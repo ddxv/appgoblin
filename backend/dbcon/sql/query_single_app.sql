@@ -28,7 +28,8 @@ SELECT
     adstxt_crawl_result,
     version_code,
     sdk_last_crawled,
-    sdk_crawl_result
+    sdk_crawl_result,
+    sdk_successful_last_crawled
 FROM
     store_apps_overview
 WHERE

@@ -409,6 +409,7 @@ export interface AppFullDetail {
 	version_code: string;
 	sdk_last_crawled: string;
 	sdk_crawl_result: number;
+	sdk_successful_last_crawled: string;
 }
 
 export type CategoryRanks = {

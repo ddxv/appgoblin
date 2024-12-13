@@ -124,9 +124,22 @@
 					<!-- Developer Information Section -->
 					<WhiteCard>
 						{#snippet title()}
-							Developer Details
+							App Details
 						{/snippet}
-						<div class="space-y-2">
+						<div class="space-y-2 p-2">
+							<div class="flex items-center gap-2">
+								<span class="font-medium">Store ID:</span>
+								<span>{myapp.store_id}</span>
+							</div>
+							<div class="flex items-center gap-2">
+								<span class="font-medium">First Released:</span>
+								<span>{myapp.release_date}</span>
+							</div>
+							<div class="flex items-center gap-2">
+								<span class="font-medium">Store Last Updated:</span>
+								<span>{myapp.store_last_updated}</span>
+							</div>
+
 							{#if myapp.developer_id}
 								<div class="flex items-center gap-2">
 									<span class="font-medium">Developer:</span>
@@ -168,38 +181,9 @@
 					<!-- App Information Section -->
 					<WhiteCard>
 						{#snippet title()}
-							App Details
+							App Tracking Status
 						{/snippet}
-						<div class="space-y-2">
-							<div class="flex items-center gap-2">
-								<span class="font-medium">Store ID:</span>
-								<span>{myapp.store_id}</span>
-							</div>
-							<div class="flex items-center gap-2">
-								<span class="font-medium">First Released:</span>
-								<span>{myapp.release_date}</span>
-							</div>
-							<div class="flex items-center gap-2">
-								<span class="font-medium">Store Last Updated:</span>
-								<span>{myapp.store_last_updated}</span>
-							</div>
-						</div>
-					</WhiteCard>
-
-					<!-- Tracking Information Section -->
-					<WhiteCard>
-						{#snippet title()}
-							Tracking Status
-						{/snippet}
-						<div class="space-y-2">
-							<div class="flex items-center gap-2">
-								<span class="font-medium">Last Crawled:</span>
-								<span>{myapp.updated_at}</span>
-							</div>
-							<div class="flex items-center gap-2">
-								<span class="font-medium">First Crawled:</span>
-								<span>{myapp.created_at}</span>
-							</div>
+						<div class="space-y-2 p-2">
 							<div class="flex items-center gap-2">
 								<span class="font-medium">Crawl Status:</span>
 								<span
@@ -208,6 +192,23 @@
 									{myapp.crawl_result == 1 ? 'Success' : 'Failed'}
 								</span>
 							</div>
+							<div class="flex items-center gap-2">
+								<span class="font-medium">Store First Crawled:</span>
+								<span>{myapp.created_at}</span>
+							</div>
+							<div class="flex items-center gap-2">
+								<span class="font-medium">Store Last Crawled:</span>
+								<span>{myapp.updated_at}</span>
+							</div>
+						</div>
+					</WhiteCard>
+
+					<!-- Tracking Information Section -->
+					<WhiteCard>
+						{#snippet title()}
+							App-Ads.txt Status
+						{/snippet}
+						<div class="space-y-2 p-2">
 							<div class="flex items-center gap-2">
 								<span class="font-medium">Ads.txt Last Crawled:</span>
 								<span>{myapp.adstxt_last_crawled}</span>
@@ -222,12 +223,23 @@
 									{myapp.adstxt_crawl_result == 1 ? 'Success' : 'Failed'}
 								</span>
 							</div>
+						</div>
+					</WhiteCard>
+					<WhiteCard>
+						{#snippet title()}
+							SDK Tracking Status
+						{/snippet}
+						<div class="space-y-2 p-2">
 							<div class="flex items-center gap-2">
-								<span class="font-medium">SDK Last Crawled:</span>
+								<span class="font-medium">Successful Last Crawled:</span>
+								<span>{myapp.sdk_successful_last_crawled}</span>
+							</div>
+							<div class="flex items-center gap-2">
+								<span class="font-medium">Last Crawled:</span>
 								<span>{myapp.sdk_last_crawled}</span>
 							</div>
 							<div class="flex items-center gap-2">
-								<span class="font-medium">SDK Crawl Status:</span>
+								<span class="font-medium">Last Crawl Status:</span>
 								<span
 									class={myapp.sdk_crawl_result == 1
 										? 'text-success-900-100'
