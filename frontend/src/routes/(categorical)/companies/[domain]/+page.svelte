@@ -27,14 +27,17 @@
 				{#if typeof myData == 'string'}
 					<p class="text-red-500 text-center">Failed to load company details.</p>
 				{:else if myData && myData.length > 0}
-					<div class=" p-2 rounded-lg shadow-md">
-						<h2 class="text-xl font-bold text-primary-900-100 mb-4">Total Apps</h2>
+					<WhiteCard>
+						{#snippet title()}
+							<span>Company's Total Apps</span>
+						{/snippet}
+
 						<p class="text-lg">
 							<span class="font-semibold text-primary-900-100"
 								>{formatNumber(myData.map((d) => d.value).reduce((a, b) => a + b, 0))}</span
 							>
 						</p>
-					</div>
+					</WhiteCard>
 				{/if}
 			{:catch error}
 				<p class="text-red-500 text-center">{error.message}</p>
