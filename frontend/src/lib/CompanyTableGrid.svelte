@@ -1,37 +1,20 @@
 <script lang="ts">
-	import type { Snippet } from 'svelte';
 	import WhiteCard from './WhiteCard.svelte';
+	import CompanyOverviewTable from './CompanyOverviewTable.svelte';
 
-	import { page } from '$app/state';
+	let { detailsData, tableData } = $props();
 
-	let {
-		sdkAndroidTotalApps,
-		sdkIosTotalApps,
-		adstxtAndroidTotalApps,
-		adstxtIosTotalApps,
-		sdkAndroid,
-		sdkIos,
-		adstxtAndroid,
-		adstxtIos
-	}: {
-		sdkAndroidTotalApps: Snippet;
-		sdkIosTotalApps: Snippet;
-		adstxtAndroidTotalApps: Snippet;
-		adstxtIosTotalApps: Snippet;
-		sdkAndroid: Snippet;
-		sdkIos: Snippet;
-		adstxtAndroid: Snippet;
-		adstxtIos: Snippet;
-	} = $props();
+	function formatNumber(num: number) {
+		return new Intl.NumberFormat('en-US').format(num);
+	}
 </script>
 
-<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-6">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 my-6">
 	<!-- SDK Section -->
 	<WhiteCard>
 		{#snippet title()}
 			SDK
 		{/snippet}
-
 		<p class="text-sm md:text-lg mb-2">
 			SDK data is derived by downloading the app's Android APK or iOS IPA file and unzipped. We then
 			check the app's data for SDK signatures in paths, AndroidManifest.xml and the Info.plist. Many
@@ -41,31 +24,20 @@
 		<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 			<!-- Android SDK -->
 			<div class="card preset-tonal">
-				<div class="card-header">
-					<p class="text-lg">
-						{@render sdkAndroidTotalApps()}
-					</p>
-				</div>
-				<div class="card-content">
-					{@render sdkAndroid()}
-				</div>
+				<p class="text-lg">
+					Total Android Apps: {formatNumber(detailsData.categories.all.sdk_android_total_apps)}
+				</p>
 			</div>
-			<!-- iOS SDK -->
 			<div class="card preset-tonal">
-				<div class="card-header">
-					<p class="text-lg">
-						{@render sdkIosTotalApps()}
-					</p>
-				</div>
-				<div class="card-content">
-					{@render sdkIos()}
-				</div>
+				<p class="text-lg">
+					Total iOS Apps: {formatNumber(detailsData.categories.all.sdk_ios_total_apps)}
+				</p>
 			</div>
 		</div>
 	</WhiteCard>
 
 	<!-- App Ads.txt Section -->
-	{#if !page.params.type || page.params.type == 'ad-networks'}
+	{#if tableData.adstxt_direct.android.apps.length > 0 || tableData.adstxt_direct.ios.apps.length > 0}
 		<WhiteCard>
 			{#snippet title()}
 				App Ads.txt
@@ -81,25 +53,46 @@
 				<div class="card preset-tonal">
 					<div class="card-header">
 						<p class="text-sm md:text-lg">
-							{@render adstxtAndroidTotalApps()}
+							Total Android Apps: {formatNumber(
+								detailsData.categories.all.adstxt_direct_android_total_apps
+							)}
 						</p>
 					</div>
 					<div class="card-content">
-						{@render adstxtAndroid()}
+						<CompanyOverviewTable entries_table={tableData.adstxt_direct.android.apps} />
 					</div>
 				</div>
 				<!-- iOS App Ads.txt -->
 				<div class="card preset-tonal">
 					<div class="card-header">
 						<p class="text-sm md:text-lg">
-							{@render adstxtIosTotalApps()}
+							Total iOS Apps: {formatNumber(
+								detailsData.categories.all.adstxt_direct_ios_total_apps
+							)}
 						</p>
 					</div>
 					<div class="card-content">
-						{@render adstxtIos()}
+						<CompanyOverviewTable entries_table={tableData.adstxt_direct.ios.apps} />
 					</div>
 				</div>
 			</div>
 		</WhiteCard>
 	{/if}
+</div>
+
+<div class="grid grid-cols-1">
+	<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+		<WhiteCard>
+			{#snippet title()}
+				Android SDK
+			{/snippet}
+			<CompanyOverviewTable entries_table={tableData.sdk.android.apps} />
+		</WhiteCard>
+		<WhiteCard>
+			{#snippet title()}
+				iOS SDK
+			{/snippet}
+			<CompanyOverviewTable entries_table={tableData.sdk.ios.apps} />
+		</WhiteCard>
+	</div>
 </div>

@@ -109,43 +109,7 @@
 		{#if typeof tableData == 'string'}
 			Failed to load company's apps.
 		{:else}
-			<CompanyTableGrid>
-				{#snippet sdkAndroidTotalApps()}
-					Total Android Apps: {formatNumber(detailsData.categories.all.sdk_android_total_apps)}
-				{/snippet}
-				{#snippet sdkIosTotalApps()}
-					Total iOS Apps: {formatNumber(detailsData.categories.all.sdk_ios_total_apps)}
-				{/snippet}
-				{#snippet adstxtAndroidTotalApps()}
-					Total Android Apps: {formatNumber(
-						detailsData.categories.all.adstxt_direct_android_total_apps
-					)}
-				{/snippet}
-				{#snippet adstxtIosTotalApps()}
-					Total iOS Apps: {formatNumber(detailsData.categories.all.adstxt_direct_ios_total_apps)}
-				{/snippet}
-
-				{#snippet sdkAndroid()}
-					{#if tableData && tableData.sdk.android.apps.length > 0}
-						<CompanyOverviewTable entries_table={tableData.sdk.android.apps} />
-					{/if}
-				{/snippet}
-				{#snippet sdkIos()}
-					{#if tableData && tableData.sdk.ios.apps.length > 0}
-						<CompanyOverviewTable entries_table={tableData.sdk.ios.apps} />
-					{/if}
-				{/snippet}
-				{#snippet adstxtAndroid()}
-					{#if tableData && tableData.adstxt_direct.android.apps.length > 0}
-						<CompanyOverviewTable entries_table={tableData.adstxt_direct.android.apps} />
-					{/if}
-				{/snippet}
-				{#snippet adstxtIos()}
-					{#if tableData && tableData.adstxt_direct.ios.apps.length > 0}
-						<CompanyOverviewTable entries_table={tableData.adstxt_direct.ios.apps} />
-					{/if}
-				{/snippet}
-			</CompanyTableGrid>
+			<CompanyTableGrid {tableData} {detailsData} />
 		{/if}
 	{:catch error}
 		<p style="color: red">{error.message}</p>
