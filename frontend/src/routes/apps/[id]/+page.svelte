@@ -12,14 +12,14 @@
 	interface Props {
 		data: AppFullDetails;
 	}
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 
 	let { data }: Props = $props();
 	let sum = (arr: number[]) => arr.reduce((acc, curr) => acc + curr, 0);
 </script>
 
 <svelte:head>
-	<link rel="canonical" href="https://appgoblin.info/apps/{$page.params.id}" />
+	<link rel="canonical" href="https://appgoblin.info/apps/{page.params.id}" />
 	{#await data.myapp then myapp}
 		{#if myapp.store_link.includes('google')}
 			<title>{myapp.name} Android Trends | {myapp.developer_name} | AppGoblin App Data</title>
@@ -75,7 +75,7 @@
 			/>
 		{/if}
 		<meta property="og:image" content="https://appgoblin.info/goblin_purple_hat_250.png" />
-		<meta property="og:url" content={$page.url.href} />
+		<meta property="og:url" content={page.url.href} />
 		<meta property="og:type" content="website" />
 		<meta name="twitter:card" content="summary_large_image" />
 		<meta name="twitter:image" content="https://appgoblin.info/goblin_purple_hat_250.png" />

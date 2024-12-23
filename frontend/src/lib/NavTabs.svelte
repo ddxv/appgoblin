@@ -1,12 +1,12 @@
 <script lang="ts">
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	const topBarFont = 'text-base hover:text-primary-900-100';
 	const topBarHighlightedFont = 'text-base text-primary-900-100';
 	const horizontalDivider = 'h-12 w-px bg-secondary-100-900';
 	const topDivider =
 		'w-full border-t-[1px] md:border-t-0 md:border-b-[1px] border-secondary-100-900 p-2';
 	function isHighlighted(path: string) {
-		return $page.url.pathname.startsWith(path);
+		return page.url.pathname.startsWith(path);
 	}
 </script>
 

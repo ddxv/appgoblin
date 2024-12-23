@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import type { Snippet } from 'svelte';
 	let {
 		sdkAndroidTotalApps,
@@ -52,7 +52,7 @@
 		</div>
 	</WhiteCard>
 
-	{#if !$page.params.type || $page.params.type == 'ad-networks'}
+	{#if !page.params.type || page.params.type == 'ad-networks'}
 		<!-- App Ads.txt Section -->
 		<WhiteCard>
 			{#snippet title()}

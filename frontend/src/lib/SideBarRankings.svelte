@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import CardFirst from './CardFirst.svelte';
 	import { homeCollectionSelection } from '../stores';
 	import { homeStoreSelection } from '../stores';
@@ -15,7 +15,7 @@
 	let localHomeCategorySelect = $state($homeCategorySelection);
 
 	let classesActive = $derived((href: string) =>
-		$page.url.pathname.startsWith(href) ? buttonSelectedClass : buttonDeselectedClass
+		page.url.pathname.startsWith(href) ? buttonSelectedClass : buttonDeselectedClass
 	);
 
 	// Reactive statement to update the store when localValue changes
@@ -26,8 +26,8 @@
 		homeStoreSelection.set(localHomeStoreSelect);
 	});
 	$effect(() => {
-		if ($page.params.category) {
-			localHomeCategorySelect = $page.params.category;
+		if (page.params.category) {
+			localHomeCategorySelect = page.params.category;
 		}
 	});
 	$effect(() => {
@@ -36,15 +36,15 @@
 	// For adtech
 	let store = $state(1);
 	$effect(() => {
-		store = +$page.params.store;
+		store = +page.params.store;
 	});
 	let collection = $state(1);
 	$effect(() => {
-		collection = +$page.params.collection;
+		collection = +page.params.collection;
 	});
 	let category = $state(1);
 	$effect(() => {
-		category = +$page.params.category;
+		category = +page.params.category;
 	});
 	// Logic to adjust collection and category based on the store's value
 	$effect(() => {

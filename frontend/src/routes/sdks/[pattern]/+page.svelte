@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { page } from '$app/stores';
-	let pattern = $page.params.pattern;
+	import { page } from '$app/state';
+	let pattern = page.params.pattern;
 	import SDKOverviewTable from '$lib/SDKOverviewTable.svelte';
 	let { data } = $props();
 	import WhiteCard from '$lib/WhiteCard.svelte';

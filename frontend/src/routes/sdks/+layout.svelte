@@ -5,16 +5,16 @@
 
 	let { children }: Props = $props();
 
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 
-	const { pattern } = $page.params;
+	const { pattern } = page.params;
 
 	let sdk_title: string = $state(pattern);
 </script>
 
 <svelte:head>
 	<title>{sdk_title} Mobile SDKs Libraries and Services | AppGoblin</title>
-	<link rel="canonical" href={$page.url.href} />
+	<link rel="canonical" href={page.url.href} />
 	<meta
 		name="description"
 		content="{sdk_title} is a mobile SDKs libraries and services. Explore detailed analytics, market presence, and insights about {sdk_title} in the mobile advertising ecosystem."
@@ -35,7 +35,7 @@
 	/>
 
 	<meta property="og:image" content="https://appgoblin.info/goblin_purple_hat_250.png" />
-	<meta property="og:url" content={$page.url.href} />
+	<meta property="og:url" content={page.url.href} />
 	<meta property="og:type" content="website" />
 	<meta name="twitter:card" content="summary_large_image" />
 	<meta name="twitter:image" content="https://appgoblin.info/goblin_purple_hat_250.png" />

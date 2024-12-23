@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import type { Crumb } from '../../../types';
 	import Breadcrumbs from '$lib/Breadcrumbs.svelte';
 	import CompanyTypesTabs from '$lib/utils/CompanyTypesTabs.svelte';
@@ -9,12 +9,12 @@
 
 	let { data, children } = $props();
 
-	let companyTypes = $page.data.companyTypes;
+	let companyTypes = page.data.companyTypes;
 
-	let pageDataCrumbs = $derived($page.data.crumbs as Crumb<MyCrumbMetadata>[] | undefined);
+	let pageDataCrumbs = $derived(page.data.crumbs as Crumb<MyCrumbMetadata>[] | undefined);
 
-	let type_title: string = $derived(getTypeTitle(companyTypes, $page.params.type));
-	let category_title = $derived(getCategoryName($page.params.category));
+	let type_title: string = $derived(getTypeTitle(companyTypes, page.params.type));
+	let category_title = $derived(getCategoryName(page.params.category));
 
 	function getTypeTitle(myTypes: CompanyTypes, currentType: string) {
 		if (myTypes.types && currentType) {
@@ -44,7 +44,7 @@
 
 <svelte:head>
 	<title>{title}</title>
-	<link rel="canonical" href={$page.url.href} />
+	<link rel="canonical" href={page.url.href} />
 	<meta name="description" content={description} />
 	<meta name="keywords" content={keywords} />
 	<meta property="og:title" content={title} />
@@ -53,19 +53,14 @@
 	<meta name="twitter:description" content={description} />
 
 	<meta property="og:image" content="https://appgoblin.info/goblin_purple_hat_250.png" />
-	<meta property="og:url" content={$page.url.href} />
+	<meta property="og:url" content={page.url.href} />
 	<meta property="og:type" content="website" />
 	<meta name="twitter:card" content="summary_large_image" />
 	<meta name="twitter:image" content="https://appgoblin.info/goblin_purple_hat_250.png" />
 </svelte:head>
 
 <div class="text-surface-900-100 text-sm p-2 md:p-4">
-	<Breadcrumbs
-		url={$page.url}
-		routeId={$page.route.id}
-		pageData={$page.data}
-		crumbs={pageDataCrumbs}
-	>
+	<Breadcrumbs url={page.url} routeId={page.route.id} pageData={page.data} crumbs={pageDataCrumbs}>
 		{#snippet children({ crumbs })}
 			<div>
 				<span><a href="/" class="text-surface-900-100 hover:text-primary-900-100">Home</a></span>

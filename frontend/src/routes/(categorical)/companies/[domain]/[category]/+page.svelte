@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { CompanyCategoryDetails } from '../../../../../types';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import CompanyOverviewTable from '$lib/CompanyOverviewTable.svelte';
 
 	import CompaniesLayout from '$lib/CompaniesLayout.svelte';
@@ -13,7 +13,7 @@
 
 	let { data }: Props = $props();
 
-	let company_category = $derived($page.params.category);
+	let company_category = $derived(page.params.category);
 
 	function formatNumber(num: number) {
 		return new Intl.NumberFormat('en-US').format(num);

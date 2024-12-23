@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import type { SearchResponse } from '../../../types';
 	import AppGroupCard from '$lib/AppGroupCard.svelte';
 	import { goto } from '$app/navigation';
@@ -11,7 +11,7 @@
 	}
 
 	let { data }: Props = $props();
-	let searchTerm: string | null = $state($page.params.term || '');
+	let searchTerm: string | null = $state(page.params.term || '');
 
 	function searchGooglePlay() {
 		if (searchTerm) {

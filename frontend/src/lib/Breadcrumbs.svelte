@@ -8,7 +8,7 @@
 	interface Props {
 		// Relative path to the routes folder for the glob import
 		relPathToRoutes?: string;
-		// The route from the routers perspective, e.g. $page.route.id
+		// The route from the routers perspective, e.g. page.route.id
 		routeId: string | null;
 		url: URL;
 		crumbs?: Crumb<Metadata>[] | undefined;

@@ -1,11 +1,11 @@
 <script lang="ts">
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 
 	import ExternalLink from '$lib/ExternalLink.svelte';
 	import CompanyButton from '$lib/CompanyButton.svelte';
 
 	let { children, data } = $props();
-	const { domain, category } = $page.params;
+	const { domain, category } = page.params;
 
 	let category_title: string = $state(category);
 	// let rel_link = $state(domain);
@@ -18,7 +18,7 @@
 	// 	rel_link = `${domain}/${category}`;
 	// }
 
-	let categoryName = $derived(getAppCategories($page.params.category));
+	let categoryName = $derived(getAppCategories(page.params.category));
 
 	function getAppCategories(category: string) {
 		if (category) {
@@ -61,11 +61,11 @@
 	/>
 
 	<meta property="og:image" content="https://appgoblin.info/goblin_purple_hat_250.png" />
-	<meta property="og:url" content={$page.url.href} />
+	<meta property="og:url" content={page.url.href} />
 	<meta property="og:type" content="website" />
 	<meta name="twitter:card" content="summary_large_image" />
 	<meta name="twitter:image" content="https://appgoblin.info/goblin_purple_hat_250.png" />
-	<link rel="canonical" href={$page.url.href} />
+	<link rel="canonical" href={page.url.href} />
 </svelte:head>
 
 <div class="flex items-center mb-2">

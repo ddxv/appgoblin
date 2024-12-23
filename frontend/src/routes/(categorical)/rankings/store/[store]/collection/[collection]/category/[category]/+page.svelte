@@ -7,7 +7,7 @@
 
 	import type { StoreCategoryRanks } from '../../../../../../../../../types.js';
 
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import RankChart from '$lib/RankChart.svelte';
 	import AppRankTable from '$lib/AppRankTable.svelte';
 	interface Props {
@@ -16,9 +16,9 @@
 
 	let { data }: Props = $props();
 
-	let store = $derived(+$page.params.store);
-	let collection = $derived(+$page.params.collection);
-	let category = $derived(+$page.params.category);
+	let store = $derived(+page.params.store);
+	let collection = $derived(+page.params.collection);
+	let category = $derived(+page.params.category);
 </script>
 
 <svelte:head>
@@ -47,7 +47,7 @@
 		content="Discover the top-performing apps across Google Play and iOS App Store. Access monthly ranking charts, category top 100 lists, and historical data to enhance your ASO strategy with AppGoblin."
 	/>
 	<meta property="og:image" content="https://appgoblin.info/goblin_purple_hat_250.png" />
-	<meta property="og:url" content={$page.url.href} />
+	<meta property="og:url" content={page.url.href} />
 	<meta property="og:type" content="website" />
 
 	<!-- Twitter Card meta tags -->

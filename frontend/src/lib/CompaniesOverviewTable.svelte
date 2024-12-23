@@ -5,7 +5,7 @@
 	import ThSort from './clientside/ThSort.svelte';
 	// import ThFilter from './clientside/ThFilter.svelte';
 
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 
 	export let entries_table: CompaniesOverviewEntries[];
 
@@ -37,7 +37,7 @@
 						><p class="text-xs md:text-lg">Android SDK</p></ThSort
 					>
 					<ThSort {handler} orderBy="apple_sdk"><p class="text-xs md:text-lg">iOS SDK</p></ThSort>
-					{#if !$page.params.type || $page.params.type == 'ad-networks'}
+					{#if !page.params.type || page.params.type == 'ad-networks'}
 						<ThSort {handler} orderBy="google_app_ads_direct"
 							><p class="text-xs md:text-lg">Android AdsTxt</p></ThSort
 						>
@@ -79,7 +79,7 @@
 							</p>
 						</td>
 
-						{#if !$page.params.type || $page.params.type == 'ad-networks'}
+						{#if !page.params.type || page.params.type == 'ad-networks'}
 							<td class="table-cell-fit">
 								<p class="text-xs md:text-sm">
 									{(row.google_app_ads_direct * 100).toFixed(2)}%

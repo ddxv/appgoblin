@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	let { myTabs } = $props();
 
 	function typeTabClass(tab: string) {
@@ -9,14 +9,14 @@
 			'px-2 md:px-4 py-2 border-b-2 border-surface-800-200 hover:border-primary-300-700 hover:border-b-2 hover:underline';
 		if (tab === 'all') {
 			if (
-				$page.url.pathname === '/companies' ||
-				$page.url.pathname.startsWith('/companies/categories')
+				page.url.pathname === '/companies' ||
+				page.url.pathname.startsWith('/companies/categories')
 			) {
 				return selectedClass;
 			} else {
 				return unselectedClass;
 			}
-		} else if ($page.url.pathname.startsWith(`/companies/types/${tab}`)) {
+		} else if (page.url.pathname.startsWith(`/companies/types/${tab}`)) {
 			return selectedClass;
 		} else return unselectedClass;
 	}
@@ -42,12 +42,12 @@
 
 <div class="flex flex-row flex-wrap text-sm md:text-base">
 	<a
-		href={getCategoryUrlPart($page.url.pathname.toString(), '', $page.params.category)}
+		href={getCategoryUrlPart(page.url.pathname.toString(), '', page.params.category)}
 		class={typeTabClass('all')}>All</a
 	>
 	{#each myTabs.types as tab}
 		<a
-			href={getCategoryUrlPart($page.url.pathname.toString(), tab.url_slug, $page.params.category)}
+			href={getCategoryUrlPart(page.url.pathname.toString(), tab.url_slug, page.params.category)}
 			class={typeTabClass(tab.url_slug)}>{tab.name}</a
 		>
 	{/each}

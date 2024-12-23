@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import { homeCollectionSelection } from '../stores';
 	import { homeStoreSelection } from '../stores';
 	import { homeCategorySelection } from '../stores';
@@ -27,8 +27,8 @@
 		homeStoreSelection.set(localHomeStoreSelect);
 	});
 	$effect(() => {
-		if ($page.params.category) {
-			localHomeCategorySelect = $page.params.category;
+		if (page.params.category) {
+			localHomeCategorySelect = page.params.category;
 		}
 	});
 	$effect(() => {
@@ -37,15 +37,15 @@
 	// For adtech
 	let store = $state(1);
 	$effect(() => {
-		store = +$page.params.store;
+		store = +page.params.store;
 	});
 	let collection = $state(1);
 	$effect(() => {
-		collection = +$page.params.collection;
+		collection = +page.params.collection;
 	});
 	let category = $state(1);
 	$effect(() => {
-		category = +$page.params.category;
+		category = +page.params.category;
 	});
 	// Logic to adjust collection and category based on the store's value
 	$effect(() => {
@@ -68,14 +68,14 @@
 	});
 </script>
 
-{#if $page.url.pathname.startsWith('/collections')}
+{#if page.url.pathname.startsWith('/collections')}
 	<SideBarCollections {myCatData} />
 {/if}
 
-{#if $page.url.pathname == '/rankings' || $page.url.pathname.startsWith('/rankings')}
+{#if page.url.pathname == '/rankings' || page.url.pathname.startsWith('/rankings')}
 	<SideBarRankings />
 {/if}
 
-{#if $page.url.pathname == '/companies' || $page.url.pathname.startsWith('/companies')}
+{#if page.url.pathname == '/companies' || page.url.pathname.startsWith('/companies')}
 	<SideBarCompanies {myCatData} />
 {/if}

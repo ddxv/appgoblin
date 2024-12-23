@@ -3,23 +3,23 @@
 	import WhiteCard from '$lib/WhiteCard.svelte';
 	import CompaniesBarChart from '$lib/CompaniesBarChart.svelte';
 	import TotalsBox from '$lib/TotalsBox.svelte';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 
 	import type { Snippet } from 'svelte';
 
 	let { children }: { children: Snippet } = $props();
 
 	let currentType = $derived(
-		$page.data.companyTypes.types.find(
-			(type: { url_slug: string }) => type.url_slug === $page.params.type
+		page.data.companyTypes.types.find(
+			(type: { url_slug: string }) => type.url_slug === page.params.type
 		)
 	);
 
-	let currentCategoryName = $derived(getCategoryName($page.params.category));
+	let currentCategoryName = $derived(getCategoryName(page.params.category));
 
 	function getCategoryName(category: string) {
 		return (
-			$page.data?.appCats?.categories?.find((cat: { id: string }) => cat.id == category)?.name ||
+			page.data?.appCats?.categories?.find((cat: { id: string }) => cat.id == category)?.name ||
 			category
 		);
 	}
@@ -44,7 +44,7 @@
 			{#snippet title()}
 				Totals
 			{/snippet}
-			{#await $page.data.companiesOverview then myData}
+			{#await page.data.companiesOverview then myData}
 				{#if typeof myData == 'string'}
 					<p class="text-red-500 text-center">Failed to load company details.</p>
 				{:else}
@@ -58,7 +58,7 @@
 			{#snippet title()}
 				Top SDK Companies
 			{/snippet}
-			{#await $page.data.companiesOverview then myData}
+			{#await page.data.companiesOverview then myData}
 				{#if typeof myData == 'string'}
 					<p class="text-red-500 text-center">Failed to load company details.</p>
 				{:else}
@@ -72,7 +72,7 @@
 			{#snippet title()}
 				Top Adstxt Companies
 			{/snippet}
-			{#await $page.data.companiesOverview then myData}
+			{#await page.data.companiesOverview then myData}
 				{#if typeof myData == 'string'}
 					<p class="text-red-500 text-center">Failed to load company details.</p>
 				{:else}

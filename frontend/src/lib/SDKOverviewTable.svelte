@@ -7,9 +7,9 @@
 	import IconiOs from './svg/IconiOS.svelte';
 	import IconGoogle from './svg/IconGoogle.svelte';
 
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 
-	let pattern = $page.params.pattern;
+	let pattern = page.params.pattern;
 
 	import type { SdkOverview } from '../types';
 

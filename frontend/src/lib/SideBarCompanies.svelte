@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 
 	function getBaseUrl(url: string, type: string) {
 		const parts = url.split('/').filter(Boolean);
@@ -36,7 +36,7 @@
 		return newUrl;
 	}
 
-	let baseUrl = $derived(getBaseUrl($page.url.pathname.toString(), $page.params.type));
+	let baseUrl = $derived(getBaseUrl(page.url.pathname.toString(), page.params.type));
 
 	import type { CatData } from '../types';
 	interface Props {
@@ -54,8 +54,8 @@
 	});
 
 	$effect(() => {
-		if ($page.params.category) {
-			localHomeCategorySelect = $page.params.category;
+		if (page.params.category) {
+			localHomeCategorySelect = page.params.category;
 		} else {
 			localHomeCategorySelect = 'overall';
 		}
