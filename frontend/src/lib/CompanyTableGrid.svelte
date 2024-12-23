@@ -7,6 +7,11 @@
 	function formatNumber(num: number) {
 		return new Intl.NumberFormat('en-US').format(num);
 	}
+	function hasAppAdsTxt(tableData: any) {
+		return (
+			tableData.adstxt_direct.android.apps.length > 0 || tableData.adstxt_direct.ios.apps.length > 0
+		);
+	}
 </script>
 
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 my-6">
@@ -58,9 +63,7 @@
 							)}
 						</p>
 					</div>
-					<div class="card-content">
-						<CompanyOverviewTable entries_table={tableData.adstxt_direct.android.apps} />
-					</div>
+					<div class="card-content"></div>
 				</div>
 				<!-- iOS App Ads.txt -->
 				<div class="card preset-tonal">
@@ -71,9 +74,7 @@
 							)}
 						</p>
 					</div>
-					<div class="card-content">
-						<CompanyOverviewTable entries_table={tableData.adstxt_direct.ios.apps} />
-					</div>
+					<div class="card-content"></div>
 				</div>
 			</div>
 		</WhiteCard>
@@ -81,7 +82,7 @@
 </div>
 
 <div class="grid grid-cols-1">
-	<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+	<div class="grid grid-cols-1 md:grid-cols-{hasAppAdsTxt(tableData) ? 4 : 2} gap-4">
 		<WhiteCard>
 			{#snippet title()}
 				Android SDK
@@ -94,5 +95,21 @@
 			{/snippet}
 			<CompanyOverviewTable entries_table={tableData.sdk.ios.apps} />
 		</WhiteCard>
+
+		{#if hasAppAdsTxt(tableData)}
+			<WhiteCard>
+				{#snippet title()}
+					Android App Ads.txt
+				{/snippet}
+				<CompanyOverviewTable entries_table={tableData.adstxt_direct.android.apps} />
+			</WhiteCard>
+
+			<WhiteCard>
+				{#snippet title()}
+					iOS App Ads.txt
+				{/snippet}
+				<CompanyOverviewTable entries_table={tableData.adstxt_direct.ios.apps} />
+			</WhiteCard>
+		{/if}
 	</div>
 </div>
