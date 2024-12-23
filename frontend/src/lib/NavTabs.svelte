@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	const topBarFont = 'text-base hover:text-primary-900-100';
-	const topBarHighlightedFont = 'text-base text-primary-900-100';
+	const topBarFont = 'text-xs md:text-base hover:text-primary-900-100';
+	const topBarHighlightedFont = 'text-xs md:text-base text-primary-900-100';
 	const horizontalDivider = 'h-12 w-px bg-secondary-100-900';
 	const topDivider =
 		'w-full border-t-[1px] md:border-t-0 md:border-b-[1px] border-secondary-100-900 p-2';

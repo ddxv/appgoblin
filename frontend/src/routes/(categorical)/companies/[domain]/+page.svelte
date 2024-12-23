@@ -1,7 +1,6 @@
 <script lang="ts">
 	import type { CompanyFullDetails } from '../../../../types';
 
-	import CompanyOverviewTable from '$lib/CompanyOverviewTable.svelte';
 	import CompanyCategoryPie from '$lib/CompanyCategoryPie.svelte';
 
 	import CompanyTableGrid from '$lib/CompanyTableGrid.svelte';
@@ -45,6 +44,9 @@
 
 	{#snippet card2()}
 		<WhiteCard>
+			{#snippet title()}
+				<span>Apps by Category</span>
+			{/snippet}
 			<div>
 				{#await data.companyParentCategories}
 					<span class="text-lg">Loading...</span>

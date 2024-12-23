@@ -28,7 +28,7 @@
 		}
 	}
 
-	let titleClass = 'h1 text-3xl font-bold text-primary-900-100';
+	let titleClass = 'h1 text-2xl md:text-3xl font-bold text-primary-900-100';
 	let titleSecondaryClass = 'text-xl font-bold text-primary-900-100 mr-2';
 	let titleDividerClass = 'md:h-8 w-px bg-gray-300 mx-2';
 </script>
