@@ -69,6 +69,7 @@ class PostgresCon:
                 connect_args={
                     "connect_timeout": 10,
                     "application_name": "appgoblin",
+                    "isolation_level": "autocommit",
                 },
             )
             logger.info(f"Created PostgreSQL Engine {self.db_name}")
