@@ -2,7 +2,7 @@
 	import WhiteCard from './WhiteCard.svelte';
 	import CompanyOverviewTable from './CompanyOverviewTable.svelte';
 
-	let { detailsData, tableData } = $props();
+	let { detailsData, tableData, category } = $props();
 
 	function formatNumber(num: number) {
 		return new Intl.NumberFormat('en-US').format(num);
@@ -30,12 +30,14 @@
 			<!-- Android SDK -->
 			<div class="card preset-tonal">
 				<p class="text-lg">
-					Total Android Apps: {formatNumber(detailsData.categories.all.sdk_android_total_apps)}
+					Total Android Apps: {formatNumber(
+						detailsData.categories[category].sdk_android_total_apps
+					)}
 				</p>
 			</div>
 			<div class="card preset-tonal">
 				<p class="text-lg">
-					Total iOS Apps: {formatNumber(detailsData.categories.all.sdk_ios_total_apps)}
+					Total iOS Apps: {formatNumber(detailsData.categories[category].sdk_ios_total_apps)}
 				</p>
 			</div>
 		</div>
@@ -59,7 +61,7 @@
 					<div class="card-header">
 						<p class="text-sm md:text-lg">
 							Total Android Apps: {formatNumber(
-								detailsData.categories.all.adstxt_direct_android_total_apps
+								detailsData.categories[category].adstxt_direct_android_total_apps
 							)}
 						</p>
 					</div>
@@ -70,7 +72,7 @@
 					<div class="card-header">
 						<p class="text-sm md:text-lg">
 							Total iOS Apps: {formatNumber(
-								detailsData.categories.all.adstxt_direct_ios_total_apps
+								detailsData.categories[category].adstxt_direct_ios_total_apps
 							)}
 						</p>
 					</div>

@@ -114,7 +114,7 @@
 		{#if typeof tableData == 'string'}
 			Failed to load company's apps.
 		{:else}
-			<CompanyTableGrid {tableData} {detailsData} />
+			<CompanyTableGrid {tableData} {detailsData} category="all" />
 		{/if}
 	{:catch error}
 		<p style="color: red">{error.message}</p>

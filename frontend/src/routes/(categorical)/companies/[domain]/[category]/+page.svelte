@@ -49,58 +49,14 @@
 
 {#await data.companyDetails}
 	<div><span>Loading...</span></div>
-{:then myData}
+{:then detailsData}
 	{#await data.companyCategoryApps}
 		<div><span>Loading...</span></div>
 	{:then tableData}
 		{#if typeof tableData == 'string'}
 			Failed to load company's apps.
 		{:else}
-			<CompanyTableGrid>
-				{#snippet sdkAndroidTotalApps()}
-					Total Android Apps: {formatNumber(
-						myData.categories[company_category].sdk_android_total_apps
-					)}
-				{/snippet}
-				{#snippet sdkIosTotalApps()}
-					Total iOS Apps: {formatNumber(myData.categories[company_category].sdk_ios_total_apps)}
-				{/snippet}
-				{#snippet adstxtAndroidTotalApps()}
-					Total Android Apps: {formatNumber(
-						myData.categories[company_category].adstxt_direct_android_total_apps
-					)}
-				{/snippet}
-				{#snippet adstxtIosTotalApps()}
-					Total iOS Apps: {formatNumber(
-						myData.categories[company_category].adstxt_direct_ios_total_apps
-					)}
-				{/snippet}
-
-				{#snippet sdkAndroid()}
-					{#if typeof tableData == 'string'}
-						Failed to load company's apps.
-					{:else if tableData.sdk.android.apps}
-						<CompanyOverviewTable entries_table={tableData.sdk.android.apps} />
-					{:else}
-						Failed to load company overview.
-					{/if}
-				{/snippet}
-				{#snippet sdkIos()}
-					{#if tableData.sdk.ios.apps}
-						<CompanyOverviewTable entries_table={tableData.sdk.ios.apps} />
-					{/if}
-				{/snippet}
-				{#snippet adstxtAndroid()}
-					{#if tableData.adstxt_direct.android.apps}
-						<CompanyOverviewTable entries_table={tableData.adstxt_direct.android.apps} />
-					{/if}
-				{/snippet}
-				{#snippet adstxtIos()}
-					{#if tableData.adstxt_direct.ios.apps}
-						<CompanyOverviewTable entries_table={tableData.adstxt_direct.ios.apps} />
-					{/if}
-				{/snippet}
-			</CompanyTableGrid>
+			<CompanyTableGrid {tableData} {detailsData} category={company_category} />
 		{/if}
 	{:catch error}
 		<p style="color: red">{error.message}</p>
