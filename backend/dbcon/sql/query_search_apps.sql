@@ -16,6 +16,14 @@ WITH apps AS (
 )
 SELECT * FROM apps
 ORDER BY
-    installs DESC NULLS LAST,
-    rating_count DESC NULLS LAST
+   (
+        coalesce(
+            installs,
+            0
+        )
+    + coalesce(
+            rating_count * 100,
+            0
+        )
+    ) DESC NULLS LAST
 LIMIT :mylimit;
