@@ -476,7 +476,7 @@ def get_single_apps_adstxt(store_id: str) -> pd.DataFrame:
     return df
 
 
-def new_get_top_apps_for_company(
+def get_top_apps_for_company(
     company_domain: str,
     mapped_category: str | None = None,
 ) -> pd.DataFrame:

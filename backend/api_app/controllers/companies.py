@@ -40,7 +40,7 @@ from dbcon.queries import (
     get_company_tree,
     get_tag_source_category_totals,
     get_tag_source_totals,
-    new_get_top_apps_for_company,
+    get_top_apps_for_company,
     search_companies,
 )
 
@@ -55,12 +55,12 @@ def get_search_results(search_term: str) -> pd.DataFrame:
     return df
 
 
-def get_company_apps_new(
+def get_company_apps(
     company_domain: str,
     category: str | None = None,
 ) -> CompanyAppsOverview:
     """Get the overview data from the database."""
-    df = new_get_top_apps_for_company(
+    df = get_top_apps_for_company(
         company_domain=company_domain,
         mapped_category=category,
     )
@@ -570,7 +570,7 @@ class CompaniesController(Controller):
 
         """
         start = time.perf_counter() * 1000
-        results = get_company_apps_new(company_domain=company_domain, category=category)
+        results = get_company_apps(company_domain=company_domain, category=category)
 
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(
