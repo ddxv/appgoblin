@@ -50,8 +50,6 @@ QUERY_ADTECH_CATEGORY_TYPE = load_sql_file(
     "query_adtech_category_type.sql",
 )
 QUERY_ADTECH_TYPE = load_sql_file("query_adtech_type.sql")
-QUERY_TOP_COMPANIES_MONTH = load_sql_file("query_top_companies_month.sql")
-QUERY_TOP_PARENT_COMPANIES_MONTH = load_sql_file("query_top_companies_month_parent.sql")
 QUERY_COMPANY_TOP_APPS = load_sql_file("query_company_top_apps.sql")
 QUERY_COMPANY_CATEGORY_TOP_APPS = load_sql_file("query_company_category_top_apps.sql")
 QUERY_COMPANIES_PARENT_OVERVIEW = load_sql_file("query_companies_parent_overview.sql")
@@ -544,31 +542,6 @@ def search_apps(search_input: str, limit: int = 100) -> pd.DataFrame:
     df = pd.concat([apps, devapps]).drop_duplicates()
     if not df.empty:
         df = clean_app_df(df)
-    return df
-
-
-def get_top_companies(
-    categories: list[int],
-    *,
-    group_by_parent: bool = False,
-) -> pd.DataFrame:
-    """Get top networks, mmps or other companies.
-
-    Data is pre-processed by materialized views.
-
-    Args:
-    ----
-        categories (list[int]): list of 1=adnetworks, 2=MMP/Attribution, 3=Analytics.
-        group_by_parent (bool): Group by a parent entity if such entity exists.
-
-    """
-    if group_by_parent:
-        query = QUERY_TOP_PARENT_COMPANIES_MONTH
-    else:
-        query = QUERY_TOP_COMPANIES_MONTH
-
-    df = pd.read_sql(query, DBCON.engine, params={"categories": tuple(categories)})
-
     return df
 
 

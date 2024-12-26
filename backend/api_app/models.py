@@ -304,17 +304,6 @@ class CompanyAppsOverview:
 
 
 @dataclass
-class TopCompanies:
-    """Contains a list of CompanyDetail objects.
-
-    Representing the top networks identified.
-    """
-
-    all_companies: list[CompanyDetail]
-    parent_companies: list[CompanyDetail]
-
-
-@dataclass
 class StoreCategoryDetail:
     """Describes details of a store category, including its identifier and name."""
 

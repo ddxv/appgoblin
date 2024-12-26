@@ -25,7 +25,6 @@ from api_app.models import (
     CompanyPlatformOverview,
     CompanyTypes,
     ParentCompanyTree,
-    TopCompanies,
     TopCompaniesOverviewShort,
     TopCompaniesShort,
 )
@@ -41,7 +40,6 @@ from dbcon.queries import (
     get_company_tree,
     get_tag_source_category_totals,
     get_tag_source_totals,
-    get_top_companies,
     new_get_top_apps_for_company,
     search_companies,
 )
@@ -282,77 +280,6 @@ def append_overall_categories(df: pd.DataFrame) -> pd.DataFrame:
     games_cat_df["mapped_category"] = "games"
     df = pd.concat([df, games_cat_df])
     return df
-
-
-def old_companies_overview(categories: list[int]) -> TopCompanies:
-    """Process networks and return TopCompanies class."""
-    df = get_top_companies(categories=categories)
-    df_parents = get_top_companies(
-        categories=categories,
-        group_by_parent=True,
-    )
-
-    df = df[~df["company_name"].isna()].rename(columns={"company_name": "name"})
-    df_parents = df_parents.rename(columns={"company_name": "name"})
-
-    # Append combined columns like "overall" and "games"
-    df = append_overall_categories(df)
-    df_parents = append_overall_categories(df_parents)
-
-    # Since new columns added, recalculate percentages
-    df["app_count_percent"] = df["app_count"] / df["category_total_apps"]
-    df["installs_percent"] = df["installs"] / df["total_installs"]
-    df["ratings_percent"] = df["ratings"] / df["total_ratings"]
-    df_parents["app_count_percent"] = (
-        df_parents["app_count"] / df_parents["category_total_apps"]
-    )
-    df_parents["installs_percent"] = (
-        df_parents["installs"] / df_parents["total_installs"]
-    )
-    df_parents["ratings_percent"] = df_parents["ratings"] / df_parents["total_ratings"]
-
-    df = df.sort_values(
-        ["app_count_percent", "installs", "ratings"],
-        ascending=False,
-        na_position="first",
-    )
-    df_parents = df_parents.sort_values(
-        ["app_count_percent", "installs", "ratings"],
-        ascending=False,
-        na_position="first",
-    )
-
-    required_columns = [
-        "store",
-        "mapped_category",
-        "name",
-        "installs",
-        "ratings",
-        "app_count",
-        "installs_percent",
-        "ratings_percent",
-        "app_count_percent",
-    ]
-
-    df = df[[*required_columns, "parent_company_name"]]
-    df_parents = df_parents[required_columns]
-
-    def transform_group(group: pd.DataFrame) -> dict:
-        return group.drop(columns=["store", "mapped_category"]).to_dict(
-            orient="records",
-        )
-
-    top = TopCompanies(
-        all_companies=df.groupby(["store", "mapped_category"])
-        .apply(transform_group)
-        .unstack(level=1)
-        .to_dict(orient="index"),
-        parent_companies=df_parents.groupby(["store", "mapped_category"])
-        .apply(transform_group)
-        .unstack(level=1)
-        .to_dict(orient="index"),
-    )
-    return top
 
 
 def make_category_uniques(
