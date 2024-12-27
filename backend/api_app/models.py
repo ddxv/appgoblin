@@ -185,9 +185,10 @@ class PlatformCompanies:
 class TopCompaniesShort:
     """Represents top companies across different categories."""
 
-    sdk: PlatformCompanies
-    adstxt_direct: PlatformCompanies
-    adstxt_reseller: PlatformCompanies
+    sdk_ios: PlatformCompanies
+    sdk_android: PlatformCompanies
+    adstxt_direct_ios: PlatformCompanies
+    adstxt_direct_android: PlatformCompanies
 
 
 @dataclass

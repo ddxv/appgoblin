@@ -73,18 +73,18 @@
 			{#snippet card2()}
 				<WhiteCard>
 					{#snippet title()}
-						Top SDK Companies
+						Top Companies (Android SDKs)
 					{/snippet}
-					<CompaniesBarChart plotData={myData.top.sdk} /></WhiteCard
-				>
+
+					<CompaniesBarChart plotData={myData.top.sdk_android} />
+				</WhiteCard>
 			{/snippet}
 			{#snippet card3()}
 				<WhiteCard>
 					{#snippet title()}
-						Top Adstxt Companies
+						Top Companies (iOS SDKs)
 					{/snippet}
-
-					<CompaniesBarChart plotData={myData.top.adstxt_direct} />
+					<CompaniesBarChart plotData={myData.top.sdk_ios} />
 				</WhiteCard>
 			{/snippet}
 		</CompaniesLayout>

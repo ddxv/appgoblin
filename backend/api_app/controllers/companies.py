@@ -120,40 +120,31 @@ def get_company_apps(
 
 def make_top_companies(top_df: pd.DataFrame) -> TopCompaniesShort:
     """Make top companies short."""
-    top_sdk_df = top_df[top_df["tag_source"] == "sdk"].copy()
-    top_adstxt_direct_df = top_df[top_df["tag_source"] == "app_ads_direct"].copy()
-    top_adstxt_reseller_df = top_df[top_df["tag_source"] == "app_ads_reseller"].copy()
 
-    top_sdk_df["company_title"] = np.where(
-        top_sdk_df["company_name"].isna(),
-        top_sdk_df["company_domain"],
-        top_sdk_df["company_name"],
-    )
-    top_adstxt_direct_df["company_title"] = np.where(
-        top_adstxt_direct_df["company_name"].isna(),
-        top_adstxt_direct_df["company_domain"],
-        top_adstxt_direct_df["company_name"],
-    )
-    top_adstxt_reseller_df["company_title"] = np.where(
-        top_adstxt_reseller_df["company_name"].isna(),
-        top_adstxt_reseller_df["company_domain"],
-        top_adstxt_reseller_df["company_name"],
-    )
+    def process_top_df(
+        df: pd.DataFrame, tag_source: str, store_pattern: str
+    ) -> pd.DataFrame:
+        """Process dataframe for a specific tag source and store pattern."""
+        return (
+            df[
+                (df["tag_source"] == tag_source)
+                & (df["store"].str.contains(store_pattern))
+            ]
+            .copy()
+            .rename(columns={"company_name": "group", "app_count": "value"})
+            .sort_values(by=["value"], ascending=True)
+        )
 
-    top_sdk_df = top_sdk_df.rename(
-        columns={"company_title": "group", "app_count": "value"},
-    ).sort_values(by=["value"], ascending=True)
-    top_adstxt_direct_df = top_adstxt_direct_df.rename(
-        columns={"company_title": "group", "app_count": "value"},
-    ).sort_values(by=["value"], ascending=True)
-    top_adstxt_reseller_df = top_adstxt_reseller_df.rename(
-        columns={"company_title": "group", "app_count": "value"},
-    ).sort_values(by=["value"], ascending=True)
+    top_ios_sdk_df = process_top_df(top_df, "sdk", "Apple")
+    top_android_sdk_df = process_top_df(top_df, "sdk", "Google")
+    top_ios_adstxt_direct_df = process_top_df(top_df, "app_ads_direct", "Apple")
+    top_android_adstxt_direct_df = process_top_df(top_df, "app_ads_direct", "Google")
 
     top_companies_short = TopCompaniesShort(
-        sdk=top_sdk_df.to_dict(orient="records"),
-        adstxt_direct=top_adstxt_direct_df.to_dict(orient="records"),
-        adstxt_reseller=top_adstxt_reseller_df.to_dict(orient="records"),
+        sdk_ios=top_ios_sdk_df.to_dict(orient="records"),
+        sdk_android=top_android_sdk_df.to_dict(orient="records"),
+        adstxt_direct_ios=top_ios_adstxt_direct_df.to_dict(orient="records"),
+        adstxt_direct_android=top_android_adstxt_direct_df.to_dict(orient="records"),
     )
     return top_companies_short
 

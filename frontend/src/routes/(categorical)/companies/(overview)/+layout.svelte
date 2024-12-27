@@ -53,36 +53,31 @@
 			{/await}
 		</WhiteCard>
 	{/snippet}
+
 	{#snippet card2()}
 		<WhiteCard>
 			{#snippet title()}
-				Top SDK Companies
+				Top Companies (Android SDKs)
 			{/snippet}
-			{#await page.data.companiesOverview then myData}
-				{#if typeof myData == 'string'}
-					<p class="text-red-500 text-center">Failed to load company details.</p>
-				{:else}
-					<CompaniesBarChart plotData={myData.top.sdk} />
-				{/if}
+			{#await page.data.companiesOverview}
+				Loading...
+			{:then myData}
+				<CompaniesBarChart plotData={myData.top.sdk_android} />
 			{/await}
 		</WhiteCard>
 	{/snippet}
-	{#if page.data.companiesOverview.top.adstxt_direct.length > 0}
-		{#snippet card3()}
-			<WhiteCard>
-				{#snippet title()}
-					Top Adstxt Companies
-				{/snippet}
-				{#await page.data.companiesOverview then myData}
-					{#if typeof myData == 'string'}
-						<p class="text-red-500 text-center">Failed to load company details.</p>
-					{:else}
-						<CompaniesBarChart plotData={myData.top.adstxt_direct} />
-					{/if}
-				{/await}
-			</WhiteCard>
-		{/snippet}
-	{/if}
+	{#snippet card3()}
+		<WhiteCard>
+			{#snippet title()}
+				Top Companies (iOS SDKs)
+			{/snippet}
+			{#await page.data.companiesOverview}
+				Loading...
+			{:then myData}
+				<CompaniesBarChart plotData={myData.top.sdk_ios} />
+			{/await}
+		</WhiteCard>
+	{/snippet}
 </CompaniesLayout>
 
 <main>

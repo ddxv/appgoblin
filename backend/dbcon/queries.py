@@ -324,6 +324,7 @@ def get_companies_top(
             DBCON.engine,
             params={"app_category": app_category, "mylimit": limit},
         )
+    df["store"] = df["store"].replace({1: "Google Play", 2: "Apple App Store"})
     logger.info("query companies parent top return")
     return df
 
