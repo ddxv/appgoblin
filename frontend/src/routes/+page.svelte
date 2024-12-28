@@ -1,11 +1,10 @@
 <script lang="ts">
 	import AppRankTableShort from '$lib/AppRankTableShort.svelte';
-	import type { PageData } from './$types';
 
 	import CompaniesBarChart from '$lib/CompaniesBarChart.svelte';
 	import WhiteCard from '$lib/WhiteCard.svelte';
 
-	let { data }: { data: PageData } = $props();
+	let { data } = $props();
 
 	function formatNumber(num: number) {
 		return num.toLocaleString();
@@ -230,9 +229,9 @@
 							{#if myTops.adnetworks}
 								<WhiteCard>
 									{#snippet title()}
-										Top SDK Ad Networks
+										Top SDK Ad Networks (Android)
 									{/snippet}
-									<CompaniesBarChart plotData={myTops.adnetworks.sdk} />
+									<CompaniesBarChart plotData={myTops.adnetworks.sdk_android} />
 								</WhiteCard>
 							{/if}
 						{/await}
@@ -254,9 +253,9 @@
 							{#if myTops.attribution}
 								<WhiteCard>
 									{#snippet title()}
-										Top MMPs & Attribution Companies
+										Top MMPs & Attribution Companies (iOS)
 									{/snippet}
-									<CompaniesBarChart plotData={myTops.attribution.sdk} />
+									<CompaniesBarChart plotData={myTops.attribution.sdk_ios} />
 								</WhiteCard>
 							{/if}
 						{/await}
@@ -278,9 +277,9 @@
 							{#if myTops.analytics}
 								<WhiteCard>
 									{#snippet title()}
-										Top Product Analytics Companies
+										Top Product Analytics Companies (iOS)
 									{/snippet}
-									<CompaniesBarChart plotData={myTops.analytics.sdk} />
+									<CompaniesBarChart plotData={myTops.analytics.sdk_ios} />
 								</WhiteCard>
 							{/if}
 						{/await}
