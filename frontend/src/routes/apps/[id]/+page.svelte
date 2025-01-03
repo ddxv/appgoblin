@@ -397,22 +397,6 @@
 				</section>
 			{/await}
 		</div>
-		<!-- <div class="card preset-tonal p-2 md:p-8 mt-2 md:mt-4">
-			<h4 class="h4 md:h3 p-2">Additional Information</h4>
-			<div class="px-4 md:px-8">
-				{#await data.myapp then myapp}
-					<p>Free: {myapp.free}</p>
-					<p>Price: {myapp.price}</p>
-					<p>Size: {myapp.size || 'N/A'}</p>
-					<p>Minimum Android Version: {myapp.minimum_android || 'N/A'}</p>
-					<p>Developer Email: {myapp.developer_email || 'N/A'}</p>
-					<p>Content Rating: {myapp.content_rating || 'N/A'}</p>
-					<p>Ad Supported: {myapp.ad_supported || 'N/A'}</p>
-					<p>In-App Purchases: {myapp.in_app_purchases || 'N/A'}</p>
-					<p>Editor's Choice: {myapp.editors_choice || 'N/A'}</p>
-				{/await}
-			</div>
-		</div> -->
 		<div class="card preset-tonal p-2 md:p-8 mt-2 md:mt-4">
 			<h4 class="h4 md:h3 p-2">Ad SDKs, Trackers & Permissions</h4>
 			{#await data.myPackageInfo}

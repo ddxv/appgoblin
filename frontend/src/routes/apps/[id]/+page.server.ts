@@ -37,7 +37,7 @@ export const load: PageServerLoad = async ({ params, parent }) => {
 	const app = await myapp();
 
 	// Conditionally create myPackageInfo based on sdk_crawl_result
-	let myPackageInfo = async () => null;
+	let myPackageInfo = async () => 'No SDK Scan Result';
 	if (app.sdk_crawl_result > 0) {
 		myPackageInfo = async () => {
 			const resp = await fetch(`http://localhost:8000/api/apps/${id}/packageinfo`);
@@ -45,7 +45,7 @@ export const load: PageServerLoad = async ({ params, parent }) => {
 		};
 	}
 
-	let myAdsTxt = async () => null;
+	let myAdsTxt = async () => 'No AdsTxt Result';
 	if (app.adstxt_crawl_result === 1) {
 		myAdsTxt = async () => {
 			const resp = await fetch(`http://localhost:8000/api/apps/${id}/adstxt`);
