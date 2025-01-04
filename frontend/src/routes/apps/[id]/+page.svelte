@@ -16,6 +16,16 @@
 
 	let { data }: Props = $props();
 	let sum = (arr: number[]) => arr.reduce((acc, curr) => acc + curr, 0);
+
+	function getCategoryName(category: string) {
+		if (category) {
+			return (
+				data?.appCats?.categories?.find((cat: { id: string }) => cat.id == category)?.name ||
+				category
+			);
+		}
+		return '';
+	}
 </script>
 
 <svelte:head>
@@ -25,11 +35,15 @@
 			<title>{myapp.name} Android Trends | {myapp.developer_name} | AppGoblin App Data</title>
 			<meta
 				name="description"
-				content="Explore {myapp.name} Android app's analytics and market trends on Google Play with AppGoblin. Developed by {myapp.developer_name} (ID: {myapp.developer_id}). Dive into detailed app rankings and download statistics to inform your Android app strategy and discover top-performing apps."
+				content="Explore {myapp.name} Android app's analytics and market trends on Google Play with AppGoblin. Developed by {myapp.developer_name} (ID: {myapp.developer_id}) in {getCategoryName(
+					myapp.category
+				)} category. Check out detailed app statistics, rankings, and more."
 			/>
 			<meta
 				name="keywords"
-				content="{myapp.name}, {myapp.developer_name}, {myapp.developer_id}, {myapp.category} analytics, ads, market data, Android app rankings, app reviews, download statistics, Google Play data, app comparison, mobile app insights, Android"
+				content="{myapp.name}, {myapp.developer_name}, {myapp.developer_id}, {getCategoryName(
+					myapp.category
+				)}, analytics, ads, market data, Android app rankings, app reviews, download statistics, Google Play data, app comparison, mobile app insights, Android"
 			/>
 			<meta
 				property="og:title"
@@ -109,7 +123,7 @@
 				<div class="p-2 md:py-2">
 					<a href="/categories/{myapp.category}">
 						<div class="btn preset-tonal hover:preset-tonal-primary">
-							<span>Category: {myapp.category}</span>
+							<span>Category: {getCategoryName(myapp.category)}</span>
 						</div>
 					</a>
 				</div>
@@ -436,6 +450,7 @@
 					{/if}
 				{/if}
 			{/await}
+			<!-- <button class="btn preset-tonal">Request New SDK Scan</button> -->
 		</div>
 	</div>
 </section>

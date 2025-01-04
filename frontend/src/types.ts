@@ -319,6 +319,7 @@ export interface CompanyCategoryDetails {
 export interface AppFullDetails {
 	myapp: AppFullDetail;
 	companyTypes: CompanyTypes;
+	appCats: CatData;
 	status?: number;
 	error?: string;
 	myranks: Promise<{ latest: AppRankDetail[]; history: AppRankDetail[] }>;
