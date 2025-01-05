@@ -76,6 +76,8 @@ QUERY_SDK_PATTERN_COMPANIES = load_sql_file("query_sdk_pattern_companies.sql")
 QUERY_SITEMAP_APPS = load_sql_file("query_sitemap_apps.sql")
 QUERY_SITEMAP_COMPANIES = load_sql_file("query_sitemap_companies.sql")
 
+INSERT_SDK_SCAN_REQUEST = load_sql_file("insert_sdk_scan_request.sql")
+
 
 def get_recent_apps(collection: str, limit: int = 20) -> pd.DataFrame:
     """Get app collections by time."""
@@ -587,6 +589,17 @@ def get_sitemap_apps() -> pd.DataFrame:
     return df
 
 
+def insert_sdk_scan_request(store_id: str) -> None:
+    """Insert a new sdk scan request."""
+    logger.info(f"Inserting new sdk scan request: {store_id}")
+
+    with DBCONWRITE.engine.connect() as connection:
+        connection.execute(INSERT_SDK_SCAN_REQUEST, {"store_id": store_id})
+        connection.commit()
+
+
 logger.info("set db engine")
 DBCON = get_db_connection("madrone")
 DBCON.set_engine()
+DBCONWRITE = get_db_connection("madrone-write")
+DBCONWRITE.set_engine()

@@ -1,5 +1,24 @@
 import type { PageServerLoad } from './$types.js';
 
+import type { Actions } from './$types';
+
+export const actions = {
+	requestSDKScan: async (event) => {
+		const formData = await event.request.formData();
+		const appId = formData.get('appId');
+		console.log('requestSDKScan', appId);
+
+		const response = await fetch(`http://localhost:8000/api/apps/${appId}/requestSDKScan`, {
+			method: 'POST'
+		});
+		if (response.status === 200) {
+			return { success: true };
+		} else {
+			return { success: false };
+		}
+	}
+} satisfies Actions;
+
 function checkStatus(resp: Response, name: string) {
 	if (resp.status === 200) {
 		return resp.json();

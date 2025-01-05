@@ -1,6 +1,7 @@
 <script lang="ts">
 	import ExternalLinkSvg from '$lib/svg/ExternalLinkSVG.svelte';
 	import ManifestItemList from '$lib/ManifestItemList.svelte';
+	import RequestSDKScanButton from '$lib/RequestSDKScanButton.svelte';
 	import type { AppFullDetails } from '../../../types';
 	import AppDetails from '$lib/RatingInstallsLarge.svelte';
 	import AppPlot from '$lib/AppPlot.svelte';
@@ -244,24 +245,29 @@
 							SDK Tracking Status
 						{/snippet}
 						<div class="space-y-2 p-2">
-							<div class="flex items-center gap-2">
-								<span class="font-medium">Successful Last Crawled:</span>
-								<span>{myapp.sdk_successful_last_crawled}</span>
-							</div>
-							<div class="flex items-center gap-2">
-								<span class="font-medium">Last Crawled:</span>
-								<span>{myapp.sdk_last_crawled}</span>
-							</div>
-							<div class="flex items-center gap-2">
-								<span class="font-medium">Last Crawl Status:</span>
-								<span
-									class={myapp.sdk_crawl_result == 1
-										? 'text-success-900-100'
-										: 'text-error-900-100'}
-								>
-									{myapp.sdk_crawl_result == 1 ? 'Success' : 'Failed'}
-								</span>
-							</div>
+							{#if myapp.sdk_last_crawled}
+								<div class="flex items-center gap-2">
+									<span class="font-medium">Successful Last Crawled:</span>
+									<span>{myapp.sdk_successful_last_crawled}</span>
+								</div>
+								<div class="flex items-center gap-2">
+									<span class="font-medium">Last Crawled:</span>
+									<span>{myapp.sdk_last_crawled}</span>
+								</div>
+								<div class="flex items-center gap-2">
+									<span class="font-medium">Last Crawl Status:</span>
+									<span
+										class={myapp.sdk_crawl_result == 1
+											? 'text-success-900-100'
+											: 'text-error-900-100'}
+									>
+										{myapp.sdk_crawl_result == 1 ? 'Success' : 'Failed'}
+									</span>
+								</div>
+							{:else}
+								App not yet analyzed for SDKs.
+								<RequestSDKScanButton />
+							{/if}
 						</div>
 					</WhiteCard>
 					<div class="ml-auto">
@@ -450,7 +456,7 @@
 					{/if}
 				{/if}
 			{/await}
-			<!-- <button class="btn preset-tonal">Request New SDK Scan</button> -->
+			<RequestSDKScanButton />
 		</div>
 	</div>
 </section>

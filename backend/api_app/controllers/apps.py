@@ -13,7 +13,7 @@ import numpy as np
 import pandas as pd
 from adscrawler import connection as write_conn
 from adscrawler.app_stores import apple, google, scrape_stores
-from litestar import Controller, Response, get
+from litestar import Controller, Response, get, post
 from litestar.background_tasks import BackgroundTask
 from litestar.exceptions import NotFoundException
 
@@ -38,6 +38,7 @@ from dbcon.queries import (
     get_single_apps_adstxt,
     get_single_developer,
     get_total_counts,
+    insert_sdk_scan_request,
     search_apps,
 )
 
@@ -567,6 +568,13 @@ class AppController(Controller):
                 background=BackgroundTask(process_search_results, full_results),
             )
         return app_group
+
+    @post(path="/{store_id:str}/requestSDKScan")
+    async def request_sdk_scan(self: Self, store_id: str) -> Response:
+        """Request a new SDK scan for an app."""
+        logger.info(f"Requesting SDK scan for {store_id}")
+        insert_sdk_scan_request(store_id)
+        return
 
 
 COLLECTIONS = {
