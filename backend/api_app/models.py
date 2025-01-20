@@ -36,7 +36,14 @@ class AdsTxtEntries:
 
 
 @dataclass
-class PackageDetails:
+class AppSDKsOverview:
+    """Lists of Package permissions, trackers etc from Manifest."""
+
+    sdk_categories: dict
+
+
+@dataclass
+class SDKsDetails:
     """Lists of Package permissions, trackers etc from Manifest."""
 
     permissions: list[str]

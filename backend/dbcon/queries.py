@@ -38,7 +38,8 @@ QUERY_SINGLE_DEVELOPER = load_sql_file("query_single_developer.sql")
 QUERY_SINGLE_APP_ADSTXT = load_sql_file("query_single_app_adstxt.sql")
 QUERY_APP_HISTORY = load_sql_file("query_app_history.sql")
 QUERY_SINGLE_APP = load_sql_file("query_single_app.sql")
-QUERY_APP_PACKAGE_DETAILS = load_sql_file("query_app_package_details.sql")
+QUERY_APP_SDK_DETAILS = load_sql_file("query_app_sdk_details.sql")
+QUERY_APP_SDK_OVERVIEW = load_sql_file("query_app_sdk_overview.sql")
 QUERY_TOTAL_COUNTS = load_sql_file("query_total_counts.sql")
 QUERY_STORE_COLLECTION_CATEGORY_MAP = load_sql_file(
     "query_store_collection_category_map.sql",
@@ -275,11 +276,22 @@ def get_single_app(store_id: str) -> pd.DataFrame:
     return df
 
 
-def get_app_package_details(store_id: str) -> pd.DataFrame:
+def get_app_sdk_details(store_id: str) -> pd.DataFrame:
     """Get basic app details for a single store_id."""
-    logger.info(f"Query for single app_id={store_id}")
+    logger.info(f"Query SDKs app_id={store_id}")
     df = pd.read_sql(
-        QUERY_APP_PACKAGE_DETAILS,
+        QUERY_APP_SDK_DETAILS,
+        DBCON.engine,
+        params={"store_id": store_id},
+    )
+    return df
+
+
+def get_app_sdk_overview(store_id: str) -> pd.DataFrame:
+    """Get SDK overview for a single store_id."""
+    logger.info(f"Query SDKs app_id={store_id}")
+    df = pd.read_sql(
+        QUERY_APP_SDK_OVERVIEW,
         DBCON.engine,
         params={"store_id": store_id},
     )

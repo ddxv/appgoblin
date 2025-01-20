@@ -23,15 +23,17 @@ from api_app.models import (
     AppGroup,
     AppHistory,
     AppRank,
+    AppSDKsOverview,
     Category,
     Collection,
     DeveloperApps,
-    PackageDetails,
+    SDKsDetails,
 )
 from config import get_logger
 from dbcon.queries import (
     get_app_history,
-    get_app_package_details,
+    get_app_sdk_details,
+    get_app_sdk_overview,
     get_ranks_for_app,
     get_recent_apps,
     get_single_app,
@@ -310,9 +312,9 @@ class AppController(Controller):
         logger.info(f"{self.path}/{store_id}/history took {duration}ms")
         return hist_dict
 
-    @get(path="/{store_id:str}/packageinfo", cache=3600)
-    async def get_package_info(self: Self, store_id: str) -> PackageDetails:
-        """Handle GET request for a specific app.
+    @get(path="/{store_id:str}/sdksoverview", cache=3600)
+    async def get_sdk_overview(self: Self, store_id: str) -> AppSDKsOverview:
+        """Handle GET request for overview of SDKs for a specific app.
 
          store_id (str): The id of the app to retrieve.
 
@@ -323,10 +325,39 @@ class AppController(Controller):
         """
         start = time.perf_counter() * 1000
 
-        df = get_app_package_details(store_id)
+        df = get_app_sdk_overview(store_id)
+
+        cats = df.loc[df["category_slug"].notna(), "category_slug"].unique().tolist()
+        company_cats = {}
+        for cat in cats:
+            company_cats[cat] = df[df["category_slug"] == cat][
+                ["company_name", "company_domain"]
+            ].to_dict(orient="records")
+
+        sdk_overview_dict = AppSDKsOverview(
+            sdk_categories=company_cats,
+        )
+        duration = round((time.perf_counter() * 1000 - start), 2)
+        logger.info(f"{self.path}/{store_id}/sdksoverview took {duration}ms")
+        return sdk_overview_dict
+
+    @get(path="/{store_id:str}/sdks", cache=3600)
+    async def get_sdk_details(self: Self, store_id: str) -> SDKsDetails:
+        """Handle GET request for all SDKs for a specific app.
+
+         store_id (str): The id of the app to retrieve.
+
+        Returns
+        -------
+            json
+
+        """
+        start = time.perf_counter() * 1000
+
+        df = get_app_sdk_details(store_id)
 
         if df.empty:
-            msg = f"Package info for store ID not found: {store_id!r}"
+            msg = f"SDK info for store ID not found: {store_id!r}"
             raise NotFoundException(
                 msg,
                 status_code=404,
@@ -365,7 +396,7 @@ class AppController(Controller):
             x.replace("android.permission.", "") for x in permissions_list
         ]
 
-        trackers_dict = PackageDetails(
+        trackers_dict = SDKsDetails(
             company_categories=company_cats,
             permissions=permissions_list,
             leftovers=left_overs_df[["xml_path", "value_name"]]
@@ -374,7 +405,7 @@ class AppController(Controller):
             .to_dict(),
         )
         duration = round((time.perf_counter() * 1000 - start), 2)
-        logger.info(f"{self.path}/{store_id}/packageinfo took {duration}ms")
+        logger.info(f"{self.path}/{store_id}/sdks took {duration}ms")
         return trackers_dict
 
     @get(path="/{store_id:str}/ranks", cache=3600)
