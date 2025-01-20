@@ -71,7 +71,7 @@ class PostgresCon:
             logger.info(f"Adscrawler connecting to PostgreSQL {self.db_name}")
             self.engine = sqlalchemy.create_engine(
                 db_uri,
-                connect_args={"connect_timeout": 10, "application_name": "adscrawler"},
+                connect_args={"connect_timeout": 30, "application_name": "adscrawler"},
             )
         except Exception:
             logger.exception(
