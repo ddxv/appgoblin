@@ -19,11 +19,10 @@ ORDER BY
    (
         coalesce(
             installs,
-            0
-        )
-    + coalesce(
+coalesce(
             rating_count * 100,
             0
+        )
         )
     ) DESC NULLS LAST
 LIMIT :mylimit;

@@ -40,10 +40,10 @@
 			{#if companiesResults.length > 0}
 				<CompaniesOverviewTable entries_table={companiesResults} />
 			{:else}
-				<h3 class="h3 p-4">
+				<p class="p-4">
 					No adtech/business/ development tool companies found, if you expected to see something
 					please let us know by sending a note on Discord or GitHub and we can add it.
-				</h3>
+				</p>
 			{/if}
 		{:else}
 			<p>Search failed please try again ...</p>
@@ -52,6 +52,8 @@
 		<p>Search failed please try again ... {error.message}</p>
 	{/await}
 </div>
+
+<hr />
 
 <div class="p-4">
 	{#await data.results}
