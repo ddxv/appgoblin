@@ -27,6 +27,7 @@ from api_app.models import (
     Category,
     Collection,
     DeveloperApps,
+    PlatformDeveloper,
     SDKsDetails,
 )
 from config import get_logger
@@ -467,18 +468,50 @@ class AppController(Controller):
         apps_df = get_single_developer(developer_id)
 
         if apps_df.empty:
-            msg = f"Store ID not found: {developer_id!r}"
+            msg = f"Developer ID not found: {developer_id!r}"
             raise NotFoundException(
                 msg,
                 status_code=404,
             )
-        developer_name = apps_df.to_dict(orient="records")[0]["developer_name"]
-        apps_dict = apps_df.to_dict(orient="records")
+
+        developer_url = apps_df[apps_df["developer_url"].notna()].to_dict(
+            orient="records"
+        )[0]["developer_url"]
+
+        ios_df = apps_df[apps_df["store"] == "Apple App Store"]
+        google_df = apps_df[apps_df["store"] == "Google Play"]
+        if not google_df.empty:
+            google_developer_name = google_df.to_dict(orient="records")[0][
+                "developer_name"
+            ]
+            google_developer_id = google_df.to_dict(orient="records")[0]["developer_id"]
+        else:
+            google_developer_name = "Google developer not found"
+            google_developer_id = None
+        if not ios_df.empty:
+            apple_developer_name = ios_df.to_dict(orient="records")[0]["developer_name"]
+            apple_developer_id = ios_df.to_dict(orient="records")[0]["developer_id"]
+        else:
+            apple_developer_name = "Apple developer not found"
+            apple_developer_id = None
+        developer_name = google_developer_name or apple_developer_name
+        google_apps_dict = google_df.to_dict(orient="records")
+        apple_apps_dict = ios_df.to_dict(orient="records")
 
         developer_apps = DeveloperApps(
-            developer_id=developer_id,
+            google=PlatformDeveloper(
+                developer_id=google_developer_id,
+                developer_name=google_developer_name,
+                developer_url=developer_url,
+                apps=AppGroup(title="Google", apps=google_apps_dict),
+            ),
+            apple=PlatformDeveloper(
+                developer_id=apple_developer_id,
+                developer_name=apple_developer_name,
+                developer_url=developer_url,
+                apps=AppGroup(title="Apple", apps=apple_apps_dict),
+            ),
             title=developer_name,
-            apps=apps_dict,
         )
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(f"{self.path}/developers/{developer_id} took {duration}ms")

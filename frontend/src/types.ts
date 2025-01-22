@@ -32,8 +32,20 @@ export interface CategoryResponse {
 	error?: string;
 }
 
+export interface PlatformDeveloper {
+	title: string;
+	developer_id: string;
+	developer_name: string;
+	developer_url: string;
+	apps: AppGroup;
+}
+
 export interface DeveloperResponse {
-	results: AppGroup;
+	devs: {
+		title: string;
+		google: PlatformDeveloper;
+		apple: PlatformDeveloper;
+	};
 	status?: number;
 	error?: string;
 }

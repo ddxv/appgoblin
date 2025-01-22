@@ -69,15 +69,25 @@ class Category:
 
 
 @dataclass
+class PlatformDeveloper:
+    """Developer details for a specific platform."""
+
+    developer_id: str
+    developer_name: str
+    developer_url: str
+    apps: AppGroup
+
+
+@dataclass
 class DeveloperApps:
     """A developer's list of apps.
 
     Note: This is platform specific.
     """
 
-    developer_id: str
+    google: PlatformDeveloper
+    apple: PlatformDeveloper
     title: str
-    apps: list[AppDetail]
 
 
 @dataclass

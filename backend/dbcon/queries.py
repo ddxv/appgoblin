@@ -421,7 +421,18 @@ def get_tag_source_totals() -> pd.DataFrame:
 
 
 def clean_app_df(df: pd.DataFrame) -> pd.DataFrame:
-    """Apply generic cleaning for a DF with app data from store_apps table."""
+    """Apply generic cleaning for a DF with app data from store_apps table.
+
+    Required columns:
+    - store
+    - store_id
+    - developer_id
+    - installs
+    - review_count
+    - rating_count
+    - rating
+
+    """
     df["store"] = df["store"].replace({1: "Google Play", 2: "Apple App Store"})
     string_nums = ["installs", "review_count", "rating_count"]
     for col in string_nums:

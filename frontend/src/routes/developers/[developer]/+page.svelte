@@ -11,7 +11,7 @@
 
 <svelte:head>
 	<link rel="canonical" href="https://appgoblin.info/developers/{page.params.developer}" />
-	{#await data.results then dev}
+	{#await data.devs then dev}
 		<title>{dev.title} Android Trends | {page.params.developer} | AppGoblin Developer Data</title>
 		<meta
 			name="description"
@@ -52,7 +52,7 @@
 </svelte:head>
 
 <div>
-	{#await data.results}
+	{#await data.devs}
 		<div>
 			<span>Loading...</span>
 		</div>
@@ -60,9 +60,32 @@
 		{#if typeof devs == 'string'}
 			Failed to load developer
 		{:else}
-			<h1 class="h1 p-2">Apps: {devs.title}</h1>
-			<AppsCard apps={devs} />
-			<p class="p-2"></p>
+			<h1 class="h1 p-2">{devs.title}</h1>
+			<h2 class="h2 p-2">Google Apps: {devs.google.developer_name}</h2>
+			<p class="p-2">
+				Matched Developer ID: <a href={`/developers/${devs.google.developer_id}`}
+					>{devs.google.developer_id}</a
+				>
+				<br />
+				Matched Developer URL:
+				<a href={devs.google.developer_url} target="_blank" rel="noopener noreferrer">
+					{devs.google.developer_url}
+				</a>
+			</p>
+			<AppsCard apps={devs.google.apps} />
+			<hr />
+			<h2 class="h2 p-2">Apple Apps: {devs.apple.developer_name}</h2>
+			<p class="p-2">
+				Matched Developer ID: <a href={`/developers/${devs.apple.developer_id}`}
+					>{devs.apple.developer_id}</a
+				>
+				<br />
+				Matched Developer URL:
+				<a href={devs.apple.developer_url} target="_blank" rel="noopener noreferrer">
+					{devs.apple.developer_url}
+				</a>
+			</p>
+			<AppsCard apps={devs.apple.apps} />
 		{/if}
 	{:catch error}
 		<p style="color: red">{error.message}</p>

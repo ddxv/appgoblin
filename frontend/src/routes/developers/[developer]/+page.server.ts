@@ -9,7 +9,7 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 	console.log(`load started developer=${developerValue}`);
 	try {
 		return {
-			results: res
+			devs: res
 				.then((resp) => {
 					if (resp.status === 200) {
 						return resp.json();
@@ -32,7 +32,7 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 	} catch (error) {
 		console.error('Failed to load data:', error);
 		return {
-			results: {},
+			devs: {},
 			status: 500,
 			error: 'Failed to load trending apps'
 		};
