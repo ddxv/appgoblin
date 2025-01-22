@@ -106,6 +106,17 @@
 			{:then myapp}
 				<AppTitle {myapp} />
 
+				{#if myapp.developer_id}
+					<div class="block md:hidden"></div>
+					<div class="p-2 md:py-2">
+						<a href="/developers/{myapp.developer_id}">
+							<div class="btn preset-tonal hover:preset-tonal-primary">
+								<span>Developer: {myapp.developer_name || myapp.developer_id}</span>
+							</div>
+						</a>
+					</div>
+				{/if}
+
 				<div class="block md:hidden"></div>
 				<div class="p-2 md:py-2">
 					<a href="/categories/{myapp.category}">
