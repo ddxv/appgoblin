@@ -9,13 +9,6 @@
 </script>
 
 <h4 class="h4 md:h3 p-2">Ad SDKs, Trackers & Permissions</h4>
-<div class="p-2 md:py-2">
-	<a href="/apps/{page.params.id}/sdks">
-		<div class="btn preset-tonal hover:preset-tonal-primary">
-			<span> Full list of individual SDK parts detected.</span>
-		</div>
-	</a>
-</div>
 
 {#await myPackageInfo}
 	Loading permissions and tracker data...
@@ -24,6 +17,14 @@
 		<p>Permissions, SDKs and trackers info not yet available for this app.</p>
 		<RequestSDKScanButton />
 	{:else if packageInfo.sdk_categories && Object.keys(packageInfo.sdk_categories).length > 0}
+		<div class="p-2 md:py-2">
+			<a href="/apps/{page.params.id}/sdks">
+				<div class="btn preset-tonal hover:preset-tonal-primary">
+					<span> Full list of individual SDK parts detected.</span>
+				</div>
+			</a>
+		</div>
+
 		{#await companyTypes}
 			Loading company types...
 		{:then myCompanyTypes}
