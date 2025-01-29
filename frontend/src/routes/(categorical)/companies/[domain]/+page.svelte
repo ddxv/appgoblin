@@ -42,7 +42,9 @@
 						{#await data.companyDetails}
 							<div><span>Loading...</span></div>
 						{:then detailsData}
-							<AdsTxtTotalsBox myTotals={detailsData.adstxt_ad_domain_overview} />
+							{#if detailsData && detailsData.adstxt_ad_domain_overview}
+								<AdsTxtTotalsBox myTotals={detailsData.adstxt_ad_domain_overview} />
+							{/if}
 						{/await}
 					</WhiteCard>
 				{/if}
@@ -115,18 +117,21 @@
 {#await data.companyDetails}
 	<div><span>Loading...</span></div>
 {:then detailsData}
-	<div class="card preset-tonal p-2 md:p-8 mt-2 md:mt-4">
-		<div class="grid md:grid-cols-2 gap-4">
-			<div>
-				<h2 class="text-lg font-semibold mb-4">ANDROID DIRECT PUBLISHER IDS</h2>
-				<AdsTxtPubIDsTable entries_table={detailsData.adstxt_publishers_overview.google.direct} />
-			</div>
-			<div>
-				<h2 class="text-lg font-semibold mb-4">IOS DIRECT PUBLISHER IDS</h2>
-				<AdsTxtPubIDsTable entries_table={detailsData.adstxt_publishers_overview.apple.direct} />
+	{#if detailsData && detailsData.adstxt_publishers_overview}
+		<div class="card preset-tonal p-2 md:p-8 mt-2 md:mt-4">
+			<div class="grid md:grid-cols-2 gap-4">
+				<div>
+					<h2 class="text-lg font-semibold mb-4">ANDROID DIRECT PUBLISHER IDS</h2>
+					<AdsTxtPubIDsTable entries_table={detailsData.adstxt_publishers_overview.google.direct} />
+				</div>
+				<div>
+					<h2 class="text-lg font-semibold mb-4">IOS DIRECT PUBLISHER IDS</h2>
+					<AdsTxtPubIDsTable entries_table={detailsData.adstxt_publishers_overview.apple.direct} />
+				</div>
 			</div>
 		</div>
-	</div>
+	{/if}
+
 	{#await data.companyTopApps}
 		<div><span>Loading...</span></div>
 	{:then tableData}

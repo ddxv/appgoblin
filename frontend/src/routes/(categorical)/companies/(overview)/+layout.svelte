@@ -28,7 +28,7 @@
 <div class="flex items-center mb-2">
 	<h1 class="h1 text-3xl font-bold text-primary-900-100">
 		Top {#await currentType then currentType}
-			<span class="text-primary-700-300">{currentType ? currentType.name : ''}</span>
+			<span class="text-primary-700-300">{currentType ? currentType.name : 'X'}</span>
 		{/await}
 		companies for
 		{#await currentCategoryName then currentCategoryName}
