@@ -2,7 +2,7 @@
 	import type { CompanyTypes } from '../../../../../types';
 	import { page } from '$app/state';
 
-	let { data } = $props();
+	let { data, children } = $props();
 
 	let companyTypes = page.data.companyTypes;
 
@@ -54,3 +54,7 @@
 	<meta name="twitter:card" content="summary_large_image" />
 	<meta name="twitter:image" content="https://appgoblin.info/goblin_purple_hat_250.png" />
 </svelte:head>
+
+<main>
+	{@render children()}
+</main>
