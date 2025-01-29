@@ -34,6 +34,8 @@ from dbcon.queries import (
     get_adtech_category_type,
     get_companies_parent_overview,
     get_companies_top,
+    get_company_adstxt_ad_domain_overview,
+    get_company_adstxt_publishers_overview,
     get_company_overview,
     get_company_parent_categories,
     get_company_sdks,
@@ -528,9 +530,24 @@ class CompaniesController(Controller):
 
         """
         start = time.perf_counter() * 1000
+
         df = get_company_overview(company_domain=company_domain)
 
+        if df["tag_source"].str.contains("app_ads").any():
+            ad_domain_overview = get_company_adstxt_ad_domain_overview(
+                company_domain
+            ).to_dict(orient="records")
+            publishers_overview = get_company_adstxt_publishers_overview(
+                company_domain
+            ).to_dict(orient="records")
+        else:
+            ad_domain_overview = None
+            publishers_overview = None
+
         overview = make_company_category_sums(df=df)
+
+        overview.adstxt_ad_domain_overview = ad_domain_overview
+        overview.adstxt_publishers_overview = publishers_overview
 
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(f"GET /api/companies/{company_domain} took {duration}ms")

@@ -73,6 +73,13 @@ QUERY_SDKS = load_sql_file("query_sdks.sql")
 QUERY_SDK_PATTERN = load_sql_file("query_sdk_pattern.sql")
 QUERY_SDK_PATTERN_COMPANIES = load_sql_file("query_sdk_pattern_companies.sql")
 
+QUERY_COMPANY_ADSTXT_AD_DOMAIN_OVERVIEW = load_sql_file(
+    "query_company_adstxt_ad_domain_overview.sql"
+)
+QUERY_COMPANY_ADSTXT_PUBLISHERS_OVERVIEW = load_sql_file(
+    "query_company_adstxt_publishers_overview.sql"
+)
+
 # Used for generating sitemaps
 QUERY_SITEMAP_APPS = load_sql_file("query_sitemap_apps.sql")
 QUERY_SITEMAP_COMPANIES = load_sql_file("query_sitemap_companies.sql")
@@ -359,6 +366,28 @@ def get_company_overview(company_domain: str) -> pd.DataFrame:
         )
     df["store"] = df["store"].replace({1: "Google Play", 2: "Apple App Store"})
     df.loc[df["app_category"].isna(), "app_category"] = "None"
+    return df
+
+
+def get_company_adstxt_publishers_overview(
+    ad_domain_url: str, limit: int = 5
+) -> pd.DataFrame:
+    """Get ad domain overview."""
+    df = pd.read_sql(
+        QUERY_COMPANY_ADSTXT_PUBLISHERS_OVERVIEW,
+        DBCON.engine,
+        params={"ad_domain_url": ad_domain_url, "pubrank_limit": limit},
+    )
+    return df
+
+
+def get_company_adstxt_ad_domain_overview(ad_domain_url: str) -> pd.DataFrame:
+    """Get ad domain overview."""
+    df = pd.read_sql(
+        QUERY_COMPANY_ADSTXT_AD_DOMAIN_OVERVIEW,
+        DBCON.engine,
+        params={"ad_domain_url": ad_domain_url},
+    )
     return df
 
 

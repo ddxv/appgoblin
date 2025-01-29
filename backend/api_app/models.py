@@ -277,6 +277,8 @@ class CompanyCategoryOverview:
     """Contains a dictionary of categories, each with their associated statistics."""
 
     categories: dict[str, CategoryCompanyStats] = field(default_factory=dict)
+    adstxt_ad_domain_overview: dict | None = None
+    adstxt_publishers_overview: dict | None = None
 
     def add_category(self, category: str) -> None:
         """Add a category to the overview."""
