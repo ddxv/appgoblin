@@ -1,8 +1,10 @@
 <script lang="ts">
 	import type { CompanyFullDetails } from '../../../../types';
 
-	import CompanyCategoryPie from '$lib/CompanyCategoryPie.svelte';
+	import AdsTxtPubIDsTable from '$lib/AdsTxtPubIDsTable.svelte';
 
+	import CompanyCategoryPie from '$lib/CompanyCategoryPie.svelte';
+	import AdsTxtTotalsBox from '$lib/AdsTxtTotalsBox.svelte';
 	import CompanyTableGrid from '$lib/CompanyTableGrid.svelte';
 	import CompanyTree from '$lib/CompanyTree.svelte';
 	import CompanySDKs from '$lib/CompanySDKs.svelte';
@@ -37,6 +39,11 @@
 								>{formatNumber(myData.map((d) => d.value).reduce((a, b) => a + b, 0))}</span
 							>
 						</p>
+						{#await data.companyDetails}
+							<div><span>Loading...</span></div>
+						{:then detailsData}
+							<AdsTxtTotalsBox myTotals={detailsData.adstxt_ad_domain_overview} />
+						{/await}
 					</WhiteCard>
 				{/if}
 			{:catch error}
@@ -108,6 +115,18 @@
 {#await data.companyDetails}
 	<div><span>Loading...</span></div>
 {:then detailsData}
+	<div class="card preset-tonal p-2 md:p-8 mt-2 md:mt-4">
+		<div class="grid md:grid-cols-2 gap-4">
+			<div>
+				<h2 class="text-lg font-semibold mb-4">ANDROID DIRECT PUBLISHER IDS</h2>
+				<AdsTxtPubIDsTable entries_table={detailsData.adstxt_publishers_overview.google.direct} />
+			</div>
+			<div>
+				<h2 class="text-lg font-semibold mb-4">IOS DIRECT PUBLISHER IDS</h2>
+				<AdsTxtPubIDsTable entries_table={detailsData.adstxt_publishers_overview.apple.direct} />
+			</div>
+		</div>
+	</div>
 	{#await data.companyTopApps}
 		<div><span>Loading...</span></div>
 	{:then tableData}

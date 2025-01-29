@@ -378,6 +378,8 @@ def get_company_adstxt_publishers_overview(
         DBCON.engine,
         params={"ad_domain_url": ad_domain_url, "pubrank_limit": limit},
     )
+    df["store"] = df["store"].replace({1: "google", 2: "apple"})
+    df["relationship"] = df["relationship"].str.lower()
     return df
 
 
@@ -388,6 +390,8 @@ def get_company_adstxt_ad_domain_overview(ad_domain_url: str) -> pd.DataFrame:
         DBCON.engine,
         params={"ad_domain_url": ad_domain_url},
     )
+    df["store"] = df["store"].replace({1: "google", 2: "apple"})
+    df["relationship"] = df["relationship"].str.lower()
     return df
 
 

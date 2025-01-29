@@ -299,7 +299,37 @@ export interface CompanyPatternsDict {
 	};
 }
 
+export interface AdsTxtAdDomainDetails {
+	publisher_id_count: number;
+	develoepr_count: number;
+	app_count: number;
+}
+
+export interface AdsTxtAdDomainOverview {
+	google: {
+		direct: AdsTxtAdDomainDetails;
+		reseller: AdsTxtAdDomainDetails;
+	};
+	apple: {
+		direct: AdsTxtAdDomainDetails;
+		reseller: AdsTxtAdDomainDetails;
+	};
+}
+
+export interface AdsTxtPublishersOverview {
+	google: {
+		direct: AdsTxtEntries[];
+		reseller: AdsTxtEntries[];
+	};
+	apple: {
+		direct: AdsTxtEntries[];
+		reseller: AdsTxtEntries[];
+	};
+}
+
 export interface CompanyCategoryOverview {
+	adstxt_ad_domain_overview: AdsTxtAdDomainOverview;
+	adstxt_publishers_overview: AdsTxtPublishersOverview;
 	categories: {
 		[key: string]: CategoryAppStats;
 	};
