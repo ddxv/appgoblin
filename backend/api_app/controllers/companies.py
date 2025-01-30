@@ -35,6 +35,7 @@ from dbcon.queries import (
     get_companies_parent_overview,
     get_companies_top,
     get_company_adstxt_ad_domain_overview,
+    get_company_adstxt_publisher_id,
     get_company_adstxt_publishers_overview,
     get_company_overview,
     get_company_parent_categories,
@@ -865,3 +866,41 @@ class CompaniesController(Controller):
         logger.info(f"{self.path}/{search_term} took {duration}ms")
 
         return overview_df.to_dict(orient="records")
+
+    @get(
+        path="/companies/{company_domain:str}/adstxt/publisher/{publisher_id:str}",
+        cache=86400,
+    )
+    async def adstxt_company_overview(
+        self: Self,
+        company_domain: str,
+        publisher_id: str,
+    ) -> dict:
+        """Handle GET request for a company adstxt publisher id.
+
+        Args:
+        ----
+        company_domain : str
+            The domain of the company to retrieve apps for.
+        publisher_id: str
+            The publisher id to retrieve apps for.
+
+        Returns:
+        -------
+        ListOfAppsRelatedToPublisher
+            A list of apps related to the publisher.
+
+        """
+        start = time.perf_counter() * 1000
+
+        df = get_company_adstxt_publisher_id(
+            ad_domain_url=company_domain, publisher_id=publisher_id
+        )
+
+        overview = df.to_dict(orient="records")
+
+        duration = round((time.perf_counter() * 1000 - start), 2)
+        logger.info(
+            f"GET /api/companies/{company_domain}/adstxt/publisher/{publisher_id} took {duration}ms"
+        )
+        return overview
