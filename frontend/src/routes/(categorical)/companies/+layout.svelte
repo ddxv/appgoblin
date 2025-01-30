@@ -37,7 +37,7 @@
 {#await data.companyTypes}
 	Loading company types ...
 {:then myTabs}
-	{#if myTabs && myTabs.types.length > 0}
+	{#if !page.url.pathname.includes('adstxt') && myTabs && myTabs.types.length > 0}
 		<CompanyTypesTabs {myTabs} />
 	{/if}
 {/await}

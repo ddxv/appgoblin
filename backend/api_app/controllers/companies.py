@@ -904,8 +904,6 @@ class CompaniesController(Controller):
             ad_domain_url=company_domain, publisher_id=publisher_id, app_category=None
         )
 
-        df_groupby = df.set_index(["store", "relationship"]).groupby(level=[0, 1])
-
         # Define default structure once
         def default_structure() -> dict:
             return {
@@ -915,7 +913,10 @@ class CompaniesController(Controller):
 
         # Process apps with default structure
         apps_raw = (
-            df_groupby.apply(lambda x: x.to_dict(orient="records"))
+            df.sort_values(["installs", "rating_count"], ascending=False)
+            .set_index(["store", "relationship"])
+            .groupby(level=[0, 1])
+            .apply(lambda x: x.to_dict(orient="records"))
             .unstack(level=0)
             .to_dict()
         )
@@ -923,7 +924,7 @@ class CompaniesController(Controller):
         for store in ["apple", "google"]:
             for relationship in ["direct", "reseller"]:
                 if store in apps_raw and relationship in apps_raw[store]:
-                    apps[store][relationship] = apps_raw[store][relationship]
+                    apps[store][relationship] = apps_raw[store][relationship][0:20]
 
         devs_df = (
             df.groupby(
@@ -942,27 +943,29 @@ class CompaniesController(Controller):
 
         # Process devs with default structure
         devs_raw = (
-            devs_df.groupby(["store", "relationship"])
+            devs_df.sort_values(["installs", "rating_count"], ascending=False)
+            .groupby(["store", "relationship"])
             .apply(lambda x: x.to_dict(orient="records"))
             .unstack(level=0)
             .to_dict()
         )
+
         devs = default_structure()
         for store in ["apple", "google"]:
             for relationship in ["direct", "reseller"]:
                 if store in devs_raw and relationship in devs_raw[store]:
-                    devs[store][relationship] = devs_raw[store][relationship]
+                    devs[store][relationship] = devs_raw[store][relationship][0:20]
 
         # Get developer and app counts
         totals = CompanyPubIDTotals(
-            direct_google_devs=get_count(devs, "google", "direct"),
-            direct_apple_devs=get_count(devs, "apple", "direct"),
-            direct_google_apps=get_count(apps, "google", "direct"),
-            direct_apple_apps=get_count(apps, "apple", "direct"),
-            reseller_google_devs=get_count(devs, "google", "reseller"),
-            reseller_apple_devs=get_count(devs, "apple", "reseller"),
-            reseller_google_apps=get_count(apps, "google", "reseller"),
-            reseller_apple_apps=get_count(apps, "apple", "reseller"),
+            direct_google_devs=get_count(devs_raw, "google", "direct"),
+            direct_apple_devs=get_count(devs_raw, "apple", "direct"),
+            direct_google_apps=get_count(apps_raw, "google", "direct"),
+            direct_apple_apps=get_count(apps_raw, "apple", "direct"),
+            reseller_google_devs=get_count(devs_raw, "google", "reseller"),
+            reseller_apple_devs=get_count(devs_raw, "apple", "reseller"),
+            reseller_google_apps=get_count(apps_raw, "google", "reseller"),
+            reseller_apple_apps=get_count(apps_raw, "apple", "reseller"),
         )
 
         overview = CompanyPubIDOverview(

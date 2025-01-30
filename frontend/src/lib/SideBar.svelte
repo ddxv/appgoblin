@@ -76,6 +76,6 @@
 	<SideBarRankings />
 {/if}
 
-{#if page.url.pathname == '/companies' || page.url.pathname.startsWith('/companies')}
+{#if (page.url.pathname == '/companies' || page.url.pathname.startsWith('/companies')) && !page.url.pathname.includes('adstxt')}
 	<SideBarCompanies {myCatData} />
 {/if}
