@@ -4,6 +4,7 @@
 	import { DataHandler } from '@vincjo/datatables/legacy/remote';
 	import type { State } from '@vincjo/datatables/legacy/remote';
 	import type { AdsTxtEntries } from '../types';
+	import { page } from '$app/state';
 
 	interface Props {
 		entries_table: AdsTxtEntries[];
@@ -46,8 +47,9 @@
 				{#each $rows as row}
 					<tr>
 						<td class="table-cell-fit text-sm md:text-base max-w-[100px] truncate">
-							<!-- <a href={`/ads-txt/unrulymedia.com/${row.publisher_id}`}>{row.publisher_id}</a> -->
-							{row.publisher_id}
+							<a href={`/companies/${page.params.domain}/app-adstxt/publisher/${row.publisher_id}`}
+								>{row.publisher_id}</a
+							>
 						</td>
 						<td class="table-cell-fit text-sm md:text-base">
 							{row.app_count}
