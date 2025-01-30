@@ -18,7 +18,7 @@
 				{#each crumbs as c}
 					<span>/</span>
 					<span>
-						{#if c.title != 'Types' && c.title != 'Categories'}
+						{#if c.title != 'Types' && c.title != 'Categories' && c.title != 'Publisher' && c.title != 'App-adstxt'}
 							<a href={c.url} class="text-surface-900-100 hover:text-primary-900-100">
 								{c.title}
 								{c.metadata ? `(${c.metadata.extraValue})` : ''}

@@ -55,7 +55,9 @@
 							{/if}
 						</td>
 						<td class="table-cell-fit text-sm md:text-base max-w-[100px] truncate">
-							{row.publisher_id}
+							<a href={`/companies/${row.ad_domain_url}/app-adstxt/publisher/${row.publisher_id}`}
+								>{row.publisher_id}</a
+							>
 						</td>
 						<td class="table-cell-fit text-sm md:text-base">
 							{new Date(row.developer_domain_crawled_at).toLocaleDateString('en-CA')}

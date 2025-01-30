@@ -68,10 +68,18 @@
 			<p class="text-red-500">Failed to load company tree.</p>
 		{:else if myTree}
 			<div class="flex flex-col md:flex-row items-left md:items-center">
-				{#if myTree.queried_company_domain}
+				{#if page.url.pathname.includes('adstxt/publisher')}
+					<h1 class={titleClass}>
+						<a href={`/companies/${myTree.parent_company_domain}`}
+							>{myTree.parent_company_name || myTree.parent_company_domain}</a
+						>
+					</h1>
+				{:else if myTree.queried_company_domain}
 					{#if myTree.parent_company_domain == myTree.queried_company_domain}
 						<!-- IS PARENT COMPANY -->
-						<h1 class={titleClass}>{myTree.parent_company_name} / Category: {categoryName}</h1>
+						<h1 class={titleClass}>
+							{myTree.parent_company_name || myTree.parent_company_domain} / Category: {categoryName}
+						</h1>
 						<div class={titleDividerClass}></div>
 						<ExternalLink domain={myTree.parent_company_domain} />
 					{:else}
