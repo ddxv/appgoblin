@@ -373,15 +373,19 @@ def get_company_overview(company_domain: str) -> pd.DataFrame:
 
 
 def get_company_adstxt_publisher_id(
-    ad_domain_url: str, publisher_id: str
+    ad_domain_url: str, publisher_id: str, app_category: str | None = None
 ) -> pd.DataFrame:
     """Get ad domain publisher id."""
     df = pd.read_sql(
         QUERY_COMPANY_ADSTXT_PUBLISHER_ID,
         DBCON.engine,
-        params={"ad_domain_url": ad_domain_url, "publisher_id": publisher_id},
+        params={
+            "ad_domain_url": ad_domain_url,
+            "publisher_id": publisher_id,
+        },
     )
     df["store"] = df["store"].replace({1: "google", 2: "apple"})
+    df["relationship"] = df["relationship"].str.lower()
     return df
 
 

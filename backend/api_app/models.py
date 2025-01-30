@@ -191,6 +191,46 @@ class CompanyDetail:
 
 
 @dataclass
+class CompanyPubIDTotals:
+    """Totals for a publisher ID."""
+
+    direct_google_devs: int
+    direct_apple_devs: int
+    direct_google_apps: int
+    direct_apple_apps: int
+
+    reseller_google_devs: int
+    reseller_apple_devs: int
+    reseller_google_apps: int
+    reseller_apple_apps: int
+
+
+@dataclass
+class CompanyPubIDAppsRelationship:
+    """Apps for a publisher ID."""
+
+    direct: list[dict]
+    reseller: list[dict]
+
+
+@dataclass
+class CompanyPubIDApps:
+    """Apps for a publisher ID."""
+
+    google: CompanyPubIDAppsRelationship
+    apple: CompanyPubIDAppsRelationship
+
+
+@dataclass
+class CompanyPubIDOverview:
+    """Companies data for a specific platform (iOS/Android)."""
+
+    totals: CompanyPubIDTotals
+    devs: CompanyPubIDApps
+    apps: CompanyPubIDApps
+
+
+@dataclass
 class PlatformCompanies:
     """Companies data for a specific platform (iOS/Android)."""
 

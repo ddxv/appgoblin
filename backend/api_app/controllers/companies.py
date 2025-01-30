@@ -23,6 +23,8 @@ from api_app.models import (
     CompanyPatterns,
     CompanyPatternsDict,
     CompanyPlatformOverview,
+    CompanyPubIDOverview,
+    CompanyPubIDTotals,
     CompanyTypes,
     ParentCompanyTree,
     TopCompaniesOverviewShort,
@@ -469,6 +471,11 @@ def make_company_category_sums(df: pd.DataFrame) -> CompanyCategoryOverview:
     return overview
 
 
+def get_count(data: dict, store: str, relationship: str) -> int:
+    """Helper function to safely get counts from nested dictionary."""
+    return len(data.get(store, {}).get(relationship, [])) if store in data else 0
+
+
 class CompaniesController(Controller):
     """API EndPoint return for all ad tech companies."""
 
@@ -875,7 +882,7 @@ class CompaniesController(Controller):
         self: Self,
         company_domain: str,
         publisher_id: str,
-    ) -> dict:
+    ) -> CompanyPubIDOverview:
         """Handle GET request for a company adstxt publisher id.
 
         Args:
@@ -894,10 +901,75 @@ class CompaniesController(Controller):
         start = time.perf_counter() * 1000
 
         df = get_company_adstxt_publisher_id(
-            ad_domain_url=company_domain, publisher_id=publisher_id
+            ad_domain_url=company_domain, publisher_id=publisher_id, app_category=None
         )
 
-        overview = df.to_dict(orient="records")
+        df_groupby = df.set_index(["store", "relationship"]).groupby(level=[0, 1])
+
+        # Define default structure once
+        def default_structure() -> dict:
+            return {
+                "apple": {"direct": [], "reseller": []},
+                "google": {"direct": [], "reseller": []},
+            }
+
+        # Process apps with default structure
+        apps_raw = (
+            df_groupby.apply(lambda x: x.to_dict(orient="records"))
+            .unstack(level=0)
+            .to_dict()
+        )
+        apps = default_structure()
+        for store in ["apple", "google"]:
+            for relationship in ["direct", "reseller"]:
+                if store in apps_raw and relationship in apps_raw[store]:
+                    apps[store][relationship] = apps_raw[store][relationship]
+
+        devs_df = (
+            df.groupby(
+                [
+                    "store",
+                    "relationship",
+                    "developer_domain_url",
+                    "developer_id",
+                    "developer_name",
+                ]
+            )
+            .agg({"installs": "sum", "rating_count": "sum", "store_id": "size"})
+            .rename(columns={"store_id": "app_count"})
+            .reset_index()
+        )
+
+        # Process devs with default structure
+        devs_raw = (
+            devs_df.groupby(["store", "relationship"])
+            .apply(lambda x: x.to_dict(orient="records"))
+            .unstack(level=0)
+            .to_dict()
+        )
+        devs = default_structure()
+        for store in ["apple", "google"]:
+            for relationship in ["direct", "reseller"]:
+                if store in devs_raw and relationship in devs_raw[store]:
+                    devs[store][relationship] = devs_raw[store][relationship]
+
+        # Get developer and app counts
+        totals = CompanyPubIDTotals(
+            direct_google_devs=get_count(devs, "google", "direct"),
+            direct_apple_devs=get_count(devs, "apple", "direct"),
+            direct_google_apps=get_count(apps, "google", "direct"),
+            direct_apple_apps=get_count(apps, "apple", "direct"),
+            reseller_google_devs=get_count(devs, "google", "reseller"),
+            reseller_apple_devs=get_count(devs, "apple", "reseller"),
+            reseller_google_apps=get_count(apps, "google", "reseller"),
+            reseller_apple_apps=get_count(apps, "apple", "reseller"),
+        )
+
+        overview = CompanyPubIDOverview(
+            totals=totals,
+            devs=devs,
+            apps=apps,
+        )
 
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(
