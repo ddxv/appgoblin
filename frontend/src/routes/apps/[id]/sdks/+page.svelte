@@ -1,8 +1,9 @@
 <script lang="ts">
 	import WhiteCard from '$lib/WhiteCard.svelte';
 	import ManifestItemList from '$lib/ManifestItemList.svelte';
-	import RequestSDKScanButton from '$lib/RequestSDKScanButton.svelte';
+	import ManifestItemUnknownsList from '$lib/ManifestItemUnknownsList.svelte';
 
+	import RequestSDKScanButton from '$lib/RequestSDKScanButton.svelte';
 	import AppTitle from '$lib/AppTitle.svelte';
 
 	import { page } from '$app/state';
@@ -60,7 +61,7 @@
 			{/if}
 			{#if packageInfo.leftovers && Object.keys(packageInfo.leftovers).length > 0}
 				<h4 class="h4 md:h3 p-2 md:p-4 mt-4">Unknown SDKs and Services</h4>
-				<ManifestItemList items={packageInfo.leftovers}></ManifestItemList>
+				<ManifestItemUnknownsList items={packageInfo.leftovers}></ManifestItemUnknownsList>
 			{/if}
 		{/if}
 	{/await}

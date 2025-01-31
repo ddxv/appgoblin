@@ -21,42 +21,28 @@
 				: '2'} gap-2 md:gap-4"
 		>
 			{#each Object.entries(items) as [key, value]}
-				{#if Array.isArray(value)}
-					<!-- For leftovers -->
-					<li>
-						<p class={xmlPathFont}>{key}</p>
-						<ul>
-							{#each value as androidName}
-								<li>
-									<a href={`/sdks/${androidName}`} class={androidNameFont}>{androidName}</a>
-								</li>
-							{/each}
-						</ul>
-					</li>
-				{:else}
-					<!-- For trackers and networks -->
-					<WhiteCard>
-						{#snippet title()}
-							<div class="text-lg text-bold p-2">
-								<CompanyButton companyName={key} companyDomain={key} />
-							</div>
-						{/snippet}
-						{#each Object.entries(value) as [xml_path, androidNames]}
-							<li>
-								<p class={xmlPathFont}>{xml_path}</p>
-								{#if Array.isArray(androidNames)}
-									<ul>
-										{#each androidNames as androidName}
-											<li>
-												<a href={`/sdks/${androidName}`} class={androidNameFont}>{androidName}</a>
-											</li>
-										{/each}
-									</ul>
-								{/if}
-							</li>
-						{/each}
-					</WhiteCard>
-				{/if}
+				<!-- For trackers and networks -->
+				<WhiteCard>
+					{#snippet title()}
+						<div class="text-lg text-bold p-2">
+							<CompanyButton companyName={key} companyDomain={key} />
+						</div>
+					{/snippet}
+					{#each Object.entries(value) as [xml_path, androidNames]}
+						<li>
+							<p class={xmlPathFont}>{xml_path}</p>
+							{#if Array.isArray(androidNames)}
+								<ul>
+									{#each androidNames as androidName}
+										<li>
+											<a href={`/sdks/${androidName}`} class={androidNameFont}>{androidName}</a>
+										</li>
+									{/each}
+								</ul>
+							{/if}
+						</li>
+					{/each}
+				</WhiteCard>
 			{/each}
 		</div>
 	</ul>

@@ -384,14 +384,34 @@ class AppController(Controller):
             r"^(com.android)|(android)",
         )
 
+        is_value_empty = df["value_name"] == ""
+
         permissions_df = df[is_permission]
 
         left_overs_df = df[
             ~is_permission
             & ~is_matching_packages
             & ~is_android_activity
+            & ~is_value_empty
             & df["company_name"].isna()
         ]
+
+        left_overs_df["short_value_name"] = left_overs_df.value_name.apply(
+            lambda x: ".".join(x.split(".")[0:2])
+        )
+
+        left_overs_dict = (
+            left_overs_df[["xml_path", "short_value_name", "value_name"]]
+            .groupby(["xml_path", "short_value_name"])
+            .apply(lambda x: x["value_name"].to_list())
+            .reset_index()
+            .rename(columns={0: "value_name"})
+            .set_index(["xml_path"])[["short_value_name", "value_name"]]
+            .groupby(level=["xml_path"])
+            .apply(lambda x: x.set_index("short_value_name")["value_name"].to_dict())
+            .to_dict()
+        )
+
         permissions_list = permissions_df.value_name.tolist()
         permissions_list = [
             x.replace("android.permission.", "") for x in permissions_list
@@ -400,10 +420,7 @@ class AppController(Controller):
         trackers_dict = SDKsDetails(
             company_categories=company_cats,
             permissions=permissions_list,
-            leftovers=left_overs_df[["xml_path", "value_name"]]
-            .groupby("xml_path")["value_name"]
-            .apply(list)
-            .to_dict(),
+            leftovers=left_overs_dict,
         )
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(f"{self.path}/{store_id}/sdks took {duration}ms")
