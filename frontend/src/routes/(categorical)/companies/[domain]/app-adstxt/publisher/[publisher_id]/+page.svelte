@@ -56,26 +56,6 @@
 		{#await data.publishersApps}
 			<loading class="text-center">Loading...</loading>
 		{:then publishersApps}
-			<h2 class="text-2xl font-bold text-primary-900-100">Developers DIRECT</h2>
-			<div class="grid grid-cols-1 gap-2 md:gap-6">
-				{#if publishersApps.devs.google.direct.length > 0}
-					<WhiteCard>
-						{#snippet title()}
-							Google Developers
-						{/snippet}
-						<CompanyPubDevsTable entries_table={publishersApps.devs.google.direct} />
-					</WhiteCard>
-				{/if}
-				{#if publishersApps.devs.apple.direct.length > 0}
-					<WhiteCard>
-						{#snippet title()}
-							Apple Developers
-						{/snippet}
-						<CompanyPubDevsTable entries_table={publishersApps.devs.apple.direct} />
-					</WhiteCard>
-				{/if}
-			</div>
-
 			<h2 class="text-2xl font-bold text-primary-900-100">Apps DIRECT</h2>
 			<div class="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-6">
 				{#if publishersApps.apps.google.direct.length > 0}
@@ -96,26 +76,6 @@
 				{/if}
 			</div>
 			<hr class="my-4" />
-			<h2 class="text-2xl font-bold text-primary-900-100">Developers RESELLER</h2>
-			<div class="grid grid-cols-1 gap-2 md:gap-6">
-				{#if publishersApps.devs.google.reseller.length == 0 && publishersApps.devs.apple.reseller.length == 0}
-					<p>No RESLLER developers found for this publisher ID.</p>
-				{:else if publishersApps.devs.google.reseller.length > 0}
-					<WhiteCard>
-						{#snippet title()}
-							Google Developers
-						{/snippet}
-						<CompanyPubDevsTable entries_table={publishersApps.devs.google.reseller} />
-					</WhiteCard>
-				{:else if publishersApps.devs.apple.reseller.length > 0}
-					<WhiteCard>
-						{#snippet title()}
-							Apple Developers
-						{/snippet}
-						<CompanyPubDevsTable entries_table={publishersApps.devs.apple.reseller} />
-					</WhiteCard>
-				{/if}
-			</div>
 
 			<h2 class="text-2xl font-bold text-primary-900-100">Apps RESELLER</h2>
 			<div class="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-6">
@@ -139,4 +99,13 @@
 			</div>
 		{/await}
 	</div>
+	<hr class="my-4" />
+	<WhiteCard>
+		{#snippet title()}
+			Full List of Apps
+		{/snippet}
+		<p class="p-2">
+			For a full list of apps and app-ads.txt metrics, please feel free to reach out.
+		</p>
+	</WhiteCard>
 </div>

@@ -39,8 +39,7 @@ from dbcon.queries import (
     get_companies_parent_overview,
     get_companies_top,
     get_company_adstxt_ad_domain_overview,
-    get_company_adstxt_publisher_id,
-    get_company_adstxt_publisher_id_csv,
+    get_company_adstxt_publisher_id_apps_overview,
     get_company_adstxt_publishers_overview,
     get_company_overview,
     get_company_parent_categories,
@@ -474,9 +473,10 @@ def make_company_category_sums(df: pd.DataFrame) -> CompanyCategoryOverview:
     return overview
 
 
-def get_count(data: dict, store: str, relationship: str) -> int:
-    """Helper function to safely get counts from nested dictionary."""
-    return len(data.get(store, {}).get(relationship, [])) if store in data else 0
+def get_count(df: pd.DataFrame, condition: pd.Series, column: str) -> int:
+    """Safely get count from filtered DataFrame."""
+    filtered = df[condition][column]
+    return int(filtered.iloc[0]) if not filtered.empty else 0
 
 
 class CompaniesController(Controller):
@@ -903,7 +903,15 @@ class CompaniesController(Controller):
         """
         start = time.perf_counter() * 1000
 
-        df = get_company_adstxt_publisher_id(
+        publisher_id = "pub-3940256099942544"
+        company_domain = "google.com"
+
+        df_apps = get_company_adstxt_publisher_id_apps_overview(
+            ad_domain_url=company_domain,
+            publisher_id=publisher_id,
+        )
+
+        df_pub_id_overview = get_company_adstxt_publishers_overview(
             ad_domain_url=company_domain,
             publisher_id=publisher_id,
         )
@@ -915,9 +923,8 @@ class CompaniesController(Controller):
                 "google": {"direct": [], "reseller": []},
             }
 
-        # Process apps with default structure
         apps_raw = (
-            df.sort_values(["installs", "rating_count"], ascending=False)
+            df_apps.sort_values(["installs", "rating_count"], ascending=False)
             .set_index(["store", "relationship"])
             .groupby(level=[0, 1])
             .apply(lambda x: x.to_dict(orient="records"))
@@ -925,56 +932,72 @@ class CompaniesController(Controller):
             .to_dict()
         )
         apps = default_structure()
+
         for store in ["apple", "google"]:
             for relationship in ["direct", "reseller"]:
-                if store in apps_raw and relationship in apps_raw[store]:
-                    apps[store][relationship] = apps_raw[store][relationship][0:20]
+                if (
+                    store in apps_raw
+                    and relationship in apps_raw[store]
+                    and apps_raw[store][relationship]
+                ):
+                    apps[store][relationship] = apps_raw[store][relationship]
 
-        devs_df = (
-            df.groupby(
-                [
-                    "store",
-                    "relationship",
-                    "developer_domain_url",
-                    "developer_id",
-                    "developer_name",
-                ]
-            )
-            .agg({"installs": "sum", "rating_count": "sum", "store_id": "size"})
-            .rename(columns={"store_id": "app_count"})
-            .reset_index()
-        )
-
-        # Process devs with default structure
-        devs_raw = (
-            devs_df.sort_values(["installs", "rating_count"], ascending=False)
-            .groupby(["store", "relationship"])
+        stats_raw = (
+            df_pub_id_overview.set_index(["store", "relationship"])
+            .groupby(level=[0, 1])
             .apply(lambda x: x.to_dict(orient="records"))
             .unstack(level=0)
             .to_dict()
         )
 
-        devs = default_structure()
+        stats = default_structure()
         for store in ["apple", "google"]:
             for relationship in ["direct", "reseller"]:
-                if store in devs_raw and relationship in devs_raw[store]:
-                    devs[store][relationship] = devs_raw[store][relationship][0:20]
+                if (
+                    store in stats_raw
+                    and relationship in stats_raw[store]
+                    and stats_raw[store][relationship]
+                ):
+                    stats[store][relationship] = stats_raw[store][relationship]
+
+        is_apple = df_pub_id_overview["store"] == "apple"
+        is_google = df_pub_id_overview["store"] == "google"
+        is_direct = df_pub_id_overview["relationship"] == "direct"
+        is_reseller = df_pub_id_overview["relationship"] == "reseller"
+
+        df_pub_id_overview[is_apple & is_direct]
 
         # Get developer and app counts
         totals = CompanyPubIDTotals(
-            direct_google_devs=get_count(devs_raw, "google", "direct"),
-            direct_apple_devs=get_count(devs_raw, "apple", "direct"),
-            direct_google_apps=get_count(apps_raw, "google", "direct"),
-            direct_apple_apps=get_count(apps_raw, "apple", "direct"),
-            reseller_google_devs=get_count(devs_raw, "google", "reseller"),
-            reseller_apple_devs=get_count(devs_raw, "apple", "reseller"),
-            reseller_google_apps=get_count(apps_raw, "google", "reseller"),
-            reseller_apple_apps=get_count(apps_raw, "apple", "reseller"),
+            direct_google_devs=get_count(
+                df_pub_id_overview, is_google & is_direct, "developer_count"
+            ),
+            direct_apple_devs=get_count(
+                df_pub_id_overview, is_apple & is_direct, "developer_count"
+            ),
+            direct_google_apps=get_count(
+                df_pub_id_overview, is_google & is_direct, "app_count"
+            ),
+            direct_apple_apps=get_count(
+                df_pub_id_overview, is_apple & is_direct, "app_count"
+            ),
+            reseller_google_devs=get_count(
+                df_pub_id_overview, is_google & is_reseller, "developer_count"
+            ),
+            reseller_apple_devs=get_count(
+                df_pub_id_overview, is_apple & is_reseller, "developer_count"
+            ),
+            reseller_google_apps=get_count(
+                df_pub_id_overview, is_google & is_reseller, "app_count"
+            ),
+            reseller_apple_apps=get_count(
+                df_pub_id_overview, is_apple & is_reseller, "app_count"
+            ),
         )
 
         overview = CompanyPubIDOverview(
             totals=totals,
-            devs=devs,
+            # devs=devs,
             apps=apps,
         )
 
@@ -1008,7 +1031,7 @@ class CompaniesController(Controller):
             A list of apps related to the publisher.
 
         """
-        df = get_company_adstxt_publisher_id_csv(
+        df = get_company_adstxt_publisher_id_apps_overview(
             ad_domain_url=company_domain,
             publisher_id=publisher_id,
         )

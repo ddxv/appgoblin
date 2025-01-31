@@ -82,6 +82,9 @@ QUERY_COMPANY_ADSTXT_PUBLISHERS_OVERVIEW = load_sql_file(
 QUERY_COMPANY_ADSTXT_PUBLISHER_ID = load_sql_file(
     "query_company_adstxt_publisher_id.sql"
 )
+QUERY_COMPANY_ADSTXT_PUBLISHER_ID_APPS_OVERVIEW = load_sql_file(
+    "query_company_adstxt_publisher_id_apps_overview.sql"
+)
 
 # Used for generating sitemaps
 QUERY_SITEMAP_APPS = load_sql_file("query_sitemap_apps.sql")
@@ -372,13 +375,13 @@ def get_company_overview(company_domain: str) -> pd.DataFrame:
     return df
 
 
-def get_company_adstxt_publisher_id(
+def get_company_adstxt_publisher_id_apps_overview(
     ad_domain_url: str,
     publisher_id: str,
 ) -> pd.DataFrame:
     """Get ad domain publisher id."""
     df = pd.read_sql(
-        QUERY_COMPANY_ADSTXT_PUBLISHER_ID,
+        QUERY_COMPANY_ADSTXT_PUBLISHER_ID_APPS_OVERVIEW,
         DBCON.engine,
         params={
             "ad_domain_url": ad_domain_url,
@@ -390,7 +393,7 @@ def get_company_adstxt_publisher_id(
     return df
 
 
-def get_company_adstxt_publisher_id_csv(
+def get_company_adstxt_publisher_id_apps_raw(
     ad_domain_url: str,
     publisher_id: str,
 ) -> pd.DataFrame:
@@ -409,13 +412,19 @@ def get_company_adstxt_publisher_id_csv(
 
 
 def get_company_adstxt_publishers_overview(
-    ad_domain_url: str, limit: int = 5
+    ad_domain_url: str,
+    publisher_id: str | None = None,
+    limit: int = 5,
 ) -> pd.DataFrame:
     """Get ad domain publishers overview."""
     df = pd.read_sql(
         QUERY_COMPANY_ADSTXT_PUBLISHERS_OVERVIEW,
         DBCON.engine,
-        params={"ad_domain_url": ad_domain_url, "pubrank_limit": limit},
+        params={
+            "ad_domain_url": ad_domain_url,
+            "pubrank_limit": limit,
+            "publisher_id": publisher_id,
+        },
     )
     df["store"] = df["store"].replace({1: "google", 2: "apple"})
     df["relationship"] = df["relationship"].str.lower()
