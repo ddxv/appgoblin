@@ -226,7 +226,6 @@ class CompanyPubIDOverview:
     """Companies data for a specific platform (iOS/Android)."""
 
     totals: CompanyPubIDTotals
-    # devs: CompanyPubIDApps
     apps: CompanyPubIDApps
 
 

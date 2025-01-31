@@ -40,6 +40,7 @@ from dbcon.queries import (
     get_companies_top,
     get_company_adstxt_ad_domain_overview,
     get_company_adstxt_publisher_id_apps_overview,
+    get_company_adstxt_publisher_id_apps_raw,
     get_company_adstxt_publishers_overview,
     get_company_overview,
     get_company_parent_categories,
@@ -997,7 +998,6 @@ class CompaniesController(Controller):
 
         overview = CompanyPubIDOverview(
             totals=totals,
-            # devs=devs,
             apps=apps,
         )
 
@@ -1031,7 +1031,7 @@ class CompaniesController(Controller):
             A list of apps related to the publisher.
 
         """
-        df = get_company_adstxt_publisher_id_apps_overview(
+        df = get_company_adstxt_publisher_id_apps_raw(
             ad_domain_url=company_domain,
             publisher_id=publisher_id,
         )
