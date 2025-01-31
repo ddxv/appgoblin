@@ -1,7 +1,8 @@
-SELECT 
+SELECT
     store,
     store_id,
     app_name,
+    app_category,
     installs,
     rating_count,
     developer_id,

@@ -4,6 +4,7 @@
 
 """
 
+import io
 import time
 import urllib
 from typing import Self
@@ -12,6 +13,7 @@ import numpy as np
 import pandas as pd
 from litestar import Controller, get
 from litestar.config.response_cache import CACHE_FOREVER
+from litestar.response import Stream
 
 from api_app.models import (
     AppGroup,
@@ -38,6 +40,7 @@ from dbcon.queries import (
     get_companies_top,
     get_company_adstxt_ad_domain_overview,
     get_company_adstxt_publisher_id,
+    get_company_adstxt_publisher_id_csv,
     get_company_adstxt_publishers_overview,
     get_company_overview,
     get_company_parent_categories,
@@ -901,7 +904,8 @@ class CompaniesController(Controller):
         start = time.perf_counter() * 1000
 
         df = get_company_adstxt_publisher_id(
-            ad_domain_url=company_domain, publisher_id=publisher_id, app_category=None
+            ad_domain_url=company_domain,
+            publisher_id=publisher_id,
         )
 
         # Define default structure once
@@ -979,3 +983,44 @@ class CompaniesController(Controller):
             f"GET /api/companies/{company_domain}/adstxt/publisher/{publisher_id} took {duration}ms"
         )
         return overview
+
+    @get(
+        path="/companies/{company_domain:str}/adstxt/publisher/{publisher_id:str}/download",
+        cache=86400,
+    )
+    async def adstxt_company_publisher_download(
+        self: Self,
+        company_domain: str,
+        publisher_id: str,
+    ) -> CompanyPubIDOverview:
+        """Handle GET request for a company adstxt publisher id.
+
+        Args:
+        ----
+        company_domain : str
+            The domain of the company to retrieve apps for.
+        publisher_id: str
+            The publisher id to retrieve apps for.
+
+        Returns:
+        -------
+        ListOfAppsRelatedToPublisher
+            A list of apps related to the publisher.
+
+        """
+        df = get_company_adstxt_publisher_id_csv(
+            ad_domain_url=company_domain,
+            publisher_id=publisher_id,
+        )
+
+        buffer = io.StringIO()
+        df.to_csv(buffer, index=False)
+        buffer.seek(0)
+
+        return Stream(
+            iter([buffer.getvalue()]),
+            media_type="text/csv",
+            headers={
+                "Content-Disposition": f"attachment; filename=adstxt_{company_domain}_{publisher_id}.csv"
+            },
+        )
