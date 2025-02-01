@@ -41,7 +41,6 @@
 	},
 	"dependencies": {
 		"@carbon/charts-svelte": "^1.22.3",
-		"echarts": "^5.5.1",
-		"lucide-svelte": "^0.474.0"
+		"echarts": "^5.5.1"
 	}
 }
