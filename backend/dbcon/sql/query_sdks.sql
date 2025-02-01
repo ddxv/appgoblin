@@ -9,7 +9,10 @@ FROM (
     SELECT
         *,
         ROW_NUMBER()
-            OVER (PARTITION BY store ORDER BY app_count DESC)
+            OVER (
+                PARTITION BY store
+                ORDER BY app_count DESC
+            )
         AS row_num
     FROM companies_version_details_count
 ) AS ranked

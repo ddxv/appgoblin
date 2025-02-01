@@ -11,7 +11,6 @@ export const load: PageServerLoad = async ({ params }) => {
 		`http://localhost:8000/api/companies/${companyDomain}/adstxt/publisher/${publisher_id}`
 	);
 
-
 	console.log(`start load overview for company=${companyDomain}`);
 	try {
 		return {
@@ -33,7 +32,7 @@ export const load: PageServerLoad = async ({ params }) => {
 						console.log('Uncaught error', error);
 						return 'Uncaught Error';
 					}
-				),
+				)
 		};
 	} catch (error) {
 		console.error('Failed to load data:', error);

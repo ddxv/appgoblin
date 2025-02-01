@@ -5,7 +5,6 @@ SELECT
     developer_count,
     app_count
 FROM
-    adstxt_ad_domain_overview aado
+    adstxt_ad_domain_overview
 WHERE
-    ad_domain_url = :ad_domain_url
-;
+    ad_domain_url = :ad_domain_url;
