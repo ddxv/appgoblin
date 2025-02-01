@@ -355,8 +355,6 @@ class AppController(Controller):
         """
         start = time.perf_counter() * 1000
 
-        store_id = "com.zhiliaoapp.musically"
-
         df = get_app_sdk_details(store_id)
 
         if df.empty:
