@@ -355,6 +355,8 @@ class AppController(Controller):
         """
         start = time.perf_counter() * 1000
 
+        store_id = "com.zhiliaoapp.musically"
+
         df = get_app_sdk_details(store_id)
 
         if df.empty:
@@ -364,19 +366,37 @@ class AppController(Controller):
                 status_code=404,
             )
 
+        # NOTE WARNING only works for android packages
+        # First medium short for com.google.analytics
+        df["short_value_name"] = df.value_name.apply(
+            lambda x: ".".join(x.split(".")[0:3])
+        )
+
         cats = df.loc[df["category_slug"].notna(), "category_slug"].unique().tolist()
-        company_cats = {}
+        company_sdk_dict = {}
+        # example: {"ad-networks":
+        # {"bytedance.com":
+        # {"com.bytedance.sdk":
+        # {"application/acitivity":
+        # ["com.bytedance.sdk.analytics"]}}}}
         for cat in cats:
-            company_cats[cat] = {
-                k: f.groupby("xml_path")["value_name"].apply(list).to_dict()
-                for k, f in df[df["category_slug"] == cat].groupby("company_domain")
+            company_sdk_dict[cat] = {
+                company: {
+                    short_value_name: dddf.groupby("xml_path")["value_name"]
+                    .apply(list)
+                    .to_dict()
+                    for short_value_name, dddf in ddf.groupby("short_value_name")
+                }
+                for company, ddf in df[df["category_slug"] == cat].groupby(
+                    "company_domain"
+                )
             }
 
         is_permission = df["xml_path"] == "uses-permission"
         df.loc[df["xml_path"].str.contains("key", case=False), "value_name"] = (
             "redacted_key"
         )
-        is_matching_packages = df["value_name"].str.startswith(
+        is_matching_store_id = df["value_name"].str.startswith(
             ".".join(store_id.split(".")[:2]),
         )
 
@@ -388,29 +408,28 @@ class AppController(Controller):
 
         permissions_df = df[is_permission]
 
-        left_overs_df = df[
+        leftovers_df = df[
             ~is_permission
-            & ~is_matching_packages
+            & ~is_matching_store_id
             & ~is_android_activity
             & ~is_value_empty
             & df["company_name"].isna()
         ]
 
-        left_overs_df["short_value_name"] = left_overs_df.value_name.apply(
+        # NOTE WARNING only works for android packages
+        leftovers_df["short_value_name"] = leftovers_df.value_name.apply(
             lambda x: ".".join(x.split(".")[0:2])
         )
 
-        left_overs_dict = (
-            left_overs_df[["xml_path", "short_value_name", "value_name"]]
-            .groupby(["xml_path", "short_value_name"])
-            .apply(lambda x: x["value_name"].to_list())
-            .reset_index()
-            .rename(columns={0: "value_name"})
-            .set_index(["xml_path"])[["short_value_name", "value_name"]]
-            .groupby(level=["xml_path"])
-            .apply(lambda x: x.set_index("short_value_name")["value_name"].to_dict())
+        # example: {"bytedance.com":
+        # {"application/acitivity":
+        # ["com.bytedance.sdk.analytics"] }}
+        leftovers_dict = {
+            short_value_name: dddf.groupby("xml_path")["value_name"]
+            .apply(list)
             .to_dict()
-        )
+            for short_value_name, dddf in leftovers_df.groupby("short_value_name")
+        }
 
         permissions_list = permissions_df.value_name.tolist()
         permissions_list = [
@@ -418,9 +437,9 @@ class AppController(Controller):
         ]
 
         trackers_dict = SDKsDetails(
-            company_categories=company_cats,
+            company_categories=company_sdk_dict,
             permissions=permissions_list,
-            leftovers=left_overs_dict,
+            leftovers=leftovers_dict,
         )
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(f"{self.path}/{store_id}/sdks took {duration}ms")

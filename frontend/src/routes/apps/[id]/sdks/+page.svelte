@@ -51,6 +51,10 @@
 					{/each}
 				{/await}
 			{/if}
+			{#if packageInfo.leftovers && Object.keys(packageInfo.leftovers).length > 0}
+				<h4 class="h4 md:h3 p-2 md:p-4 mt-4">Unknown SDKs and Services</h4>
+				<ManifestItemUnknownsList items={packageInfo.leftovers}></ManifestItemUnknownsList>
+			{/if}
 			{#if packageInfo.permissions && packageInfo.permissions.length > 0}
 				<h4 class="h4 md:h3 p-2 md:p-4 mt-4">Permissions</h4>
 				<div class="px-4 md:px-8 max-w-sm md:max-w-md lg:max-w-full overflow-x-scroll">
@@ -58,10 +62,6 @@
 						<p>{permission}</p>
 					{/each}
 				</div>
-			{/if}
-			{#if packageInfo.leftovers && Object.keys(packageInfo.leftovers).length > 0}
-				<h4 class="h4 md:h3 p-2 md:p-4 mt-4">Unknown SDKs and Services</h4>
-				<ManifestItemUnknownsList items={packageInfo.leftovers}></ManifestItemUnknownsList>
 			{/if}
 		{/if}
 	{/await}

@@ -140,12 +140,12 @@ export interface AppRankDetail {
 	category: string;
 }
 
-export interface Networks {
+export interface UnknownSDKs {
 	[key: string]: { [key: string]: string[] };
 }
 
-export interface Trackers {
-	[key: string]: { [key: string]: string[] };
+export interface CompanySDKs {
+	[key: string]: { [key: string]: { [key: string]: string[] } };
 }
 
 interface UnknownManifestItems {

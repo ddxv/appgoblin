@@ -1,16 +1,19 @@
 <script lang="ts">
-	import type { Networks } from '../types';
-	import type { Trackers } from '../types';
+	import type { CompanySDKs } from '../types';
 	import WhiteCard from './WhiteCard.svelte';
 	import CompanyButton from './CompanyButton.svelte';
+	import { Accordion } from '@skeletonlabs/skeleton-svelte';
+
 	interface Props {
-		items?: Record<string, string[]> | Trackers | Networks;
+		items: CompanySDKs;
 	}
 
 	let { items = {} }: Props = $props();
 
 	const androidNameFont = 'text-xs md:text-sm px-8 md:px-16';
 	const xmlPathFont = 'text-base px-4 md:px-8';
+
+	let accordionValue = $state(['allclosed']);
 </script>
 
 <div class="max-w-sm lg:max-w-full overflow-x-scroll">
@@ -20,27 +23,40 @@
 				? '1'
 				: '2'} gap-2 md:gap-4"
 		>
-			{#each Object.entries(items) as [key, value]}
+			<!-- {"bytedance.com": {"com.bytedance.sdk": {"application/acitivity":["com.bytedance.sdk.analytics"]}}} -->
+
+			{#each Object.entries(items) as [companyDomain, companyObj]}
 				<!-- For trackers and networks -->
 				<WhiteCard>
 					{#snippet title()}
 						<div class="text-lg text-bold p-2">
-							<CompanyButton companyName={key} companyDomain={key} />
+							<CompanyButton companyName={companyDomain} {companyDomain} />
 						</div>
 					{/snippet}
-					{#each Object.entries(value) as [xml_path, androidNames]}
-						<li>
-							<p class={xmlPathFont}>{xml_path}</p>
-							{#if Array.isArray(androidNames)}
-								<ul>
-									{#each androidNames as androidName}
-										<li>
-											<a href={`/sdks/${androidName}`} class={androidNameFont}>{androidName}</a>
-										</li>
-									{/each}
-								</ul>
-							{/if}
-						</li>
+					{#each Object.entries(companyObj) as [sdkShort, sdkShortObj]}
+						<Accordion value={accordionValue} multiple>
+							<Accordion.Item value="club">
+								<!-- Control -->
+								{#snippet control()}<p class={androidNameFont}>{sdkShort}</p>{/snippet}
+								<!-- Panel -->
+								{#snippet panel()}
+									<li>
+										<!-- <p class={xmlPathFont}>{sdkShort}</p> -->
+										<ul>
+											{#each Object.entries(sdkShortObj) as [xmlPath, androidNames]}
+												{#each androidNames as androidName}
+													<li>
+														{xmlPath}:<a href={`/sdks/${androidName}`} class={androidNameFont}
+															>{androidName}</a
+														>
+													</li>
+												{/each}
+											{/each}
+										</ul>
+									</li>
+								{/snippet}
+							</Accordion.Item>
+						</Accordion>
 					{/each}
 				</WhiteCard>
 			{/each}
