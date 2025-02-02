@@ -8,8 +8,8 @@ SELECT
     sa.rating_count,
     sa.icon_url_512
 FROM
-    companies_apps_version_details AS cavd
-LEFT JOIN store_apps AS sa
+    frontend.companies_apps_version_details AS cavd
+LEFT JOIN public.store_apps AS sa
     ON
         cavd.store_id = sa.store_id
 WHERE
