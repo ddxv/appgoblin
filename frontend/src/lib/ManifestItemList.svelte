@@ -16,7 +16,7 @@
 	let accordionValue = $state(['allclosed']);
 </script>
 
-<div class="max-w-sm lg:max-w-full overflow-x-scroll">
+<div class="">
 	<ul>
 		<div
 			class="grid grid-cols-1 md:grid-cols-{Object.keys(items).length === 1

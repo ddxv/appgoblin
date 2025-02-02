@@ -25,7 +25,7 @@
 	</a>
 </div>
 
-<div class="card preset-tonal p-2 md:p-8 mt-2 md:mt-4">
+<div class="card preset-tonal p-2 md:p-16 mt-2 md:mt-4">
 	<h4 class="h4 md:h3 p-2">Ad SDKs, Trackers & Permissions</h4>
 	{#await data.myPackageInfo}
 		Loading permissions and tracker data...
@@ -43,7 +43,7 @@
 								{myCompanyTypes.types.find((x: { url_slug: string }) => x.url_slug === category)
 									?.name || category}
 							{/snippet}
-							<div class="p-2">
+							<div class="p-2 lg:p-16">
 								<ManifestItemList items={packageInfo.company_categories[category]}
 								></ManifestItemList>
 							</div>

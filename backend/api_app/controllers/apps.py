@@ -367,7 +367,7 @@ class AppController(Controller):
         # NOTE WARNING only works for android packages
         # First medium short for com.google.analytics
         df["short_value_name"] = df.value_name.apply(
-            lambda x: ".".join(x.split(".")[0:3])
+            lambda x: ".".join(x.split(".")[0:2])
         )
 
         cats = df.loc[df["category_slug"].notna(), "category_slug"].unique().tolist()
@@ -413,11 +413,6 @@ class AppController(Controller):
             & ~is_value_empty
             & df["company_name"].isna()
         ]
-
-        # NOTE WARNING only works for android packages
-        leftovers_df["short_value_name"] = leftovers_df.value_name.apply(
-            lambda x: ".".join(x.split(".")[0:2])
-        )
 
         # example: {"bytedance.com":
         # {"application/acitivity":
