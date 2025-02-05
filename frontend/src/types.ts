@@ -380,6 +380,7 @@ export interface AppFullDetails {
 		company_categories: { [key: string]: { [key: string]: string[] } };
 		android: string[];
 		leftovers: UnknownManifestItems;
+		app_queries: string[];
 	}>;
 	myAdsTxt: Promise<{
 		direct_entries: AdsTxtEntries[];

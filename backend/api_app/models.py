@@ -49,6 +49,7 @@ class SDKsDetails:
     permissions: list[str]
     company_categories: dict
     leftovers: dict[str, list[str]]
+    app_queries: list[str]
 
 
 @dataclass

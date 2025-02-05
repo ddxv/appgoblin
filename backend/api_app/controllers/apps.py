@@ -399,8 +399,10 @@ class AppController(Controller):
         )
 
         is_android_activity = df["value_name"].str.contains(
-            r"^(com.android)|(android)",
+            r"^(com\.android|android|kotlin|smali_)",
         )
+
+        is_package_query = df["xml_path"] == "queries/package"
 
         is_value_empty = df["value_name"] == ""
 
@@ -411,6 +413,7 @@ class AppController(Controller):
             & ~is_matching_store_id
             & ~is_android_activity
             & ~is_value_empty
+            & ~is_package_query
             & df["company_name"].isna()
         ]
 
@@ -429,10 +432,13 @@ class AppController(Controller):
             x.replace("android.permission.", "") for x in permissions_list
         ]
 
+        app_queries = df[is_package_query].value_name.unique().tolist()
+
         trackers_dict = SDKsDetails(
             company_categories=company_sdk_dict,
             permissions=permissions_list,
             leftovers=leftovers_dict,
+            app_queries=app_queries,
         )
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(f"{self.path}/{store_id}/sdks took {duration}ms")

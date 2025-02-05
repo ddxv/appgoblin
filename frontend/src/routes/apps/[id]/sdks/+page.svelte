@@ -55,6 +55,15 @@
 				<h4 class="h4 md:h3 p-2 md:p-4 mt-4">Unknown SDKs and Services</h4>
 				<ManifestItemUnknownsList items={packageInfo.leftovers}></ManifestItemUnknownsList>
 			{/if}
+			{#if packageInfo.app_queries && packageInfo.app_queries.length > 0}
+				<h4 class="h4 md:h3 p-2 md:p-4 mt-4">App Queries</h4>
+				This app requests to know which of these apps are also installed:
+				<div class="px-4 md:px-8 max-w-sm md:max-w-md lg:max-w-full overflow-x-scroll">
+					{#each packageInfo.app_queries as app_query}
+						<p><a href="/apps/{app_query}">{app_query}</a></p>
+					{/each}
+				</div>
+			{/if}
 			{#if packageInfo.permissions && packageInfo.permissions.length > 0}
 				<h4 class="h4 md:h3 p-2 md:p-4 mt-4">Permissions</h4>
 				<div class="px-4 md:px-8 max-w-sm md:max-w-md lg:max-w-full overflow-x-scroll">
