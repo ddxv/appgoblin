@@ -9,7 +9,7 @@ WITH ranked_apps AS (
             ORDER BY SUM(app_count) DESC
         ) AS rank
     FROM
-        adtech.companies_parent_app_counts
+        frontend.companies_parent_app_counts
     WHERE
         app_category = :app_category OR :app_category IS NULL
         AND tag_source != 'app_ads_reseller'
