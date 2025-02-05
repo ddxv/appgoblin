@@ -1,7 +1,7 @@
 WITH ranked_apps AS (
     SELECT *
     FROM
-        adtech.company_top_apps
+        frontend.company_parent_top_apps
     WHERE
         company_domain = :company_domain
         AND category = :mapped_category

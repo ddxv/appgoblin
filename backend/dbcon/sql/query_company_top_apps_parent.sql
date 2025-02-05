@@ -1,7 +1,7 @@
 WITH ranked_apps AS (
     SELECT *
     FROM
-        frontend.company_top_apps
+        frontend.company_parent_top_apps
     WHERE
         company_domain = :company_domain
         AND app_company_rank <= :mylimit

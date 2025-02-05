@@ -52,7 +52,11 @@ QUERY_ADTECH_CATEGORY_TYPE = load_sql_file(
 )
 QUERY_ADTECH_TYPE = load_sql_file("query_adtech_type.sql")
 QUERY_COMPANY_TOP_APPS = load_sql_file("query_company_top_apps.sql")
-QUERY_COMPANY_CATEGORY_TOP_APPS = load_sql_file("query_company_category_top_apps.sql")
+QUERY_COMPANY_TOP_APPS_PARENT = load_sql_file("query_company_top_apps_parent.sql")
+QUERY_COMPANY_TOP_APPS_CATEGORY = load_sql_file("query_company_top_apps_category.sql")
+QUERY_COMPANY_TOP_APPS_CATEGORY_PARENT = load_sql_file(
+    "query_company_top_apps_category_parent.sql"
+)
 QUERY_COMPANIES_PARENT_OVERVIEW = load_sql_file("query_companies_parent_overview.sql")
 QUERY_COMPANIES_PARENT_OVERVIEW_CATEGORY = load_sql_file(
     "query_companies_parent_overview_category.sql"
@@ -584,34 +588,44 @@ def get_single_apps_adstxt(store_id: str) -> pd.DataFrame:
 
 
 def get_top_apps_for_company(
-    company_domain: str,
-    mapped_category: str | None = None,
+    company_domain: str, mapped_category: str | None = None, limit: int = 20
 ) -> pd.DataFrame:
     """Get apps for for a network."""
-    mylimit = 20
-
     if mapped_category == "games":
         mapped_category = "game%"
 
     if mapped_category:
         df = pd.read_sql(
-            QUERY_COMPANY_CATEGORY_TOP_APPS,
+            QUERY_COMPANY_TOP_APPS_CATEGORY_PARENT,
             con=DBCON.engine,
             params={
                 "company_domain": company_domain,
                 "mapped_category": mapped_category,
-                "mylimit": mylimit,
+                "mylimit": limit,
             },
         )
+        if df.empty:
+            df = pd.read_sql(
+                QUERY_COMPANY_TOP_APPS_CATEGORY,
+                con=DBCON.engine,
+                params={
+                    "company_domain": company_domain,
+                    "mapped_category": mapped_category,
+                    "mylimit": limit,
+                },
+            )
     else:
         df = pd.read_sql(
-            QUERY_COMPANY_TOP_APPS,
+            QUERY_COMPANY_TOP_APPS_PARENT,
             con=DBCON.engine,
-            params={
-                "company_domain": company_domain,
-                "mylimit": mylimit,
-            },
+            params={"company_domain": company_domain, "mylimit": limit},
         )
+        if df.empty:
+            df = pd.read_sql(
+                QUERY_COMPANY_TOP_APPS,
+                con=DBCON.engine,
+                params={"company_domain": company_domain, "mylimit": limit},
+            )
     if not df.empty:
         df["review_count"] = 0
         df["rating"] = 5
