@@ -31,13 +31,13 @@
 			<div class="card preset-tonal">
 				<p class="text-lg">
 					Total Android Apps: {formatNumber(
-						detailsData.categories[category].sdk_android_total_apps
+						detailsData.categories[category]?.sdk_android_total_apps || 0
 					)}
 				</p>
 			</div>
 			<div class="card preset-tonal">
 				<p class="text-lg">
-					Total iOS Apps: {formatNumber(detailsData.categories[category].sdk_ios_total_apps)}
+					Total iOS Apps: {formatNumber(detailsData.categories[category]?.sdk_ios_total_apps || 0)}
 				</p>
 			</div>
 		</div>
@@ -61,7 +61,7 @@
 					<div class="card-header">
 						<p class="text-sm md:text-lg">
 							Total Android Apps: {formatNumber(
-								detailsData.categories[category].adstxt_direct_android_total_apps
+								detailsData.categories[category]?.adstxt_direct_android_total_apps || 0
 							)}
 						</p>
 					</div>
@@ -72,7 +72,7 @@
 					<div class="card-header">
 						<p class="text-sm md:text-lg">
 							Total iOS Apps: {formatNumber(
-								detailsData.categories[category].adstxt_direct_ios_total_apps
+								detailsData.categories[category]?.adstxt_direct_ios_total_apps || 0
 							)}
 						</p>
 					</div>

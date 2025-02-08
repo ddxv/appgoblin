@@ -25,7 +25,7 @@
 		<WhiteCard>
 			{#await data.companyDetails}
 				<div class="p-6 rounded-lg shadow-md flex justify-center items-center h-40">
-					<span class="text-lg">Loading...</span>
+					<span class="text-lg">Loading company info...</span>
 				</div>
 			{:then myData}
 				{#if typeof myData == 'string'}
@@ -35,7 +35,7 @@
 						<h2 class="text-xl font-bold text-primary-900-100 mb-4">Total Apps</h2>
 						<p class="text-lg">
 							<span class="font-semibold text-primary-900-100"
-								>{formatNumber(myData.categories[company_category].total_apps)}</span
+								>{formatNumber(myData.categories[company_category]?.total_apps || 0)}</span
 							>
 						</p>
 					</div>
@@ -48,10 +48,10 @@
 </CompaniesLayout>
 
 {#await data.companyDetails}
-	<div><span>Loading...</span></div>
+	<div><span>Loading company apps...</span></div>
 {:then detailsData}
 	{#await data.companyCategoryApps}
-		<div><span>Loading...</span></div>
+		<div><span>Loading apps ...</span></div>
 	{:then tableData}
 		{#if typeof tableData == 'string'}
 			Failed to load company's apps.

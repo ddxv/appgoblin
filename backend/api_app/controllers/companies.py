@@ -48,7 +48,7 @@ from dbcon.queries import (
     get_company_tree,
     get_tag_source_category_totals,
     get_tag_source_totals,
-    get_top_apps_for_company,
+    get_topapps_for_company,
     search_companies,
 )
 
@@ -68,7 +68,7 @@ def get_company_apps(
     category: str | None = None,
 ) -> CompanyAppsOverview:
     """Get the overview data from the database."""
-    df = get_top_apps_for_company(
+    df = get_topapps_for_company(
         company_domain=company_domain,
         mapped_category=category,
     )
@@ -1002,9 +1002,11 @@ class CompaniesController(Controller):
         )
 
         duration = round((time.perf_counter() * 1000 - start), 2)
-        logger.info(
-            f"GET /api/companies/{company_domain}/adstxt/publisher/{publisher_id} took {duration}ms"
+        endpoint = (
+            f"GET /api/companies/{company_domain}/adstxt/publisher/{publisher_id}"
         )
+        msg = f"{endpoint} took {duration}ms"
+        logger.info(msg)
         return overview
 
     @get(
@@ -1040,10 +1042,10 @@ class CompaniesController(Controller):
         df.to_csv(buffer, index=False)
         buffer.seek(0)
 
+        filename = f"adstxt_{company_domain}_{publisher_id}.csv"
+
         return Stream(
             iter([buffer.getvalue()]),
             media_type="text/csv",
-            headers={
-                "Content-Disposition": f"attachment; filename=adstxt_{company_domain}_{publisher_id}.csv"
-            },
+            headers={"Content-Disposition": f"attachment; filename={filename}"},
         )
