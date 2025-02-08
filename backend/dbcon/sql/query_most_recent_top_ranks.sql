@@ -10,6 +10,8 @@ LEFT JOIN
     ON ar.store = s.id
 LEFT JOIN
     store_apps AS sa ON ar.store_app = sa.id
+LEFT JOIN
+    countries AS c ON ar.country = c.id
 WHERE
     ar.crawled_date
     = (
@@ -20,4 +22,5 @@ WHERE
     AND ar.store = :store
     AND ar.store_collection = :collection_id
     AND ar.store_category = :category_id
+    AND c.alpha2 = :country
 LIMIT :mylimit;

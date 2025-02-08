@@ -109,6 +109,7 @@ class RankingsController(Controller):
         store: int,
         collection: int,
         category: int,
+        country: str = "US",
     ) -> dict:
         """Handle GET request for store/collection/category rank.
 
@@ -123,6 +124,7 @@ class RankingsController(Controller):
             store=store,
             collection_id=collection,
             category_id=category,
+            country=country,
             limit=200,
         )
         ranks_dict = df.to_dict(orient="records")
@@ -134,6 +136,7 @@ class RankingsController(Controller):
         store: int,
         collection: int,
         category: int,
+        country: str = "US",
     ) -> dict:
         """Handle GET request for a store/collection/category rank.
 
@@ -148,6 +151,7 @@ class RankingsController(Controller):
             store=store,
             collection_id=collection,
             category_id=category,
+            country=country,
             limit=10,
             days=30,
         )

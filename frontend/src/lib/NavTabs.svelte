@@ -16,7 +16,7 @@
 	</a>
 
 	<div class={horizontalDivider}></div>
-	<a href="/rankings/store/1/collection/1/category/1" class={topBarFont}>
+	<a href="/rankings/store/1/collection/1/category/1/US" class={topBarFont}>
 		<p class={isHighlighted('/rankings') ? topBarHighlightedFont : topBarFont}>APP RANKS</p>
 	</a>
 	<div class={horizontalDivider}></div>

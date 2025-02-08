@@ -7,6 +7,8 @@ FROM
     app_rankings AS arr
 LEFT JOIN
     store_apps AS sa ON arr.store_app = sa.id
+LEFT JOIN
+    countries AS c ON arr.country = c.id
 WHERE
     arr.store_app IN (
         SELECT ar.store_app
@@ -22,6 +24,7 @@ WHERE
             AND ar.store = :store
             AND ar.store_collection = :collection_id
             AND ar.store_category = :category_id
+            AND c.alpha2 = :country
         LIMIT :mylimit
     )
     AND arr.crawled_date >= :start_date

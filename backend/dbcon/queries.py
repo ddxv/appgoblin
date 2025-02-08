@@ -229,6 +229,7 @@ def get_most_recent_top_ranks(
     store: int,
     collection_id: int,
     category_id: int,
+    country: str = "US",
     limit: int = 25,
 ) -> pd.DataFrame:
     """Get the latest top ranks for a category."""
@@ -239,6 +240,7 @@ def get_most_recent_top_ranks(
             "store": store,
             "collection_id": collection_id,
             "category_id": category_id,
+            "country": country,
             "mylimit": limit,
         },
     )
@@ -249,6 +251,7 @@ def get_history_top_ranks(
     store: int,
     collection_id: int,
     category_id: int,
+    country: str = "US",
     limit: int = 25,
     days: int = 30,
 ) -> pd.DataFrame:
@@ -263,6 +266,7 @@ def get_history_top_ranks(
             "store": store,
             "collection_id": collection_id,
             "category_id": category_id,
+            "country": country,
             "start_date": start_date,
             "mylimit": limit,
         },

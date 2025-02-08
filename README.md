@@ -9,20 +9,19 @@ This is the code I use to create [AppGoblin](https://appgoblin.info) for trackin
 ## Features
 
 - **[Companies Directory](https://appgoblin.info/companies)**: Rankings based on SDK integration frequency
-  - Filter by category 
+  - Filter by category
     - Example: [Most popular Ad Networks for Casino Games](https://appgoblin.info/companies/types/ad-networks/game_casino)
     - Example: [Most popular Product analytics for Business Apps](https://appgoblin.info/companies/types/product-analytics/business)
 - **Company Intelligence**: See the top client apps for mobile app companies
   - Example: [Salesforce Clients](https://appgoblin.info/companies/salesforce.com)
   - Example: [AppsFlyer Top Apps](https://appgoblin.info/companies/appsflyer.com)
-- **[App Rankings](https://appgoblin.info/rankings/store/1/collection/1/category/1)**: Daily tracking of top apps from Google Play and Apple App Store.
+- **[App Rankings](https://appgoblin.info/rankings/store/1/collection/1/category/1/US)**: Daily tracking of top apps from Google Play and Apple App Store.
 - **[SDK Analysis](https://appgoblin.info/sdks)**: Detailed list of decompiled Android and iOS Apps and their internally used SDKs. See what tracking SDKs are used in which apps.
-
 
 ### Project Structure
 
-   1. Python Litestar backend API found in `backend/`
-   2. Javascript SvelteKit+Tailwind UI found in `frontend/`
+1.  Python Litestar backend API found in `backend/`
+2.  Javascript SvelteKit+Tailwind UI found in `frontend/`
 
 ### Data & Database
 
@@ -50,8 +49,3 @@ The database referred to in this repository is created by [adscrawler](https://g
 **Have questions or suggestions? Let's connect!**
 
 🧙‍♂️ [Join Discord Server](https://discord.gg/7jpWEhkXRW)
-
-
-
-
-

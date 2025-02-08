@@ -290,10 +290,10 @@
 	</div>
 
 	<div class="card preset-tonal-surface p-2 md:p-8">
-		<a href="/rankings/store/1/collection/1/category/1">
+		<a href="/rankings/store/1/collection/1/category/1/US">
 			<h2 class="h2 p-2 md:p-4">Latest App Store Ranks</h2>
 		</a>
-		<a href="/rankings/store/1/collection/1/category/1">
+		<a href="/rankings/store/1/collection/1/category/1/US">
 			<p class="p-2 md:p-4">Click through for full app store categories and rankings.</p>
 		</a>
 		<div
@@ -302,7 +302,7 @@
 			{#await data.androidAppRanks}
 				Loading Android App Ranks...
 			{:then androidApps}
-				<a href="/rankings/store/1/collection/1/category/1">
+				<a href="/rankings/store/1/collection/1/category/1/US">
 					<div class="snap-center shrink-0 card preset-tonal-surface w-48 md:w-56">
 						<div class="table-container card-header">
 							<h3 class="h3">Android Apps</h3>
@@ -317,7 +317,7 @@
 			{#await data.iOSAppRanks}
 				Loading iOS App Ranks...
 			{:then iOSApps}
-				<a href="/rankings/store/2/collection/4/category/120">
+				<a href="/rankings/store/2/collection/4/category/120/US">
 					<div class="snap-center shrink-0 card preset-tonal-surface w-48 md:w-56">
 						<div class="table-container card-header">
 							<h3 class="h3">iOS Apps</h3>
@@ -332,7 +332,7 @@
 			{#await data.androidGameRanks}
 				Loading Android Game Ranks...
 			{:then androidGames}
-				<a href="/rankings/store/1/collection/1/category/36">
+				<a href="/rankings/store/1/collection/1/category/36/US">
 					<div class="snap-center shrink-0 card preset-tonal-surface w-48 md:w-56">
 						<div class="table-container card-header">
 							<h3 class="h3">Android Games</h3>
@@ -347,7 +347,7 @@
 			{#await data.iOSGameRanks}
 				Loading iOS Game Ranks...
 			{:then iOSGames}
-				<a href="/rankings/store/2/collection/4/category/62	">
+				<a href="/rankings/store/2/collection/4/category/62/US">
 					<div class="snap-center shrink-0 card preset-tonal-surface w-48 md:w-56">
 						<div class="table-container card-header">
 							<h3 class="h3">iOS Games</h3>
