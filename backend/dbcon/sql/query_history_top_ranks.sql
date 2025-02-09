@@ -1,33 +1,30 @@
+WITH top_apps AS (
+    -- First identify all apps that were ever in top 10 during the period
+    SELECT DISTINCT ar.store_id
+    FROM frontend.app_rankings_latest_by_week AS ar
+    WHERE
+        ar.store = ar.:store
+        AND ar.store_collection = ar.:collection_id
+        AND ar.store_category = ar.:category_id
+        AND ar.country = ar.:country
+        AND ar.crawled_date >= ar.:start_date
+        AND ar.rank <= ar.:mylimit
+)
+
 SELECT
-    arr.crawled_date,
-    arr.rank,
-    sa.name,
-    sa.store_id
-FROM
-    app_rankings AS arr
-LEFT JOIN
-    store_apps AS sa ON arr.store_app = sa.id
-LEFT JOIN
-    countries AS c ON arr.country = c.id
+    ar.crawled_date,
+    ar.rank,
+    ar.name,
+    ar.store_id
+FROM frontend.app_rankings_latest_by_week AS ar
+INNER JOIN top_apps AS ta
+    ON ar.store_id = ta.store_id
 WHERE
-    arr.store_app IN (
-        SELECT ar.store_app
-        FROM
-            app_rankings AS ar
-        WHERE
-            ar.crawled_date
-            = (
-                SELECT max(arr.crawled_date)
-                FROM app_rankings AS arr
-                WHERE arr.store = :store
-            )
-            AND ar.store = :store
-            AND ar.store_collection = :collection_id
-            AND ar.store_category = :category_id
-            AND c.alpha2 = :country
-        LIMIT :mylimit
-    )
-    AND arr.crawled_date >= :start_date
-    AND arr.store = :store
-    AND arr.store_collection = :collection_id
-    AND arr.store_category = :category_id;
+    ar.store = :store
+    AND ar.store_collection = :collection_id
+    AND ar.store_category = :category_id
+    AND ar.country = :country
+    AND ar.crawled_date >= :start_date
+ORDER BY
+    ar.store_id ASC,
+    ar.crawled_date DESC;
