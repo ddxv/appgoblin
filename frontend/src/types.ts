@@ -138,6 +138,7 @@ export interface AppRankDetail {
 	store: number;
 	collection: string;
 	category: string;
+	country: string;
 }
 
 export interface UnknownSDKs {

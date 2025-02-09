@@ -445,12 +445,13 @@ class AppController(Controller):
         return trackers_dict
 
     @get(path="/{store_id:str}/ranks", cache=3600)
-    async def app_ranks(self: Self, store_id: str) -> AppRank:
+    async def app_ranks(self: Self, store_id: str, country: str = "US") -> AppRank:
         """Handle GET requests for a specific app ranks.
 
         Args:
         ----
             store_id (str): The id of the store to retrieve.
+            country (str): The country to retrieve, alpha2 code (capitalized)
 
         Returns:
         -------
@@ -466,11 +467,17 @@ class AppController(Controller):
                 status_code=404,
             )
         df["rank_group"] = df["collection"] + ": " + df["category"]
-        latest_dict = df[df["crawled_date"].max() == df["crawled_date"]][
-            ["rank", "store", "crawled_date", "collection", "category"]
-        ].to_dict(orient="records")
+        latest_dict = (
+            df[df["crawled_date"].max() == df["crawled_date"]][
+                ["rank", "store", "crawled_date", "collection", "category", "country"]
+            ]
+            .sort_values("rank")
+            .to_dict(orient="records")
+        )
         df["crawled_date"] = pd.to_datetime(df["crawled_date"]).dt.strftime("%Y-%m-%d")
-        pdf = df[["crawled_date", "rank", "rank_group"]].sort_values("crawled_date")
+        pdf = df[df["country"] == country][
+            ["crawled_date", "rank", "rank_group"]
+        ].sort_values("crawled_date")
         # This format is for echarts, expects data series as columns
         hist_dict = (
             pdf.pivot_table(

@@ -3,12 +3,12 @@ WITH top_apps AS (
     SELECT DISTINCT ar.store_id
     FROM frontend.app_rankings_latest_by_week AS ar
     WHERE
-        ar.store = ar.:store
-        AND ar.store_collection = ar.:collection_id
-        AND ar.store_category = ar.:category_id
-        AND ar.country = ar.:country
-        AND ar.crawled_date >= ar.:start_date
-        AND ar.rank <= ar.:mylimit
+        ar.store = :store
+        AND ar.store_collection = :collection_id
+        AND ar.store_category = :category_id
+        AND ar.country = :country
+        AND ar.crawled_date >= :start_date
+        AND ar.rank <= :mylimit
 )
 
 SELECT

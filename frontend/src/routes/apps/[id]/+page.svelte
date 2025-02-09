@@ -14,7 +14,7 @@
 		data: AppFullDetails;
 	}
 	import { page } from '$app/state';
-
+	import { countries } from '../../../stores.js';
 	let { data }: Props = $props();
 	let sum = (arr: number[]) => arr.reduce((acc, curr) => acc + curr, 0);
 
@@ -27,6 +27,7 @@
 		}
 		return '';
 	}
+	let country = $state(page.params.country || 'US');
 </script>
 
 <svelte:head>
@@ -321,18 +322,32 @@
 					</p>
 				{:else}
 					{#if ranks.latest && ranks.latest.length > 0}
-						{#each ranks.latest as myrow}
+						{#each ranks.latest.slice(0, 10) as myrow}
 							<div class="px-4">
 								#{myrow.rank}
 								in: {myrow.collection}
 								{myrow.category}
-								({myrow.crawled_date})
+								({myrow.country})
 							</div>
 						{/each}
+						{#if ranks.latest.length > 10}
+							<div class="px-4 mt-2 text-surface-600">
+								+ {ranks.latest.length - 10} more rankings
+							</div>
+						{/if}
 					{/if}
+
 					{#if ranks.history && ranks.history.length > 0}
 						<div class="card preset-tonal mt-2 md:mt-4">
 							<h4 class="h4 md:h3 p-2 mt-2">Store Ranks Historical</h4>
+							<div class="max-w-sm p-2">
+								<select class="select" bind:value={country}>
+									{#each Object.entries(countries) as [key, value]}
+										<option value={key}>{value}</option>
+									{/each}
+								</select>
+							</div>
+
 							<RankChart plotData={ranks.history} narrowBool={true} />
 						</div>
 					{:else}
