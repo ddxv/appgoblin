@@ -2,6 +2,7 @@
 	import type { DeveloperResponse } from '../../../types';
 	import AppsCard from '$lib/AppGroupCard.svelte';
 	import { page } from '$app/state';
+	import ExternalLink from '$lib/ExternalLink.svelte';
 	interface Props {
 		data: DeveloperResponse;
 	}
@@ -68,9 +69,7 @@
 				>
 				<br />
 				Matched Developer URL:
-				<a href={devs.google.developer_url} target="_blank" rel="noopener noreferrer">
-					{devs.google.developer_url}
-				</a>
+				<ExternalLink domain={devs.google.developer_url} />
 			</p>
 			<AppsCard apps={devs.google.apps} />
 			<hr />
@@ -81,9 +80,7 @@
 				>
 				<br />
 				Matched Developer URL:
-				<a href={devs.apple.developer_url} target="_blank" rel="noopener noreferrer">
-					{devs.apple.developer_url}
-				</a>
+				<ExternalLink domain={devs.apple.developer_url} />
 			</p>
 			<AppsCard apps={devs.apple.apps} />
 		{/if}
