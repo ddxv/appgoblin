@@ -31,9 +31,11 @@ jobs:
             sudo systemctl enable /home/goblin/appgoblin/scripts/appgoblin-api.service
             sudo systemctl enable /home/goblin/appgoblin/scripts/appgoblin-frontend.service
             sudo systemctl daemon-reload
+            echo "Restart systemd backend"
             sudo systemctl restart appgoblin-api
             cd frontend
             pwd
+            echo "Build frontend"
             export PATH="/home/root/.nvm/versions/node/v22.13.1/bin:$PATH" && /home/goblin/.nvm/versions/node/v22.13.1/bin/npm run build
-            echo "Restart systemd service"
+            echo "Restart systemd frontend"
             sudo systemctl restart appgoblin-frontend
