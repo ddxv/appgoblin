@@ -5,6 +5,7 @@ description = "Backend server for appgoblin"
 version = "0.0.1"
 
 dependencies = [
+    "psycopg2-binary",
     "gunicorn",
     "litestar[standard]",
     "pandas",
@@ -14,7 +15,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pre-commit", "psycopg2-binary", "sshtunnel"]
+dev = ["pre-commit", "sshtunnel"]
 
 
 [build-system]
