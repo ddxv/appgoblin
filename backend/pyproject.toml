@@ -1,7 +1,7 @@
 [project]
 authors = [{ name = "James O'Claire" }]
-name = "app-store-dash-backend"
-description = "Backend server for app store dashboard"
+name = "appgoblin-backend"
+description = "Backend server for appgoblin"
 version = "0.0.1"
 
 dependencies = [
@@ -37,7 +37,7 @@ lint.ignore = [
     "D213",   # Suppress ruff internal conflict
     "COM812", # ruff-format requested ignore to avoid conflict
     "D203",   # ruff-format requested ignore to avoid conflict
-    "ISC001"  # ruff-format requested ignore to avoid conflict
+    "ISC001", # ruff-format requested ignore to avoid conflict
 ]
 
 

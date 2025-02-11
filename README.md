@@ -42,7 +42,7 @@ The database referred to in this repository is created by [adscrawler](https://g
   - Backend: in `backend/` run `gunicorn -k uvicorn.workers.UvicornWorker app:app` or `litestar run dev`
   - Frontend: in `frontend` run `npm run dev`
 - This repo includes the scripts used to run in production as well. These are located in the steps in `.github/actions` as well as `scripts` for systemd services for frontend and backend.
-- Additionally, you will need a proxy. I used Nginx. This is wherever you have your nginx configuration set, possibly sites-available `/etc/nginx/sites-available/app-store-api` or `/etc/nginx/conf.d/app-store-api.conf`
+- Additionally, you will need a proxy. I used Nginx. This is wherever you have your nginx configuration set, possibly sites-available `/etc/nginx/sites-available/appgoblin-api` or `/etc/nginx/conf.d/appgoblin-api.conf`
 
 ### AppGoblin Community
 

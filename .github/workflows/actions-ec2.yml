@@ -17,7 +17,7 @@ jobs:
       - name: Deploy to server
         uses: appleboy/ssh-action@master
         env:
-          TARGETDIR: app-store-dash
+          TARGETDIR: appgoblin
         with:
           host: ${{ secrets.HOST_DNS }}
           username: ${{ vars.USERNAME }}
@@ -30,11 +30,11 @@ jobs:
             pwd
             git pull origin main
             cd frontend
-            sudo systemctl enable /home/goblin/app-store-dash/scripts/app-store-api.service
-            sudo systemctl enable /home/goblin/app-store-dash/scripts/app-store-frontend.service
+            sudo systemctl enable /home/goblin/appgoblin/scripts/appgoblin-api.service
+            sudo systemctl enable /home/goblin/appgoblin/scripts/appgoblin-frontend.service
             sudo systemctl daemon-reload
-            sudo systemctl restart app-store-api
+            sudo systemctl restart appgoblin-api
             pwd
-            export PATH="/home/goblin/.nvm/versions/node/v20.16.0/bin:$PATH" && NODE_OPTIONS="--max-old-space-size=800" /home/goblin/.nvm/versions/node/v20.16.0/bin/npm run build
+            export PATH="/home/root/.nvm/versions/node/v20.16.0/bin:$PATH" && NODE_OPTIONS="--max-old-space-size=800" /home/goblin/.nvm/versions/node/v20.16.0/bin/npm run build
             echo "Restart systemd service"
-            sudo systemctl restart app-store-frontend
+            sudo systemctl restart appgoblin-frontend
