@@ -5,6 +5,7 @@ description = "Backend server for appgoblin"
 version = "0.0.1"
 
 dependencies = [
+    "gunicorn",
     "litestar[standard]",
     "pandas",
     "numpy",
