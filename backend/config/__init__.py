@@ -6,12 +6,12 @@ import sys
 import tomllib
 from logging.handlers import RotatingFileHandler
 
-PROJECT_NAME = "app-store"
+PROJECT_NAME = "appgoblin"
 
 HOME = pathlib.Path.home()
 
-# load config in /home/my-user/app-store/config.toml
-# Save logs in /home/my-user/app-store/config.toml
+# load config in /home/my-user/appboblin/config.toml
+# Save logs in /home/my-user/appgoblin/config.toml
 TOP_CONFIGDIR = pathlib.Path(HOME, pathlib.Path(".config"))
 CONFIG_DIR = pathlib.Path(TOP_CONFIGDIR, pathlib.Path(PROJECT_NAME))
 CONFIG_FILENAME = "config.toml"
