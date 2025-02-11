@@ -35,6 +35,6 @@ jobs:
             sudo systemctl restart appgoblin-api
             cd frontend
             pwd
-            export PATH="/home/root/.nvm/versions/node/v22.13.1/bin:$PATH" && NODE_OPTIONS="--max-old-space-size=800" /home/goblin/.nvm/versions/node/v22.13.1/bin/npm run build
+            export PATH="/home/root/.nvm/versions/node/v22.13.1/bin:$PATH" && /home/goblin/.nvm/versions/node/v22.13.1/bin/npm run build
             echo "Restart systemd service"
             sudo systemctl restart appgoblin-frontend
