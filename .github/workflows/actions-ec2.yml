@@ -29,11 +29,11 @@ jobs:
             cd $TARGETDIR
             pwd
             git pull origin main
-            cd frontend
             sudo systemctl enable /home/goblin/appgoblin/scripts/appgoblin-api.service
             sudo systemctl enable /home/goblin/appgoblin/scripts/appgoblin-frontend.service
             sudo systemctl daemon-reload
             sudo systemctl restart appgoblin-api
+            cd frontend
             pwd
             export PATH="/home/root/.nvm/versions/node/v22.13.1/bin:$PATH" && NODE_OPTIONS="--max-old-space-size=800" /home/goblin/.nvm/versions/node/v22.13.1/bin/npm run build
             echo "Restart systemd service"
