@@ -95,24 +95,22 @@
 			{/await}
 		</WhiteCard>
 	{/snippet}
-
-	{#snippet card4()}
-		<WhiteCard>
-			{#snippet title()}
-				<span>Company SDKs</span>
-			{/snippet}
-			{#await data.companySdks}
-				<span class="text-lg">Loading...</span>
-			{:then mySdks}
-				{#if typeof mySdks == 'string'}
-					<p class="text-red-500 text-center">Failed to load company SDKs.</p>
-				{:else if mySdks}
-					<CompanySDKs {mySdks} />
-				{/if}
-			{/await}
-		</WhiteCard>
-	{/snippet}
 </CompaniesLayout>
+
+<WhiteCard>
+	{#snippet title()}
+		<span>Company SDKs</span>
+	{/snippet}
+	{#await data.companySdks}
+		<span class="text-lg">Loading...</span>
+	{:then mySdks}
+		{#if typeof mySdks == 'string'}
+			<p class="text-red-500 text-center">Failed to load company SDKs.</p>
+		{:else if mySdks}
+			<CompanySDKs {mySdks} />
+		{/if}
+	{/await}
+</WhiteCard>
 
 {#await data.companyDetails}
 	<div><span>Loading...</span></div>
