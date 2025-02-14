@@ -22,7 +22,6 @@ from api_app.models import (
     CompanyAppsOverview,
     CompanyCategoryOverview,
     CompanyDetail,
-    CompanyPatterns,
     CompanyPatternsDict,
     CompanyPlatformOverview,
     CompanyPubIDOverview,
@@ -759,14 +758,22 @@ class CompaniesController(Controller):
 
         df = get_company_sdks(company_domain=company_domain)
 
+        company_sdks = (
+            df[["company_name", "sdk_name", "package_pattern", "path_pattern"]]
+            .set_index(["company_name", "sdk_name"])
+            .groupby(level=[0, 1])
+            .apply(
+                lambda x: {
+                    "package_patterns": x["package_pattern"].unique().tolist(),
+                    "paths": x["path_pattern"].unique().tolist(),
+                }
+            )
+            .unstack(level=0)
+            .to_dict()
+        )
+
         mydict = CompanyPatternsDict(
-            companies={
-                company_name[0]: CompanyPatterns(
-                    package_patterns=mylist["package_pattern"].unique().tolist(),
-                    paths=mylist["path_pattern"].unique().tolist(),
-                )
-                for company_name, mylist in df.groupby(["company_name"])
-            },
+            companies=company_sdks,
         )
 
         duration = round((time.perf_counter() * 1000 - start), 2)

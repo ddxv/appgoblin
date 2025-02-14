@@ -145,7 +145,7 @@ export interface UnknownSDKs {
 	[key: string]: { [key: string]: string[] };
 }
 
-export interface CompanySDKs {
+export interface CompanySDKParts {
 	[key: string]: { [key: string]: { [key: string]: string[] } };
 }
 
@@ -294,9 +294,18 @@ export interface CompanyPatterns {
 	paths: string[];
 }
 
-export interface CompanyPatternsDict {
+export interface SDKPatterns {
+	package_patterns: string[];
+	paths: string[];
+}
+
+export interface CompanySDKs {
+	[sdk_name: string]: SDKPatterns;
+}
+
+export interface CompanySDKsDict {
 	companies: {
-		[company_name: string]: CompanyPatterns;
+		[company_name: string]: CompanySDKs;
 	};
 }
 
@@ -348,7 +357,7 @@ export interface CompanyFullDetails {
 	companyDetails: CompanyCategoryOverview;
 	companyTopApps: CompanyOverviewSections;
 	companyTree: ParentCompanyTree;
-	companySdks: CompanyPatternsDict;
+	companySdks: CompanySDKsDict;
 	companyParentCategories: ChartTabularData;
 }
 export interface CompanyCategoryDetails {

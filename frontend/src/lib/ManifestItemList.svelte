@@ -1,11 +1,11 @@
 <script lang="ts">
-	import type { CompanySDKs } from '../types';
+	import type { CompanySDKParts } from '../types';
 	import WhiteCard from './WhiteCard.svelte';
 	import CompanyButton from './CompanyButton.svelte';
 	import { Accordion } from '@skeletonlabs/skeleton-svelte';
 
 	interface Props {
-		items: CompanySDKs;
+		items: CompanySDKParts;
 	}
 
 	let { items = {} }: Props = $props();

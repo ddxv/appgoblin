@@ -145,11 +145,28 @@ class CompanyTypes:
 
 
 @dataclass
+class SDKPatterns:
+    """Holds a list of package patterns and paths for a company."""
+
+    sdk_name: str
+    package_patterns: list[str]
+    paths: list[str]
+
+
+@dataclass
+class CompanySDKs:
+    """Holds a list of package patterns and paths for a company."""
+
+    company_name: str
+    sdks: list[SDKPatterns]
+
+
+@dataclass
 class CompanyPatterns:
     """Holds a list of package patterns and paths for a company."""
 
-    package_patterns: list[str]
-    paths: list[str]
+    company_name: str
+    sdks: list[CompanySDKs]
 
 
 @dataclass
