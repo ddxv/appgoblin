@@ -81,16 +81,6 @@ def process_search_results(results: list[dict]) -> None:
     logger.info("search results done")
 
 
-def get_playstore_results(search_term: str) -> AppGroup:
-    """Parse search term and return resulting APpGroup."""
-    decoded_input = urllib.parse.unquote(search_term)
-    df = search_apps(search_input=decoded_input, limit=20)
-    logger.info(f"{decoded_input=} returned rows: {df.shape[0]}")
-    apps_dict = df.to_dict(orient="records")
-    app_group = AppGroup(title=search_term, apps=apps_dict)
-    return app_group
-
-
 def app_history(store_app: int, app_name: str) -> AppHistory:
     """Get the history of app scraping."""
     app_hist = get_app_history(store_app)
@@ -617,63 +607,6 @@ class AppController(Controller):
             apps_dict,
             background=BackgroundTask(search_both_stores, search_term),
         )
-
-    @get(path="/search/{search_term:str}/playstore", cache=3600)
-    async def search_playstore(self: Self, search_term: str) -> AppGroup:
-        """Search apps and developers.
-
-        Args:
-        ----
-            search_term: str the search term to search for.
-                Can search packages, developers and app names.
-
-        """
-        start = time.perf_counter() * 1000
-        results = google.search_play_store(search_term)
-        app_group = AppGroup(title="Google Playstore Results", apps=results)
-        duration = round((time.perf_counter() * 1000 - start), 2)
-        logger.info(f"{self.path}/{search_term}/playstore took {duration}ms")
-        if len(results) > 0:
-            return Response(
-                app_group,
-                background=BackgroundTask(process_search_results, results),
-            )
-        return app_group
-
-    @get(path="/search/{search_term:str}/applestore", cache=3600)
-    async def search_applestore(self: Self, search_term: str) -> AppGroup:
-        """Search apps and developers.
-
-        Args:
-        ----
-            search_term: str the search term to search for.
-                Can search packages, developers and app names.
-
-        """
-        logger.info(f"{self.path} term={search_term} for apple store")
-
-        start = time.perf_counter() * 1000
-
-        ids = apple.search_app_store_for_ids(search_term)
-        full_results = [{"store_id": store_id, "store": 2} for store_id in ids]
-        results = apple.app_details_for_ids(ids[:10])
-
-        df = pd.DataFrame(results)
-        df = apple.clean_ios_app_df(df)
-
-        df["store_link"] = "https://apps.apple.com/us/app/-/id" + df["store_id"]
-
-        results_dict = df.to_dict(orient="records")
-
-        app_group = AppGroup(title="Apple App Store Results", apps=results_dict)
-        duration = round((time.perf_counter() * 1000 - start), 2)
-        logger.info(f"{self.path} took {duration}ms")
-        if len(results) > 0:
-            return Response(
-                app_group,
-                background=BackgroundTask(process_search_results, full_results),
-            )
-        return app_group
 
     @post(path="/{store_id:str}/requestSDKScan")
     async def request_sdk_scan(self: Self, store_id: str) -> Response:

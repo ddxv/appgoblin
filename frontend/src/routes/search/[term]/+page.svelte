@@ -2,7 +2,6 @@
 	import { page } from '$app/state';
 	import type { SearchResponse } from '../../../types';
 	import AppGroupCard from '$lib/AppGroupCard.svelte';
-	import { goto } from '$app/navigation';
 
 	import CompaniesOverviewTable from '$lib/CompaniesOverviewTable.svelte';
 
@@ -12,21 +11,6 @@
 
 	let { data }: Props = $props();
 	let searchTerm: string | null = $state(page.params.term || '');
-
-	function searchGooglePlay() {
-		if (searchTerm) {
-			goto(`/search/${encodeURIComponent(searchTerm)}/playstore`);
-		} else {
-			console.log('search term error');
-		}
-	}
-	function searchAppleStore() {
-		if (searchTerm) {
-			goto(`/search/${encodeURIComponent(searchTerm)}/applestore`);
-		} else {
-			console.log('search term error');
-		}
-	}
 </script>
 
 <h1 class="h1">Search Results for {searchTerm}</h1>
@@ -62,27 +46,23 @@
 		{#if typeof results != 'string'}
 			{#if results.apps.length > 0}
 				<AppGroupCard apps={results} />
+
+				<div class="card p-4 mt-4">
+					<h3 class="h3">Didn't see what you're looking for?</h3>
+					<p class="p-2">
+						This search will also crawl the top 200 apps on Google Play and App Store and update
+						AppGoblin over the next day. You can also reach out on Discord or GitHub if you have
+						questions or need any support.
+					</p>
+				</div>
 			{:else}
 				<h2 class="h2 p-4">Apps</h2>
-				<h3 class="h3">No apps found, please try your search again.</h3>
+				<h3 class="h3">
+					No apps found, but a search for {searchTerm} has been queued and full data from app store,
+					if it exists, should be available in the coming days. Please feel free to reach out on GitHub
+					or Discord if you have any questions.
+				</h3>
 			{/if}
-			<div class="card p-4 mt-4">
-				<h3 class="h3">Didn't see what you're looking for?</h3>
-				<p class="p-2">
-					Try searching on Google Play. Results will take an hour to be live on AppGoblin. If you
-					still don't see what you're looking for please reach out on GitHub or Discord.
-				</p>
-				<card class="card preset-tonal p-4">
-					<button class="btn preset-filled-primary p-2" onclick={searchGooglePlay}>
-						Search Google Play Store
-					</button>
-				</card>
-				<card class="card preset-tonal p-4">
-					<button class="btn preset-filled-primary p-2" onclick={searchAppleStore}>
-						Search Apple App Store
-					</button>
-				</card>
-			</div>
 		{:else}
 			<p>Search failed please try again ... {results}</p>
 		{/if}
