@@ -73,12 +73,12 @@ def get_search_results(search_term: str) -> AppGroup:
 
 def process_search_results(results: list[dict]) -> None:
     """After having queried an external app store send results to db."""
-    logger.info("search results to try opening connection")
+    logger.info("background:search results to try opening connection")
     db_conn = write_conn.get_db_connection(use_ssh_tunnel=True)
     db_conn.set_engine()
-    logger.info("search results to be processed")
+    logger.info("background:search results to be processed")
     scrape_stores.process_scraped(db_conn, results, "appgoblin_search")
-    logger.info("search results done")
+    logger.info("background:search results done")
 
 
 def app_history(store_app: int, app_name: str) -> AppHistory:
