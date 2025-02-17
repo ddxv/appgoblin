@@ -91,7 +91,7 @@
 						{/if}
 						<td class="table-cell-fit">
 							<p class="text-xs md:text-sm">
-								{(row.google_sdk * 100).toFixed(0)}%
+								{(row.google_sdk * 100).toFixed(2)}%
 							</p>
 						</td>
 
