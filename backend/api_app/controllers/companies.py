@@ -194,6 +194,15 @@ def prep_companies_overview_df(
         columns=["store_tag_source"],
         values="percentage",
     ).reset_index()
+
+    overview_df["tempsort"] = (
+        overview_df[store_tag_source_values].fillna(0).mean(axis=1)
+    )
+    overview_df = overview_df.sort_values(
+        by="tempsort",
+        ascending=False,
+    ).drop(columns=["tempsort"])
+
     overview_df = overview_df.sort_values(
         by=store_tag_source_values,
         ascending=False,
