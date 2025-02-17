@@ -178,6 +178,7 @@ export interface CompaniesOverviewEntries extends Row {
 	store: string;
 	app_count: number;
 	percentage: number;
+	percent_open_source: number;
 }
 
 export interface CompaniesOverviewPlatforms {

@@ -41,6 +41,7 @@ from dbcon.queries import (
     get_company_adstxt_publisher_id_apps_overview,
     get_company_adstxt_publisher_id_apps_raw,
     get_company_adstxt_publishers_overview,
+    get_company_open_source,
     get_company_overview,
     get_company_parent_categories,
     get_company_sdks,
@@ -245,6 +246,14 @@ def get_overviews(
     )
 
     overview_df = prep_companies_overview_df(overview_df)
+
+    open_source_df = get_company_open_source()
+
+    overview_df = overview_df.merge(
+        open_source_df, on="company_domain", how="left", validate="1:1"
+    )
+
+    overview_df["percent_open_source"] = overview_df["percent_open_source"].fillna(0)
 
     results = CompaniesOverview(
         companies_overview=overview_df.to_dict(orient="records"),

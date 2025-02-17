@@ -19,7 +19,7 @@
 
 	const rows = handler.getRows();
 
-	console.log(`TABLE Companies: ${totalRows}`);
+	const include_open_source = page.params.type == 'development-tools';
 </script>
 
 <div class="table-container space-y-4">
@@ -33,6 +33,11 @@
 							><p class="text-xs md:text-lg">Company</p></ThSort
 						>
 					</th>
+					{#if include_open_source}
+						<ThSort {handler} orderBy="percent_open_source"
+							><p class="text-xs md:text-lg">Open Source</p></ThSort
+						>
+					{/if}
 					<ThSort {handler} orderBy="google_sdk"
 						><p class="text-xs md:text-lg">Android SDK</p></ThSort
 					>
@@ -67,9 +72,26 @@
 								{/if}
 							</a>
 						</td>
+						{#if include_open_source}
+							<td>
+								{#if row.percent_open_source == 1}
+									<span class="text-success-900-100">
+										{row.percent_open_source * 100}%
+									</span>
+								{:else if row.percent_open_source == 0}
+									<span class="text-error-900-100">
+										{(row.percent_open_source * 100).toFixed(0)}%
+									</span>
+								{:else}
+									<span class="text-warning-900-100">
+										{(row.percent_open_source * 100).toFixed(0)}%
+									</span>
+								{/if}
+							</td>
+						{/if}
 						<td class="table-cell-fit">
 							<p class="text-xs md:text-sm">
-								{(row.google_sdk * 100).toFixed(2)}%
+								{(row.google_sdk * 100).toFixed(0)}%
 							</p>
 						</td>
 
