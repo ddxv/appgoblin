@@ -14,6 +14,8 @@
 	let localHomeStoreSelect = $state($homeStoreSelection);
 	let localHomeCategorySelect = $state($homeCategorySelection);
 
+	let country = $state(page.params.country);
+
 	let classesActive = $derived((href: string) =>
 		page.url.pathname.startsWith(href) ? buttonSelectedClass : buttonDeselectedClass
 	);
@@ -79,9 +81,9 @@
 						<a
 							href={`/rankings/store/${values.store_id}${
 								values.store_id == 1
-									? '/collection/1/category/1/US'
+									? `/collection/1/category/1/${country}`
 									: values.store_id == 2
-										? '/collection/4/category/120/US'
+										? `/collection/4/category/120/${country}`
 										: '' // default value or path for other store_ids if needed
 							}`}
 							class={classesActive(`/rankings/store/${values.store_id}/`)}
@@ -104,7 +106,7 @@
 				{#each Object.entries(collectionIDLookup[store]) as [id, values]}
 					<li>
 						<a
-							href={`/rankings/store/${store}/collection/${values.collection_id}/category/${category}`}
+							href={`/rankings/store/${store}/collection/${values.collection_id}/category/${category}/${country}`}
 							class={classesActive(`/rankings/store/${store}/collection/${values.collection_id}/`)}
 							>{values.collection_name}</a
 						>
@@ -124,7 +126,7 @@
 				{#each Object.entries(categoryIDLookup[collection]) as [id, values]}
 					<li>
 						<a
-							href={`/rankings/store/${store}/collection/${collection}/category/${values.category_id}`}
+							href={`/rankings/store/${store}/collection/${collection}/category/${values.category_id}/${country}`}
 							class={classesActive(
 								`/rankings/store/${store}/collection/${collection}/category/${values.category_id}`
 							)}>{values.category_name}</a
