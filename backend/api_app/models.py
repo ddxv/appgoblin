@@ -445,8 +445,10 @@ class SdksOverview:
 
     ios_sdkparts: list[dict]
     android_sdkparts: list[dict]
-    ios_latest_apps: list[dict]
-    android_latest_apps: list[dict]
+    ios_success_latest_apps: list[dict]
+    android_success_latest_apps: list[dict]
+    ios_failed_latest_apps: list[dict]
+    android_failed_latest_apps: list[dict]
     user_requested_latest_apps: list[dict]
 
 

@@ -1,4 +1,4 @@
-WITH apps AS (
+WITH user_requests AS (
     SELECT DISTINCT ON
     (urs.store_id)
         urs.store_id,
@@ -14,12 +14,20 @@ WITH apps AS (
         sdk_crawled_at DESC
 )
 
-SELECT *
+SELECT
+    ur.store_id,
+    ur.sdk_crawled_at,
+    sa.name,
+    sa.category,
+    sa.store,
+    sa.installs,
+    sa.rating_count,
+    sa.icon_url_512
 FROM
-    apps AS a
+    user_requests AS ur
 LEFT JOIN store_apps AS sa
     ON
-        a.store_id = sa.store_id
+        ur.store_id = sa.store_id
 ORDER BY
-    a.sdk_crawled_at DESC
+    ur.sdk_crawled_at DESC
 LIMIT 20;

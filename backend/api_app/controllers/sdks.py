@@ -29,7 +29,7 @@ class SdksController(Controller):
 
     path = "/api/sdks"
 
-    @get(path="/overview", cache=3600)
+    @get(path="/overview", cache=12000)
     async def sdks(self: Self) -> SdksOverview:
         """Handle GET request for all sdks.
 
@@ -44,30 +44,43 @@ class SdksController(Controller):
         most_sdk_parts = get_sdks()
         latest_apps = get_latest_sdks()
         user_requested_latest_apps = get_user_requested_latest_sdks()
+
         is_google = most_sdk_parts["store"].str.startswith("Google")
         is_google_apps = latest_apps["store"].str.startswith("Google")
+
+        is_success = latest_apps["crawl_result"] == 1
 
         android_sdkparts = most_sdk_parts[is_google]
         ios_sdkparts = most_sdk_parts[~is_google]
 
-        android_latest_apps = latest_apps[is_google_apps]
-        ios_latest_apps = latest_apps[~is_google_apps]
+        android_success_latest_apps = latest_apps[is_google_apps & is_success]
+        ios_success_latest_apps = latest_apps[~is_google_apps & is_success]
 
-        user_requested_latest_apps_dict = user_requested_latest_apps.to_dict(
-            orient="records"
-        )
+        android_failed_latest_apps = latest_apps[is_google_apps & ~is_success]
+        ios_failed_latest_apps = latest_apps[~is_google_apps & ~is_success]
 
         android_sdkparts_dict = android_sdkparts.to_dict(orient="records")
         ios_sdkparts_dict = ios_sdkparts.to_dict(orient="records")
 
-        android_latest_apps_dict = android_latest_apps.to_dict(orient="records")
-        ios_latest_apps_dict = ios_latest_apps.to_dict(orient="records")
+        android_success_latest_apps_dict = android_success_latest_apps.to_dict(
+            orient="records"
+        )
+        ios_success_latest_apps_dict = ios_success_latest_apps.to_dict(orient="records")
+        android_failed_latest_apps_dict = android_failed_latest_apps.to_dict(
+            orient="records"
+        )
+        ios_failed_latest_apps_dict = ios_failed_latest_apps.to_dict(orient="records")
+        user_requested_latest_apps_dict = user_requested_latest_apps.to_dict(
+            orient="records"
+        )
 
         return SdksOverview(
             android_sdkparts=android_sdkparts_dict,
             ios_sdkparts=ios_sdkparts_dict,
-            android_latest_apps=android_latest_apps_dict,
-            ios_latest_apps=ios_latest_apps_dict,
+            android_success_latest_apps=android_success_latest_apps_dict,
+            ios_success_latest_apps=ios_success_latest_apps_dict,
+            android_failed_latest_apps=android_failed_latest_apps_dict,
+            ios_failed_latest_apps=ios_failed_latest_apps_dict,
             user_requested_latest_apps=user_requested_latest_apps_dict,
         )
 

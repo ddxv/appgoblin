@@ -27,41 +27,60 @@
 	{:then mySdksOverview}
 		<WhiteCard>
 			{#snippet title()}
-				Android Apps
+				Android Successfully Crawled Apps
 			{/snippet}
 
-			{#if mySdksOverview.android_latest_apps.length > 0}
-				<SDKsLatestAppsTable entries_table={mySdksOverview.android_latest_apps} />
+			{#if mySdksOverview.android_success_latest_apps && mySdksOverview.android_success_latest_apps.length > 0}
+				<SDKsLatestAppsTable entries_table={mySdksOverview.android_success_latest_apps} />
 			{/if}
 		</WhiteCard>
 
 		<WhiteCard>
 			{#snippet title()}
-				Android SDKs
+				iOS Apps SDKs
 			{/snippet}
 
-			{#if mySdksOverview.ios_latest_apps.length > 0}
-				<SDKsLatestAppsTable entries_table={mySdksOverview.ios_latest_apps} />
+			{#if mySdksOverview.ios_success_latest_apps && mySdksOverview.ios_success_latest_apps.length > 0}
+				<SDKsLatestAppsTable entries_table={mySdksOverview.ios_success_latest_apps} />
 			{/if}
 		</WhiteCard>
 
 		<WhiteCard>
 			{#snippet title()}
-				User Requested Android Apps
+				Android Failed to Crawled Apps
 			{/snippet}
 
-			{#if mySdksOverview.user_requested_latest_apps.length > 0}
+			{#if mySdksOverview.android_failed_latest_apps && mySdksOverview.android_failed_latest_apps.length > 0}
+				<SDKsLatestAppsTable entries_table={mySdksOverview.android_failed_latest_apps} />
+			{/if}
+		</WhiteCard>
+
+		<WhiteCard>
+			{#snippet title()}
+				iOS Failed to Crawled Apps
+			{/snippet}
+
+			{#if mySdksOverview.ios_failed_latest_apps && mySdksOverview.ios_failed_latest_apps.length > 0}
+				<SDKsLatestAppsTable entries_table={mySdksOverview.ios_failed_latest_apps} />
+			{/if}
+		</WhiteCard>
+
+		<WhiteCard>
+			{#snippet title()}
+				User Requested Apps
+			{/snippet}
+
+			{#if mySdksOverview.user_requested_latest_apps && mySdksOverview.user_requested_latest_apps.length > 0}
 				<SDKsLatestAppsTable entries_table={mySdksOverview.user_requested_latest_apps} />
 			{/if}
 		</WhiteCard>
-		<div></div>
 
 		<WhiteCard>
 			{#snippet title()}
 				Android SDKs
 			{/snippet}
 
-			{#if mySdksOverview.android_sdkparts.length > 0}
+			{#if mySdksOverview.android_sdkparts && mySdksOverview.android_sdkparts.length > 0}
 				<SDKsOverviewTable entries_table={mySdksOverview.android_sdkparts} />
 			{/if}
 		</WhiteCard>
@@ -71,7 +90,7 @@
 				iOS SDKs
 			{/snippet}
 
-			{#if mySdksOverview.ios_sdkparts.length > 0}
+			{#if mySdksOverview.ios_sdkparts && mySdksOverview.ios_sdkparts.length > 0}
 				<SDKsOverviewTable entries_table={mySdksOverview.ios_sdkparts} />
 			{/if}
 		</WhiteCard>
