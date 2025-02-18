@@ -74,6 +74,8 @@ QUERY_COMPANY_CATEGORIES = load_sql_file("query_company_category.sql")
 QUERY_TAG_SOURCE_CATEGORY_TOTALS = load_sql_file("query_category_totals.sql")
 QUERY_TAG_SOURCE_TOTALS = load_sql_file("query_tag_source_totals.sql")
 QUERY_SDKS = load_sql_file("query_sdks.sql")
+QUERY_LATEST_SDKS = load_sql_file("query_sdks_latest.sql")
+QUERY_USER_REQUESTED_LATEST_SDKS = load_sql_file("query_sdks_user_requested_latest.sql")
 QUERY_SDK_PATTERN = load_sql_file("query_sdk_pattern.sql")
 QUERY_SDK_PATTERN_COMPANIES = load_sql_file("query_sdk_pattern_companies.sql")
 
@@ -676,6 +678,19 @@ def get_sdks() -> pd.DataFrame:
     """Get top sdks."""
     df = pd.read_sql(QUERY_SDKS, DBCON.engine)
     df["store"] = df["store"].replace({1: "Google Play", 2: "Apple App Store"})
+    return df
+
+
+def get_latest_sdks() -> pd.DataFrame:
+    """Get latest sdks."""
+    df = pd.read_sql(QUERY_LATEST_SDKS, DBCON.engine)
+    df["store"] = df["store"].replace({1: "Google Play", 2: "Apple App Store"})
+    return df
+
+
+def get_user_requested_latest_sdks() -> pd.DataFrame:
+    """Get user requested latest sdks."""
+    df = pd.read_sql(QUERY_USER_REQUESTED_LATEST_SDKS, DBCON.engine)
     return df
 
 

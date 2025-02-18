@@ -443,8 +443,11 @@ class SdksOverview:
     Representing the top sdks identified.
     """
 
-    ios_overview: list[dict]
-    android_overview: list[dict]
+    ios_sdkparts: list[dict]
+    android_sdkparts: list[dict]
+    ios_latest_apps: list[dict]
+    android_latest_apps: list[dict]
+    user_requested_latest_apps: list[dict]
 
 
 @dataclass

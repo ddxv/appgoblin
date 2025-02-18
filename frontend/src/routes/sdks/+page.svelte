@@ -1,7 +1,9 @@
 <script lang="ts">
 	import SDKsOverviewTable from '$lib/SDKsOverviewTable.svelte';
-	let { data } = $props();
+	import SDKsLatestAppsTable from '$lib/SDKsLatestAppsTable.svelte';
 	import WhiteCard from '$lib/WhiteCard.svelte';
+
+	let { data } = $props();
 </script>
 
 <h1 class="text-2xl font-bold text-primary-900-100">SDKs</h1>
@@ -25,11 +27,42 @@
 	{:then mySdksOverview}
 		<WhiteCard>
 			{#snippet title()}
+				Android Apps
+			{/snippet}
+
+			{#if mySdksOverview.android_latest_apps.length > 0}
+				<SDKsLatestAppsTable entries_table={mySdksOverview.android_latest_apps} />
+			{/if}
+		</WhiteCard>
+
+		<WhiteCard>
+			{#snippet title()}
 				Android SDKs
 			{/snippet}
 
-			{#if mySdksOverview.android_overview.length > 0}
-				<SDKsOverviewTable entries_table={mySdksOverview.android_overview} />
+			{#if mySdksOverview.ios_latest_apps.length > 0}
+				<SDKsLatestAppsTable entries_table={mySdksOverview.ios_latest_apps} />
+			{/if}
+		</WhiteCard>
+
+		<WhiteCard>
+			{#snippet title()}
+				User Requested Android Apps
+			{/snippet}
+
+			{#if mySdksOverview.user_requested_latest_apps.length > 0}
+				<SDKsLatestAppsTable entries_table={mySdksOverview.user_requested_latest_apps} />
+			{/if}
+		</WhiteCard>
+		<div></div>
+
+		<WhiteCard>
+			{#snippet title()}
+				Android SDKs
+			{/snippet}
+
+			{#if mySdksOverview.android_sdkparts.length > 0}
+				<SDKsOverviewTable entries_table={mySdksOverview.android_sdkparts} />
 			{/if}
 		</WhiteCard>
 
@@ -38,8 +71,8 @@
 				iOS SDKs
 			{/snippet}
 
-			{#if mySdksOverview.ios_overview.length > 0}
-				<SDKsOverviewTable entries_table={mySdksOverview.ios_overview} />
+			{#if mySdksOverview.ios_sdkparts.length > 0}
+				<SDKsOverviewTable entries_table={mySdksOverview.ios_sdkparts} />
 			{/if}
 		</WhiteCard>
 	{/await}

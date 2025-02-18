@@ -14,9 +14,11 @@ from api_app.models import (
 )
 from config import get_logger
 from dbcon.queries import (
+    get_latest_sdks,
     get_sdk_pattern,
     get_sdk_pattern_companies,
     get_sdks,
+    get_user_requested_latest_sdks,
 )
 
 logger = get_logger(__name__)
@@ -39,18 +41,34 @@ class SdksController(Controller):
         """
         logger.info("GET /api/sdks/overview start")
 
-        overview = get_sdks()
+        most_sdk_parts = get_sdks()
+        latest_apps = get_latest_sdks()
+        user_requested_latest_apps = get_user_requested_latest_sdks()
+        is_google = most_sdk_parts["store"].str.startswith("Google")
+        is_google_apps = latest_apps["store"].str.startswith("Google")
 
-        is_google = overview["store"].str.startswith("Google")
+        android_sdkparts = most_sdk_parts[is_google]
+        ios_sdkparts = most_sdk_parts[~is_google]
 
-        android_overview = overview[is_google]
-        ios_overview = overview[~is_google]
+        android_latest_apps = latest_apps[is_google_apps]
+        ios_latest_apps = latest_apps[~is_google_apps]
 
-        android_overview_dict = android_overview.to_dict(orient="records")
-        ios_overview_dict = ios_overview.to_dict(orient="records")
+        user_requested_latest_apps_dict = user_requested_latest_apps.to_dict(
+            orient="records"
+        )
+
+        android_sdkparts_dict = android_sdkparts.to_dict(orient="records")
+        ios_sdkparts_dict = ios_sdkparts.to_dict(orient="records")
+
+        android_latest_apps_dict = android_latest_apps.to_dict(orient="records")
+        ios_latest_apps_dict = ios_latest_apps.to_dict(orient="records")
 
         return SdksOverview(
-            android_overview=android_overview_dict, ios_overview=ios_overview_dict
+            android_sdkparts=android_sdkparts_dict,
+            ios_sdkparts=ios_sdkparts_dict,
+            android_latest_apps=android_latest_apps_dict,
+            ios_latest_apps=ios_latest_apps_dict,
+            user_requested_latest_apps=user_requested_latest_apps_dict,
         )
 
     @get(path="/{value_pattern:str}", cache=3600)
