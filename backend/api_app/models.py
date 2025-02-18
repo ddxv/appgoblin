@@ -50,6 +50,7 @@ class SDKsDetails:
     company_categories: dict
     leftovers: dict[str, list[str]]
     app_queries: list[str]
+    skadnetwork: list[str]
 
 
 @dataclass

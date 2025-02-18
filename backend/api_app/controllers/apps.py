@@ -392,9 +392,13 @@ class AppController(Controller):
             r"^(com\.android|android|kotlin|smali_)",
         )
 
-        is_package_query = df["xml_path"] == "queries/package"
+        is_package_query = df["xml_path"].str.contains(
+            r"^queries/package|LSApplicationQueriesSchemes"
+        )
 
         is_value_empty = df["value_name"] == ""
+
+        is_skadnetwork = df["xml_path"] == "SKAdNetworkItems"
 
         permissions_df = df[is_permission]
 
@@ -404,6 +408,7 @@ class AppController(Controller):
             & ~is_android_activity
             & ~is_value_empty
             & ~is_package_query
+            & ~is_skadnetwork
             & df["company_name"].isna()
         ]
 
@@ -424,11 +429,14 @@ class AppController(Controller):
 
         app_queries = df[is_package_query].value_name.unique().tolist()
 
+        skadnetwork_list = df[is_skadnetwork].value_name.unique().tolist()
+
         trackers_dict = SDKsDetails(
             company_categories=company_sdk_dict,
             permissions=permissions_list,
             leftovers=leftovers_dict,
             app_queries=app_queries,
+            skadnetwork=skadnetwork_list,
         )
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(f"{self.path}/{store_id}/sdks took {duration}ms")
