@@ -29,6 +29,12 @@ export const handle: Handle = async ({ event, resolve }) => {
 			headers: { Location: '/companies/types/ad-networks' }
 		});
 	}
+	if (route.startsWith('/companies/github.com/')) {
+		return new Response(undefined, {
+			status: 301,
+			headers: { Location: route.replace('github.com/', 'github.com-') }
+		});
+	}
 	if (route.startsWith('/trackers')) {
 		return new Response(undefined, {
 			status: 301,

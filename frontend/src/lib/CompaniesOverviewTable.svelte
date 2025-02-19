@@ -28,16 +28,19 @@
 			<thead>
 				<tr>
 					<th class="table-cell-fit w-0"></th>
+					{#if include_open_source}
+						<th class="table-cell-fit">
+							<ThSort {handler} orderBy="percent_open_source"
+								><p class="text-xs md:text-lg">Open Source</p></ThSort
+							>
+						</th>
+					{/if}
 					<th class="w-[50%]">
 						<ThSort {handler} orderBy="company_name"
 							><p class="text-xs md:text-lg">Company</p></ThSort
 						>
 					</th>
-					{#if include_open_source}
-						<ThSort {handler} orderBy="percent_open_source"
-							><p class="text-xs md:text-lg">Open Source</p></ThSort
-						>
-					{/if}
+
 					<ThSort {handler} orderBy="google_sdk"
 						><p class="text-xs md:text-lg">Android SDK</p></ThSort
 					>
@@ -58,6 +61,18 @@
 						<td class="table-cell-fit">
 							<p class="text-xs md:text-base">{index + 1}</p>
 						</td>
+						{#if include_open_source}
+							<td class="text-center">
+								{#if row.percent_open_source == 1}
+									<div class="w-3 h-3 rounded-full bg-success-500 mx-auto"></div>
+								{:else if row.percent_open_source == 0}
+									<div class="w-3 h-3 rounded-full bg-error-500 mx-auto"></div>
+								{:else}
+									<div class="w-3 h-3 rounded-full bg-warning-500 mx-auto"></div>
+								{/if}
+							</td>
+						{/if}
+
 						<td class="w-0">
 							<a
 								href="/companies/{row.company_domain}"
@@ -72,23 +87,7 @@
 								{/if}
 							</a>
 						</td>
-						{#if include_open_source}
-							<td>
-								{#if row.percent_open_source == 1}
-									<span class="text-success-900-100">
-										{row.percent_open_source * 100}%
-									</span>
-								{:else if row.percent_open_source == 0}
-									<span class="text-error-900-100">
-										{(row.percent_open_source * 100).toFixed(0)}%
-									</span>
-								{:else}
-									<span class="text-warning-900-100">
-										{(row.percent_open_source * 100).toFixed(0)}%
-									</span>
-								{/if}
-							</td>
-						{/if}
+
 						<td class="table-cell-fit">
 							<p class="text-xs md:text-sm">
 								{(row.google_sdk * 100).toFixed(2)}%
