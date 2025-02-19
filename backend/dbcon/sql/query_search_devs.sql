@@ -14,7 +14,4 @@ WITH devs AS (
         )
     )
 SELECT * FROM devs
-ORDER BY
-    installs DESC NULLS LAST,
-    rating_count DESC NULLS LAST
 LIMIT :mylimit;

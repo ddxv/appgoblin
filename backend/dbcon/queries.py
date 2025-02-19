@@ -655,6 +655,7 @@ def search_companies(search_input: str, limit: int = 10) -> pd.DataFrame:
 def search_apps(search_input: str, limit: int = 100) -> pd.DataFrame:
     """Search apps by term in database."""
     logger.info(f"App search: {search_input=}")
+    search_input = search_input.replace("+", " & ")
     apps = pd.read_sql(
         QUERY_SEARCH_APPS,
         DBCON.engine,
@@ -669,6 +670,8 @@ def search_apps(search_input: str, limit: int = 100) -> pd.DataFrame:
     logger.info(f"App search finished: {search_input=}")
     df = pd.concat([apps, devapps]).drop_duplicates()
     if not df.empty:
+        df["tempsort"] = df["installs"].fillna(df["rating_count"] * 100)
+        df = df.sort_values(by="tempsort", ascending=False).drop(columns=["tempsort"])
         df = clean_app_df(df)
     return df
 
