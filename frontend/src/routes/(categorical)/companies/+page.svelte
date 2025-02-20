@@ -65,7 +65,7 @@
 					{/snippet}
 					<TotalsBox
 						myTotals={myData.categories.categories.all}
-						myType={{ name: 'All Companies & Domains' }}
+						myType={{ name: 'All Companies & Domains', url_slug: 'all-companies' }}
 					/>
 				</WhiteCard>
 			{/snippet}

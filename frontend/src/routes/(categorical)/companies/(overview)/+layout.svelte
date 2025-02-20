@@ -12,7 +12,7 @@
 	let currentType = $derived(
 		page.data.companyTypes.types.find(
 			(type: { url_slug: string }) => type.url_slug === page.params.type
-		)
+		) || { name: 'All Companies & Domains', url_slug: 'all-companies' }
 	);
 
 	let currentCategoryName = $derived(getCategoryName(page.params.category));
