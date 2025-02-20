@@ -3,11 +3,8 @@
 	import { page } from '$app/state';
 
 	import TotalsBox from '$lib/TotalsBox.svelte';
-	import AdsTxtTotalsBox from '$lib/AdsTxtTotalsBox.svelte';
-
 	import CompaniesLayout from '$lib/CompaniesLayout.svelte';
 	import WhiteCard from '$lib/WhiteCard.svelte';
-
 	import CompanyTableGrid from '$lib/CompanyTableGrid.svelte';
 	interface Props {
 		data: CompanyCategoryDetails;
@@ -16,10 +13,6 @@
 	let { data }: Props = $props();
 
 	let company_category = $derived(page.params.category);
-
-	function formatNumber(num: number) {
-		return new Intl.NumberFormat('en-US').format(num);
-	}
 </script>
 
 {#await data.companyDetails}
@@ -37,7 +30,6 @@
 					myTotals={myData.categories[company_category]}
 					myType={{ name: 'All Companies & Domains', url_slug: 'all-companies' }}
 				/>
-				<AdsTxtTotalsBox myTotals={myData.categories[company_category]} />
 			</WhiteCard>
 		{/snippet}
 	</CompaniesLayout>

@@ -3,6 +3,8 @@
 
 	import AdsTxtPubIDsTable from '$lib/AdsTxtPubIDsTable.svelte';
 
+	import TotalsBox from '$lib/TotalsBox.svelte';
+
 	import CompanyCategoryPie from '$lib/CompanyCategoryPie.svelte';
 	import AdsTxtTotalsBox from '$lib/AdsTxtTotalsBox.svelte';
 	import CompanyTableGrid from '$lib/CompanyTableGrid.svelte';
@@ -31,17 +33,17 @@
 				{:else if myData && myData.length > 0}
 					<WhiteCard>
 						{#snippet title()}
-							<span>Company's Total Apps</span>
+							<span>Company Apps</span>
 						{/snippet}
 
-						<p class="text-lg">
-							<span class="font-semibold text-primary-900-100"
-								>{formatNumber(myData.map((d) => d.value).reduce((a, b) => a + b, 0))}</span
-							>
-						</p>
 						{#await data.companyDetails}
 							<div><span>Loading...</span></div>
 						{:then detailsData}
+							<TotalsBox
+								myTotals={detailsData.categories.all}
+								myType={{ name: 'All Companies & Domains', url_slug: 'all-companies' }}
+								hideAdstxtApps={true}
+							/>
 							{#if detailsData && detailsData.adstxt_ad_domain_overview}
 								<AdsTxtTotalsBox myTotals={detailsData.adstxt_ad_domain_overview} />
 							{/if}
