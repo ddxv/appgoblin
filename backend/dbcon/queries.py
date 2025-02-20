@@ -47,8 +47,8 @@ QUERY_STORE_COLLECTION_CATEGORY_MAP = load_sql_file(
 QUERY_ADTECH_CATEGORIES = load_sql_file(
     "query_adtech_categories.sql",
 )
-QUERY_ADTECH_CATEGORY_TYPE = load_sql_file(
-    "query_adtech_category_type.sql",
+QUERY_COMPANIES_CATEGORY_TYPE = load_sql_file(
+    "query_companies_categories_types_app_counts.sql",
 )
 QUERY_COMPANY_TOPAPPS = load_sql_file("query_company_top_apps.sql")
 QUERY_COMPANY_TOPAPPS_PARENT = load_sql_file("query_company_top_apps_parent.sql")
@@ -201,7 +201,7 @@ def get_companies_category_type(
     if app_category and app_category == "games":
         app_category = "game%"
     df = pd.read_sql(
-        QUERY_ADTECH_CATEGORY_TYPE,
+        QUERY_COMPANIES_CATEGORY_TYPE,
         con=DBCON.engine,
         params={"type_slug": type_slug, "app_category": app_category},
     )
