@@ -50,7 +50,6 @@ QUERY_ADTECH_CATEGORIES = load_sql_file(
 QUERY_ADTECH_CATEGORY_TYPE = load_sql_file(
     "query_adtech_category_type.sql",
 )
-QUERY_ADTECH_TYPE = load_sql_file("query_adtech_type.sql")
 QUERY_COMPANY_TOPAPPS = load_sql_file("query_company_top_apps.sql")
 QUERY_COMPANY_TOPAPPS_PARENT = load_sql_file("query_company_top_apps_parent.sql")
 QUERY_COMPANY_TOPAPPS_CATEGORY = load_sql_file("query_company_top_apps_category.sql")
@@ -72,7 +71,6 @@ QUERY_COMPANY_SDKS = load_sql_file("query_company_sdks.sql")
 QUERY_PARENT_COMPANY_CATEGORIES = load_sql_file("query_company_parent_category.sql")
 QUERY_COMPANY_CATEGORIES = load_sql_file("query_company_category.sql")
 QUERY_TAG_SOURCE_CATEGORY_TOTALS = load_sql_file("query_category_totals.sql")
-QUERY_TAG_SOURCE_TOTALS = load_sql_file("query_tag_source_totals.sql")
 QUERY_SDKS = load_sql_file("query_sdks.sql")
 QUERY_LATEST_SDKS = load_sql_file("query_sdks_latest.sql")
 QUERY_USER_REQUESTED_LATEST_SDKS = load_sql_file("query_sdks_user_requested_latest.sql")
@@ -195,23 +193,43 @@ def get_total_counts() -> pd.DataFrame:
     return df
 
 
-def get_adtech_category_type(
+def get_companies_category_type(
     type_slug: str,
     app_category: str | None = None,
 ) -> pd.DataFrame:
     """Get top companies for a category type."""
-    if app_category:
-        df = pd.read_sql(
-            QUERY_ADTECH_CATEGORY_TYPE,
-            con=DBCON.engine,
-            params={"type_slug": type_slug, "app_category": app_category},
-        )
+    if app_category and app_category == "games":
+        app_category = "game%"
+    df = pd.read_sql(
+        QUERY_ADTECH_CATEGORY_TYPE,
+        con=DBCON.engine,
+        params={"type_slug": type_slug, "app_category": app_category},
+    )
+    if app_category is None:
+        df["app_category"] = "all"
     else:
-        df = pd.read_sql(
-            QUERY_ADTECH_TYPE, con=DBCON.engine, params={"type_slug": type_slug}
-        )
+        df.loc[df["app_category"].isna(), "app_category"] = "None"
+    if app_category == "game%":
+        df.loc[
+            df["app_category"].str.contains("game"),
+            "app_category",
+        ] = "games"
+    df = (
+        df.groupby(
+            [
+                "store",
+                "tag_source",
+                "company_domain",
+                "company_name",
+                "app_category",
+                "type_url_slug",
+            ]
+        )[["app_count"]]
+        .sum()
+        .reset_index()
+    )
+
     df["store"] = df["store"].replace({1: "Google Play", 2: "Apple App Store"})
-    df.loc[df["app_category"].isna(), "app_category"] = "None"
     return df
 
 
@@ -326,11 +344,28 @@ def get_companies_parent_overview(app_category: str | None = None) -> pd.DataFra
     """Get overview of companies from multiple types like sdk and app-ads.txt."""
     logger.info("query companies parent overview start")
     if app_category:
+        if app_category == "games":
+            app_category = "game%"
         df = pd.read_sql(
             QUERY_COMPANIES_PARENT_OVERVIEW_CATEGORY,
             DBCON.engine,
             params={"app_category": app_category},
         )
+        if app_category == "game%":
+            df["app_category"] = "games"
+            df = (
+                df.groupby(
+                    [
+                        "company_domain",
+                        "company_name",
+                        "store",
+                        "app_category",
+                        "tag_source",
+                    ]
+                )[["app_count"]]
+                .sum()
+                .reset_index()
+            )
     else:
         df = pd.read_sql(QUERY_COMPANIES_PARENT_OVERVIEW, DBCON.engine)
     logger.info("query companies parent overview return")
@@ -346,6 +381,8 @@ def get_companies_top(
 ) -> pd.DataFrame:
     """Get overview of companies from multiple types like sdk and app-ads.txt."""
     logger.info("query companies parent top start")
+    if app_category == "games":
+        app_category = "game%"
     if type_slug:
         df = pd.read_sql(
             QUERY_COMPANIES_CATEGORY_TYPE_TOP,
@@ -494,19 +531,36 @@ def get_company_parent_categories(company_domain: str) -> pd.DataFrame:
     return df
 
 
-@lru_cache(maxsize=1)
-def get_tag_source_category_totals() -> pd.DataFrame:
+@lru_cache(maxsize=100)
+def get_tag_source_category_totals(app_category: str | None = None) -> pd.DataFrame:
     """Get category totals."""
-    df = pd.read_sql(QUERY_TAG_SOURCE_CATEGORY_TOTALS, DBCON.engine)
-    df = df.rename(columns={"app_count": "total_app_count"})
-    df["store"] = df["store"].replace({1: "Google Play", 2: "Apple App Store"})
-    return df
+    if app_category:
+        if app_category == "games":
+            app_category = "game%"
+        df = pd.read_sql(
+            QUERY_TAG_SOURCE_CATEGORY_TOTALS,
+            DBCON.engine,
+            params={"app_category": app_category},
+        )
+        if app_category == "game%":
+            df.loc[
+                df["app_category"].str.contains("game"),
+                "app_category",
+            ] = "games"
 
-
-@lru_cache(maxsize=1)
-def get_tag_source_totals() -> pd.DataFrame:
-    """Get types totals."""
-    df = pd.read_sql(QUERY_TAG_SOURCE_TOTALS, DBCON.engine)
+    else:
+        df = pd.read_sql(
+            QUERY_TAG_SOURCE_CATEGORY_TOTALS,
+            DBCON.engine,
+            params={"app_category": "%"},
+        )
+        df["app_category"] = "all"
+    df.loc[df["app_category"].isna(), "app_category"] = "None"
+    df = (
+        df.groupby(["app_category", "store", "tag_source"])[["app_count"]]
+        .sum()
+        .reset_index()
+    )
     df = df.rename(columns={"app_count": "total_app_count"})
     df["store"] = df["store"].replace({1: "Google Play", 2: "Apple App Store"})
     return df
@@ -597,7 +651,7 @@ def get_single_apps_adstxt(store_id: str) -> pd.DataFrame:
 def get_topapps_for_company(
     company_domain: str, mapped_category: str | None = None, limit: int = 20
 ) -> pd.DataFrame:
-    """Get top apps for for a network."""
+    """Get top apps for for a company."""
     if mapped_category == "games":
         mapped_category = "game%"
 
@@ -620,6 +674,20 @@ def get_topapps_for_company(
                     "mapped_category": mapped_category,
                     "mylimit": limit,
                 },
+            )
+        if mapped_category == "game%":
+            df = (
+                df.groupby(
+                    [
+                        "company_domain",
+                        "store",
+                        "tag_source",
+                        "name",
+                        "store_id",
+                    ]
+                )[["installs", "rating_count"]]
+                .sum()
+                .reset_index()
             )
     else:
         df = pd.read_sql(

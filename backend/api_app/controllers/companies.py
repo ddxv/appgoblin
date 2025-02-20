@@ -34,7 +34,7 @@ from api_app.models import (
 from config import get_logger
 from dbcon.queries import (
     get_adtech_categories,
-    get_adtech_category_type,
+    get_companies_category_type,
     get_companies_parent_overview,
     get_companies_top,
     get_company_adstxt_ad_domain_overview,
@@ -47,7 +47,6 @@ from dbcon.queries import (
     get_company_sdks,
     get_company_tree,
     get_tag_source_category_totals,
-    get_tag_source_totals,
     get_topapps_for_company,
     search_companies,
 )
@@ -221,17 +220,14 @@ def get_overviews(
 
     if type_slug:
         logger.info("Getting adtech category type")
-        overview_df = get_adtech_category_type(type_slug, app_category=category)
+        overview_df = get_companies_category_type(type_slug, app_category=category)
     else:
         logger.info("Getting companies parent overview")
         overview_df = get_companies_parent_overview(app_category=category)
 
-    if category:
-        logger.info("Getting category totals")
-        tag_source_category_app_counts = get_tag_source_category_totals()
-    else:
-        logger.info("Getting category totals")
-        tag_source_category_app_counts = get_tag_source_totals()
+    tag_source_category_app_counts = get_tag_source_category_totals(
+        app_category=category
+    )
 
     overview_df = overview_df.merge(
         tag_source_category_app_counts,
@@ -887,7 +883,7 @@ class CompaniesController(Controller):
 
         results["app_category"] = "all"
 
-        category_totals_df = get_tag_source_totals()
+        category_totals_df = get_tag_source_category_totals()
 
         overview_df = results.merge(
             category_totals_df,

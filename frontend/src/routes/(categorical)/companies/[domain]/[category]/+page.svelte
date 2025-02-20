@@ -1,7 +1,6 @@
 <script lang="ts">
 	import type { CompanyCategoryDetails } from '../../../../../types';
 	import { page } from '$app/state';
-	import CompanyOverviewTable from '$lib/CompanyOverviewTable.svelte';
 
 	import CompaniesLayout from '$lib/CompaniesLayout.svelte';
 	import WhiteCard from '$lib/WhiteCard.svelte';

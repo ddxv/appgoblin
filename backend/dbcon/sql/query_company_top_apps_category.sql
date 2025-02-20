@@ -4,7 +4,7 @@ WITH ranked_apps AS (
         frontend.company_top_apps
     WHERE
         company_domain = :company_domain
-        AND category = :mapped_category
+        AND category LIKE :mapped_category
         AND app_company_category_rank <= :mylimit
 )
 
