@@ -308,6 +308,7 @@ class CategoryCompanyStats:
     adstxt_reseller_android_total_apps: int = 0
     sdk_ios_total_apps: int = 0
     sdk_android_total_apps: int = 0
+    sdk_total_apps: int = 0
 
 
 @dataclass

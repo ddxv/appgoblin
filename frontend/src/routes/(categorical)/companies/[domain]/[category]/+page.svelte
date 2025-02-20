@@ -2,6 +2,9 @@
 	import type { CompanyCategoryDetails } from '../../../../../types';
 	import { page } from '$app/state';
 
+	import TotalsBox from '$lib/TotalsBox.svelte';
+	import AdsTxtTotalsBox from '$lib/AdsTxtTotalsBox.svelte';
+
 	import CompaniesLayout from '$lib/CompaniesLayout.svelte';
 	import WhiteCard from '$lib/WhiteCard.svelte';
 
@@ -19,32 +22,28 @@
 	}
 </script>
 
-<CompaniesLayout>
-	{#snippet card1()}
-		<WhiteCard>
-			{#await data.companyDetails}
-				<div class="p-6 rounded-lg shadow-md flex justify-center items-center h-40">
-					<span class="text-lg">Loading company info...</span>
-				</div>
-			{:then myData}
-				{#if typeof myData == 'string'}
-					<p class="text-red-500 text-center">Failed to load company details.</p>
-				{:else if myData}
-					<div class="p-6 rounded-lg shadow-md">
-						<h2 class="text-xl font-bold text-primary-900-100 mb-4">Total Apps</h2>
-						<p class="text-lg">
-							<span class="font-semibold text-primary-900-100"
-								>{formatNumber(myData.categories[company_category]?.total_apps || 0)}</span
-							>
-						</p>
-					</div>
-				{/if}
-			{:catch error}
-				<p class="text-red-500 text-center">{error.message}</p>
-			{/await}
-		</WhiteCard>
-	{/snippet}
-</CompaniesLayout>
+{#await data.companyDetails}
+	<div class="p-6 rounded-lg shadow-md flex justify-center items-center h-40">
+		<span class="text-lg">Loading company info...</span>
+	</div>
+{:then myData}
+	<CompaniesLayout>
+		{#snippet card1()}
+			<WhiteCard>
+				{#snippet title()}
+					Totals
+				{/snippet}
+				<TotalsBox
+					myTotals={myData.categories[company_category]}
+					myType={{ name: 'All Companies & Domains', url_slug: 'all-companies' }}
+				/>
+				<AdsTxtTotalsBox myTotals={myData.categories[company_category]} />
+			</WhiteCard>
+		{/snippet}
+	</CompaniesLayout>
+{:catch error}
+	<p class="text-red-500 text-center">{error.message}</p>
+{/await}
 
 {#await data.companyDetails}
 	<div><span>Loading company apps...</span></div>

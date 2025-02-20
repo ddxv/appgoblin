@@ -229,6 +229,8 @@ def get_overviews(
         app_category=category
     )
 
+    overview_df
+
     overview_df = overview_df.merge(
         tag_source_category_app_counts,
         on=["app_category", "store", "tag_source"],
@@ -399,9 +401,9 @@ def make_company_category_sums(df: pd.DataFrame) -> CompanyCategoryOverview:
         results["adstxt_reseller_android"],
     )
 
+    sdk_total_apps = sdk_ios_total_apps + sdk_android_total_apps
     total_apps = (
-        sdk_ios_total_apps
-        + sdk_android_total_apps
+        sdk_total_apps
         + adstxt_direct_ios_total_apps
         + adstxt_direct_android_total_apps
         + adstxt_reseller_ios_total_apps
@@ -417,6 +419,7 @@ def make_company_category_sums(df: pd.DataFrame) -> CompanyCategoryOverview:
         adstxt_reseller_android_total_apps=adstxt_reseller_android_total_apps,
         sdk_ios_total_apps=sdk_ios_total_apps,
         sdk_android_total_apps=sdk_android_total_apps,
+        sdk_total_apps=sdk_total_apps,
     )
     cats = df.app_category.unique().tolist()
     for cat in cats:
@@ -464,9 +467,10 @@ def make_company_category_sums(df: pd.DataFrame) -> CompanyCategoryOverview:
             results["adstxt_reseller_android"],
         )
 
+        sdk_total_apps = sdk_ios_total_apps + sdk_android_total_apps
+
         total_apps = (
-            sdk_ios_total_apps
-            + sdk_android_total_apps
+            sdk_total_apps
             + adstxt_direct_ios_total_apps
             + adstxt_direct_android_total_apps
             + adstxt_reseller_ios_total_apps
@@ -482,6 +486,7 @@ def make_company_category_sums(df: pd.DataFrame) -> CompanyCategoryOverview:
             adstxt_reseller_android_total_apps=adstxt_reseller_android_total_apps,
             sdk_ios_total_apps=sdk_ios_total_apps,
             sdk_android_total_apps=sdk_android_total_apps,
+            sdk_total_apps=sdk_total_apps,
         )
     return overview
 
