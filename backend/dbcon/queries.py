@@ -795,13 +795,13 @@ def get_sdk_pattern_companies(value_pattern: str) -> pd.DataFrame:
 
 def get_sitemap_companies() -> pd.DataFrame:
     """Get sitemap companies."""
-    df = pd.read_sql(QUERY_SITEMAP_COMPANIES, DBCON.engine)
+    df = pd.read_sql(QUERY_SITEMAP_COMPANIES, DBCONWRITE.engine)
     return df
 
 
 def get_sitemap_apps() -> pd.DataFrame:
     """Get sitemap apps."""
-    df = pd.read_sql(QUERY_SITEMAP_APPS, DBCON.engine)
+    df = pd.read_sql(QUERY_SITEMAP_APPS, DBCONWRITE.engine)
     return df
 
 
