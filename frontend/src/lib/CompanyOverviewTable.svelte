@@ -3,9 +3,8 @@
 
 	import { DataHandler } from '@vincjo/datatables/legacy/remote';
 	import type { State } from '@vincjo/datatables/legacy/remote';
-	import type { CompanyOverviewApps } from '../types';
-
-	export let entries_table: CompanyOverviewApps[];
+	import type { CompanyOverviewApps, AppFullDetail } from '../types';
+	export let entries_table: CompanyOverviewApps[] | AppFullDetail[];
 
 	const totalRows = entries_table.length;
 

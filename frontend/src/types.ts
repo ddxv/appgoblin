@@ -218,7 +218,6 @@ export interface OverviewAppList {
 }
 
 export interface CompanyOverviewApps extends Row {
-	rank: number;
 	name: string;
 	store_id: string;
 }

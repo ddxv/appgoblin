@@ -7,6 +7,8 @@
 		data: DeveloperResponse;
 	}
 
+	import CompanyOverviewTable from '$lib/CompanyOverviewTable.svelte';
+
 	let { data }: Props = $props();
 </script>
 
@@ -62,27 +64,44 @@
 			Failed to load developer
 		{:else}
 			<h1 class="h1 p-2">{devs.title}</h1>
-			<h2 class="h2 p-2">Google Apps: {devs.google.developer_name}</h2>
+			<h2 class="h2 p-2">Google Android Apps: {devs.google.developer_name}</h2>
 			<p class="p-2">
-				Matched Developer ID: <a href={`/developers/${devs.google.developer_id}`}
+				Developer ID: <a href={`/developers/${devs.google.developer_id}`}
 					>{devs.google.developer_id}</a
 				>
 				<br />
-				Matched Developer URL:
-				<ExternalLink domain={devs.google.developer_url} />
+				App Count: {devs.google.apps.apps.length}
+				<br />
+				Developer URL:<ExternalLink domain={devs.google.developer_url} />
 			</p>
-			<AppsCard apps={devs.google.apps} />
+			<AppsCard
+				apps={{
+					apps: devs.google.apps.apps.slice(0, 10),
+					title: `${devs.google.developer_name} Top Android Apps`
+				}}
+			/>
+			<h2 class="h2 p-2">Google Apps: {devs.google.developer_name} All Apps</h2>
+			<CompanyOverviewTable entries_table={devs.google.apps.apps} />
 			<hr />
-			<h2 class="h2 p-2">Apple Apps: {devs.apple.developer_name}</h2>
+
+			<h2 class="h2 p-2">Apple iOS Apps: {devs.apple.developer_name}</h2>
 			<p class="p-2">
 				Matched Developer ID: <a href={`/developers/${devs.apple.developer_id}`}
 					>{devs.apple.developer_id}</a
 				>
 				<br />
-				Matched Developer URL:
-				<ExternalLink domain={devs.apple.developer_url} />
+				App Count: {devs.apple.apps.apps.length}
+				<br />
+				Developer URL:<ExternalLink domain={devs.apple.developer_url} />
 			</p>
-			<AppsCard apps={devs.apple.apps} />
+			<AppsCard
+				apps={{
+					apps: devs.apple.apps.apps.slice(0, 10),
+					title: `${devs.apple.developer_name} Top iOS Apps`
+				}}
+			/>
+			<h2 class="h2 p-2">Apple Apps: {devs.apple.developer_name} All Apps</h2>
+			<CompanyOverviewTable entries_table={devs.apple.apps.apps} />
 		{/if}
 	{:catch error}
 		<p style="color: red">{error.message}</p>
