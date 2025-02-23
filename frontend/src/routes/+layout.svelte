@@ -84,7 +84,7 @@
 						<a href="https://github.com/ddxv/appgoblin" target="_blank" rel="noreferrer">
 							<button type="button" class="btn preset-tonal hover:preset-tonal-primary p-2">
 								<div class="inline-flex items-center text-xs md:text-lg gap-2">
-									{@html githubIcon} GitHub
+									{@html githubIcon} Star on GitHub
 								</div>
 							</button>
 						</a>
