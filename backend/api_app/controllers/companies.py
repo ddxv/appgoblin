@@ -927,9 +927,6 @@ class CompaniesController(Controller):
         """
         start = time.perf_counter() * 1000
 
-        publisher_id = "pub-3940256099942544"
-        company_domain = "google.com"
-
         df_apps = get_company_adstxt_publisher_id_apps_overview(
             ad_domain_url=company_domain,
             publisher_id=publisher_id,

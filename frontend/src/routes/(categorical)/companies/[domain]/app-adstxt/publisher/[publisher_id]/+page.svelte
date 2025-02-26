@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import CompanyPubAppsTable from '$lib/CompanyPubAppsTable.svelte';
-	import CompanyPubDevsTable from '$lib/CompanyPubDevsTable.svelte';
 	import WhiteCard from '$lib/WhiteCard.svelte';
 	let { data } = $props();
 </script>
