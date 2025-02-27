@@ -10,7 +10,7 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 a {
-	color: text-tertiary-900-100;
+	color: var(--color-tertiary-900-100);
 }
 
 /* [data-theme='catppuccin'] {
