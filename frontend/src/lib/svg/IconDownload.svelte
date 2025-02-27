@@ -4,7 +4,7 @@
 	version="1.1"
 	width="0.7em"
 	fill="currentColor"
-	class="flex-shrink-0 self-center"
+	class="shrink-0 self-center"
 	height="0.7em"
 	viewBox="0 0 256 256"
 >

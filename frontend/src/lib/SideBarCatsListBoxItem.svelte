@@ -26,7 +26,7 @@
 </script>
 
 <div class="flex w-full justify-between p-1 {setSelectedClass(isSelected)}">
-	<div class="flex-grow">
+	<div class="grow">
 		{values.name}
 	</div>
 

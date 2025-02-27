@@ -50,38 +50,38 @@
 			<table class="table table-hover table-compact table-auto w-full">
 				<thead>
 					<tr>
-						<th class="table-cell-fit !pl-1 !pr-0">Date</th>
+						<th class="table-cell-fit pl-1! pr-0!">Date</th>
 						{#if os == 'google'}
-							<th class="table-cell-fit !px-0">Installs</th>
+							<th class="table-cell-fit px-0!">Installs</th>
 						{/if}
-						<th class="table-cell-fit !px-0">Rating</th>
-						<th class="table-cell-fit !px-0">Ratings</th>
-						<th class="table-cell-fit !px-0">Reviews</th>
+						<th class="table-cell-fit px-0!">Rating</th>
+						<th class="table-cell-fit px-0!">Ratings</th>
+						<th class="table-cell-fit px-0!">Reviews</th>
 					</tr>
 				</thead>
 				<tbody>
 					<!-- {#each Object.entries(history_table) as [_prop, values]} -->
 					{#each $rows as row}
 						<tr>
-							<td class="!pl-1 !pr-0">
+							<td class="pl-1! pr-0!">
 								{row.crawled_date}
 							</td>
 							{#if os == 'google'}
-								<td class="table-cell-fit !px-0">
+								<td class="table-cell-fit px-0!">
 									{numberFormatter.format(row.installs)}
 								</td>
 							{/if}
-							<td class="table-cell-fit !px-0">
+							<td class="table-cell-fit px-0!">
 								{#if row.rating}
 									{row.rating.toFixed(2)}
 								{:else}
 									null
 								{/if}
 							</td>
-							<td class="table-cell-fit !px-0">
+							<td class="table-cell-fit px-0!">
 								{numberFormatter.format(row.rating_count)}
 							</td>
-							<td class="table-cell-fit !px-0">
+							<td class="table-cell-fit px-0!">
 								{numberFormatter.format(row.review_count)}
 							</td>
 						</tr>

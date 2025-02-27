@@ -452,7 +452,7 @@
 		border-radius: 5px; /* Rounded corners */
 		margin-left: 5px;
 		padding: 0px;
-		flex-grow: 1;
+		grow: 1;
 	}
 
 	.bar {
