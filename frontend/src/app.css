@@ -13,7 +13,7 @@ a {
 	color: text-tertiary-900-100;
 }
 
-[data-theme='catppuccin'] {
+/* [data-theme='catppuccin'] {
 	background-image:
 		radial-gradient(
 			at 20% 10%,
@@ -29,4 +29,4 @@ a {
 	background-position: center;
 	background-repeat: no-repeat;
 	background-size: cover;
-}
+} */
