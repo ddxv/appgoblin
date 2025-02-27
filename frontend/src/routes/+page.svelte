@@ -58,7 +58,7 @@
 
 <div class="grid grid-cols-1 gap-4 md:gap-8 p-2 md:p-4 px-2 md:px-20 lg:px-48">
 	<br />
-	<div class="card preset-tonal-surface p-2 md:p-8">
+	<div class="card preset-tonal p-2 md:p-8">
 		<h1 class="h1 p-2 md:p-4 text-primary-900-100">AppGoblin: Mobile App Store Data and Stats</h1>
 		<p class="p-2 md:p-4">
 			AppGoblin is an open source project for collecting Google & Apple App Store data and
@@ -122,7 +122,7 @@
 		</WhiteCard>
 	</div>
 
-	<div class="card preset-tonal-surface p-2 md:p-8">
+	<div class="card preset-tonal p-2 md:p-8">
 		<a href="/companies">
 			<h2 class="h2 p-2 md:p-4">Most Popular Ad Networks, MMPs & Analytics</h2>
 		</a>
@@ -216,7 +216,7 @@
 		{/await}
 		<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
 			<a href="/companies/types/ad-networks">
-				<div class="card preset-tonal-surface md:p-4">
+				<div class="card preset-tonal md:p-4">
 					<div class="card-header">
 						<h3 class="h3">Top SDK Advertising Networks</h3>
 					</div>
@@ -240,7 +240,7 @@
 			</a>
 
 			<a href="/companies/types/ad-attribution">
-				<div class="card preset-tonal-surface md:p-4">
+				<div class="card preset-tonal md:p-4">
 					<div class="card-header">
 						<h3 class="h3">Top iOS MMPs & Ad Tracking</h3>
 					</div>
@@ -264,7 +264,7 @@
 			</a>
 
 			<a href="/companies/types/product-analytics">
-				<div class="card preset-tonal-surface md:p-4">
+				<div class="card preset-tonal md:p-4">
 					<div class="card-header">
 						<h3 class="h3">Top Product Analytics</h3>
 					</div>
@@ -289,7 +289,7 @@
 		</div>
 	</div>
 
-	<div class="card preset-tonal-surface p-2 md:p-8">
+	<div class="card preset-tonal p-2 md:p-8">
 		<a href="/rankings/store/1/collection/1/category/1/US">
 			<h2 class="h2 p-2 md:p-4">Latest App Store Ranks</h2>
 		</a>
@@ -303,7 +303,7 @@
 				Loading Android App Ranks...
 			{:then androidApps}
 				<a href="/rankings/store/1/collection/1/category/1/US">
-					<div class="snap-center shrink-0 card preset-tonal-surface w-48 md:w-56">
+					<div class="snap-center shrink-0 card preset-tonal w-48 md:w-56">
 						<div class="table-container card-header">
 							<h3 class="h3">Android Apps</h3>
 							<AppRankTableShort myTable={androidApps} />
@@ -318,7 +318,7 @@
 				Loading iOS App Ranks...
 			{:then iOSApps}
 				<a href="/rankings/store/2/collection/4/category/120/US">
-					<div class="snap-center shrink-0 card preset-tonal-surface w-48 md:w-56">
+					<div class="snap-center shrink-0 card preset-tonal w-48 md:w-56">
 						<div class="table-container card-header">
 							<h3 class="h3">iOS Apps</h3>
 							<AppRankTableShort myTable={iOSApps} />
@@ -333,7 +333,7 @@
 				Loading Android Game Ranks...
 			{:then androidGames}
 				<a href="/rankings/store/1/collection/1/category/36/US">
-					<div class="snap-center shrink-0 card preset-tonal-surface w-48 md:w-56">
+					<div class="snap-center shrink-0 card preset-tonal w-48 md:w-56">
 						<div class="table-container card-header">
 							<h3 class="h3">Android Games</h3>
 							<AppRankTableShort myTable={androidGames} />
@@ -348,7 +348,7 @@
 				Loading iOS Game Ranks...
 			{:then iOSGames}
 				<a href="/rankings/store/2/collection/4/category/62/US">
-					<div class="snap-center shrink-0 card preset-tonal-surface w-48 md:w-56">
+					<div class="snap-center shrink-0 card preset-tonal w-48 md:w-56">
 						<div class="table-container card-header">
 							<h3 class="h3">iOS Games</h3>
 							<AppRankTableShort myTable={iOSGames} />
@@ -361,7 +361,7 @@
 		</div>
 	</div>
 
-	<div class="card preset-tonal-surface p-2 md:p-8">
+	<div class="card preset-tonal p-2 md:p-8">
 		<a href="/collections/new_monthly">
 			<h2 class="h2 p-2 md:p-4">Explore New Apps</h2>
 			<p class="p-2 md:p-4">
@@ -372,28 +372,28 @@
 			class="snap-x scroll-px-4 snap-mandatory scroll-smooth flex gap-4 md:flex-row flex-col px-4 py-10"
 		>
 			<a href="/collections/new_weekly">
-				<div class="snap-center shrink-0 card preset-tonal-surface w-48 md:w-56 md:p-4">
+				<div class="snap-center shrink-0 card preset-tonal w-48 md:w-56 md:p-4">
 					<div class="table-container card-header">
 						<h3 class="h3">Newest Apps This Week</h3>
 					</div>
 				</div>
 			</a>
 			<a href="/collections/new_monthly">
-				<div class="snap-center shrink-0 card preset-tonal-surface w-48 md:w-56 md:p-4">
+				<div class="snap-center shrink-0 card preset-tonal w-48 md:w-56 md:p-4">
 					<div class="table-container card-header">
 						<h3 class="h3">Newest Apps This Month</h3>
 					</div>
 				</div>
 			</a>
 			<a href="/collections/new_yearly">
-				<div class="snap-center shrink-0 card preset-tonal-surface w-48 md:w-56 md:p-4">
+				<div class="snap-center shrink-0 card preset-tonal w-48 md:w-56 md:p-4">
 					<div class="table-container card-header">
 						<h3 class="h3">Newest Apps This Year</h3>
 					</div>
 				</div>
 			</a>
 			<a href="/collections/top">
-				<div class="snap-center shrink-0 card preset-tonal-surface w-48 md:w-56 md:p-4">
+				<div class="snap-center shrink-0 card preset-tonal w-48 md:w-56 md:p-4">
 					<div class="table-container card-header">
 						<h3 class="h3">Alltime Most Popular</h3>
 					</div>
