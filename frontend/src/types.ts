@@ -379,10 +379,11 @@ export interface AppFullDetails {
 		histogram: number[];
 		history_table: AppHistoryInfo[];
 		plot_data?: {
-			numbers: ChartTabularData;
 			changes: ChartTabularData;
 			installs: ChartTabularData;
 			ratings: ChartTabularData;
+			ratings_stars: ChartTabularData;
+			ratings_stars_new: ChartTabularData;
 		};
 	}>;
 	myPackageInfo: Promise<{

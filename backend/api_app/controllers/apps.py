@@ -81,6 +81,20 @@ def process_search_results(results: list[dict]) -> None:
     logger.info("background:search results done")
 
 
+def attach_rating_history(app_hist: pd.DataFrame, star_cols: list[str]) -> pd.DataFrame:
+    """Get the rating history of an app."""
+    df = app_hist[["crawled_date", "histogram"]].copy()
+    df[star_cols] = np.stack(app_hist["histogram"].values)
+    df.sort_values(["crawled_date"])
+    df = df.drop(columns=["histogram", "crawled_date"])
+    change_df = df[star_cols].diff()
+    change_df = change_df.rename(
+        columns={col: "new_" + col for col in change_df.columns}
+    )
+    app_hist = pd.concat([app_hist, df, change_df], axis=1)
+    return app_hist
+
+
 def app_history(store_app: int, app_name: str) -> AppHistory:
     """Get the history of app scraping."""
     app_hist = get_app_history(store_app)
@@ -121,8 +135,11 @@ def app_history(store_app: int, app_name: str) -> AppHistory:
         )
         change_metrics.append(metric + "_rate_of_change")
         change_metrics.append(metric + "_avg_per_day")
+    star_cols = ["one_star", "two_star", "three_star", "four_star", "five_star"]
+    new_star_cols = [f"new_{col}" for col in star_cols]
+    app_hist = attach_rating_history(app_hist, star_cols)
     app_hist = (
-        app_hist[[group_col, xaxis_col, *change_metrics]]
+        app_hist[[group_col, xaxis_col, *change_metrics, *star_cols, *new_star_cols]]
         .drop(app_hist.index[0])
         .rename(
             columns={
@@ -133,6 +150,16 @@ def app_history(store_app: int, app_name: str) -> AppHistory:
                 "installs_rate_of_change": "Installs Rate of Change",
                 "rating_count_rate_of_change": "Rating Count Rate of Change",
                 "review_count_rate_of_change": "Review Count Rate of Change",
+                "one_star": "One Star",
+                "two_star": "Two Star",
+                "three_star": "Three Star",
+                "four_star": "Four Star",
+                "five_star": "Five Star",
+                "new_one_star": "New One Star",
+                "new_two_star": "New Two Star",
+                "new_three_star": "New Three Star",
+                "new_four_star": "New Four Star",
+                "new_five_star": "New Five Star",
             },
         )
     )
@@ -146,24 +173,30 @@ def app_history(store_app: int, app_name: str) -> AppHistory:
     # not for when more than 1 dimension
     mymelt = app_hist.melt(id_vars=xaxis_col).rename(columns={"variable": "group"})
     final_metrics = [x for x in app_hist.columns if x not in ["group", "crawled_date"]]
-    number_dicts = []
     change_dicts = []
     ratings_dicts = []
+    ratings_stars_dicts = []
+    ratings_stars_new_dicts = []
     plot_dicts = {}
     for metric in final_metrics:
         meltdf = mymelt.loc[mymelt.group == metric]
         metric_dict = meltdf.to_dict(orient="records")
         if "Rate of Change" in metric:
             change_dicts += metric_dict
-        else:
-            number_dicts += metric_dict
         if metric == "Installs Daily Average":
             plot_dicts["installs"] = metric_dict
         if metric in ["Review Count Daily Average", "Rating Count Daily Average"]:
             ratings_dicts += metric_dict
-    plot_dicts["numbers"] = number_dicts
+        if " Star" in metric:
+            if "New" in metric:
+                ratings_stars_new_dicts += metric_dict
+            else:
+                ratings_stars_dicts += metric_dict
     plot_dicts["ratings"] = ratings_dicts
     plot_dicts["changes"] = change_dicts
+    plot_dicts["ratings_stars"] = ratings_stars_dicts
+    plot_dicts["ratings_stars_new"] = ratings_stars_new_dicts
+
     hist = AppHistory(
         histogram=histogram,
         history_table=history_table,

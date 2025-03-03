@@ -2,6 +2,7 @@
 	import ExternalLinkSvg from '$lib/svg/ExternalLinkSVG.svelte';
 	import RequestSDKScanButton from '$lib/RequestSDKScanButton.svelte';
 	import AppSDKOverview from '$lib/AppSDKOverview.svelte';
+	import { Tabs } from '@skeletonlabs/skeleton-svelte';
 	import type { AppFullDetails } from '../../../types';
 	import AppTitle from '$lib/AppTitle.svelte';
 	import AppPlot from '$lib/AppPlot.svelte';
@@ -28,6 +29,8 @@
 		return '';
 	}
 	let country = $state(page.params.country || 'US');
+
+	let ratingsTab = $state('new');
 </script>
 
 <svelte:head>
@@ -382,6 +385,28 @@
 				<div class="card preset-tonal p-2 md:p-8 mt-2 md:mt-4">
 					<h3 class="h4 md:h3 p-2">Rate of Change Week on Week</h3>
 					<AppPlot plotdata={histdata.plot_data.changes} plotType="change" />
+				</div>
+			{/if}
+			{#if histdata.plot_data && histdata.plot_data.ratings_stars && histdata.plot_data.ratings_stars.length > 1}
+				<div class="card preset-tonal p-2 md:p-8 mt-2 md:mt-4">
+					<h3 class="h4 md:h3 p-2">App Ratings</h3>
+					<Tabs value={ratingsTab} onValueChange={(e) => (ratingsTab = e.value)}>
+						{#snippet list()}
+							<Tabs.Control value="average">Total Ratings</Tabs.Control>
+							<Tabs.Control value="new">New Ratings</Tabs.Control>
+						{/snippet}
+						{#snippet content()}
+							<Tabs.Panel value="average">
+								<AppPlot plotdata={histdata.plot_data.ratings_stars} plotType="ratings_stars" />
+							</Tabs.Panel>
+							<Tabs.Panel value="new">
+								<AppPlot
+									plotdata={histdata.plot_data.ratings_stars_new}
+									plotType="ratings_stars_new"
+								/>
+							</Tabs.Panel>
+						{/snippet}
+					</Tabs>
 				</div>
 			{/if}
 		{/await}
