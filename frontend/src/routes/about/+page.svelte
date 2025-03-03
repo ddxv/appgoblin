@@ -45,7 +45,7 @@
 </svelte:head>
 
 <div class="p-2 px-8 md:px-32 lg:px-72">
-	<h1 class="h1">Thanks for checking out this project</h1>
+	<h1 class="h1">Welcome to AppGoblin</h1>
 
 	<br />
 
@@ -54,7 +54,7 @@
 		<div class="p-4">
 			<p>
 				Join our Discord community to discuss app marketing strategies, share AppGoblin product
-				ideas, or get feedback from fellow developers.
+				ideas, or get feedback.
 			</p>
 
 			<br />
@@ -70,6 +70,22 @@
 				</div>
 			</a>
 			<br />
+		</div>
+	</div>
+	<div class="card preset-filled-surface-100-900 p-2 md:p-8">
+		<h2 class="h2 p-2 md:p-4">Pricing</h2>
+		<div class="p-4">
+			<p>
+				AppGoblin is a free self-funded project. The goal is to provide free and open source app
+				analytics for the community. Deeper insights, reports or work are available on request.
+			</p>
+			<br />
+			<p>Full access to the daily updated app-ads.txt data (~50GB) is available for $100/month.</p>
+			<br />
+			<p>
+				Please reach out to me directly if you'd like to get a quote for a custom report or
+				analysis.
+			</p>
 		</div>
 	</div>
 
@@ -88,10 +104,7 @@
 			<p>
 				Now, App Goblin is the combination of several open source projects I built. Yes, there are a
 				large number of similar companies like data.ai and sensortower.com which have many more
-				features. But it was a great project for me to learn more frontend and javascript as well as
-				give me something to do with the scraper which I had built previously (whats the point of a
-				database if you cant use it somehow). For now App Goblin is simply here as a resource free
-				of charge as it's running costs only $20 a month or so in hosting.
+				features. But it was a great project for me to learn more frontend and javascript.
 			</p>
 			<br />
 			<p>If you have questions or suggestions please feel free to reach out.</p>
