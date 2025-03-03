@@ -135,9 +135,12 @@ def app_history(store_app: int, app_name: str) -> AppHistory:
         )
         change_metrics.append(metric + "_rate_of_change")
         change_metrics.append(metric + "_avg_per_day")
-    star_cols = ["one_star", "two_star", "three_star", "four_star", "five_star"]
-    new_star_cols = [f"new_{col}" for col in star_cols]
-    app_hist = attach_rating_history(app_hist, star_cols)
+    star_cols = []
+    new_star_cols = []
+    if sum(histogram) > 0:
+        new_star_cols = [f"new_{col}" for col in star_cols]
+        star_cols = ["one_star", "two_star", "three_star", "four_star", "five_star"]
+        app_hist = attach_rating_history(app_hist, star_cols)
     app_hist = (
         app_hist[[group_col, xaxis_col, *change_metrics, *star_cols, *new_star_cols]]
         .drop(app_hist.index[0])
