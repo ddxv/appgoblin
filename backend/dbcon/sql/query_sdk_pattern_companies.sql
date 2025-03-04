@@ -3,9 +3,12 @@ SELECT
     ad.domain AS company_domain
 FROM
     adtech.sdk_packages AS sp
+LEFT JOIN adtech.sdks AS sd
+    ON
+        sp.sdk_id = sd.id
 LEFT JOIN adtech.companies AS c
     ON
-        sp.company_id = c.id
+        sd.company_id = c.id
 LEFT JOIN adtech.company_domain_mapping AS cdm
     ON
         c.id = cdm.company_id

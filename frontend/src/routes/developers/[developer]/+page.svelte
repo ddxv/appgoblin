@@ -63,45 +63,61 @@
 		{#if typeof devs == 'string'}
 			Failed to load developer
 		{:else}
-			<h1 class="h1 p-2">{devs.title}</h1>
-			<h2 class="h2 p-2">Google Android Apps: {devs.google.developer_name}</h2>
-			<p class="p-2">
-				Developer ID: <a href={`/developers/${devs.google.developer_id}`}
-					>{devs.google.developer_id}</a
-				>
-				<br />
-				App Count: {devs.google.apps.apps.length}
-				<br />
-				Developer URL:<ExternalLink domain={devs.google.developer_url} />
-			</p>
-			<AppsCard
-				apps={{
-					apps: devs.google.apps.apps.slice(0, 10),
-					title: `${devs.google.developer_name} Top Android Apps`
-				}}
-			/>
-			<h2 class="h2 p-2">Google Apps: {devs.google.developer_name} All Apps</h2>
-			<CompanyOverviewTable entries_table={devs.google.apps.apps} />
-			<hr />
+			<h1 class="h1 p-2">Developer: {page.params.developer}</h1>
+			{#if devs.google.app_count > 0}
+				<h2 class="h2 p-2">Google Play Developer: {devs.google.developer_name}</h2>
+				<p class="p-2">
+					Developer ID: <a href={`/developers/${devs.google.developer_id}`}
+						>{devs.google.developer_id}</a
+					>
+					<br />
+					App Count: {devs.google.apps.apps.length}
+					<br />
+					{#if devs.google.developer_url}
+						Developer URL:<ExternalLink domain={devs.google.developer_url} />
+					{:else}
+						Developer URL: None
+					{/if}
+				</p>
 
-			<h2 class="h2 p-2">Apple iOS Apps: {devs.apple.developer_name}</h2>
-			<p class="p-2">
-				Matched Developer ID: <a href={`/developers/${devs.apple.developer_id}`}
-					>{devs.apple.developer_id}</a
-				>
-				<br />
-				App Count: {devs.apple.apps.apps.length}
-				<br />
-				Developer URL:<ExternalLink domain={devs.apple.developer_url} />
-			</p>
-			<AppsCard
-				apps={{
-					apps: devs.apple.apps.apps.slice(0, 10),
-					title: `${devs.apple.developer_name} Top iOS Apps`
-				}}
-			/>
-			<h2 class="h2 p-2">Apple Apps: {devs.apple.developer_name} All Apps</h2>
-			<CompanyOverviewTable entries_table={devs.apple.apps.apps} />
+				<AppsCard
+					apps={{
+						apps: devs.google.apps.apps.slice(0, 10),
+						title: `${devs.google.developer_name} Top Android Apps`
+					}}
+				/>
+				<h2 class="h2 p-2">Google Apps: {devs.google.developer_name} All Apps</h2>
+				<CompanyOverviewTable entries_table={devs.google.apps.apps} />
+			{:else}
+				<p class="p-2">No apps found for Google Play developer or matched developer URLs.</p>
+			{/if}
+			<hr />
+			{#if devs.apple.apps.apps.length > 0}
+				<h2 class="h2 p-2">Apple iOS Developer: {devs.apple.developer_name}</h2>
+				<p class="p-2">
+					Matched Developer ID: <a href={`/developers/${devs.apple.developer_id}`}
+						>{devs.apple.developer_id}</a
+					>
+					<br />
+					App Count: {devs.apple.apps.apps.length}
+					<br />
+					{#if devs.apple.developer_url}
+						Developer URL:<ExternalLink domain={devs.apple.developer_url} />
+					{:else}
+						Developer URL: None
+					{/if}
+				</p>
+				<AppsCard
+					apps={{
+						apps: devs.apple.apps.apps.slice(0, 10),
+						title: `${devs.apple.developer_name} Top iOS Apps`
+					}}
+				/>
+				<h2 class="h2 p-2">Apple Apps: {devs.apple.developer_name} All Apps</h2>
+				<CompanyOverviewTable entries_table={devs.apple.apps.apps} />
+			{:else}
+				<p class="p-2">No apps found for Apple developer or matched developer URLs.</p>
+			{/if}
 		{/if}
 	{:catch error}
 		<p style="color: red">{error.message}</p>

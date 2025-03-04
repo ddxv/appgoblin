@@ -548,10 +548,6 @@ class AppController(Controller):
                 status_code=404,
             )
 
-        developer_url = apps_df[apps_df["developer_url"].notna()].to_dict(
-            orient="records"
-        )[0]["developer_url"]
-
         ios_df = apps_df[apps_df["store"] == "Apple App Store"]
         google_df = apps_df[apps_df["store"] == "Google Play"]
         if not google_df.empty:
@@ -559,15 +555,23 @@ class AppController(Controller):
                 "developer_name"
             ]
             google_developer_id = google_df.to_dict(orient="records")[0]["developer_id"]
+            google_developer_url = google_df.to_dict(orient="records")[0][
+                "store_developer_link"
+            ]
         else:
-            google_developer_name = "Google developer not found"
+            google_developer_name = "Google developer(s) not found"
             google_developer_id = None
+            google_developer_url = None
         if not ios_df.empty:
             apple_developer_name = ios_df.to_dict(orient="records")[0]["developer_name"]
             apple_developer_id = ios_df.to_dict(orient="records")[0]["developer_id"]
+            apple_developer_url = ios_df.to_dict(orient="records")[0][
+                "store_developer_link"
+            ]
         else:
-            apple_developer_name = "Apple developer not found"
+            apple_developer_name = "Apple developer(s) not found"
             apple_developer_id = None
+            apple_developer_url = None
         developer_name = google_developer_name or apple_developer_name
         google_apps_dict = google_df.to_dict(orient="records")
         apple_apps_dict = ios_df.to_dict(orient="records")
@@ -576,13 +580,13 @@ class AppController(Controller):
             google=PlatformDeveloper(
                 developer_id=google_developer_id,
                 developer_name=google_developer_name,
-                developer_url=developer_url,
+                developer_url=google_developer_url,
                 apps=AppGroup(title="Google", apps=google_apps_dict),
             ),
             apple=PlatformDeveloper(
                 developer_id=apple_developer_id,
                 developer_name=apple_developer_name,
-                developer_url=developer_url,
+                developer_url=apple_developer_url,
                 apps=AppGroup(title="Apple", apps=apple_apps_dict),
             ),
             title=developer_name,

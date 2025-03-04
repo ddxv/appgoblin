@@ -613,21 +613,20 @@ def clean_app_df(df: pd.DataFrame) -> pd.DataFrame:
         + df["store_id"]
     )
     if "developer_id" in df.columns:
-        if (
-            df["developer_id"].astype(str).str.isdigit().all()
-            and df["store"].str.contains("Google").all()
-        ):
-            df["store_developer_link"] = np.where(
-                df["store"].str.contains("Google"),
-                play_dev_link,
-                ios_dev_link,
-            ) + df["developer_id"].astype(str)
-        else:
-            df["store_developer_link"] = np.where(
-                df["store"].str.contains("Google"),
-                play_dev_name_link,
-                ios_dev_link,
-            ) + df["developer_id"].astype(str)
+        is_dev_digits = df["developer_id"].astype(str).str.isdigit()
+        is_store_google = df["store"].str.contains("Google")
+        is_store_apple = df["store"].str.contains("Apple")
+
+        df.loc[is_store_apple, "store_developer_link"] = (
+            ios_dev_link + df["developer_id"]
+        )
+        df.loc[is_store_google, "store_developer_link"] = (
+            play_dev_link + df["developer_id"]
+        )
+        df.loc[is_store_google & ~is_dev_digits, "store_developer_link"] = (
+            play_dev_name_link + df["developer_id"]
+        )
+
     date_cols = [
         "created_at",
         "store_last_updated",
