@@ -72,19 +72,23 @@
 			<br />
 		</div>
 	</div>
+	<br />
 	<div class="card preset-filled-surface-100-900 p-2 md:p-8">
 		<h2 class="h2 p-2 md:p-4">Pricing</h2>
 		<div class="p-4">
 			<p>
-				AppGoblin is a free self-funded project. The goal is to provide free and open source app
-				analytics for the community. Deeper insights, reports or work are available on request.
+				AppGoblin provides free mobile app marketing resources. The goal is to provide as much free
+				and reproducible open source app analytics for the community as possible.
 			</p>
 			<br />
-			<p>Full access to the daily updated app-ads.txt data (~50GB) is available for $100/month.</p>
+			<p>
+				Currently, the only paid feature is full access to the daily updated app-ads.txt data
+				(~50GB) for $100/month.
+			</p>
 			<br />
 			<p>
-				Please reach out to me directly if you'd like to get a quote for a custom report or
-				analysis.
+				Additional custom reports or analysis are available on request. Please reach out to me
+				directly if you'd like to get a quote for a custom report or analysis.
 			</p>
 		</div>
 	</div>
