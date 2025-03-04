@@ -16,6 +16,14 @@ export const actions = {
 		} else {
 			return { success: false };
 		}
+	},
+	updateRanks: async ({ request, params }) => {
+		const formData = await request.formData();
+		const country = formData.get('country');
+		const id = params.id;
+
+		const resp = await fetch(`http://localhost:8000/api/apps/${id}/ranks?country=${country}`);
+		return checkStatus(resp, 'App Ranks');
 	}
 } satisfies Actions;
 
@@ -33,13 +41,14 @@ function checkStatus(resp: Response, name: string) {
 	}
 }
 
-export const load: PageServerLoad = async ({ params, parent }) => {
+export const load: PageServerLoad = async ({ params, parent, url }) => {
 	const id = params.id;
+	const country = url.searchParams.get('country') || 'US';
 	// Load parent data first because it is cached
 	const { appCats, companyTypes, myapp } = await parent();
 
 	const myranks = async () => {
-		const resp = await fetch(`http://localhost:8000/api/apps/${id}/ranks`);
+		const resp = await fetch(`http://localhost:8000/api/apps/${id}/ranks?country=${country}`);
 		return checkStatus(resp, 'App Ranks');
 	};
 	const myhistory = async () => {

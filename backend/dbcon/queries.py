@@ -28,6 +28,7 @@ QUERY_CATEGORY_TOP_APPS_BY_INSTALLS = load_sql_file(
     "query_category_top_apps_by_installs.sql",
 )
 QUERY_RANKS_FOR_APP = load_sql_file("query_ranks_for_app.sql")
+QUERY_RANKS_FOR_APP_OVERVIEW = load_sql_file("query_ranks_for_app_overview.sql")
 QUERY_MOST_RECENT_TOP_RANKS = load_sql_file("query_most_recent_top_ranks.sql")
 QUERY_HISTORY_TOP_RANKS = load_sql_file("query_history_top_ranks.sql")
 QUERY_APPSTORE_CATEGORIES = load_sql_file("query_appstore_categories.sql")
@@ -233,13 +234,28 @@ def get_companies_category_type(
     return df
 
 
-def get_ranks_for_app(store_id: str, days: int = 30) -> pd.DataFrame:
+def get_ranks_for_app(
+    store_id: str, country: str = "US", days: int = 30
+) -> pd.DataFrame:
     """Get appstore ranks for a specific app."""
     start_date = (
         datetime.datetime.now(datetime.UTC) - datetime.timedelta(days=days)
     ).strftime("%Y-%m-%d")
     df = pd.read_sql(
         QUERY_RANKS_FOR_APP,
+        con=DBCON.engine,
+        params={"store_id": store_id, "start_date": start_date, "country": country},
+    )
+    return df
+
+
+def get_ranks_for_app_overview(store_id: str, days: int = 30) -> pd.DataFrame:
+    """Get appstore ranks for a specific app."""
+    start_date = (
+        datetime.datetime.now(datetime.UTC) - datetime.timedelta(days=days)
+    ).strftime("%Y-%m-%d")
+    df = pd.read_sql(
+        QUERY_RANKS_FOR_APP_OVERVIEW,
         con=DBCON.engine,
         params={"store_id": store_id, "start_date": start_date},
     )

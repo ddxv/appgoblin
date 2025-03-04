@@ -1,5 +1,6 @@
 <script lang="ts">
 	import ExternalLinkSvg from '$lib/svg/ExternalLinkSVG.svelte';
+	import { goto } from '$app/navigation';
 	import RequestSDKScanButton from '$lib/RequestSDKScanButton.svelte';
 	import AppSDKOverview from '$lib/AppSDKOverview.svelte';
 	import { Tabs } from '@skeletonlabs/skeleton-svelte';
@@ -29,6 +30,13 @@
 		return '';
 	}
 	let country = $state(page.params.country || 'US');
+
+	function updateCountry(newCountry: string) {
+		country = newCountry;
+		const url = new URL(window.location.href);
+		url.searchParams.set('country', newCountry);
+		goto(url.toString(), { replaceState: true, noScroll: true });
+	}
 
 	let ratingsTab = $state('new');
 </script>
@@ -110,24 +118,37 @@
 			{:then myapp}
 				<AppTitle {myapp} />
 
-				{#if myapp.developer_id}
-					<div class="block md:hidden"></div>
-					<div class="p-2 md:py-2">
-						<a href="/developers/{myapp.developer_id}">
-							<div class="btn preset-tonal hover:preset-tonal-primary">
-								<span>Developer: {myapp.developer_name || myapp.developer_id}</span>
+				<div class="grid grid-cols-2">
+					<div>
+						{#if myapp.developer_id}
+							<div class="block md:hidden"></div>
+							<div class="p-2 md:py-2">
+								<a href="/developers/{myapp.developer_id}">
+									<div class="btn preset-tonal hover:preset-tonal-primary">
+										<span>Developer: {myapp.developer_name || myapp.developer_id}</span>
+									</div>
+								</a>
 							</div>
+						{/if}
+
+						<div class="block md:hidden"></div>
+						<div class="p-2 md:py-2">
+							<a href="/categories/{myapp.category}">
+								<div class="btn preset-tonal hover:preset-tonal-primary">
+									<span>Category: {getCategoryName(myapp.category)}</span>
+								</div>
+							</a>
+						</div>
+					</div>
+					<div class="ml-auto">
+						<a href={myapp.store_link} target="_blank" class="anchor inline-flex items-baseline">
+							{#if myapp.store_link.includes('google')}
+								<img class="w-40 md:w-60" src="/gp_en_badge_web_generic.png" alt={myapp.name} />
+							{:else}
+								<AvailableOniOs />
+							{/if}
 						</a>
 					</div>
-				{/if}
-
-				<div class="block md:hidden"></div>
-				<div class="p-2 md:py-2">
-					<a href="/categories/{myapp.category}">
-						<div class="btn preset-tonal hover:preset-tonal-primary">
-							<span>Category: {getCategoryName(myapp.category)}</span>
-						</div>
-					</a>
 				</div>
 			{/await}
 		</div>
@@ -271,15 +292,6 @@
 							{/if}
 						</div>
 					</WhiteCard>
-					<div class="ml-auto">
-						<a href={myapp.store_link} target="_blank" class="anchor inline-flex items-baseline">
-							{#if myapp.store_link.includes('google')}
-								<img class="w-40 md:w-60" src="/gp_en_badge_web_generic.png" alt={myapp.name} />
-							{:else}
-								<AvailableOniOs />
-							{/if}
-						</a>
-					</div>
 				</div>
 			{/await}
 		</div>
@@ -314,6 +326,20 @@
 		</div>
 
 		<div class="card preset-tonal p-2 md:p-8 mt-2 md:mt-4">
+			<div class="max-w-sm p-2">
+				<div class="max-w-sm p-2">
+					<select
+						class="select"
+						bind:value={country}
+						onchange={(e) => updateCountry(e.currentTarget.value)}
+					>
+						{#each Object.keys(countries) as countryCode}
+							<option value={countryCode}>{countries[countryCode as keyof typeof countries]}</option
+							>
+						{/each}
+					</select>
+				</div>
+			</div>
 			<h4 class="h4 md:h3 p-2">Lastest Store Ranks</h4>
 			{#await data.myranks}
 				Loading app ranks...
@@ -327,7 +353,7 @@
 					{#if ranks.latest && ranks.latest.length > 0}
 						{#each ranks.latest.slice(0, 10) as myrow}
 							<div class="px-4">
-								#{myrow.rank}
+								#{myrow.current_rank}
 								in: {myrow.collection}
 								{myrow.category}
 								({myrow.country})
@@ -343,13 +369,6 @@
 					{#if ranks.history && ranks.history.length > 0}
 						<div class="card preset-tonal mt-2 md:mt-4">
 							<h4 class="h4 md:h3 p-2 mt-2">Store Ranks Historical</h4>
-							<div class="max-w-sm p-2">
-								<select class="select" bind:value={country}>
-									{#each Object.entries(countries) as [key, value]}
-										<option value={key}>{value}</option>
-									{/each}
-								</select>
-							</div>
 
 							<RankChart plotData={ranks.history} narrowBool={true} />
 						</div>
@@ -410,23 +429,6 @@
 				</div>
 			{/if}
 		{/await}
-
-		{#await data.myAdsTxt}
-			Loading App-Ads.txt data...
-		{:then adstxt}
-			{#if adstxt.direct_entries && adstxt.direct_entries.length >= 1}
-				<div class="card preset-tonal mt-2 md:mt-4 md:p-4">
-					<h4 class="h4 md:h3 p-2 mt-2">Direct App-Ads.Txt</h4>
-					<AdsTxtTable entries_table={adstxt.direct_entries} />
-				</div>
-			{/if}
-			{#if adstxt.reseller_entries && adstxt.reseller_entries.length >= 1}
-				<div class="card preset-tonal mt-2 md:mt-4 md:p-4">
-					<h4 class="h4 md:h3 p-2 mt-2">Reseller App-Ads.Txt Entries</h4>
-					<AdsTxtTable entries_table={adstxt.reseller_entries} />
-				</div>
-			{/if}
-		{/await}
 	</div>
 
 	<!-- Column2: App Pictures -->
@@ -457,6 +459,23 @@
 		<div class="card preset-tonal p-2 md:p-8 mt-2 md:mt-4">
 			<AppSDKOverview myPackageInfo={data.myPackageInfo} companyTypes={data.companyTypes} />
 		</div>
+
+		{#await data.myAdsTxt}
+			Loading App-Ads.txt data...
+		{:then adstxt}
+			{#if adstxt.direct_entries && adstxt.direct_entries.length >= 1}
+				<div class="card preset-tonal mt-2 md:mt-4 md:p-4">
+					<h4 class="h4 md:h3 p-2 mt-2">Direct App-Ads.Txt</h4>
+					<AdsTxtTable entries_table={adstxt.direct_entries} />
+				</div>
+			{/if}
+			{#if adstxt.reseller_entries && adstxt.reseller_entries.length >= 1}
+				<div class="card preset-tonal mt-2 md:mt-4 md:p-4">
+					<h4 class="h4 md:h3 p-2 mt-2">Reseller App-Ads.Txt Entries</h4>
+					<AdsTxtTable entries_table={adstxt.reseller_entries} />
+				</div>
+			{/if}
+		{/await}
 	</div>
 </section>
 

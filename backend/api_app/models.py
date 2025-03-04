@@ -435,6 +435,7 @@ class AppRank:
 
     latest: dict
     history: dict
+    countries: list[str]
 
 
 @dataclass

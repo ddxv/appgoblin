@@ -36,6 +36,7 @@ from dbcon.queries import (
     get_app_sdk_details,
     get_app_sdk_overview,
     get_ranks_for_app,
+    get_ranks_for_app_overview,
     get_recent_apps,
     get_single_app,
     get_single_apps_adstxt,
@@ -85,7 +86,7 @@ def attach_rating_history(app_hist: pd.DataFrame, star_cols: list[str]) -> pd.Da
     """Get the rating history of an app."""
     df = app_hist[["crawled_date", "histogram"]].copy()
     df[star_cols] = np.stack(app_hist["histogram"].values)
-    df.sort_values(["crawled_date"])
+    df = df.sort_values(["crawled_date"])
     df = df.drop(columns=["histogram", "crawled_date"])
     change_df = df[star_cols].diff()
     change_df = change_df.rename(
@@ -140,6 +141,7 @@ def app_history(store_app: int, app_name: str) -> AppHistory:
     if sum(histogram) > 0:
         new_star_cols = [f"new_{col}" for col in star_cols]
         star_cols = ["one_star", "two_star", "three_star", "four_star", "five_star"]
+        new_star_cols = ["new_" + col for col in star_cols]
         app_hist = attach_rating_history(app_hist, star_cols)
     app_hist = (
         app_hist[[group_col, xaxis_col, *change_metrics, *star_cols, *new_star_cols]]
@@ -493,7 +495,8 @@ class AppController(Controller):
 
         """
         start = time.perf_counter() * 1000
-        df = get_ranks_for_app(store_id=store_id)
+        df = get_ranks_for_app(store_id=store_id, country=country, days=90)
+        df_overview = get_ranks_for_app_overview(store_id=store_id, days=90)
         if df.empty:
             msg = f"Ranks not found for {store_id!r}"
             raise NotFoundException(
@@ -501,13 +504,8 @@ class AppController(Controller):
                 status_code=404,
             )
         df["rank_group"] = df["collection"] + ": " + df["category"]
-        latest_dict = (
-            df[df["crawled_date"].max() == df["crawled_date"]][
-                ["rank", "store", "crawled_date", "collection", "category", "country"]
-            ]
-            .sort_values("rank")
-            .to_dict(orient="records")
-        )
+        countries = df_overview["country"].unique().tolist()
+        latest_dict = df_overview.sort_values("current_rank").to_dict(orient="records")
         df["crawled_date"] = pd.to_datetime(df["crawled_date"]).dt.strftime("%Y-%m-%d")
         pdf = df[df["country"] == country][
             ["crawled_date", "rank", "rank_group"]
@@ -522,7 +520,7 @@ class AppController(Controller):
             .reset_index()
             .to_dict(orient="records")
         )
-        rank_dict = AppRank(latest=latest_dict, history=hist_dict)
+        rank_dict = AppRank(latest=latest_dict, history=hist_dict, countries=countries)
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(f"{self.path}/{store_id}/ranks took {duration}ms")
         return rank_dict

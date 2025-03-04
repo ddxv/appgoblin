@@ -134,7 +134,8 @@ export interface RankedApps extends Row {
 }
 export interface AppRankDetail {
 	crawled_date: string;
-	rank: number;
+	current_rank: number;
+	best_rank: number;
 	store: number;
 	collection: string;
 	category: string;
@@ -374,7 +375,7 @@ export interface AppFullDetails {
 	appCats: CatData;
 	status?: number;
 	error?: string;
-	myranks: Promise<{ latest: AppRankDetail[]; history: AppRankDetail[] }>;
+	myranks: Promise<{ latest: AppRankDetail[]; history: AppRankDetail[]; countries: string[] }>;
 	myhistory: Promise<{
 		histogram: number[];
 		history_table: AppHistoryInfo[];
