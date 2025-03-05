@@ -66,7 +66,7 @@ def search_both_stores(search_term: str) -> None:
 def get_search_results(search_term: str) -> AppGroup:
     """Parse search term and return resulting APpGroup."""
     decoded_input = urllib.parse.unquote(search_term)
-    df = search_apps(search_input=decoded_input, limit=20)
+    df = search_apps(search_input=decoded_input, limit=60)
     logger.info(f"{decoded_input=} returned rows: {df.shape[0]}")
     apps_dict = df.to_dict(orient="records")
     app_group = AppGroup(title=search_term, apps=apps_dict)
