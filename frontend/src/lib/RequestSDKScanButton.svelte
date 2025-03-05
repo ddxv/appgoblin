@@ -25,7 +25,7 @@
 	use:enhance={handleSubmit}
 >
 	<input type="hidden" name="appId" value={page.params.id} />
-	<button class="btn preset-tonal">Request New SDK Scan</button>
+	<button class="btn preset-tonal text-tertiary-900-100">Request New SDK Scan</button>
 	{#if myMessage}
 		<!-- this message is ephemeral; it exists because the page was rendered in
 	       response to a form submission. it will vanish if the user reloads -->

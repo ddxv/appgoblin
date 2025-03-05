@@ -41,6 +41,7 @@ QUERY_APP_HISTORY = load_sql_file("query_app_history.sql")
 QUERY_SINGLE_APP = load_sql_file("query_single_app.sql")
 QUERY_APP_SDK_DETAILS = load_sql_file("query_app_sdk_details.sql")
 QUERY_APP_SDK_OVERVIEW = load_sql_file("query_app_sdk_overview.sql")
+QUERY_APP_ADSTXT_OVERVIEW = load_sql_file("query_app_adstxt_overview.sql")
 QUERY_TOTAL_COUNTS = load_sql_file("query_total_counts.sql")
 QUERY_STORE_COLLECTION_CATEGORY_MAP = load_sql_file(
     "query_store_collection_category_map.sql",
@@ -350,6 +351,17 @@ def get_app_sdk_overview(store_id: str) -> pd.DataFrame:
     logger.info(f"Query SDKs app_id={store_id}")
     df = pd.read_sql(
         QUERY_APP_SDK_OVERVIEW,
+        DBCON.engine,
+        params={"store_id": store_id},
+    )
+    return df
+
+
+def get_app_adstxt_overview(store_id: str) -> pd.DataFrame:
+    """Get app-ads.txt overview for a single store_id."""
+    logger.info(f"Query app-ads.txt overview app_id={store_id}")
+    df = pd.read_sql(
+        QUERY_APP_ADSTXT_OVERVIEW,
         DBCON.engine,
         params={"store_id": store_id},
     )

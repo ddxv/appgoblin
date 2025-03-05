@@ -65,19 +65,17 @@ export const load: PageServerLoad = async ({ params, parent, url }) => {
 		};
 	}
 
-	let myAdsTxt = async () => 'No AdsTxt Result';
-	if (myapp.adstxt_crawl_result === 1) {
-		myAdsTxt = async () => {
-			const resp = await fetch(`http://localhost:8000/api/apps/${id}/adstxt`);
-			return checkStatus(resp, 'App AdsTxt');
-		};
-	}
+	let myAdsTxtOverview = async () => 'No AdsTxt Overview Result';
+	myAdsTxtOverview = async () => {
+		const resp = await fetch(`http://localhost:8000/api/apps/${id}/adstxt/overview`);
+		return checkStatus(resp, 'App AdsTxt Overview');
+	};
 
 	return {
 		myranks: myranks(),
 		myhistory: myhistory(),
 		myPackageInfo: myPackageInfo(),
-		myAdsTxt: myAdsTxt(),
+		myAdsTxtOverview: myAdsTxtOverview(),
 		appCats: appCats,
 		companyTypes: companyTypes
 	};

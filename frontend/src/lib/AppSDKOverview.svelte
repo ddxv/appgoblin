@@ -48,10 +48,7 @@
 			</div>
 		{/await}
 	{:else}
-		<p>
-			No SDKs found for this app, <a href="/apps/{page.params.id}/sdks"
-				>check the full list of SDKs
-			</a> for untagged companies.
-		</p>
+		<p>App not yet scanned for SDKs.</p>
+		<RequestSDKScanButton />
 	{/if}
 {/await}

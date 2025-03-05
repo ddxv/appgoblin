@@ -32,6 +32,7 @@ from api_app.models import (
 )
 from config import get_logger
 from dbcon.queries import (
+    get_app_adstxt_overview,
     get_app_history,
     get_app_sdk_details,
     get_app_sdk_overview,
@@ -594,6 +595,46 @@ class AppController(Controller):
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(f"{self.path}/developers/{developer_id} took {duration}ms")
         return developer_apps
+
+    @get(path="/{store_id:str}/adstxt/overview", cache=3600)
+    async def get_app_adstxt_overview(self: Self, store_id: str) -> AdsTxtEntries:
+        """Handle GET request for a store_id's related ads txt entries.
+
+        Note these IDs are only connected to the app's developer's URL
+        and thus are not app specific.
+
+        Args:
+        ----
+            store_id (str): The url of the store_id's ads txt to retrieve
+
+        Returns:
+        -------
+            json
+
+        """
+        start = time.perf_counter() * 1000
+        adstxt_df = get_app_adstxt_overview(store_id)
+
+        if adstxt_df.empty:
+            msg = f"App's ads-txt entries not found: {store_id!r}"
+            raise NotFoundException(
+                msg,
+                status_code=404,
+            )
+        direct_adstxt_dict = adstxt_df[
+            adstxt_df["relationship"].str.upper() == "DIRECT"
+        ].to_dict(orient="records")
+        reseller_adstxt_dict = adstxt_df[
+            adstxt_df["relationship"].str.upper() == "RESELLER"
+        ].to_dict(orient="records")
+
+        txts = AdsTxtEntries(
+            direct_entries=direct_adstxt_dict,
+            reseller_entries=reseller_adstxt_dict,
+        )
+        duration = round((time.perf_counter() * 1000 - start), 2)
+        logger.info(f"{self.path}/{store_id}/adstxt/overview took {duration}ms")
+        return txts
 
     @get(path="/{store_id:str}/adstxt", cache=3600)
     async def get_developer_adstxt(self: Self, store_id: str) -> AdsTxtEntries:

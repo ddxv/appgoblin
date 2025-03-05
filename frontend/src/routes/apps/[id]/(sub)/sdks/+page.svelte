@@ -4,26 +4,9 @@
 	import ManifestItemUnknownsList from '$lib/ManifestItemUnknownsList.svelte';
 
 	import RequestSDKScanButton from '$lib/RequestSDKScanButton.svelte';
-	import AppTitle from '$lib/AppTitle.svelte';
-
-	import { page } from '$app/state';
 
 	let { data } = $props();
 </script>
-
-{#await data.myapp}
-	Loading app details...
-{:then myapp}
-	<AppTitle {myapp} />
-{/await}
-
-<div class="p-2 md:py-2">
-	<a href="/apps/{page.params.id}">
-		<div class="btn preset-tonal hover:preset-tonal-primary">
-			<span>Back to App Main Page</span>
-		</div>
-	</a>
-</div>
 
 <div class="card preset-tonal p-2 md:p-16 mt-2 md:mt-4">
 	<h4 class="h4 md:h3 p-2">Ad SDKs, Trackers & Permissions</h4>
