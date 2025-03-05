@@ -65,7 +65,7 @@
 		{:else}
 			<h1 class="h1 p-2">Developer: {page.params.developer}</h1>
 			{#if devs.google.apps.apps.length > 0}
-				<h2 class="h2 p-2">Google Play Developer: {devs.google.developer_name}</h2>
+				<h2 class="h2 p-2 md:my-4 my-8">Google Play Developer: {devs.google.developer_name}</h2>
 				<p class="p-2">
 					Developer ID: <a href={`/developers/${devs.google.developer_id}`}
 						>{devs.google.developer_id}</a
@@ -86,14 +86,16 @@
 						title: `${devs.google.developer_name} Top Android Apps`
 					}}
 				/>
-				<h2 class="h2 p-2">Google Apps: {devs.google.developer_name} All Apps</h2>
-				<CompanyOverviewTable entries_table={devs.google.apps.apps} />
+				{#if devs.google.apps.apps.length > 10}
+					<h2 class="h2 p-2">Google Apps: {devs.google.developer_name} All Apps</h2>
+					<CompanyOverviewTable entries_table={devs.google.apps.apps} />
+				{/if}
 			{:else}
 				<p class="p-2">No apps found for Google Play developer or matched developer URLs.</p>
 			{/if}
 			<hr />
 			{#if devs.apple.apps.apps.length > 0}
-				<h2 class="h2 p-2">Apple iOS Developer: {devs.apple.developer_name}</h2>
+				<h2 class="h2 p-2 md:my-4 my-8">Apple iOS Developer: {devs.apple.developer_name}</h2>
 				<p class="p-2">
 					Matched Developer ID: <a href={`/developers/${devs.apple.developer_id}`}
 						>{devs.apple.developer_id}</a
@@ -113,8 +115,10 @@
 						title: `${devs.apple.developer_name} Top iOS Apps`
 					}}
 				/>
-				<h2 class="h2 p-2">Apple Apps: {devs.apple.developer_name} All Apps</h2>
-				<CompanyOverviewTable entries_table={devs.apple.apps.apps} />
+				{#if devs.apple.apps.apps.length > 10}
+					<h2 class="h2 p-2">Apple Apps: {devs.apple.developer_name} All Apps</h2>
+					<CompanyOverviewTable entries_table={devs.apple.apps.apps} />
+				{/if}
 			{:else}
 				<p class="p-2">No apps found for Apple developer or matched developer URLs.</p>
 			{/if}

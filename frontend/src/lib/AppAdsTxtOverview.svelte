@@ -23,13 +23,13 @@
 		<div class="grid grid-cols-1 md:grid-cols-2 gap-2">
 			<WhiteCard>
 				{#snippet title()}
-					DIRECT
+					<a href="/apps/{page.params.id}/ads-txt">DIRECT</a>
 				{/snippet}
 				<div class="grid grid-cols-1 md:grid-cols-2 gap-2 p-4">
 					{#if adsTxt.direct_entries && adsTxt.direct_entries.length > 0}
 						{#each adsTxt.direct_entries as company}
 							<CompanyButton
-								companyName={company.company_name}
+								companyName={company.name ? company.name : company.company_domain}
 								companyDomain={company.company_domain}
 							/>
 						{/each}
@@ -40,7 +40,7 @@
 			</WhiteCard>
 			<WhiteCard>
 				{#snippet title()}
-					RESELLER
+					<a href="/apps/{page.params.id}/ads-txt"> RESELLER </a>
 				{/snippet}
 				<div class="grid grid-cols-1 md:grid-cols-2 gap-2 p-4">
 					{#if adsTxt.reseller_entries && adsTxt.reseller_entries.length > 0}
