@@ -64,7 +64,7 @@
 			Failed to load developer
 		{:else}
 			<h1 class="h1 p-2">Developer: {page.params.developer}</h1>
-			{#if devs.google.app_count > 0}
+			{#if devs.google.apps.apps.length > 0}
 				<h2 class="h2 p-2">Google Play Developer: {devs.google.developer_name}</h2>
 				<p class="p-2">
 					Developer ID: <a href={`/developers/${devs.google.developer_id}`}
