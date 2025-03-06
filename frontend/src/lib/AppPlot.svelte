@@ -9,6 +9,12 @@
 		plotType: string;
 	}
 
+	const red = '#E53935';
+	const orange = '#FB8C00';
+	const yellow = '#FDD835';
+	const lightgreen = '#7CB342';
+	const darkgreen = '#2E7D32';
+
 	let { plotdata, plotType }: Props = $props();
 
 	function getMaxYValue() {
@@ -123,11 +129,11 @@
 				option: 2
 			},
 			scale: {
-				'One Star': '#E53935', // Red
-				'Two Star': '#FB8C00', // Orange
-				'Three Star': '#FDD835', // Yellow
-				'Four Star': '#7CB342', // Light green
-				'Five Star': '#2E7D32' // Dark green
+				'One Star': red,
+				'Two Star': orange,
+				'Three Star': yellow,
+				'Four Star': lightgreen,
+				'Five Star': darkgreen
 			}
 		},
 		comboChartTypes: [
@@ -176,11 +182,11 @@
 				option: 2
 			},
 			scale: {
-				'New One Star': '#E53935', // Red
-				'New Two Star': '#FB8C00', // Orange
-				'New Three Star': '#FDD835', // Yellow
-				'New Four Star': '#7CB342', // Light green
-				'New Five Star': '#2E7D32' // Dark green
+				'New One Star': red,
+				'New Two Star': orange,
+				'New Three Star': yellow,
+				'New Four Star': lightgreen,
+				'New Five Star': darkgreen
 			}
 		},
 		comboChartTypes: [
