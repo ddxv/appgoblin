@@ -655,10 +655,14 @@ def clean_app_df(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-def get_app_history(store_app: int) -> pd.DataFrame:
+def get_app_history(store_app: int, country: str = "US") -> pd.DataFrame:
     """Get scraping history for an app."""
     logger.info(f"Query for history single app_id={store_app}")
-    df = pd.read_sql(QUERY_APP_HISTORY, DBCON.engine, params={"store_app": store_app})
+    df = pd.read_sql(
+        QUERY_APP_HISTORY,
+        DBCON.engine,
+        params={"store_app": store_app, "country": country},
+    )
     return df
 
 

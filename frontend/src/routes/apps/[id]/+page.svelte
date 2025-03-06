@@ -10,7 +10,7 @@
 	import AppPlot from '$lib/AppPlot.svelte';
 	import AvailableOniOs from '$lib/svg/AvailableOniOS.svelte';
 	import RankChart from '$lib/RankChart.svelte';
-	import AppHistoryTable from '$lib/AppHistoryTable.svelte';
+	// import AppHistoryTable from '$lib/AppHistoryTable.svelte';
 	import WhiteCard from '$lib/WhiteCard.svelte';
 	interface Props {
 		data: AppFullDetails;
@@ -29,7 +29,8 @@
 		}
 		return '';
 	}
-	let country = $state(page.params.country || 'US');
+	let country = $state(page.url.searchParams.get('country'));
+	let countryTitle = $derived(countries[country as keyof typeof countries]);
 
 	function updateCountry(newCountry: string) {
 		country = newCountry;
@@ -39,6 +40,12 @@
 	}
 
 	let ratingsTab = $state('new');
+
+	data.myranksOverview.then((ranks) => {
+		if (country == '' && ranks.countries && ranks.countries.length > 0) {
+			country = ranks.countries[0];
+		}
+	});
 </script>
 
 <svelte:head>
@@ -309,39 +316,29 @@
 				{#await data.myhistory}
 					Loading rating details...
 				{:then histdata}
-					{#each [...histdata.histogram].reverse() as count, index}
-						<div class="flex bar-spacer">
-							<span class="label">{histdata.histogram.length - index}★</span>
-							<div class="bar-container bg-surface-100-900">
-								<div
-									class="bar bg-primary-100-900"
-									style="width: {(count / sum(histdata.histogram)) * 100}%"
-									title="{index + 1} star: {count} ratings"
-								></div>
+					{#if histdata.histogram}
+						{#each [...histdata.histogram].reverse() as count, index}
+							<div class="flex bar-spacer">
+								<span class="label">{histdata.histogram.length - index}★</span>
+								<div class="bar-container bg-surface-100-900 grow">
+									<div
+										class="bar bg-primary-100-900"
+										style="width: {(count / sum(histdata.histogram)) * 100}%"
+										title="{index + 1} star: {count} ratings"
+									></div>
+								</div>
 							</div>
-						</div>
-					{/each}
+						{/each}
+					{:else}
+						<p>No rating data available for this app.</p>
+					{/if}
 				{/await}
 			</div>
 		</div>
 
 		<div class="card preset-tonal p-2 md:p-8 mt-2 md:mt-4">
-			<div class="max-w-sm p-2">
-				<div class="max-w-sm p-2">
-					<select
-						class="select"
-						bind:value={country}
-						onchange={(e) => updateCountry(e.currentTarget.value)}
-					>
-						{#each Object.keys(countries) as countryCode}
-							<option value={countryCode}>{countries[countryCode as keyof typeof countries]}</option
-							>
-						{/each}
-					</select>
-				</div>
-			</div>
-			<h4 class="h4 md:h3 p-2">App Store Ranks</h4>
-			{#await data.myranks}
+			<h4 class="h4 md:h3 p-2">Highest Ranks Past 90 Days</h4>
+			{#await data.myranksOverview}
 				Loading app ranks...
 			{:then ranks}
 				{#if typeof ranks == 'string'}
@@ -350,43 +347,75 @@
 						No official ranks available for this app. This app is not ranked on the store's top 200
 						apps for it's categories.
 					</p>
-				{:else}
-					{#if ranks.best_ranks && ranks.best_ranks.length > 0}
-						{#each ranks.best_ranks.slice(0, 10) as myrow}
-							<div class="px-4">
-								#{myrow.best_rank}
-								in: {myrow.collection}
-								{myrow.category}
-								({myrow.country})
-							</div>
-						{/each}
-						{#if ranks.latest.length > 10}
-							<div class="px-4 mt-2 text-surface-600">
-								+ {ranks.latest.length - 10} more rankings
-							</div>
-						{/if}
-					{/if}
-
-					{#if ranks.history && ranks.history.length > 0}
-						<div class="card preset-tonal mt-2 md:mt-4">
-							<h4 class="h4 md:h3 p-2 mt-2">Store Ranks Historical</h4>
-
-							<RankChart plotData={ranks.history} narrowBool={true} />
+				{:else if ranks.best_ranks && ranks.best_ranks.length > 0}
+					{#each ranks.best_ranks.slice(0, 10) as myrow}
+						<div class="px-4">
+							#{myrow.best_rank}
+							in: {myrow.collection}
+							{myrow.category}
+							({myrow.country})
 						</div>
-					{:else}
-						<p>No ranking data available for this app.</p>
+					{/each}
+					{#if ranks.best_ranks.length > 10}
+						<div class="px-4 mt-2 text-surface-600">
+							+ {ranks.best_ranks.length - 10} more rankings
+						</div>
 					{/if}
 				{/if}
 			{:catch}
 				<p>The server caught an error.</p>
 			{/await}
 		</div>
+		<hr class="my-4" />
+		<div class="max-w-sm p-2">
+			<p>Breakdown App Store Ranks by Country</p>
+			{#await data.myranksOverview}
+				Loading app ranks...
+			{:then ranks}
+				<select
+					class="select"
+					bind:value={country}
+					onchange={(e) => updateCountry(e.currentTarget.value)}
+				>
+					{#if typeof ranks != 'string' && ranks.countries && ranks.countries.length > 0}
+						{#each ranks.countries as countryCode}
+							<option value={countryCode}>{countries[countryCode as keyof typeof countries]}</option
+							>
+						{/each}
+					{:else}
+						{#each Object.keys(countries) as countryCode}
+							<option value={countryCode}>{countries[countryCode as keyof typeof countries]}</option
+							>
+						{/each}
+					{/if}
+				</select>
+			{/await}
+		</div>
+		{#await data.myranks}
+			Loading app ranks...
+		{:then ranks}
+			{#if typeof ranks == 'string'}
+				<p>
+					No official ranks available for this app. This app is not ranked on the store's top 200
+					apps for it's categories.
+				</p>
+			{:else if ranks.history && ranks.history.length > 0}
+				<div class="card preset-tonal mt-2 md:mt-4">
+					<h4 class="h4 md:h3 p-2 mt-2">App Store Ranks: {countryTitle}</h4>
+
+					<RankChart plotData={ranks.history} narrowBool={true} />
+				</div>
+			{:else}
+				<p>No ranking data available for this app.</p>
+			{/if}
+		{/await}
+
 		{#await data.myhistory}
 			Loading historical data...
 		{:then histdata}
 			{#if histdata.history_table}
 				{#await data.myapp then myapp}
-					<AppHistoryTable os={myapp.store_link} history_table={histdata.history_table} />
+					<!-- <AppHistoryTable os={myapp.store_link} history_table={histdata.history_table} /> -->
 				{/await}
 			{/if}
 			{#if histdata.plot_data && histdata.plot_data.installs && histdata.plot_data.installs.length > 1}
@@ -483,7 +512,6 @@
 		border-radius: 5px; /* Rounded corners */
 		margin-left: 5px;
 		padding: 0px;
-		grow: 1;
 	}
 
 	.bar {

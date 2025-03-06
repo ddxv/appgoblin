@@ -427,15 +427,24 @@ class RankingOverview:
 
 
 @dataclass
+class AppRankOverview:
+    """Represents the ranking details of an app.
+
+    Including its latest rankings and historical rankings data as dictionaries.
+    """
+
+    countries: list[str]
+    best_ranks: dict
+
+
+@dataclass
 class AppRank:
     """Represents the ranking details of an app.
 
     Including its latest rankings and historical rankings data as dictionaries.
     """
 
-    best_ranks: dict
     history: dict
-    countries: list[str]
 
 
 @dataclass

@@ -23,6 +23,7 @@ from api_app.models import (
     AppGroup,
     AppHistory,
     AppRank,
+    AppRankOverview,
     AppSDKsOverview,
     Category,
     Collection,
@@ -97,9 +98,9 @@ def attach_rating_history(app_hist: pd.DataFrame, star_cols: list[str]) -> pd.Da
     return app_hist
 
 
-def app_history(store_app: int, app_name: str) -> AppHistory:
+def app_history(store_app: int, app_name: str, country: str = "US") -> AppHistory:
     """Get the history of app scraping."""
-    app_hist = get_app_history(store_app)
+    app_hist = get_app_history(store_app, country)
     histogram = app_hist.sort_values(["id"]).tail(1)["histogram"].to_numpy()[0]
     history_table = (
         app_hist.sort_values("crawled_date", ascending=False)
@@ -315,7 +316,10 @@ class AppController(Controller):
         return app_dict
 
     @get(path="/{store_id:str}/history", cache=3600)
-    async def get_app_history_details(self: Self, store_id: str) -> AppHistory:
+    async def get_app_history_details(
+        self: Self,
+        store_id: str,
+    ) -> AppHistory:
         """Handle GET request for a specific app.
 
          store_id (str): The id of the app to retrieve.
@@ -481,6 +485,35 @@ class AppController(Controller):
         logger.info(f"{self.path}/{store_id}/sdks took {duration}ms")
         return trackers_dict
 
+    @get(path="/{store_id:str}/ranks/overview", cache=3600)
+    async def app_ranks_overview(self: Self, store_id: str) -> AppRank:
+        """Handle GET requests for a specific app ranks.
+
+        Args:
+        ----
+            store_id (str): The id of the store to retrieve.
+
+        Returns:
+        -------
+            json
+
+        """
+        start = time.perf_counter() * 1000
+        df_overview = get_ranks_for_app_overview(store_id=store_id, days=90)
+        if df_overview.empty:
+            msg = f"Ranks not found for {store_id!r}"
+            raise NotFoundException(
+                msg,
+                status_code=404,
+            )
+        countries = df_overview["country"].unique().tolist()
+        countries = sorted(countries)
+        duration = round((time.perf_counter() * 1000 - start), 2)
+        logger.info(f"{self.path}/{store_id}/ranks/overview took {duration}ms")
+        return AppRankOverview(
+            countries=countries, best_ranks=df_overview.to_dict(orient="records")
+        )
+
     @get(path="/{store_id:str}/ranks", cache=3600)
     async def app_ranks(self: Self, store_id: str, country: str = "US") -> AppRank:
         """Handle GET requests for a specific app ranks.
@@ -497,7 +530,6 @@ class AppController(Controller):
         """
         start = time.perf_counter() * 1000
         df = get_ranks_for_app(store_id=store_id, country=country, days=90)
-        df_overview = get_ranks_for_app_overview(store_id=store_id, days=90)
         if df.empty:
             msg = f"Ranks not found for {store_id!r}"
             raise NotFoundException(
@@ -505,8 +537,6 @@ class AppController(Controller):
                 status_code=404,
             )
         df["rank_group"] = df["collection"] + ": " + df["category"]
-        countries = df_overview["country"].unique().tolist()
-        best_ranks_dict = df_overview.to_dict(orient="records")
         df["crawled_date"] = pd.to_datetime(df["crawled_date"]).dt.strftime("%Y-%m-%d")
         pdf = df[df["country"] == country][
             ["crawled_date", "rank", "rank_group"]
@@ -521,9 +551,7 @@ class AppController(Controller):
             .reset_index()
             .to_dict(orient="records")
         )
-        rank_dict = AppRank(
-            best_ranks=best_ranks_dict, history=hist_dict, countries=countries
-        )
+        rank_dict = AppRank(history=hist_dict)
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(f"{self.path}/{store_id}/ranks took {duration}ms")
         return rank_dict
@@ -617,12 +645,6 @@ class AppController(Controller):
         start = time.perf_counter() * 1000
         adstxt_df = get_app_adstxt_overview(store_id)
 
-        if adstxt_df.empty:
-            msg = f"App's ads-txt entries not found: {store_id!r}"
-            raise NotFoundException(
-                msg,
-                status_code=404,
-            )
         direct_adstxt_dict = adstxt_df[
             adstxt_df["relationship"].str.upper() == "DIRECT"
         ].to_dict(orient="records")

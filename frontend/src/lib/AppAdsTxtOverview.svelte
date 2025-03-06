@@ -14,7 +14,7 @@
 {:then adsTxt}
 	{#if typeof adsTxt == 'string'}
 		<p>App-Ads.txt data not found on the developer's website.</p>
-	{:else if adsTxt && (adsTxt.direct_entries || adsTxt.reseller_entries)}
+	{:else if adsTxt && (adsTxt.direct_entries.length > 0 || adsTxt.reseller_entries.length > 0)}
 		<div class="p-2 md:py-2">
 			These are the publisher IDs and networks found for this app in the app-ads.txt file hosted on
 			the developer's website.

@@ -47,10 +47,16 @@ export const load: PageServerLoad = async ({ params, parent, url }) => {
 	// Load parent data first because it is cached
 	const { appCats, companyTypes, myapp } = await parent();
 
+	const myranksOverview = async () => {
+		const resp = await fetch(`http://localhost:8000/api/apps/${id}/ranks/overview`);
+		return checkStatus(resp, 'App Ranks Overview');
+	};
+
 	const myranks = async () => {
 		const resp = await fetch(`http://localhost:8000/api/apps/${id}/ranks?country=${country}`);
 		return checkStatus(resp, 'App Ranks');
 	};
+
 	const myhistory = async () => {
 		const resp = await fetch(`http://localhost:8000/api/apps/${id}/history`);
 		return checkStatus(resp, 'App History');
@@ -73,6 +79,7 @@ export const load: PageServerLoad = async ({ params, parent, url }) => {
 
 	return {
 		myranks: myranks(),
+		myranksOverview: myranksOverview(),
 		myhistory: myhistory(),
 		myPackageInfo: myPackageInfo(),
 		myAdsTxtOverview: myAdsTxtOverview(),
