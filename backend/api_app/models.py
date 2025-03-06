@@ -433,7 +433,7 @@ class AppRank:
     Including its latest rankings and historical rankings data as dictionaries.
     """
 
-    latest: dict
+    best_ranks: dict
     history: dict
     countries: list[str]
 

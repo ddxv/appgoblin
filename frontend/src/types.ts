@@ -375,7 +375,7 @@ export interface AppFullDetails {
 	appCats: CatData;
 	status?: number;
 	error?: string;
-	myranks: Promise<{ latest: AppRankDetail[]; history: AppRankDetail[]; countries: string[] }>;
+	myranks: Promise<{ best_ranks: AppRankDetail[]; history: AppRankDetail[]; countries: string[] }>;
 	myhistory: Promise<{
 		histogram: number[];
 		history_table: AppHistoryInfo[];

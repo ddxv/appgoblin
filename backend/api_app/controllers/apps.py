@@ -506,7 +506,7 @@ class AppController(Controller):
             )
         df["rank_group"] = df["collection"] + ": " + df["category"]
         countries = df_overview["country"].unique().tolist()
-        latest_dict = df_overview.sort_values("current_rank").to_dict(orient="records")
+        best_ranks_dict = df_overview.to_dict(orient="records")
         df["crawled_date"] = pd.to_datetime(df["crawled_date"]).dt.strftime("%Y-%m-%d")
         pdf = df[df["country"] == country][
             ["crawled_date", "rank", "rank_group"]
@@ -521,7 +521,9 @@ class AppController(Controller):
             .reset_index()
             .to_dict(orient="records")
         )
-        rank_dict = AppRank(latest=latest_dict, history=hist_dict, countries=countries)
+        rank_dict = AppRank(
+            best_ranks=best_ranks_dict, history=hist_dict, countries=countries
+        )
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(f"{self.path}/{store_id}/ranks took {duration}ms")
         return rank_dict

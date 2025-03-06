@@ -340,20 +340,21 @@
 					</select>
 				</div>
 			</div>
-			<h4 class="h4 md:h3 p-2">Lastest Store Ranks</h4>
+			<h4 class="h4 md:h3 p-2">App Store Ranks</h4>
 			{#await data.myranks}
 				Loading app ranks...
 			{:then ranks}
 				{#if typeof ranks == 'string'}
+					{ranks}
 					<p>
 						No official ranks available for this app. This app is not ranked on the store's top 200
 						apps for it's categories.
 					</p>
 				{:else}
-					{#if ranks.latest && ranks.latest.length > 0}
-						{#each ranks.latest.slice(0, 10) as myrow}
+					{#if ranks.best_ranks && ranks.best_ranks.length > 0}
+						{#each ranks.best_ranks.slice(0, 10) as myrow}
 							<div class="px-4">
-								#{myrow.current_rank}
+								#{myrow.best_rank}
 								in: {myrow.collection}
 								{myrow.category}
 								({myrow.country})
