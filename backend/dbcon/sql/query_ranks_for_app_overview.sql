@@ -1,42 +1,53 @@
 WITH myrankings AS (
     SELECT
-        sar.store_id,
+        sa.store_id,
         sar.crawled_date,
         c.alpha2 AS country,
-        sar.collection,
-        sar.category,
-        sar."rank" AS current_rank,
+        sar.store_collection,
+        sar.store_category,
+        sar.rank AS current_rank,
         MIN(sar.rank) OVER (
-            PARTITION BY c.alpha2,
-            sar.collection,
-            sar.category
+            PARTITION BY
+                c.alpha2,
+                sar.store_collection,
+                sar.store_category
         ) AS best_rank,
         ROW_NUMBER() OVER (
-            PARTITION BY c.alpha2,
-            sar.collection,
-            sar.category
-        ORDER BY
-            sar.crawled_date DESC
+            PARTITION BY
+                c.alpha2,
+                sar.store_collection,
+                sar.store_category
+            ORDER BY
+                sar.crawled_date DESC
         ) AS orderedrow
     FROM
-        store_apps_rankings AS sar
+        frontend.store_apps_rankings AS sar
     LEFT JOIN countries AS c
         ON
-        sar.country = c.id
+            sar.country = c.id
+    LEFT JOIN store_apps AS sa
+        ON
+            sar.store_app = sa.id
     WHERE
-        sar.store_id = :store_id
+        sa.store_id = :store_id
         AND sar.crawled_date >= :start_date
 )
+
 SELECT
-    store_id,
-    crawled_date,
-    country,
-    collection,
-    category,
-    current_rank,
-    best_rank
+    mr.store_id,
+    mr.crawled_date,
+    mr.country,
+    sc.collection,
+    sca.category,
+    mr.current_rank,
+    mr.best_rank
 FROM
-    myrankings
+    myrankings AS mr
+LEFT JOIN store_collections AS sc
+    ON
+        mr.store_collection = sc.id
+LEFT JOIN store_categories AS sca
+    ON
+        mr.store_category = sca.id
 WHERE
-    orderedrow = 1
-;
+    mr.orderedrow = 1
