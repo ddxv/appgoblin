@@ -14,10 +14,10 @@ export const load: PageServerLoad = async ({ params, setHeaders }) => {
 		const categoryValue = params.category;
 		const countryValue = params.country || 'US';
 		const res = fetch(
-			`http://localhost:8000/api/rankings/${storeVal}/${collectionValue}/${categoryValue}?country=${countryValue}`
+			`http://localhost:8000/api/rankings/${collectionValue}/${categoryValue}?country=${countryValue}`
 		);
 		const history = fetch(
-			`http://localhost:8000/api/rankings/${storeVal}/${collectionValue}/${categoryValue}/history?country=${countryValue}`
+			`http://localhost:8000/api/rankings/${collectionValue}/${categoryValue}/history?country=${countryValue}`
 		);
 
 		return {

@@ -3,8 +3,7 @@ WITH top_apps AS (
     SELECT DISTINCT ar.store_id
     FROM frontend.app_rankings_latest_by_week AS ar
     WHERE
-        ar.store = :store
-        AND ar.store_collection = :collection_id
+        ar.store_collection = :collection_id
         AND ar.store_category = :category_id
         AND ar.country = :country
         AND ar.crawled_date >= :start_date
@@ -20,8 +19,7 @@ FROM frontend.app_rankings_latest_by_week AS ar
 INNER JOIN top_apps AS ta
     ON ar.store_id = ta.store_id
 WHERE
-    ar.store = :store
-    AND ar.store_collection = :collection_id
+    ar.store_collection = :collection_id
     AND ar.store_category = :category_id
     AND ar.country = :country
     AND ar.crawled_date >= :start_date

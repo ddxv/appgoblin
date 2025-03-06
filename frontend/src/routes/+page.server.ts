@@ -8,11 +8,11 @@ export const load: PageServerLoad = async ({ setHeaders, parent }) => {
 		'cache-control': 'max-age=3600'
 	});
 
-	const androidAppRanks = fetch(`http://localhost:8000/api/rankings/1/1/1/short`);
-	const iOSAppRanks = fetch(`http://localhost:8000/api/rankings/2/4/120/short`);
+	const androidAppRanks = fetch(`http://localhost:8000/api/rankings/1/1/short`);
+	const iOSAppRanks = fetch(`http://localhost:8000/api/rankings/4/120/short`);
 
-	const androidGameRanks = fetch(`http://localhost:8000/api/rankings/1/1/36/short`);
-	const iOSGameRanks = fetch(`http://localhost:8000/api/rankings/2/4/62/short`);
+	const androidGameRanks = fetch(`http://localhost:8000/api/rankings/1/36/short`);
+	const iOSGameRanks = fetch(`http://localhost:8000/api/rankings/4/62/short`);
 
 	const topCompanies = fetch(`http://localhost:8000/api/companies/topshort`);
 

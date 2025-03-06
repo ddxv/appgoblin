@@ -78,10 +78,9 @@ class RankingsController(Controller):
 
         return overview
 
-    @get(path="/{store:int}/{collection:int}/{category:int}/short", cache=86400)
+    @get(path="/{collection:int}/{category:int}/short", cache=86400)
     async def get_short_ranks_for_category(
         self: Self,
-        store: int,
         collection: int,
         category: int,
     ) -> dict:
@@ -95,7 +94,6 @@ class RankingsController(Controller):
         """
         logger.info(f"{self.path} start for store/collection/category")
         df = get_most_recent_top_ranks(
-            store=store,
             collection_id=collection,
             category_id=category,
             limit=5,
@@ -103,10 +101,9 @@ class RankingsController(Controller):
         ranks_dict = df.to_dict(orient="records")
         return {"ranks": ranks_dict}
 
-    @get(path="/{store:int}/{collection:int}/{category:int}", cache=86400)
+    @get(path="/{collection:int}/{category:int}", cache=86400)
     async def get_ranks_for_category(
         self: Self,
-        store: int,
         collection: int,
         category: int,
         country: str = "US",
@@ -121,7 +118,6 @@ class RankingsController(Controller):
         """
         logger.info(f"{self.path} start")
         df = get_most_recent_top_ranks(
-            store=store,
             collection_id=collection,
             category_id=category,
             country=country,
@@ -130,10 +126,9 @@ class RankingsController(Controller):
         ranks_dict = df.to_dict(orient="records")
         return {"ranks": ranks_dict}
 
-    @get(path="/{store:int}/{collection:int}/{category:int}/history", cache=86400)
+    @get(path="/{collection:int}/{category:int}/history", cache=86400)
     async def get_ranks_history_for_category(
         self: Self,
-        store: int,
         collection: int,
         category: int,
         country: str = "US",
@@ -148,7 +143,6 @@ class RankingsController(Controller):
         """
         logger.info(f"{self.path} start for store/collection/category")
         df = get_history_top_ranks(
-            store=store,
             collection_id=collection,
             category_id=category,
             country=country,

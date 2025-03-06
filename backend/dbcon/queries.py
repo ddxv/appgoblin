@@ -264,7 +264,6 @@ def get_ranks_for_app_overview(store_id: str, days: int = 30) -> pd.DataFrame:
 
 
 def get_most_recent_top_ranks(
-    store: int,
     collection_id: int,
     category_id: int,
     country: str = "US",
@@ -275,7 +274,6 @@ def get_most_recent_top_ranks(
         QUERY_MOST_RECENT_TOP_RANKS,
         con=DBCON.engine,
         params={
-            "store": store,
             "collection_id": collection_id,
             "category_id": category_id,
             "country": country,
@@ -286,7 +284,6 @@ def get_most_recent_top_ranks(
 
 
 def get_history_top_ranks(
-    store: int,
     collection_id: int,
     category_id: int,
     country: str = "US",
@@ -301,7 +298,6 @@ def get_history_top_ranks(
         QUERY_HISTORY_TOP_RANKS,
         con=DBCON.engine,
         params={
-            "store": store,
             "collection_id": collection_id,
             "category_id": category_id,
             "country": country,

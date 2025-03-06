@@ -6,9 +6,6 @@ SELECT
 FROM
     app_rankings AS ar
 LEFT JOIN
-    stores AS s
-    ON ar.store = s.id
-LEFT JOIN
     store_apps AS sa ON ar.store_app = sa.id
 LEFT JOIN
     countries AS c ON ar.country = c.id
@@ -17,9 +14,11 @@ WHERE
     = (
         SELECT max(arr.crawled_date)
         FROM app_rankings AS arr
-        WHERE arr.store = :store
+        LEFT JOIN countries AS c ON arr.country = c.id
+        WHERE
+            arr.store_collection = :collection_id
+            AND c.alpha2 = :country
     )
-    AND ar.store = :store
     AND ar.store_collection = :collection_id
     AND ar.store_category = :category_id
     AND c.alpha2 = :country
