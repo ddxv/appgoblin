@@ -4,7 +4,7 @@ SELECT
     sa.store_id,
     sa.icon_url_512
 FROM
-    app_rankings AS ar
+    frontend.store_apps_rankings AS ar
 LEFT JOIN
     store_apps AS sa ON ar.store_app = sa.id
 LEFT JOIN
@@ -13,7 +13,7 @@ WHERE
     ar.crawled_date
     = (
         SELECT max(arr.crawled_date)
-        FROM app_rankings AS arr
+        FROM frontend.store_apps_rankings AS arr
         LEFT JOIN countries AS c ON arr.country = c.id
         WHERE
             arr.store_collection = :collection_id

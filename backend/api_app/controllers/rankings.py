@@ -4,6 +4,7 @@
 """
 
 import datetime
+import time
 from typing import Self
 
 import pandas as pd
@@ -117,6 +118,7 @@ class RankingsController(Controller):
 
         """
         logger.info(f"{self.path} start")
+        start_time = time.time()
         df = get_most_recent_top_ranks(
             collection_id=collection,
             category_id=category,
@@ -124,6 +126,9 @@ class RankingsController(Controller):
             limit=200,
         )
         ranks_dict = df.to_dict(orient="records")
+        logger.info(
+            f"/api/rankings/{collection}/{category} took {time.time() - start_time} seconds"
+        )
         return {"ranks": ranks_dict}
 
     @get(path="/{collection:int}/{category:int}/history", cache=86400)
@@ -142,6 +147,7 @@ class RankingsController(Controller):
 
         """
         logger.info(f"{self.path} start for store/collection/category")
+        start_time = time.time()
         df = get_history_top_ranks(
             collection_id=collection,
             category_id=category,
@@ -169,5 +175,8 @@ class RankingsController(Controller):
             df.pivot_table(columns=["name"], index=["crawled_date"], values="rank")
             .reset_index()
             .to_dict(orient="records")
+        )
+        logger.info(
+            f"/api/rankings/{collection}/{category}/history took {time.time() - start_time} seconds"
         )
         return {"history": hist_dict}
