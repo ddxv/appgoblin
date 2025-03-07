@@ -3,13 +3,15 @@ import type { PageServerLoad } from './$types.js';
 export const ssr: boolean = true;
 export const csr: boolean = true;
 
-export const load: PageServerLoad = async ({}) => {
+export const load: PageServerLoad = async ({ parent }) => {
+	const { appsOverview } = await parent();
 	const resUserRequested = fetch(`http://localhost:8000/api/sdks/user_requested`);
 	const res = fetch(`http://localhost:8000/api/sdks/overview`);
 	const resParts = fetch(`http://localhost:8000/api/sdks/sdkparts`);
 	console.log('start load overview for sdks');
 	try {
 		return {
+			appsOverview,
 			sdksUserRequested: resUserRequested
 				.then((resp) => {
 					if (resp.status === 200) {

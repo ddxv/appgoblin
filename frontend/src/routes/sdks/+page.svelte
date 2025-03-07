@@ -3,6 +3,7 @@
 	import SDKsLatestAppsTable from '$lib/SDKsLatestAppsTable.svelte';
 	import SDKsUserRequestAppsTable from '$lib/SDKsUserRequestAppsTable.svelte';
 	import WhiteCard from '$lib/WhiteCard.svelte';
+	import SDKOverview from '$lib/utils/SDKOverview.svelte';
 	import { Tabs } from '@skeletonlabs/skeleton-svelte';
 
 	let group = $state('user_requested');
@@ -12,7 +13,7 @@
 
 <h1 class="text-2xl font-bold text-primary-900-100">SDKs</h1>
 
-<div class="my-6">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-6">
 	<WhiteCard>
 		{#snippet title()}
 			SDKs Overview
@@ -23,6 +24,7 @@
 			anything you'd like to tag please reach out on Discord to help contribute.
 		</p>
 	</WhiteCard>
+	<SDKOverview {data} />
 </div>
 
 <div>
@@ -39,7 +41,7 @@
 				<h2 class="text-2xl font-bold text-primary-900-100">User Requested App Scans</h2>
 				<p class="text-sm md:text-base p-2 md:p-4">
 					While scans can happen quickly (~1hr), the results will not aggregate to the dashboard for
-					~24hrs.
+					~24hrs. If you see that you
 				</p>
 				{#await data.sdksUserRequested}
 					loading
