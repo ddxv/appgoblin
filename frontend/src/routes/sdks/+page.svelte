@@ -1,7 +1,11 @@
 <script lang="ts">
 	import SDKsOverviewTable from '$lib/SDKsOverviewTable.svelte';
 	import SDKsLatestAppsTable from '$lib/SDKsLatestAppsTable.svelte';
+	import SDKsUserRequestAppsTable from '$lib/SDKsUserRequestAppsTable.svelte';
 	import WhiteCard from '$lib/WhiteCard.svelte';
+	import { Tabs } from '@skeletonlabs/skeleton-svelte';
+
+	let group = $state('user_requested');
 
 	let { data } = $props();
 </script>
@@ -21,78 +25,122 @@
 	</WhiteCard>
 </div>
 
-<div class="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-6">
-	{#await data.sdksOverview}
-		loading
-	{:then mySdksOverview}
-		<WhiteCard>
-			{#snippet title()}
-				Android Successfully Crawled Apps
-			{/snippet}
+<div>
+	<Tabs value={group} onValueChange={(e) => (group = e.value)}>
+		{#snippet list()}
+			<Tabs.Control value="user_requested">User Requests</Tabs.Control>
+			<Tabs.Control value="latest_success">Latest Success</Tabs.Control>
+			<Tabs.Control value="latest_failed">Latest Failed</Tabs.Control>
+			<Tabs.Control value="sdkparts">Raw SDKs Parts</Tabs.Control>
+		{/snippet}
 
-			{#if mySdksOverview.android_success_latest_apps && mySdksOverview.android_success_latest_apps.length > 0}
-				<SDKsLatestAppsTable entries_table={mySdksOverview.android_success_latest_apps} />
-			{/if}
-		</WhiteCard>
+		{#snippet content()}
+			<Tabs.Panel value="user_requested">
+				<h2 class="text-2xl font-bold text-primary-900-100">User Requested App Scans</h2>
+				<p class="text-sm md:text-base p-2 md:p-4">
+					While scans can happen quickly (~1hr), the results will not aggregate to the dashboard for
+					~24hrs.
+				</p>
+				{#await data.sdksUserRequested}
+					loading
+				{:then mySdksUserRequested}
+					<WhiteCard>
+						{#snippet title()}
+							User Requests
+						{/snippet}
 
-		<WhiteCard>
-			{#snippet title()}
-				iOS Apps SDKs
-			{/snippet}
+						{#if mySdksUserRequested.user_requested_latest_apps && mySdksUserRequested.user_requested_latest_apps.length > 0}
+							<SDKsUserRequestAppsTable
+								entries_table={mySdksUserRequested.user_requested_latest_apps}
+							/>
+						{/if}
+					</WhiteCard>
+				{/await}
+			</Tabs.Panel>
+			<Tabs.Panel value="latest_success">
+				<h2 class="text-2xl font-bold text-primary-900-100">Latest Successfully Crawled Apps</h2>
 
-			{#if mySdksOverview.ios_success_latest_apps && mySdksOverview.ios_success_latest_apps.length > 0}
-				<SDKsLatestAppsTable entries_table={mySdksOverview.ios_success_latest_apps} />
-			{/if}
-		</WhiteCard>
+				<div class="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-6">
+					{#await data.sdksOverview}
+						loading
+					{:then mySdksOverview}
+						<WhiteCard>
+							{#snippet title()}
+								Android Successfully Crawled Apps
+							{/snippet}
 
-		<WhiteCard>
-			{#snippet title()}
-				Android Failed to Crawled Apps
-			{/snippet}
+							{#if mySdksOverview.android_success_latest_apps && mySdksOverview.android_success_latest_apps.length > 0}
+								<SDKsLatestAppsTable entries_table={mySdksOverview.android_success_latest_apps} />
+							{/if}
+						</WhiteCard>
 
-			{#if mySdksOverview.android_failed_latest_apps && mySdksOverview.android_failed_latest_apps.length > 0}
-				<SDKsLatestAppsTable entries_table={mySdksOverview.android_failed_latest_apps} />
-			{/if}
-		</WhiteCard>
+						<WhiteCard>
+							{#snippet title()}
+								iOS Apps SDKs
+							{/snippet}
 
-		<WhiteCard>
-			{#snippet title()}
-				iOS Failed to Crawled Apps
-			{/snippet}
+							{#if mySdksOverview.ios_success_latest_apps && mySdksOverview.ios_success_latest_apps.length > 0}
+								<SDKsLatestAppsTable entries_table={mySdksOverview.ios_success_latest_apps} />
+							{/if}
+						</WhiteCard>
+					{/await}
+				</div></Tabs.Panel
+			>
+			<Tabs.Panel value="latest_failed">
+				<h2 class="text-2xl font-bold text-primary-900-100">Latest Failed to Crawled Apps</h2>
 
-			{#if mySdksOverview.ios_failed_latest_apps && mySdksOverview.ios_failed_latest_apps.length > 0}
-				<SDKsLatestAppsTable entries_table={mySdksOverview.ios_failed_latest_apps} />
-			{/if}
-		</WhiteCard>
+				{#await data.sdksOverview}
+					loading
+				{:then mySdksOverview}
+					<WhiteCard>
+						{#snippet title()}
+							Android Failed to Crawled Apps
+						{/snippet}
 
-		<WhiteCard>
-			{#snippet title()}
-				User Requested Apps
-			{/snippet}
+						{#if mySdksOverview.android_failed_latest_apps && mySdksOverview.android_failed_latest_apps.length > 0}
+							<SDKsLatestAppsTable entries_table={mySdksOverview.android_failed_latest_apps} />
+						{/if}
+					</WhiteCard>
 
-			{#if mySdksOverview.user_requested_latest_apps && mySdksOverview.user_requested_latest_apps.length > 0}
-				<SDKsLatestAppsTable entries_table={mySdksOverview.user_requested_latest_apps} />
-			{/if}
-		</WhiteCard>
+					<WhiteCard>
+						{#snippet title()}
+							iOS Failed to Crawled Apps
+						{/snippet}
 
-		<WhiteCard>
-			{#snippet title()}
-				Android SDKs
-			{/snippet}
+						{#if mySdksOverview.ios_failed_latest_apps && mySdksOverview.ios_failed_latest_apps.length > 0}
+							<SDKsLatestAppsTable entries_table={mySdksOverview.ios_failed_latest_apps} />
+						{/if}
+					</WhiteCard>
+				{/await}
+			</Tabs.Panel>
 
-			{#if mySdksOverview.android_sdkparts && mySdksOverview.android_sdkparts.length > 0}
-				<SDKsOverviewTable entries_table={mySdksOverview.android_sdkparts} />
-			{/if}
-		</WhiteCard>
+			<Tabs.Panel value="sdkparts">
+				<h2 class="text-2xl font-bold text-primary-900-100">SDKs Parts</h2>
 
-		<WhiteCard>
-			{#snippet title()}
-				iOS SDKs
-			{/snippet}
+				{#await data.sdksParts}
+					loading
+				{:then mySdksParts}
+					<WhiteCard>
+						{#snippet title()}
+							Android SDKs
+						{/snippet}
 
-			{#if mySdksOverview.ios_sdkparts && mySdksOverview.ios_sdkparts.length > 0}
-				<SDKsOverviewTable entries_table={mySdksOverview.ios_sdkparts} />
-			{/if}
-		</WhiteCard>
-	{/await}
+						{#if mySdksParts.android_sdkparts && mySdksParts.android_sdkparts.length > 0}
+							<SDKsOverviewTable entries_table={mySdksParts.android_sdkparts} />
+						{/if}
+					</WhiteCard>
+
+					<WhiteCard>
+						{#snippet title()}
+							iOS SDKs
+						{/snippet}
+
+						{#if mySdksParts.ios_sdkparts && mySdksParts.ios_sdkparts.length > 0}
+							<SDKsOverviewTable entries_table={mySdksParts.ios_sdkparts} />
+						{/if}
+					</WhiteCard>
+				{/await}
+			</Tabs.Panel>
+		{/snippet}
+	</Tabs>
 </div>

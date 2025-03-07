@@ -6,12 +6,15 @@
 import time
 from typing import Self
 
+import pandas as pd
 from litestar import Controller, get
 
 from api_app.models import (
     SdkCompanies,
     SdkOverview,
+    SdkParts,
     SdksOverview,
+    SdksUserRequested,
 )
 from config import get_logger
 from dbcon.queries import (
@@ -31,7 +34,7 @@ class SdksController(Controller):
     path = "/api/sdks"
 
     @get(path="/overview", cache=12000)
-    async def sdks(self: Self) -> SdksOverview:
+    async def sdks_overview(self: Self) -> SdksOverview:
         """Handle GET request for all sdks.
 
         Returns
@@ -42,26 +45,16 @@ class SdksController(Controller):
         """
         start = time.perf_counter() * 1000
 
-        most_sdk_parts = get_sdks()
         latest_apps = get_latest_sdks()
-        user_requested_latest_apps = get_user_requested_latest_sdks()
-
-        is_google = most_sdk_parts["store"].str.startswith("Google")
-        is_google_apps = latest_apps["store"].str.startswith("Google")
 
         is_success = latest_apps["crawl_result"] == 1
 
-        android_sdkparts = most_sdk_parts[is_google]
-        ios_sdkparts = most_sdk_parts[~is_google]
-
+        is_google_apps = latest_apps["store"].str.startswith("Google")
         android_success_latest_apps = latest_apps[is_google_apps & is_success]
         ios_success_latest_apps = latest_apps[~is_google_apps & is_success]
 
         android_failed_latest_apps = latest_apps[is_google_apps & ~is_success]
         ios_failed_latest_apps = latest_apps[~is_google_apps & ~is_success]
-
-        android_sdkparts_dict = android_sdkparts.to_dict(orient="records")
-        ios_sdkparts_dict = ios_sdkparts.to_dict(orient="records")
 
         android_success_latest_apps_dict = android_success_latest_apps.to_dict(
             orient="records"
@@ -71,20 +64,69 @@ class SdksController(Controller):
             orient="records"
         )
         ios_failed_latest_apps_dict = ios_failed_latest_apps.to_dict(orient="records")
-        user_requested_latest_apps_dict = user_requested_latest_apps.to_dict(
-            orient="records"
-        )
+
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(f"{self.path}/overview took {duration}ms")
 
         return SdksOverview(
-            android_sdkparts=android_sdkparts_dict,
-            ios_sdkparts=ios_sdkparts_dict,
             android_success_latest_apps=android_success_latest_apps_dict,
             ios_success_latest_apps=ios_success_latest_apps_dict,
             android_failed_latest_apps=android_failed_latest_apps_dict,
             ios_failed_latest_apps=ios_failed_latest_apps_dict,
-            user_requested_latest_apps=user_requested_latest_apps_dict,
+        )
+
+    @get(path="/user_requested", cache=3600)
+    async def sdks_user_requested(self: Self) -> SdksUserRequested:
+        """Handle GET request for all sdks.
+
+        Returns
+        -------
+        SdksUserRequested
+            A list of user requested apps.
+
+        """
+        start = time.perf_counter() * 1000
+
+        df = get_user_requested_latest_sdks()
+
+        df = df.replace({pd.NaT: None})
+
+        user_requested_latest_apps_dict = df.to_dict(orient="records")
+
+        duration = round((time.perf_counter() * 1000 - start), 2)
+        logger.info(f"{self.path}/user_requested took {duration}ms")
+
+        return SdksUserRequested(
+            user_requested_latest_apps=user_requested_latest_apps_dict
+        )
+
+    @get(path="/sdkparts", cache=3600)
+    async def sdks_sdkparts(self: Self) -> SdkParts:
+        """Handle GET request for all sdks.
+
+        Returns
+        -------
+        SdkOverview
+            An overview of apps for a given sdk pattern
+
+        """
+        start = time.perf_counter() * 1000
+
+        most_sdk_parts = get_sdks()
+
+        is_google = most_sdk_parts["store"].str.startswith("Google")
+
+        android_sdkparts = most_sdk_parts[is_google]
+        ios_sdkparts = most_sdk_parts[~is_google]
+
+        android_sdkparts_dict = android_sdkparts.to_dict(orient="records")
+        ios_sdkparts_dict = ios_sdkparts.to_dict(orient="records")
+
+        duration = round((time.perf_counter() * 1000 - start), 2)
+        logger.info(f"{self.path}/sdkparts took {duration}ms")
+        return SdkParts(
+            android_sdkparts=android_sdkparts_dict,
+            ios_sdkparts=ios_sdkparts_dict,
         )
 
     @get(path="/{value_pattern:str}", cache=3600)

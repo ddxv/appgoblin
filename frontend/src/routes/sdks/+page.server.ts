@@ -4,11 +4,52 @@ export const ssr: boolean = true;
 export const csr: boolean = true;
 
 export const load: PageServerLoad = async ({}) => {
+	const resUserRequested = fetch(`http://localhost:8000/api/sdks/user_requested`);
 	const res = fetch(`http://localhost:8000/api/sdks/overview`);
+	const resParts = fetch(`http://localhost:8000/api/sdks/sdkparts`);
 	console.log('start load overview for sdks');
 	try {
 		return {
+			sdksUserRequested: resUserRequested
+				.then((resp) => {
+					if (resp.status === 200) {
+						return resp.json();
+					} else if (resp.status === 406) {
+						console.log('Sdks overview not found');
+						return 'Sdks overview not Found';
+					} else if (resp.status === 500) {
+						console.log('API Server error');
+						return 'Backend Error';
+					}
+				})
+				.then(
+					(json) => json,
+					(error) => {
+						console.log('Uncaught error', error);
+						return 'Uncaught Error';
+					}
+				),
 			sdksOverview: res
+				.then((resp) => {
+					if (resp.status === 200) {
+						return resp.json();
+					} else if (resp.status === 406) {
+						console.log('Sdks overview not found');
+						return 'Sdks overview not Found';
+					} else if (resp.status === 500) {
+						console.log('API Server error');
+						return 'Backend Error';
+					}
+				})
+				.then(
+					(json) => json,
+					(error) => {
+						console.log('Uncaught error', error);
+						return 'Uncaught Error';
+					}
+				),
+
+			sdksParts: resParts
 				.then((resp) => {
 					if (resp.status === 200) {
 						return resp.json();
