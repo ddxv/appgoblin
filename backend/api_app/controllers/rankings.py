@@ -93,13 +93,15 @@ class RankingsController(Controller):
             with ios and google apps
 
         """
-        logger.info(f"{self.path} start for store/collection/category")
+        start = time.perf_counter() * 1000
         df = get_most_recent_top_ranks(
             collection_id=collection,
             category_id=category,
             limit=5,
         )
         ranks_dict = df.to_dict(orient="records")
+        duration = round((time.perf_counter() * 1000 - start), 2)
+        logger.info(f"{self.path}/{collection}/{category}/short took {duration}ms")
         return {"ranks": ranks_dict}
 
     @get(path="/{collection:int}/{category:int}", cache=86400)
@@ -117,8 +119,7 @@ class RankingsController(Controller):
             with ios and google apps
 
         """
-        logger.info(f"{self.path} start")
-        start_time = time.time()
+        start = time.perf_counter() * 1000
         df = get_most_recent_top_ranks(
             collection_id=collection,
             category_id=category,
@@ -126,9 +127,8 @@ class RankingsController(Controller):
             limit=200,
         )
         ranks_dict = df.to_dict(orient="records")
-        logger.info(
-            f"/api/rankings/{collection}/{category} took {time.time() - start_time} seconds"
-        )
+        duration = round((time.perf_counter() * 1000 - start), 2)
+        logger.info(f"{self.path}/{collection}/{category} took {duration}ms")
         return {"ranks": ranks_dict}
 
     @get(path="/{collection:int}/{category:int}/history", cache=86400)
@@ -146,8 +146,7 @@ class RankingsController(Controller):
             with ios or google apps
 
         """
-        logger.info(f"{self.path} start for store/collection/category")
-        start_time = time.time()
+        start = time.perf_counter() * 1000
         df = get_history_top_ranks(
             collection_id=collection,
             category_id=category,
@@ -176,7 +175,6 @@ class RankingsController(Controller):
             .reset_index()
             .to_dict(orient="records")
         )
-        logger.info(
-            f"/api/rankings/{collection}/{category}/history took {time.time() - start_time} seconds"
-        )
+        duration = round((time.perf_counter() * 1000 - start), 2)
+        logger.info(f"{self.path}/{collection}/{category}/history took {duration}ms")
         return {"history": hist_dict}

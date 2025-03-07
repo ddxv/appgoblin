@@ -366,7 +366,6 @@ def get_app_adstxt_overview(store_id: str) -> pd.DataFrame:
 
 def get_companies_parent_overview(app_category: str | None = None) -> pd.DataFrame:
     """Get overview of companies from multiple types like sdk and app-ads.txt."""
-    logger.info("query companies parent overview start")
     if app_category:
         if app_category == "games":
             app_category = "game%"
@@ -392,7 +391,6 @@ def get_companies_parent_overview(app_category: str | None = None) -> pd.DataFra
             )
     else:
         df = pd.read_sql(QUERY_COMPANIES_PARENT_OVERVIEW, DBCON.engine)
-    logger.info("query companies parent overview return")
     df["store"] = df["store"].replace({1: "Google Play", 2: "Apple App Store"})
     df.loc[df["app_category"].isna(), "app_category"] = "None"
     return df
@@ -404,7 +402,6 @@ def get_companies_top(
     limit: int = 10,
 ) -> pd.DataFrame:
     """Get overview of companies from multiple types like sdk and app-ads.txt."""
-    logger.info("query companies parent top start")
     if app_category == "games":
         app_category = "game%"
     if type_slug:
@@ -424,7 +421,6 @@ def get_companies_top(
             params={"app_category": app_category, "mylimit": limit},
         )
     df["store"] = df["store"].replace({1: "Google Play", 2: "Apple App Store"})
-    logger.info("query companies parent top return")
     return df
 
 

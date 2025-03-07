@@ -3,6 +3,7 @@
 /categories/{category_id} a specific app
 """
 
+import time
 from typing import Self
 
 import numpy as np
@@ -66,10 +67,10 @@ class CategoryController(Controller):
             each with an id, name, type and total of apps
 
         """
-        logger.info(f"{self.path} start")
+        start = time.perf_counter() * 1000
         overview = category_overview()
-        logger.info(f"{self.path} return")
-
+        duration = round((time.perf_counter() * 1000 - start), 2)
+        logger.info(f"{self.path} took {duration}ms")
         return overview
 
     @get(path="/{category_id:str}", cache=86400)
@@ -82,7 +83,7 @@ class CategoryController(Controller):
             with ios and google apps
 
         """
-        logger.info(f"{self.path} start")
+        start = time.perf_counter() * 1000
         df = get_category_top_apps_by_installs(category_id, limit=20)
         google = AppGroup(
             apps=(df[df["store"].str.contains("oogle")].to_dict(orient="records")),
@@ -93,4 +94,6 @@ class CategoryController(Controller):
             title="iOS",
         )
         category = Category(key=category_id, ios=ios, google=google)
+        duration = round((time.perf_counter() * 1000 - start), 2)
+        logger.info(f"{self.path}/{category_id} took {duration}ms")
         return category

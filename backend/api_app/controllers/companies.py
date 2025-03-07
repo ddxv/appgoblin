@@ -219,10 +219,8 @@ def get_overviews(
     top_companies_short = make_top_companies(top_df)
 
     if type_slug:
-        logger.info("Getting adtech category type")
         overview_df = get_companies_category_type(type_slug, app_category=category)
     else:
-        logger.info("Getting companies parent overview")
         overview_df = get_companies_parent_overview(app_category=category)
 
     tag_source_category_app_counts = get_tag_source_category_totals(

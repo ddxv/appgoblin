@@ -3,6 +3,7 @@
 /sdks/overview returns list of all sdks.
 """
 
+import time
 from typing import Self
 
 from litestar import Controller, get
@@ -39,7 +40,7 @@ class SdksController(Controller):
             An overview of sdks across different platforms and sources.
 
         """
-        logger.info("GET /api/sdks/overview start")
+        start = time.perf_counter() * 1000
 
         most_sdk_parts = get_sdks()
         latest_apps = get_latest_sdks()
@@ -73,6 +74,8 @@ class SdksController(Controller):
         user_requested_latest_apps_dict = user_requested_latest_apps.to_dict(
             orient="records"
         )
+        duration = round((time.perf_counter() * 1000 - start), 2)
+        logger.info(f"{self.path}/overview took {duration}ms")
 
         return SdksOverview(
             android_sdkparts=android_sdkparts_dict,
@@ -94,7 +97,7 @@ class SdksController(Controller):
             An overview of apps for a given sdk pattern.
 
         """
-        logger.info(f"GET /api/sdks/{value_pattern} start")
+        start = time.perf_counter() * 1000
 
         overview = get_sdk_pattern(value_pattern)
 
@@ -109,6 +112,8 @@ class SdksController(Controller):
             ios_overview=ios_overview_dict, android_overview=android_overview_dict
         )
 
+        duration = round((time.perf_counter() * 1000 - start), 2)
+        logger.info(f"{self.path}/{value_pattern} took {duration}ms")
         return overview_resp
 
     @get(path="/{value_pattern:str}/companies", cache=3600)
@@ -121,7 +126,7 @@ class SdksController(Controller):
             An overview of apps for a given sdk pattern.
 
         """
-        logger.info(f"GET /api/sdks/{value_pattern}/companies start")
+        start = time.perf_counter() * 1000
 
         overview = get_sdk_pattern_companies(value_pattern)
 
@@ -129,4 +134,6 @@ class SdksController(Controller):
 
         overview_resp = SdkCompanies(companies=overview_dict)
 
+        duration = round((time.perf_counter() * 1000 - start), 2)
+        logger.info(f"{self.path}/{value_pattern}/companies took {duration}ms")
         return overview_resp
