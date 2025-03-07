@@ -40,7 +40,7 @@
 	},
 	"dependencies": {
 		"@carbon/charts-svelte": "^1.22.3",
-		"@tailwindcss/vite": "^4.0.9",
+		"@tailwindcss/vite": "^4.0.11",
 		"echarts": "^5.5.1",
 		"toml": "^3.0.0"
 	}
