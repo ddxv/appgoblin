@@ -772,20 +772,23 @@ class CompaniesController(Controller):
 
         df = get_company_sdks(company_domain=company_domain)
 
-        company_sdks = (
-            df[["company_name", "sdk_name", "package_pattern", "path_pattern"]]
-            .set_index(["company_name", "sdk_name"])
-            .groupby(level=[0, 1])
-            .apply(
-                lambda x: {
-                    "package_patterns": x["package_pattern"].unique().tolist(),
-                    "paths": x["path_pattern"].unique().tolist(),
-                }
-            )
-            .unstack(level=0)
-            .to_dict()
-        )
+        company_sdks: dict = {}
 
+        # Group by company_name and sdk_name
+        for (company, sdk), group in df.groupby(["company_name", "sdk_name"]):
+            # Create entry for company if it doesn't exist
+            if company not in company_sdks:
+                company_sdks[company] = {}
+
+            # Add sdk data
+            company_sdks[company][sdk] = {
+                "package_patterns": group["package_pattern"].unique().tolist(),
+                "paths": [
+                    path
+                    for path in group["path_pattern"].unique().tolist()
+                    if pd.notna(path)
+                ],
+            }
         mydict = CompanyPatternsDict(
             companies=company_sdks,
         )
