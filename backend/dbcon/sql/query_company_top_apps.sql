@@ -15,7 +15,9 @@ SELECT
     ranked_apps.store_id,
     ranked_apps.app_company_rank AS rank,
     ranked_apps.rating_count,
-    ranked_apps.installs
+    ranked_apps.rating_count_d30,
+    ranked_apps.installs,
+    ranked_apps.installs_d30
 FROM ranked_apps
 ORDER BY
     ranked_apps.store, ranked_apps.tag_source, ranked_apps.app_company_rank;

@@ -49,6 +49,13 @@
 							Ratings
 						{/if}
 					</th>
+					<th class="table-cell-fit">
+						{#if firstRowInstalls}
+							Installs (30d)
+						{:else}
+							Rating Count (30d)
+						{/if}
+					</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -70,12 +77,18 @@
 								{row.rating_count}
 							{/if}
 						</td>
+						<td class="table-cell-fit">
+							{#if row.installs_d30 && typeof row.installs_d30 === 'string' && row.installs_d30 != 'N/A'}
+								{row.installs_d30}
+							{:else}
+								{row.rating_count_d30}
+							{/if}
+						</td>
 					</tr>
 				{/each}
 			</tbody>
 		</table>
 		<footer class="flex justify-between">
-			<!-- <RowCount {handler} /> -->
 			{#if totalRows > rowsPerPage}
 				<Pagination {handler} />
 			{/if}
