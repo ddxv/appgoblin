@@ -448,7 +448,7 @@ class AppRank:
 
 
 @dataclass
-class SdksOverview:
+class SdksLatestResults:
     """Contains a list of SDK objects.
 
     Representing the top sdks identified.

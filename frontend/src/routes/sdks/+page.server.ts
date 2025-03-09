@@ -6,7 +6,7 @@ export const csr: boolean = true;
 export const load: PageServerLoad = async ({ parent }) => {
 	const { appsOverview } = await parent();
 	const resUserRequested = fetch(`http://localhost:8000/api/sdks/user_requested`);
-	const res = fetch(`http://localhost:8000/api/sdks/overview`);
+	const resLatest = fetch(`http://localhost:8000/api/sdks/latest`);
 	const resParts = fetch(`http://localhost:8000/api/sdks/sdkparts`);
 	console.log('start load overview for sdks');
 	try {
@@ -31,13 +31,13 @@ export const load: PageServerLoad = async ({ parent }) => {
 						return 'Uncaught Error';
 					}
 				),
-			sdksOverview: res
+			sdksOverview: resLatest
 				.then((resp) => {
 					if (resp.status === 200) {
 						return resp.json();
 					} else if (resp.status === 406) {
-						console.log('Sdks overview not found');
-						return 'Sdks overview not Found';
+						console.log('Sdks latest results not found');
+						return 'Sdks latest results not Found';
 					} else if (resp.status === 500) {
 						console.log('API Server error');
 						return 'Backend Error';
@@ -56,8 +56,8 @@ export const load: PageServerLoad = async ({ parent }) => {
 					if (resp.status === 200) {
 						return resp.json();
 					} else if (resp.status === 406) {
-						console.log('Sdks overview not found');
-						return 'Sdks overview not Found';
+						console.log('Sdks sdkparts not found');
+						return 'Sdks sdkparts not Found';
 					} else if (resp.status === 500) {
 						console.log('API Server error');
 						return 'Backend Error';

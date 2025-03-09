@@ -13,7 +13,7 @@ from api_app.models import (
     SdkCompanies,
     SdkOverview,
     SdkParts,
-    SdksOverview,
+    SdksLatestResults,
     SdksUserRequested,
 )
 from config import get_logger
@@ -33,8 +33,8 @@ class SdksController(Controller):
 
     path = "/api/sdks"
 
-    @get(path="/overview", cache=12000)
-    async def sdks_overview(self: Self) -> SdksOverview:
+    @get(path="/latest", cache=12000)
+    async def sdks_latest_results(self: Self) -> SdksLatestResults:
         """Handle GET request for all sdks.
 
         Returns
@@ -68,7 +68,7 @@ class SdksController(Controller):
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(f"{self.path}/overview took {duration}ms")
 
-        return SdksOverview(
+        return SdksLatestResults(
             android_success_latest_apps=android_success_latest_apps_dict,
             ios_success_latest_apps=ios_success_latest_apps_dict,
             android_failed_latest_apps=android_failed_latest_apps_dict,
