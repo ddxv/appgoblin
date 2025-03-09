@@ -91,57 +91,61 @@
 			<Tabs.Panel value="latest_failed">
 				<h2 class="text-2xl font-bold text-primary-900-100">Latest Failed to Crawled Apps</h2>
 
-				{#await data.sdksOverview}
-					loading
-				{:then mySdksOverview}
-					<WhiteCard>
-						{#snippet title()}
-							Android Failed to Crawled Apps
-						{/snippet}
+				<div class="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-6">
+					{#await data.sdksOverview}
+						loading
+					{:then mySdksOverview}
+						<WhiteCard>
+							{#snippet title()}
+								Android Failed to Crawled Apps
+							{/snippet}
 
-						{#if mySdksOverview.android_failed_latest_apps && mySdksOverview.android_failed_latest_apps.length > 0}
-							<SDKsLatestAppsTable entries_table={mySdksOverview.android_failed_latest_apps} />
-						{/if}
-					</WhiteCard>
+							{#if mySdksOverview.android_failed_latest_apps && mySdksOverview.android_failed_latest_apps.length > 0}
+								<SDKsLatestAppsTable entries_table={mySdksOverview.android_failed_latest_apps} />
+							{/if}
+						</WhiteCard>
 
-					<WhiteCard>
-						{#snippet title()}
-							iOS Failed to Crawled Apps
-						{/snippet}
+						<WhiteCard>
+							{#snippet title()}
+								iOS Failed to Crawled Apps
+							{/snippet}
 
-						{#if mySdksOverview.ios_failed_latest_apps && mySdksOverview.ios_failed_latest_apps.length > 0}
-							<SDKsLatestAppsTable entries_table={mySdksOverview.ios_failed_latest_apps} />
-						{/if}
-					</WhiteCard>
-				{/await}
+							{#if mySdksOverview.ios_failed_latest_apps && mySdksOverview.ios_failed_latest_apps.length > 0}
+								<SDKsLatestAppsTable entries_table={mySdksOverview.ios_failed_latest_apps} />
+							{/if}
+						</WhiteCard>
+					{/await}
+				</div>
 			</Tabs.Panel>
 
 			<Tabs.Panel value="sdkparts">
 				<h2 class="text-2xl font-bold text-primary-900-100">SDKs Parts</h2>
 
-				{#await data.sdksParts}
-					loading
-				{:then mySdksParts}
-					<WhiteCard>
-						{#snippet title()}
-							Android SDKs
-						{/snippet}
+				<div class="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-6">
+					{#await data.sdksParts}
+						loading
+					{:then mySdksParts}
+						<WhiteCard>
+							{#snippet title()}
+								Android SDKs
+							{/snippet}
 
-						{#if mySdksParts.android_sdkparts && mySdksParts.android_sdkparts.length > 0}
-							<SDKsOverviewTable entries_table={mySdksParts.android_sdkparts} />
-						{/if}
-					</WhiteCard>
+							{#if mySdksParts.android_sdkparts && mySdksParts.android_sdkparts.length > 0}
+								<SDKsOverviewTable entries_table={mySdksParts.android_sdkparts} />
+							{/if}
+						</WhiteCard>
 
-					<WhiteCard>
-						{#snippet title()}
-							iOS SDKs
-						{/snippet}
+						<WhiteCard>
+							{#snippet title()}
+								iOS SDKs
+							{/snippet}
 
-						{#if mySdksParts.ios_sdkparts && mySdksParts.ios_sdkparts.length > 0}
-							<SDKsOverviewTable entries_table={mySdksParts.ios_sdkparts} />
-						{/if}
-					</WhiteCard>
-				{/await}
+							{#if mySdksParts.ios_sdkparts && mySdksParts.ios_sdkparts.length > 0}
+								<SDKsOverviewTable entries_table={mySdksParts.ios_sdkparts} />
+							{/if}
+						</WhiteCard>
+					{/await}
+				</div>
 			</Tabs.Panel>
 		{/snippet}
 	</Tabs>
