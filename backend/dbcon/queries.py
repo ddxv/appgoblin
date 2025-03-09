@@ -70,8 +70,10 @@ QUERY_COMPANY_OVERVIEW = load_sql_file("query_company_overview.sql")
 QUERY_COMPANY_PARENT_OVERVIEW = load_sql_file("query_company_parent_overview.sql")
 QUERY_COMPANY_TREE = load_sql_file("query_company_tree.sql")
 QUERY_COMPANY_SDKS = load_sql_file("query_company_sdks.sql")
-QUERY_PARENT_COMPANY_CATEGORIES = load_sql_file("query_company_parent_category.sql")
-QUERY_COMPANY_CATEGORIES = load_sql_file("query_company_category.sql")
+QUERY_PARENT_COMPANY_CATEGORIES = load_sql_file(
+    "query_company_parent_categories_counts.sql"
+)
+QUERY_COMPANY_CATEGORIES_COUNTS = load_sql_file("query_company_categories_counts.sql")
 QUERY_TAG_SOURCE_CATEGORY_TOTALS = load_sql_file("query_category_totals.sql")
 QUERY_SDKS = load_sql_file("query_sdks.sql")
 QUERY_LATEST_SDKS = load_sql_file("query_sdks_latest.sql")
@@ -543,7 +545,7 @@ def get_company_parent_categories(company_domain: str) -> pd.DataFrame:
     )
     if df.empty:
         df = pd.read_sql(
-            QUERY_COMPANY_CATEGORIES,
+            QUERY_COMPANY_CATEGORIES_COUNTS,
             DBCON.engine,
             params={"company_domain": company_domain},
         )
