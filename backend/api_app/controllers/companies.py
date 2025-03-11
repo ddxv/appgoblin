@@ -41,9 +41,9 @@ from dbcon.queries import (
     get_company_adstxt_publisher_id_apps_overview,
     get_company_adstxt_publisher_id_apps_raw,
     get_company_adstxt_publishers_overview,
+    get_company_category_stats,
     get_company_open_source,
     get_company_overview,
-    get_company_parent_category_stats,
     get_company_sdks,
     get_company_tree,
     get_tag_source_category_totals,
@@ -377,8 +377,18 @@ def make_company_category_sums(df: pd.DataFrame) -> CompanyCategoryOverview:
     }
 
     # Calculate sums for all conditions in one go
-    results = {
+    res_app_counts = {
         key: df.loc[condition, "app_count"].sum()
+        for key, condition in conditions.items()
+    }
+
+    res_installs_d30 = {
+        key: df.loc[condition, "installs_d30"].sum()
+        for key, condition in conditions.items()
+    }
+
+    res_rating_count_d30 = {
+        key: df.loc[condition, "rating_count_d30"].sum()
         for key, condition in conditions.items()
     }
 
@@ -391,12 +401,32 @@ def make_company_category_sums(df: pd.DataFrame) -> CompanyCategoryOverview:
         adstxt_reseller_ios_total_apps,
         adstxt_reseller_android_total_apps,
     ) = (
-        results["sdk_ios"],
-        results["sdk_android"],
-        results["adstxt_direct_ios"],
-        results["adstxt_direct_android"],
-        results["adstxt_reseller_ios"],
-        results["adstxt_reseller_android"],
+        res_app_counts["sdk_ios"],
+        res_app_counts["sdk_android"],
+        res_app_counts["adstxt_direct_ios"],
+        res_app_counts["adstxt_direct_android"],
+        res_app_counts["adstxt_reseller_ios"],
+        res_app_counts["adstxt_reseller_android"],
+    )
+
+    (
+        sdk_android_installs_d30,
+        adstxt_direct_android_installs_d30,
+        adstxt_reseller_android_installs_d30,
+    ) = (
+        res_installs_d30["sdk_android"],
+        res_installs_d30["adstxt_direct_android"],
+        res_installs_d30["adstxt_reseller_android"],
+    )
+
+    (
+        sdk_ios_rating_count_d30,
+        adstxt_direct_ios_rating_count_d30,
+        adstxt_reseller_ios_rating_count_d30,
+    ) = (
+        res_rating_count_d30["sdk_ios"],
+        res_rating_count_d30["adstxt_direct_ios"],
+        res_rating_count_d30["adstxt_reseller_ios"],
     )
 
     sdk_total_apps = sdk_ios_total_apps + sdk_android_total_apps
@@ -410,14 +440,20 @@ def make_company_category_sums(df: pd.DataFrame) -> CompanyCategoryOverview:
 
     overview.update_stats(
         "all",
-        total_apps=total_apps,
-        adstxt_direct_ios_total_apps=adstxt_direct_ios_total_apps,
-        adstxt_direct_android_total_apps=adstxt_direct_android_total_apps,
-        adstxt_reseller_ios_total_apps=adstxt_reseller_ios_total_apps,
-        adstxt_reseller_android_total_apps=adstxt_reseller_android_total_apps,
-        sdk_ios_total_apps=sdk_ios_total_apps,
-        sdk_android_total_apps=sdk_android_total_apps,
-        sdk_total_apps=sdk_total_apps,
+        total_apps=int(total_apps),
+        adstxt_direct_ios_total_apps=int(adstxt_direct_ios_total_apps),
+        adstxt_direct_android_total_apps=int(adstxt_direct_android_total_apps),
+        adstxt_reseller_ios_total_apps=int(adstxt_reseller_ios_total_apps),
+        adstxt_reseller_android_total_apps=int(adstxt_reseller_android_total_apps),
+        sdk_ios_total_apps=int(sdk_ios_total_apps),
+        sdk_android_total_apps=int(sdk_android_total_apps),
+        sdk_total_apps=int(sdk_total_apps),
+        sdk_android_installs_d30=int(sdk_android_installs_d30),
+        adstxt_direct_android_installs_d30=int(adstxt_direct_android_installs_d30),
+        adstxt_reseller_android_installs_d30=int(adstxt_reseller_android_installs_d30),
+        sdk_ios_rating_count_d30=int(sdk_ios_rating_count_d30),
+        adstxt_direct_ios_rating_count_d30=int(adstxt_direct_ios_rating_count_d30),
+        adstxt_reseller_ios_rating_count_d30=int(adstxt_reseller_ios_rating_count_d30),
     )
     cats = df.app_category.unique().tolist()
     for cat in cats:
@@ -443,8 +479,16 @@ def make_company_category_sums(df: pd.DataFrame) -> CompanyCategoryOverview:
         }
 
         # Calculate sums for all conditions in one go
-        results = {
+        res_app_counts = {
             key: df.loc[condition, "app_count"].sum()
+            for key, condition in conditions.items()
+        }
+        res_installs_d30 = {
+            key: df.loc[condition, "installs_d30"].sum()
+            for key, condition in conditions.items()
+        }
+        res_rating_count_d30 = {
+            key: df.loc[condition, "rating_count_d30"].sum()
             for key, condition in conditions.items()
         }
 
@@ -457,16 +501,35 @@ def make_company_category_sums(df: pd.DataFrame) -> CompanyCategoryOverview:
             adstxt_reseller_ios_total_apps,
             adstxt_reseller_android_total_apps,
         ) = (
-            results["sdk_ios"],
-            results["sdk_android"],
-            results["adstxt_direct_ios"],
-            results["adstxt_direct_android"],
-            results["adstxt_reseller_ios"],
-            results["adstxt_reseller_android"],
+            res_app_counts["sdk_ios"],
+            res_app_counts["sdk_android"],
+            res_app_counts["adstxt_direct_ios"],
+            res_app_counts["adstxt_direct_android"],
+            res_app_counts["adstxt_reseller_ios"],
+            res_app_counts["adstxt_reseller_android"],
+        )
+
+        (
+            sdk_android_installs_d30,
+            adstxt_direct_android_installs_d30,
+            adstxt_reseller_android_installs_d30,
+        ) = (
+            res_installs_d30["sdk_android"],
+            res_installs_d30["adstxt_direct_android"],
+            res_installs_d30["adstxt_reseller_android"],
+        )
+
+        (
+            sdk_ios_rating_count_d30,
+            adstxt_direct_ios_rating_count_d30,
+            adstxt_reseller_ios_rating_count_d30,
+        ) = (
+            res_rating_count_d30["sdk_ios"],
+            res_rating_count_d30["adstxt_direct_ios"],
+            res_rating_count_d30["adstxt_reseller_ios"],
         )
 
         sdk_total_apps = sdk_ios_total_apps + sdk_android_total_apps
-
         total_apps = (
             sdk_total_apps
             + adstxt_direct_ios_total_apps
@@ -477,14 +540,24 @@ def make_company_category_sums(df: pd.DataFrame) -> CompanyCategoryOverview:
 
         overview.update_stats(
             cat,
-            total_apps=total_apps,
-            adstxt_direct_ios_total_apps=adstxt_direct_ios_total_apps,
-            adstxt_direct_android_total_apps=adstxt_direct_android_total_apps,
-            adstxt_reseller_ios_total_apps=adstxt_reseller_ios_total_apps,
-            adstxt_reseller_android_total_apps=adstxt_reseller_android_total_apps,
-            sdk_ios_total_apps=sdk_ios_total_apps,
-            sdk_android_total_apps=sdk_android_total_apps,
-            sdk_total_apps=sdk_total_apps,
+            total_apps=int(total_apps),
+            adstxt_direct_ios_total_apps=int(adstxt_direct_ios_total_apps),
+            adstxt_direct_android_total_apps=int(adstxt_direct_android_total_apps),
+            adstxt_reseller_ios_total_apps=int(adstxt_reseller_ios_total_apps),
+            adstxt_reseller_android_total_apps=int(adstxt_reseller_android_total_apps),
+            sdk_ios_total_apps=int(sdk_ios_total_apps),
+            sdk_android_total_apps=int(sdk_android_total_apps),
+            sdk_total_apps=int(sdk_total_apps),
+            sdk_android_installs_d30=int(sdk_android_installs_d30),
+            adstxt_direct_android_installs_d30=int(adstxt_direct_android_installs_d30),
+            adstxt_reseller_android_installs_d30=int(
+                adstxt_reseller_android_installs_d30
+            ),
+            sdk_ios_rating_count_d30=int(sdk_ios_rating_count_d30),
+            adstxt_direct_ios_rating_count_d30=int(adstxt_direct_ios_rating_count_d30),
+            adstxt_reseller_ios_rating_count_d30=int(
+                adstxt_reseller_ios_rating_count_d30
+            ),
         )
     return overview
 
@@ -646,7 +719,7 @@ class CompaniesController(Controller):
         """
         start = time.perf_counter() * 1000
 
-        df = get_company_parent_category_stats(company_domain=company_domain)
+        df = get_company_category_stats(company_domain=company_domain)
 
         num_categories = 9
 

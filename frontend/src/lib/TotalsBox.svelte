@@ -5,29 +5,36 @@
 
 	let { myTotals, myType, hideAdstxtApps = false } = $props();
 
-	const titleFont = 'text-md text-primary-800-200 uppercase tracking-wide';
-	const subTitleFont = 'text-sm text-primary-800-200 uppercase tracking-wide';
+	const titleFont = 'text-xl text-primary-800-200 uppercase tracking-wide';
+	const subTitleFont = 'text-large font-bold text-primary-800-200 uppercase tracking-wide';
+	const subContentFont = 'text-sm text-primary-900 uppercase tracking-wide';
 </script>
 
 <div class={titleFont}>Apps Scanned for SDKs</div>
+<div class="stat-container">
+	<div class={subTitleFont}>Total Apps Scanned</div>
+	<div class={subContentFont}>
+		Apps: {formatNumber(myTotals.sdk_total_apps)}
+	</div>
+</div>
 <div class="grid grid-cols-2 gap-4 p-4">
 	<div class="stat-container">
-		<div class={subTitleFont}>Android Apps</div>
-		<div class="text-2xl font-bold text-primary-900">
-			{formatNumber(myTotals.sdk_android_total_apps)}
+		<div class={subTitleFont}>Android</div>
+		<div class={subContentFont}>
+			Apps: {formatNumber(myTotals.sdk_android_total_apps)}
+		</div>
+		<div class={subContentFont}>
+			Monthly Installs: {formatNumber(myTotals.sdk_android_installs_d30)}
 		</div>
 	</div>
 
 	<div class="stat-container">
-		<div class={subTitleFont}>iOS Apps</div>
-		<div class="text-2xl font-bold text-primary-900">
-			{formatNumber(myTotals.sdk_ios_total_apps)}
+		<div class={subTitleFont}>iOS</div>
+		<div class={subContentFont}>
+			Apps: {formatNumber(myTotals.sdk_ios_total_apps)}
 		</div>
-	</div>
-	<div class="stat-container">
-		<div class={subTitleFont}>Total Apps Scanned</div>
-		<div class="text-2xl font-bold text-primary-900">
-			{formatNumber(myTotals.sdk_total_apps)}
+		<div class={subContentFont}>
+			Monthly Installs: {formatNumber(myTotals.sdk_ios_rating_count_d30 * 100)}
 		</div>
 	</div>
 </div>

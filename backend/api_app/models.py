@@ -292,6 +292,12 @@ class CategoryCompaniesStats:
     sdk_total_apps: int = 0
     sdk_ios_total_apps: int = 0
     sdk_android_total_apps: int = 0
+    sdk_android_installs_d30: int = 0
+    adstxt_direct_android_installs_d30: int = 0
+    adstxt_reseller_android_installs_d30: int = 0
+    sdk_ios_rating_count_d30: int = 0
+    adstxt_direct_ios_rating_count_d30: int = 0
+    adstxt_reseller_ios_rating_count_d30: int = 0
 
 
 @dataclass
@@ -309,6 +315,12 @@ class CategoryCompanyStats:
     sdk_ios_total_apps: int = 0
     sdk_android_total_apps: int = 0
     sdk_total_apps: int = 0
+    sdk_android_installs_d30: int = 0
+    adstxt_direct_android_installs_d30: int = 0
+    adstxt_reseller_android_installs_d30: int = 0
+    sdk_ios_rating_count_d30: int = 0
+    adstxt_direct_ios_rating_count_d30: int = 0
+    adstxt_reseller_ios_rating_count_d30: int = 0
 
 
 @dataclass

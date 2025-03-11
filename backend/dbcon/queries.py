@@ -66,14 +66,16 @@ QUERY_COMPANIES_PARENT_TOP = load_sql_file("query_companies_parent_top.sql")
 QUERY_COMPANIES_CATEGORY_TYPE_TOP = load_sql_file(
     "query_companies_category_type_top.sql",
 )
-QUERY_COMPANY_OVERVIEW = load_sql_file("query_company_overview.sql")
-QUERY_COMPANY_PARENT_OVERVIEW = load_sql_file("query_company_parent_overview.sql")
+QUERY_COMPANY_CATEGORY_TAG_STATS = load_sql_file("query_company_category_tag_stats.sql")
+QUERY_COMPANY_PARENT_CATEGORY_TAG_STATS = load_sql_file(
+    "query_company_parent_category_tag_stats.sql"
+)
 QUERY_COMPANY_TREE = load_sql_file("query_company_tree.sql")
 QUERY_COMPANY_SDKS = load_sql_file("query_company_sdks.sql")
 QUERY_PARENT_COMPANY_CATEGORY_STATS = load_sql_file(
     "query_company_parent_category_stats.sql"
 )
-QUERY_COMPANY_CATEGORIES_COUNTS = load_sql_file("query_company_categories_counts.sql")
+QUERY_COMPANY_CATEGORY_STATS = load_sql_file("query_company_category_stats.sql")
 QUERY_TAG_SOURCE_CATEGORY_TOTALS = load_sql_file("query_category_totals.sql")
 QUERY_SDKS = load_sql_file("query_sdks.sql")
 QUERY_LATEST_SDKS = load_sql_file("query_sdks_latest.sql")
@@ -366,6 +368,7 @@ def get_app_adstxt_overview(store_id: str) -> pd.DataFrame:
     return df
 
 
+@lru_cache(maxsize=100)
 def get_companies_parent_category_stats(
     app_category: str | None = None,
 ) -> pd.DataFrame:
@@ -432,13 +435,13 @@ def get_company_overview(company_domain: str) -> pd.DataFrame:
     """Get overview of companies from multiple types like sdk and app-ads.txt."""
     logger.info(f"query company overview: {company_domain=}")
     df = pd.read_sql(
-        QUERY_COMPANY_PARENT_OVERVIEW,
+        QUERY_COMPANY_PARENT_CATEGORY_TAG_STATS,
         DBCON.engine,
         params={"company_domain": company_domain},
     )
     if df.empty:
         df = pd.read_sql(
-            QUERY_COMPANY_OVERVIEW,
+            QUERY_COMPANY_CATEGORY_TAG_STATS,
             DBCON.engine,
             params={"company_domain": company_domain},
         )
@@ -537,7 +540,7 @@ def get_company_sdks(company_domain: str) -> pd.DataFrame:
     return df
 
 
-def get_company_parent_category_stats(company_domain: str) -> pd.DataFrame:
+def get_company_category_stats(company_domain: str) -> pd.DataFrame:
     """Get a company parent categories."""
     logger.info(f"query company parent categories: {company_domain=}")
     df = pd.read_sql(
@@ -547,7 +550,7 @@ def get_company_parent_category_stats(company_domain: str) -> pd.DataFrame:
     )
     if df.empty:
         df = pd.read_sql(
-            QUERY_COMPANY_CATEGORIES_COUNTS,
+            QUERY_COMPANY_CATEGORY_STATS,
             DBCON.engine,
             params={"company_domain": company_domain},
         )
