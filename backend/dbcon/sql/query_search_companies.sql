@@ -11,7 +11,7 @@ SELECT
     cac.company_name,
     sum(app_count) AS app_count
 FROM
-    frontend.companies_categories_types_app_counts AS cac
+    frontend.companies_category_tag_stats AS cac
 WHERE
     cac.company_name ILIKE '%' || :searchinput || '%'
     OR cac.company_domain ILIKE '%' || :searchinput || '%'

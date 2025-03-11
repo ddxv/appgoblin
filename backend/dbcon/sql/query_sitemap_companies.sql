@@ -4,7 +4,7 @@ SELECT
     type_url_slug,
     sum(app_count) AS app_count
 FROM
-    frontend.companies_categories_types_app_counts
+    frontend.companies_category_tag_type_stats
 GROUP BY
     app_category,
     company_domain,

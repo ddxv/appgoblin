@@ -6,7 +6,7 @@ SELECT
     COALESCE(company_name, company_domain) AS company_name,
     SUM(app_count) AS app_count
 FROM
-    frontend.companies_parent_app_counts
+    frontend.companies_parent_category_tag_stats
 WHERE
     app_category LIKE :app_category
 GROUP BY company_domain, company_name, store, app_category, tag_source;

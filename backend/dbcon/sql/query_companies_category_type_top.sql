@@ -9,7 +9,7 @@ WITH ranked_apps AS (
             ORDER BY SUM(app_count) DESC
         ) AS rank
     FROM
-        frontend.companies_categories_types_app_counts
+        frontend.companies_category_tag_type_stats
     WHERE
         type_url_slug = :type_slug
         AND (app_category LIKE :app_category OR :app_category IS NULL)

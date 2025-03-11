@@ -34,8 +34,8 @@ from api_app.models import (
 from config import get_logger
 from dbcon.queries import (
     get_adtech_categories,
-    get_companies_category_type,
-    get_companies_parent_overview,
+    get_companies_category_tag_type_stats,
+    get_companies_parent_category_stats,
     get_companies_top,
     get_company_adstxt_ad_domain_overview,
     get_company_adstxt_publisher_id_apps_overview,
@@ -43,7 +43,7 @@ from dbcon.queries import (
     get_company_adstxt_publishers_overview,
     get_company_open_source,
     get_company_overview,
-    get_company_parent_categories,
+    get_company_parent_category_stats,
     get_company_sdks,
     get_company_tree,
     get_tag_source_category_totals,
@@ -219,9 +219,11 @@ def get_overviews(
     top_companies_short = make_top_companies(top_df)
 
     if type_slug:
-        overview_df = get_companies_category_type(type_slug, app_category=category)
+        overview_df = get_companies_category_tag_type_stats(
+            type_slug, app_category=category
+        )
     else:
-        overview_df = get_companies_parent_overview(app_category=category)
+        overview_df = get_companies_parent_category_stats(app_category=category)
 
     tag_source_category_app_counts = get_tag_source_category_totals(
         app_category=category
@@ -243,7 +245,7 @@ def get_overviews(
     open_source_df = get_company_open_source()
 
     overview_df = overview_df.merge(
-        open_source_df, on="company_domain", how="left", validate="1:1"
+        open_source_df, on="company_domain", how="left", validate="m:1"
     )
 
     overview_df["percent_open_source"] = overview_df["percent_open_source"].fillna(0)
@@ -644,7 +646,7 @@ class CompaniesController(Controller):
         """
         start = time.perf_counter() * 1000
 
-        df = get_company_parent_categories(company_domain=company_domain)
+        df = get_company_parent_category_stats(company_domain=company_domain)
 
         num_categories = 9
 

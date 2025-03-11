@@ -9,7 +9,7 @@ WITH ranked_apps AS (
             ORDER BY SUM(app_count) DESC
         ) AS rank
     FROM
-        frontend.companies_parent_app_counts
+        frontend.companies_parent_category_tag_stats
     WHERE
         (app_category LIKE :app_category OR :app_category IS NULL)
         AND tag_source != 'app_ads_reseller'

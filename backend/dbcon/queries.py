@@ -49,8 +49,8 @@ QUERY_STORE_COLLECTION_CATEGORY_MAP = load_sql_file(
 QUERY_ADTECH_CATEGORIES = load_sql_file(
     "query_adtech_categories.sql",
 )
-QUERY_COMPANIES_CATEGORY_TYPE = load_sql_file(
-    "query_companies_categories_types_app_counts.sql",
+QUERY_COMPANIES_CATEGORY_TAG_TYPE_STATS = load_sql_file(
+    "query_companies_category_tag_type_stats.sql",
 )
 QUERY_COMPANY_TOPAPPS = load_sql_file("query_company_top_apps.sql")
 QUERY_COMPANY_TOPAPPS_PARENT = load_sql_file("query_company_top_apps_parent.sql")
@@ -58,9 +58,9 @@ QUERY_COMPANY_TOPAPPS_CATEGORY = load_sql_file("query_company_top_apps_category.
 QUERY_COMPANY_TOPAPPS_CATEGORY_PARENT = load_sql_file(
     "query_company_top_apps_category_parent.sql"
 )
-QUERY_COMPANIES_PARENT_OVERVIEW = load_sql_file("query_companies_parent_overview.sql")
-QUERY_COMPANIES_PARENT_OVERVIEW_CATEGORY = load_sql_file(
-    "query_companies_parent_overview_category.sql"
+QUERY_COMPANIES_PARENT_TAG_STATS = load_sql_file("query_companies_parent_tag_stats.sql")
+QUERY_COMPANIES_PARENT_CATEGORY_TAG_STATS = load_sql_file(
+    "query_companies_parent_category_tag_stats.sql"
 )
 QUERY_COMPANIES_PARENT_TOP = load_sql_file("query_companies_parent_top.sql")
 QUERY_COMPANIES_CATEGORY_TYPE_TOP = load_sql_file(
@@ -70,8 +70,8 @@ QUERY_COMPANY_OVERVIEW = load_sql_file("query_company_overview.sql")
 QUERY_COMPANY_PARENT_OVERVIEW = load_sql_file("query_company_parent_overview.sql")
 QUERY_COMPANY_TREE = load_sql_file("query_company_tree.sql")
 QUERY_COMPANY_SDKS = load_sql_file("query_company_sdks.sql")
-QUERY_PARENT_COMPANY_CATEGORIES = load_sql_file(
-    "query_company_parent_categories_counts.sql"
+QUERY_PARENT_COMPANY_CATEGORY_STATS = load_sql_file(
+    "query_company_parent_category_stats.sql"
 )
 QUERY_COMPANY_CATEGORIES_COUNTS = load_sql_file("query_company_categories_counts.sql")
 QUERY_TAG_SOURCE_CATEGORY_TOTALS = load_sql_file("query_category_totals.sql")
@@ -197,7 +197,7 @@ def get_total_counts() -> pd.DataFrame:
     return df
 
 
-def get_companies_category_type(
+def get_companies_category_tag_type_stats(
     type_slug: str,
     app_category: str | None = None,
 ) -> pd.DataFrame:
@@ -205,7 +205,7 @@ def get_companies_category_type(
     if app_category and app_category == "games":
         app_category = "game%"
     df = pd.read_sql(
-        QUERY_COMPANIES_CATEGORY_TYPE,
+        QUERY_COMPANIES_CATEGORY_TAG_TYPE_STATS,
         con=DBCON.engine,
         params={"type_slug": type_slug, "app_category": app_category},
     )
@@ -366,13 +366,15 @@ def get_app_adstxt_overview(store_id: str) -> pd.DataFrame:
     return df
 
 
-def get_companies_parent_overview(app_category: str | None = None) -> pd.DataFrame:
+def get_companies_parent_category_stats(
+    app_category: str | None = None,
+) -> pd.DataFrame:
     """Get overview of companies from multiple types like sdk and app-ads.txt."""
     if app_category:
         if app_category == "games":
             app_category = "game%"
         df = pd.read_sql(
-            QUERY_COMPANIES_PARENT_OVERVIEW_CATEGORY,
+            QUERY_COMPANIES_PARENT_CATEGORY_TAG_STATS,
             DBCON.engine,
             params={"app_category": app_category},
         )
@@ -392,7 +394,7 @@ def get_companies_parent_overview(app_category: str | None = None) -> pd.DataFra
                 .reset_index()
             )
     else:
-        df = pd.read_sql(QUERY_COMPANIES_PARENT_OVERVIEW, DBCON.engine)
+        df = pd.read_sql(QUERY_COMPANIES_PARENT_TAG_STATS, DBCON.engine)
     df["store"] = df["store"].replace({1: "Google Play", 2: "Apple App Store"})
     df.loc[df["app_category"].isna(), "app_category"] = "None"
     return df
@@ -535,11 +537,11 @@ def get_company_sdks(company_domain: str) -> pd.DataFrame:
     return df
 
 
-def get_company_parent_categories(company_domain: str) -> pd.DataFrame:
+def get_company_parent_category_stats(company_domain: str) -> pd.DataFrame:
     """Get a company parent categories."""
     logger.info(f"query company parent categories: {company_domain=}")
     df = pd.read_sql(
-        QUERY_PARENT_COMPANY_CATEGORIES,
+        QUERY_PARENT_COMPANY_CATEGORY_STATS,
         DBCON.engine,
         params={"company_domain": company_domain},
     )
