@@ -55,7 +55,7 @@
 	</div>
 {:then myData}
 	{#if typeof myData == 'string'}
-		<p class="text-red-500 text-center">Failed to load company details.</p>
+		<p class="text-red-500 text-center">Failed to load companies details.</p>
 	{:else if myData && myData.categories}
 		<CompaniesLayout>
 			{#snippet card1()}

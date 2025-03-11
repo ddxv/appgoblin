@@ -230,7 +230,7 @@ def get_companies_category_tag_type_stats(
                 "app_category",
                 "type_url_slug",
             ]
-        )[["app_count"]]
+        )[["app_count", "installs_d30", "rating_count_d30"]]
         .sum()
         .reset_index()
     )

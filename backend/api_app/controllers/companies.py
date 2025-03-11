@@ -235,7 +235,7 @@ def get_overviews(
         validate="m:1",
     )
 
-    category_overview = make_category_uniques(
+    category_overview = make_companies_stats(
         df=overview_df.copy(),
         tag_source_category_app_counts=tag_source_category_app_counts,
     )
@@ -293,7 +293,7 @@ def append_overall_categories(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-def make_category_uniques(
+def make_companies_stats(
     df: pd.DataFrame, tag_source_category_app_counts: pd.DataFrame
 ) -> CompaniesCategoryOverview:
     """Make category sums for overview."""
@@ -309,6 +309,12 @@ def make_category_uniques(
     # Function to calculate unique counts
     def get_unique_company_counts(mask: pd.Series) -> int:
         return df.loc[mask, "company_domain"].nunique()
+
+    def get_installs_d30(mask: pd.Series) -> int:
+        return df.loc[mask, "installs_d30"].sum()
+
+    def get_rating_count_d30(mask: pd.Series) -> int:
+        return df.loc[mask, "rating_count_d30"].sum()
 
     # Calculate overall stats
     overall_stats = {
@@ -326,6 +332,20 @@ def make_category_uniques(
         ),
         "adstxt_reseller_android_total_companies": get_unique_company_counts(
             is_google & is_app_ads_reseller,
+        ),
+        "sdk_android_installs_d30": get_installs_d30(is_google & is_sdk),
+        "sdk_ios_rating_count_d30": get_rating_count_d30(is_apple & is_sdk),
+        "adstxt_direct_android_installs_d30": get_installs_d30(
+            is_google & is_app_ads_direct
+        ),
+        "adstxt_direct_ios_rating_count_d30": get_rating_count_d30(
+            is_apple & is_app_ads_direct
+        ),
+        "adstxt_reseller_android_installs_d30": get_installs_d30(
+            is_google & is_app_ads_reseller
+        ),
+        "adstxt_reseller_ios_rating_count_d30": get_rating_count_d30(
+            is_apple & is_app_ads_reseller
         ),
     }
     overview.update_stats("all", **overall_stats)
@@ -359,7 +379,7 @@ def make_category_uniques(
     return overview
 
 
-def make_company_category_sums(df: pd.DataFrame) -> CompanyCategoryOverview:
+def make_company_stats(df: pd.DataFrame) -> CompanyCategoryOverview:
     """Make category sums for overview."""
     overview = CompanyCategoryOverview()
     conditions = {
@@ -654,7 +674,7 @@ class CompaniesController(Controller):
             final_ad_domain_overview = None
             final_publishers_overview = None
 
-        overview = make_company_category_sums(df=df)
+        overview = make_company_stats(df=df)
 
         overview.adstxt_ad_domain_overview = final_ad_domain_overview
         overview.adstxt_publishers_overview = final_publishers_overview
