@@ -44,7 +44,7 @@
 								myType={{ name: 'All Companies & Domains', url_slug: 'all-companies' }}
 								hideAdstxtApps={true}
 							/>
-							{#if detailsData && detailsData.adstxt_ad_domain_overview}
+							{#if detailsData && detailsData.adstxt_ad_domain_overview && detailsData.adstxt_ad_domain_overview.google}
 								<AdsTxtTotalsBox myTotals={detailsData.adstxt_ad_domain_overview} />
 							{/if}
 						{/await}
@@ -117,7 +117,7 @@
 {#await data.companyDetails}
 	<div><span>Loading...</span></div>
 {:then detailsData}
-	{#if detailsData && detailsData.adstxt_publishers_overview}
+	{#if detailsData && detailsData.adstxt_publishers_overview && detailsData.adstxt_publishers_overview.google && detailsData.adstxt_publishers_overview.apple}
 		<div class="card preset-tonal p-2 md:p-8 mt-2 md:mt-4">
 			<div class="grid md:grid-cols-2 gap-4">
 				<div>
