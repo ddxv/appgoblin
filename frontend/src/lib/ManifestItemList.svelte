@@ -34,8 +34,12 @@
 						</div>
 					{/snippet}
 					{#each Object.entries(companyObj) as [sdkShort, sdkShortObj]}
-						<Accordion value={accordionValue} multiple>
-							<Accordion.Item value="club">
+						<Accordion
+							value={accordionValue}
+							onValueChange={(e) => (accordionValue = e.value)}
+							multiple
+						>
+							<Accordion.Item value={sdkShort}>
 								<!-- Control -->
 								{#snippet control()}<p class={androidNameFont}>{sdkShort}</p>{/snippet}
 								<!-- Panel -->

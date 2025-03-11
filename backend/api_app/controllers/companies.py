@@ -652,7 +652,6 @@ class CompaniesController(Controller):
         start = time.perf_counter() * 1000
 
         df = get_company_overview(company_domain=company_domain)
-        first_query_time = time.perf_counter() * 1000
 
         if df["tag_source"].str.contains("app_ads").any():
             ad_domain_overview = get_company_adstxt_ad_domain_overview(company_domain)
@@ -675,16 +674,13 @@ class CompaniesController(Controller):
             final_ad_domain_overview = None
             final_publishers_overview = None
 
-        second_query_time = time.perf_counter() * 1000
         overview = make_company_stats(df=df)
 
         overview.adstxt_ad_domain_overview = final_ad_domain_overview
         overview.adstxt_publishers_overview = final_publishers_overview
 
         duration = round((time.perf_counter() * 1000 - start), 2)
-        logger.info(
-            f"GET /api/companies/{company_domain} took {duration}ms, first query took {first_query_time - start}ms, second query took {second_query_time - first_query_time}ms"
-        )
+        logger.info(f"GET /api/companies/{company_domain} took {duration}ms")
         return overview
 
     @get(

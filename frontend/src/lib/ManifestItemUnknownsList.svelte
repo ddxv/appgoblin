@@ -24,8 +24,12 @@
 			<!-- {"bytedance.com": {"application/acitivity":["com.bytedance.sdk.analytics"]}} -->
 			{#each Object.entries(items) as [sdkShort, sdkShortValue]}
 				<li>
-					<Accordion value={accordionValue} multiple>
-						<Accordion.Item value="club">
+					<Accordion
+						value={accordionValue}
+						onValueChange={(e) => (accordionValue = e.value)}
+						multiple
+					>
+						<Accordion.Item value={sdkShort}>
 							<!-- Control -->
 							{#snippet control()}<p class={androidNameFont}>{sdkShort}</p>{/snippet}
 							<!-- Panel -->
