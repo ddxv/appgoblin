@@ -1,6 +1,14 @@
 <script lang="ts">
 	function formatNumber(num: number) {
-		return new Intl.NumberFormat('en-US').format(num);
+		if (num < 1000) {
+			return num.toString();
+		} else if (num < 1000000) {
+			return (num / 1000).toFixed(1) + 'K';
+		} else if (num < 1000000000) {
+			return (num / 1000000).toFixed(1) + 'M';
+		} else {
+			return (num / 1000000000).toFixed(1) + 'B';
+		}
 	}
 
 	let { myTotals, myType, hideAdstxtApps = false } = $props();
