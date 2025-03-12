@@ -5,4 +5,4 @@ SELECT
 FROM
     frontend.companies_apps_overview AS cao
 WHERE
-    cao.store_id = cao.:store_id;
+    cao.store_id = :store_id;
