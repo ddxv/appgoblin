@@ -348,13 +348,13 @@ def get_app_sdk_details(store_id: str) -> pd.DataFrame:
 
 
 @lru_cache(maxsize=1000)
-def get_apps_sdk_overview(store_ids: list[str]) -> pd.DataFrame:
+def get_apps_sdk_overview(store_ids: tuple[str, ...]) -> pd.DataFrame:
     """Get SDK overview for multiple store_ids."""
     logger.info(f"Query SDKs for {store_ids=}")
     df = pd.read_sql(
         QUERY_APPS_SDK_OVERVIEW,
         DBCON.engine,
-        params={"store_ids": tuple(store_ids)},
+        params={"store_ids": store_ids},
     )
     return df
 

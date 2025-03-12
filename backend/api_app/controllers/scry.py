@@ -26,6 +26,6 @@ class ScryController(Controller):
         """Lookup apps' SDKs by store_ids."""
         store_ids = data.get("store_ids", [])
         store_ids_log_str = ",".join(store_ids[0:2])
-        df = get_apps_sdk_overview(store_ids)
+        df = get_apps_sdk_overview(tuple(store_ids))
         logger.info(f"looked up store_ids:{store_ids_log_str} found {df.shape[0]} apps")
         return df.to_dict(orient="records")
