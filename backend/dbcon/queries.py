@@ -347,6 +347,7 @@ def get_app_sdk_details(store_id: str) -> pd.DataFrame:
     return df
 
 
+@lru_cache(maxsize=1000)
 def get_apps_sdk_overview(store_ids: list[str]) -> pd.DataFrame:
     """Get SDK overview for multiple store_ids."""
     logger.info(f"Query SDKs for {store_ids=}")

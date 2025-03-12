@@ -4,12 +4,9 @@ PUBLIC
 
 """
 
-import time
 from typing import Self
 
-import pandas as pd
-from litestar import Controller, get, post
-
+from litestar import Controller, post
 
 from config import get_logger
 from dbcon.queries import (
@@ -24,7 +21,7 @@ class ScryController(Controller):
 
     path = "/api/public/"
 
-    @post(path="sdks/apps", cache=86400)
+    @post(path="sdks/apps")
     async def lookup_apps(self: Self, data: dict) -> dict:
         """Lookup apps' SDKs by store_ids."""
         store_ids = data.get("store_ids", [])
