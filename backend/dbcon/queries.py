@@ -41,6 +41,7 @@ QUERY_APP_HISTORY = load_sql_file("query_app_history.sql")
 QUERY_SINGLE_APP = load_sql_file("query_single_app.sql")
 QUERY_APP_SDK_DETAILS = load_sql_file("query_app_sdk_details.sql")
 QUERY_APP_SDK_OVERVIEW = load_sql_file("query_app_sdk_overview.sql")
+QUERY_APPS_SDK_OVERVIEW = load_sql_file("query_apps_sdk_overview.sql")
 QUERY_APP_ADSTXT_OVERVIEW = load_sql_file("query_app_adstxt_overview.sql")
 QUERY_TOTAL_COUNTS = load_sql_file("query_total_counts.sql")
 QUERY_STORE_COLLECTION_CATEGORY_MAP = load_sql_file(
@@ -342,6 +343,17 @@ def get_app_sdk_details(store_id: str) -> pd.DataFrame:
         QUERY_APP_SDK_DETAILS,
         DBCON.engine,
         params={"store_id": store_id},
+    )
+    return df
+
+
+def get_apps_sdk_overview(store_ids: list[str]) -> pd.DataFrame:
+    """Get SDK overview for multiple store_ids."""
+    logger.info(f"Query SDKs for {store_ids=}")
+    df = pd.read_sql(
+        QUERY_APPS_SDK_OVERVIEW,
+        DBCON.engine,
+        params={"store_ids": tuple(store_ids)},
     )
     return df
 
