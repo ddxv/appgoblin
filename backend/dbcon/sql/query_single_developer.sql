@@ -9,4 +9,5 @@ WHERE
             developer_store_apps AS dd
         WHERE
             dd.developer_id = :developer_id
-    );
+    )
+;

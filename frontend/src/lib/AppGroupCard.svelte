@@ -33,6 +33,7 @@
 										src={app.featured_image_url}
 										alt={app.name}
 										referrerpolicy="no-referrer"
+										loading="lazy"
 									/>
 								</div>
 								<div class="flex text-left">
@@ -41,6 +42,7 @@
 										src={app.icon_url_512}
 										alt={app.name}
 										referrerpolicy="no-referrer"
+										loading="lazy"
 									/>
 									<AppInfo {app} />
 								</div>
@@ -52,6 +54,7 @@
 										src={app.tablet_image_url_1}
 										alt={app.name}
 										referrerpolicy="no-referrer"
+										loading="lazy"
 									/>
 									<div class="inline-flex text-left">
 										<img
@@ -59,6 +62,7 @@
 											src={app.icon_url_512}
 											alt={app.name}
 											referrerpolicy="no-referrer"
+											loading="lazy"
 										/>
 										<AppInfo {app} />
 									</div>
@@ -72,12 +76,14 @@
 											src={app.icon_url_512}
 											alt={app.name}
 											referrerpolicy="no-referrer"
+											loading="lazy"
 										/>
 										<img
 											class="object-top object-cover h-48 w-48 rounded-lg"
 											src={app.phone_image_url_1}
 											alt={app.name}
 											referrerpolicy="no-referrer"
+											loading="lazy"
 										/>
 									</div>
 									<div class="inline-flex text-left">
@@ -86,6 +92,7 @@
 											src={app.icon_url_512}
 											alt={app.name}
 											referrerpolicy="no-referrer"
+											loading="lazy"
 										/>
 										<AppInfo {app} />
 									</div>
@@ -98,6 +105,7 @@
 										src={app.icon_url_512}
 										alt={app.name}
 										referrerpolicy="no-referrer"
+										loading="lazy"
 									/>
 									<AppInfo {app} />
 								</div>

@@ -50,6 +50,22 @@ export interface DeveloperResponse {
 	error?: string;
 }
 
+export interface DeveloperSDKResponse {
+	devs: {
+		title: string;
+		google: PlatformDeveloper;
+		apple: PlatformDeveloper;
+	};
+	devSDKs: {
+		store_id: string;
+		app_name: string;
+		sdk_name: string;
+		sdk_description: string;
+	}[];
+	status?: number;
+	error?: string;
+}
+
 export interface CompanyApps {
 	results: AppGroup;
 	status?: number;

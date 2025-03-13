@@ -10,6 +10,7 @@ from litestar.openapi import OpenAPIConfig, OpenAPIController
 from api_app.controllers.apps import AppController
 from api_app.controllers.categories import CategoryController
 from api_app.controllers.companies import CompaniesController
+from api_app.controllers.developers import DeveloperController
 from api_app.controllers.rankings import RankingsController
 from api_app.controllers.scry import ScryController
 from api_app.controllers.sdks import SdksController
@@ -37,9 +38,11 @@ logging_config = LoggingConfig(
 
 
 def restrict_access(request: Request, route_handler) -> None:
-    """Guard to restrict access:
+    """Guard to restrict access.
+
     - ScryController endpoints are always public
     - Other endpoints are open to localhost, but require an API key otherwise
+
     """
     if route_handler.owner.__class__ == ScryController:
         return
@@ -55,6 +58,7 @@ def restrict_access(request: Request, route_handler) -> None:
 # Apply the guard to specific controllers
 private_controllers = [
     AppController,
+    DeveloperController,
     CategoryController,
     RankingsController,
     CompaniesController,
@@ -69,6 +73,7 @@ for controller in private_controllers:
 app = Litestar(
     route_handlers=[
         AppController,
+        DeveloperController,
         CategoryController,
         RankingsController,
         CompaniesController,

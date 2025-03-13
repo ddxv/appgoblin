@@ -93,6 +93,13 @@ class DeveloperApps:
 
 
 @dataclass
+class DeveloperSDKs:
+    """A developer's list of sdks."""
+
+    sdks: dict
+
+
+@dataclass
 class Collection:
     """A single Collection to combine ios and Google collections."""
 

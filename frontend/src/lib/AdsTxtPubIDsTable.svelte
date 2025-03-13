@@ -1,6 +1,4 @@
 <script lang="ts">
-	import Pagination from './Pagination.svelte';
-
 	import { DataHandler } from '@vincjo/datatables/legacy/remote';
 	import type { State } from '@vincjo/datatables/legacy/remote';
 	import type { AdsTxtEntries } from '../types';
@@ -47,7 +45,8 @@
 				{#each $rows as row}
 					<tr>
 						<td class="table-cell-fit text-sm md:text-base max-w-[100px] truncate">
-							<a href={`/companies/${page.params.domain}/app-adstxt/publisher/${row.publisher_id}`}
+							tbody <a
+								href={`/companies/${page.params.domain}/app-adstxt/publisher/${row.publisher_id}`}
 								>{row.publisher_id}</a
 							>
 						</td>
