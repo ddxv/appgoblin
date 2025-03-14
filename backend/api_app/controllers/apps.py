@@ -27,8 +27,6 @@ from api_app.models import (
     AppSDKsOverview,
     Category,
     Collection,
-    DeveloperApps,
-    PlatformDeveloper,
     SDKsDetails,
 )
 from config import get_logger
@@ -42,7 +40,6 @@ from dbcon.queries import (
     get_recent_apps,
     get_single_app,
     get_single_apps_adstxt,
-    get_single_developer,
     get_total_counts,
     insert_sdk_scan_request,
     search_apps,
@@ -109,10 +106,21 @@ def app_history(store_app: int, app_name: str, country: str = "US") -> AppHistor
             orient="records",
         )
     )
-    app_hist["group"] = app_name
     app_hist = app_hist[
         ~((app_hist["installs"].isna()) & (app_hist["rating_count"].isna()))
     ]
+    app_hist["group"] = app_name
+    plot_dicts = create_plot_dicts(app_hist, histogram)
+    hist = AppHistory(
+        histogram=histogram,
+        history_table=history_table,
+        plot_data=plot_dicts,
+    )
+    return hist
+
+
+def create_plot_dicts(app_hist: pd.DataFrame, histogram: list[int]) -> dict:
+    """Create plot dicts for the app history."""
     metrics = ["installs", "rating", "review_count", "rating_count"]
     group_col = "group"
     xaxis_col = "crawled_date"
@@ -138,8 +146,8 @@ def app_history(store_app: int, app_name: str, country: str = "US") -> AppHistor
         )
         change_metrics.append(metric + "_rate_of_change")
         change_metrics.append(metric + "_avg_per_day")
-    star_cols = []
-    new_star_cols = []
+    star_cols: list[str] = []
+    new_star_cols: list[str] = []
     if sum(histogram) > 0:
         new_star_cols = [f"new_{col}" for col in star_cols]
         star_cols = ["one_star", "two_star", "three_star", "four_star", "five_star"]
@@ -203,13 +211,7 @@ def app_history(store_app: int, app_name: str, country: str = "US") -> AppHistor
     plot_dicts["changes"] = change_dicts
     plot_dicts["ratings_stars"] = ratings_stars_dicts
     plot_dicts["ratings_stars_new"] = ratings_stars_new_dicts
-
-    hist = AppHistory(
-        histogram=histogram,
-        history_table=history_table,
-        plot_data=plot_dicts,
-    )
-    return hist
+    return plot_dicts
 
 
 def get_string_date_from_days_ago(days: int) -> str:
@@ -486,7 +488,7 @@ class AppController(Controller):
         return trackers_dict
 
     @get(path="/{store_id:str}/ranks/overview", cache=3600)
-    async def app_ranks_overview(self: Self, store_id: str) -> AppRank:
+    async def app_ranks_overview(self: Self, store_id: str) -> AppRankOverview:
         """Handle GET requests for a specific app ranks.
 
         Args:
@@ -555,76 +557,6 @@ class AppController(Controller):
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(f"{self.path}/{store_id}/ranks took {duration}ms")
         return rank_dict
-
-    @get(path="/developers/{developer_id:str}", cache=3600)
-    async def get_developer_apps(self: Self, developer_id: str) -> DeveloperApps:
-        """Handle GET request for a specific developer.
-
-        Args:
-        ----
-            developer_id (str): The id of the developer to retrieve.
-
-        Returns:
-        -------
-            json
-
-        """
-        start = time.perf_counter() * 1000
-        apps_df = get_single_developer(developer_id)
-
-        if apps_df.empty:
-            msg = f"Developer ID not found: {developer_id!r}"
-            raise NotFoundException(
-                msg,
-                status_code=404,
-            )
-
-        ios_df = apps_df[apps_df["store"] == "Apple App Store"]
-        google_df = apps_df[apps_df["store"] == "Google Play"]
-        if not google_df.empty:
-            google_developer_name = google_df.to_dict(orient="records")[0][
-                "developer_name"
-            ]
-            google_developer_id = google_df.to_dict(orient="records")[0]["developer_id"]
-            google_developer_url = google_df.to_dict(orient="records")[0][
-                "store_developer_link"
-            ]
-        else:
-            google_developer_name = "Google developer(s) not found"
-            google_developer_id = None
-            google_developer_url = None
-        if not ios_df.empty:
-            apple_developer_name = ios_df.to_dict(orient="records")[0]["developer_name"]
-            apple_developer_id = ios_df.to_dict(orient="records")[0]["developer_id"]
-            apple_developer_url = ios_df.to_dict(orient="records")[0][
-                "store_developer_link"
-            ]
-        else:
-            apple_developer_name = "Apple developer(s) not found"
-            apple_developer_id = None
-            apple_developer_url = None
-        developer_name = google_developer_name or apple_developer_name
-        google_apps_dict = google_df.to_dict(orient="records")
-        apple_apps_dict = ios_df.to_dict(orient="records")
-
-        developer_apps = DeveloperApps(
-            google=PlatformDeveloper(
-                developer_id=google_developer_id,
-                developer_name=google_developer_name,
-                developer_url=google_developer_url,
-                apps=AppGroup(title="Google", apps=google_apps_dict),
-            ),
-            apple=PlatformDeveloper(
-                developer_id=apple_developer_id,
-                developer_name=apple_developer_name,
-                developer_url=apple_developer_url,
-                apps=AppGroup(title="Apple", apps=apple_apps_dict),
-            ),
-            title=developer_name,
-        )
-        duration = round((time.perf_counter() * 1000 - start), 2)
-        logger.info(f"{self.path}/developers/{developer_id} took {duration}ms")
-        return developer_apps
 
     @get(path="/{store_id:str}/adstxt/overview", cache=3600)
     async def get_app_adstxt_overview(self: Self, store_id: str) -> AdsTxtEntries:
