@@ -43,6 +43,13 @@ class AppSDKsOverview:
 
 
 @dataclass
+class DeveloperSDKsOverview:
+    """Lists of Package permissions, trackers etc from Manifest."""
+
+    sdks: dict
+
+
+@dataclass
 class SDKsDetails:
     """Lists of Package permissions, trackers etc from Manifest."""
 

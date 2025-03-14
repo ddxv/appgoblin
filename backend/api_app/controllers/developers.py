@@ -7,10 +7,16 @@
 import time
 from typing import Self
 
+import pandas as pd
 from litestar import Controller, get, post
 from litestar.exceptions import NotFoundException
 
-from api_app.models import AppGroup, DeveloperApps, DeveloperSDKs, PlatformDeveloper
+from api_app.models import (
+    AppGroup,
+    DeveloperApps,
+    DeveloperSDKsOverview,
+    PlatformDeveloper,
+)
 from config import get_logger
 from dbcon.queries import (
     get_apps_sdk_overview,
@@ -96,7 +102,7 @@ class DeveloperController(Controller):
         return developer_apps
 
     @post(path="/sdks", cache=3600)
-    async def get_developer_sdks(self: Self, data: dict) -> DeveloperSDKs:
+    async def get_developer_sdks(self: Self, data: dict) -> DeveloperSDKsOverview:
         """Handle GET request for a specific developer.
 
         Args:
@@ -113,11 +119,29 @@ class DeveloperController(Controller):
         store_ids = data.get("store_ids", [])
         store_ids_log_str = ",".join(store_ids[0:2])
         logger.info(f"looked up store_ids:{store_ids_log_str} start")
+
         df = get_apps_sdk_overview(tuple(store_ids))
-        logger.info(
-            f"looked up store_ids:{store_ids_log_str} found {df.shape[0]} companies"
+
+        cats = df.loc[df["category_slug"].notna(), "category_slug"].unique().tolist()
+        company_cats = {}
+        for cat in cats:
+            company_cats[cat] = (
+                df[df["category_slug"] == cat][
+                    ["company_name", "company_domain", "store_id"]
+                ]
+                .groupby(["company_name", "company_domain"])
+                .apply(
+                    lambda x: pd.Series(
+                        {"store_ids": x["store_id"].tolist(), "count": len(x)}
+                    )
+                )
+                .reset_index()
+                .to_dict(orient="records")
+            )
+
+        sdk_overview_dict = DeveloperSDKsOverview(
+            sdks=company_cats,
         )
-        developer_apps = DeveloperSDKs(sdks=df.to_dict(orient="records"))
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(f"{self.path}/developers/sdks took {duration}ms")
-        return developer_apps
+        return sdk_overview_dict

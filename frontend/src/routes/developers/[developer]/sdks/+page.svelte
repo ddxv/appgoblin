@@ -1,7 +1,7 @@
 <script lang="ts">
-	import type { DeveloperSDKResponse } from '../../../../types';
-
 	import CompanyButton from '$lib/CompanyButton.svelte';
+	import DeveloperSDKOverview from '$lib/DeveloperSDKOverview.svelte';
+	import type { DeveloperSDKResponse } from '../../../../types';
 
 	interface Props {
 		data: DeveloperSDKResponse;
@@ -13,7 +13,7 @@
 </script>
 
 <Tabs.Panel value="sdks">
-	<h2 class="text-2xl font-bold text-primary-900-100">SDKs</h2>
+	<h2 class="text-2xl font-bold text-primary-900-100">SDKs by Company</h2>
 	<p class="text-sm md:text-base p-2 md:p-4">Developers SDKS</p>
 
 	<div>
@@ -25,28 +25,9 @@
 			{#if typeof sdks == 'string'}
 				Failed to load sdks
 			{:else}
-				{console.log('sdks', sdks)}
-				<table class="table">
-					<thead>
-						<tr>
-							<th>Store ID</th>
-							<th>Category Slug</th>
-							<th>Company</th>
-						</tr>
-					</thead>
-					<tbody>
-						{#each sdks.sdks as sdk}
-							<tr>
-								<td>{sdk.store_id}</td>
-								<td>{sdk.category_slug}</td>
-								<td>
-									<CompanyButton companyName={sdk.company_name} companyDomain={sdk.company_domain}
-									></CompanyButton>
-								</td>
-							</tr>
-						{/each}
-					</tbody>
-				</table>
+				<div class="card preset-tonal p-2 md:p-8 mt-2 md:mt-4">
+					<DeveloperSDKOverview myPackageInfo={sdks} companyTypes={data.companyTypes} />
+				</div>
 			{/if}
 		{:catch error}
 			<p style="color: red">{error.message}</p>
