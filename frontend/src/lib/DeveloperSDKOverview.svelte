@@ -3,14 +3,24 @@
 	import RequestSDKScanButton from '$lib/RequestSDKScanButton.svelte';
 	import CompanyButton from '$lib/CompanyButton.svelte';
 
-	import { page } from '$app/state';
-
 	import { Accordion } from '@skeletonlabs/skeleton-svelte';
+
+	import StoreIcon from './StoreIcon.svelte';
 
 	let accordionValue = $state(['allclosed']);
 	const androidNameFont = 'text-xs md:text-sm px-8 md:px-16';
 
-	let { myPackageInfo, companyTypes } = $props();
+	import type { DeveloperSDKResponse, CompanyTypes } from '../types';
+
+	interface Props {
+		myPackageInfo: DeveloperSDKResponse['devSDKs'];
+		companyTypes: CompanyTypes;
+	}
+
+	let { myPackageInfo, companyTypes }: Props = $props();
+
+	let crawled_store_ids = $derived(myPackageInfo.success_store_ids.length);
+	let failed_store_ids = $derived(myPackageInfo.failed_store_ids.length);
 </script>
 
 <p class="p-4">
@@ -30,7 +40,7 @@
 		{#await companyTypes}
 			Loading company types...
 		{:then myCompanyTypes}
-			<div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+			<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 				{#each Object.keys(packageInfo.sdks) as category}
 					<WhiteCard>
 						{#snippet title()}
@@ -39,7 +49,11 @@
 						{/snippet}
 						<div class="grid grid-cols-1 md:grid-cols-2 gap-2 p-4">
 							{#each packageInfo.sdks[category] as company}
-								<div class="border border-primary-900 rounded-md p-2">
+								<div class="border border-primary-900 rounded-md p-2 grid grid-flow-col">
+									<CompanyButton
+										companyName={company.company_name}
+										companyDomain={company.company_domain}
+									/>
 									<Accordion
 										value={accordionValue}
 										onValueChange={(e) => (accordionValue = e.value)}
@@ -48,26 +62,27 @@
 										<Accordion.Item value={company.company_domain}>
 											<!-- Control -->
 											{#snippet control()}
-												<div class="grid grid-cols-2 gap-2">
-													<CompanyButton
-														companyName={company.company_name}
-														companyDomain={company.company_domain}
-													/>
-
-													Apps: {company.count}
+												<div class="grid grid-cols-2 gap-1 md:gap-2">
+													<p class="text-xs md:text-sm">
+														Apps: {company.count} / {crawled_store_ids}
+													</p>
 												</div>
 											{/snippet}
 
 											<!-- Panel -->
 											{#snippet panel()}
-												<li>
-													<!-- <p class={xmlPathFont}>{sdkShort}</p> -->
-													{#each company.store_ids as storeId}
+												<ul>
+													{#each company.apps as app}
 														<li>
-															<a href={`/apps/${storeId}`} class={androidNameFont}>{storeId}</a>
+															<a href={`/apps/${app.store_id}`} class={androidNameFont}>
+																<span class="inline-flex gap-1 md:gap-2">
+																	<StoreIcon store={app.store} />
+																	{app.app_name}
+																</span>
+															</a>
 														</li>
 													{/each}
-												</li>
+												</ul>
 											{/snippet}
 										</Accordion.Item>
 									</Accordion>

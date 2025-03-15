@@ -56,12 +56,23 @@ export interface DeveloperSDKResponse {
 		google: PlatformDeveloper;
 		apple: PlatformDeveloper;
 	};
+	companyTypes: companyType[];
 	devSDKs: {
-		store_id: string;
-		app_name: string;
-		sdk_name: string;
-		sdk_description: string;
-	}[];
+		sdks: {
+			[key: string]: {
+				company_name: string;
+				company_domain: string;
+				count: number;
+				apps: {
+					store: string;
+					store_id: string;
+					app_name: string;
+				}[];
+			}[];
+		};
+		success_store_ids: string[];
+		failed_store_ids: string[];
+	};
 	status?: number;
 	error?: string;
 }

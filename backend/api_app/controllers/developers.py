@@ -122,17 +122,24 @@ class DeveloperController(Controller):
 
         df = get_apps_sdk_overview(tuple(store_ids))
 
+        success_store_ids = df["store_id"].unique().tolist()
+        failed_store_ids = [
+            store_id for store_id in store_ids if store_id not in success_store_ids
+        ]
         cats = df.loc[df["category_slug"].notna(), "category_slug"].unique().tolist()
         company_cats = {}
         for cat in cats:
             company_cats[cat] = (
-                df[df["category_slug"] == cat][
-                    ["company_name", "company_domain", "store_id"]
-                ]
+                df[df["category_slug"] == cat]
                 .groupby(["company_name", "company_domain"])
                 .apply(
                     lambda x: pd.Series(
-                        {"store_ids": x["store_id"].tolist(), "count": len(x)}
+                        {
+                            "count": len(x),
+                            "apps": x[["store", "store_id", "app_name"]].to_dict(
+                                orient="records"
+                            ),
+                        }
                     )
                 )
                 .reset_index()
@@ -141,6 +148,8 @@ class DeveloperController(Controller):
 
         sdk_overview_dict = DeveloperSDKsOverview(
             sdks=company_cats,
+            failed_store_ids=failed_store_ids,
+            success_store_ids=success_store_ids,
         )
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(f"{self.path}/developers/sdks took {duration}ms")

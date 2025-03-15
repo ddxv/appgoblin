@@ -4,8 +4,7 @@
 	import { DataHandler } from '@vincjo/datatables/legacy/remote';
 	import type { State } from '@vincjo/datatables/legacy/remote';
 
-	import IconiOs from './svg/IconiOS.svelte';
-	import IconGoogle from './svg/IconGoogle.svelte';
+	import StoreIcon from './StoreIcon.svelte';
 
 	import { page } from '$app/state';
 
@@ -74,14 +73,10 @@
 
 						<td class="table-cell-fit">
 							<a href={`/apps/${row.store_id}`} class="inline-flex gap-1 md:gap-2">
+								<StoreIcon store={row.store} />
 								<div>
-									{#if row.store.startsWith('Google')}
-										<IconGoogle size="16" />
-									{:else}
-										<IconiOs size="16" />
-									{/if}
+									{row.app_name}
 								</div>
-								{row.app_name}
 							</a>
 						</td>
 						{#if !is_ios}

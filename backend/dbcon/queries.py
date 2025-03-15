@@ -356,6 +356,7 @@ def get_apps_sdk_overview(store_ids: tuple[str, ...]) -> pd.DataFrame:
         DBCON.engine,
         params={"store_ids": store_ids},
     )
+    df["store"] = df["store"].replace({1: "Google Play", 2: "Apple App Store"})
     return df
 
 

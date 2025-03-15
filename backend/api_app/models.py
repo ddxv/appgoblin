@@ -47,6 +47,8 @@ class DeveloperSDKsOverview:
     """Lists of Package permissions, trackers etc from Manifest."""
 
     sdks: dict
+    failed_store_ids: list[str]
+    success_store_ids: list[str]
 
 
 @dataclass
