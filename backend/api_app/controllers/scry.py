@@ -7,7 +7,10 @@ PUBLIC
 from typing import Self
 
 import pandas as pd
-from litestar import Controller, post
+from adscrawler import connection as write_conn
+from adscrawler.app_stores import scrape_stores
+from litestar import Controller, Response, post
+from litestar.background_tasks import BackgroundTask
 
 from config import get_logger
 from dbcon.queries import (
@@ -15,6 +18,16 @@ from dbcon.queries import (
 )
 
 logger = get_logger(__name__)
+
+
+def add_store_ids(store_ids_dict: list[dict]) -> None:
+    """After having queried an external app store send results to db."""
+    logger.info("background:search results to try opening connection")
+    db_conn = write_conn.get_db_connection(use_ssh_tunnel=True)
+    db_conn.set_engine()
+    logger.info("background:search results to be processed")
+    scrape_stores.process_scraped(db_conn, store_ids_dict, "appgoblin_search")
+    logger.info("background:search results done")
 
 
 class ScryController(Controller):
@@ -28,11 +41,11 @@ class ScryController(Controller):
         store_ids = data.get("store_ids", [])
         store_ids_log_str = ",".join(store_ids[0:2])
 
-        store_ids = ["com.nexonm.dominations.adk"]
-
         df = get_apps_sdk_overview(tuple(store_ids))
 
-        success_store_ids = df["store_id"].unique().tolist()
+        store_ids_df = df[["store_id"]].drop_duplicates()
+        store_ids_dict = store_ids_df.to_dict(orient="records")
+        success_store_ids = store_ids_df["store_id"].unique().tolist()
         failed_store_ids = [
             store_id for store_id in store_ids if store_id not in success_store_ids
         ]
@@ -73,4 +86,7 @@ class ScryController(Controller):
         }
 
         logger.info(f"looked up store_ids:{store_ids_log_str} found {df.shape[0]} apps")
-        return my_dict
+        return Response(
+            my_dict,
+            background=BackgroundTask(add_store_ids, store_ids_dict),
+        )
