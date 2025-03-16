@@ -44,6 +44,7 @@ class ScryController(Controller):
         df = get_apps_sdk_overview(tuple(store_ids))
 
         store_ids_df = df[["store_id"]].drop_duplicates()
+        store_ids_df["store"] = 1
         store_ids_dict = store_ids_df.to_dict(orient="records")
         success_store_ids = store_ids_df["store_id"].unique().tolist()
         failed_store_ids = [
@@ -90,7 +91,9 @@ class ScryController(Controller):
             "success_store_ids": success_store_ids,
         }
 
-        logger.info(f"looked up store_ids:{store_ids_log_str} found {df.shape[0]} apps")
+        logger.info(
+            f"Scry: store_ids:{len(success_store_ids)} found SDKs:{df.shape[0]}"
+        )
         return Response(
             my_dict,
             background=BackgroundTask(add_store_ids, store_ids_dict),
