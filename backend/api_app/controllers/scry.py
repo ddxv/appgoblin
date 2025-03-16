@@ -26,7 +26,7 @@ def add_store_ids(store_ids_dict: list[dict]) -> None:
     db_conn = write_conn.get_db_connection(use_ssh_tunnel=True)
     db_conn.set_engine()
     logger.info("background:search results to be processed")
-    scrape_stores.process_scraped(db_conn, store_ids_dict, "appgoblin_search")
+    scrape_stores.process_scraped(db_conn, store_ids_dict, "appgoblin_android")
     logger.info("background:search results done")
 
 
@@ -54,7 +54,7 @@ class ScryController(Controller):
         for cat in cats:
             company_cats[cat] = (
                 df[df["category_slug"] == cat]
-                .groupby(["company_name", "company_domain"])
+                .groupby(["company_name", "company_domain", "percent_open_source"])
                 .apply(
                     lambda x: pd.Series(
                         {
@@ -71,7 +71,12 @@ class ScryController(Controller):
 
         by_store_id_dict = (
             df.groupby(["store_id"])[
-                ["category_slug", "company_name", "company_domain"]
+                [
+                    "category_slug",
+                    "company_name",
+                    "company_domain",
+                    "percent_open_source",
+                ]
             ]
             .apply(lambda x: x.to_dict(orient="records"))
             .to_dict()
