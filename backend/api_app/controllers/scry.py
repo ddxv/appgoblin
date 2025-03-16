@@ -65,7 +65,7 @@ class ScryController(Controller):
         )
 
         my_dict = {
-            "sdks": by_store_id_dict,
+            "sdks_by_store_id": by_store_id_dict,
             "company_categories": cats,
             "sdks_by_company_category": company_cats,
             "failed_store_ids": failed_store_ids,
