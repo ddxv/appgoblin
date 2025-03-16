@@ -39,9 +39,14 @@ class ScryController(Controller):
     async def lookup_apps(self: Self, data: dict) -> dict:
         """Lookup apps' SDKs by store_ids."""
         store_ids = data.get("store_ids", [])
-        store_ids_log_str = ",".join(store_ids[0:2])
 
         df = get_apps_sdk_overview(tuple(store_ids))
+
+        if df["company_domain"].isna().sum() > 0:
+            logger.error(
+                f"Scry: {df[df['company_domain'].isna()]} SDKs have no company domain"
+            )
+            df = df[df["company_domain"].notna()]
 
         store_ids_df = df[["store_id"]].drop_duplicates()
         store_ids_df["store"] = 1
