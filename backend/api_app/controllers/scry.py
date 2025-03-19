@@ -72,6 +72,7 @@ class ScryController(Controller):
                     )
                 )
                 .reset_index()
+                .sort_values("count", ascending=False)
                 .to_dict(orient="records")
             )
         if df.shape[0] > 0:
