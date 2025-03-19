@@ -74,19 +74,21 @@ class ScryController(Controller):
                 .reset_index()
                 .to_dict(orient="records")
             )
-
-        by_store_id_dict = (
-            df.groupby(["store_id"])[
-                [
-                    "category_slug",
-                    "company_name",
-                    "company_domain",
-                    "percent_open_source",
+        if df.shape[0] > 0:
+            by_store_id_dict = (
+                df.groupby(["store_id"])[
+                    [
+                        "category_slug",
+                        "company_name",
+                        "company_domain",
+                        "percent_open_source",
+                    ]
                 ]
-            ]
-            .apply(lambda x: x.to_dict(orient="records"))
-            .to_dict()
-        )
+                .apply(lambda x: x.to_dict(orient="records"))
+                .to_dict()
+            )
+        else:
+            by_store_id_dict = {}
 
         my_dict = {
             "sdks_by_store_id": by_store_id_dict,
