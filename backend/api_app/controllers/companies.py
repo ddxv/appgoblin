@@ -183,10 +183,10 @@ def prep_companies_overview_df(
 
     # NOTE: Crucial for SDK to be first
     # since it has more than just advertising data
-    store_tag_source_values = overview_df["store_tag_source"].unique().tolist()
-    sdk_values = [x for x in store_tag_source_values if "sdk" in x]
-    adstxt_values = [x for x in store_tag_source_values if "adstxt" in x]
-    adstxt_direct_values = [x for x in adstxt_values if "direct" in x]
+    store_tag_source_cols = overview_df["store_tag_source"].unique().tolist()
+    sdk_cols = [x for x in store_tag_source_cols if "sdk" in x]
+    adstxt_cols = [x for x in store_tag_source_cols if "app_ads" in x]
+    adstxt_direct_cols = [x for x in adstxt_cols if "direct" in x]
 
     overview_df = overview_df.pivot(
         index=["company_name", "company_domain"],
@@ -195,7 +195,7 @@ def prep_companies_overview_df(
     ).reset_index()
 
     overview_df["tempsort"] = (
-        overview_df[sdk_values + adstxt_direct_values].fillna(0).mean(axis=1)
+        overview_df[sdk_cols + adstxt_direct_cols].fillna(0).mean(axis=1)
     )
 
     overview_df = (
