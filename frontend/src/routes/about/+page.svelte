@@ -120,7 +120,22 @@
 		</div>
 	</div>
 	<br />
-
+	<div class="card preset-filled-surface-100-900 p-2 md:p-4">
+		<h2 class="h2 p-2 md:p-4">Check the Trackers on Your Android Device</h2>
+		<div class="p-2 md:p-4">
+			<p>AppGoblin has an Android app which can be used to check the trackers on your device.</p>
+			<br />
+			<p>You can download it from the Google Play Store.</p>
+			<a
+				href="https://app.thirdgate.dev/appgoblin-android-site"
+				target="_blank"
+				class="anchor inline-flex items-baseline"
+			>
+				<img class="w-40 md:w-60" src="/gp_en_badge_web_generic.png" alt="AppGoblin Android App" />
+			</a>
+		</div>
+	</div>
+	<br />
 	<div class="card preset-filled-surface-100-900 p-2 md:p-4">
 		<h2 class="h2 p-2 md:p-4">Open Source Tech Stack</h2>
 		<div class="p-2 md:p-4">

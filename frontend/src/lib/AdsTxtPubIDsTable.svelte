@@ -45,8 +45,7 @@
 				{#each $rows as row}
 					<tr>
 						<td class="table-cell-fit text-sm md:text-base max-w-[100px] truncate">
-							tbody <a
-								href={`/companies/${page.params.domain}/app-adstxt/publisher/${row.publisher_id}`}
+							<a href={`/companies/${page.params.domain}/app-adstxt/publisher/${row.publisher_id}`}
 								>{row.publisher_id}</a
 							>
 						</td>

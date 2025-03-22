@@ -10,7 +10,6 @@
 	import AppPlot from '$lib/AppPlot.svelte';
 	import AvailableOniOs from '$lib/svg/AvailableOniOS.svelte';
 	import RankChart from '$lib/RankChart.svelte';
-	// import AppHistoryTable from '$lib/AppHistoryTable.svelte';
 	import WhiteCard from '$lib/WhiteCard.svelte';
 	interface Props {
 		data: AppFullDetails;
