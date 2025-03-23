@@ -183,28 +183,6 @@
 								<span>{myapp.store_last_updated}</span>
 							</div>
 
-							{#if myapp.developer_id}
-								<div class="flex items-center gap-2">
-									<span class="font-medium">Developer:</span>
-									<a
-										class="anchor inline-flex items-baseline"
-										href={myapp.store_developer_link}
-										target="_blank"
-									>
-										{myapp.developer_name}
-										<ExternalLinkSvg />
-									</a>
-								</div>
-							{:else}
-								<div class="flex items-center gap-2">
-									<span class="font-medium">Developer Name:</span>
-									<span>{myapp.developer_name}</span>
-								</div>
-								<div class="flex items-center gap-2">
-									<span class="font-medium">Developer ID:</span>
-									<span>{myapp.developer_id}</span>
-								</div>
-							{/if}
 							{#if myapp.developer_url}
 								<div class="flex items-center gap-2">
 									<span class="font-medium">Website:</span>
