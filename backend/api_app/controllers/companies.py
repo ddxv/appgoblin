@@ -164,13 +164,13 @@ def prep_companies_overview_df(
         overview_df.groupby(
             ["company_name", "company_domain", "store", "tag_source"],
             dropna=False,
-        )[["app_count", "total_app_count"]]
+        )[["app_count", "cat_total_app_count"]]
         .sum()
         .reset_index()
     )
 
     overview_df["percentage"] = (
-        overview_df["app_count"] / overview_df["total_app_count"]
+        overview_df["app_count"] / overview_df["cat_total_app_count"]
     )
     overview_df["store_tag"] = np.where(
         overview_df["store"].str.contains("Google"),
@@ -360,16 +360,16 @@ def make_companies_stats(
 
     sdk_app_counts = {
         "sdk_total_apps": int(
-            tag_source_category_app_counts[is_sdk]["total_app_count"].sum()
+            tag_source_category_app_counts[is_sdk]["cat_total_app_count"].sum()
         ),
         "sdk_android_total_apps": int(
             tag_source_category_app_counts[is_sdk & is_google][
-                "total_app_count"
+                "cat_total_app_count"
             ].to_numpy()[0]
         ),
         "sdk_ios_total_apps": int(
             tag_source_category_app_counts[is_sdk & is_apple][
-                "total_app_count"
+                "cat_total_app_count"
             ].to_numpy()[0]
         ),
     }

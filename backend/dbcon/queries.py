@@ -406,7 +406,7 @@ def get_companies_parent_category_stats(
                         "app_category",
                         "tag_source",
                     ]
-                )[["app_count"]]
+                )[["app_count", "installs_d30", "rating_count_d30"]]
                 .sum()
                 .reset_index()
             )
@@ -598,11 +598,27 @@ def get_tag_source_category_totals(app_category: str | None = None) -> pd.DataFr
         df["app_category"] = "all"
     df.loc[df["app_category"].isna(), "app_category"] = "None"
     df = (
-        df.groupby(["app_category", "store", "tag_source"])[["app_count"]]
+        df.groupby(["app_category", "store", "tag_source"])[
+            [
+                "app_count",
+                "installs_total",
+                "rating_count_total",
+                "installs_d30",
+                "rating_count_d30",
+            ]
+        ]
         .sum()
         .reset_index()
     )
-    df = df.rename(columns={"app_count": "total_app_count"})
+    df = df.rename(
+        columns={
+            "app_count": "cat_total_app_count",
+            "installs_total": "cat_total_installs",
+            "rating_count_total": "cat_total_rating_count",
+            "installs_d30": "cat_total_installs_d30",
+            "rating_count_d30": "cat_total_rating_count_d30",
+        }
+    )
     df["store"] = df["store"].replace({1: "Google Play", 2: "Apple App Store"})
     return df
 
