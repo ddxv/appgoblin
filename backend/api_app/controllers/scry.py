@@ -20,7 +20,7 @@ from dbcon.queries import (
 logger = get_logger(__name__)
 
 
-def log_umami_event() -> None:
+def log_umami_event(ip: str | None) -> None:
     """Log an umami event.
 
     This function is called when a user requests SDKs.
@@ -39,13 +39,15 @@ def log_umami_event() -> None:
         page_title="User Requested SDKs",
         url="/api/public/sdks/apps",
         referrer="dev.thirdgate.appgoblin",
+        ip_address=ip,
     )
 
 
-def process_sdk_request(store_ids_dict: list[dict]) -> None:
+def process_sdk_request(store_ids_dict: list[dict], ip: str | None) -> None:
     """Process a sdk request."""
     try:
-        log_umami_event()
+        log_umami_event(ip)
+        logger.info("logged umami event")
     except Exception:
         logger.exception("Error logging umami event")
     try:
@@ -70,7 +72,7 @@ class ScryController(Controller):
     path = "/api/public/"
 
     @post(path="sdks/apps")
-    async def lookup_apps(self: Self, data: dict) -> dict:
+    async def lookup_apps(self: Self, headers: dict[str, str], data: dict) -> dict:
         """Lookup apps' SDKs by store_ids."""
         store_ids = data.get("store_ids", [])
 
@@ -133,10 +135,17 @@ class ScryController(Controller):
             "success_store_ids": success_store_ids,
         }
 
+        if headers and "X-Forwarded-For" in headers:
+            ip = headers["X-Forwarded-For"]
+        elif headers and "x-forwarded-for" in headers:
+            ip = headers["x-forwarded-for"]
+        else:
+            ip = None
+
         logger.info(
             f"Scry: store_ids:{len(success_store_ids)} found SDKs:{df.shape[0]}"
         )
         return Response(
             my_dict,
-            background=BackgroundTask(process_sdk_request, store_ids_dict),
+            background=BackgroundTask(process_sdk_request, store_ids_dict, ip),
         )
