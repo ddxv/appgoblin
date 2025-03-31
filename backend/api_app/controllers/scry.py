@@ -12,12 +12,45 @@ from adscrawler.app_stores import scrape_stores
 from litestar import Controller, Response, post
 from litestar.background_tasks import BackgroundTask
 
-from config import get_logger
+from config import CONFIG, get_logger
 from dbcon.queries import (
     get_apps_sdk_overview,
 )
 
 logger = get_logger(__name__)
+
+
+def log_umami_event() -> None:
+    """Log an umami event.
+
+    This function is called when a user requests SDKs.
+    This is only for seeing how often the backend is calleda
+    and not needed if you are recreating for other reasons.
+
+    """
+    import umami
+
+    umami_base_url = CONFIG["umami"].get("base_url")
+    umami_site_id = CONFIG["umami"].get("site_id")
+    umami.set_website_id(umami_site_id)
+    umami.set_hostname(umami_base_url)
+    umami.new_page_view(
+        page_title="User Requested SDKs",
+        url="/api/public/sdks/apps",
+        referrer="dev.thirdgate.appgoblin",
+    )
+
+
+def process_sdk_request(store_ids_dict: list[dict]) -> None:
+    """Process a sdk request."""
+    try:
+        log_umami_event()
+    except Exception:
+        logger.exception("Error logging umami event")
+    try:
+        add_store_ids(store_ids_dict)
+    except Exception:
+        logger.exception("Error adding store ids")
 
 
 def add_store_ids(store_ids_dict: list[dict]) -> None:
@@ -104,5 +137,5 @@ class ScryController(Controller):
         )
         return Response(
             my_dict,
-            background=BackgroundTask(add_store_ids, store_ids_dict),
+            background=BackgroundTask(process_sdk_request, store_ids_dict),
         )
