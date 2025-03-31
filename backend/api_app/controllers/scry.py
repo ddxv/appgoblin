@@ -32,8 +32,9 @@ def log_umami_event() -> None:
 
     umami_base_url = CONFIG["umami"].get("base_url")
     umami_site_id = CONFIG["umami"].get("site_id")
+    umami.set_url_base(umami_base_url)
     umami.set_website_id(umami_site_id)
-    umami.set_hostname(umami_base_url)
+    umami.set_hostname("dev.thirdgate.appgoblin")
     umami.new_page_view(
         page_title="User Requested SDKs",
         url="/api/public/sdks/apps",
