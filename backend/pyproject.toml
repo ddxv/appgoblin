@@ -15,7 +15,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pre-commit", "sshtunnel"]
+dev = ["pre-commit", "sshtunnel", "umami-analytics"]
 
 
 [build-system]
