@@ -4,9 +4,9 @@ SELECT
     store,
     'all' AS app_category,
     tag_source,
-    sum(app_count) AS app_count,
-    sum(installs_d30) AS installs_d30,
-    sum(rating_count_d30) AS rating_count_d30
+    COALESCE(SUM(app_count), 0) AS app_count,
+    COALESCE(SUM(installs_d30), 0) AS installs_d30,
+    COALESCE(SUM(rating_count_d30), 0) AS rating_count_d30
 FROM
     frontend.companies_parent_category_tag_stats
 GROUP BY company_domain, company_name, store, tag_source;

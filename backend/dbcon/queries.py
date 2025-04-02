@@ -48,6 +48,7 @@ QUERY_STORE_COLLECTION_CATEGORY_MAP = load_sql_file(
     "query_store_collection_category_map.sql",
 )
 QUERY_PARENT_COMPANIES = load_sql_file("query_parent_companies.sql")
+QUERY_CHILD_COMPANIES = load_sql_file("query_child_companies.sql")
 QUERY_ADTECH_CATEGORIES = load_sql_file(
     "query_adtech_categories.sql",
 )
@@ -61,8 +62,12 @@ QUERY_COMPANY_TOPAPPS_CATEGORY_PARENT = load_sql_file(
     "query_company_top_apps_category_parent.sql"
 )
 QUERY_COMPANIES_PARENT_TAG_STATS = load_sql_file("query_companies_parent_tag_stats.sql")
+QUERY_COMPANIES_TAG_STATS = load_sql_file("query_companies_tag_stats.sql")
 QUERY_COMPANIES_PARENT_CATEGORY_TAG_STATS = load_sql_file(
     "query_companies_parent_category_tag_stats.sql"
+)
+QUERY_COMPANIES_CATEGORY_TAG_STATS = load_sql_file(
+    "query_companies_category_tag_stats.sql"
 )
 QUERY_COMPANIES_PARENT_TOP = load_sql_file("query_companies_parent_top.sql")
 QUERY_COMPANIES_CATEGORY_TYPE_TOP = load_sql_file(
@@ -190,6 +195,13 @@ def get_store_collection_category_map() -> pd.DataFrame:
 def get_parent_companies() -> list[str]:
     """Get parent companies."""
     df = pd.read_sql(QUERY_PARENT_COMPANIES, con=DBCON.engine)
+    return df["domain"].tolist()
+
+
+@lru_cache(maxsize=1)
+def get_child_companies() -> list[str]:
+    """Get child companies."""
+    df = pd.read_sql(QUERY_CHILD_COMPANIES, con=DBCON.engine)
     return df["domain"].tolist()
 
 
@@ -395,14 +407,27 @@ def get_companies_parent_category_stats(
     app_category: str | None = None,
 ) -> pd.DataFrame:
     """Get overview of companies from multiple types like sdk and app-ads.txt."""
+    parent_company_domains = get_parent_companies()
+    child_company_domains = get_child_companies()
     if app_category:
         if app_category == "games":
             app_category = "game%"
-        df = pd.read_sql(
+        parents_df = pd.read_sql(
             QUERY_COMPANIES_PARENT_CATEGORY_TAG_STATS,
             DBCON.engine,
             params={"app_category": app_category},
         )
+        child_df = pd.read_sql(
+            QUERY_COMPANIES_CATEGORY_TAG_STATS,
+            DBCON.engine,
+            params={"app_category": app_category},
+        )
+        child_df = child_df[
+            ~child_df["company_domain"].isin(
+                parent_company_domains + child_company_domains
+            )
+        ]
+        df = pd.concat([parents_df, child_df], axis=0)
         if app_category == "game%":
             df["app_category"] = "games"
             df = (
@@ -419,7 +444,13 @@ def get_companies_parent_category_stats(
                 .reset_index()
             )
     else:
-        df = pd.read_sql(QUERY_COMPANIES_PARENT_TAG_STATS, DBCON.engine)
+        parents_df = pd.read_sql(QUERY_COMPANIES_PARENT_TAG_STATS, DBCON.engine)
+        child_df = child_df[
+            ~child_df["company_domain"].isin(
+                parent_company_domains + child_company_domains
+            )
+        ]
+        df = pd.concat([parents_df, child_df], axis=0)
     df["store"] = df["store"].replace({1: "Google Play", 2: "Apple App Store"})
     df.loc[df["app_category"].isna(), "app_category"] = "None"
     return df
