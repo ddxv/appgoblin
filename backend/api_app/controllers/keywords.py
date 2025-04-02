@@ -8,7 +8,6 @@ from typing import Self
 
 from litestar import Controller, get
 
-
 from config import get_logger
 from dbcon.queries import (
     get_single_app_keywords,

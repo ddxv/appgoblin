@@ -11,6 +11,4 @@ SELECT
     COALESCE(rating_count_d30, 0) AS rating_count_d30
 FROM
     frontend.companies_category_tag_stats
-WHERE company_domain = :company_domain
-;
-
+WHERE company_domain = :company_domain;

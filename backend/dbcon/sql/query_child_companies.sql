@@ -8,6 +8,7 @@ child_companies AS (
     WHERE
         c.parent_company_id IS NOT NULL
 )
+
 SELECT
     cc.id,
     ad.domain
