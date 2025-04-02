@@ -1,7 +1,7 @@
 repos:
   # Ruff
   - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: v0.9.7
+    rev: v0.11.2
     hooks:
       - id: ruff
         args: [--fix]
@@ -33,7 +33,7 @@ repos:
           - prettier
           - prettier-plugin-svelte
   - repo: https://github.com/pre-commit/mirrors-eslint
-    rev: v9.21.0
+    rev: v9.23.0
     hooks:
       - id: eslint
         name: eslint
