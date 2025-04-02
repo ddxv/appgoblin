@@ -445,6 +445,7 @@ def get_companies_parent_category_stats(
             )
     else:
         parents_df = pd.read_sql(QUERY_COMPANIES_PARENT_TAG_STATS, DBCON.engine)
+        child_df = pd.read_sql(QUERY_COMPANIES_TAG_STATS, DBCON.engine)
         child_df = child_df[
             ~child_df["company_domain"].isin(
                 parent_company_domains + child_company_domains
