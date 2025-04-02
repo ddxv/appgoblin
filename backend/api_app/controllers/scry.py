@@ -15,12 +15,13 @@ from litestar.background_tasks import BackgroundTask
 from config import CONFIG, get_logger
 from dbcon.queries import (
     get_apps_sdk_overview,
+    insert_sdk_scan_request,
 )
 
 logger = get_logger(__name__)
 
 
-def log_umami_event(ip: str | None) -> None:
+def log_umami_event(ip: str | None, url: str) -> None:
     """Log an umami event.
 
     This function is called when a user requests SDKs.
@@ -37,16 +38,32 @@ def log_umami_event(ip: str | None) -> None:
     umami.set_hostname("dev.thirdgate.appgoblin")
     umami.new_page_view(
         page_title="User Requested SDKs",
-        url="/api/public/sdks/apps",
+        url=url,
         referrer="dev.thirdgate.appgoblin",
         ip_address=ip,
     )
 
 
-def process_sdk_request(store_ids_dict: list[dict], ip: str | None) -> None:
-    """Process a sdk request."""
+def process_sdk_scan_request(store_ids: list[str], ip: str | None) -> None:
+    """Process a sdk scan request."""
+    url = "/api/public/sdks/apps/requestSDKScan"
     try:
-        log_umami_event(ip)
+        log_umami_event(ip, url)
+        logger.info("logged umami event")
+    except Exception:
+        logger.exception("Error logging umami event")
+    try:
+        insert_sdk_scan_request(store_ids)
+        logger.info(f"inserted sdk scan request for {len(store_ids)} store_ids")
+    except Exception:
+        logger.exception("Error inserting sdk scan request")
+
+
+def process_get_sdks(store_ids_dict: list[dict], ip: str | None) -> None:
+    """Process a sdk request."""
+    url = "/api/public/sdks/apps"
+    try:
+        log_umami_event(ip, url)
         logger.info("logged umami event")
     except Exception:
         logger.exception("Error logging umami event")
@@ -147,5 +164,24 @@ class ScryController(Controller):
         )
         return Response(
             my_dict,
-            background=BackgroundTask(process_sdk_request, store_ids_dict, ip),
+            background=BackgroundTask(process_get_sdks, store_ids_dict, ip),
+        )
+
+    @post(path="sdks/apps/requestSDKScan")
+    async def lookup_apps_request(
+        self: Self, headers: dict[str, str], data: dict
+    ) -> dict:
+        """Lookup apps' SDKs by store_ids."""
+        store_ids = data.get("store_ids", [])
+
+        if headers and "X-Forwarded-For" in headers:
+            ip = headers["X-Forwarded-For"]
+        elif headers and "x-forwarded-for" in headers:
+            ip = headers["x-forwarded-for"]
+        else:
+            ip = None
+
+        logger.info(f"Scry: store_ids:{len(store_ids)} request SDK Scan")
+        return Response(
+            background=BackgroundTask(process_sdk_scan_request, store_ids, ip),
         )
