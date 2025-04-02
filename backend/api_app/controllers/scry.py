@@ -183,5 +183,6 @@ class ScryController(Controller):
 
         logger.info(f"Scry: store_ids:{len(store_ids)} request SDK Scan")
         return Response(
+            {"status": "ok"},
             background=BackgroundTask(process_sdk_scan_request, store_ids, ip),
         )

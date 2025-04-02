@@ -924,7 +924,7 @@ def get_sitemap_apps() -> pd.DataFrame:
     return df
 
 
-def insert_sdk_scan_request(store_id: str) -> None:
+def insert_sdk_scan_request(store_id: str | list[str]) -> None:
     """Insert a new sdk scan request."""
     logger.info(f"Inserting new sdk scan request: {store_id}")
 
