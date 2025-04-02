@@ -461,7 +461,24 @@
 						{/if}
 					{/each}
 				</section>
+				<section class="">
+					<h4 class="h4 md:h3 p-2">App Description</h4>
+					<div>
+						<p class="text-strong">{myapp.description_short}</p>
+					</div>
+					<div>
+						<p>{myapp.description}</p>
+					</div>
+				</section>
 			{/await}
+			<div>
+				<h4 class="h4 md:h3 p-2">App Keywords</h4>
+				{#await data.myKeywords}
+					Loading keywords...
+				{:then keywords}
+					<p>{keywords.keywords}</p>
+				{/await}
+			</div>
 		</div>
 		<div class="card preset-tonal p-2 md:p-8 mt-2 md:mt-4">
 			<AppSDKOverview myPackageInfo={data.myPackageInfo} companyTypes={data.companyTypes} />

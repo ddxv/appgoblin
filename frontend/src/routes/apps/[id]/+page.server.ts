@@ -71,6 +71,15 @@ export const load: PageServerLoad = async ({ params, parent, url }) => {
 		};
 	}
 
+	// Conditionally create myKeywords based on description length
+	let myKeywords = async () => 'No Keywords Result';
+	if (myapp.description.length > 100) {
+		myKeywords = async () => {
+			const resp = await fetch(`http://localhost:8000/api/keywords/app/${id}`);
+			return checkStatus(resp, 'App Keywords');
+		};
+	}
+
 	let myAdsTxtOverview = async () => 'No AdsTxt Overview Result';
 	myAdsTxtOverview = async () => {
 		const resp = await fetch(`http://localhost:8000/api/apps/${id}/adstxt/overview`);
@@ -83,6 +92,7 @@ export const load: PageServerLoad = async ({ params, parent, url }) => {
 		myhistory: myhistory(),
 		myPackageInfo: myPackageInfo(),
 		myAdsTxtOverview: myAdsTxtOverview(),
+		myKeywords: myKeywords(),
 		appCats: appCats,
 		companyTypes: companyTypes
 	};

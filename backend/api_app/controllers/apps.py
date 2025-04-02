@@ -333,6 +333,7 @@ class AppController(Controller):
         """
         start = time.perf_counter() * 1000
         app_df = get_single_app(store_id)
+
         if app_df.empty:
             msg = f"Store ID not found: {store_id!r}"
             raise NotFoundException(

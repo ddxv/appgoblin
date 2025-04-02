@@ -21,6 +21,8 @@ SELECT
     tablet_image_url_1,
     tablet_image_url_2,
     tablet_image_url_3,
+    description,
+    description_short,
     developer_id,
     developer_name,
     developer_url,

@@ -103,6 +103,7 @@ QUERY_COMPANY_ADSTXT_PUBLISHER_ID_APPS_OVERVIEW = load_sql_file(
     "query_company_adstxt_publisher_id_apps_overview.sql"
 )
 QUERY_COMPANY_OPEN_SOURCE = load_sql_file("query_company_open_source.sql")
+QUERY_SINGLE_APP_KEYWORDS = load_sql_file("query_single_app_keywords.sql")
 
 # Used for generating sitemaps
 QUERY_SITEMAP_APPS = load_sql_file("query_sitemap_apps.sql")
@@ -899,6 +900,14 @@ def get_sdk_pattern(value_pattern: str) -> pd.DataFrame:
 def get_company_open_source() -> pd.DataFrame:
     """Get company is open source."""
     df = pd.read_sql(QUERY_COMPANY_OPEN_SOURCE, DBCON.engine)
+    return df
+
+
+def get_single_app_keywords(store_id: str) -> pd.DataFrame:
+    """Get single app keywords."""
+    df = pd.read_sql(
+        QUERY_SINGLE_APP_KEYWORDS, DBCON.engine, params={"store_id": store_id}
+    )
     return df
 
 

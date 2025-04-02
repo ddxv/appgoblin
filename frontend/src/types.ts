@@ -426,6 +426,9 @@ export interface AppFullDetails {
 		direct_entries: AdsTxtEntries[];
 		reseller_entries: AdsTxtEntries[];
 	}>;
+	myKeywords: Promise<{
+		keywords: string[];
+	}>;
 }
 
 export interface Company {
@@ -489,6 +492,8 @@ export interface AppFullDetail {
 	tablet_image_url_1?: string;
 	tablet_image_url_2?: string;
 	tablet_image_url_3?: string;
+	description?: string;
+	description_short?: string;
 	adstxt_last_crawled: string;
 	adstxt_crawl_result: number;
 	version_code: string;
