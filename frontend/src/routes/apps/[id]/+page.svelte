@@ -11,6 +11,7 @@
 	import AvailableOniOs from '$lib/svg/AvailableOniOS.svelte';
 	import RankChart from '$lib/RankChart.svelte';
 	import WhiteCard from '$lib/WhiteCard.svelte';
+	import AppKeywordsTable from '$lib/AppKeywordsTable.svelte';
 	interface Props {
 		data: AppFullDetails;
 	}
@@ -390,11 +391,6 @@
 		{#await data.myhistory}
 			Loading historical data...
 		{:then histdata}
-			{#if histdata.history_table}
-				{#await data.myapp then myapp}
-					<!-- <AppHistoryTable os={myapp.store_link} history_table={histdata.history_table} /> -->
-				{/await}
-			{/if}
 			{#if histdata.plot_data && histdata.plot_data.installs && histdata.plot_data.installs.length > 1}
 				<div class="card preset-tonal p-2 md:p-8 mt-2 md:mt-4">
 					<h3 class="h4 md:h3 p-2">Average Daily Installs</h3>
@@ -467,7 +463,7 @@
 						<p class="text-strong">{myapp.description_short}</p>
 					</div>
 					<div>
-						<p>{myapp.description}</p>
+						<p>{@html myapp.description?.replace(/\r?\n/g, '<br>')}</p>
 					</div>
 				</section>
 			{/await}
@@ -476,7 +472,12 @@
 				{#await data.myKeywords}
 					Loading keywords...
 				{:then keywords}
-					<p>{keywords.keywords}</p>
+					{#if keywords && keywords.keyword_scores && keywords.keyword_scores.length > 0}
+						<!-- <p>{keywords.keywords}</p> -->
+						<AppKeywordsTable entries_table={keywords.keyword_scores} />
+					{:else}
+						<p>No keywords found for this app.</p>
+					{/if}
 				{/await}
 			</div>
 		</div>

@@ -23,7 +23,7 @@ class AppHistory:
     """
 
     histogram: dict
-    history_table: dict
+    # history_table: dict
     plot_data: dict
 
 

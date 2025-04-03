@@ -396,6 +396,15 @@ export interface CompanyCategoryDetails {
 	companyTree: ParentCompanyTree;
 }
 
+export interface KeywordScore extends Row {
+	keyword_id: number;
+	keyword_text: string;
+	app_count: number;
+	total_apps: number;
+	competitiveness_score: number;
+	d30_best_rank: number;
+}
+
 export interface AppFullDetails {
 	myapp: AppFullDetail;
 	companyTypes: CompanyTypes;
@@ -406,7 +415,7 @@ export interface AppFullDetails {
 	myranksOverview: Promise<{ countries: string[]; best_ranks: AppRankDetail[] }>;
 	myhistory: Promise<{
 		histogram: number[];
-		history_table: AppHistoryInfo[];
+		// history_table: AppHistoryInfo[];
 		plot_data?: {
 			changes: ChartTabularData;
 			installs: ChartTabularData;
@@ -428,6 +437,7 @@ export interface AppFullDetails {
 	}>;
 	myKeywords: Promise<{
 		keywords: string[];
+		keyword_scores: KeywordScore[];
 	}>;
 }
 

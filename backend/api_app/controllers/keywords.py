@@ -32,8 +32,9 @@ class KeywordsController(Controller):
         """
         start = time.perf_counter() * 1000
         keywords_df = get_single_app_keywords(store_id)
+        keyword_scores = keywords_df.to_dict(orient="records")
         keywords_list = keywords_df["keyword_text"].tolist()
-        keywords_dict = {"keywords": keywords_list}
+        keywords_dict = {"keywords": keywords_list, "keyword_scores": keyword_scores}
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(f"{self.path}/app/{store_id} took {duration}ms")
         return keywords_dict

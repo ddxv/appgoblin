@@ -10,7 +10,7 @@
 	}
 
 	let { tableData }: Props = $props();
-	const totalRows = tableData.ranks.length; // Calculate totalRows based on the length of the history_table array
+	const totalRows = tableData.ranks.length;
 	const rowsPerPage = 10;
 
 	const handler = new DataHandler<RankedApps>([], {
