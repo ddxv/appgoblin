@@ -937,8 +937,13 @@ def insert_sdk_scan_request(store_id: str | list[str]) -> None:
     """Insert a new sdk scan request."""
     logger.info(f"Inserting new sdk scan request: {store_id}")
 
+    if isinstance(store_id, str):
+        store_ids = [{"store_id": store_id}]
+    else:
+        store_ids = [{"store_id": s} for s in store_id]
+
     with DBCONWRITE.engine.connect() as connection:
-        connection.execute(INSERT_SDK_SCAN_REQUEST, {"store_id": store_id})
+        connection.execute(INSERT_SDK_SCAN_REQUEST, {"store_ids": store_ids})
         connection.commit()
 
 
