@@ -30,10 +30,18 @@
 <div>
 	<Tabs value={group} onValueChange={(e) => (group = e.value)}>
 		{#snippet list()}
-			<Tabs.Control value="user_requested">User Requests</Tabs.Control>
-			<Tabs.Control value="latest_success">Latest Success</Tabs.Control>
-			<Tabs.Control value="latest_failed">Latest Failed</Tabs.Control>
-			<Tabs.Control value="sdkparts">Raw SDKs Parts</Tabs.Control>
+			<Tabs.Control value="user_requested" labelClasses="p-0 md:p-8"
+				><p class="text-xs md:text-base">User Requests</p></Tabs.Control
+			>
+			<Tabs.Control value="latest_success" labelClasses="p-0 md:p-8"
+				><p class="text-xs md:text-base">Latest Success</p></Tabs.Control
+			>
+			<Tabs.Control value="latest_failed" labelClasses="p-0 md:p-8"
+				><p class="text-xs md:text-base">Latest Failed</p></Tabs.Control
+			>
+			<Tabs.Control value="sdkparts" labelClasses="p-0 md:p-8"
+				><p class="text-xs md:text-base">Raw SDKs Parts</p></Tabs.Control
+			>
 		{/snippet}
 
 		{#snippet content()}
