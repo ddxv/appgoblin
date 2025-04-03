@@ -943,7 +943,7 @@ def insert_sdk_scan_request(store_id: str | list[str]) -> None:
         store_ids = [{"store_id": s} for s in store_id]
 
     with DBCONWRITE.engine.connect() as connection:
-        connection.execute(INSERT_SDK_SCAN_REQUEST, {"store_ids": store_ids})
+        connection.execute(INSERT_SDK_SCAN_REQUEST, store_ids)
         connection.commit()
 
 
