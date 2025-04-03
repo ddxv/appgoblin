@@ -307,6 +307,7 @@ def get_most_recent_top_ranks(
             "mylimit": limit,
         },
     )
+    df = df.sort_values("rank", ascending=True)
     return df
 
 
