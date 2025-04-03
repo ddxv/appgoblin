@@ -12,4 +12,4 @@ LEFT JOIN
         cavd.version_string_id = vs.id
 WHERE
     cavd.store_id = :store_id
-ORDER BY cavd.xml_path, cavd.value_name;
+ORDER BY vs.xml_path, vs.value_name;
