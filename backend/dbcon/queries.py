@@ -104,7 +104,8 @@ QUERY_COMPANY_ADSTXT_PUBLISHER_ID_APPS_OVERVIEW = load_sql_file(
 )
 QUERY_COMPANY_OPEN_SOURCE = load_sql_file("query_company_open_source.sql")
 QUERY_SINGLE_APP_KEYWORDS = load_sql_file("query_single_app_keywords.sql")
-
+QUERY_KEYWORD_DETAILS = load_sql_file("query_keyword_details.sql")
+QUERY_KEYWORD_APPS = load_sql_file("query_keyword_apps.sql")
 # Used for generating sitemaps
 QUERY_SITEMAP_APPS = load_sql_file("query_sitemap_apps.sql")
 QUERY_SITEMAP_COMPANIES = load_sql_file("query_sitemap_companies.sql")
@@ -900,6 +901,26 @@ def get_sdk_pattern(value_pattern: str) -> pd.DataFrame:
 def get_company_open_source() -> pd.DataFrame:
     """Get company is open source."""
     df = pd.read_sql(QUERY_COMPANY_OPEN_SOURCE, DBCON.engine)
+    return df
+
+
+def get_keyword_details(keyword: str, limit: int = 30) -> pd.DataFrame:
+    """Get keyword details."""
+    df = pd.read_sql(
+        QUERY_KEYWORD_DETAILS,
+        DBCON.engine,
+        params={"keyword": keyword, "limit": limit},
+    )
+    return df
+
+
+def get_keyword_apps(keyword: str, rank: int = 30) -> pd.DataFrame:
+    """Get keyword apps."""
+    df = pd.read_sql(
+        QUERY_KEYWORD_APPS,
+        DBCON.engine,
+        params={"keyword": keyword, "rank": rank},
+    )
     return df
 
 

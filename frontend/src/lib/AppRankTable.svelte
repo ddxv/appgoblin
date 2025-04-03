@@ -4,6 +4,7 @@
 	// import ThFilter from './ThFilter.svelte';
 	import { DataHandler } from '@vincjo/datatables/legacy/remote';
 	import type { State } from '@vincjo/datatables/legacy/remote';
+	import StoreIcon from '$lib/StoreIcon.svelte';
 
 	interface Props {
 		tableData: RankedAppList;
@@ -57,6 +58,7 @@
 					<td>
 						<a href="/apps/{row.store_id}">
 							<div class="inline-flex">
+								<StoreIcon store={row.store} />
 								<img
 									src={row.icon_url_512}
 									alt={row.name}

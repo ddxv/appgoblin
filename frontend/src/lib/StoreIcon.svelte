@@ -2,11 +2,23 @@
 	import IconiOs from './svg/IconiOS.svelte';
 	import IconGoogle from './svg/IconGoogle.svelte';
 
-	let { store }: { store: string } = $props();
+	let { store }: { store: string | number } = $props();
+	function getIcon(store: string | number) {
+		if (typeof store === 'string' && store.toString().startsWith('Google')) {
+			return IconGoogle;
+		} else if (typeof store === 'string' && store.toString().startsWith('Apple')) {
+			return IconiOs;
+		} else if (typeof store === 'number' && store === 1) {
+			return IconGoogle;
+		} else if (typeof store === 'number' && store === 2) {
+			return IconiOs;
+		}
+	}
+	let icon = $derived(getIcon(store));
 </script>
 
 <div>
-	{#if store.startsWith('Google')}
+	{#if icon === IconGoogle}
 		<IconGoogle size="16" />
 	{:else}
 		<IconiOs size="16" />

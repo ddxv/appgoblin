@@ -1,6 +1,5 @@
 import type { PageServerLoad } from './$types.js';
 
-
 function checkStatus(resp: Response, name: string) {
 	if (resp.status === 200) {
 		return resp.json();
@@ -15,16 +14,21 @@ function checkStatus(resp: Response, name: string) {
 	}
 }
 
-export const load: PageServerLoad = async ({ params}) => {
+export const load: PageServerLoad = async ({ params }) => {
 	const keyword = params.keyword;
-	
 
 	const keywordDetails = async () => {
 		const resp = await fetch(`http://localhost:8000/api/keywords/${keyword}`);
 		return checkStatus(resp, 'Keyword Details');
 	};
 
+	const keywordApps = async () => {
+		const resp = await fetch(`http://localhost:8000/api/keywords/${keyword}/30`);
+		return checkStatus(resp, 'Keyword Apps');
+	};
+
 	return {
-		keywordDetails: keywordDetails()
+		keywordDetails: keywordDetails(),
+		keywordApps: keywordApps()
 	};
 };

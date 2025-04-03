@@ -46,7 +46,7 @@
 				{#each $rows as row, index}
 					<tr class="px-0">
 						<td class="table-cell-fit">
-							<a href="/keywords/{row.keyword_text}"> {row.keyword_text}</a>
+							<a href="/keywords/en/{row.keyword_text}"> {row.keyword_text}</a>
 						</td>
 						<!-- <td class="table-cell-fit">
 							{row.app_count}
