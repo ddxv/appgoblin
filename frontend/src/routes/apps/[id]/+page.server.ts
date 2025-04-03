@@ -75,7 +75,7 @@ export const load: PageServerLoad = async ({ params, parent, url }) => {
 	let myKeywords = async () => 'No Keywords Result';
 	if (myapp.description && myapp.description.length > 100) {
 		myKeywords = async () => {
-			const resp = await fetch(`http://localhost:8000/api/keywords/app/${id}`);
+			const resp = await fetch(`http://localhost:8000/api/apps/${id}/keywords`);
 			return checkStatus(resp, 'App Keywords');
 		};
 	}

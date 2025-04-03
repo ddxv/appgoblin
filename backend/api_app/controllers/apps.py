@@ -39,6 +39,7 @@ from dbcon.queries import (
     get_ranks_for_app_overview,
     get_recent_apps,
     get_single_app,
+    get_single_app_keywords,
     get_single_apps_adstxt,
     get_total_counts,
     insert_sdk_scan_request,
@@ -658,6 +659,24 @@ class AppController(Controller):
         logger.info(f"Requesting SDK scan for {store_id}")
         insert_sdk_scan_request(store_id)
         return
+
+    @get(path="/{store_id:str}/keywords", cache=86400)
+    async def get_app_keywords(self: Self, store_id: str) -> dict:
+        """Handle GET request for a list of apps.
+
+        Returns
+        -------
+            A dictionary representation of the total counts
+
+        """
+        start = time.perf_counter() * 1000
+        keywords_df = get_single_app_keywords(store_id)
+        keyword_scores = keywords_df.to_dict(orient="records")
+        keywords_list = keywords_df["keyword_text"].tolist()
+        keywords_dict = {"keywords": keywords_list, "keyword_scores": keyword_scores}
+        duration = round((time.perf_counter() * 1000 - start), 2)
+        logger.info(f"{self.path}/app/{store_id} took {duration}ms")
+        return keywords_dict
 
 
 COLLECTIONS = {

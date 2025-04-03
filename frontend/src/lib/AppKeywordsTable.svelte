@@ -36,30 +36,30 @@
 			<thead>
 				<tr>
 					<th class="table-cell-fit">Keyword</th>
-					<th class="table-cell-fit">App Count</th>
-					<th class="table-cell-fit">Total Apps</th>
+					<!-- <th class="table-cell-fit">App Count</th> -->
+					<!-- <th class="table-cell-fit">Total Apps</th> -->
 					<th class="table-cell-fit">Competitiveness Score</th>
-					<th class="table-cell-fit">30 Day Best Rank</th>
+					<!-- <th class="table-cell-fit">30 Day Best Rank</th> -->
 				</tr>
 			</thead>
 			<tbody>
 				{#each $rows as row, index}
 					<tr class="px-0">
 						<td class="table-cell-fit">
-							{row.keyword_text}
+							<a href="/keywords/{row.keyword_text}"> {row.keyword_text}</a>
 						</td>
-						<td class="table-cell-fit">
+						<!-- <td class="table-cell-fit">
 							{row.app_count}
 						</td>
 						<td class="table-cell-fit">
 							{row.total_apps}
-						</td>
+						</td> -->
 						<td class="table-cell-fit">
 							{row.competitiveness_score}
 						</td>
-						<td class="table-cell-fit">
+						<!-- <td class="table-cell-fit">
 							{row.d30_best_rank}
-						</td>
+						</td> -->
 					</tr>
 				{/each}
 			</tbody>
