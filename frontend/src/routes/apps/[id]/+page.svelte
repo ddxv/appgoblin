@@ -125,7 +125,7 @@
 			{:then myapp}
 				<AppTitle {myapp} />
 
-				<div class="grid grid-cols-2">
+				<div class="grid grid-cols-1 md:grid-cols-2">
 					<div>
 						{#if myapp.developer_id}
 							<div class="block md:hidden"></div>
@@ -147,12 +147,12 @@
 							</a>
 						</div>
 					</div>
-					<div class="ml-auto">
+					<div class="">
 						<a href={myapp.store_link} target="_blank" class="anchor inline-flex items-baseline">
 							{#if myapp.store_link.includes('google')}
 								<img class="w-40 md:w-60" src="/gp_en_badge_web_generic.png" alt={myapp.name} />
 							{:else}
-								<AvailableOniOs />
+								<AvailableOniOs size={150} />
 							{/if}
 						</a>
 					</div>

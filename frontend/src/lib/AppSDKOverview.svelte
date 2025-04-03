@@ -17,10 +17,10 @@
 		<p>Permissions, SDKs and trackers info not yet available for this app.</p>
 		<RequestSDKScanButton />
 	{:else if packageInfo.sdk_categories && Object.keys(packageInfo.sdk_categories).length > 0}
-		<div class="p-2 md:py-2">
+		<div class="p-4 py-4">
 			<a href="/apps/{page.params.id}/sdks">
 				<div class="btn preset-tonal hover:preset-tonal-primary">
-					<span> Full list of individual SDK parts detected.</span>
+					<span>Raw list of SDK parts detected.</span>
 				</div>
 			</a>
 		</div>

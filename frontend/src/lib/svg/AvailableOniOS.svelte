@@ -1,8 +1,16 @@
+<script lang="ts">
+	interface Props {
+		size: number;
+	}
+
+	let { size = 150 }: Props = $props();
+</script>
+
 <svg
-	id="livetype"
 	xmlns="http://www.w3.org/2000/svg"
-	width="240.66407"
-	height="80"
+	class="w-max flex justify-center items-center"
+	width={size}
+	height="100%"
 	viewBox="0 0 119.66407 40"
 >
 	<title>Download_on_the_App_Store_Badge_US-UK_RGB_blk_4SVG_092917</title>
