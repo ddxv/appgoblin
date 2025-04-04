@@ -14,12 +14,6 @@
 </script>
 
 <Tabs.Panel value="apps">
-	<h2 class="text-2xl font-bold text-primary-900-100">User Requested App Scans</h2>
-	<p class="text-sm md:text-base p-2 md:p-4">
-		While scans can happen quickly (~1hr), the results will not aggregate to the dashboard for
-		~24hrs. If you see that you
-	</p>
-
 	<div>
 		{#await data.devs}
 			<div>

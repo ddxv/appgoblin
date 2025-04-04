@@ -27,8 +27,10 @@
 <svelte:head>
 	<!-- Title -->
 	<title>
-		App Ranks {storeIDLookup[store].store_name}, Collection: {collectionIDLookup[store][collection]
-			.collection_name}, Category: {categoryIDLookup[collection][category].category_name}
+		App Ranks {storeIDLookup[store].store_name}
+		{collectionIDLookup[store][collection].collection_name} for {categoryIDLookup[collection][
+			category
+		].category_name} in {country}
 	</title>
 	<!-- Standard meta tags -->
 	<meta
@@ -68,15 +70,18 @@
 	<!-- Additional meta tags -->
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	<meta name="robots" content="index, follow" />
-	<link rel="canonical" href="https://appgoblin.info/rankings/store/1/collection/1/category/1/US" />
+	<link rel="canonical" href={page.url.href} />
 </svelte:head>
 
 <div class="card p-2 md:p-8">
-	<h3 class="h3 md:h3 p-4">
-		Store: {storeIDLookup[store].store_name}, Collection: {collectionIDLookup[store][collection]
-			.collection_name}, Category: {categoryIDLookup[collection][category].category_name} Country:
+	<h1 class="h4 md:h3 p-4">
+		<p>
+			{storeIDLookup[store].store_name}
+			{collectionIDLookup[store][collection].collection_name} Apps
+		</p>
+		Category: {categoryIDLookup[collection][category].category_name} Country:
 		{country}
-	</h3>
+	</h1>
 	<div class="max-w-sm">
 		<select
 			class="select"

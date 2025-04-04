@@ -11,19 +11,19 @@
 <svelte:head>
 	<link rel="canonical" href={page.url.href} />
 	{#await data.devs then dev}
-		<title>{dev.title} Android Trends | {page.params.developer} | AppGoblin Developer Data</title>
+		<title>{dev.title} | {page.params.developer} | Apps, SDKs and Market Data</title>
 		<meta
 			name="description"
-			content="Explore {dev.title} Android & iOS app's analytics and market trends with AppGoblin. Detailed app rankings and download statistics to inform your Android & iOS app strategy and discover top-performing apps."
+			content="Explore {dev.title}'s Android & iOS apps, their SDKs, trackers and analytics with AppGoblin. Gather ASO information on the top mobile developers."
 		/>
 		<meta
 			name="keywords"
 			content="{dev.title}, {page.params
-				.developer}, analytics, ads, market data, Android app rankings, app reviews, download statistics, Google Play data, app comparison, mobile app insights, Android"
+				.developer}, developer, app publisher, analytics, ads, market data, Android app rankings, app reviews, download statistics, Google Play data, app comparison, mobile app insights, Android"
 		/>
 		<meta
 			property="og:title"
-			content="{dev.title} Android App Stats & Info - AppGoblin | {page.params.developer}"
+			content="{dev.title} Developer Stats & App Info - AppGoblin | {page.params.developer}"
 		/>
 		<meta
 			property="og:description"
@@ -51,7 +51,9 @@
 </svelte:head>
 
 <div>
-	<h1 class="h1 p-2">Developer: {page.params.developer}</h1>
+	<h1 class="h2 p-2">
+		Developer: <p class="text-primary-900-100">{page.params.developer}</p>
+	</h1>
 	<Tabs value={tabGroup} onValueChange={(e) => (tabGroup = e.value)}>
 		{#snippet list()}
 			<Tabs.Control value="apps"
