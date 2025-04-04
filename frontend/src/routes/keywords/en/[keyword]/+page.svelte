@@ -7,6 +7,10 @@
 
 <div class="card preset-tonal p-2 md:p-8 mt-2 md:mt-4">
 	<h1 class="text-2xl font-bold">Keyword Details for {page.params.keyword}</h1>
+	<p>
+		Keywords are being added April 2025. As such it may take a couple weeks to crawl all 1 million
+		keywords for their rankings to populate this page. ETA for this should be end of April.
+	</p>
 </div>
 
 <div class="card preset-tonal p-2 md:p-8 mt-2 md:mt-4">
