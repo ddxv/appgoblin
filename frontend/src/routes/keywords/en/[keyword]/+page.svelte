@@ -25,13 +25,21 @@
 				{#snippet title()}
 					Android
 				{/snippet}
-				<AppRankTable tableData={keywordApps.apple} />
+				{#if keywordApps.google && keywordApps.google.ranks.length > 0}
+					<AppRankTable tableData={keywordApps.google} />
+				{:else}
+					<p>No apps found</p>
+				{/if}
 			</WhiteCard>
 			<WhiteCard>
 				{#snippet title()}
 					iOS
 				{/snippet}
-				<AppRankTable tableData={keywordApps.google} />
+				{#if keywordApps.apple && keywordApps.apple.ranks.length > 0}
+					<AppRankTable tableData={keywordApps.apple} />
+				{:else}
+					<p>No apps found</p>
+				{/if}
 			</WhiteCard>
 		</div>
 	{/await}

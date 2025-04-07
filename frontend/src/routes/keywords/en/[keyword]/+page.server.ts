@@ -23,7 +23,7 @@ export const load: PageServerLoad = async ({ params }) => {
 	};
 
 	const keywordApps = async () => {
-		const resp = await fetch(`http://localhost:8000/api/keywords/${keyword}/30`);
+		const resp = await fetch(`http://localhost:8000/api/keywords/${keyword}/ranks`);
 		return checkStatus(resp, 'Keyword Apps');
 	};
 

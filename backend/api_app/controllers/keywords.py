@@ -30,7 +30,7 @@ class KeywordsController(Controller):
         df = get_keyword_details(keyword)
         return df.to_dict(orient="records")
 
-    @get(path="/{keyword:str}/{rank:int}", cache=86400)
+    @get(path="/{keyword:str}/ranks", cache=86400)
     async def get_keyword_apps(self: Self, keyword: str) -> dict:
         """Handle GET request for a list of apps.
 

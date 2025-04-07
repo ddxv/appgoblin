@@ -11,10 +11,10 @@
 </script>
 
 <!-- Desktop buttons -->
-<section class="btn-group preset-tonal-surface [&>*+*]:border-surface-500 h-10 hidden lg:block">
+<section class="btn-group preset-tonal [&>*+*]:border-surface-500 h-10 hidden lg:block">
 	<button
 		type="button"
-		class="hover:preset-tonal-primary"
+		class="btn hover:preset-tonal-primary"
 		class:disabled={$pageNumber === 1}
 		onclick={() => handler.setPage('previous')}
 	>
@@ -23,7 +23,7 @@
 	{#each $pages as page}
 		<button
 			type="button"
-			class="hover:preset-tonal-primary"
+			class="btn hover:preset-tonal-primary"
 			class:active={$pageNumber === page}
 			class:ellipse={page === null}
 			onclick={() => handler.setPage(page)}
@@ -33,7 +33,7 @@
 	{/each}
 	<button
 		type="button"
-		class="hover:preset-tonal-primary"
+		class="btn hover:preset-tonal-primary"
 		class:disabled={$pageNumber === $pageCount}
 		onclick={() => handler.setPage('next')}
 	>

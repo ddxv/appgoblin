@@ -1,9 +1,8 @@
 <script lang="ts">
 	import type { RankedAppList, RankedApps } from '../types';
-	import Pagination from './Pagination.svelte';
+	import Pagination from './clientside/Pagination.svelte';
 	// import ThFilter from './ThFilter.svelte';
-	import { DataHandler } from '@vincjo/datatables/legacy/remote';
-	import type { State } from '@vincjo/datatables/legacy/remote';
+	import { DataHandler } from '@vincjo/datatables/legacy';
 	import StoreIcon from '$lib/StoreIcon.svelte';
 
 	interface Props {
@@ -14,22 +13,11 @@
 	const totalRows = tableData.ranks.length;
 	const rowsPerPage = 10;
 
-	const handler = new DataHandler<RankedApps>([], {
-		rowsPerPage: rowsPerPage,
-		totalRows: totalRows
+	const handler = new DataHandler<RankedApps>(tableData.ranks, {
+		rowsPerPage: rowsPerPage
 	});
 	const rows = handler.getRows();
-
-	handler.onChange((state: State) =>
-		Promise.resolve(
-			tableData.ranks.slice(
-				0 + (state.pageNumber - 1) * state.rowsPerPage,
-				state.rowsPerPage * state.pageNumber
-			)
-		)
-	);
-
-	handler.invalidate();
+	console.log('CHECK', totalRows);
 </script>
 
 <div class="table-container">
