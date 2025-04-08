@@ -41,7 +41,7 @@ from dbcon.queries import (
     get_company_adstxt_publisher_id_apps_overview,
     get_company_adstxt_publisher_id_apps_raw,
     get_company_adstxt_publishers_overview,
-    get_company_category_stats,
+    get_company_categories_topn,
     get_company_open_source,
     get_company_overview,
     get_company_sdks,
@@ -739,31 +739,7 @@ class CompaniesController(Controller):
         """
         start = time.perf_counter() * 1000
 
-        df = get_company_category_stats(company_domain=company_domain)
-
-        num_categories = 9
-
-        top_cats = (
-            df.sort_values(by="app_count", ascending=False)
-            .head(num_categories)
-            .app_category.tolist()
-        )
-
-        df.loc[~df["app_category"].isin(top_cats), "app_category"] = "others"
-
-        df = df.groupby(["app_category"])["app_count"].sum().reset_index()
-
-        df["name"] = df["app_category"]
-
-        df["name"] = (
-            df["name"]
-            .str.replace("game_", "Games: ")
-            .str.replace("_and_", " & ")
-            .str.replace("_", " ")
-            .str.title()
-        )
-
-        df = df.rename(columns={"name": "group", "app_count": "value"})
+        df = get_company_categories_topn(company_domain=company_domain)
 
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(

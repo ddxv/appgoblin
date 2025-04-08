@@ -598,7 +598,9 @@ def get_company_sdks(company_domain: str) -> pd.DataFrame:
     return df
 
 
-def get_company_category_stats(company_domain: str) -> pd.DataFrame:
+def get_company_categories_topn(
+    company_domain: str, num_categories: int = 9
+) -> pd.DataFrame:
     """Get a company parent categories."""
     logger.info(f"query company parent categories: {company_domain=}")
     parent_companies = get_parent_companies()
@@ -614,6 +616,44 @@ def get_company_category_stats(company_domain: str) -> pd.DataFrame:
         params={"company_domain": company_domain},
     )
     df.loc[df["app_category"].isna(), "app_category"] = "None"
+
+    top_cats = (
+        df.sort_values(by="app_count", ascending=False)
+        .head(num_categories)
+        .app_category.tolist()
+    )
+    game_cat_count = sum(["game" in x for x in top_cats])
+    is_mostly_games = game_cat_count > num_categories / 2
+    is_mostly_non_games = game_cat_count <= 1
+
+    if is_mostly_games:
+        df.loc[~df["app_category"].str.contains("game"), "app_category"] = "apps"
+        top_cats = (
+            df.sort_values(by="app_count", ascending=False)
+            .head(num_categories)
+            .app_category.tolist()
+        )
+    if is_mostly_non_games:
+        df.loc[df["app_category"].str.contains("game"), "app_category"] = "games"
+        top_cats = (
+            df.sort_values(by="app_count", ascending=False)
+            .head(num_categories)
+            .app_category.tolist()
+        )
+
+    df.loc[~df["app_category"].isin(top_cats), "app_category"] = "others"
+    df = df.groupby(["app_category"])["app_count"].sum().reset_index()
+    df["name"] = df["app_category"]
+    df["name"] = (
+        df["name"]
+        .str.replace("game_", "Games: ")
+        .str.replace("_and_", " & ")
+        .str.replace("_", " ")
+        .str.title()
+    )
+
+    df = df.rename(columns={"name": "group", "app_count": "value"})
+
     return df
 
 
