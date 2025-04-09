@@ -206,7 +206,7 @@
 		<footer class="flex justify-between">
 			<div class="flex items-center justify-end space-x-2 py-4">
 				<Pagination tableModel={table} />
-				<ExportAsCSV {table} filename="appgoblin_data" />
+				<ExportAsCSV {table} filename="appgoblin_companies" />
 			</div>
 		</footer>
 	</div>
