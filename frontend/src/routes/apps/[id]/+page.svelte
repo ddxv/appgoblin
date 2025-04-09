@@ -474,7 +474,7 @@
 				{:then keywords}
 					{#if keywords && keywords.keyword_scores && keywords.keyword_scores.length > 0}
 						<!-- <p>{keywords.keywords}</p> -->
-						<AppKeywordsTable entries_table={keywords.keyword_scores} />
+						<AppKeywordsTable data={keywords.keyword_scores} />
 					{:else}
 						<p>No keywords found for this app.</p>
 					{/if}
