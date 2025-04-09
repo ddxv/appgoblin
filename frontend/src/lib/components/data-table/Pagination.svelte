@@ -60,6 +60,7 @@
 				<option value="10">10 Rows</option>
 				<option value="25">25 Rows</option>
 				<option value="50">50 Rows</option>
+				<option value="100">100 Rows</option>
 			</select>
 		</div>
 	</div>

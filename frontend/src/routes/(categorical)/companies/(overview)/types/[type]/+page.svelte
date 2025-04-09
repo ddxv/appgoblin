@@ -24,7 +24,7 @@
 		<CompaniesTableGrid>
 			{#snippet mainTable()}
 				{#if tableData && tableData.companies_overview.length > 0}
-					<CompaniesOverviewTable entries_table={tableData.companies_overview} />
+					<CompaniesOverviewTable data={tableData.companies_overview} />
 				{/if}
 			{/snippet}
 			{#snippet sdkAndroidTotalApps()}
