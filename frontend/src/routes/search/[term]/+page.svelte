@@ -22,7 +22,7 @@
 		{#if typeof companiesResults != 'string'}
 			<h2 class="h2 p-4">Companies</h2>
 			{#if companiesResults.length > 0}
-				<CompaniesOverviewTable entries_table={companiesResults} />
+				<CompaniesOverviewTable data={companiesResults} />
 			{:else}
 				<p class="p-4">
 					No adtech/business/ development tool companies found, if you expected to see something
