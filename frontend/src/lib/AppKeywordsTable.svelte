@@ -27,18 +27,16 @@
 	let { data }: DataTableProps<KeywordScore, TValue> = $props();
 
 	const columns = genericColumns([
-		{ title: 'Keyword', accessorKey: 'keyword_text', isSortable: true, isFilterable: true },
+		{ title: 'Keyword', accessorKey: 'keyword_text', isSortable: true },
 		{
 			title: 'Competitiveness Score',
 			accessorKey: 'competitiveness_score',
-			isSortable: true,
-			isFilterable: false
+			isSortable: true
 		},
 		{
 			title: '30 Day Best Rank',
 			accessorKey: 'd30_best_rank',
-			isSortable: true,
-			isFilterable: false
+			isSortable: true
 		}
 	]);
 

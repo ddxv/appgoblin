@@ -39,54 +39,47 @@
 					{
 						title: 'Open Source',
 						accessorKey: 'percent_open_source',
-						isSortable: true,
-						isFilterable: false
+						isSortable: true
 					}
 				]
 			: []),
 		{
 			title: 'Company',
 			accessorKey: 'company_name',
-			isSortable: true,
-			isFilterable: true
+			isSortable: true
 		},
 		{
 			title: 'Domain',
 			accessorKey: 'company_domain',
-			isSortable: true,
-			isFilterable: true
+			isSortable: true
 		},
 		{
 			title: 'Android SDK',
 			accessorKey: 'google_sdk',
-			isSortable: true,
-			isFilterable: false
+			isSortable: true
 		},
 		{
 			title: 'iOS SDK',
 			accessorKey: 'apple_sdk',
-			isSortable: true,
-			isFilterable: false
+			isSortable: true
 		},
 		...(!page.params.type || page.params.type == 'ad-networks'
 			? [
 					{
 						title: 'Android AdsTxt',
 						accessorKey: 'google_app_ads_direct',
-						isSortable: true,
-						isFilterable: false
+						isSortable: true
 					},
 					{
 						title: 'iOS AdsTxt',
 						accessorKey: 'apple_app_ads_direct',
-						isSortable: true,
-						isFilterable: false
+						isSortable: true
 					}
 				]
 			: [])
 	]);
 
-	const globalFilterFn = (row, columnId, filterValue: string) => {
+	const globalFilterFn = (row: any, columnId: string, filterValue: string) => {
 		const name = row.original.company_name?.toLowerCase() ?? '';
 		const domain = row.original.company_domain?.toLowerCase() ?? '';
 		const query = filterValue.toLowerCase();

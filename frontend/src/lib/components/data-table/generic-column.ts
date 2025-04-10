@@ -8,7 +8,6 @@ type GenericColumnProps = {
 	title: string;
 	accessorKey: string;
 	isSortable: boolean;
-	isFilterable?: boolean;
 };
 
 // Define a generic type for the data
