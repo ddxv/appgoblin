@@ -1,11 +1,12 @@
 <script lang="ts" generics="TData, TValue">
 	import {
-		type ColumnDef,
 		type PaginationState,
 		type SortingState,
+		type ColumnFiltersState,
 		getCoreRowModel,
 		getPaginationRowModel,
-		getSortedRowModel
+		getSortedRowModel,
+		getFilteredRowModel
 	} from '@tanstack/table-core';
 
 	import Pagination from '$lib/components/data-table/Pagination.svelte';
@@ -22,6 +23,9 @@
 
 	let pagination = $state<PaginationState>({ pageIndex: 0, pageSize: 50 });
 	let sorting = $state<SortingState>([]);
+	let columnFilters = $state<ColumnFiltersState>([]);
+
+	let globalFilter = $state<string>('');
 
 	let { data }: DataTableProps<CompaniesOverviewEntries, TValue> = $props();
 
@@ -43,6 +47,12 @@
 		{
 			title: 'Company',
 			accessorKey: 'company_name',
+			isSortable: true,
+			isFilterable: true
+		},
+		{
+			title: 'Domain',
+			accessorKey: 'company_domain',
 			isSortable: true,
 			isFilterable: true
 		},
@@ -76,6 +86,13 @@
 			: [])
 	]);
 
+	const globalFilterFn = (row, columnId, filterValue: string) => {
+		const name = row.original.company_name?.toLowerCase() ?? '';
+		const domain = row.original.company_domain?.toLowerCase() ?? '';
+		const query = filterValue.toLowerCase();
+		return name.includes(query) || domain.includes(query);
+	};
+
 	const table = createSvelteTable({
 		get data() {
 			return data;
@@ -87,15 +104,31 @@
 			},
 			get sorting() {
 				return sorting;
+			},
+			get columnFilters() {
+				return columnFilters;
+			},
+			get globalFilter() {
+				return globalFilter;
 			}
 		},
 
 		getSortedRowModel: getSortedRowModel(),
+
+		globalFilterFn,
+
 		onSortingChange: (updater) => {
 			if (typeof updater === 'function') {
 				sorting = updater(sorting);
 			} else {
 				sorting = updater;
+			}
+		},
+		onColumnFiltersChange: (updater) => {
+			if (typeof updater === 'function') {
+				columnFilters = updater(columnFilters);
+			} else {
+				columnFilters = updater;
 			}
 		},
 
@@ -106,12 +139,27 @@
 				pagination = updater;
 			}
 		},
+		onGlobalFilterChange: (updater) => {
+			globalFilter = typeof updater === 'function' ? updater(globalFilter) : updater;
+		},
 		getCoreRowModel: getCoreRowModel(),
-		getPaginationRowModel: getPaginationRowModel()
+		getPaginationRowModel: getPaginationRowModel(),
+		getFilteredRowModel: getFilteredRowModel()
 	});
 </script>
 
-<div class="table-container space-y-4">
+<div class="table-container">
+	<div class="flex items-center p-2">
+		<input
+			placeholder="Filter companies..."
+			value={globalFilter}
+			oninput={(e) => {
+				const value = e.currentTarget.value;
+				table.setGlobalFilter(value);
+			}}
+			class="max-w-sm p-1"
+		/>
+	</div>
 	<div class="overflow-x-auto pl-0">
 		<table class="md:table table-hover md:table-compact table-auto w-full">
 			<thead>
