@@ -139,7 +139,7 @@
 					<tr class="px-0">
 						<td>{row.original.rank}</td>
 						<td>
-							<a href="/apps/{row.original.app_id}">
+							<a href="/apps/{row.original.store_id}">
 								<div class="inline-flex">
 									<StoreIcon store={row.original.store} />
 									<img

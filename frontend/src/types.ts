@@ -199,6 +199,11 @@ export interface AdsTxtEntries extends Row {
 	developer_domain_crawled_at: number;
 }
 
+export interface AdsTxtEntriesResult extends Row {
+direct_entries: AdsTxtEntries[];
+		reseller_entries: AdsTxtEntries[];
+	}
+
 export interface CompaniesOverviewEntries extends Row {
 	company_domain: string;
 	company_name: string;
