@@ -7,8 +7,8 @@
 
 	import { storeIDLookup, collectionIDLookup, categoryIDLookup } from '../stores';
 
-	const buttonSelectedClass = 'preset-filled-primary relative p-2 md:p-4 text-primary-900-100';
-	const buttonDeselectedClass = 'p-2 md:p-4 hover:text-primary-900-100';
+	const buttonSelectedClass = 'btn preset-outlined-primary-900-100 relative text-primary-900-100';
+	const buttonDeselectedClass = 'p-1 md:p-2 hover:text-primary-900-100';
 
 	let localHomeCollectionSelect = $homeCollectionSelection;
 	let localHomeStoreSelect = $state($homeStoreSelection);
@@ -86,9 +86,10 @@
 										? `/collection/4/category/120/${country}`
 										: '' // default value or path for other store_ids if needed
 							}`}
-							class={classesActive(`/rankings/store/${values.store_id}/`)}
 						>
-							{values.store_name}
+							<p class={classesActive(`/rankings/store/${values.store_id}/`)}>
+								{values.store_name}
+							</p>
 						</a>
 					</li>
 				{/each}
@@ -107,9 +108,15 @@
 					<li>
 						<a
 							href={`/rankings/store/${store}/collection/${values.collection_id}/category/${category}/${country}`}
-							class={classesActive(`/rankings/store/${store}/collection/${values.collection_id}/`)}
-							>{values.collection_name}</a
 						>
+							<p
+								class={classesActive(
+									`/rankings/store/${store}/collection/${values.collection_id}/`
+								)}
+							>
+								{values.collection_name}
+							</p>
+						</a>
 					</li>
 				{/each}
 			</ul>
@@ -127,10 +134,15 @@
 					<li>
 						<a
 							href={`/rankings/store/${store}/collection/${collection}/category/${values.category_id}/${country}`}
-							class={classesActive(
-								`/rankings/store/${store}/collection/${collection}/category/${values.category_id}`
-							)}>{values.category_name}</a
 						>
+							<p
+								class={classesActive(
+									`/rankings/store/${store}/collection/${collection}/category/${values.category_id}`
+								)}
+							>
+								{values.category_name}
+							</p>
+						</a>
 					</li>
 				{/each}
 			</ul>
