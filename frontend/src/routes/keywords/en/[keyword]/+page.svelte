@@ -26,7 +26,7 @@
 					Android
 				{/snippet}
 				{#if keywordApps.google && keywordApps.google.ranks.length > 0}
-					<AppRankTable tableData={keywordApps.google} />
+					<AppRankTable data={keywordApps.google} />
 				{:else}
 					<p>No apps found</p>
 				{/if}
@@ -36,7 +36,7 @@
 					iOS
 				{/snippet}
 				{#if keywordApps.apple && keywordApps.apple.ranks.length > 0}
-					<AppRankTable tableData={keywordApps.apple} />
+					<AppRankTable data={keywordApps.apple} />
 				{:else}
 					<p>No apps found</p>
 				{/if}

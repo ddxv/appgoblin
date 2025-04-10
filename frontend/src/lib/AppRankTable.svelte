@@ -1,70 +1,167 @@
-<script lang="ts">
-	import type { RankedAppList, RankedApps } from '../types';
-	import Pagination from './clientside/Pagination.svelte';
-	// import ThFilter from './ThFilter.svelte';
-	import { DataHandler } from '@vincjo/datatables/legacy';
+<script lang="ts" generics="TData, TValue">
+	import {
+		type PaginationState,
+		type SortingState,
+		type ColumnFiltersState,
+		getCoreRowModel,
+		getPaginationRowModel,
+		getSortedRowModel,
+		getFilteredRowModel
+	} from '@tanstack/table-core';
+
+	import Pagination from '$lib/components/data-table/Pagination.svelte';
+	import ExportAsCSV from '$lib/components/data-table/ExportAsCSV.svelte';
 	import StoreIcon from '$lib/StoreIcon.svelte';
+	import type { RankedApps } from '../types';
 
-	interface Props {
-		tableData: RankedAppList;
-	}
+	import { createSvelteTable, FlexRender } from '$lib/components/data-table/index.js';
 
-	let { tableData }: Props = $props();
-	const totalRows = tableData.ranks.length;
-	const rowsPerPage = 10;
+	import { genericColumns } from '$lib/components/data-table/generic-column';
 
-	const handler = new DataHandler<RankedApps>(tableData.ranks, {
-		rowsPerPage: rowsPerPage
+	type DataTableProps<RankedApps, TValue> = {
+		data: RankedApps[];
+	};
+
+	let pagination = $state<PaginationState>({ pageIndex: 0, pageSize: 50 });
+	let sorting = $state<SortingState>([]);
+	let columnFilters = $state<ColumnFiltersState>([]);
+
+	let globalFilter = $state<string>('');
+
+	let { data }: DataTableProps<RankedApps, TValue> = $props();
+
+	const columns = genericColumns([
+		{
+			title: 'Rank',
+			accessorKey: 'rank',
+			isSortable: true
+		},
+		{
+			title: 'Name',
+			accessorKey: 'name',
+			isSortable: true
+		}
+	]);
+
+	const globalFilterFn = (row: any, columnId: string, filterValue: string) => {
+		const name = row.original.name?.toLowerCase() ?? '';
+		const query = filterValue.toLowerCase();
+		return name.includes(query);
+	};
+
+	const table = createSvelteTable({
+		get data() {
+			return data;
+		},
+		columns,
+		state: {
+			get pagination() {
+				return pagination;
+			},
+			get sorting() {
+				return sorting;
+			},
+			get columnFilters() {
+				return columnFilters;
+			},
+			get globalFilter() {
+				return globalFilter;
+			}
+		},
+
+		getSortedRowModel: getSortedRowModel(),
+
+		globalFilterFn,
+
+		onSortingChange: (updater) => {
+			if (typeof updater === 'function') {
+				sorting = updater(sorting);
+			} else {
+				sorting = updater;
+			}
+		},
+		onColumnFiltersChange: (updater) => {
+			if (typeof updater === 'function') {
+				columnFilters = updater(columnFilters);
+			} else {
+				columnFilters = updater;
+			}
+		},
+
+		onPaginationChange: (updater) => {
+			if (typeof updater === 'function') {
+				pagination = updater(pagination);
+			} else {
+				pagination = updater;
+			}
+		},
+		onGlobalFilterChange: (updater) => {
+			globalFilter = typeof updater === 'function' ? updater(globalFilter) : updater;
+		},
+		getCoreRowModel: getCoreRowModel(),
+		getPaginationRowModel: getPaginationRowModel(),
+		getFilteredRowModel: getFilteredRowModel()
 	});
-	const rows = handler.getRows();
-	console.log('CHECK', totalRows);
 </script>
 
 <div class="table-container">
-	<table class="table table-hover table-compact table-auto w-full">
-		<thead>
-			<tr>
-				<th>Rank</th>
-				<th>Name</th>
-			</tr>
-			<tr>
-				<th></th>
-				<!-- <ThFilter {handler} filterBy="name" /> -->
-			</tr>
-		</thead>
-		<tbody>
-			{#each $rows as row}
-				<tr>
-					<td
-						><div class="inline-flex">
-							#
-							<h3 class="h4 md:h3">
-								{row.rank}
-							</h3>
-						</div>
-					</td>
-					<td>
-						<a href="/apps/{row.store_id}">
-							<div class="inline-flex">
-								<StoreIcon store={row.store} />
-								<img
-									src={row.icon_url_512}
-									alt={row.name}
-									width="100 md:200"
-									class="p-2"
-									referrerpolicy="no-referrer"
-								/>
-								<h3 class="h4 md:h3 p-2">{row.name}</h3>
-							</div>
-						</a>
-					</td>
-				</tr>
-			{/each}
-		</tbody>
-	</table>
-	<footer class="flex justify-between">
-		{#if totalRows > rowsPerPage}
-			<Pagination {handler} />
-		{/if}
-	</footer>
+	<div class="flex items-center p-2">
+		<input
+			placeholder="Filter apps..."
+			value={globalFilter}
+			oninput={(e) => {
+				const value = e.currentTarget.value;
+				table.setGlobalFilter(value);
+			}}
+			class="max-w-sm p-1"
+		/>
+	</div>
+	<div class="overflow-x-auto pl-0">
+		<table class="md:table table-hover md:table-compact table-auto w-full">
+			<thead>
+				{#each table.getHeaderGroups() as headerGroup (headerGroup.id)}
+					<tr>
+						{#each headerGroup.headers as header (header.id)}
+							<th class="">
+								{#if !header.isPlaceholder}
+									<FlexRender
+										content={header.column.columnDef.header}
+										context={header.getContext()}
+									/>
+								{/if}
+							</th>
+						{/each}
+					</tr>
+				{/each}
+			</thead>
+			<tbody>
+				{#each table.getRowModel().rows as row (row.id)}
+					<tr class="px-0">
+						<td>{row.original.rank}</td>
+						<td>
+							<a href="/apps/{row.original.app_id}">
+								<div class="inline-flex">
+									<StoreIcon store={row.original.store} />
+									<img
+										src={row.original.icon_url_512}
+										alt={row.original.name}
+										width="100 md:200"
+										class="p-2"
+										referrerpolicy="no-referrer"
+									/>
+									<h3 class="h4 md:h3 p-2">{row.original.name}</h3>
+								</div>
+							</a>
+						</td>
+					</tr>
+				{/each}
+			</tbody>
+		</table>
+		<footer class="flex justify-between">
+			<div class="flex items-center justify-end space-x-2 py-4">
+				<Pagination tableModel={table} />
+				<ExportAsCSV {table} filename="appgoblin_apps" />
+			</div>
+		</footer>
+	</div>
 </div>

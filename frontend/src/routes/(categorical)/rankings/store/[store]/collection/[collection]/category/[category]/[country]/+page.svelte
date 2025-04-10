@@ -110,7 +110,11 @@
 			Failed to load history
 		{/await}
 		<div class="p-2 md:p-4"></div>
-		<AppRankTable tableData={ranks}></AppRankTable>
+		{#if ranks && ranks.ranks.length > 0}
+			<AppRankTable data={ranks.ranks} />
+		{:else}
+			No data found
+		{/if}
 	{:catch}
 		Problem loading data
 	{/await}
