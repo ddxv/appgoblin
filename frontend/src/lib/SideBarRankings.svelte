@@ -72,7 +72,7 @@
 <div class="p-1 md:p-2">
 	<CardFirst>
 		{#snippet header()}
-			<h4 class="h4 md:h3">Stores</h4>
+			<h4 class="h5 md:h4">Stores</h4>
 		{/snippet}
 		<nav class="list-nav">
 			<ul>
@@ -100,7 +100,7 @@
 <div class="p-1 md:p-2">
 	<CardFirst>
 		{#snippet header()}
-			<h4 class="md:h3 h4">Collections</h4>
+			<h4 class="h5 md:h4">Collections</h4>
 		{/snippet}
 		<nav class="list-nav">
 			<ul>
@@ -126,7 +126,7 @@
 <div class="p-1 md:p-2">
 	<CardFirst>
 		{#snippet header()}
-			<h4 class="h4 md:h3">Categories</h4>
+			<h4 class="h5 md:h4">Categories</h4>
 		{/snippet}
 		<nav class="list-nav">
 			<ul>

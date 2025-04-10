@@ -11,7 +11,6 @@
 
 	import Pagination from '$lib/components/data-table/Pagination.svelte';
 	import ExportAsCSV from '$lib/components/data-table/ExportAsCSV.svelte';
-	import StoreIcon from '$lib/StoreIcon.svelte';
 	import type { RankedApps } from '../types';
 
 	import { createSvelteTable, FlexRender } from '$lib/components/data-table/index.js';
@@ -22,7 +21,7 @@
 		data: RankedApps[];
 	};
 
-	let pagination = $state<PaginationState>({ pageIndex: 0, pageSize: 50 });
+	let pagination = $state<PaginationState>({ pageIndex: 0, pageSize: 40 });
 	let sorting = $state<SortingState>([]);
 	let columnFilters = $state<ColumnFiltersState>([]);
 
@@ -141,7 +140,6 @@
 						<td>
 							<a href="/apps/{row.original.store_id}">
 								<div class="inline-flex">
-									<StoreIcon store={row.original.store} />
 									<img
 										src={row.original.icon_url_512}
 										alt={row.original.name}

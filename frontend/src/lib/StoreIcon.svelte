@@ -12,6 +12,8 @@
 			return IconGoogle;
 		} else if (typeof store === 'number' && store === 2) {
 			return IconiOs;
+		} else {
+			console.log('store', store);
 		}
 	}
 	let icon = $derived(getIcon(store));

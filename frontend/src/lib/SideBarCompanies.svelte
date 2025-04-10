@@ -67,7 +67,7 @@
 <div class="p-1 md:p-2">
 	<CardFirst>
 		{#snippet header()}
-			<h3 class="h5 md:h4">App Categories</h3>
+			<h4 class="h5 md:h4">App Categories</h4>
 		{/snippet}
 		{#if myCatData}
 			{#each Object.entries(myCatData.categories) as [_prop, values]}

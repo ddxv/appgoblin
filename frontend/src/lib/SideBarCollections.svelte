@@ -6,9 +6,9 @@
 	import { homeCategorySelection } from '../stores';
 
 	const buttonSelectedClass =
-		'text-left preset-filled-primary relative p-2 md:p-4 text-primary-900-100';
+		'preset-outlined-primary-900-100 text-left relative text-primary-900-100 rounded-md p-2';
 	const buttonDeselectedClass =
-		'text-left p-2 md:p-4 text-tertiary-900-100 hover:text-primary-900-100';
+		'p-1 md:p-2 text-tertiary-900-100 text-left hover:text-primary-900-100';
 
 	const listClass = 'flex flex-col';
 
@@ -16,8 +16,6 @@
 	let localHomeStoreSelect = $state('google');
 	let localHomeCategorySelect = $state('overall');
 	import type { CatData } from '../types';
-
-	// FOLOWING IS FOR RANKINGS
 
 	interface Props {
 		myCatData: CatData;
@@ -89,19 +87,15 @@
 <div class="p-1 md:p-2">
 	<CardFirst>
 		{#snippet header()}
-			<h3 class="h4 md:h3">Appstores</h3>
+			<h4 class="h5 md:h4">Appstores</h4>
 		{/snippet}
 		<div class={listClass}>
-			<button
-				class={classesActiveStore('google')}
-				value="google"
-				onclick={() => (localHomeStoreSelect = 'google')}>Google</button
-			>
-			<button
-				class={classesActiveStore('ios')}
-				value="ios"
-				onclick={() => (localHomeStoreSelect = 'ios')}>Apple</button
-			>
+			<button value="google" onclick={() => (localHomeStoreSelect = 'google')}>
+				<p class={classesActiveStore('google')}>Google</p>
+			</button>
+			<button value="ios" onclick={() => (localHomeStoreSelect = 'ios')}>
+				<p class={classesActiveStore('ios')}>Apple</p>
+			</button>
 		</div>
 	</CardFirst>
 </div>
@@ -109,19 +103,21 @@
 <div class="p-1 md:p-2">
 	<CardFirst>
 		{#snippet header()}
-			<h3 class="h3">Time</h3>
+			<h4 class="h5 md:h4">Time</h4>
 		{/snippet}
 		<div class={listClass}>
-			<a href="/collections/new_yearly" class={classesActive('/collections/new_yearly')}
-				>New this Year</a
-			>
-			<a href="/collections/new_monthly" class={classesActive('/collections/new_monthly')}
-				>New this Month</a
-			>
-			<a href="/collections/new_weekly" class={classesActive('/collections/new_weekly')}
-				>New this Week</a
-			>
-			<a href="/collections/top" class={classesActive('/collections/top')}>Alltime Top</a>
+			<a href="/collections/new_yearly">
+				<p class={classesActive('/collections/new_yearly')}>New this Year</p>
+			</a>
+			<a href="/collections/new_monthly">
+				<p class={classesActive('/collections/new_monthly')}>New this Month</p>
+			</a>
+			<a href="/collections/new_weekly">
+				<p class={classesActive('/collections/new_weekly')}>New this Week</p>
+			</a>
+			<a href="/collections/top">
+				<p class={classesActive('/collections/top')}>Alltime Top</p>
+			</a>
 		</div>
 	</CardFirst>
 </div>
@@ -129,7 +125,7 @@
 <div class="p-1 md:p-2">
 	<CardFirst>
 		{#snippet header()}
-			<h3 class="h3">Appstore Categories</h3>
+			<h4 class="h5 md:h4">Appstore Categories</h4>
 		{/snippet}
 		<div class={listClass}>
 			{#if myCatData}
@@ -138,8 +134,11 @@
 						<button
 							class={classesActiveCategory(values.id)}
 							value={values.id}
-							onclick={() => (localHomeCategorySelect = values.id)}>{values.name}</button
+							onclick={() => (localHomeCategorySelect = values.id)}
 						>
+							<!-- <p class={classesActiveCategory(values.id)}>{values.name}</p> -->
+							{values.name}
+						</button>
 					{/if}
 				{/each}
 			{/if}

@@ -14,7 +14,7 @@
 		<title>{dev.title} | {page.params.developer} | Apps, SDKs and Market Data</title>
 		<meta
 			name="description"
-			content="Explore {dev.title}'s Android & iOS apps, their SDKs, trackers and analytics with AppGoblin. Gather ASO information on the top mobile developers."
+			content="Explore {dev.title}'s Android & iOS apps, their SDKs, trackers and analytics with AppGoblin. Gather free ASO information on the top mobile developers."
 		/>
 		<meta
 			name="keywords"
@@ -47,6 +47,7 @@
 		<meta property="og:type" content="website" />
 		<meta name="twitter:card" content="summary_large_image" />
 		<meta name="twitter:image" content="https://appgoblin.info/goblin_purple_hat_250.png" />
+		<meta name="robots" content="index, follow" />
 	{/await}
 </svelte:head>
 

@@ -57,6 +57,7 @@
 	<meta name="twitter:card" content="summary_large_image" />
 	<meta name="twitter:image" content="https://appgoblin.info/goblin_purple_hat_250.png" />
 	<link rel="canonical" href={page.url.href} />
+	<meta name="robots" content="index, follow" />
 </svelte:head>
 
 <div class="flex items-center mb-2">

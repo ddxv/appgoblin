@@ -15,34 +15,29 @@
 	function formatNumber(num: number) {
 		return new Intl.NumberFormat('en-US').format(num);
 	}
+	const title = 'Top Mobile Ad Networks, Development Tools & MMPs | AppGoblin Free Marketing Tools';
+	const description =
+		'Explore top mobile adtech advertising networks, data trackers, MMPs, and programmatic networks based on SDK data and app-ads.txt files. Covering hundreds of companies and millions of apps all for free.';
 </script>
 
 <svelte:head>
-	<title>Top Adtech Companies, Ad Networks & Data Trackers | AppGoblin</title>
-	<meta
-		name="description"
-		content="Explore top-ranked adtech advertising networks, data trackers, MMPs, and programmatic networks. Discover insights from app-ads.txt files and our extensive research on hundreds of ad tech companies across various app categories."
-	/>
+	<title>{title}</title>
+	<meta name="description" content={description} />
 	<meta
 		name="keywords"
-		content="adtech companies, advertising networks, data trackers, MMPs, programmatic networks, app-ads.txt, mobile advertising, ad tech analytics, app marketing, AppGoblin"
+		content="mobile, development tools, ad networks, data trackers, MMPs, programmatic networks, app-ads.txt, mobile advertising, ad tech analytics, app marketing, AppGoblin"
 	/>
-	<meta property="og:title" content="Top Adtech Companies & Ad Networks | AppGoblin Analytics" />
-	<meta
-		property="og:description"
-		content="Discover top adtech companies, ad networks, and data trackers. Explore comprehensive data on hundreds of ad tech firms, their app clients, and market presence across different app categories."
-	/>
-	<meta name="twitter:title" content="Leading Adtech Companies & Networks | AppGoblin Insights" />
-	<meta
-		name="twitter:description"
-		content="Uncover insights on top adtech firms, ad networks, and data trackers. Analyze data from app-ads.txt files and our research on hundreds of ad tech companies and their app clients."
-	/>
+	<meta property="og:title" content={title} />
+	<meta property="og:description" content={description} />
+	<meta name="twitter:title" content={title} />
+	<meta name="twitter:description" content={description} />
 	<meta property="og:image" content="https://appgoblin.info/adtech-companies-banner.png" />
 	<meta property="og:url" content="https://appgoblin.info/companies" />
 	<meta property="og:type" content="website" />
 	<meta name="twitter:card" content="summary_large_image" />
 	<meta name="twitter:image" content="https://appgoblin.info/adtech-companies-banner.png" />
 	<link rel="canonical" href="https://appgoblin.info/companies" />
+	<meta name="robots" content="index, follow" />
 </svelte:head>
 
 <div class="flex items-center mb-2">
