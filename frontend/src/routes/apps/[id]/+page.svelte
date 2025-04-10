@@ -491,8 +491,6 @@
 	</div>
 </section>
 
-<a href="/"><p>Back to Home</p></a>
-
 <style>
 	.bar-spacer {
 		margin: 10px;
