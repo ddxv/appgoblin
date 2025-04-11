@@ -49,11 +49,6 @@
 			isSortable: true
 		},
 		{
-			title: 'Domain',
-			accessorKey: 'company_domain',
-			isSortable: true
-		},
-		{
 			title: 'Android SDK',
 			accessorKey: 'google_sdk',
 			isSortable: true
