@@ -6,7 +6,7 @@
 	import SDKOverview from '$lib/utils/SDKOverview.svelte';
 	import { Tabs } from '@skeletonlabs/skeleton-svelte';
 
-	let group = $state('user_requested');
+	let group = $state('latest_success');
 
 	let { data } = $props();
 </script>
@@ -30,11 +30,11 @@
 <div>
 	<Tabs value={group} onValueChange={(e) => (group = e.value)}>
 		{#snippet list()}
-			<Tabs.Control value="user_requested" labelClasses="p-0 md:p-8"
-				><p class="text-xs md:text-base">User Requests</p></Tabs.Control
-			>
 			<Tabs.Control value="latest_success" labelClasses="p-0 md:p-8"
 				><p class="text-xs md:text-base">Latest Success</p></Tabs.Control
+			>
+			<Tabs.Control value="user_requested" labelClasses="p-0 md:p-8"
+				><p class="text-xs md:text-base">User Requests</p></Tabs.Control
 			>
 			<Tabs.Control value="latest_failed" labelClasses="p-0 md:p-8"
 				><p class="text-xs md:text-base">Latest Failed</p></Tabs.Control
