@@ -366,7 +366,7 @@ class AppController(Controller):
             ].to_dict(orient="records")
 
         sdk_overview_dict = AppSDKsOverview(
-            sdk_categories=company_cats,
+            company_categories=company_cats,
         )
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(f"{self.path}/{store_id}/sdksoverview took {duration}ms")

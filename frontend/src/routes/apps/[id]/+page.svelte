@@ -482,7 +482,11 @@
 			</div>
 		</div>
 		<div class="card preset-tonal p-2 md:p-8 mt-2 md:mt-4">
-			<AppSDKOverview myPackageInfo={data.myPackageInfo} companyTypes={data.companyTypes} />
+			<AppSDKOverview
+				myPackageInfo={data.myPackageInfo}
+				companyTypes={data.companyTypes}
+				myapp={data.myapp}
+			/>
 		</div>
 		<div class="card preset-tonal p-2 md:p-8 mt-2 md:mt-4">
 			<AppAdsTxtOverview myAdsTxt={data.myAdsTxtOverview} />

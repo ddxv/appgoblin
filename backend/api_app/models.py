@@ -23,7 +23,6 @@ class AppHistory:
     """
 
     histogram: dict
-    # history_table: dict
     plot_data: dict
 
 
@@ -39,7 +38,7 @@ class AdsTxtEntries:
 class AppSDKsOverview:
     """Lists of Package permissions, trackers etc from Manifest."""
 
-    sdk_categories: dict
+    company_categories: dict
 
 
 @dataclass

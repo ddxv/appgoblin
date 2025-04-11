@@ -407,7 +407,7 @@ export interface KeywordScore extends Row {
 }
 
 export interface AppSDKsOverview {
-	company_categories: { [key: string]: { [key: string]: string[] } };
+	company_categories: { [key: string]: Array<{ company_name: string; company_domain: string }> };
 }
 
 export interface AppSDKs {
@@ -440,9 +440,7 @@ export interface AppFullDetails {
 			ratings_stars_new: ChartTabularData;
 		};
 	}>;
-	myPackageInfo: Promise<{
-		company_categories: { [key: string]: { [key: string]: string[] } };
-	}>;
+	myPackageInfo: AppSDKsOverview;
 	myAdsTxtOverview: Promise<{
 		direct_entries: AdsTxtEntries[];
 		reseller_entries: AdsTxtEntries[];
