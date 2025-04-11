@@ -98,10 +98,10 @@ class DeveloperController(Controller):
             title=developer_name,
         )
         duration = round((time.perf_counter() * 1000 - start), 2)
-        logger.info(f"{self.path}/developers/{developer_id} took {duration}ms")
+        logger.info(f"{self.path}/{developer_id} took {duration}ms")
         return developer_apps
 
-    @post(path="/sdks", cache=3600)
+    @post(path="/sdks")
     async def get_developer_sdks(self: Self, data: dict) -> DeveloperSDKsOverview:
         """Handle GET request for a specific developer.
 

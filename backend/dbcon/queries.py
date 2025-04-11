@@ -361,7 +361,6 @@ def get_single_app(store_id: str) -> pd.DataFrame:
 
 def get_app_sdk_details(store_id: str) -> pd.DataFrame:
     """Get basic app details for a single store_id."""
-    logger.info(f"Query SDKs app_id={store_id}")
     df = pd.read_sql(
         QUERY_APP_SDK_DETAILS,
         DBCON.engine,
@@ -373,7 +372,6 @@ def get_app_sdk_details(store_id: str) -> pd.DataFrame:
 @lru_cache(maxsize=1000)
 def get_apps_sdk_overview(store_ids: tuple[str, ...]) -> pd.DataFrame:
     """Get SDK overview for multiple store_ids."""
-    logger.info(f"Query SDKs for {store_ids=}")
     df = pd.read_sql(
         QUERY_APPS_SDK_OVERVIEW,
         DBCON.engine,
@@ -385,7 +383,6 @@ def get_apps_sdk_overview(store_ids: tuple[str, ...]) -> pd.DataFrame:
 
 def get_app_sdk_overview(store_id: str) -> pd.DataFrame:
     """Get SDK overview for a single store_id."""
-    logger.info(f"Query SDKs app_id={store_id}")
     df = pd.read_sql(
         QUERY_APP_SDK_OVERVIEW,
         DBCON.engine,

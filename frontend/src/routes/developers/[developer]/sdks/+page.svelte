@@ -1,5 +1,4 @@
 <script lang="ts">
-	import CompanyButton from '$lib/CompanyButton.svelte';
 	import DeveloperSDKOverview from '$lib/DeveloperSDKOverview.svelte';
 	import type { DeveloperSDKResponse } from '../../../../types';
 

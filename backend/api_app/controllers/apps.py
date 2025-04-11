@@ -101,13 +101,6 @@ def app_history(store_app: int, app_name: str, country: str = "US") -> AppHistor
     """Get the history of app scraping."""
     app_hist = get_app_history(store_app, country)
     histogram = app_hist.sort_values(["id"]).tail(1)["histogram"].to_numpy()[0]
-    # history_table = (
-    #     app_hist.sort_values("crawled_date", ascending=False)
-    #     .drop(["id", "store_app"], axis=1)
-    #     .to_dict(
-    #         orient="records",
-    #     )
-    # )
     app_hist = app_hist[
         ~((app_hist["installs"].isna()) & (app_hist["rating_count"].isna()))
     ]
@@ -115,7 +108,6 @@ def app_history(store_app: int, app_name: str, country: str = "US") -> AppHistor
     plot_dicts = create_plot_dicts(app_hist, histogram)
     hist = AppHistory(
         histogram=histogram,
-        # history_table=history_table,
         plot_data=plot_dicts,
     )
     return hist
@@ -676,7 +668,7 @@ class AppController(Controller):
         keywords_list = keywords_df["keyword_text"].tolist()
         keywords_dict = {"keywords": keywords_list, "keyword_scores": keyword_scores}
         duration = round((time.perf_counter() * 1000 - start), 2)
-        logger.info(f"{self.path}/app/{store_id} took {duration}ms")
+        logger.info(f"{self.path}/{store_id}/keywords took {duration}ms")
         return keywords_dict
 
 
