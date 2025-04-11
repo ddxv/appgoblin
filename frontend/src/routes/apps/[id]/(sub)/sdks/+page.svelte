@@ -5,7 +5,9 @@
 
 	import RequestSDKScanButton from '$lib/RequestSDKScanButton.svelte';
 
-	let { data } = $props();
+	import type { AppSDKs } from '../../../../../types';
+
+	let { data }: { data: AppSDKs } = $props();
 </script>
 
 <div class="card preset-tonal p-2 md:p-16 mt-2 md:mt-4">

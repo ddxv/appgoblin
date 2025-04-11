@@ -177,10 +177,6 @@ export interface CompanySDKParts {
 	[key: string]: { [key: string]: { [key: string]: string[] } };
 }
 
-interface UnknownManifestItems {
-	[key: string]: string[];
-}
-
 export interface AppHistoryInfo extends Row {
 	crawled_date: string;
 	review_count: number;
@@ -414,13 +410,17 @@ export interface AppSDKsOverview {
 	company_categories: { [key: string]: { [key: string]: string[] } };
 }
 
-// export interface AppSDKs {
-// 	permissions: string[];
-// 	company_categories: { [key: string]: { [key: string]: string[] } };
-// 	android: string[];
-// 	leftovers: UnknownManifestItems;
-// 	app_queries: string[];
-// }
+export interface AppSDKs {
+	myPackageInfo: {
+		permissions: string[];
+		company_categories: { [key: string]: CompanySDKParts };
+		android: string[];
+		leftovers: UnknownSDKs;
+		skadnetwork: string[];
+		app_queries: string[];
+	};
+	companyTypes: CompanyTypes;
+}
 
 export interface AppFullDetails {
 	myapp: AppFullDetail;
