@@ -10,7 +10,7 @@
 		useKeysAsHeaders: true
 	});
 
-	const exportDataCSV = (rows: Row<_>[]) => {
+	const exportDataCSV = (rows: Row<any>[]) => {
 		const rowData = rows.map((row) => row.original);
 		const csv = generateCsv(csvConfig)(rowData);
 		download(csvConfig)(csv);
