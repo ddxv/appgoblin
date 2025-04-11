@@ -56,7 +56,7 @@ export interface DeveloperSDKResponse {
 		google: PlatformDeveloper;
 		apple: PlatformDeveloper;
 	};
-	companyTypes: companyType[];
+	companyTypes: CompanyTypes;
 	devSDKs: {
 		sdks: {
 			[key: string]: {
@@ -410,6 +410,18 @@ export interface KeywordScore extends Row {
 	d30_best_rank: number;
 }
 
+export interface AppSDKsOverview {
+	company_categories: { [key: string]: { [key: string]: string[] } };
+}
+
+// export interface AppSDKs {
+// 	permissions: string[];
+// 	company_categories: { [key: string]: { [key: string]: string[] } };
+// 	android: string[];
+// 	leftovers: UnknownManifestItems;
+// 	app_queries: string[];
+// }
+
 export interface AppFullDetails {
 	myapp: AppFullDetail;
 	companyTypes: CompanyTypes;
@@ -420,7 +432,6 @@ export interface AppFullDetails {
 	myranksOverview: Promise<{ countries: string[]; best_ranks: AppRankDetail[] }>;
 	myhistory: Promise<{
 		histogram: number[];
-		// history_table: AppHistoryInfo[];
 		plot_data?: {
 			changes: ChartTabularData;
 			installs: ChartTabularData;
@@ -430,11 +441,7 @@ export interface AppFullDetails {
 		};
 	}>;
 	myPackageInfo: Promise<{
-		permissions: string[];
 		company_categories: { [key: string]: { [key: string]: string[] } };
-		android: string[];
-		leftovers: UnknownManifestItems;
-		app_queries: string[];
 	}>;
 	myAdsTxtOverview: Promise<{
 		direct_entries: AdsTxtEntries[];
