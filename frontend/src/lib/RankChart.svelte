@@ -49,8 +49,8 @@
 
 	const plotSeries = makeSeries(plotData);
 
-	let myChartDiv: HTMLDivElement = $state();
-	let myChart: echarts.ECharts = $state();
+	let myChartDiv: HTMLDivElement = document.createElement('div');
+	let myChart: echarts.ECharts = $state(echarts.init(myChartDiv, 'dark'));
 	if (narrowBool) {
 		// Legend at top!
 		topPadding = 40;
@@ -139,7 +139,6 @@
 		if (myChart) {
 			// Create the echarts instance
 			myChart.dispose();
-			// myChart = echarts.init(myChartDiv, null, { renderer: 'svg' });
 			myChart = echarts.init(myChartDiv, 'dark');
 			// Draw the chart
 			myChart.setOption(chartoption);
