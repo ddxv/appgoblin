@@ -17,7 +17,6 @@
 	import { genericColumns } from '$lib/components/data-table/generic-column';
 
 	type DataTableProps<KeywordScore, TValue> = {
-		columns: ColumnDef<TData, TValue>[];
 		data: KeywordScore[];
 	};
 

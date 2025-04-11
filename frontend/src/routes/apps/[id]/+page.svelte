@@ -410,15 +410,15 @@
 					<AppPlot plotdata={histdata.plot_data.changes} plotType="change" />
 				</div>
 			{/if}
-			{#if histdata.plot_data && histdata.plot_data.ratings_stars && histdata.plot_data.ratings_stars.length > 1}
-				<div class="card preset-tonal p-2 md:p-8 mt-2 md:mt-4">
-					<h3 class="h4 md:h3 p-2">App Ratings</h3>
-					<Tabs value={ratingsTab} onValueChange={(e) => (ratingsTab = e.value)}>
-						{#snippet list()}
-							<Tabs.Control value="average">Total Ratings</Tabs.Control>
-							<Tabs.Control value="new">New Ratings</Tabs.Control>
-						{/snippet}
-						{#snippet content()}
+			<div class="card preset-tonal p-2 md:p-8 mt-2 md:mt-4">
+				<h3 class="h4 md:h3 p-2">App Ratings</h3>
+				<Tabs value={ratingsTab} onValueChange={(e) => (ratingsTab = e.value)}>
+					{#snippet list()}
+						<Tabs.Control value="average">Total Ratings</Tabs.Control>
+						<Tabs.Control value="new">New Ratings</Tabs.Control>
+					{/snippet}
+					{#snippet content()}
+						{#if histdata.plot_data && histdata.plot_data.ratings_stars && histdata.plot_data.ratings_stars.length > 1}
 							<Tabs.Panel value="average">
 								<AppPlot plotdata={histdata.plot_data.ratings_stars} plotType="ratings_stars" />
 							</Tabs.Panel>
@@ -428,10 +428,10 @@
 									plotType="ratings_stars_new"
 								/>
 							</Tabs.Panel>
-						{/snippet}
-					</Tabs>
-				</div>
-			{/if}
+						{/if}
+					{/snippet}
+				</Tabs>
+			</div>
 		{/await}
 	</div>
 
@@ -474,7 +474,6 @@
 					Loading keywords...
 				{:then keywords}
 					{#if keywords && keywords.keyword_scores && keywords.keyword_scores.length > 0}
-						<!-- <p>{keywords.keywords}</p> -->
 						<AppKeywordsTable data={keywords.keyword_scores} />
 					{:else}
 						<p>No keywords found for this app.</p>
