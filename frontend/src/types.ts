@@ -200,9 +200,9 @@ export interface AdsTxtEntries extends Row {
 }
 
 export interface AdsTxtEntriesResult extends Row {
-direct_entries: AdsTxtEntries[];
-		reseller_entries: AdsTxtEntries[];
-	}
+	direct_entries: AdsTxtEntries[];
+	reseller_entries: AdsTxtEntries[];
+}
 
 export interface CompaniesOverviewEntries extends Row {
 	company_domain: string;
@@ -436,7 +436,7 @@ export interface AppFullDetails {
 		leftovers: UnknownManifestItems;
 		app_queries: string[];
 	}>;
-	myAdsTxt: Promise<{
+	myAdsTxtOverview: Promise<{
 		direct_entries: AdsTxtEntries[];
 		reseller_entries: AdsTxtEntries[];
 	}>;
