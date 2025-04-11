@@ -27,7 +27,7 @@
 
 	import NavTabs from '$lib/NavTabs.svelte';
 	interface Props {
-		data;
+		data: any;
 		children?: import('svelte').Snippet;
 	}
 

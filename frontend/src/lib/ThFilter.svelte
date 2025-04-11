@@ -7,7 +7,7 @@
 
 	let { handler, filterBy }: Props = $props();
 
-	let value: string = $state();
+	let value: string = $state('');
 	let timeout: any;
 
 	const filter = () => {
