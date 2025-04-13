@@ -12,7 +12,7 @@
 		return num.toLocaleString();
 	}
 	const description =
-		'Free app analytics, keywords, ASO and detailed SDK and app-ads.txt data for marketing Android and iOS apps. AppGoblin is an open source project for collecting Google & Apple App Store data and presenting it for developers and marketers.';
+		'Free app analytics, keywords, ASO, app SDKs and app-ads.txt data for marketing Android and iOS apps. AppGoblin is an open source project for collecting Google & Apple App Store data and presenting it for developers and marketers.';
 
 	const title = 'AppGoblin: Free Mobile App Marketing Tools';
 </script>
@@ -52,16 +52,13 @@
 	<div class="card preset-tonal p-2 md:p-8">
 		<h1 class="h1 p-2 md:p-4 text-primary-900-100">{title}</h1>
 		<p class="p-2 md:p-4">
-			AppGoblin contains free marketing tools for app developers including ASO, App Rankings,
-			Keyword Ranking.
-		</p>
-		<p class="p-2 md:p-4">
-			AppGoblin enables marketers to find and analyze competitors to see what strategies, business
-			partnerships and marketing tools they use.
-		</p>
-		<p class="p-2 md:p-4">
-			Advanced advertising data including detailed breakdowns of mobile ad networks by their SDKs,
-			app-ads.txt data.
+			AppGoblin contains <span class="font-bold text-primary-900-100"
+				>free marketing tools for app developers</span
+			>
+			including ASO, App Rankings, Keyword Ranking. AppGoblin has the best
+			<span class="font-bold text-primary-900-100">competitor analysis tools</span> to research mobile
+			app installs, keywords and SDKs. Advanced advertising data includes mobile ad networks by their
+			SDKs and app-ads.txt data.
 		</p>
 
 		<div class="card preset-tonal p-2 md:p-8">
@@ -69,53 +66,13 @@
 				<h2 class="h2 p-2 md:p-4">Most Popular Ad Networks, MMPs & Analytics</h2>
 			</a>
 			<p class="p-2 md:p-4">
-				By downloading and opening up the top apps and games from the Google and iOS Appstore we can
-				see which third-party ad networks and trackers are used across the various App Store
-				categories. The lists include various ad networks, MMPs, tracking, analytics and other 3rd
-				party services which likely collect app data. You can also help expand these lists.
+				The lists include various ad networks, MMPs, tracking, analytics and other 3rd party
+				services which collect app data.
 				<a href="/companies">
 					<strong>Check out all the SDKs, Companies and Ad Network rankings.</strong>
 				</a>
 			</p>
-			{#await data.appsOverview}
-				Loading Overview...
-			{:then appsOverview}
-				<div class="grid grid-cols-1 md:grid-cols-2 gap-4 p-2 md:p-4">
-					<SDKOverview {data} />
-					<WhiteCard>
-						{#snippet title()}
-							App Ads.txt URLs
-						{/snippet}
-						<table class="table mt-4">
-							<thead>
-								<tr class="border-b">
-									<th>Total URLs</th>
-									<th>URLs Scanned This Week</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td>
-										<span class="text-success-900-100">
-											{formatNumber(appsOverview.appads_success_urls)}
-										</span>
-										/ {formatNumber(appsOverview.appads_urls)}
-									</td>
 
-									<td>
-										<span class="text-success-900-100">
-											{formatNumber(appsOverview.appads_weekly_success_urls)}
-										</span>
-										/ {formatNumber(appsOverview.appads_weekly_urls)}
-									</td>
-								</tr>
-							</tbody>
-						</table>
-					</WhiteCard>
-				</div>
-			{:catch}
-				Error Loading Overview
-			{/await}
 			<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
 				<a href="/companies/types/ad-networks">
 					<div class="card preset-tonal md:p-4">
@@ -304,56 +261,114 @@
 			</div>
 		</div>
 
-		<WhiteCard>
-			{#snippet title()}
-				App Store Scanned Apps
-			{/snippet}
+		<div class="card preset-tonal p-2 md:p-8">
+			<a href="/about">
+				<h2 class="h2 p-2 md:p-4">About AppGoblin Data</h2>
+				<p class="p-2 md:p-4">
+					<strong> Click here to learn more about AppGoblin data.</strong>
+				</p>
+			</a>
+			<WhiteCard>
+				{#snippet title()}
+					App Store Scanned Apps
+				{/snippet}
+				{#await data.appsOverview}
+					Loading Overview...
+				{:then appsOverview}
+					<p class="p-2 md:p-4">
+						These are the apps we are currently have in our databases. Green represents apps that
+						are currently live on the store while the others are older apps that are no longer
+						active on the app stores.
+					</p>
+					<div class="table-wrap">
+						<table class="table w-full">
+							<thead>
+								<tr class="border-b">
+									<th>Android Apps</th>
+									<th>iOS Apps</th>
+									<th>Android Weekly Scans</th>
+									<th>iOS Weekly Scans</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>
+										<span class="text-success-900-100">
+											{formatNumber(appsOverview.success_android_apps)}
+										</span>
+										/ {formatNumber(appsOverview.android_apps)}
+									</td>
+									<td>
+										<span class="text-success-900-100">
+											{formatNumber(appsOverview.success_ios_apps)}
+										</span>
+										/ {formatNumber(appsOverview.ios_apps)}
+									</td>
+									<td>
+										<span class="text-success-900-100">
+											{formatNumber(appsOverview.weekly_success_scanned_android_apps)}
+										</span>
+										/ {formatNumber(appsOverview.weekly_scanned_android_apps)}
+									</td>
+									<td>
+										<span class="text-success-900-100">
+											{formatNumber(appsOverview.weekly_success_scanned_ios_apps)}
+										</span>
+										/ {formatNumber(appsOverview.weekly_scanned_ios_apps)}
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				{:catch}
+					Error Loading Overview
+				{/await}
+			</WhiteCard>
+
 			{#await data.appsOverview}
 				Loading Overview...
 			{:then appsOverview}
-				<div class="table-wrap">
-					<table class="table w-full">
-						<thead>
-							<tr class="border-b">
-								<th>Android Apps</th>
-								<th>iOS Apps</th>
-								<th>Android Weekly Scans</th>
-								<th>iOS Weekly Scans</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td>
-									<span class="text-success-900-100">
-										{formatNumber(appsOverview.success_android_apps)}
-									</span>
-									/ {formatNumber(appsOverview.android_apps)}
-								</td>
-								<td>
-									<span class="text-success-900-100">
-										{formatNumber(appsOverview.success_ios_apps)}
-									</span>
-									/ {formatNumber(appsOverview.ios_apps)}
-								</td>
-								<td>
-									<span class="text-success-900-100">
-										{formatNumber(appsOverview.weekly_success_scanned_android_apps)}
-									</span>
-									/ {formatNumber(appsOverview.weekly_scanned_android_apps)}
-								</td>
-								<td>
-									<span class="text-success-900-100">
-										{formatNumber(appsOverview.weekly_success_scanned_ios_apps)}
-									</span>
-									/ {formatNumber(appsOverview.weekly_scanned_ios_apps)}
-								</td>
-							</tr>
-						</tbody>
-					</table>
+				<div class="grid grid-cols-1 md:grid-cols-2 gap-4 p-2 md:p-4">
+					<SDKOverview {data} />
+					<WhiteCard>
+						{#snippet title()}
+							App Ads.txt URLs
+						{/snippet}
+						<p class="p-2 md:p-4">
+							These are the app-ads.txt URLs we have found on app developer websites. Green
+							represents URLs that we have successfully crawled and parsed while the others are
+							developer URLs that do not host app-ads.txt files.
+						</p>
+						<table class="table mt-4">
+							<thead>
+								<tr class="border-b">
+									<th>Total URLs</th>
+									<th>URLs Scanned This Week</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>
+										<span class="text-success-900-100">
+											{formatNumber(appsOverview.appads_success_urls)}
+										</span>
+										/ {formatNumber(appsOverview.appads_urls)}
+									</td>
+
+									<td>
+										<span class="text-success-900-100">
+											{formatNumber(appsOverview.appads_weekly_success_urls)}
+										</span>
+										/ {formatNumber(appsOverview.appads_weekly_urls)}
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</WhiteCard>
 				</div>
 			{:catch}
 				Error Loading Overview
 			{/await}
-		</WhiteCard>
+		</div>
 	</div>
 </div>
