@@ -26,6 +26,7 @@
 	let columnFilters = $state<ColumnFiltersState>([]);
 
 	let globalFilter = $state<string>('');
+	let dataSource = $state<string>('installs');
 
 	let { data }: DataTableProps<CompaniesOverviewEntries, TValue> = $props();
 
@@ -48,30 +49,48 @@
 			accessorKey: 'company_name',
 			isSortable: true
 		},
+		// ### SDK Stats
 		{
-			title: 'Android SDK',
-			accessorKey: 'google_sdk',
+			title: 'SDK Android',
+			accessorKey: 'google_sdk_installs_d30',
 			isSortable: true
 		},
 		{
-			title: 'iOS SDK',
-			accessorKey: 'apple_sdk',
+			title: 'SDK iOS',
+			accessorKey: 'apple_sdk_installs_d30',
 			isSortable: true
 		},
-		...(!page.params.type || page.params.type == 'ad-networks'
-			? [
-					{
-						title: 'Android AdsTxt',
-						accessorKey: 'google_app_ads_direct',
-						isSortable: true
-					},
-					{
-						title: 'iOS AdsTxt',
-						accessorKey: 'apple_app_ads_direct',
-						isSortable: true
-					}
-				]
-			: [])
+		{
+			title: 'SDK Android',
+			accessorKey: 'google_sdk_percentage',
+			isSortable: true
+		},
+		{
+			title: 'SDK iOS',
+			accessorKey: 'apple_sdk_percentage',
+			isSortable: true
+		},
+		// ### Direct Stats
+		{
+			title: 'Direct Android',
+			accessorKey: 'google_app_ads_direct_installs_d30',
+			isSortable: true
+		},
+		{
+			title: 'Direct iOS',
+			accessorKey: 'apple_app_ads_direct_installs_d30',
+			isSortable: true
+		},
+		{
+			title: 'Direct Android',
+			accessorKey: 'google_app_ads_direct_percentage',
+			isSortable: true
+		},
+		{
+			title: 'Direct iOS',
+			accessorKey: 'apple_app_ads_direct_percentage',
+			isSortable: true
+		}
 	]);
 
 	const globalFilterFn = (row: any, columnId: string, filterValue: string) => {
@@ -134,19 +153,113 @@
 		getPaginationRowModel: getPaginationRowModel(),
 		getFilteredRowModel: getFilteredRowModel()
 	});
+
+	function formatNumber(num: number) {
+		if (num >= 1000000000000) return (num / 1000000000000).toFixed(1).replace(/\.0$/, '') + 'T';
+		if (num >= 1000000000) return (num / 1000000000).toFixed(1).replace(/\.0$/, '') + 'B';
+		if (num >= 1000000) return (num / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
+		if (num >= 1000) return (num / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
+		return num;
+	}
+
+	function formatPercentage(num: number) {
+		if (num && num > 0) {
+			num = num * 100;
+			if (num < 10) {
+				return num.toFixed(2) + '%';
+			} else {
+				return num.toFixed(0) + '%';
+			}
+		}
+		return '';
+	}
+
+	let isAdsPage = $derived(!page.params.type || page.params.type == 'ad-networks');
+
+	function shouldShowHeader(header: any) {
+		if (header.column.id === 'company_name') return true;
+		if (header.column.id === 'percent_open_source') return include_open_source;
+
+		let headerHasInstall = header.column.id.includes('install');
+		let headerHasPercent = header.column.id.includes('percentage');
+		let headerIsDirect = header.column.id.includes('direct');
+		let doShowAdsCol = isAdsPage && headerIsDirect;
+		let doNotShowAdsCol = !isAdsPage && headerIsDirect;
+
+		if (dataSource === 'installs' && headerHasInstall) {
+			if (doShowAdsCol) {
+				return true;
+			} else if (doNotShowAdsCol) {
+				return false;
+			}
+			return true;
+		} else if (dataSource === 'percent' && headerHasPercent) {
+			if (doShowAdsCol) {
+				return true;
+			} else if (doNotShowAdsCol) {
+				return false;
+			}
+			return true;
+		}
+		return false;
+	}
+
+	function getCompanyNameColumnWidth(header: any) {
+		if (header.column.id === 'company_name') {
+			if (isAdsPage) {
+				return 'w-[40%]';
+			} else {
+				return 'w-[50%]';
+			}
+		}
+		return '';
+	}
 </script>
 
-<div class="table-container">
-	<div class="flex items-center p-2">
-		<input
-			placeholder="Filter companies..."
-			value={globalFilter}
-			oninput={(e) => {
-				const value = e.currentTarget.value;
-				table.setGlobalFilter(value);
-			}}
-			class="max-w-sm p-1"
-		/>
+<div class="table-container p-0 md:p-2">
+	<div class="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-8 m-2">
+		<div class="card preset-tonal flex items-center flex-col p-2">
+			<input
+				placeholder="Filter companies..."
+				value={globalFilter}
+				oninput={(e) => {
+					const value = e.currentTarget.value;
+					table.setGlobalFilter(value);
+				}}
+				class="max-w-sm p-1"
+			/>
+		</div>
+		<div class="card preset-tonal flex items-center p-2">
+			<label for="data-source" class="px-4 text-sm md:text-base">Data source: </label>
+			<form class="flex flex-row space-x-4">
+				<label class="flex flex-row items-center space-x-1">
+					<input
+						class="radio"
+						type="radio"
+						checked={dataSource == 'installs'}
+						name="radio-direct"
+						value="installs"
+						onchange={() => {
+							dataSource = 'installs';
+						}}
+					/>
+					<p class="text-xs md:text-sm text-primary-900-100">Installs Last 30 Days</p>
+				</label>
+				<label class="flex flex-row items-center space-x-1">
+					<input
+						class="radio"
+						type="radio"
+						checked={dataSource == 'percent'}
+						name="radio-direct"
+						value="percent"
+						onchange={() => {
+							dataSource = 'percent';
+						}}
+					/>
+					<p class="text-xs md:text-sm text-primary-900-100">Percent</p>
+				</label>
+			</form>
+		</div>
 	</div>
 	<div class="overflow-x-auto pl-0">
 		<table class="md:table table-hover md:table-compact table-auto w-full">
@@ -154,17 +267,8 @@
 				{#each table.getHeaderGroups() as headerGroup (headerGroup.id)}
 					<tr>
 						{#each headerGroup.headers as header (header.id)}
-							{#if header.column.id == 'company_name'}
-								<th class="w-[50%]">
-									{#if !header.isPlaceholder}
-										<FlexRender
-											content={header.column.columnDef.header}
-											context={header.getContext()}
-										/>
-									{/if}
-								</th>
-							{:else}
-								<th class="">
+							{#if shouldShowHeader(header)}
+								<th class={getCompanyNameColumnWidth(header)}>
 									{#if !header.isPlaceholder}
 										<FlexRender
 											content={header.column.columnDef.header}
@@ -180,9 +284,6 @@
 			<tbody>
 				{#each table.getRowModel().rows as row (row.id)}
 					<tr class="px-0">
-						<!-- <td class="table-cell-fit">
-							<p class="text-xs md:text-base">{row.index + 1}</p>
-						</td> -->
 						{#if include_open_source}
 							<td class="text-center">
 								{#if row.original.percent_open_source == 1}
@@ -210,31 +311,83 @@
 							</a>
 						</td>
 
-						<td class="table-cell-fit">
-							<p class="text-xs md:text-sm">
-								{(row.original.google_sdk * 100).toFixed(2)}%
-							</p>
-						</td>
-
-						<td class="table-cell-fit">
-							<p class="text-xs md:text-sm">
-								{(row.original.apple_sdk * 100).toFixed(2)}%
-							</p>
-						</td>
-
-						{#if !page.params.type || page.params.type == 'ad-networks'}
+						{#if dataSource == 'installs'}
 							<td class="table-cell-fit">
 								<p class="text-xs md:text-sm">
-									{(row.original.google_app_ads_direct * 100).toFixed(2)}%
+									{formatNumber(row.original.google_sdk_installs_d30)}
 								</p>
 							</td>
-
 							<td class="table-cell-fit">
 								<p class="text-xs md:text-sm">
-									{(row.original.apple_app_ads_direct * 100).toFixed(2)}%
+									{formatNumber(row.original.apple_sdk_installs_d30)}
 								</p>
 							</td>
+							{#if isAdsPage}
+								<td class="table-cell-fit">
+									<p class="text-xs md:text-sm">
+										{formatNumber(row.original.google_app_ads_direct_installs_d30)}
+									</p>
+								</td>
+
+								<td class="table-cell-fit">
+									<p class="text-xs md:text-sm">
+										{formatNumber(row.original.apple_app_ads_direct_installs_d30)}
+									</p>
+								</td>
+							{/if}
 						{/if}
+
+						{#if dataSource == 'percent'}
+							<td class="table-cell-fit">
+								<p class="text-xs md:text-sm">
+									{formatPercentage(row.original.google_sdk_percentage)}
+								</p>
+							</td>
+
+							<td class="table-cell-fit">
+								<p class="text-xs md:text-sm">
+									{formatPercentage(row.original.apple_sdk_percentage)}
+								</p>
+							</td>
+
+							{#if isAdsPage}
+								<td class="table-cell-fit">
+									<p class="text-xs md:text-sm">
+										{formatPercentage(row.original.google_app_ads_direct_percentage)}
+									</p>
+								</td>
+
+								<td class="table-cell-fit">
+									<p class="text-xs md:text-sm">
+										{formatPercentage(row.original.apple_app_ads_direct_percentage)}
+									</p>
+								</td>
+							{/if}
+						{/if}
+
+						<!-- {#if dataSource == 'reseller'}
+							<td class="table-cell-fit">
+								<p class="text-xs md:text-sm">
+									{formatNumber(row.original.google_app_ads_reseller_installs_d30)}
+								</p>
+							</td>
+
+							<td class="table-cell-fit">
+								<p class="text-xs md:text-sm">
+									{formatNumber(row.original.apple_app_ads_reseller_installs_d30)}
+								</p>
+							</td>
+							<td class="table-cell-fit">
+								<p class="text-xs md:text-sm">
+									{(row.original.google_app_ads_reseller_percentage * 100).toFixed(2)}%
+								</p>
+							</td>
+							<td class="table-cell-fit">
+								<p class="text-xs md:text-sm">
+									{(row.original.apple_app_ads_reseller_percentage * 100).toFixed(2)}%
+								</p>
+							</td>
+						{/if} -->
 					</tr>
 				{/each}
 			</tbody>

@@ -164,7 +164,7 @@ def prep_companies_overview_df(
         overview_df.groupby(
             ["company_name", "company_domain", "store", "tag_source"],
             dropna=False,
-        )[["app_count", "cat_total_app_count"]]
+        )[["app_count", "cat_total_app_count", "installs_d30", "rating_count_d30"]]
         .sum()
         .reset_index()
     )
@@ -183,16 +183,27 @@ def prep_companies_overview_df(
 
     # NOTE: Crucial for SDK to be first
     # since it has more than just advertising data
-    store_tag_source_cols = overview_df["store_tag_source"].unique().tolist()
+    store_tag_source_cols = [
+        f"{x}_percentage" for x in overview_df["store_tag_source"].unique().tolist()
+    ]
     sdk_cols = [x for x in store_tag_source_cols if "sdk" in x]
     adstxt_cols = [x for x in store_tag_source_cols if "app_ads" in x]
     adstxt_direct_cols = [x for x in adstxt_cols if "direct" in x]
 
-    overview_df = overview_df.pivot(
+    # NOTE: Hacky way to handle iOS with no installs
+    overview_df.loc[overview_df["installs_d30"] == 0, "installs_d30"] = (
+        overview_df.loc[overview_df["installs_d30"] == 0, "rating_count_d30"] * 50
+    )
+
+    pivoted_df = overview_df.pivot(
         index=["company_name", "company_domain"],
         columns=["store_tag_source"],
-        values="percentage",
-    ).reset_index()
+        values=["percentage", "installs_d30"],
+    )
+
+    # Flatten the multi-level columns
+    pivoted_df.columns = [f"{col[1]}_{col[0]}" for col in pivoted_df.columns]
+    overview_df = pivoted_df.reset_index()
 
     overview_df["tempsort"] = (
         overview_df[sdk_cols + adstxt_direct_cols].fillna(0).mean(axis=1)
