@@ -5,7 +5,7 @@
 	let myMessage = $state('');
 
 	function handleSubmit() {
-		return async ({ result }) => {
+		return async ({ result }: { result: any }) => {
 			// Handle the form submission result
 			if (result.type === 'success') {
 				// You can add additional success handling here if needed

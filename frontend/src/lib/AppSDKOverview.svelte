@@ -24,7 +24,7 @@
 	{#if typeof packageInfo == 'string'}
 		<p>Permissions, SDKs and trackers info not yet available for this app.</p>
 		<RequestSDKScanButton />
-	{:else if packageInfo.company_categories && myapp.sdk_last_crawled}
+	{:else if packageInfo.company_categories && myapp.sdk_last_crawled && myapp.sdk_crawl_result == 1}
 		<div class="">
 			<p class="p-2 md:p-4">
 				<span class="text-primary-900-100">{myapp.name}</span> was last scanned for SDKs
