@@ -45,4 +45,7 @@
   <sitemap>
     <loc>https://appgoblin.info/sitemap_apps_8.xml</loc>
   </sitemap>
+  <sitemap>
+    <loc>https://appgoblin.info/sitemap_apps_9.xml</loc>
+  </sitemap>
 </sitemapindex>
