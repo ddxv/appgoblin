@@ -47,11 +47,11 @@ def create_sitemap(df: pd.DataFrame, filename: str) -> None:
     ]
 
     # Direct string formatting instead of XML DOM operations
-    template = """  <url>
+    template = """<url>
     <loc>{url}</loc>
     <priority>{priority}</priority>
     <changefreq>{changefreq}</changefreq>
-  </url>"""
+     </url>"""
 
     # Bulk append using list comprehension
     xml_lines.extend(template.format(**row) for _, row in df.iterrows())
