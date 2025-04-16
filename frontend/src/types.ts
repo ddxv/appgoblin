@@ -403,7 +403,7 @@ export interface KeywordScore extends Row {
 	app_count: number;
 	total_apps: number;
 	competitiveness_score: number;
-	d30_best_rank: number;
+	d30_best_rank: number | string;
 }
 
 export interface AppSDKsOverview {

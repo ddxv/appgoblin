@@ -39,10 +39,18 @@
 
 	function typeTabClass(tab: string) {
 		const baseClass =
-			'flex items-center gap-2 px-4 py-3 border-b-2 font-medium transition-colors duration-200';
-		const selectedClass = 'text-primary-500 border-primary-500 hover:bg-primary-500/5';
+			'flex items-center gap-2 px-4 py-3 font-medium transition-colors duration-200';
+		const selectedClass = 'text-primary-500 bg-surface-100-900 hover:bg-primary-500/5';
 		const unselectedClass =
-			'text-surface-700-200-token border-transparent hover:text-primary-400 hover:border-primary-400/30 hover:bg-primary-500/5';
+			'text-surface-700-200-token border-transparent hover:text-primary-400 hover:border-primary-400/30 hover:bg-primary-900-100/50';
+
+		if (tab === '') {
+			if (page.url.pathname === `/apps/${page.params.id}`) {
+				return `${baseClass} ${selectedClass}`;
+			} else {
+				return `${baseClass} ${unselectedClass}`;
+			}
+		}
 
 		if (page.url.pathname.startsWith(`/apps/${page.params.id}/${tab}`)) {
 			return `${baseClass} ${selectedClass}`;

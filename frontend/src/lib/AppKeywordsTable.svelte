@@ -1,6 +1,5 @@
 <script lang="ts" generics="TData, TValue">
 	import {
-		type ColumnDef,
 		type PaginationState,
 		type SortingState,
 		getCoreRowModel,
@@ -20,7 +19,7 @@
 		data: KeywordScore[];
 	};
 
-	let pagination = $state<PaginationState>({ pageIndex: 0, pageSize: 10 });
+	let pagination = $state<PaginationState>({ pageIndex: 0, pageSize: 25 });
 	let sorting = $state<SortingState>([]);
 
 	let { data }: DataTableProps<KeywordScore, TValue> = $props();

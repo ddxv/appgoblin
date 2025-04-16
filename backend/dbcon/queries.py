@@ -969,6 +969,7 @@ def get_single_app_keywords(store_id: str) -> pd.DataFrame:
     df = pd.read_sql(
         QUERY_SINGLE_APP_KEYWORDS, DBCON.engine, params={"store_id": store_id}
     )
+    df = df.sort_values(by="d30_best_rank", ascending=True)
     return df
 
 
