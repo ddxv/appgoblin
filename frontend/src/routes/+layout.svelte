@@ -118,7 +118,7 @@
 
 	<footer class="sticky bottom-0 z-10 bg-surface-50-950">
 		<div class="md:hidden p-2">
-			{#if page.url.pathname.startsWith('/collections') || page.url.pathname.startsWith('/rankings') || page.url.pathname.startsWith('/companies')}
+			{#if page.url.pathname.startsWith('/collections') || page.url.pathname.startsWith('/rankings') || page.url.pathname.startsWith('/companies') || page.url.pathname.startsWith('/fastest-growing-apps')}
 				{#await data.appCats then myCatData}
 					<OpenSideBarDrawer {myCatData} />
 				{/await}

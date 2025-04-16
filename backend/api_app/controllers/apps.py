@@ -35,6 +35,7 @@ from dbcon.queries import (
     get_app_history,
     get_app_sdk_details,
     get_app_sdk_overview,
+    get_growth_apps,
     get_ranks_for_app,
     get_ranks_for_app_overview,
     get_recent_apps,
@@ -286,6 +287,30 @@ class AppController(Controller):
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(f"{self.path}/collections/{collection} took {duration}ms")
         return home_dict
+
+    @get(path="/growth", cache=3600)
+    async def get_growth_apps(
+        self: Self, app_category: str | None = None
+    ) -> list[dict]:
+        """Handle GET request for a list of fastest growing apps.
+
+        Args:
+        ----
+            app_category (str): The category of apps to retrieve.
+
+        Returns:
+        -------
+            A dictionary representation of the list of apps for homepage
+
+        """
+        start = time.perf_counter() * 1000
+        if app_category == "overall":
+            app_category = None
+        df = get_growth_apps(app_category=app_category)
+
+        duration = round((time.perf_counter() * 1000 - start), 2)
+        logger.info(f"{self.path}/growth took {duration}ms")
+        return {"apps": df.to_dict(orient="records")}
 
     @get(path="/{store_id:str}", cache=3600)
     async def get_app_detail(self: Self, store_id: str) -> AppDetail:

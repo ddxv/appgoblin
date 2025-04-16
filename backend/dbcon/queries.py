@@ -44,6 +44,7 @@ QUERY_APP_SDK_OVERVIEW = load_sql_file("query_app_sdk_overview.sql")
 QUERY_APPS_SDK_OVERVIEW = load_sql_file("query_apps_sdk_overview.sql")
 QUERY_APP_ADSTXT_OVERVIEW = load_sql_file("query_app_adstxt_overview.sql")
 QUERY_TOTAL_COUNTS = load_sql_file("query_total_counts.sql")
+QUERY_GROWTH_APPS = load_sql_file("query_growth_apps.sql")
 QUERY_STORE_COLLECTION_CATEGORY_MAP = load_sql_file(
     "query_store_collection_category_map.sql",
 )
@@ -219,6 +220,21 @@ def get_adtech_categories() -> pd.DataFrame:
 def get_total_counts() -> pd.DataFrame:
     """Get total counts."""
     df = pd.read_sql(QUERY_TOTAL_COUNTS, con=DBCON.engine)
+    return df
+
+
+def get_growth_apps(app_category: str | None = None) -> pd.DataFrame:
+    """Get fastest growing apps."""
+    df = pd.read_sql(
+        QUERY_GROWTH_APPS, con=DBCON.engine, params={"app_category": app_category}
+    )
+    decimal_cols = [
+        "installs_z_score_2w",
+        "rating_z_score_2w",
+        "installs_z_score_4w",
+        "rating_z_score_4w",
+    ]
+    df[decimal_cols] = df[decimal_cols].round(2)
     return df
 
 

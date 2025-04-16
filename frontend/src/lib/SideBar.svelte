@@ -7,7 +7,7 @@
 	import SideBarRankings from './SideBarRankings.svelte';
 	import SideBarCollections from './SideBarCollections.svelte';
 	import SideBarCompanies from './SideBarCompanies.svelte';
-
+	import SideBarFastestGrowingApps from './SideBarFastestGrowingApps.svelte';
 	let localHomeCollectionSelect = $homeCollectionSelection;
 	let localHomeStoreSelect = $state($homeStoreSelection);
 	let localHomeCategorySelect = $state($homeCategorySelection);
@@ -78,4 +78,8 @@
 
 {#if (page.url.pathname == '/companies' || page.url.pathname.startsWith('/companies')) && !page.url.pathname.includes('adstxt')}
 	<SideBarCompanies {myCatData} />
+{/if}
+
+{#if page.url.pathname == '/fastest-growing-apps' || page.url.pathname.startsWith('/fastest-growing-apps')}
+	<SideBarFastestGrowingApps {myCatData} />
 {/if}
