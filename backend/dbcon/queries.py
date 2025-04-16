@@ -223,10 +223,12 @@ def get_total_counts() -> pd.DataFrame:
     return df
 
 
-def get_growth_apps(app_category: str | None = None) -> pd.DataFrame:
+def get_growth_apps(store: int, app_category: str | None = None) -> pd.DataFrame:
     """Get fastest growing apps."""
     df = pd.read_sql(
-        QUERY_GROWTH_APPS, con=DBCON.engine, params={"app_category": app_category}
+        QUERY_GROWTH_APPS,
+        con=DBCON.engine,
+        params={"store": store, "app_category": app_category},
     )
     decimal_cols = [
         "installs_z_score_2w",

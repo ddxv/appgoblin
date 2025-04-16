@@ -288,14 +288,15 @@ class AppController(Controller):
         logger.info(f"{self.path}/collections/{collection} took {duration}ms")
         return home_dict
 
-    @get(path="/growth", cache=3600)
+    @get(path="/growth/{store:int}", cache=3600)
     async def get_growth_apps(
-        self: Self, app_category: str | None = None
+        self: Self, store: int, app_category: str | None = None
     ) -> list[dict]:
         """Handle GET request for a list of fastest growing apps.
 
         Args:
         ----
+            store (int): The store to retrieve.
             app_category (str): The category of apps to retrieve.
 
         Returns:
@@ -306,7 +307,7 @@ class AppController(Controller):
         start = time.perf_counter() * 1000
         if app_category == "overall":
             app_category = None
-        df = get_growth_apps(app_category=app_category)
+        df = get_growth_apps(store=store, app_category=app_category)
 
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(f"{self.path}/growth took {duration}ms")

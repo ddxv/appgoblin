@@ -26,7 +26,7 @@
 	let columnFilters = $state<ColumnFiltersState>([]);
 
 	let globalFilter = $state<string>('');
-	let dataSource = $state<string>('installs');
+	let dataSource = $state<string>('both');
 
 	let { data }: DataTableProps<CompaniesOverviewEntries, TValue> = $props();
 
@@ -35,17 +35,6 @@
 			title: 'App',
 			accessorKey: 'app_name',
 			isSortable: true
-		},
-		// {
-		// 	title: 'Category',
-		// 	accessorKey: 'app_cateogry',
-		// 	isSortable: true
-		// },
-		{
-			title: 'Store',
-			accessorKey: 'store',
-			isSortable: true
-			// cell: (info) => (info.getValue() === 1 ? 'Google Play' : 'App Store')
 		},
 		{
 			title: 'Total Installs',
@@ -95,6 +84,11 @@
 			accessorKey: 'installs_z_score_4w',
 			isSortable: true
 		},
+		{
+			title: 'Z-Score Ratings (4w)',
+			accessorKey: 'rating_z_score_4w',
+			isSortable: true
+		},
 		// Monetization indicators
 		{
 			title: 'IAP',
@@ -103,7 +97,7 @@
 			// cell: (info) => (info.getValue() ? 'Yes' : 'No')
 		},
 		{
-			title: 'Ad Supported',
+			title: 'Ads',
 			accessorKey: 'ad_supported',
 			isSortable: true
 			// cell: (info) => (info.getValue() ? 'Yes' : 'No')
@@ -111,10 +105,9 @@
 	]);
 
 	const globalFilterFn = (row: any, columnId: string, filterValue: string) => {
-		const name = row.original.company_name?.toLowerCase() ?? '';
-		const domain = row.original.company_domain?.toLowerCase() ?? '';
+		const name = row.original.app_name?.toLowerCase() ?? '';
 		const query = filterValue.toLowerCase();
-		return name.includes(query) || domain.includes(query);
+		return name.includes(query);
 	};
 
 	const table = createSvelteTable({
@@ -178,18 +171,6 @@
 		if (num >= 1000) return (num / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
 		return num;
 	}
-
-	function formatPercentage(num: number) {
-		if (num && num > 0) {
-			num = num * 100;
-			if (num < 10) {
-				return num.toFixed(2) + '%';
-			} else {
-				return num.toFixed(0) + '%';
-			}
-		}
-		return '';
-	}
 </script>
 
 <div class="table-container p-0 md:p-2">
@@ -206,33 +187,46 @@
 			/>
 		</div>
 		<div class="card preset-tonal flex items-center p-2">
-			<label for="data-source" class="px-4 text-sm md:text-base">Data source: </label>
+			<label for="data-source" class="px-4 text-sm md:text-base">Revenue Source: </label>
 			<form class="flex flex-row space-x-4">
 				<label class="flex flex-row items-center space-x-1">
 					<input
 						class="radio"
 						type="radio"
-						checked={dataSource == 'installs'}
+						checked={dataSource == 'iap'}
 						name="radio-direct"
-						value="installs"
+						value="iap"
 						onchange={() => {
-							dataSource = 'installs';
+							dataSource = 'iap';
 						}}
 					/>
-					<p class="text-xs md:text-sm text-primary-900-100">Installs Last 30 Days</p>
+					<p class="text-xs md:text-sm text-primary-900-100">IAP</p>
 				</label>
 				<label class="flex flex-row items-center space-x-1">
 					<input
 						class="radio"
 						type="radio"
-						checked={dataSource == 'percent'}
+						checked={dataSource == 'ads'}
 						name="radio-direct"
-						value="percent"
+						value="ads"
 						onchange={() => {
-							dataSource = 'percent';
+							dataSource = 'ads';
 						}}
 					/>
-					<p class="text-xs md:text-sm text-primary-900-100">Percent</p>
+					<p class="text-xs md:text-sm text-primary-900-100">Ads</p>
+				</label>
+				<label class="flex flex-row items-center space-x-1">
+					<input
+						class="radio"
+						type="radio"
+						checked={dataSource == 'both'}
+						name="radio-direct"
+						value="both"
+						onchange={() => {
+							dataSource = 'both';
+						}}
+					/>
+					<p class="text-xs md:text-sm text-primary-900-100">Both</p>
 				</label>
 			</form>
 		</div>
@@ -257,96 +251,95 @@
 			</thead>
 			<tbody>
 				{#each table.getRowModel().rows as row (row.id)}
-					<tr class="px-0 hover:bg-surface-100-900">
-						<td class="p-2">
-							<a
-								href="/apps/{row.original.store_id}"
-								style="cursor: pointer;"
-								class="text-xs md:text-sm font-medium text-blue-600 hover:text-blue-800"
-							>
-								<div class="inline-flex gap-2">
-									<img
-										src={row.original.icon_url_512}
-										alt="App icon"
-										class="w-10 h-10 rounded-lg"
-										loading="lazy"
-									/>
-									{row.original.app_name}
-								</div>
-							</a>
-						</td>
-						<!-- <td class="p-2">
-							<p class="text-xs md:text-sm">
-								{row.original.app_cateogry.replace('_', ' ')}
-							</p>
-						</td> -->
-						<td class="p-2">
-							<p class="text-xs md:text-sm">
-								{row.original.store === 1 ? 'Google Play' : 'App Store'}
-							</p>
-						</td>
-						<td class="p-2">
-							<p class="text-xs md:text-sm">
-								{formatNumber(row.original.installs)}
-							</p>
-						</td>
-						<td class="p-2">
-							<p class="text-xs md:text-sm">
-								{formatNumber(row.original.rating_count)}
-							</p>
-						</td>
-						<td class="p-2">
-							<p class="text-xs md:text-sm">
-								{formatNumber(row.original.installs_sum_1w)}
-							</p>
-						</td>
-						<td class="p-2">
-							<p class="text-xs md:text-sm">
-								{formatNumber(row.original.ratings_sum_1w)}
-							</p>
-						</td>
-						<td class="p-2">
-							<p class="text-xs md:text-sm">
-								{formatNumber(row.original.installs_avg_2w)}
-							</p>
-						</td>
-						<td class="p-2">
-							<p
-								class={`text-xs md:text-sm ${row.original.installs_z_score_2w > 100 ? 'font-bold text-green-600' : ''}`}
-							>
-								{formatNumber(row.original.installs_z_score_2w)}
-							</p>
-						</td>
-						<td class="p-2">
-							<p
-								class={`text-xs md:text-sm ${row.original.rating_z_score_2w > 100 ? 'font-bold text-green-600' : ''}`}
-							>
-								{formatNumber(row.original.rating_z_score_2w)}
-							</p>
-						</td>
-						<td class="p-2">
-							<p class="text-xs md:text-sm">
-								{formatNumber(row.original.installs_sum_4w)}
-							</p>
-						</td>
-						<td class="p-2">
-							<p
-								class={`text-xs md:text-sm ${row.original.installs_z_score_4w > 100 ? 'font-bold text-green-600' : ''}`}
-							>
-								{formatNumber(row.original.installs_z_score_4w)}
-							</p>
-						</td>
-						<td class="p-2">
-							<p class="text-xs md:text-sm">
-								{row.original.in_app_purchases ? 'Yes' : 'No'}
-							</p>
-						</td>
-						<td class="p-2">
-							<p class="text-xs md:text-sm">
-								{row.original.ad_supported ? 'Yes' : 'No'}
-							</p>
-						</td>
-					</tr>
+					{#if dataSource == 'both' || (row.original.ad_supported && dataSource == 'ads') || (row.original.in_app_purchases && dataSource == 'iap')}
+						<tr class="px-0 hover:bg-surface-100-900">
+							<td class="p-2">
+								<a
+									href="/apps/{row.original.store_id}"
+									style="cursor: pointer;"
+									class="text-xs md:text-sm font-medium text-blue-600 hover:text-blue-800"
+								>
+									<div class="inline-flex gap-2">
+										<!-- <img
+											src={row.original.icon_url_512}
+											alt="App icon"
+											class="w-10 h-10 rounded-lg"
+											loading="lazy"
+										/> -->
+										{row.original.app_name}
+									</div>
+								</a>
+							</td>
+							<td class="p-2">
+								<p class="text-xs md:text-sm">
+									{formatNumber(row.original.installs)}
+								</p>
+							</td>
+							<td class="p-2">
+								<p class="text-xs md:text-sm">
+									{formatNumber(row.original.rating_count)}
+								</p>
+							</td>
+							<td class="p-2">
+								<p class="text-xs md:text-sm">
+									{formatNumber(row.original.installs_sum_1w)}
+								</p>
+							</td>
+							<td class="p-2">
+								<p class="text-xs md:text-sm">
+									{formatNumber(row.original.ratings_sum_1w)}
+								</p>
+							</td>
+							<td class="p-2">
+								<p class="text-xs md:text-sm">
+									{formatNumber(row.original.installs_avg_2w)}
+								</p>
+							</td>
+							<td class="p-2">
+								<p
+									class={`text-xs md:text-sm ${row.original.installs_z_score_2w > 100 ? 'font-bold text-green-600' : ''}`}
+								>
+									{formatNumber(row.original.installs_z_score_2w)}
+								</p>
+							</td>
+							<td class="p-2">
+								<p
+									class={`text-xs md:text-sm ${row.original.rating_z_score_2w > 2 ? 'font-bold text-green-600' : ''}`}
+								>
+									{formatNumber(row.original.rating_z_score_2w)}
+								</p>
+							</td>
+							<td class="p-2">
+								<p class="text-xs md:text-sm">
+									{formatNumber(row.original.installs_sum_4w)}
+								</p>
+							</td>
+							<td class="p-2">
+								<p
+									class={`text-xs md:text-sm ${row.original.installs_z_score_4w > 100 ? 'font-bold text-green-600' : ''}`}
+								>
+									{formatNumber(row.original.installs_z_score_4w)}
+								</p>
+							</td>
+							<td class="p-2">
+								<p
+									class={`text-xs md:text-sm ${row.original.rating_z_score_4w > 2 ? 'font-bold text-green-600' : ''}`}
+								>
+									{formatNumber(row.original.rating_z_score_4w)}
+								</p>
+							</td>
+							<td class="p-2">
+								<p class="text-xs md:text-sm">
+									{row.original.in_app_purchases ? 'Yes' : 'No'}
+								</p>
+							</td>
+							<td class="p-2">
+								<p class="text-xs md:text-sm">
+									{row.original.ad_supported ? 'Yes' : 'No'}
+								</p>
+							</td>
+						</tr>
+					{/if}
 				{/each}
 			</tbody>
 		</table>
