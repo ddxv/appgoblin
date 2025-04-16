@@ -6,9 +6,7 @@
 	import AppAdsTxtOverview from '$lib/AppAdsTxtOverview.svelte';
 	import { Tabs } from '@skeletonlabs/skeleton-svelte';
 	import type { AppFullDetails } from '../../../types';
-	import AppTitle from '$lib/AppTitle.svelte';
 	import AppPlot from '$lib/AppPlot.svelte';
-	import AvailableOniOs from '$lib/svg/AvailableOniOS.svelte';
 	import RankChart from '$lib/RankChart.svelte';
 	import WhiteCard from '$lib/WhiteCard.svelte';
 	import AppKeywordsTable from '$lib/AppKeywordsTable.svelte';
@@ -120,47 +118,6 @@
 <section class="grid grid-flow-cols-1 md:grid-cols-2 md:gap-4 p-2">
 	<!-- Column1: App Icon Title & Info -->
 	<div class="card preset-filled-surface-100-900 p-0 lg:p-8">
-		<div class="card-header p-2 md:p-4">
-			{#await data.myapp}
-				Loading app details...
-			{:then myapp}
-				<AppTitle {myapp} />
-
-				<div class="grid grid-cols-1 md:grid-cols-2">
-					<div>
-						{#if myapp.developer_id}
-							<div class="block md:hidden"></div>
-							<div class="p-2 md:py-2">
-								<a href="/developers/{myapp.developer_id}">
-									<div class="btn preset-tonal hover:preset-tonal-primary">
-										<span>Developer: {myapp.developer_name || myapp.developer_id}</span>
-									</div>
-								</a>
-							</div>
-						{/if}
-
-						<div class="block md:hidden"></div>
-						<div class="p-2 md:py-2">
-							<a href="/categories/{myapp.category}">
-								<div class="btn preset-tonal hover:preset-tonal-primary">
-									<span>Category: {getCategoryName(myapp.category)}</span>
-								</div>
-							</a>
-						</div>
-					</div>
-					<div class="">
-						<a href={myapp.store_link} target="_blank" class="anchor inline-flex items-baseline">
-							{#if myapp.store_link.includes('google')}
-								<img class="w-40 md:w-60" src="/gp_en_badge_web_generic.png" alt={myapp.name} />
-							{:else}
-								<AvailableOniOs size={150} />
-							{/if}
-						</a>
-					</div>
-				</div>
-			{/await}
-		</div>
-
 		<div class="card-footer md:flex">
 			{#await data.myapp}
 				Loading app details...
