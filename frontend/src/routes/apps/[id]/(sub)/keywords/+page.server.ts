@@ -1,6 +1,5 @@
 import type { PageServerLoad } from './$types.js';
 
-
 function checkStatus(resp: Response, name: string) {
 	if (resp.status === 200) {
 		return resp.json();
@@ -20,7 +19,6 @@ export const load: PageServerLoad = async ({ params, parent }) => {
 	// Load parent data first because it is cached
 	const { myapp } = await parent();
 
-	
 	// Conditionally create myKeywords based on description length
 	let myKeywords = async () => 'No Keywords Result';
 	if (myapp.description && myapp.description.length > 100) {

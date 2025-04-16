@@ -10,8 +10,8 @@ SELECT
     cac.company_domain,
     cac.company_name,
     sum(app_count) AS app_count,
-    COALESCE(SUM(installs_d30), 0) AS installs_d30,
-    COALESCE(SUM(rating_count_d30), 0) AS rating_count_d30
+    coalesce(sum(installs_d30), 0) AS installs_d30,
+    coalesce(sum(rating_count_d30), 0) AS rating_count_d30
 FROM
     frontend.companies_category_tag_stats AS cac
 WHERE
