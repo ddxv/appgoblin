@@ -1,6 +1,11 @@
 <script lang="ts">
-	let { myapp } = $props();
+	import type { AppFullDetail } from '../types';
+	interface Props {
+		myapp: AppFullDetail;
+	}
+	let { myapp }: Props = $props();
 	import RatingInstallsLarge from '$lib/RatingInstallsLarge.svelte';
+	import StarsRating from '$lib/StarsRating.svelte';
 </script>
 
 <div class="inline-flex">
@@ -12,9 +17,14 @@
 			referrerpolicy="no-referrer"
 		/>
 	{/if}
-	<div class="p-4">
-		{#if myapp.installs}
-			<RatingInstallsLarge app={myapp} />
-		{/if}
-	</div>
+	{#if myapp.installs}
+		<RatingInstallsLarge app={myapp} />
+	{/if}
+</div>
+<!-- Ratings: STARS (123) -->
+<div class="md:hidden">
+	<StarsRating total={5} size={20} rating={myapp.rating} />
+</div>
+<div class="hidden md:inline-flex">
+	<StarsRating total={5} size={40} rating={myapp.rating} />
 </div>

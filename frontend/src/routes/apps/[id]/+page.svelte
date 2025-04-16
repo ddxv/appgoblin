@@ -174,15 +174,23 @@
 						<div class="space-y-2 p-2">
 							<div class="flex items-center gap-2">
 								<span class="font-medium">Store ID:</span>
-								<span>{myapp.store_id}</span>
+								<span class="text-primary-900-100">{myapp.store_id}</span>
 							</div>
 							<div class="flex items-center gap-2">
 								<span class="font-medium">First Released:</span>
-								<span>{myapp.release_date}</span>
+								<span class="text-primary-900-100">{myapp.release_date}</span>
 							</div>
 							<div class="flex items-center gap-2">
 								<span class="font-medium">Store Last Updated:</span>
-								<span>{myapp.store_last_updated}</span>
+								<span class="text-primary-900-100">{myapp.store_last_updated}</span>
+							</div>
+							<div class="flex items-center gap-2">
+								<span class="font-medium">In-App Purchases:</span>
+								<span class="text-primary-900-100">{myapp.in_app_purchases ? 'Yes' : 'No'}</span>
+							</div>
+							<div class="flex items-center gap-2">
+								<span class="font-medium">Ads:</span>
+								<span class="text-primary-900-100">{myapp.ad_supported ? 'Yes' : 'No'}</span>
 							</div>
 
 							{#if myapp.developer_url}
@@ -204,7 +212,7 @@
 					<!-- App Information Section -->
 					<WhiteCard>
 						{#snippet title()}
-							App Tracking Status
+							App Store
 						{/snippet}
 						<div class="space-y-2 p-2">
 							<div class="flex items-center gap-2">
@@ -217,11 +225,11 @@
 							</div>
 							<div class="flex items-center gap-2">
 								<span class="font-medium">Store First Crawled:</span>
-								<span>{myapp.created_at}</span>
+								<span class="text-primary-900-100">{myapp.created_at}</span>
 							</div>
 							<div class="flex items-center gap-2">
 								<span class="font-medium">Store Last Crawled:</span>
-								<span>{myapp.updated_at}</span>
+								<span class="text-primary-900-100">{myapp.updated_at}</span>
 							</div>
 						</div>
 					</WhiteCard>
@@ -229,24 +237,28 @@
 					<!-- Tracking Information Section -->
 					<WhiteCard>
 						{#snippet title()}
-							App-Ads.txt Status
+							Ads & App-Ads.txt
 						{/snippet}
-						<div class="space-y-2 p-2">
-							<div class="flex items-center gap-2">
-								<span class="font-medium">Ads.txt Last Crawled:</span>
-								<span>{myapp.adstxt_last_crawled}</span>
+						{#if myapp.ad_supported || myapp.adstxt_crawl_result == 1}
+							<div class="space-y-2 p-2">
+								<div class="flex items-center gap-2">
+									<span class="font-medium">Ads.txt Last Crawled:</span>
+									<span class="text-primary-900-100">{myapp.adstxt_last_crawled}</span>
+								</div>
+								<div class="flex items-center gap-2">
+									<span class="font-medium">Ads.txt Crawl Status:</span>
+									<span
+										class={myapp.adstxt_crawl_result == 1
+											? 'text-success-900-100'
+											: 'text-error-900-100'}
+									>
+										{myapp.adstxt_crawl_result == 1 ? 'Success' : 'Failed'}
+									</span>
+								</div>
 							</div>
-							<div class="flex items-center gap-2">
-								<span class="font-medium">Ads.txt Crawl Status:</span>
-								<span
-									class={myapp.adstxt_crawl_result == 1
-										? 'text-success-900-100'
-										: 'text-error-900-100'}
-								>
-									{myapp.adstxt_crawl_result == 1 ? 'Success' : 'Failed'}
-								</span>
-							</div>
-						</div>
+						{:else}
+							App not yet analyzed for ads.
+						{/if}
 					</WhiteCard>
 					<WhiteCard>
 						{#snippet title()}
@@ -256,11 +268,11 @@
 							{#if myapp.sdk_last_crawled}
 								<div class="flex items-center gap-2">
 									<span class="font-medium">Successful Last Crawled:</span>
-									<span>{myapp.sdk_successful_last_crawled}</span>
+									<span class="text-primary-900-100">{myapp.sdk_successful_last_crawled}</span>
 								</div>
 								<div class="flex items-center gap-2">
 									<span class="font-medium">Last Crawled:</span>
-									<span>{myapp.sdk_last_crawled}</span>
+									<span class="text-primary-900-100">{myapp.sdk_last_crawled}</span>
 								</div>
 								<div class="flex items-center gap-2">
 									<span class="font-medium">Last Crawl Status:</span>
@@ -288,7 +300,7 @@
 			{:then myapp}
 				<div class="self-center text-center">
 					<p class="text-4xl p-2 text-primary-800-200">{myapp.rating}★</p>
-					<p>Ratings: {myapp.rating_count}</p>
+					<p class="text-primary-900-100">Ratings: {myapp.rating_count}</p>
 				</div>
 			{/await}
 			<div class="flex-1">

@@ -490,7 +490,12 @@ export interface AppFullDetail {
 	rating?: number;
 	rating_count: string;
 	review_count: string;
-	rating_count_num: number;
+	installs_sum_1w: number;
+	installs_sum_4w: number;
+	ratings_sum_1w: number;
+	ratings_sum_4w: number;
+	installs_z_score_2w: number;
+	rating_z_score_2w: number;
 	category: string;
 	free: string;
 	price: string;

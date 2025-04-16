@@ -9,7 +9,9 @@ SELECT
     cac.store,
     cac.company_domain,
     cac.company_name,
-    sum(app_count) AS app_count
+    sum(app_count) AS app_count,
+    sum(installs_d30) AS installs_d30,
+    sum(raiting_count_d30) AS raiting_count_d30
 FROM
     frontend.companies_category_tag_stats AS cac
 WHERE

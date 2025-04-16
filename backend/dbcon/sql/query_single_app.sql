@@ -8,6 +8,12 @@ SELECT
     rating_count,
     review_count,
     installs,
+    installs_sum_1w,
+    installs_sum_4w,
+    ratings_sum_1w,
+    ratings_sum_4w,
+    installs_z_score_2w,
+    rating_z_score_2w,
     store_last_updated,
     created_at,
     updated_at,
@@ -28,11 +34,13 @@ SELECT
     developer_url,
     adstxt_last_crawled,
     adstxt_crawl_result,
+    ad_supported,
+    in_app_purchases,
     version_code,
     sdk_last_crawled,
     sdk_crawl_result,
     sdk_successful_last_crawled
 FROM
-    frontend.store_apps_overview
+    frontend.store_apps_overview_new
 WHERE
     store_id = :store_id;
