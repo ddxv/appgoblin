@@ -14,6 +14,8 @@ SELECT
     ratings_sum_4w,
     installs_z_score_2w,
     rating_z_score_2w,
+    installs_z_score_4w,
+    rating_z_score_4w,
     store_last_updated,
     created_at,
     updated_at,
@@ -41,6 +43,6 @@ SELECT
     sdk_crawl_result,
     sdk_successful_last_crawled
 FROM
-    frontend.store_apps_overview_new
+    frontend.store_apps_overview
 WHERE
     store_id = :store_id;

@@ -496,6 +496,8 @@ export interface AppFullDetail {
 	ratings_sum_4w: number;
 	installs_z_score_2w: number;
 	rating_z_score_2w: number;
+	installs_z_score_4w: number;
+	rating_z_score_4w: number;
 	category: string;
 	free: string;
 	price: string;

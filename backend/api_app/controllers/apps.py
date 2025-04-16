@@ -387,12 +387,14 @@ class AppController(Controller):
 
         df = get_app_sdk_details(store_id)
 
-        if df.empty:
+        if df.empty or df.isna().all().all():
             msg = f"SDK info for store ID not found: {store_id!r}"
             raise NotFoundException(
                 msg,
                 status_code=404,
             )
+
+        df.loc[df["value_name"].isna(), "value_name"] = ""
 
         # NOTE WARNING only works for android packages
         # First medium short for com.google.analytics
