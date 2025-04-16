@@ -1,166 +1,18 @@
 <script lang="ts">
 	import ExternalLinkSvg from '$lib/svg/ExternalLinkSVG.svelte';
-	import { goto } from '$app/navigation';
 	import RequestSDKScanButton from '$lib/RequestSDKScanButton.svelte';
-	import AppSDKOverview from '$lib/AppSDKOverview.svelte';
-	import AppAdsTxtOverview from '$lib/AppAdsTxtOverview.svelte';
-	import { Tabs } from '@skeletonlabs/skeleton-svelte';
 	import type { AppFullDetails } from '../../../types';
-	import AppTitle from '$lib/AppTitle.svelte';
-	import AppPlot from '$lib/AppPlot.svelte';
-	import AvailableOniOs from '$lib/svg/AvailableOniOS.svelte';
-	import RankChart from '$lib/RankChart.svelte';
 	import WhiteCard from '$lib/WhiteCard.svelte';
-	import AppKeywordsTable from '$lib/AppKeywordsTable.svelte';
 	interface Props {
 		data: AppFullDetails;
 	}
-	import { page } from '$app/state';
-	import { countries } from '../../../stores.js';
 	let { data }: Props = $props();
 	let sum = (arr: number[]) => arr.reduce((acc, curr) => acc + curr, 0);
-
-	function getCategoryName(category: string) {
-		if (category) {
-			return (
-				data?.appCats?.categories?.find((cat: { id: string }) => cat.id == category)?.name ||
-				category
-			);
-		}
-		return '';
-	}
-	let country = $state(page.url.searchParams.get('country'));
-	let countryTitle = $derived(countries[country as keyof typeof countries]);
-
-	function updateCountry(newCountry: string) {
-		country = newCountry;
-		const url = new URL(window.location.href);
-		url.searchParams.set('country', newCountry);
-		goto(url.toString(), { replaceState: true, noScroll: true });
-	}
-
-	let ratingsTab = $state('new');
-
-	data.myranksOverview.then((ranks) => {
-		if (country == '' && ranks.countries && ranks.countries.length > 0) {
-			country = ranks.countries[0];
-		}
-	});
 </script>
-
-<svelte:head>
-	<link rel="canonical" href="https://appgoblin.info/apps/{page.params.id}" />
-	{#await data.myapp then myapp}
-		{#if myapp.store_link.includes('google')}
-			<title>{myapp.name} Android Trends | {myapp.developer_name} | AppGoblin App Data</title>
-			<meta
-				name="description"
-				content="Explore {myapp.name} Android app's analytics and market trends on Google Play with AppGoblin. Developed by {myapp.developer_name} (ID: {myapp.developer_id}) in {getCategoryName(
-					myapp.category
-				)} category. Check out detailed app statistics, rankings, and more."
-			/>
-			<meta
-				name="keywords"
-				content="{myapp.name}, {myapp.developer_name}, {myapp.developer_id}, {getCategoryName(
-					myapp.category
-				)}, analytics, ads, market data, Android app rankings, app reviews, download statistics, Google Play data, app comparison, mobile app insights, Android"
-			/>
-			<meta
-				property="og:title"
-				content="{myapp.name} Android App Stats & Info - AppGoblin | {myapp.developer_name}"
-			/>
-			<meta
-				property="og:description"
-				content="Explore {myapp.name} Android app analytics and market trends on Google Play with AppGoblin. {myapp.name} by {myapp.developer_name} (ID: {myapp.developer_id}). Dive into detailed app rankings and download statistics to inform your Android app strategy and discover top-performing apps."
-			/>
-			<meta
-				name="twitter:title"
-				content="{myapp.name} Android | {myapp.developer_name} | App Stats & Info - AppGoblin"
-			/>
-			<meta
-				name="twitter:description"
-				content="Explore {myapp.name} Android app analytics and market trends on Google Play with AppGoblin. {myapp.name} by {myapp.developer_name} (ID: {myapp.developer_id}). Dive into detailed app rankings and download statistics to inform your Android app strategy and discover top-performing apps."
-			/>
-		{:else}
-			<title>{myapp.name} iOS Trends | {myapp.developer_name} | AppGoblin App Data</title>
-			<meta
-				name="description"
-				content="Explore {myapp.name} iOS app's analytics and market trends on the App Store with AppGoblin. Developed by {myapp.developer_name} (ID: {myapp.developer_id}). Dive into detailed app rankings and download statistics to inform your iOS app strategy and discover top-performing apps."
-			/>
-			<meta
-				name="keywords"
-				content="{myapp.name}, {myapp.developer_name}, {myapp.developer_id}, {myapp.category} analytics, market data, iOS app rankings, app reviews, download statistics, App Store data, app comparison, mobile app insights, iOS"
-			/>
-			<meta
-				property="og:title"
-				content="{myapp.name} iOS | {myapp.developer_name} | App Stats & Info - AppGoblin"
-			/>
-			<meta
-				property="og:description"
-				content="Explore {myapp.name} iOS app analytics and market trends on the App Store with AppGoblin. {myapp.name} by {myapp.developer_name} (ID: {myapp.developer_id}). Dive into detailed app rankings and download statistics to inform your iOS app strategy and discover top-performing apps."
-			/>
-			<meta
-				name="twitter:title"
-				content="{myapp.name} iOS | {myapp.developer_name} | App Stats & Info - AppGoblin "
-			/>
-			<meta
-				name="twitter:description"
-				content="Explore {myapp.name} iOS app analytics and market trends on the App Store with AppGoblin. {myapp.name} by {myapp.developer_name} (ID: {myapp.developer_id}). Dive into detailed app rankings and download statistics to inform your iOS app strategy and discover top-performing apps."
-			/>
-		{/if}
-		<meta property="og:image" content="https://appgoblin.info/goblin_purple_hat_250.png" />
-		<meta property="og:url" content={page.url.href} />
-		<meta property="og:type" content="website" />
-		<meta name="twitter:card" content="summary_large_image" />
-		<meta name="twitter:image" content="https://appgoblin.info/goblin_purple_hat_250.png" />
-		<meta name="robots" content="index, follow" />
-	{/await}
-</svelte:head>
 
 <section class="grid grid-flow-cols-1 md:grid-cols-2 md:gap-4 p-2">
 	<!-- Column1: App Icon Title & Info -->
 	<div class="card preset-filled-surface-100-900 p-0 lg:p-8">
-		<div class="card-header p-2 md:p-4">
-			{#await data.myapp}
-				Loading app details...
-			{:then myapp}
-				<AppTitle {myapp} />
-
-				<div class="grid grid-cols-1 md:grid-cols-2">
-					<div>
-						{#if myapp.developer_id}
-							<div class="block md:hidden"></div>
-							<div class="p-2 md:py-2">
-								<a href="/developers/{myapp.developer_id}">
-									<div class="btn preset-tonal hover:preset-tonal-primary">
-										<span>Developer: {myapp.developer_name || myapp.developer_id}</span>
-									</div>
-								</a>
-							</div>
-						{/if}
-
-						<div class="block md:hidden"></div>
-						<div class="p-2 md:py-2">
-							<a href="/categories/{myapp.category}">
-								<div class="btn preset-tonal hover:preset-tonal-primary">
-									<span>Category: {getCategoryName(myapp.category)}</span>
-								</div>
-							</a>
-						</div>
-					</div>
-					<div class="">
-						<a href={myapp.store_link} target="_blank" class="anchor inline-flex items-baseline">
-							{#if myapp.store_link.includes('google')}
-								<img class="w-40 md:w-60" src="/gp_en_badge_web_generic.png" alt={myapp.name} />
-							{:else}
-								<AvailableOniOs size={150} />
-							{/if}
-						</a>
-					</div>
-				</div>
-			{/await}
-		</div>
-
 		<div class="card-footer md:flex">
 			{#await data.myapp}
 				Loading app details...
@@ -330,125 +182,6 @@
 				{/await}
 			</div>
 		</div>
-
-		<div class="card preset-tonal p-2 md:p-8 mt-2 md:mt-4">
-			<h4 class="h4 md:h3 p-2">Highest Ranks Past 90 Days</h4>
-			{#await data.myranksOverview}
-				Loading app ranks...
-			{:then ranks}
-				{#if typeof ranks == 'string'}
-					{ranks}
-					<p>
-						No official ranks available for this app. This app is not ranked on the store's top 200
-						apps for it's categories.
-					</p>
-				{:else if ranks.best_ranks && ranks.best_ranks.length > 0}
-					{#each ranks.best_ranks.slice(0, 10) as myrow}
-						<div class="px-4">
-							#{myrow.best_rank}
-							in: {myrow.collection}
-							{myrow.category}
-							({myrow.country})
-						</div>
-					{/each}
-					{#if ranks.best_ranks.length > 10}
-						<div class="px-4 mt-2 text-surface-600">
-							+ {ranks.best_ranks.length - 10} more rankings
-						</div>
-					{/if}
-				{/if}
-			{:catch}
-				<p>The server caught an error.</p>
-			{/await}
-		</div>
-		<hr class="my-4" />
-		<div class="max-w-sm p-2">
-			<p>Breakdown App Store Ranks by Country</p>
-			{#await data.myranksOverview}
-				Loading app ranks...
-			{:then ranks}
-				<select
-					class="select"
-					bind:value={country}
-					onchange={(e) => updateCountry(e.currentTarget.value)}
-				>
-					{#if typeof ranks != 'string' && ranks.countries && ranks.countries.length > 0}
-						{#each ranks.countries as countryCode}
-							<option value={countryCode}>{countries[countryCode as keyof typeof countries]}</option
-							>
-						{/each}
-					{:else}
-						{#each Object.keys(countries) as countryCode}
-							<option value={countryCode}>{countries[countryCode as keyof typeof countries]}</option
-							>
-						{/each}
-					{/if}
-				</select>
-			{/await}
-		</div>
-		{#await data.myranks}
-			Loading app ranks...
-		{:then ranks}
-			{#if typeof ranks == 'string'}
-				<p>
-					No official ranks available for this app. This app is not ranked on the store's top 200
-					apps for it's categories.
-				</p>
-			{:else if ranks.history && ranks.history.length > 0}
-				<div class="card preset-tonal mt-2 md:mt-4">
-					<h4 class="h4 md:h3 p-2 mt-2">App Store Ranks: {countryTitle}</h4>
-
-					<RankChart plotData={ranks.history} narrowBool={true} />
-				</div>
-			{:else}
-				<p>No ranking data available for this app.</p>
-			{/if}
-		{/await}
-
-		{#await data.myhistory}
-			Loading historical data...
-		{:then histdata}
-			{#if histdata.plot_data && histdata.plot_data.installs && histdata.plot_data.installs.length > 1}
-				<div class="card preset-tonal p-2 md:p-8 mt-2 md:mt-4">
-					<h3 class="h4 md:h3 p-2">Average Daily Installs</h3>
-					<AppPlot plotdata={histdata.plot_data.installs} plotType="installs" />
-				</div>
-			{/if}
-			{#if histdata.plot_data && histdata.plot_data.ratings && histdata.plot_data.ratings.length > 1}
-				<div class="card preset-tonal p-2 md:p-8 mt-2 md:mt-4">
-					<h3 class="h4 md:h3 p-2">Average Daily Reviews & Ratings</h3>
-					<AppPlot plotdata={histdata.plot_data.ratings} plotType="ratings" />
-				</div>
-			{/if}
-			{#if histdata.plot_data && histdata.plot_data.changes && histdata.plot_data.changes.length > 1}
-				<div class="card preset-tonal p-2 md:p-8 mt-2 md:mt-4">
-					<h3 class="h4 md:h3 p-2">Rate of Change Week on Week</h3>
-					<AppPlot plotdata={histdata.plot_data.changes} plotType="change" />
-				</div>
-			{/if}
-			<div class="card preset-tonal p-2 md:p-8 mt-2 md:mt-4">
-				<h3 class="h4 md:h3 p-2">App Ratings</h3>
-				<Tabs value={ratingsTab} onValueChange={(e) => (ratingsTab = e.value)}>
-					{#snippet list()}
-						<Tabs.Control value="average">Total Ratings</Tabs.Control>
-						<Tabs.Control value="new">New Ratings</Tabs.Control>
-					{/snippet}
-					{#snippet content()}
-						{#if histdata.plot_data && histdata.plot_data.ratings_stars && histdata.plot_data.ratings_stars.length > 1}
-							<Tabs.Panel value="average">
-								<AppPlot plotdata={histdata.plot_data.ratings_stars} plotType="ratings_stars" />
-							</Tabs.Panel>
-							<Tabs.Panel value="new">
-								<AppPlot
-									plotdata={histdata.plot_data.ratings_stars_new}
-									plotType="ratings_stars_new"
-								/>
-							</Tabs.Panel>
-						{/if}
-					{/snippet}
-				</Tabs>
-			</div>
-		{/await}
 	</div>
 
 	<!-- Column2: App Pictures -->
@@ -484,28 +217,6 @@
 					</div>
 				</section>
 			{/await}
-			<div>
-				<h4 class="h4 md:h3 p-2">App Keywords</h4>
-				{#await data.myKeywords}
-					Loading keywords...
-				{:then keywords}
-					{#if keywords && keywords.keyword_scores && keywords.keyword_scores.length > 0}
-						<AppKeywordsTable data={keywords.keyword_scores} />
-					{:else}
-						<p>No keywords found for this app.</p>
-					{/if}
-				{/await}
-			</div>
-		</div>
-		<div class="card preset-tonal p-2 md:p-8 mt-2 md:mt-4">
-			<AppSDKOverview
-				myPackageInfo={data.myPackageInfo}
-				companyTypes={data.companyTypes}
-				myapp={data.myapp}
-			/>
-		</div>
-		<div class="card preset-tonal p-2 md:p-8 mt-2 md:mt-4">
-			<AppAdsTxtOverview myAdsTxt={data.myAdsTxtOverview} />
 		</div>
 	</div>
 </section>
