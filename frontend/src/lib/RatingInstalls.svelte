@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Rating from '$lib/Rating.svelte';
+	import Rating from '$lib/StarsRating.svelte';
 	import IconDownload from '$lib/svg/IconDownload.svelte';
 	import type { AppFullDetail } from '../types';
 	import IconGoogle from './svg/IconGoogle.svelte';

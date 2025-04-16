@@ -240,24 +240,28 @@
 							Ads & App-Ads.txt
 						{/snippet}
 						{#if myapp.ad_supported || myapp.adstxt_crawl_result == 1}
-							<div class="space-y-2 p-2">
-								<div class="flex items-center gap-2">
-									<span class="font-medium">Ads.txt Last Crawled:</span>
-									<span class="text-primary-900-100">{myapp.adstxt_last_crawled}</span>
+							{#if myapp.adstxt_last_crawled}
+								<div class="space-y-2 p-2">
+									<div class="flex items-center gap-2">
+										<span class="font-medium">Ads.txt Last Crawled:</span>
+										<span class="text-primary-900-100">{myapp.adstxt_last_crawled}</span>
+									</div>
+									<div class="flex items-center gap-2">
+										<span class="font-medium">Ads.txt Crawl Status:</span>
+										<span
+											class={myapp.adstxt_crawl_result == 1
+												? 'text-success-900-100'
+												: 'text-error-900-100'}
+										>
+											{myapp.adstxt_crawl_result == 1 ? 'Success' : 'Failed'}
+										</span>
+									</div>
 								</div>
-								<div class="flex items-center gap-2">
-									<span class="font-medium">Ads.txt Crawl Status:</span>
-									<span
-										class={myapp.adstxt_crawl_result == 1
-											? 'text-success-900-100'
-											: 'text-error-900-100'}
-									>
-										{myapp.adstxt_crawl_result == 1 ? 'Success' : 'Failed'}
-									</span>
-								</div>
-							</div>
+							{:else}
+								App not yet analyzed for ads.
+							{/if}
 						{:else}
-							App not yet analyzed for ads.
+							App does not have ads.
 						{/if}
 					</WhiteCard>
 					<WhiteCard>
