@@ -13,7 +13,7 @@
 	let searchTerm: string | null = $state(page.params.term || '');
 </script>
 
-<h1 class="h1">Search Results for {searchTerm}</h1>
+<h1 class="text-3xl text-primary-900-100">Search Results for: '{searchTerm}'</h1>
 
 <div class="p-4">
 	{#await data.companiesResults}

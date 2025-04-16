@@ -50,7 +50,7 @@
 <div class="grid grid-cols-1 gap-4 md:gap-8 p-2 md:p-4 px-2 md:px-20 lg:px-48">
 	<br />
 	<div class="card preset-tonal p-2 md:p-8">
-		<h1 class="h1 p-2 md:p-4 text-primary-900-100">{title}</h1>
+		<h1 class="p-2 md:p-4 text-3xl text-primary-900-100">{title}</h1>
 		<p class="p-2 md:p-4">
 			AppGoblin contains <span class="font-bold text-primary-900-100"
 				>free marketing tools for app developers</span
