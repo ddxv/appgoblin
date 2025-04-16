@@ -29,11 +29,9 @@
 			{:else if app.rating_count != '0' && app.rating_count != 'N/A'}
 				<div class="flex items-center">
 					<IconDownload />
-					<span class="font-medium"
-						>~{formatNumber(Number(app.rating_count.replace(/,/g, '')) * 50)}</span
-					>
-					<span class="text-sm text-primary-600-400"
-						>- {formatNumber(Number(app.rating_count.replace(/,/g, '')) * 100)}</span
+					<span class="font-medium">
+						~{formatNumber(Number(app.rating_count.replace(/,/g, '')) * 50)}
+						- {formatNumber(Number(app.rating_count.replace(/,/g, '')) * 100)}</span
 					>
 				</div>
 			{:else}
@@ -50,42 +48,88 @@
 			<span class="text-primary-600-400">Ratings not yet available</span>
 		{/if}
 
-		{#if app.installs_z_score_2w > 0 || (app.installs_z_score_2w == 0 && app.rating_z_score_2w > 0)}
-			<div class="flex items-center gap-1 text-success-900-100">
-				<TrendingUpIcon />
-				<span>Trending Up</span>
-			</div>
-		{:else if app.installs_z_score_2w < 0 || (app.installs_z_score_2w == 0 && app.rating_z_score_2w < 0)}
-			<div class="flex items-center gap-1 text-danger-900-100">
-				<TrendingDownIcon />
-				<span>Trending Down</span>
-			</div>
-		{/if}
-
+		<!-- installs week trend -->
 		{#if app.installs_sum_1w > 0}
 			<div class="flex items-center gap-1 text-primary-800-200">
 				<span>+{formatNumber(app.installs_sum_1w)}</span>
 				<span class="text-primary-600-400">(week)</span>
+				{#if app.installs_z_score_2w > 1 || (app.installs_z_score_2w == 0 && app.rating_z_score_2w > 1)}
+					<div class="flex items-center gap-1 text-success-900-100">
+						<TrendingUpIcon />
+					</div>
+				{:else if app.installs_z_score_2w < -1 || (app.installs_z_score_2w == 0 && app.rating_z_score_2w < -1)}
+					<div class="flex items-center gap-1 text-danger-900-100">
+						<TrendingDownIcon />
+					</div>
+				{:else}
+					<div class="flex items-center gap-1 text-primary-600-400 text-xs">
+						<span>Trend Steady</span>
+					</div>
+				{/if}
 			</div>
 		{/if}
+		<!-- installs month trend -->
 		{#if app.installs_sum_4w > 0}
-			<div class="flex items-center gap-1 text-primary-600-400">
+			<div class="flex items-center gap-1 text-primary-800-200">
 				<span>+{formatNumber(app.installs_sum_4w)}</span>
-				<span>(month)</span>
+				<span class="text-primary-600-400">(month)</span>
+				{#if app.installs_z_score_4w > 1 || (app.installs_z_score_4w == 0 && app.rating_z_score_4w > 1)}
+					<div class="flex items-center gap-1 text-success-900-100">
+						<TrendingUpIcon />
+					</div>
+				{:else if app.installs_z_score_4w < -1 || (app.installs_z_score_4w == 0 && app.rating_z_score_4w < -1)}
+					<div class="flex items-center gap-1 text-danger-900-100">
+						<TrendingDownIcon />
+					</div>
+				{:else}
+					<div class="flex items-center gap-1 text-primary-600-400 text-xs">
+						<span>Trend Steady</span>
+					</div>
+				{/if}
 			</div>
 		{/if}
 
-		{#if app.ratings_sum_1w > 0}
-			<div class="flex items-center gap-1 text-primary-600-400">
-				<span>+{formatNumber(app.ratings_sum_1w)}</span>
-				<span>(week)</span>
-			</div>
-		{/if}
-		{#if app.ratings_sum_4w > 0}
-			<div class="flex items-center gap-1 text-primary-600-400">
-				<span>+{formatNumber(app.ratings_sum_4w)}</span>
-				<span>(month)</span>
-			</div>
+		<!-- ratings week trend -->
+		{#if app.installs == 'N/A'}
+			{#if app.ratings_sum_1w > 0}
+				<div class="flex items-center gap-1 text-primary-800-200">
+					<span>+{formatNumber(app.ratings_sum_1w)}</span>
+					<span class="text-primary-600-400">(week)</span>
+					{#if app.rating_z_score_2w > 1}
+						<div class="flex items-center gap-1 text-success-900-100">
+							<TrendingUpIcon />
+						</div>
+					{:else if app.rating_z_score_2w < -1}
+						<div class="flex items-center gap-1 text-danger-900-100">
+							<TrendingDownIcon />
+						</div>
+					{:else}
+						<div class="flex items-center gap-1 text-primary-600-400 text-xs">
+							<span>Trend Steady</span>
+						</div>
+					{/if}
+				</div>
+			{/if}
+			<!-- ratings month trend -->
+			{#if app.ratings_sum_4w > 0}
+				<div class="flex items-center gap-1 text-primary-800-200">
+					<span>+{formatNumber(app.ratings_sum_4w)}</span>
+					<span class="text-primary-600-400">(month)</span>
+					{#if app.rating_z_score_4w > 1}
+						<div class="flex items-center gap-1 text-success-900-100">
+							<TrendingUpIcon />
+						</div>
+					{:else if app.rating_z_score_4w < -1}
+						<div class="flex items-center gap-1 text-danger-900-100">
+							<TrendingDownIcon />
+						</div>
+					{:else}
+						<div class="flex items-center gap-1 text-primary-600-400 text-xs">
+							<span>Trend Steady</span>
+						</div>
+					{/if}
+				</div>
+			{/if}
 		{/if}
 	</div>
 </div>
