@@ -43,6 +43,6 @@ SELECT
     sdk_crawl_result,
     sdk_successful_last_crawled
 FROM
-    frontend.store_apps_overview
+    frontend.store_apps_overview_old
 WHERE
     store_id = :store_id;
