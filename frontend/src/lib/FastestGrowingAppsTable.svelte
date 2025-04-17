@@ -70,7 +70,7 @@
 		},
 		{
 			title: 'Z-Score Ratings (2w)',
-			accessorKey: 'rating_z_score_2w',
+			accessorKey: 'ratings_z_score_2w',
 			isSortable: true
 		},
 		// Monthly growth metrics
@@ -86,7 +86,7 @@
 		},
 		{
 			title: 'Z-Score Ratings (4w)',
-			accessorKey: 'rating_z_score_4w',
+			accessorKey: 'ratings_z_score_4w',
 			isSortable: true
 		},
 		// Monetization indicators
@@ -304,9 +304,9 @@
 							</td>
 							<td class="p-2">
 								<p
-									class={`text-xs md:text-sm ${row.original.rating_z_score_2w > 2 ? 'font-bold text-green-600' : ''}`}
+									class={`text-xs md:text-sm ${row.original.ratings_z_score_2w > 2 ? 'font-bold text-green-600' : ''}`}
 								>
-									{formatNumber(row.original.rating_z_score_2w)}
+									{formatNumber(row.original.ratings_z_score_2w)}
 								</p>
 							</td>
 							<td class="p-2">
@@ -323,9 +323,9 @@
 							</td>
 							<td class="p-2">
 								<p
-									class={`text-xs md:text-sm ${row.original.rating_z_score_4w > 2 ? 'font-bold text-green-600' : ''}`}
+									class={`text-xs md:text-sm ${row.original.ratings_z_score_4w > 2 ? 'font-bold text-green-600' : ''}`}
 								>
-									{formatNumber(row.original.rating_z_score_4w)}
+									{formatNumber(row.original.ratings_z_score_4w)}
 								</p>
 							</td>
 							<td class="p-2">

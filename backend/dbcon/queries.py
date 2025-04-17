@@ -232,9 +232,9 @@ def get_growth_apps(store: int, app_category: str | None = None) -> pd.DataFrame
     )
     decimal_cols = [
         "installs_z_score_2w",
-        "rating_z_score_2w",
+        "ratings_z_score_2w",
         "installs_z_score_4w",
-        "rating_z_score_4w",
+        "ratings_z_score_4w",
     ]
     df[decimal_cols] = df[decimal_cols].round(2)
     return df
