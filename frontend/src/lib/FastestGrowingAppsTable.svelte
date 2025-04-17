@@ -3,6 +3,7 @@
 		type PaginationState,
 		type SortingState,
 		type ColumnFiltersState,
+		type VisibilityState,
 		getCoreRowModel,
 		getPaginationRowModel,
 		getSortedRowModel,
@@ -24,6 +25,7 @@
 	let pagination = $state<PaginationState>({ pageIndex: 0, pageSize: 50 });
 	let sorting = $state<SortingState>([]);
 	let columnFilters = $state<ColumnFiltersState>([]);
+	let columnVisibility = $state<VisibilityState>({});
 
 	let globalFilter = $state<string>('');
 	let dataSource = $state<string>('both');
@@ -104,6 +106,20 @@
 		}
 	]);
 
+	const hideableColumns = $state<string[]>(
+		columns
+			.filter((column) => {
+				const key = column.accessorKey as string;
+				return (
+					key === 'in_app_purchases' ||
+					key === 'ad_supported' ||
+					key?.includes('ratings') ||
+					key?.includes('installs')
+				);
+			})
+			.map((column) => column.accessorKey as string)
+	);
+
 	const globalFilterFn = (row: any, columnId: string, filterValue: string) => {
 		const name = row.original.app_name?.toLowerCase() ?? '';
 		const query = filterValue.toLowerCase();
@@ -127,6 +143,9 @@
 			},
 			get globalFilter() {
 				return globalFilter;
+			},
+			get columnVisibility() {
+				return columnVisibility;
 			}
 		},
 
@@ -148,7 +167,13 @@
 				columnFilters = updater;
 			}
 		},
-
+		onColumnVisibilityChange: (updater) => {
+			if (typeof updater === 'function') {
+				columnVisibility = updater(columnVisibility);
+			} else {
+				columnVisibility = updater;
+			}
+		},
 		onPaginationChange: (updater) => {
 			if (typeof updater === 'function') {
 				pagination = updater(pagination);
@@ -175,6 +200,35 @@
 
 <div class="table-container p-0 md:p-2">
 	<div class="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-8 m-2">
+		<!-- <div>
+			<form class="space-y-2">
+				{#each table.getHeaderGroups() as headerGroup (headerGroup.id)}
+					{#each headerGroup.headers as header (header.id)}
+						{#if !header.isPlaceholder && hideableColumns.includes(header.id)}
+							<label class="flex items-center space-x-2">
+								<input class="checkbox" type="checkbox" />
+								<p>{header.id}</p>
+							</label>
+						{/if}
+					{/each}
+				{/each}
+			</form>
+		</div> -->
+		<div>
+			<form class="space-y-2">
+				{#each table.getAllColumns().filter((col) => col.getCanHide()) as column (column.id)}
+					<label class="flex items-center space-x-2">
+						<input
+							class="checkbox"
+							type="checkbox"
+							bind:checked={() => column.getIsVisible(), (v) => column.toggleVisibility(!!v)}
+						/>
+						<p>{column.id}</p>
+					</label>
+				{/each}
+			</form>
+		</div>
+
 		<div class="card preset-tonal flex items-center flex-col p-2">
 			<input
 				placeholder="Filter apps..."
@@ -237,7 +291,7 @@
 				{#each table.getHeaderGroups() as headerGroup (headerGroup.id)}
 					<tr>
 						{#each headerGroup.headers as header (header.id)}
-							{#if !header.isPlaceholder}
+							{#if !header.isPlaceholder && header.column.getIsVisible()}
 								<th>
 									<FlexRender
 										content={header.column.columnDef.header}
@@ -253,91 +307,35 @@
 				{#each table.getRowModel().rows as row (row.id)}
 					{#if dataSource == 'both' || (row.original.ad_supported && dataSource == 'ads') || (row.original.in_app_purchases && dataSource == 'iap')}
 						<tr class="px-0 hover:bg-surface-100-900">
-							<td class="p-2">
-								<a
-									href="/apps/{row.original.store_id}"
-									style="cursor: pointer;"
-									class="text-xs md:text-sm font-medium text-blue-600 hover:text-blue-800"
-								>
-									<div class="inline-flex gap-2">
-										<!-- <img
+							{#each row.getVisibleCells() as cell (cell.id)}
+								<td class="p-2">
+									{#if cell.column.id == 'app_name'}
+										<a
+											href="/apps/{row.original.store_id}"
+											style="cursor: pointer;"
+											class="text-xs md:text-sm font-medium text-blue-600 hover:text-blue-800"
+										>
+											<div class="inline-flex gap-2">
+												<!-- <img
 											src={row.original.icon_url_512}
 											alt="App icon"
 											class="w-10 h-10 rounded-lg"
 											loading="lazy"
 										/> -->
-										{row.original.app_name}
-									</div>
-								</a>
-							</td>
-							<td class="p-2">
-								<p class="text-xs md:text-sm">
-									{formatNumber(row.original.installs)}
-								</p>
-							</td>
-							<td class="p-2">
-								<p class="text-xs md:text-sm">
-									{formatNumber(row.original.rating_count)}
-								</p>
-							</td>
-							<td class="p-2">
-								<p class="text-xs md:text-sm">
-									{formatNumber(row.original.installs_sum_1w)}
-								</p>
-							</td>
-							<td class="p-2">
-								<p class="text-xs md:text-sm">
-									{formatNumber(row.original.ratings_sum_1w)}
-								</p>
-							</td>
-							<td class="p-2">
-								<p class="text-xs md:text-sm">
-									{formatNumber(row.original.installs_avg_2w)}
-								</p>
-							</td>
-							<td class="p-2">
-								<p
-									class={`text-xs md:text-sm ${row.original.installs_z_score_2w > 100 ? 'font-bold text-green-600' : ''}`}
-								>
-									{formatNumber(row.original.installs_z_score_2w)}
-								</p>
-							</td>
-							<td class="p-2">
-								<p
-									class={`text-xs md:text-sm ${row.original.ratings_z_score_2w > 2 ? 'font-bold text-green-600' : ''}`}
-								>
-									{formatNumber(row.original.ratings_z_score_2w)}
-								</p>
-							</td>
-							<td class="p-2">
-								<p class="text-xs md:text-sm">
-									{formatNumber(row.original.installs_sum_4w)}
-								</p>
-							</td>
-							<td class="p-2">
-								<p
-									class={`text-xs md:text-sm ${row.original.installs_z_score_4w > 100 ? 'font-bold text-green-600' : ''}`}
-								>
-									{formatNumber(row.original.installs_z_score_4w)}
-								</p>
-							</td>
-							<td class="p-2">
-								<p
-									class={`text-xs md:text-sm ${row.original.ratings_z_score_4w > 2 ? 'font-bold text-green-600' : ''}`}
-								>
-									{formatNumber(row.original.ratings_z_score_4w)}
-								</p>
-							</td>
-							<td class="p-2">
-								<p class="text-xs md:text-sm">
-									{row.original.in_app_purchases ? 'Yes' : 'No'}
-								</p>
-							</td>
-							<td class="p-2">
-								<p class="text-xs md:text-sm">
-									{row.original.ad_supported ? 'Yes' : 'No'}
-								</p>
-							</td>
+												{row.original.app_name}
+											</div>
+										</a>
+									{:else if ['installs', 'rating_count', 'installs_sum_1w', 'ratings_sum_1w', 'installs_avg_2w', 'installs_z_score_2w', 'ratings_z_score_2w', 'installs_sum_4w', 'installs_z_score_4w', 'ratings_z_score_4w'].includes(cell.column.id)}
+										<p class="text-xs md:text-sm">
+											{formatNumber(cell.getValue() as number)}
+										</p>
+									{:else}
+										<p class="text-xs md:text-sm">
+											{cell.getValue()}
+										</p>
+									{/if}
+								</td>
+							{/each}
 						</tr>
 					{/if}
 				{/each}
