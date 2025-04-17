@@ -34,20 +34,16 @@
 
 	import CardFirst from './CardFirst.svelte';
 
-	let localHomeStoreSelect = $state('google');
-
-	let listClass = 'flex flex-wrap gap-2';
-
 	const buttonSelectedClass =
 		'preset-outlined-primary-900-100 text-left relative text-primary-900-100 rounded-md p-2';
 	const buttonDeselectedClass =
 		'p-1 md:p-2 text-tertiary-900-100 text-left hover:text-primary-900-100';
 
-	let classesActiveStore = $derived((store: string) =>
-		localHomeStoreSelect.toLowerCase() == store.toLowerCase()
+	function classesActiveStore(store: string) {
+		return page.params.store.toLowerCase() == store.toLowerCase()
 			? buttonSelectedClass
-			: buttonDeselectedClass
-	);
+			: buttonDeselectedClass;
+	}
 </script>
 
 <div class="p-1 md:p-2">

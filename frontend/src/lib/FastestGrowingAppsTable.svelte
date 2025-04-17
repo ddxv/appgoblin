@@ -20,6 +20,8 @@
 
 	import { page } from '$app/state';
 
+	import { Check, X } from 'lucide-svelte';
+
 	type DataTableProps<CompaniesOverviewEntries, TValue> = {
 		data: CompaniesOverviewEntries[];
 	};
@@ -117,13 +119,11 @@
 			title: 'IAP',
 			accessorKey: 'in_app_purchases',
 			isSortable: true
-			// cell: (info) => (info.getValue() ? 'Yes' : 'No')
 		},
 		{
 			title: 'Ads',
 			accessorKey: 'ad_supported',
 			isSortable: true
-			// cell: (info) => (info.getValue() ? 'Yes' : 'No')
 		}
 	];
 
@@ -363,6 +363,14 @@
 										<p class="text-xs md:text-sm">
 											{formatNumber(cell.getValue() as number)}
 										</p>
+									{:else if ['in_app_purchases', 'ad_supported'].includes(cell.column.id)}
+										<div class="flex justify-center">
+											{#if cell.getValue()}
+												<Check class="w-4 h-4 text-success-500" />
+											{:else}
+												<X class="w-4 h-4 text-error-500" />
+											{/if}
+										</div>
 									{:else}
 										<p class="text-xs md:text-sm">
 											{cell.getValue()}
