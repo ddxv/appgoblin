@@ -18,6 +18,8 @@
 
 	import { genericColumns } from '$lib/components/data-table/generic-column';
 
+	import { page } from '$app/state';
+
 	type DataTableProps<CompaniesOverviewEntries, TValue> = {
 		data: CompaniesOverviewEntries[];
 	};
@@ -25,14 +27,33 @@
 	let pagination = $state<PaginationState>({ pageIndex: 0, pageSize: 50 });
 	let sorting = $state<SortingState>([]);
 	let columnFilters = $state<ColumnFiltersState>([]);
-	let columnVisibility = $state<VisibilityState>({});
+	const ratingsHiddenDefaults = {
+		rating_count: false,
+		ratings_sum_1w: false,
+		ratings_z_score_2w: false,
+		ratings_z_score_4w: false
+	};
+
+	const installsHiddenDefaults = {
+		installs: false,
+		installs_sum_1w: false,
+		installs_avg_2w: false,
+		installs_z_score_2w: false,
+		installs_sum_4w: false,
+		installs_z_score_4w: false
+	};
+
+	let hiddenDefaults =
+		page.params.store === 'google' ? ratingsHiddenDefaults : installsHiddenDefaults;
+
+	let columnVisibility = $state<VisibilityState>(hiddenDefaults);
 
 	let globalFilter = $state<string>('');
 	let dataSource = $state<string>('both');
 
 	let { data }: DataTableProps<CompaniesOverviewEntries, TValue> = $props();
 
-	const columns = genericColumns([
+	const myColumns = [
 		{
 			title: 'App',
 			accessorKey: 'app_name',
@@ -104,7 +125,9 @@
 			isSortable: true
 			// cell: (info) => (info.getValue() ? 'Yes' : 'No')
 		}
-	]);
+	];
+
+	const columns = genericColumns(myColumns);
 
 	const hideableColumns = $state<string[]>(
 		columns
@@ -196,38 +219,49 @@
 		if (num >= 1000) return (num / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
 		return num;
 	}
+
+	import { Popover } from '@skeletonlabs/skeleton-svelte';
+
+	let openState = $state(false);
+
+	function popoverClose() {
+		openState = false;
+	}
 </script>
 
 <div class="table-container p-0 md:p-2">
-	<div class="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-8 m-2">
-		<!-- <div>
-			<form class="space-y-2">
-				{#each table.getHeaderGroups() as headerGroup (headerGroup.id)}
-					{#each headerGroup.headers as header (header.id)}
-						{#if !header.isPlaceholder && hideableColumns.includes(header.id)}
-							<label class="flex items-center space-x-2">
-								<input class="checkbox" type="checkbox" />
-								<p>{header.id}</p>
-							</label>
-						{/if}
-					{/each}
-				{/each}
-			</form>
-		</div> -->
-		<div>
-			<form class="space-y-2">
-				{#each table.getAllColumns().filter((col) => col.getCanHide()) as column (column.id)}
-					<label class="flex items-center space-x-2">
-						<input
-							class="checkbox"
-							type="checkbox"
-							bind:checked={() => column.getIsVisible(), (v) => column.toggleVisibility(!!v)}
-						/>
-						<p>{column.id}</p>
-					</label>
-				{/each}
-			</form>
-		</div>
+	<div class="grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-8 m-2">
+		<Popover
+			open={openState}
+			onOpenChange={(e) => (openState = e.open)}
+			positioning={{ placement: 'top' }}
+			triggerBase="btn preset-tonal"
+			contentBase="card bg-surface-200-800 p-4 space-y-4 max-w-[320px]"
+			arrow
+			arrowBackground="!bg-surface-200 dark:!bg-surface-800"
+		>
+			{#snippet trigger()}
+				<button class="btn btn-primary">Show/Hide Columns</button>
+			{/snippet}
+			{#snippet content()}
+				<div>
+					<form class="space-y-2">
+						{#each table.getAllColumns().filter((col) => col.getCanHide()) as column (column.id)}
+							{#if hideableColumns.includes(column.id)}
+								<label class="flex items-center space-x-2">
+									<input
+										class="checkbox"
+										type="checkbox"
+										bind:checked={() => column.getIsVisible(), (v) => column.toggleVisibility(!!v)}
+									/>
+									<p>{myColumns.find((c) => c.accessorKey === column.id)?.title}</p>
+								</label>
+							{/if}
+						{/each}
+					</form>
+				</div>
+			{/snippet}
+		</Popover>
 
 		<div class="card preset-tonal flex items-center flex-col p-2">
 			<input

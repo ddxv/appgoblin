@@ -29,11 +29,11 @@
 		<p class={isHighlighted('/collections') ? topBarHighlightedFont : topBarFont}>NEW APPS</p>
 	</a>
 	<div class={horizontalDivider}></div>
-	<a href="/fastest-growing-apps/google/overall">
+	<!-- <a href="/fastest-growing-apps/google/overall">
 		<p class={isHighlighted('/fastest-growing-apps') ? topBarHighlightedFont : topBarFont}>
 			FASTEST GROWING APPS
 		</p>
-	</a>
+	</a> -->
 
 	<div class={horizontalDivider}></div>
 	<a href="/about" class={topBarFont}>
