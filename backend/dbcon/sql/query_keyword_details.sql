@@ -1,7 +1,5 @@
-SELECT
-    *
+SELECT *
 FROM
-    frontend.keyword_scores ks
+    frontend.keyword_scores AS ks
 WHERE
-    ks.keyword_text = :keyword
-;
+    ks.keyword_text = ks.:keyword;

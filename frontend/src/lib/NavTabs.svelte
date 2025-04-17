@@ -21,13 +21,20 @@
 	</a>
 	<div class={horizontalDivider}></div>
 	<a href="/sdks" class={topBarFont}>
-		<p class={isHighlighted('/sdks') ? topBarHighlightedFont : topBarFont}>APP SDK</p>
+		<p class={isHighlighted('/sdks') ? topBarHighlightedFont : topBarFont}>SDKS</p>
 	</a>
 
 	<div class={horizontalDivider}></div>
 	<a href="/collections/new_monthly">
 		<p class={isHighlighted('/collections') ? topBarHighlightedFont : topBarFont}>NEW APPS</p>
 	</a>
+	<div class={horizontalDivider}></div>
+	<!-- <a href="/fastest-growing-apps/google/overall">
+		<p class={isHighlighted('/fastest-growing-apps') ? topBarHighlightedFont : topBarFont}>
+			FASTEST GROWING APPS
+		</p>
+	</a> -->
+
 	<div class={horizontalDivider}></div>
 	<a href="/about" class={topBarFont}>
 		<p class={isHighlighted('/about') ? topBarHighlightedFont : topBarFont}>ABOUT</p>

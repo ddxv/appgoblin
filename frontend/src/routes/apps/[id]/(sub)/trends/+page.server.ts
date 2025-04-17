@@ -1,6 +1,5 @@
 import type { PageServerLoad } from './$types.js';
 
-	
 function checkStatus(resp: Response, name: string) {
 	if (resp.status === 200) {
 		return resp.json();
@@ -23,8 +22,7 @@ export const load: PageServerLoad = async ({ params }) => {
 		return checkStatus(resp, 'App History');
 	};
 
-
 	return {
-		myhistory: myhistory(),
+		myhistory: myhistory()
 	};
 };

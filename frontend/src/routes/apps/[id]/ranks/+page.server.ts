@@ -3,7 +3,6 @@ import type { PageServerLoad } from './$types.js';
 import type { Actions } from './$types';
 
 export const actions = {
-	
 	updateRanks: async ({ request, params }) => {
 		const formData = await request.formData();
 		const country = formData.get('country');
@@ -42,9 +41,8 @@ export const load: PageServerLoad = async ({ params, url }) => {
 		return checkStatus(resp, 'App Ranks');
 	};
 
-
 	return {
 		myranks: myranks(),
-		myranksOverview: myranksOverview(),
+		myranksOverview: myranksOverview()
 	};
 };
