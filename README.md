@@ -1,13 +1,17 @@
 # AppGoblin Analytics Dashboard for Mobile App Ecosystem
 
-You can see a production version of the site at [AppGoblin](https://appgoblin.info)
+Visit [AppGoblin](https://appgoblin.info) for free app marketing aso tools, app analytics and ad tech company analysis for over 4 million apps.
 
 [<img src="/frontend/static/appgoblin_screenshot.png" width="500"/>](/frontend/static/appgoblin_screenshot.png)
 
-This is the code I use to create [AppGoblin](https://appgoblin.info) for tracking app store ranks and SDKs of mobile companies like ad networks and mobile attribution companies. The goal was simply to have a good source of data for Apps on the Google Play and iOS stores. The code is provided here incase it helps anyone. As this is a project for general fun and learning, please don't hesitate to reach out if you have any questions or suggestions, Discord below.
+This is the code used to create [AppGoblin](https://appgoblin.info) for tracking app store ranks, app marketing keyword analysis, adtech SDKs, trackers and other mobile app companies.  Please don't hesitate to reach out if you have any questions or suggestions, Discord below.
 
 ## Features
 
+- **[App Intelligence](https://appgoblin.info/)**: AppGoblin has data on over 4 million iOS and Android apps with more added daily.
+  - Keywords: Track your or competitors' keywords and the top apps associated with those keywords
+  - Trends: Track installs or ratings over time
+  - SDKs: See which third party SDK and frameworks apps use
 - **[Companies Directory](https://appgoblin.info/companies)**: Rankings based on SDK integration frequency
   - Filter by category
     - Example: [Most popular Ad Networks for Casino Games](https://appgoblin.info/companies/types/ad-networks/game_casino)
