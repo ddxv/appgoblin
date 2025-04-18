@@ -41,7 +41,9 @@ def open_ssh_tunnel(server_name: str):  # noqa: ANN201
 class PostgresCon:
     """Class for managing the connection to PostgreSQL."""
 
-    def __init__(self, config_name: str, db_ip: str, db_port: str) -> None:
+    def __init__(
+        self, config_name: str, db_ip: str, db_port: str, tunnel: bool = False
+    ) -> None:
         """Initialize the PostgreSQL connection.
 
         Args:
@@ -54,6 +56,7 @@ class PostgresCon:
         self.db_name = CONFIG[config_name]["db_name"]
         self.db_ip = db_ip
         self.db_port = db_port
+        self.tunnel = tunnel
         self.engine: sqlalchemy.Engine
 
         try:
@@ -68,10 +71,14 @@ class PostgresCon:
         try:
             db_login = f"postgresql://{self.db_user}:{self.db_pass}"
             db_uri = f"{db_login}@{self.db_ip}:{self.db_port}/{self.db_name}"
-            logger.info(f"Adscrawler connecting to PostgreSQL {self.db_name}")
+            logger.info(f"AppGoblin connecting to PostgreSQL {self.db_name}")
+            application_name = f"appgoblin-{'tunnel' if self.tunnel else 'local'}"
             self.engine = sqlalchemy.create_engine(
                 db_uri,
-                connect_args={"connect_timeout": 30, "application_name": "appgoblin"},
+                connect_args={
+                    "connect_timeout": 30,
+                    "application_name": application_name,
+                },
             )
         except Exception:
             logger.exception(
@@ -89,8 +96,12 @@ def get_db_connection(server_config_name: str) -> PostgresCon:
     Parameters
        server_name: str String of server name for parsing config file
     """
-    server_ip, server_local_port = get_postgres_server_ips(server_config_name)
-    postgres_con = PostgresCon(server_config_name, server_ip, server_local_port)
+    server_ip, server_local_port, is_tunnel = get_postgres_server_ips(
+        server_config_name
+    )
+    postgres_con = PostgresCon(
+        server_config_name, server_ip, server_local_port, is_tunnel
+    )
     return postgres_con
 
 
@@ -100,11 +111,13 @@ def get_postgres_server_ips(server_name: str) -> tuple[str, str]:
     if db_ip == "localhost" or db_ip.startswith("192.168.0"):
         db_ip = CONFIG[server_name]["host"]
         db_port = str(5432)
+        is_tunnel = False
     else:
         logger.info(f"Opening SSH tunnel to {db_ip=} {server_name=}")
         ssh_server = open_ssh_tunnel(server_name)
         ssh_server.start()
         db_port = str(ssh_server.local_bind_port)
         db_ip = "127.0.0.1"
+        is_tunnel = True
     logger.info(f"DB connection settings: {db_ip=} {db_port=}")
-    return db_ip, db_port
+    return db_ip, db_port, is_tunnel
