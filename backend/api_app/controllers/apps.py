@@ -98,9 +98,14 @@ def attach_rating_history(app_hist: pd.DataFrame, star_cols: list[str]) -> pd.Da
     return app_hist
 
 
-def app_history(store_app: int, app_name: str, country: str = "US") -> AppHistory:
+def app_history(store_app: int, app_name: str, country: str) -> AppHistory:
     """Get the history of app scraping."""
     app_hist = get_app_history(store_app, country)
+    if app_hist.empty:
+        return AppHistory(
+            histogram=[],
+            plot_data={},
+        )
     histogram = app_hist.sort_values(["id"]).tail(1)["histogram"].to_numpy()[0]
     app_hist = app_hist[
         ~((app_hist["installs"].isna()) & (app_hist["rating_count"].isna()))
@@ -364,7 +369,7 @@ class AppController(Controller):
         store_app = app_dict["id"]
         app_name = app_dict["name"]
 
-        hist_dict = app_history(store_app=store_app, app_name=app_name)
+        hist_dict = app_history(store_app=store_app, app_name=app_name, country="US")
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(f"{self.path}/{store_id}/history took {duration}ms")
         return hist_dict
