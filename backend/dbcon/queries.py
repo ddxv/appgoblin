@@ -56,6 +56,9 @@ QUERY_ADTECH_CATEGORIES = load_sql_file(
 QUERY_COMPANIES_CATEGORY_TAG_TYPE_STATS = load_sql_file(
     "query_companies_category_tag_type_stats.sql",
 )
+QUERY_COMPANIES_TAG_TYPE_STATS = load_sql_file(
+    "query_companies_tag_type_stats.sql",
+)
 QUERY_COMPANY_TOPAPPS = load_sql_file("query_company_top_apps.sql")
 QUERY_COMPANY_TOPAPPS_PARENT = load_sql_file("query_company_top_apps_parent.sql")
 QUERY_COMPANY_TOPAPPS_CATEGORY = load_sql_file("query_company_top_apps_category.sql")
@@ -240,22 +243,34 @@ def get_growth_apps(store: int, app_category: str | None = None) -> pd.DataFrame
     return df
 
 
-def get_companies_category_tag_type_stats(
+def get_companies_tag_type_stats(
     type_slug: str,
-    app_category: str | None = None,
 ) -> pd.DataFrame:
     """Get top companies for a category type."""
-    if app_category and app_category == "games":
+    df = pd.read_sql(
+        QUERY_COMPANIES_TAG_TYPE_STATS,
+        con=DBCON.engine,
+        params={"type_slug": type_slug},
+    )
+    df["app_category"] = "all"
+    df["type_url_slug"] = type_slug
+    df["store"] = df["store"].replace({1: "Google Play", 2: "Apple App Store"})
+    return df
+
+
+def get_companies_category_tag_type_stats(
+    type_slug: str,
+    app_category: str,
+) -> pd.DataFrame:
+    """Get top companies for a category type."""
+    if app_category == "games":
         app_category = "game%"
     df = pd.read_sql(
         QUERY_COMPANIES_CATEGORY_TAG_TYPE_STATS,
         con=DBCON.engine,
         params={"type_slug": type_slug, "app_category": app_category},
     )
-    if app_category is None:
-        df["app_category"] = "all"
-    else:
-        df.loc[df["app_category"].isna(), "app_category"] = "None"
+    df.loc[df["app_category"].isna(), "app_category"] = "None"
     if app_category == "game%":
         df.loc[
             df["app_category"].str.contains("game"),
@@ -275,7 +290,6 @@ def get_companies_category_tag_type_stats(
         .sum()
         .reset_index()
     )
-
     df["store"] = df["store"].replace({1: "Google Play", 2: "Apple App Store"})
     return df
 
@@ -477,6 +491,7 @@ def get_companies_parent_category_stats(
     return df
 
 
+@lru_cache(maxsize=250)
 def get_companies_top(
     type_slug: str | None = None,
     app_category: str | None = None,

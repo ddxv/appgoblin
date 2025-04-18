@@ -12,4 +12,4 @@ FROM
     frontend.companies_category_tag_type_stats
 WHERE
     type_url_slug = :type_slug
-    AND (app_category LIKE :app_category OR :app_category IS NULL);
+    AND app_category LIKE :app_category;

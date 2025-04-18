@@ -26,7 +26,7 @@
 	let columnFilters = $state<ColumnFiltersState>([]);
 
 	let globalFilter = $state<string>('');
-	let dataSource = $state<string>('installs');
+	let dataMetric = $state<string>('installs');
 
 	let { data }: DataTableProps<CompaniesOverviewEntries, TValue> = $props();
 
@@ -186,14 +186,14 @@
 		let doShowAdsCol = isAdsPage && headerIsDirect;
 		let doNotShowAdsCol = !isAdsPage && headerIsDirect;
 
-		if (dataSource === 'installs' && headerHasInstall) {
+		if (dataMetric === 'installs' && headerHasInstall) {
 			if (doShowAdsCol) {
 				return true;
 			} else if (doNotShowAdsCol) {
 				return false;
 			}
 			return true;
-		} else if (dataSource === 'percent' && headerHasPercent) {
+		} else if (dataMetric === 'percent' && headerHasPercent) {
 			if (doShowAdsCol) {
 				return true;
 			} else if (doNotShowAdsCol) {
@@ -230,17 +230,17 @@
 			/>
 		</div>
 		<div class="card preset-tonal flex items-center p-2">
-			<label for="data-source" class="px-4 text-sm md:text-base">Data source: </label>
+			<label for="data-source" class="px-4 text-sm md:text-base">Metric: </label>
 			<form class="flex flex-row space-x-4">
 				<label class="flex flex-row items-center space-x-1">
 					<input
 						class="radio"
 						type="radio"
-						checked={dataSource == 'installs'}
+						checked={dataMetric == 'installs'}
 						name="radio-direct"
 						value="installs"
 						onchange={() => {
-							dataSource = 'installs';
+							dataMetric = 'installs';
 						}}
 					/>
 					<p class="text-xs md:text-sm text-primary-900-100">Installs Last 30 Days</p>
@@ -249,11 +249,11 @@
 					<input
 						class="radio"
 						type="radio"
-						checked={dataSource == 'percent'}
+						checked={dataMetric == 'percent'}
 						name="radio-direct"
 						value="percent"
 						onchange={() => {
-							dataSource = 'percent';
+							dataMetric = 'percent';
 						}}
 					/>
 					<p class="text-xs md:text-sm text-primary-900-100">Percent</p>
@@ -311,7 +311,7 @@
 							</a>
 						</td>
 
-						{#if dataSource == 'installs'}
+						{#if dataMetric == 'installs'}
 							<td class="table-cell-fit">
 								<p class="text-xs md:text-sm">
 									{formatNumber(row.original.google_sdk_installs_d30)}
@@ -337,7 +337,7 @@
 							{/if}
 						{/if}
 
-						{#if dataSource == 'percent'}
+						{#if dataMetric == 'percent'}
 							<td class="table-cell-fit">
 								<p class="text-xs md:text-sm">
 									{formatPercentage(row.original.google_sdk_percentage)}

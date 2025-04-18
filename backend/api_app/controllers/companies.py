@@ -36,6 +36,7 @@ from dbcon.queries import (
     get_adtech_categories,
     get_companies_category_tag_type_stats,
     get_companies_parent_category_stats,
+    get_companies_tag_type_stats,
     get_companies_top,
     get_company_adstxt_ad_domain_overview,
     get_company_adstxt_publisher_id_apps_overview,
@@ -230,9 +231,13 @@ def get_overviews(
     top_companies_short = make_top_companies(top_df)
 
     if type_slug:
-        overview_df = get_companies_category_tag_type_stats(
-            type_slug, app_category=category
-        )
+        if category:
+            overview_df = get_companies_category_tag_type_stats(
+                type_slug, app_category=category
+            )
+        else:
+            overview_df = get_companies_tag_type_stats(type_slug)
+
     else:
         overview_df = get_companies_parent_category_stats(app_category=category)
 
@@ -633,9 +638,12 @@ class CompaniesController(Controller):
             An overview of companies across different platforms and sources.
 
         """
-        logger.info(f"GET /api/companies/categories/{category} start")
+        start = time.perf_counter() * 1000
 
         overview = get_overviews(category=category)
+
+        duration = round((time.perf_counter() * 1000 - start), 2)
+        logger.info(f"GET /api/companies/categories/{category} took {duration}ms")
 
         return overview
 
