@@ -42,7 +42,7 @@ class PostgresCon:
     """Class for managing the connection to PostgreSQL."""
 
     def __init__(
-        self, config_name: str, db_ip: str, db_port: str, tunnel: bool = False
+        self, config_name: str, db_ip: str, db_port: str, tag: str = "prod"
     ) -> None:
         """Initialize the PostgreSQL connection.
 
@@ -50,13 +50,14 @@ class PostgresCon:
             config_name (str): Corresponds to the server title in the config file.
             db_ip (str): IP address of the database server.
             db_port (str): Port number of the database server.
+            tag (str): Tag for the application name.
 
         """
         self.config_name = config_name
         self.db_name = CONFIG[config_name]["db_name"]
         self.db_ip = db_ip
         self.db_port = db_port
-        self.tunnel = tunnel
+        self.tag = tag
         self.engine: sqlalchemy.Engine
 
         try:
@@ -72,7 +73,7 @@ class PostgresCon:
             db_login = f"postgresql://{self.db_user}:{self.db_pass}"
             db_uri = f"{db_login}@{self.db_ip}:{self.db_port}/{self.db_name}"
             logger.info(f"AppGoblin connecting to PostgreSQL {self.db_name}")
-            application_name = f"appgoblin-{'tunnel' if self.tunnel else 'local'}"
+            application_name = f"appgoblin-{self.tag}"
             self.engine = sqlalchemy.create_engine(
                 db_uri,
                 connect_args={
@@ -99,13 +100,12 @@ def get_db_connection(server_config_name: str) -> PostgresCon:
     server_ip, server_local_port, is_tunnel = get_postgres_server_ips(
         server_config_name
     )
-    postgres_con = PostgresCon(
-        server_config_name, server_ip, server_local_port, is_tunnel
-    )
+    tag = "tunnel" if is_tunnel else "local"
+    postgres_con = PostgresCon(server_config_name, server_ip, server_local_port, tag)
     return postgres_con
 
 
-def get_postgres_server_ips(server_name: str) -> tuple[str, str]:
+def get_postgres_server_ips(server_name: str) -> tuple[str, str, bool]:
     """Decide whether postgres is local or over ssh."""
     db_ip = CONFIG[server_name]["host"]
     if db_ip == "localhost" or db_ip.startswith("192.168.0"):

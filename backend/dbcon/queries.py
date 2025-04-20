@@ -848,9 +848,6 @@ def get_topapps_for_company(
     """Get top apps for for a company."""
     if mapped_category == "games":
         mapped_category = "game%"
-        needs_groupby = True
-    else:
-        needs_groupby = False
 
     parent_companies = get_parent_companies()
     is_parent_company = company_domain in parent_companies
@@ -870,20 +867,6 @@ def get_topapps_for_company(
                 "mylimit": limit,
             },
         )
-        if needs_groupby:
-            df = (
-                df.groupby(
-                    [
-                        "company_domain",
-                        "store",
-                        "tag_source",
-                        "name",
-                        "store_id",
-                    ]
-                )[["installs", "rating_count"]]
-                .sum()
-                .reset_index()
-            )
     else:
         query = (
             QUERY_COMPANY_TOPAPPS_PARENT if is_parent_company else QUERY_COMPANY_TOPAPPS
