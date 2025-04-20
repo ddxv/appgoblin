@@ -26,10 +26,18 @@
 				{#snippet title()}
 					Totals
 				{/snippet}
-				<TotalsBox
-					myTotals={myData.categories[company_category]}
-					myType={{ name: 'All Companies & Domains', url_slug: 'all-companies' }}
-				/>
+				{#if myData.categories[company_category]}
+					<TotalsBox
+						myTotals={myData.categories[company_category]}
+						myType={{ name: 'All Companies & Domains', url_slug: 'all-companies' }}
+					/>
+				{:else}
+					<p>
+						No apps found for
+						<span class="text-primary-900-100 font-bold">{company_category}</span>
+						category
+					</p>
+				{/if}
 			</WhiteCard>
 		{/snippet}
 	</CompaniesLayout>

@@ -44,8 +44,8 @@ from dbcon.queries import (
     get_company_adstxt_publishers_overview,
     get_company_categories_topn,
     get_company_open_source,
-    get_company_overview,
     get_company_sdks,
+    get_company_stats,
     get_company_tree,
     get_tag_source_category_totals,
     get_topapps_for_company,
@@ -654,6 +654,7 @@ class CompaniesController(Controller):
     async def company_overview(
         self: Self,
         company_domain: str,
+        category: str | None = None,
     ) -> CompanyCategoryOverview:
         """Handle GET request for a specific company.
 
@@ -661,16 +662,18 @@ class CompaniesController(Controller):
         ----
         company_domain : str
             The domain of the company to retrieve apps for.
+        category : str | None
+            The category to retrieve apps for.
 
         Returns:
         -------
-        CategoryOverview
+        CompanyCategoryOverview
             An overview of companies, filtered for the specified company and category.
 
         """
         start = time.perf_counter() * 1000
 
-        df = get_company_overview(company_domain=company_domain)
+        df = get_company_stats(company_domain=company_domain, app_category=category)
 
         if df["tag_source"].str.contains("app_ads").any():
             ad_domain_overview = get_company_adstxt_ad_domain_overview(company_domain)

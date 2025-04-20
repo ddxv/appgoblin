@@ -520,7 +520,9 @@ def get_companies_top(
     return df
 
 
-def get_company_overview(company_domain: str) -> pd.DataFrame:
+def get_company_stats(
+    company_domain: str, app_category: str | None = None
+) -> pd.DataFrame:
     """Get overview of companies from multiple types like sdk and app-ads.txt."""
     logger.info(f"query company overview: {company_domain=}")
     parent_companies = get_parent_companies()
@@ -530,11 +532,39 @@ def get_company_overview(company_domain: str) -> pd.DataFrame:
         if is_parent_company
         else QUERY_COMPANY_CATEGORY_TAG_STATS
     )
+    if app_category == "games":
+        app_category = "game%"
     df = pd.read_sql(
         query,
         DBCON.engine,
-        params={"company_domain": company_domain},
+        params={
+            "company_domain": company_domain,
+            "app_category": app_category,
+        },
     )
+    if app_category == "game%":
+        df["app_category"] = "games"
+        df = (
+            df.groupby(
+                [
+                    "company_domain",
+                    "company_name",
+                    "store",
+                    "tag_source",
+                    "app_category",
+                ]
+            )[
+                [
+                    "app_count",
+                    "installs_total",
+                    "installs_d30",
+                    "rating_count_total",
+                    "rating_count_d30",
+                ]
+            ]
+            .sum()
+            .reset_index()
+        )
     df["store"] = df["store"].replace({1: "Google Play", 2: "Apple App Store"})
     df.loc[df["app_category"].isna(), "app_category"] = "None"
     return df
