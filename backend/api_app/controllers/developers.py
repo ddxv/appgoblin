@@ -45,6 +45,7 @@ class DeveloperController(Controller):
 
         """
         start = time.perf_counter() * 1000
+        
         apps_df = get_single_developer(developer_id)
 
         if apps_df.empty:
