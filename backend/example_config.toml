@@ -1,0 +1,31 @@
+# This is an example config file for AppGoblin
+# If you have questions feel free to reach out 
+# This file is meant to be in ~/.config/appgoblin/config.toml
+
+[AServerName]
+host = "192.168.0.1"
+os_user = "root"
+db_user = "postgres"
+db_password = "postgres"
+db_name = "dbname"
+ssh_pkey = "/home/myuser/.ssh/mykey"
+ssh_pkey_password = "mypassword"
+
+[example-other-server]
+host = "192.168.0.1"
+ssh_port = 8802
+os_user = "myuser"
+db_user = "myuser"
+db_password = "mypassword"
+db_name = "dbname"
+ssh_pkey = "/home/myuser/.ssh/mykey"
+ssh_pkey_password = "mypassword"
+
+[cloud]
+access_key_id = "myaccesskey"
+secret_key = "mysecretkey"
+adstxt_endpoint = "https://mybucket.myregion.digitaloceanspaces.com/app-ads-txt/domains/domain="
+
+[umami]
+site_id = "my-site-id"
+base_url = "https://my-umami-instance.com"
