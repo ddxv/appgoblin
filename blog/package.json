@@ -17,6 +17,7 @@
     "astro": "^5.5.2",
     "astro-auto-import": "^0.4.4",
     "astro-expressive-code": "^0.40.2",
+    "rehype-external-links": "^3.0.0",
     "svelte": "^5.23.0",
     "tailwindcss": "^4.0.0",
     "typescript": "^5.8.2"

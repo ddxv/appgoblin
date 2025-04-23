@@ -7,6 +7,8 @@ import svelte from "@astrojs/svelte";
 import AutoImport from "astro-auto-import";
 import mdx from "@astrojs/mdx";
 
+import rehypeExternalLinks from 'rehype-external-links';
+
 // Plugins
 import tailwindcss from "@tailwindcss/vite";
 
@@ -14,7 +16,7 @@ import expressiveCode from "astro-expressive-code";
 
 // https://astro.build/config
 export default defineConfig({
-  site: "https://example.com",
+  site: "https://appgoblin.info",
   integrations: [
     // https://docs.astro.build/en/guides/integrations-guide/sitemap/
     sitemap(),
@@ -35,10 +37,18 @@ export default defineConfig({
         },
       ],
     }),
+    
     // IMPORTANT: MUST BE LAST INTEGRATION
     // https://docs.astro.build/en/guides/integrations-guide/mdx/
     mdx(),
   ],
+  base: "/generated-blog/",
+  outDir: "../frontend/static/generated-blog",
+markdown: {
+      rehypePlugins: [
+        [rehypeExternalLinks, { target: '_top' }]
+      ]
+    },
   vite: {
     plugins: [tailwindcss()],
   },
