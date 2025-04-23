@@ -19,7 +19,7 @@
 </svelte:head>
 
 <iframe
-	srcdoc={data.props.myblog}
+	srcdoc={data.myblog}
 	class="h-screen w-full"
 	frameborder="0"
 	title="Blog Content"

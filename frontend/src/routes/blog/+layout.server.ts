@@ -1,30 +1,39 @@
+import fs from 'fs/promises';
+import path from 'path';
+import { error } from '@sveltejs/kit';
+
 export const csr = false;
 
-import { PUBLIC_BLOG_HOST } from '$env/static/public';
+// Path to the static/generated-blog/ directory
+const STATIC_BLOG_DIR = path.resolve('static/generated-blog');
 
-async function fetchContent(url: URL) {
-	let htmlContent;
-	if (url && !url.pathname.includes('.')) {
-		// Ensure the path correctly points to where mkdocs HTML files were generated to.
-		// ie www/static/documentation/docs/index.html
-		const processedPathname = url.pathname.replace('', '');
-		var mypath = `${PUBLIC_BLOG_HOST}/generated-blog${processedPathname}/index.html`;
-		console.log(`Try rendering static blog path=${mypath}`);
-		const response = await fetch(mypath);
-		if (response.ok) {
-			htmlContent = await response.text();
-		} else {
-			htmlContent = 'Page not found.';
-		}
+async function fetchContent(url: URL): Promise<string> {
+	if (url.pathname.includes('.')) {
+		throw error(404, 'Invalid path: File extensions not allowed');
 	}
-	return htmlContent;
+
+	const processedPathname = url.pathname.replace(/^\/|\/$/g, '');
+	const filePath = path.join(STATIC_BLOG_DIR, processedPathname, 'index.html');
+
+	console.log(`Trying to read static blog file: ${filePath}`);
+
+	try {
+		// Read the HTML file from the filesystem
+		const htmlContent = await fs.readFile(filePath, 'utf-8');
+		return htmlContent;
+	} catch (err) {
+		console.error(`Failed to read ${filePath}:`, err);
+		throw error(404, 'Page not found');
+	}
 }
 
 export async function load({ url }: { url: URL }) {
-	const myhtml = await fetchContent(url);
-	return {
-		props: {
+	try {
+		const myhtml = await fetchContent(url);
+		return {
 			myblog: myhtml
-		}
-	};
+		};
+	} catch (err) {
+		throw error(404, 'Page not found');
+	}
 }
