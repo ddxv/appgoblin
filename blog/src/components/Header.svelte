@@ -8,10 +8,8 @@
 
   // For best results limit to 3-5 options max
   const navigation = [
-    { label: "AppGoblin", href: "/" },
+    { label: "AppGoblin", href: "https://appgoblin.com" },
     { label: "Blog", href: "/blog" },
-    // Enable this to show the test sandbox page
-    // { label: "Sandbox", href: "/sandbox" },
   ];
 </script>
 
