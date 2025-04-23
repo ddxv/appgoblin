@@ -1,11 +1,18 @@
 import fs from 'fs/promises';
 import path from 'path';
 import { error } from '@sveltejs/kit';
+import os from 'os';
 
 export const csr = false;
 
 // Path to the static/generated-blog/ directory
-const STATIC_BLOG_DIR = path.resolve('static/generated-blog');
+const STATIC_BLOG_DIR = path.resolve(
+	os.homedir(),
+	'appgoblin',
+	'frontend',
+	'static',
+	'generated-blog'
+);
 
 async function fetchContent(url: URL): Promise<string> {
 	if (url.pathname.includes('.')) {
