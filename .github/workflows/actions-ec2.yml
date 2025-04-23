@@ -33,7 +33,12 @@ jobs:
             sudo systemctl daemon-reload
             echo "Restart systemd backend"
             sudo systemctl restart appgoblin-api
-            cd frontend
+            cd blog
+            pwd
+            echo "Build blog"
+            npm install
+            npm run build
+            cd ../frontend
             pwd
             echo "Build and restart frontend"
             export PATH="/home/root/.nvm/versions/node/v22.13.1/bin:$PATH" && /home/goblin/.nvm/versions/node/v22.13.1/bin/npm run build && sudo systemctl restart appgoblin-frontend

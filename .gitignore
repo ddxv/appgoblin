@@ -74,9 +74,6 @@ instance/
 # Scrapy stuff:
 .scrapy
 
-# Sphinx documentation
-docs/_build/
-
 # PyBuilder
 .pybuilder/
 target/
@@ -141,8 +138,6 @@ venv.bak/
 # Rope project settings
 .ropeproject
 
-# mkdocs documentation
-/site
 
 # mypy
 .mypy_cache/
@@ -157,6 +152,7 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
+generated-blog/
 
 # PyCharm
 #  JetBrains specific template is maintained in a separate JetBrains.gitignore that can
@@ -169,7 +165,7 @@ cython_debug/
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-frontend/node_modules
+node_modules
 frontend/.pnp
 frontend.pnp.js
 /.pnp
