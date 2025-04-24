@@ -31,6 +31,7 @@ QUERY_RANKS_FOR_APP = load_sql_file("query_ranks_for_app.sql")
 QUERY_RANKS_FOR_APP_OVERVIEW = load_sql_file("query_ranks_for_app_overview.sql")
 QUERY_MOST_RECENT_TOP_RANKS = load_sql_file("query_most_recent_top_ranks.sql")
 QUERY_HISTORY_TOP_RANKS = load_sql_file("query_history_top_ranks.sql")
+QUERY_COUNTRIES = load_sql_file("query_countries.sql")
 QUERY_APPSTORE_CATEGORIES = load_sql_file("query_appstore_categories.sql")
 QUERY_SEARCH_APPS = load_sql_file("query_search_apps.sql")
 QUERY_SEARCH_COMPANIES = load_sql_file("query_search_companies.sql")
@@ -343,6 +344,21 @@ def get_most_recent_top_ranks(
     return df
 
 
+@lru_cache(maxsize=1)
+def get_country_map() -> pd.DataFrame:
+    """Get country map."""
+    df = pd.read_sql(QUERY_COUNTRIES, con=DBCON.engine)
+    return df
+
+
+@lru_cache(maxsize=200)
+def get_country_id(country: str) -> int:
+    """Get country id."""
+    df = get_country_map()
+    country_id = int(df[df["alpha2"] == country]["id"].to_numpy()[0])
+    return country_id
+
+
 def get_history_top_ranks(
     collection_id: int,
     category_id: int,
@@ -351,6 +367,7 @@ def get_history_top_ranks(
     days: int = 30,
 ) -> pd.DataFrame:
     """Get appstore rank history for plotting."""
+    country_id = get_country_id(country)
     start_date = (
         datetime.datetime.now(datetime.UTC) - datetime.timedelta(days=days)
     ).strftime("%Y-%m-%d")
@@ -360,7 +377,7 @@ def get_history_top_ranks(
         params={
             "collection_id": collection_id,
             "category_id": category_id,
-            "country": country,
+            "country_id": country_id,
             "start_date": start_date,
             "mylimit": limit,
         },

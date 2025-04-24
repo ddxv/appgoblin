@@ -9,7 +9,6 @@ export const load: PageServerLoad = async ({ params, setHeaders }) => {
 		'cache-control': 'max-age=3600'
 	});
 	try {
-		const storeVal = params.store;
 		const collectionValue = params.collection;
 		const categoryValue = params.category;
 		const countryValue = params.country || 'US';

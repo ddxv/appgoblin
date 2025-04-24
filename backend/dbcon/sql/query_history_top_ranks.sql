@@ -1,11 +1,11 @@
 WITH top_apps AS (
     -- First identify all apps that were ever in top 10 during the period
-    SELECT DISTINCT ar.store_id
-    FROM frontend.app_rankings_latest_by_week AS ar
+    SELECT DISTINCT ar.store_app
+    FROM frontend.store_app_ranks_weekly AS ar
     WHERE
         ar.store_collection = :collection_id
         AND ar.store_category = :category_id
-        AND ar.country = :country
+        AND ar.country = :country_id
         AND ar.crawled_date >= :start_date
         AND ar.rank <= :mylimit
 )
@@ -13,16 +13,18 @@ WITH top_apps AS (
 SELECT
     ar.crawled_date,
     ar.rank,
-    ar.name,
-    ar.store_id
-FROM frontend.app_rankings_latest_by_week AS ar
+    sa.name,
+    sa.store_id
+FROM frontend.store_app_ranks_weekly AS ar
 INNER JOIN top_apps AS ta
-    ON ar.store_id = ta.store_id
+    ON ar.store_app = ta.store_app
+LEFT JOIN store_apps AS sa
+    ON ar.store_app = sa.id
 WHERE
     ar.store_collection = :collection_id
     AND ar.store_category = :category_id
-    AND ar.country = :country
+    AND ar.country = :country_id
     AND ar.crawled_date >= :start_date
 ORDER BY
-    ar.store_id ASC,
+    sa.store_id ASC,
     ar.crawled_date DESC;
