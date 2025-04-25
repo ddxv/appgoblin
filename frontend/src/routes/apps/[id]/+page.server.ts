@@ -16,14 +16,6 @@ export const actions = {
 		} else {
 			return { success: false };
 		}
-	},
-	updateRanks: async ({ request, params }) => {
-		const formData = await request.formData();
-		const country = formData.get('country');
-		const id = params.id;
-
-		const resp = await fetch(`http://localhost:8000/api/apps/${id}/ranks?country=${country}`);
-		return checkStatus(resp, 'App Ranks');
 	}
 } satisfies Actions;
 

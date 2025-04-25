@@ -14,14 +14,21 @@ function checkStatus(resp: Response, name: string) {
 	}
 }
 
-export const load: LayoutServerLoad = async ({ params }) => {
+export const load: LayoutServerLoad = async ({ params, parent }) => {
+	const { companyTypes } = await parent();
+
 	const myapp = async () => {
 		const resp = await fetch(`http://localhost:8000/api/apps/${params.id}`);
 		return checkStatus(resp, 'App');
 	};
 
+	const appSDKsOverview = async () => {
+		const resp = await fetch(`http://localhost:8000/api/apps/${params.id}/sdksoverview`);
+		return checkStatus(resp, 'App SDKs Overview');
+	};
+
 	// Get the app data first
 	const app = await myapp();
 
-	return { myapp: app };
+	return { myapp: app, appSDKsOverview: appSDKsOverview(), companyTypes: await companyTypes };
 };

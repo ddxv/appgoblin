@@ -8,22 +8,19 @@
 	import type { AppSDKsOverview, CompanyTypes, AppFullDetail } from '../types';
 
 	interface Props {
+		myapp: AppFullDetail;
 		myPackageInfo: AppSDKsOverview;
 		companyTypes: CompanyTypes;
-		myapp: AppFullDetail;
 	}
 
-	let { myPackageInfo, companyTypes, myapp }: Props = $props();
+	let { myapp, myPackageInfo, companyTypes }: Props = $props();
 </script>
-
-<h4 class="h4 md:h3 p-2">SDKs, Trackers & Permissions</h4>
 
 {#await myPackageInfo}
 	Loading permissions and tracker data...
 {:then packageInfo}
 	{#if typeof packageInfo == 'string'}
 		<p>Permissions, SDKs and trackers info not yet available for this app.</p>
-		<RequestSDKScanButton />
 	{:else if packageInfo.company_categories && myapp.sdk_last_crawled && myapp.sdk_crawl_result == 1}
 		<div class="">
 			<p class="p-2 md:p-4">
@@ -46,14 +43,17 @@
 			{#await companyTypes}
 				Loading company types...
 			{:then myCompanyTypes}
-				<div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+				<div class="grid grid-cols-1 md:grid-cols-2 gap-1">
 					{#each Object.keys(packageInfo.company_categories) as category}
 						<WhiteCard>
 							{#snippet title()}
-								{myCompanyTypes.types.find((x: { url_slug: string }) => x.url_slug === category)
-									?.name || category}
+								<span class="text-sm font-semibold">
+									{packageInfo.company_categories[category].length}
+									{myCompanyTypes.types.find((x: { url_slug: string }) => x.url_slug === category)
+										?.name || category}
+								</span>
 							{/snippet}
-							<div class="grid grid-cols-1 md:grid-cols-2 gap-2 p-4">
+							<div class="grid grid-cols-1 md:grid-cols-2 gap-1 p-2">
 								{#each packageInfo.company_categories[category] as company}
 									<CompanyButton
 										companyName={company.company_name}
@@ -68,6 +68,5 @@
 		{/if}
 	{:else}
 		<p>App not yet scanned for SDKs.</p>
-		<RequestSDKScanButton />
 	{/if}
 {/await}

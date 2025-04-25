@@ -440,7 +440,7 @@ export interface AppFullDetails {
 			ratings_stars_new: ChartTabularData;
 		};
 	}>;
-	myPackageInfo: AppSDKsOverview;
+	appSDKsOverview: AppSDKsOverview;
 	myAdsTxtOverview: Promise<{
 		direct_entries: AdsTxtEntries[];
 		reseller_entries: AdsTxtEntries[];

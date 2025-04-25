@@ -2,8 +2,10 @@
 	import { page } from '$app/state';
 	import RatingInstallsLarge from '$lib/RatingInstallsLarge.svelte';
 	import StarsRating from '$lib/StarsRating.svelte';
+	import WhiteCard from '$lib/WhiteCard.svelte';
 	let { data, children } = $props();
 	import AvailableOniOs from '$lib/svg/AvailableOniOS.svelte';
+	import AppSDKOverview from '$lib/AppSDKOverview.svelte';
 
 	import AppTabs from '$lib/utils/AppTabs.svelte';
 
@@ -101,6 +103,7 @@
 	{:then myapp}
 		<h1 class="text-primary-900-100 text-3xl font-bold mb-4">{myapp.name}</h1>
 		<div class="grid grid-cols-2 md:grid-cols-3 gap-4 mt-6">
+			<!-- COL 1  -->
 			<div class="grid grid-cols-1 gap-0">
 				{#if myapp.icon_url_512}
 					<img
@@ -117,26 +120,40 @@
 				<div class="hidden md:inline-flex">
 					<StarsRating total={5} size={40} rating={myapp.rating} />
 				</div>
-			</div>
-			{#if myapp.installs}
-				<RatingInstallsLarge app={myapp} />
-			{/if}
-			<div class="space-y-4">
-				<div class="flex items-center justify-center">
-					<a
-						href={myapp.store_link}
-						target="_blank"
-						class="anchor inline-flex items-center hover:scale-105 transition-transform"
-					>
-						{#if myapp.store_link.includes('google')}
-							<img class="w-48 md:w-64" src="/gp_en_badge_web_generic.png" alt={myapp.name} />
-						{:else}
-							<AvailableOniOs size={180} />
-						{/if}
-					</a>
-				</div>
-				{#if myapp.developer_id}
-					<a href="/developers/{myapp.developer_id}" class="block">
+
+				<div class="space-y-4">
+					<div class="flex items-center justify-center">
+						<a
+							href={myapp.store_link}
+							target="_blank"
+							class="anchor inline-flex items-center hover:scale-105 transition-transform"
+						>
+							{#if myapp.store_link.includes('google')}
+								<img class="w-48 md:w-64" src="/gp_en_badge_web_generic.png" alt={myapp.name} />
+							{:else}
+								<AvailableOniOs size={180} />
+							{/if}
+						</a>
+					</div>
+					{#if myapp.developer_id}
+						<a href="/developers/{myapp.developer_id}" class="block">
+							<div class="btn preset-tonal hover:preset-tonal-primary w-full">
+								<span class="flex items-center gap-2">
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										class="h-5 w-5"
+										viewBox="0 0 20 20"
+										fill="currentColor"
+									>
+										<path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" />
+									</svg>
+									Developer: {myapp.developer_name || myapp.developer_id}
+								</span>
+							</div>
+						</a>
+					{/if}
+
+					<a href="/categories/{myapp.category}" class="block">
 						<div class="btn preset-tonal hover:preset-tonal-primary w-full">
 							<span class="flex items-center gap-2">
 								<svg
@@ -145,32 +162,33 @@
 									viewBox="0 0 20 20"
 									fill="currentColor"
 								>
-									<path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" />
+									<path
+										d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z"
+									/>
 								</svg>
-								Developer: {myapp.developer_name || myapp.developer_id}
+								Category: {getCategoryName(myapp.category)}
 							</span>
 						</div>
 					</a>
-				{/if}
-
-				<a href="/categories/{myapp.category}" class="block">
-					<div class="btn preset-tonal hover:preset-tonal-primary w-full">
-						<span class="flex items-center gap-2">
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								class="h-5 w-5"
-								viewBox="0 0 20 20"
-								fill="currentColor"
-							>
-								<path
-									d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z"
-								/>
-							</svg>
-							Category: {getCategoryName(myapp.category)}
-						</span>
-					</div>
-				</a>
+				</div>
 			</div>
+			<!-- COL 2  -->
+			<div>
+				{#if myapp.installs}
+					<RatingInstallsLarge app={myapp} />
+				{/if}
+			</div>
+			<!-- COL 3  -->
+			<WhiteCard>
+				{#snippet title()}
+					SDKs, Trackers & Permissions
+				{/snippet}
+				{#await data.appSDKsOverview}
+					Loading SDKs...
+				{:then mySDKs}
+					<AppSDKOverview myPackageInfo={mySDKs} companyTypes={data.companyTypes} {myapp} />
+				{/await}
+			</WhiteCard>
 		</div>
 	{/await}
 </div>
