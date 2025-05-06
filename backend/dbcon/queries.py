@@ -41,6 +41,7 @@ QUERY_SINGLE_APP_ADSTXT = load_sql_file("query_single_app_adstxt.sql")
 QUERY_APP_HISTORY = load_sql_file("query_app_history.sql")
 QUERY_SINGLE_APP = load_sql_file("query_single_app.sql")
 QUERY_APP_SDK_DETAILS = load_sql_file("query_app_sdk_details.sql")
+QUERY_APP_API_DETAILS = load_sql_file("query_app_api_details.sql")
 QUERY_APP_SDK_OVERVIEW = load_sql_file("query_app_sdk_overview.sql")
 QUERY_APPS_SDK_OVERVIEW = load_sql_file("query_apps_sdk_overview.sql")
 QUERY_APP_ADSTXT_OVERVIEW = load_sql_file("query_app_adstxt_overview.sql")
@@ -415,6 +416,27 @@ def get_app_sdk_details(store_id: str) -> pd.DataFrame:
         DBCON.engine,
         params={"store_id": store_id},
     )
+    return df
+
+
+def get_app_api_details(store_id: str) -> pd.DataFrame:
+    """Get app API details for a single store_id."""
+    store_id = "and.io.matchgames.dmatch"
+    df = pd.read_sql(
+        QUERY_APP_API_DETAILS,
+        DBCON.engine,
+        params={"store_id": store_id},
+    )
+    df["url"] = df["url"].str.replace("https://", "").replace("http://", "")
+    df["tld_url"] = df["tld_url"].str.replace("https://", "").replace("http://", "")
+    df["url"] = df["url"].apply(lambda x: "/".join(x.split("/")[0:3]))
+    df["url"] = df["url"].str.replace(r"\?.*$", "", regex=True)
+    df = (
+        df.groupby(["company_name", "tld_url", "url"], dropna=False)
+        .size()
+        .reset_index()
+    )
+    df = df.rename(columns={0: "count"})
     return df
 
 

@@ -410,6 +410,10 @@ export interface AppSDKsOverview {
 	company_categories: { [key: string]: Array<{ company_name: string; company_domain: string }> };
 }
 
+export interface AppAPIsOverview {
+	apis: { apis: Array<{ tld_url: string; url: string }> };
+}
+
 export interface AppSDKs {
 	myPackageInfo: {
 		permissions: string[];

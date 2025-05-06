@@ -32,6 +32,7 @@ from api_app.models import (
 from config import get_logger
 from dbcon.queries import (
     get_app_adstxt_overview,
+    get_app_api_details,
     get_app_history,
     get_app_sdk_details,
     get_app_sdk_overview,
@@ -703,6 +704,23 @@ class AppController(Controller):
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(f"{self.path}/{store_id}/keywords took {duration}ms")
         return keywords_dict
+
+    @get(path="/{store_id:str}/apis", cache=86400)
+    async def get_app_apis(self: Self, store_id: str) -> dict:
+        """Handle GET request for a list of apps.
+
+        Returns
+        -------
+            A list of API calls
+
+        """
+        start = time.perf_counter() * 1000
+        apis_df = get_app_api_details(store_id)
+        apis_list = apis_df.to_dict(orient="records")
+        apis_dict = {"apis": apis_list}
+        duration = round((time.perf_counter() * 1000 - start), 2)
+        logger.info(f"{self.path}/{store_id}/apis took {duration}ms")
+        return apis_dict
 
 
 COLLECTIONS = {
