@@ -54,7 +54,7 @@
 								</span>
 							{/snippet}
 							<div class="grid grid-cols-1 md:grid-cols-2 gap-1 p-2">
-								{#each packageInfo.company_categories[category] as company}
+								{#each packageInfo.company_categories[category].slice(0, 5) as company}
 									<CompanyButton
 										companyName={company.company_name}
 										companyDomain={company.company_domain}
