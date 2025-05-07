@@ -30,6 +30,11 @@
 				icon: ChartBar
 			},
 			{
+				name: 'Data & API Calls',
+				url_slug: 'data-flows',
+				icon: FileText
+			},
+			{
 				name: 'App-Ads.txt',
 				url_slug: 'ads-txt',
 				icon: FileText

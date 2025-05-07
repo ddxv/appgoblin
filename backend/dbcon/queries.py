@@ -431,6 +431,7 @@ def get_app_api_details(store_id: str) -> pd.DataFrame:
     df["tld_url"] = df["tld_url"].str.replace("https://", "").replace("http://", "")
     df["url"] = df["url"].apply(lambda x: "/".join(x.split("/")[0:3]))
     df["url"] = df["url"].str.replace(r"\?.*$", "", regex=True)
+    df["url"] = df["url"].str[0:84]
     df = (
         df.groupby(["company_name", "tld_url", "url"], dropna=False)
         .size()
