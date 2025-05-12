@@ -421,7 +421,6 @@ def get_app_sdk_details(store_id: str) -> pd.DataFrame:
 
 def get_app_api_details(store_id: str) -> pd.DataFrame:
     """Get app API details for a single store_id."""
-    store_id = "and.io.matchgames.dmatch"
     df = pd.read_sql(
         QUERY_APP_API_DETAILS,
         DBCON.engine,
