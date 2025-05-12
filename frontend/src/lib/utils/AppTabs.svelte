@@ -67,12 +67,13 @@
 
 <div class="flex flex-wrap gap-1 text-sm md:text-base overflow-x-auto">
 	{#each myTabs.types as tab}
+		{@const Component = tab.icon}
 		<a
 			href={`/apps/${page.params.id}/${tab.url_slug}`}
 			class={typeTabClass(tab.url_slug)}
 			data-sveltekit-preload-data
 		>
-			<svelte:component this={tab.icon} size={20} strokeWidth={1.5} class="text-current" />
+			<Component size={20} strokeWidth={1.5} class="text-current" />
 			<span>{tab.name}</span>
 		</a>
 	{/each}
