@@ -9,7 +9,7 @@ SELECT
     d.name AS developer_name,
     pd.url AS developer_domain_url,
     aae.relationship,
-    d.crawled_at AS developer_domain_crawled_at
+    pd.crawled_at AS developer_domain_crawled_at
 FROM
     frontend.adstxt_entries_store_apps AS aesa
 LEFT JOIN store_apps AS sa
