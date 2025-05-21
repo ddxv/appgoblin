@@ -18,13 +18,13 @@ ExecStart=/bin/bash -c "source /home/goblin/.nvm/nvm.sh && exec /home/goblin/.nv
 
 ExecStartPost=/bin/bash -c "
   for i in {1..10}; do
-    if [ -S /tmp/appgoblin-frontend.sock ]; then
-      chown www-data:www-data /tmp/appgoblin-frontend.sock
+    if [ -S /run/appgoblin/frontend.sock ]; then
+      chown www-data:www-data /run/appgoblin/frontend.sock
       exit 0
     fi
     sleep 0.5
   done
-  echo 'Warning: socket not found after waiting, skipping chown'
+  echo "Warning: socket not found, skipping chown"
   exit 0
 "
 
