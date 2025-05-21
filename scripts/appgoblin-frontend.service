@@ -8,13 +8,15 @@ After=network.target
 Type=simple
 User=goblin
 Group=goblin
+
 SupplementaryGroups=www-data
-Environment=NODE_ENV=production SOCKET_PATH=/tmp/appgoblin-frontend.sock
+RuntimeDirectory=appgoblin
+Environment=NODE_ENV=production SOCKET_PATH=/run/appgoblin/appgoblin-frontend.sock
 ExecStartPre=/bin/bash -c "rm -f /tmp/appgoblin-frontend.sock"
 
 ExecStart=/bin/bash -c "source /home/goblin/.nvm/nvm.sh && exec /home/goblin/.nvm/versions/node/v22.13.1/bin/node /home/goblin/appgoblin/frontend/build"
 
-ExecStartPost=/bin/bash -c '
+ExecStartPost=/bin/bash -c "
   for i in {1..10}; do
     if [ -S /tmp/appgoblin-frontend.sock ]; then
       chown www-data:www-data /tmp/appgoblin-frontend.sock
@@ -22,9 +24,9 @@ ExecStartPost=/bin/bash -c '
     fi
     sleep 0.5
   done
-  echo "Warning: socket not found after waiting, skipping chown"
+  echo 'Warning: socket not found after waiting, skipping chown'
   exit 0
-'
+"
 
 Restart=on-failure
 RestartSec=5
