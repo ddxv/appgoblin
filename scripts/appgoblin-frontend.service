@@ -1,7 +1,7 @@
 [Unit]
 Description=Using node to serve frontend for App Store Dash
-StartLimitBurst=3
-StartLimitIntervalSec=30
+StartLimitBurst=10
+StartLimitIntervalSec=60
 After=network.target
 
 [Service]
@@ -19,7 +19,7 @@ ExecStartPost=/bin/bash -c 'for i in {1..60}; do if [ -S /run/appgoblin/frontend
 
 
 Restart=on-failure
-RestartSec=5
+RestartSec=10
 KillMode=mixed
 
 [Install]
