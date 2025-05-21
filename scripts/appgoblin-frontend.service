@@ -11,8 +11,7 @@ Group=goblin
 
 SupplementaryGroups=www-data
 RuntimeDirectory=appgoblin
-Environment=NODE_ENV=production SOCKET_PATH=/run/appgoblin/appgoblin-frontend.sock
-ExecStartPre=/bin/bash -c "rm -f /tmp/appgoblin-frontend.sock"
+Environment=NODE_ENV=production SOCKET_PATH=/run/appgoblin/frontend.sock
 
 ExecStart=/bin/bash -c "source /home/goblin/.nvm/nvm.sh && exec /home/goblin/.nvm/versions/node/v22.13.1/bin/node /home/goblin/appgoblin/frontend/build"
 
