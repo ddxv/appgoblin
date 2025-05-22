@@ -683,11 +683,11 @@ class AppController(Controller):
         )
 
     @post(path="/{store_id:str}/requestSDKScan")
-    async def request_sdk_scan(self: Self, store_id: str) -> Response:
+    async def request_sdk_scan(self: Self, store_id: str) -> dict:
         """Request a new SDK scan for an app."""
         logger.info(f"Requesting SDK scan for {store_id}")
         insert_sdk_scan_request(store_id)
-        return
+        return {"status": "success"}
 
     @get(path="/{store_id:str}/keywords", cache=86400)
     async def get_app_keywords(self: Self, store_id: str) -> dict:
