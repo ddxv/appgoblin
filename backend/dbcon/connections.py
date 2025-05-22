@@ -70,7 +70,7 @@ class PostgresCon:
     def set_engine(self) -> None:
         """Set up the SQLAlchemy engine."""
         try:
-            db_login = f"postgresql://{self.db_user}:{self.db_pass}"
+            db_login = f"postgresql+psycopg://{self.db_user}:{self.db_pass}"
             db_uri = f"{db_login}@{self.db_ip}:{self.db_port}/{self.db_name}"
             logger.info(f"AppGoblin connecting to PostgreSQL {self.db_name}")
             application_name = f"appgoblin-{self.tag}"
@@ -79,9 +79,9 @@ class PostgresCon:
                 connect_args={
                     "connect_timeout": 30,
                     "application_name": application_name,
-                    "pool_pre_ping": True,
-                    "pool_recycle": 3600,
                 },
+                pool_pre_ping=True,
+                pool_recycle=3600,
             )
         except Exception:
             logger.exception(
