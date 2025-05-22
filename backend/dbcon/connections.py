@@ -79,6 +79,8 @@ class PostgresCon:
                 connect_args={
                     "connect_timeout": 30,
                     "application_name": application_name,
+                    "pool_pre_ping": True,
+                    "pool_recycle": 3600,
                 },
             )
         except Exception:
