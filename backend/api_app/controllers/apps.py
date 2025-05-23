@@ -464,8 +464,9 @@ class AppController(Controller):
             ".".join(store_id.split(".")[:2]),
         )
 
+        # maybe try ~(?:com.android... to skip the match groups?
         is_android_activity = df["value_name"].str.contains(
-            r"^(com\.android|android|kotlin|smali_)",
+            r"^(com\.android|android|kotlin|smali_)", regex=True
         )
 
         is_package_query = df["xml_path"].str.contains(

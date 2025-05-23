@@ -2,7 +2,8 @@ WITH
 child_companies AS (
     SELECT DISTINCT
         c.id,
-        c.name
+        c.name,
+        c.domain_id
     FROM
         adtech.companies AS c
     WHERE
