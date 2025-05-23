@@ -2,7 +2,8 @@ WITH
 parent_companies AS (
     SELECT DISTINCT
         pc.id,
-        pc.name
+        pc.name,
+        pc.domain_id
     FROM
         adtech.companies AS pc
     LEFT JOIN adtech.companies AS c
