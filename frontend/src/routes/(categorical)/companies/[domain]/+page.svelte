@@ -17,8 +17,13 @@
 	}
 
 	let { data }: Props = $props();
-	function formatNumber(num: number) {
-		return new Intl.NumberFormat('en-US').format(num);
+
+	function countryCodeToEmoji(code: string): string {
+		return code
+			.toUpperCase()
+			.split('')
+			.map((char) => String.fromCodePoint(char.charCodeAt(0) + 127397))
+			.join('');
 	}
 </script>
 
@@ -94,6 +99,24 @@
 				{/if}
 			{:catch error}
 				<p class="text-red-500 text-center">{error.message}</p>
+			{/await}
+
+			{#await data.companyDomains}
+				<span class="text-lg">Loading...</span>
+			{:then myDomains}
+				{#if typeof myDomains == 'string'}
+					<p class="text-red-500">Failed to load company domains.</p>
+				{:else if myDomains && myDomains.domains.length > 1}
+					<h2 class="text-lg font-semibold mb-4">Associated Domains</h2>
+
+					<div class="flex flex-col gap-2">
+						{#each myDomains.domains as domain}
+							<p>{countryCodeToEmoji(domain.country)} {domain.tld_url}</p>
+						{/each}
+					</div>
+				{/if}
+			{:catch error}
+				<p class="text-red-500">{error.message}</p>
 			{/await}
 		</WhiteCard>
 	{/snippet}

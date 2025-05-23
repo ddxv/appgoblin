@@ -385,6 +385,9 @@ export interface CompanyFullDetails {
 	error?: string;
 	companyDetails: CompanyCategoryOverview;
 	companyTopApps: CompanyOverviewSections;
+	companyDomains: {
+		domains: { company_domain: string; tld_url: string; country: string; org: string }[];
+	};
 	companyTree: ParentCompanyTree;
 	companySdks: CompanySDKsDict;
 	companyParentCategories: ChartTabularData;

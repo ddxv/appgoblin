@@ -23,6 +23,14 @@
 
 	let country = $state(page.params.country || 'US');
 
+	function countryCodeToEmoji(code: string): string {
+		return code
+			.toUpperCase()
+			.split('')
+			.map((char) => String.fromCodePoint(char.charCodeAt(0) + 127397))
+			.join('');
+	}
+
 	const title = `Top App Rankings: Android & iOS | Free ASO Tools | AppGoblin`;
 	const description = `Explore top ranking apps on Android and iOS to analyze which apps and games are at the top of the app store charts. Sort by category and view historical data all for free. Get valuable ASO insights for your app strategy with AppGoblin.`;
 </script>
@@ -85,7 +93,7 @@
 				}}
 			>
 				{#each Object.entries(countries) as [key, value]}
-					<option value={key}>{value}</option>
+					<option value={key}>{countryCodeToEmoji(key)} {value}</option>
 				{/each}
 			</select>
 		</div>

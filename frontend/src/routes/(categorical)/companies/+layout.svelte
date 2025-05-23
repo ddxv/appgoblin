@@ -5,6 +5,8 @@
 	import CompanyTypesTabs from '$lib/utils/CompanyTypesTabs.svelte';
 	import type { MyCrumbMetadata } from '../../../types';
 
+	const { domain } = page.params;
+
 	let { data, children } = $props();
 
 	let pageDataCrumbs = $derived(page.data.crumbs as Crumb<MyCrumbMetadata>[] | undefined);
@@ -36,9 +38,9 @@
 
 {#await data.companyTypes}
 	Loading company types ...
-{:then myTabs}
-	{#if !page.url.pathname.includes('adstxt') && myTabs && myTabs.types.length > 0}
-		<CompanyTypesTabs {myTabs} />
+{:then companyTypes}
+	{#if !page.url.pathname.includes('adstxt') && companyTypes && companyTypes.types.length > 0 && !domain}
+		<CompanyTypesTabs {companyTypes} />
 	{/if}
 {/await}
 

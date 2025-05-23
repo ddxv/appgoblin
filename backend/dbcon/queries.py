@@ -112,6 +112,7 @@ QUERY_COMPANY_OPEN_SOURCE = load_sql_file("query_company_open_source.sql")
 QUERY_SINGLE_APP_KEYWORDS = load_sql_file("query_single_app_keywords.sql")
 QUERY_KEYWORD_DETAILS = load_sql_file("query_keyword_details.sql")
 QUERY_KEYWORD_APPS = load_sql_file("query_keyword_apps.sql")
+QUERY_COMPANY_API_CALL_COUNTRYS = load_sql_file("query_company_api_call_countrys.sql")
 # Used for generating sitemaps
 QUERY_SITEMAP_APPS = load_sql_file("query_sitemap_apps.sql")
 QUERY_SITEMAP_COMPANIES = load_sql_file("query_sitemap_companies.sql")
@@ -1064,6 +1065,16 @@ def get_sdk_pattern_companies(value_pattern: str) -> pd.DataFrame:
         QUERY_SDK_PATTERN_COMPANIES,
         DBCON.engine,
         params={"value_pattern": value_pattern},
+    )
+    return df
+
+
+@lru_cache(maxsize=1)
+def get_company_api_call_countrys() -> pd.DataFrame:
+    """Get company api call countrys."""
+    df = pd.read_sql(
+        QUERY_COMPANY_API_CALL_COUNTRYS,
+        DBCON.engine,
     )
     return df
 

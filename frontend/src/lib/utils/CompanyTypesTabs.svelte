@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	let { myTabs } = $props();
+	let { companyTypes } = $props();
 
 	function typeTabClass(tab: string) {
 		const selectedClass =
@@ -45,7 +45,7 @@
 		href={getCategoryUrlPart(page.url.pathname.toString(), '', page.params.category)}
 		class={typeTabClass('all')}>All</a
 	>
-	{#each myTabs.types as tab}
+	{#each companyTypes.types as tab}
 		<a
 			href={getCategoryUrlPart(page.url.pathname.toString(), tab.url_slug, page.params.category)}
 			class={typeTabClass(tab.url_slug)}>{tab.name}</a

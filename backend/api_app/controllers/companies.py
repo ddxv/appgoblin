@@ -42,6 +42,7 @@ from dbcon.queries import (
     get_company_adstxt_publisher_id_apps_overview,
     get_company_adstxt_publisher_id_apps_raw,
     get_company_adstxt_publishers_overview,
+    get_company_api_call_countrys,
     get_company_categories_topn,
     get_company_open_source,
     get_company_sdks,
@@ -890,6 +891,21 @@ class CompaniesController(Controller):
         logger.info(f"GET /api/companies/{company_domain}/sdks took {duration}ms")
 
         return mydict
+
+    @get(path="/companies/{company_domain:str}/domains", cache=86400)
+    async def company_domains(self: Self, company_domain: str) -> dict:
+        """Handle GET request for company api call countrys."""
+        start = time.perf_counter() * 1000
+        df = get_company_api_call_countrys()
+
+        df = df[df["company_domain"] == company_domain]
+        if df.empty:
+            return []
+
+        duration = round((time.perf_counter() * 1000 - start), 2)
+        logger.info(f"GET /api/companies/{company_domain}/domains took {duration}ms")
+
+        return {"domains": df.to_dict(orient="records")}
 
     @get(path="/companies/types/", cache=CACHE_FOREVER)
     async def all_adtech_types(self: Self) -> CompanyTypes:
