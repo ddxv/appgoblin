@@ -14,8 +14,5 @@ SELECT
     ad.domain
 FROM
     child_companies AS cc
-LEFT JOIN adtech.company_domain_mapping AS cdm
-    ON
-        cc.id = cdm.company_id
 LEFT JOIN ad_domains AS ad ON
-    cdm.domain_id = ad.id;
+    cc.domain_id = ad.id;

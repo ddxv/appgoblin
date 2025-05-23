@@ -7,27 +7,21 @@ WITH mytree AS (
             ad.domain
         ) AS parent_company_domain,
         COALESCE(
-            cc.name,
+            pc.name,
             c.name,
             ad.domain
         ) AS parent_company_name
     FROM
         adtech.companies AS c
-    LEFT JOIN adtech.companies AS cc
+    LEFT JOIN adtech.companies AS pc
         ON
-            c.parent_company_id = cc.id
-    LEFT JOIN adtech.company_domain_mapping AS cdm
-        ON
-            c.id = cdm.company_id
-    LEFT JOIN adtech.company_domain_mapping AS pcdm
-        ON
-            cc.id = pcdm.company_id
+            c.parent_company_id = pc.id
     FULL OUTER JOIN ad_domains AS ad
         ON
-            cdm.domain_id = ad.id
+            c.domain_id = ad.id
     LEFT JOIN ad_domains AS parad
         ON
-            pcdm.domain_id = parad.id
+            pc.domain_id = parad.id
 )
 
 SELECT *

@@ -9,12 +9,9 @@ LEFT JOIN adtech.sdks AS sd
 LEFT JOIN adtech.companies AS c
     ON
         sd.company_id = c.id
-LEFT JOIN adtech.company_domain_mapping AS cdm
-    ON
-        c.id = cdm.company_id
 LEFT JOIN ad_domains AS ad
     ON
-        cdm.domain_id = ad.id
+        c.domain_id = ad.id
 WHERE
     sp.package_pattern LIKE :value_pattern || '%'
     OR :value_pattern ILIKE sp.package_pattern || '%';

@@ -17,8 +17,5 @@ SELECT
     ad.domain
 FROM
     parent_companies AS pc
-LEFT JOIN adtech.company_domain_mapping AS cdm
-    ON
-        pc.id = cdm.company_id
 LEFT JOIN ad_domains AS ad ON
-    cdm.domain_id = ad.id;
+    pc.domain_id = ad.id;
