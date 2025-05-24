@@ -1,0 +1,1 @@
+select * from frontend.company_domain_country;
