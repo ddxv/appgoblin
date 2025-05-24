@@ -44,6 +44,7 @@ from dbcon.queries import (
     get_company_adstxt_publishers_overview,
     get_company_api_call_countrys,
     get_company_categories_topn,
+    get_company_countries,
     get_company_open_source,
     get_company_sdks,
     get_company_stats,
@@ -230,6 +231,7 @@ def get_overviews(
     # Get Top 5 Companies for Plots
     top_df = get_companies_top(type_slug=type_slug, app_category=category, limit=5)
     top_companies_short = make_top_companies(top_df)
+    countries_df = get_company_countries()
 
     if type_slug:
         if category:
@@ -266,6 +268,10 @@ def get_overviews(
     )
 
     overview_df["percent_open_source"] = overview_df["percent_open_source"].fillna(0)
+
+    overview_df = overview_df.merge(
+        countries_df, on="company_domain", how="left", validate="1:1"
+    )
 
     results = CompaniesOverview(
         companies_overview=overview_df.to_dict(orient="records"),
@@ -647,6 +653,15 @@ class CompaniesController(Controller):
         logger.info(f"GET /api/companies/categories/{category} took {duration}ms")
 
         return overview
+
+    @get(path="/companies/countries", cache=CACHE_FOREVER)
+    async def companies_countries(self: Self) -> dict:
+        """Handle GET request for all companies countries."""
+        start = time.perf_counter() * 1000
+        df = get_company_countries()
+        duration = round((time.perf_counter() * 1000 - start), 2)
+        logger.info(f"GET /api/companies/countries took {duration}ms")
+        return df.to_dict(orient="records")
 
     @get(
         path="/companies/{company_domain:str}",

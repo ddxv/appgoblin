@@ -52,6 +52,7 @@ QUERY_STORE_COLLECTION_CATEGORY_MAP = load_sql_file(
 )
 QUERY_PARENT_COMPANIES = load_sql_file("query_parent_companies.sql")
 QUERY_CHILD_COMPANIES = load_sql_file("query_child_companies.sql")
+QUERY_COMPANY_COUNTRIES = load_sql_file("query_company_countries.sql")
 QUERY_ADTECH_CATEGORIES = load_sql_file(
     "query_adtech_categories.sql",
 )
@@ -205,6 +206,13 @@ def get_parent_companies() -> list[str]:
     """Get parent companies."""
     df = pd.read_sql(QUERY_PARENT_COMPANIES, con=DBCON.engine)
     return df["domain"].tolist()
+
+
+@lru_cache(maxsize=1)
+def get_company_countries() -> pd.DataFrame:
+    """Get company countries."""
+    df = pd.read_sql(QUERY_COMPANY_COUNTRIES, con=DBCON.engine)
+    return df
 
 
 @lru_cache(maxsize=1)

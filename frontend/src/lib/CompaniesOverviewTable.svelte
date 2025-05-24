@@ -214,6 +214,14 @@
 		}
 		return '';
 	}
+
+	function countryCodeToEmoji(code: string): string {
+		return code
+			.toUpperCase()
+			.split('')
+			.map((char) => String.fromCodePoint(char.charCodeAt(0) + 127397))
+			.join('');
+	}
 </script>
 
 <div class="table-container p-0 md:p-2">
@@ -307,6 +315,11 @@
 									({row.original.company_domain})
 								{:else}
 									{row.original.company_domain}
+								{/if}
+								{#if row.original.most_common_country}
+									<span class="text-xs md:text-sm">
+										({countryCodeToEmoji(row.original.most_common_country)})
+									</span>
 								{/if}
 							</a>
 						</td>
