@@ -317,7 +317,10 @@
 									{row.original.company_domain}
 								{/if}
 								{#if row.original.most_common_country}
-									<span class="text-xs md:text-sm" title={row.original.most_common_country}>
+									<span
+										class="text-xs md:text-sm"
+										title={`IP addresses for this domain commonly resolve to: ${row.original.most_common_country}`}
+									>
 										({countryCodeToEmoji(row.original.most_common_country)})
 									</span>
 								{/if}
