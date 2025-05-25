@@ -24,7 +24,7 @@
 	<div class="stat-container">
 		<div class="text-sm text-primary-800-200 uppercase tracking-wide">iOS Pub IDs</div>
 		<div class="text-2xl font-bold text-primary-900">
-			{#if myTotals.apple.direct.publisher_id_count}
+			{#if myTotals.apple && myTotals.apple.direct.publisher_id_count}
 				{formatNumber(myTotals.apple.direct.publisher_id_count)}
 			{:else}
 				<p class="text-sm">No Direct Publisher IDs</p>
@@ -46,7 +46,7 @@
 	<div class="stat-container">
 		<div class="text-sm text-primary-800-200 uppercase tracking-wide">iOS Developers</div>
 		<div class="text-2xl font-bold text-primary-900">
-			{#if myTotals.apple.direct.developer_count}
+			{#if myTotals.apple && myTotals.apple.direct.developer_count}
 				{formatNumber(myTotals.apple.direct.developer_count)}
 			{:else}
 				<p class="text-sm">No Direct Developers</p>
@@ -57,7 +57,7 @@
 	<div class="stat-container">
 		<div class="text-sm text-primary-800-200 uppercase tracking-wide">Android Apps</div>
 		<div class="text-2xl font-bold text-primary-900">
-			{#if myTotals.google.direct}
+			{#if myTotals.google && myTotals.google.direct}
 				{formatNumber(myTotals.google.direct.app_count)}
 			{:else}
 				<p class="text-sm">No Direct Apps</p>
@@ -68,7 +68,7 @@
 	<div class="stat-container">
 		<div class="text-sm text-primary-800-200 uppercase tracking-wide">iOS Apps</div>
 		<div class="text-2xl font-bold text-primary-900">
-			{#if myTotals.apple.direct}
+			{#if myTotals.apple && myTotals.apple.direct}
 				{formatNumber(myTotals.apple.direct.app_count)}
 			{:else}
 				<p class="text-sm">No Direct Apps</p>
@@ -82,7 +82,7 @@
 	<div class="stat-container">
 		<div class="text-sm text-primary-800-200 uppercase tracking-wide">Android Apps</div>
 		<div class="text-2xl font-bold text-primary-900">
-			{#if myTotals.google.reseller}
+			{#if myTotals.google && myTotals.google.reseller}
 				{formatNumber(myTotals.google.reseller.app_count)}
 			{:else}
 				<p class="text-sm">No Reseller Apps</p>
@@ -92,7 +92,7 @@
 	<div class="stat-container">
 		<div class="text-sm text-primary-800-200 uppercase tracking-wide">iOS Apps</div>
 		<div class="text-2xl font-bold text-primary-900">
-			{#if myTotals.apple.reseller}
+			{#if myTotals.apple && myTotals.apple.reseller}
 				{formatNumber(myTotals.apple.reseller.app_count)}
 			{:else}
 				<p class="text-sm">No Reseller Apps</p>

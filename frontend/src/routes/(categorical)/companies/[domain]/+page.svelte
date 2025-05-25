@@ -106,7 +106,7 @@
 			{:then myDomains}
 				{#if typeof myDomains == 'string'}
 					<p class="text-red-500">Failed to load company domains.</p>
-				{:else if myDomains && myDomains.domains.length > 1}
+				{:else if myDomains && myDomains.domains && myDomains.domains.length > 1}
 					<h2 class="text-lg font-semibold mb-4">Associated Domains</h2>
 
 					<div class="flex flex-col gap-2">
