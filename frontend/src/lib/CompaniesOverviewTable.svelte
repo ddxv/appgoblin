@@ -317,7 +317,7 @@
 									{row.original.company_domain}
 								{/if}
 								{#if row.original.most_common_country}
-									<span class="text-xs md:text-sm">
+									<span class="text-xs md:text-sm" title={row.original.most_common_country}>
 										({countryCodeToEmoji(row.original.most_common_country)})
 									</span>
 								{/if}

@@ -111,7 +111,11 @@
 
 					<div class="flex flex-col gap-2">
 						{#each myDomains.domains as domain}
-							<p>{countryCodeToEmoji(domain.country)} {domain.tld_url}</p>
+							<span
+								class="text-md p-2"
+								title={`IP addresses for this domain commonly resolve to: ${domain.country}`}
+								>{countryCodeToEmoji(domain.country)} {domain.tld_url}</span
+							>
 						{/each}
 					</div>
 				{/if}
