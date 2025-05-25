@@ -271,8 +271,7 @@ def get_overviews(
 
     overview_df = overview_df.merge(
         countries_df,
-        left_on="company_domain",
-        right_on="parent_company_domain",
+        on="company_domain",
         how="left",
         validate="1:1",
     )
