@@ -270,7 +270,11 @@ def get_overviews(
     overview_df["percent_open_source"] = overview_df["percent_open_source"].fillna(0)
 
     overview_df = overview_df.merge(
-        countries_df, on="company_domain", how="left", validate="1:1"
+        countries_df,
+        left_on="company_domain",
+        right_on="parent_company_domain",
+        how="left",
+        validate="1:1",
     )
 
     results = CompaniesOverview(
