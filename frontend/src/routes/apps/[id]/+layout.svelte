@@ -23,7 +23,7 @@
 	import AppTabs from '$lib/utils/AppTabs.svelte';
 
 	function isAndroid() {
-		return /^\d+$/.test(page.params.id);
+		return !/^\d+$/.test(page.params.id);
 	}
 
 	let isAndroidApp = $derived(isAndroid());
