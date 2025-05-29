@@ -118,7 +118,7 @@ export interface CategoryInfo {
 }
 
 export interface CatData {
-	categories: Record<string, CategoryInfo>;
+	categories: Array<{ id: string; name: string }>;
 }
 
 export interface CategoriesInfo {

@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import { ChartLine, ChartBar, Boxes, Key, TrendingUp, FileText, Cog } from 'lucide-svelte';
+	import { ChartLine, ChartBar, Boxes, Key, TrendingUp, FileText } from 'lucide-svelte';
+
+	let { isAndroidApp } = $props();
 
 	let myTabs = {
 		types: [
@@ -29,11 +31,16 @@
 				url_slug: 'ranks',
 				icon: ChartBar
 			},
-			{
-				name: 'Data & API Calls',
-				url_slug: 'data-flows',
-				icon: FileText
-			},
+			...(isAndroidApp
+				? [
+						{
+							name: 'Data & API Calls',
+							url_slug: 'data-flows',
+							icon: FileText
+						}
+					]
+				: []),
+
 			{
 				name: 'App-Ads.txt',
 				url_slug: 'ads-txt',

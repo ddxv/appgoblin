@@ -3,11 +3,30 @@
 	import RatingInstallsLarge from '$lib/RatingInstallsLarge.svelte';
 	import StarsRating from '$lib/StarsRating.svelte';
 	import WhiteCard from '$lib/WhiteCard.svelte';
-	let { data, children } = $props();
+	import type { AppSDKsOverview, CompanyTypes, AppFullDetail, CatData } from '../../../types';
+	let {
+		data,
+		children
+	}: {
+		data: {
+			myapp: AppFullDetail;
+			appSDKsOverview: AppSDKsOverview;
+			companyTypes: CompanyTypes;
+			appCats: CatData;
+		};
+		children: any;
+	} = $props();
+
 	import AvailableOniOs from '$lib/svg/AvailableOniOS.svelte';
 	import AppSDKOverview from '$lib/AppSDKOverview.svelte';
 
 	import AppTabs from '$lib/utils/AppTabs.svelte';
+
+	function isAndroid() {
+		return /^\d+$/.test(page.params.id);
+	}
+
+	let isAndroidApp = $derived(isAndroid());
 
 	function getCategoryName(category: string) {
 		if (category) {
@@ -195,7 +214,7 @@
 
 <nav class="bg-surface-100-800-token border-y border-surface-300-600-token my-2 md:my-6">
 	<div class="mx-1: md:mx-8">
-		<AppTabs />
+		<AppTabs {isAndroidApp} />
 	</div>
 </nav>
 
