@@ -2,7 +2,7 @@
 	import { page } from '$app/state';
 	import { ChartLine, ChartBar, Boxes, Key, TrendingUp, FileText } from 'lucide-svelte';
 
-	let { isAndroidApp } = $props();
+	let { isAndroidApp, myapp } = $props();
 
 	let myTabs = {
 		types: [
@@ -54,8 +54,9 @@
 			'flex items-center gap-2 px-4 py-3 font-medium transition-colors duration-200';
 		const selectedClass = 'text-primary-500 bg-surface-100-900 hover:bg-primary-500/5';
 		const unselectedClass =
-			'text-surface-700-200-token border-transparent hover:text-primary-400 hover:border-primary-400/30 hover:bg-primary-900-100/50';
-
+			'border-transparent hover:text-primary-400 hover:border-primary-400/30 hover:bg-primary-900-100/50';
+		const unselectedGreyClass =
+			'border-transparent hover:text-surface-700-200-token hover:border-surface-700-200-token/30 hover:bg-surface-100-900/50';
 		if (tab === '') {
 			if (page.url.pathname === `/apps/${page.params.id}`) {
 				return `${baseClass} ${selectedClass}`;
@@ -67,7 +68,23 @@
 		if (page.url.pathname.startsWith(`/apps/${page.params.id}/${tab}`)) {
 			return `${baseClass} ${selectedClass}`;
 		} else {
-			return `${baseClass} ${unselectedClass}`;
+			if (tab === 'sdks') {
+				return `${baseClass} ${unselectedGreyClass}`;
+			} else {
+				return `${baseClass} ${unselectedClass}`;
+			}
+		}
+	}
+
+	function tabTextClass(tab: string) {
+		if (tab === 'sdks' && !myapp.sdk_successful_last_crawled) {
+			return 'text-surface-700-300';
+		} else if (tab === 'data-flows' && !myapp.api_successful_last_crawled) {
+			return 'text-surface-700-300';
+		} else if (tab === 'ads-txt' && myapp.adstxt_crawl_result != 1) {
+			return 'text-surface-700-300';
+		} else {
+			return '';
 		}
 	}
 </script>
@@ -80,8 +97,8 @@
 			class={typeTabClass(tab.url_slug)}
 			data-sveltekit-preload-data
 		>
-			<Component size={20} strokeWidth={1.5} class="text-current" />
-			<span>{tab.name}</span>
+			<Component size={20} strokeWidth={1.5} class={tabTextClass(tab.url_slug)} />
+			<span class={tabTextClass(tab.url_slug)}>{tab.name}</span>
 		</a>
 	{/each}
 </div>

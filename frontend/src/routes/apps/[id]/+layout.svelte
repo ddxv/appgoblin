@@ -214,7 +214,9 @@
 
 <nav class="bg-surface-100-800-token border-y border-surface-300-600-token my-2 md:my-6">
 	<div class="mx-1: md:mx-8">
-		<AppTabs {isAndroidApp} />
+		{#await data.myapp then myapp}
+			<AppTabs {isAndroidApp} {myapp} />
+		{/await}
 	</div>
 </nav>
 
