@@ -1,0 +1,29 @@
+---
+title: "iOS IPA Files Available Again"
+description: "iOS IPA files can be downloaded again after 3 months of being blocked."
+pubDate: "June 05 2025"
+heroImage: "/generated-blog/2025-ipatool-working.jpg"
+---
+
+export const components = componentSet;
+
+## Background
+
+AppGoblin uses the IPA files from the iOS Appstore to analyze apps for their third party SDKs and the user permissions they require. There are two main libraries, and probably many more, [ipatool](https://github.com/majd/ipatool/) and [ipswm](https://github.com/blacktop/ipsw/), that are used to download the IPA files. Since March these libraries, along with others, have all been [unable to use Apple iOS app store authentication blocking any downloads](https://github.com/majd/ipatool/issues/357).
+
+## June 2025 Update
+
+🎉 Aaand their back! 🎉 Seemingly without any fixes, the existing tools are working again. This is much different than the usual cat and mouse game tools like this play, where the 3rd party tools are always playing catchup with whatever recent API, authentication or internal structural changes a company pursues with it's public facing services and tools.
+
+## Was this fixed on purpose by Apple?
+
+There is an unlikely reason that I would like to propose, but first lets cover some likely banalities. Maybe Apple is temporary rolling back some changes while they continue working, perhaps this is only coincidentally re-enabled the older authentication methods.
+
+But what if this is due to anti-trust? I see two possibilities here:
+
+1. Apple felt this is helpful to avoid further antitrust. By allowing tools to download IPA files they are not restricting potential competition. This to me seems a bit far fetched.
+2. As Apple sees that it is inevitable for 3rd party app stores to become popular, so sees value in keeping the ecosystem tied into it's own app store? This is so far fetched I think it has some logic.
+
+## Time to get to work
+
+Either way, today is a good day and time for AppGoblin to start analyzing iOS apps again. You can press "Request SDK Scan" on any app on AppGoblin or better yet join the Discord and let us know which apps you'd like to analyze first so we can make sure those get done while the window of opportunity is open.
