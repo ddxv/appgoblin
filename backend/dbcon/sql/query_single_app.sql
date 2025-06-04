@@ -41,7 +41,10 @@ SELECT
     version_code,
     sdk_last_crawled,
     sdk_crawl_result,
-    sdk_successful_last_crawled
+    sdk_successful_last_crawled,
+    api_last_crawled,
+    run_result AS api_crawl_result,
+    api_successful_last_crawled
 FROM
     frontend.store_apps_overview
 WHERE

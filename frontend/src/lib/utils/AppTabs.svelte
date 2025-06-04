@@ -4,6 +4,8 @@
 
 	let { isAndroidApp, myapp } = $props();
 
+	const textGreyedOutColor = 'text-surface-700-300';
+
 	let myTabs = {
 		types: [
 			{
@@ -78,11 +80,11 @@
 
 	function tabTextClass(tab: string) {
 		if (tab === 'sdks' && !myapp.sdk_successful_last_crawled) {
-			return 'text-surface-700-300';
+			return textGreyedOutColor;
 		} else if (tab === 'data-flows' && !myapp.api_successful_last_crawled) {
-			return 'text-surface-700-300';
+			return textGreyedOutColor;
 		} else if (tab === 'ads-txt' && myapp.adstxt_crawl_result != 1) {
-			return 'text-surface-700-300';
+			return textGreyedOutColor;
 		} else {
 			return '';
 		}

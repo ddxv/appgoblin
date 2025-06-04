@@ -876,6 +876,7 @@ def clean_app_df(df: pd.DataFrame) -> pd.DataFrame:
         "adstxt_last_crawled",
         "sdk_last_crawled",
         "sdk_successful_last_crawled",
+        "api_successful_last_crawled",
     ]
     for x in date_cols:
         if x not in df.columns:
