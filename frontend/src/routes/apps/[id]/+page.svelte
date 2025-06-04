@@ -3,6 +3,8 @@
 	import RequestSDKScanButton from '$lib/RequestSDKScanButton.svelte';
 	import type { AppFullDetails } from '../../../types';
 	import WhiteCard from '$lib/WhiteCard.svelte';
+	import AppSDKOverview from '$lib/AppSDKOverview.svelte';
+
 	interface Props {
 		data: AppFullDetails;
 	}
@@ -18,6 +20,17 @@
 				Loading app details...
 			{:then myapp}
 				<div class="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4">
+					<!-- Developer Information Section -->
+					<WhiteCard>
+						{#snippet title()}
+							SDKs, Trackers & Permissions
+						{/snippet}
+						{#await data.appSDKsOverview}
+							Loading SDKs...
+						{:then mySDKs}
+							<AppSDKOverview myPackageInfo={mySDKs} companyTypes={data.companyTypes} {myapp} />
+						{/await}
+					</WhiteCard>
 					<!-- Developer Information Section -->
 					<WhiteCard>
 						{#snippet title()}

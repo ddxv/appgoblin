@@ -22,13 +22,8 @@ export const load: LayoutServerLoad = async ({ params, parent }) => {
 		return checkStatus(resp, 'App');
 	};
 
-	const appSDKsOverview = async () => {
-		const resp = await fetch(`http://localhost:8000/api/apps/${params.id}/sdksoverview`);
-		return checkStatus(resp, 'App SDKs Overview');
-	};
-
 	// Get the app data first
 	const app = await myapp();
 
-	return { myapp: app, appSDKsOverview: appSDKsOverview(), companyTypes: await companyTypes };
+	return { myapp: app, companyTypes: await companyTypes };
 };

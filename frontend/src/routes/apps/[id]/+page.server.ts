@@ -33,7 +33,7 @@ function checkStatus(resp: Response, name: string) {
 	}
 }
 
-export const load: PageServerLoad = async ({ params, parent, url }) => {
+export const load: PageServerLoad = async ({ params, parent }) => {
 	const id = params.id;
 	// Load parent data first because it is cached
 	const { myapp } = await parent();
@@ -43,8 +43,14 @@ export const load: PageServerLoad = async ({ params, parent, url }) => {
 		return checkStatus(resp, 'App History');
 	};
 
+	const appSDKsOverview = async () => {
+		const resp = await fetch(`http://localhost:8000/api/apps/${params.id}/sdksoverview`);
+		return checkStatus(resp, 'App SDKs Overview');
+	};
+
 	return {
 		myapp: myapp,
-		myhistory: myhistory()
+		myhistory: myhistory(),
+		appSDKsOverview: appSDKsOverview()
 	};
 };

@@ -37,11 +37,11 @@
 			accessorKey: 'company_name',
 			isSortable: true
 		},
-		{
-			title: 'TLD URL',
-			accessorKey: 'tld_url',
-			isSortable: true
-		},
+		// {
+		// 	title: 'TLD URL',
+		// 	accessorKey: 'tld_url',
+		// 	isSortable: true,
+		// },
 		{
 			title: 'URL',
 			accessorKey: 'url',
@@ -148,7 +148,7 @@
 			</thead>
 			<tbody>
 				{#each table.getRowModel().rows as row (row.id)}
-					<tr class="px-0">
+					<tr class="px-0 text-xs md:text-sm overflow-x-auto">
 						<td>
 							{#if row.original.company_name}
 								<CompanyButton

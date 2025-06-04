@@ -2,15 +2,13 @@
 	import { page } from '$app/state';
 	import RatingInstallsLarge from '$lib/RatingInstallsLarge.svelte';
 	import StarsRating from '$lib/StarsRating.svelte';
-	import WhiteCard from '$lib/WhiteCard.svelte';
-	import type { AppSDKsOverview, CompanyTypes, AppFullDetail, CatData } from '../../../types';
+	import type { CompanyTypes, AppFullDetail, CatData } from '../../../types';
 	let {
 		data,
 		children
 	}: {
 		data: {
 			myapp: AppFullDetail;
-			appSDKsOverview: AppSDKsOverview;
 			companyTypes: CompanyTypes;
 			appCats: CatData;
 		};
@@ -18,7 +16,6 @@
 	} = $props();
 
 	import AvailableOniOs from '$lib/svg/AvailableOniOS.svelte';
-	import AppSDKOverview from '$lib/AppSDKOverview.svelte';
 
 	import AppTabs from '$lib/utils/AppTabs.svelte';
 
@@ -123,24 +120,26 @@
 		<h1 class="text-primary-900-100 text-3xl font-bold mb-4">{myapp.name}</h1>
 		<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
 			<!-- COL 1  -->
-			<div class="grid grid-cols-1 gap-0">
-				{#if myapp.icon_url_512}
-					<img
-						src={myapp.icon_url_512}
-						alt={myapp.name}
-						class="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 lg:w-56 lg:h-56 xl:w-60 xl:h-60"
-						referrerpolicy="no-referrer"
-					/>
-				{/if}
-				<!-- Ratings: STARS (123) -->
-				<div class="md:hidden">
-					<StarsRating total={5} size={20} rating={myapp.rating} />
-				</div>
-				<div class="hidden md:inline-flex">
-					<StarsRating total={5} size={40} rating={myapp.rating} />
+			<div class="grid grid-cols-3 md:grid-cols-1 gap-0">
+				<div class="col-span-1">
+					{#if myapp.icon_url_512}
+						<img
+							src={myapp.icon_url_512}
+							alt={myapp.name}
+							class="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 lg:w-56 lg:h-56 xl:w-60 xl:h-60"
+							referrerpolicy="no-referrer"
+						/>
+					{/if}
+					<!-- Ratings: STARS (123) -->
+					<div class="md:hidden">
+						<StarsRating total={5} size={20} rating={myapp.rating} />
+					</div>
+					<div class="hidden md:inline-flex">
+						<StarsRating total={5} size={40} rating={myapp.rating} />
+					</div>
 				</div>
 
-				<div class="space-y-4">
+				<div class="space-y-2 md:space-y-4 col-span-2">
 					<div class="flex items-center justify-center">
 						<a
 							href={myapp.store_link}
@@ -148,7 +147,11 @@
 							class="anchor inline-flex items-center hover:scale-105 transition-transform"
 						>
 							{#if myapp.store_link.includes('google')}
-								<img class="w-48 md:w-64" src="/gp_en_badge_web_generic.png" alt={myapp.name} />
+								<img
+									class="w-32 md:w-48 md:w-64"
+									src="/gp_en_badge_web_generic.png"
+									alt={myapp.name}
+								/>
 							{:else}
 								<AvailableOniOs size={180} />
 							{/if}
@@ -157,7 +160,7 @@
 					{#if myapp.developer_id}
 						<a href="/developers/{myapp.developer_id}" class="block">
 							<div class="btn preset-tonal hover:preset-tonal-primary w-full">
-								<span class="flex items-center gap-2">
+								<span class="flex items-center gap-1 md:gap-2 text-sm md:text-base">
 									<svg
 										xmlns="http://www.w3.org/2000/svg"
 										class="h-5 w-5"
@@ -174,7 +177,7 @@
 
 					<a href="/categories/{myapp.category}" class="block">
 						<div class="btn preset-tonal hover:preset-tonal-primary w-full">
-							<span class="flex items-center gap-2">
+							<span class="flex items-center gap-1 md:gap-2 text-xs md:text-sm">
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
 									class="h-5 w-5"
@@ -198,16 +201,7 @@
 				{/if}
 			</div>
 			<!-- COL 3  -->
-			<WhiteCard>
-				{#snippet title()}
-					SDKs, Trackers & Permissions
-				{/snippet}
-				{#await data.appSDKsOverview}
-					Loading SDKs...
-				{:then mySDKs}
-					<AppSDKOverview myPackageInfo={mySDKs} companyTypes={data.companyTypes} {myapp} />
-				{/await}
-			</WhiteCard>
+			<!-- EMPTY COL? -->
 		</div>
 	{/await}
 </div>
