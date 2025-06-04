@@ -118,9 +118,9 @@
 		</div>
 	{:then myapp}
 		<h1 class="text-primary-900-100 text-3xl font-bold mb-4">{myapp.name}</h1>
-		<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+		<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
 			<!-- COL 1  -->
-			<div class="grid grid-cols-3 md:grid-cols-1 gap-0">
+			<div class="grid grid-cols-3 gap-0">
 				<div class="col-span-1">
 					{#if myapp.icon_url_512}
 						<img
