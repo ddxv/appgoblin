@@ -1,11 +1,11 @@
 <script lang="ts">
 	let { data } = $props();
 
-	let title = 'Blog | OpenAttribution Latest News';
+	let title = 'Blog | AppGoblin Latest News';
 	const description =
-		'Latest news and updates from the OpenAttribution team. Learn about the latest features, updates, and improvements.';
+		'Latest news and updates from the AppGoblin team. Grow your app with free ASO tools and analytics from AppGoblin.';
 	const keywords =
-		'blog, openattribution, open source, mmp, mobile, ad tracking, ad analysis, ad platform';
+		'blog, appgoblin, aso, app store optimization, app marketing, app growth, monetization, reports, analysis, sdks, competitor analysis';
 </script>
 
 <svelte:head>
