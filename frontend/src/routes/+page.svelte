@@ -275,7 +275,7 @@
 				{#await data.appsOverview}
 					Loading Overview...
 				{:then appsOverview}
-					<p class="p-2 md:p-4">
+					<p class="p-2 md:p-4 text-sm md:text-base">
 						These are the apps we are currently have in our databases. Green represents apps that
 						are currently live on the store while the others are older apps that are no longer
 						active on the app stores.
@@ -291,7 +291,7 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr>
+								<tr class="text-xs md:text-base">
 									<td>
 										<span class="text-success-900-100">
 											{formatNumber(appsOverview.success_android_apps)}

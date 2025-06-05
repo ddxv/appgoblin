@@ -1,6 +1,7 @@
 <script lang="ts">
 	import '../app.css';
 	import { page } from '$app/state';
+	import { Popover } from '@skeletonlabs/skeleton-svelte';
 
 	import IconSearch from '$lib/svg/IconSearch.svelte';
 	import OpenSideBarDrawer from '$lib/utils/OpenSideBarDrawer.svelte';
@@ -34,6 +35,12 @@
 	let { data, children }: Props = $props();
 
 	homeCategoryMap.set(data.appCats);
+
+	let menuBarOpenState = $state(false);
+
+	function popoverClose() {
+		menuBarOpenState = false;
+	}
 </script>
 
 <div class="grid h-screen grid-rows-[auto_1fr_auto]">
@@ -48,14 +55,16 @@
 			{#snippet lead()}
 				<div class="flex items-center">
 					<a href="/" class="flex">
-						<img
-							class="md:ml-2 h-8 md:h-12 w-8 md:w-12"
-							src="/goblin_purple_hat_60.png"
-							alt="AppGoblin Icon"
-						/>
-						<strong class="text-xs ml-1 md:ml-2 md:text-3xl uppercase text-primary-900-100"
-							>AppGoblin</strong
-						>
+						<div class="flex items-center flex-col md:flex-row">
+							<img
+								class="md:ml-2 h-8 md:h-12 w-8 md:w-12"
+								src="/goblin_purple_hat_60.png"
+								alt="AppGoblin Icon"
+							/>
+							<strong class="text-xs ml-1 md:ml-2 md:text-3xl uppercase text-primary-900-100"
+								>AppGoblin</strong
+							>
+						</div>
 					</a>
 				</div>
 			{/snippet}
@@ -80,18 +89,18 @@
 							/>
 						</div>
 					</div>
-					<div class="flex items-center p-1 gap-2">
+					<div class="flex items-center p-1 gap-1 md:gap-2">
 						<a href="https://github.com/ddxv/appgoblin" target="_blank" rel="noreferrer">
-							<button type="button" class="btn preset-tonal hover:preset-tonal-primary p-2">
-								<div class="inline-flex items-center text-xs md:text-lg gap-2">
+							<button type="button" class="btn preset-tonal hover:preset-tonal-primary p-1 md:p-2">
+								<div class="inline-flex items-center text-xs md:text-lg gap-1 md:gap-2">
 									{@html githubIcon} Star on GitHub
 								</div>
 							</button>
 						</a>
 
 						<a href="https://discord.gg/7jpWEhkXRW" target="_blank" rel="noreferrer">
-							<button type="button" class="btn preset-tonal hover:preset-tonal-primary p-2">
-								<div class="inline-flex items-center text-xs md:text-lg gap-2">
+							<button type="button" class="btn preset-tonal hover:preset-tonal-primary p-1 md:p-2">
+								<div class="inline-flex items-center text-xs md:text-lg gap-1 md:gap-2">
 									{@html discordIcon} Discord
 								</div>
 							</button>
@@ -125,7 +134,20 @@
 			{/if}
 		</div>
 		<div class="inline-flex md:hidden">
-			<NavTabs />
+			<Popover
+				open={menuBarOpenState}
+				onOpenChange={(e) => (menuBarOpenState = e.open)}
+				positioning={{ placement: 'top' }}
+				triggerBase="btn preset-tonal"
+				contentBase="card bg-surface-200-800 p-4 space-y-4 max-w-[320px]"
+				arrow
+				arrowBackground="!bg-surface-200 dark:!bg-surface-800"
+			>
+				{#snippet trigger()}Menu{/snippet}
+				{#snippet content()}
+					<NavTabs />
+				{/snippet}
+			</Popover>
 		</div>
 	</footer>
 </div>
