@@ -134,20 +134,24 @@
 			{/if}
 		</div>
 		<div class="inline-flex md:hidden">
-			<Popover
-				open={menuBarOpenState}
-				onOpenChange={(e) => (menuBarOpenState = e.open)}
-				positioning={{ placement: 'top' }}
-				triggerBase="btn preset-tonal"
-				contentBase="card bg-surface-200-800 p-4 space-y-4 max-w-[320px]"
-				arrow
-				arrowBackground="!bg-surface-200 dark:!bg-surface-800"
-			>
-				{#snippet trigger()}Menu{/snippet}
-				{#snippet content()}
-					<NavTabs />
-				{/snippet}
-			</Popover>
+			{#if page.url.pathname.startsWith('/blog/')}
+				<NavTabs hideLinks={true} />
+			{:else}
+				<Popover
+					open={menuBarOpenState}
+					onOpenChange={(e) => (menuBarOpenState = e.open)}
+					positioning={{ placement: 'top' }}
+					triggerBase="btn preset-tonal"
+					contentBase="card bg-surface-200-800 p-4 space-y-4 max-w-[320px]"
+					arrow
+					arrowBackground="!bg-surface-200 dark:!bg-surface-800"
+				>
+					{#snippet trigger()}Menu{/snippet}
+					{#snippet content()}
+						<NavTabs />
+					{/snippet}
+				</Popover>
+			{/if}
 		</div>
 	</footer>
 </div>
