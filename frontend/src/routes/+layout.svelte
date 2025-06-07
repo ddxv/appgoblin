@@ -4,6 +4,7 @@
 	import { Popover } from '@skeletonlabs/skeleton-svelte';
 
 	import IconSearch from '$lib/svg/IconSearch.svelte';
+	import { Menu } from 'lucide-svelte';
 	import OpenSideBarDrawer from '$lib/utils/OpenSideBarDrawer.svelte';
 	import SideBar from '$lib/SideBar.svelte';
 
@@ -125,7 +126,7 @@
 		</main>
 	</div>
 
-	<footer class="sticky bottom-0 z-10 bg-surface-50-950">
+	<footer class="sticky bottom-0 z-10 bg-surface-50-950 p-2">
 		<div class="md:hidden p-2">
 			{#if page.url.pathname.startsWith('/collections') || page.url.pathname.startsWith('/rankings') || page.url.pathname.startsWith('/companies') || page.url.pathname.startsWith('/fastest-growing-apps')}
 				{#await data.appCats then myCatData}
@@ -133,25 +134,31 @@
 				{/await}
 			{/if}
 		</div>
-		<div class="inline-flex md:hidden">
-			{#if page.url.pathname.startsWith('/blog/')}
+		{#if page.url.pathname.startsWith('/blog/')}
+			<div class="inline-flex md:hidden">
 				<NavTabs hideLinks={true} />
-			{:else}
+			</div>
+		{:else}
+			<div class="fixed right-4 bottom-4 p-4">
 				<Popover
 					open={menuBarOpenState}
 					onOpenChange={(e) => (menuBarOpenState = e.open)}
 					positioning={{ placement: 'top' }}
-					triggerBase="btn preset-tonal"
+					triggerBase="btn preset-tonal-primary"
 					contentBase="card bg-surface-200-800 p-4 space-y-4 max-w-[320px]"
 					arrow
 					arrowBackground="!bg-surface-200 dark:!bg-surface-800"
 				>
-					{#snippet trigger()}Menu{/snippet}
+					{#snippet trigger()}
+						<span class="flex items-center gap-2">
+							Menu <Menu size={24} />
+						</span>
+					{/snippet}
 					{#snippet content()}
 						<NavTabs />
 					{/snippet}
 				</Popover>
-			{/if}
-		</div>
+			</div>
+		{/if}
 	</footer>
 </div>
