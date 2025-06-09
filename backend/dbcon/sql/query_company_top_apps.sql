@@ -10,7 +10,6 @@ WITH ranked_apps AS (
 SELECT
     ra.company_domain,
     ra.store,
-    ra.tag_source,
     ra.name,
     ra.store_id,
     ra.app_company_rank AS rank,
