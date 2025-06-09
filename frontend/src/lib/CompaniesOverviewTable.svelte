@@ -32,18 +32,17 @@
 
 	import { page } from '$app/state';
 
-	const include_open_source = page.params.type == 'development-tools';
-
 	const columns = genericColumns([
-		...(include_open_source
-			? [
-					{
-						title: 'Open Source',
-						accessorKey: 'percent_open_source',
-						isSortable: true
-					}
-				]
-			: []),
+		{
+			title: 'Data',
+			accessorKey: 'percent_open_source',
+			isSortable: true
+		},
+		{
+			title: 'Servers',
+			accessorKey: 'most_common_country',
+			isSortable: true
+		},
 		{
 			title: 'Company',
 			accessorKey: 'company_name',
@@ -177,8 +176,9 @@
 	let isAdsPage = $derived(!page.params.type || page.params.type == 'ad-networks');
 
 	function shouldShowHeader(header: any) {
+		if (header.column.id === 'percent_open_source') return true;
+		if (header.column.id === 'most_common_country') return true;
 		if (header.column.id === 'company_name') return true;
-		if (header.column.id === 'percent_open_source') return include_open_source;
 
 		let headerHasInstall = header.column.id.includes('install');
 		let headerHasPercent = header.column.id.includes('percentage');
@@ -226,7 +226,7 @@
 
 <div class="table-container p-0 md:p-2">
 	<div class="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-8 m-2">
-		<div class="card preset-tonal flex items-center flex-col p-2">
+		<div class="card preset-tonal flex items-center flex-col p-0 md:p-2">
 			<input
 				placeholder="Filter companies..."
 				value={globalFilter}
@@ -270,8 +270,8 @@
 		</div>
 	</div>
 	<div class="overflow-x-auto pl-0">
-		<table class="md:table table-hover md:table-compact table-auto w-full">
-			<thead>
+		<table class="table table-hover table-compact table-auto w-full">
+			<thead class="text-sm md:text-base">
 				{#each table.getHeaderGroups() as headerGroup (headerGroup.id)}
 					<tr>
 						{#each headerGroup.headers as header (header.id)}
@@ -292,18 +292,27 @@
 			<tbody>
 				{#each table.getRowModel().rows as row (row.id)}
 					<tr class="px-0">
-						{#if include_open_source}
-							<td class="text-center">
-								{#if row.original.percent_open_source == 1}
-									<div class="w-3 h-3 rounded-full bg-success-500 mx-auto"></div>
-								{:else if row.original.percent_open_source == 0}
-									<div class="w-3 h-3 rounded-full bg-error-500 mx-auto"></div>
-								{:else}
-									<div class="w-3 h-3 rounded-full bg-warning-500 mx-auto"></div>
-								{/if}
-							</td>
-						{/if}
-
+						<td class="text-center">
+							{#if row.original.percent_open_source > 0.75}
+								<div class="w-3 h-3 rounded-full bg-success-200 mx-auto"></div>
+							{:else if row.original.percent_open_source > 0.3}
+								<div class="w-3 h-3 rounded-full bg-warning-200 mx-auto"></div>
+							{:else if row.original.percent_open_source == 0}
+								<div class="w-3 h-3 rounded-full bg-error-200 mx-auto"></div>
+							{:else}
+								<div class="w-3 h-3 rounded-full bg-gray-500 mx-auto"></div>
+							{/if}
+						</td>
+						<td class="text-center">
+							{#if row.original.most_common_country}
+								<span
+									class="text-xs md:text-sm"
+									title={`IP addresses for this domain commonly resolve to: ${row.original.most_common_country}`}
+								>
+									{countryCodeToEmoji(row.original.most_common_country)}
+								</span>
+							{/if}
+						</td>
 						<td class="w-0">
 							<a
 								href="/companies/{row.original.company_domain}"
@@ -315,14 +324,6 @@
 									({row.original.company_domain})
 								{:else}
 									{row.original.company_domain}
-								{/if}
-								{#if row.original.most_common_country}
-									<span
-										class="text-xs md:text-sm"
-										title={`IP addresses for this domain commonly resolve to: ${row.original.most_common_country}`}
-									>
-										({countryCodeToEmoji(row.original.most_common_country)})
-									</span>
 								{/if}
 							</a>
 						</td>
