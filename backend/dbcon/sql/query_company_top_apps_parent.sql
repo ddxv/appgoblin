@@ -8,14 +8,14 @@ WITH ranked_apps AS (
 )
 
 SELECT
-    ranked_apps.company_domain,
-    ranked_apps.store,
-    ranked_apps.tag_source,
-    ranked_apps.name,
-    ranked_apps.store_id,
-    ranked_apps.app_company_rank AS rank,
-    ranked_apps.rating_count,
-    ranked_apps.rating_count_d30,
-    ranked_apps.installs,
-    ranked_apps.installs_d30
-FROM ranked_apps;
+    ra.company_domain,
+    ra.store,
+    ra.name,
+    ra.store_id,
+    ra.app_company_rank AS rank,
+    ra.rating_count_d30,
+    ra.installs_d30,
+    ra.sdk,
+    ra.api_call,
+    ra.app_ads_direct
+FROM ranked_apps AS ra;

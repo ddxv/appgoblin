@@ -922,7 +922,7 @@ def get_single_apps_adstxt(store_id: str) -> pd.DataFrame:
 
 
 def get_topapps_for_company(
-    company_domain: str, mapped_category: str | None = None, limit: int = 20
+    company_domain: str, mapped_category: str | None = None, limit: int = 10
 ) -> pd.DataFrame:
     """Get top apps for for a company."""
     if mapped_category == "games":
@@ -959,6 +959,8 @@ def get_topapps_for_company(
     if not df.empty:
         df["review_count"] = 0
         df["rating"] = 5
+        df["installs"] = 0
+        df["rating_count"] = 0
         df = clean_app_df(df)
         df = df.sort_values(by="rank", ascending=True)
     return df
@@ -1120,6 +1122,6 @@ DBCON.set_engine()
 try:
     DBCONWRITE = get_db_connection("madrone-write")
     DBCONWRITE.set_engine()
-except Exception as e:
-    logger.exception(f"Error setting up madrone-write engine: {e}")
+except Exception:
+    logger.exception("Error setting up madrone-write engine")
     DBCONWRITE = None

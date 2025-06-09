@@ -19,7 +19,6 @@ from api_app.models import (
     AppGroup,
     CompaniesCategoryOverview,
     CompaniesOverview,
-    CompanyAppsOverview,
     CompanyCategoryOverview,
     CompanyDetail,
     CompanyPatternsDict,
@@ -68,61 +67,24 @@ def get_search_results(search_term: str) -> pd.DataFrame:
 def get_company_apps(
     company_domain: str,
     category: str | None = None,
-) -> CompanyAppsOverview:
+) -> CompanyPlatformOverview:
     """Get the overview data from the database."""
     df = get_topapps_for_company(
         company_domain=company_domain,
         mapped_category=category,
     )
 
-    android_adstxt_reseller = df[
-        (df["tag_source"] == "app_ads_reseller")
-        & (df["store"].str.startswith("Google"))
-    ]
-    ios_adstxt_reseller = df[
-        (df["tag_source"] == "app_ads_reseller")
-        & (~df["store"].str.startswith("Google"))
-    ]
+    android_df = df[(df["store"].str.startswith("Google"))]
+    ios_df = df[(~df["store"].str.startswith("Google"))]
 
-    android_adstxt_direct = df[
-        (df["tag_source"] == "app_ads_direct") & (df["store"].str.startswith("Google"))
-    ]
-    ios_adstxt_direct = df[
-        (df["tag_source"] == "app_ads_direct") & (~df["store"].str.startswith("Google"))
-    ]
-
-    android_sdk = df[
-        (df["tag_source"] == "sdk") & (df["store"].str.startswith("Google"))
-    ]
-    ios_sdk = df[(df["tag_source"] == "sdk") & (~df["store"].str.startswith("Google"))]
-
-    results = CompanyAppsOverview(
-        adstxt_reseller=CompanyPlatformOverview(
-            android=AppGroup(
-                apps=android_adstxt_reseller.to_dict(orient="records"),
-                title=company_domain,
-            ),
-            ios=AppGroup(
-                apps=ios_adstxt_reseller.to_dict(orient="records"),
-                title=company_domain,
-            ),
+    results = CompanyPlatformOverview(
+        android=AppGroup(
+            apps=android_df.to_dict(orient="records"),
+            title=company_domain,
         ),
-        adstxt_direct=CompanyPlatformOverview(
-            android=AppGroup(
-                apps=android_adstxt_direct.to_dict(orient="records"),
-                title=company_domain,
-            ),
-            ios=AppGroup(
-                apps=ios_adstxt_direct.to_dict(orient="records"),
-                title=company_domain,
-            ),
-        ),
-        sdk=CompanyPlatformOverview(
-            android=AppGroup(
-                apps=android_sdk.to_dict(orient="records"),
-                title=company_domain,
-            ),
-            ios=AppGroup(apps=ios_sdk.to_dict(orient="records"), title=company_domain),
+        ios=AppGroup(
+            apps=ios_df.to_dict(orient="records"),
+            title=company_domain,
         ),
     )
     return results
@@ -732,7 +694,7 @@ class CompaniesController(Controller):
         self: Self,
         company_domain: str,
         category: str | None = None,
-    ) -> CompanyAppsOverview:
+    ) -> CompanyPlatformOverview:
         """Handle GET request for a specific company top apps.
 
         Args:
