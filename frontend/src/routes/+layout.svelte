@@ -62,7 +62,7 @@
 								src="/goblin_purple_hat_60.png"
 								alt="AppGoblin Icon"
 							/>
-							<strong class="text-xs ml-1 md:ml-2 md:text-3xl uppercase text-primary-900-100"
+							<strong class="text-xs ml-1 md:ml-2 md:text-xl uppercase text-primary-900-100"
 								>AppGoblin</strong
 							>
 						</div>
@@ -80,7 +80,7 @@
 						<div class="input-group-shim p-1 md:p-2">
 							<IconSearch />
 						</div>
-						<div class="text-xs md:text-lg p-1">
+						<div class="text-xs md:text-base p-1">
 							<input
 								type="search"
 								bind:value={searchTerm}
@@ -93,7 +93,7 @@
 					<div class="flex items-center p-1 gap-1 md:gap-2">
 						<a href="https://github.com/ddxv/appgoblin" target="_blank" rel="noreferrer">
 							<button type="button" class="btn preset-tonal hover:preset-tonal-primary p-1 md:p-2">
-								<div class="inline-flex items-center text-xs md:text-lg gap-1 md:gap-2">
+								<div class="inline-flex items-center text-xs md:text-base gap-1 md:gap-2">
 									{@html githubIcon} Star on GitHub
 								</div>
 							</button>
@@ -101,7 +101,7 @@
 
 						<a href="https://discord.gg/7jpWEhkXRW" target="_blank" rel="noreferrer">
 							<button type="button" class="btn preset-tonal hover:preset-tonal-primary p-1 md:p-2">
-								<div class="inline-flex items-center text-xs md:text-lg gap-1 md:gap-2">
+								<div class="inline-flex items-center text-xs md:text-base gap-1 md:gap-2">
 									{@html discordIcon} Discord
 								</div>
 							</button>
