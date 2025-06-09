@@ -139,7 +139,7 @@
 				<NavTabs hideLinks={true} />
 			</div>
 		{:else}
-			<div class="fixed right-4 bottom-4 p-4">
+			<div class="fixed right-4 bottom-4 p-4 md:hidden">
 				<Popover
 					open={menuBarOpenState}
 					onOpenChange={(e) => (menuBarOpenState = e.open)}
