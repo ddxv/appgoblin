@@ -12,6 +12,42 @@
 
 <div class="card preset-tonal p-2 md:p-16 mt-2 md:mt-4">
 	<h4 class="h4 md:h3 p-2">Ad SDKs, Trackers & Permissions</h4>
+
+	<WhiteCard>
+		{#snippet title()}
+			SDK Tracking Status
+		{/snippet}
+		{#await data.myapp}
+			Loading app data...
+		{:then myapp}
+			<div class="space-y-2 p-2">
+				{#if myapp.sdk_last_crawled}
+					<div class="flex items-center gap-2">
+						<span class="font-medium">Successful Last Crawled:</span>
+						<span class="text-primary-900-100">{myapp.sdk_successful_last_crawled}</span>
+					</div>
+					<div class="flex items-center gap-2">
+						<span class="font-medium">Last Crawled:</span>
+						<span class="text-primary-900-100">{myapp.sdk_last_crawled}</span>
+					</div>
+					<div class="flex items-center gap-2">
+						<span class="font-medium">Last Crawl Status:</span>
+						<span
+							class={myapp.sdk_last_crawl_result == 1
+								? 'text-success-900-100'
+								: 'text-error-900-100'}
+						>
+							{myapp.sdk_last_crawl_result == 1 ? 'Success' : 'Failed'}
+						</span>
+					</div>
+				{:else}
+					App not yet analyzed for SDKs.
+					<RequestSDKScanButton />
+				{/if}
+			</div>
+		{/await}
+	</WhiteCard>
+
 	{#await data.myPackageInfo}
 		Loading permissions and tracker data...
 	{:then packageInfo}

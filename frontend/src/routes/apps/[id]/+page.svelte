@@ -146,11 +146,11 @@
 								<div class="flex items-center gap-2">
 									<span class="font-medium">Last Crawl Status:</span>
 									<span
-										class={myapp.sdk_crawl_result == 1
+										class={myapp.sdk_last_crawl_result == 1
 											? 'text-success-900-100'
 											: 'text-error-900-100'}
 									>
-										{myapp.sdk_crawl_result == 1 ? 'Success' : 'Failed'}
+										{myapp.sdk_last_crawl_result == 1 ? 'Success' : 'Failed'}
 									</span>
 								</div>
 							{:else}

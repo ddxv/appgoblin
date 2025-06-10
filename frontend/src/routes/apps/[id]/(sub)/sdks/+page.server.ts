@@ -38,6 +38,7 @@ export const load: PageServerLoad = async ({ params, parent }) => {
 	const id = params.id;
 	// Load parent data first because it is cached
 	const { companyTypes } = await parent();
+	const { myapp } = await parent();
 
 	console.log('id', id);
 
@@ -45,6 +46,7 @@ export const load: PageServerLoad = async ({ params, parent }) => {
 
 	return {
 		myPackageInfo: checkStatus(resp, 'App Package Info'),
-		companyTypes: companyTypes
+		companyTypes: companyTypes,
+		myapp: myapp
 	};
 };

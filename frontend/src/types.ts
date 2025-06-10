@@ -427,6 +427,7 @@ export interface AppSDKs {
 		app_queries: string[];
 	};
 	companyTypes: CompanyTypes;
+	myapp: AppFullDetail;
 }
 
 export interface AppFullDetails {
@@ -532,7 +533,7 @@ export interface AppFullDetail {
 	adstxt_crawl_result: number;
 	version_code: string;
 	sdk_last_crawled: string;
-	sdk_crawl_result: number;
+	sdk_last_crawl_result: number;
 	sdk_successful_last_crawled: string;
 }
 

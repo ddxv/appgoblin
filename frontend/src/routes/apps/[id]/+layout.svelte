@@ -169,7 +169,8 @@
 									>
 										<path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" />
 									</svg>
-									Developer: {myapp.developer_name || myapp.developer_id}
+									Developer: {myapp.developer_name.split(' ').slice(0, 3).join(' ') ||
+										myapp.developer_id}
 								</span>
 							</div>
 						</a>

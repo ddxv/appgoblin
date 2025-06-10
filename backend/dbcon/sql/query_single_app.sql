@@ -40,7 +40,7 @@ SELECT
     in_app_purchases,
     version_code,
     sdk_last_crawled,
-    sdk_crawl_result,
+    sdk_last_crawl_result,
     sdk_successful_last_crawled,
     api_last_crawled,
     run_result AS api_crawl_result,
