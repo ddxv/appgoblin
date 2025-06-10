@@ -25,15 +25,17 @@
 	use:enhance={handleSubmit}
 >
 	<input type="hidden" name="appId" value={page.params.id} />
-	<button class="btn preset-tonal text-tertiary-900-100">Request New SDK Scan</button>
+	<button class="btn preset-tonal text-tertiary-900-100 text-sm md:text-base"
+		>Request New SDK Scan</button
+	>
 	{#if myMessage}
 		<!-- this message is ephemeral; it exists because the page was rendered in
 	       response to a form submission. it will vanish if the user reloads -->
 		<p class="text-green-500">{myMessage}</p>
 	{/if}
-	<p>
-		This will request a new SDK scan for this app. Scanning may take several days, or require manual
-		troubleshooting. Please reach out on Discord and we can help work on the scan. iOS is currently
-		not working well due to changes in Apple APIs and may not be possible.
+	<p class="text-sm md:text-base">
+		Scanning should take 24 hours to decompile the app's SDKs and check what API calls it makes. The
+		process is automated 80% of the time but can require manual troubleshooting. Feel free to reach
+		out on Discord if you have any questions.
 	</p>
 </form>
