@@ -19,11 +19,14 @@
 	let { data }: Props = $props();
 
 	function countryCodeToEmoji(code: string): string {
-		return code
-			.toUpperCase()
-			.split('')
-			.map((char) => String.fromCodePoint(char.charCodeAt(0) + 127397))
-			.join('');
+		if (!code) return '';
+		return (
+			code
+				.toUpperCase()
+				.split('')
+				.map((char) => String.fromCodePoint(char.charCodeAt(0) + 127397))
+				.join('') || ''
+		);
 	}
 </script>
 
@@ -114,8 +117,10 @@
 							<span
 								class="text-md p-2"
 								title={`IP addresses for this domain commonly resolve to: ${domain.country}`}
-								>{countryCodeToEmoji(domain.country)} {domain.tld_url}</span
 							>
+								{countryCodeToEmoji(domain.country)}
+								{domain.tld_url}
+							</span>
 						{/each}
 					</div>
 				{/if}
@@ -125,6 +130,36 @@
 		</WhiteCard>
 	{/snippet}
 </CompaniesLayout>
+
+{#await data.companyDetails}
+	<div><span>Loading...</span></div>
+{:then detailsData}
+	{#await data.companyTopApps}
+		<div><span>Loading...</span></div>
+	{:then tableData}
+		{#if typeof tableData == 'string'}
+			Failed to load company's apps.
+		{:else}
+			<CompanyTableGrid {tableData} {detailsData} category="all" />
+		{/if}
+	{:catch error}
+		<p style="color: red">{error.message}</p>
+	{/await}
+	{#if detailsData && detailsData.adstxt_publishers_overview && detailsData.adstxt_publishers_overview.google && detailsData.adstxt_publishers_overview.apple}
+		<div class="card preset-tonal p-2 md:p-8 mt-2 md:mt-4">
+			<div class="grid md:grid-cols-2 gap-4">
+				<div>
+					<h2 class="text-lg font-semibold mb-4">ANDROID DIRECT PUBLISHER IDS</h2>
+					<AdsTxtPubIDsTable entries_table={detailsData.adstxt_publishers_overview.google.direct} />
+				</div>
+				<div>
+					<h2 class="text-lg font-semibold mb-4">IOS DIRECT PUBLISHER IDS</h2>
+					<AdsTxtPubIDsTable entries_table={detailsData.adstxt_publishers_overview.apple.direct} />
+				</div>
+			</div>
+		</div>
+	{/if}
+{/await}
 
 <WhiteCard>
 	{#snippet title()}
@@ -140,34 +175,3 @@
 		{/if}
 	{/await}
 </WhiteCard>
-
-{#await data.companyDetails}
-	<div><span>Loading...</span></div>
-{:then detailsData}
-	{#if detailsData && detailsData.adstxt_publishers_overview && detailsData.adstxt_publishers_overview.google && detailsData.adstxt_publishers_overview.apple}
-		<div class="card preset-tonal p-2 md:p-8 mt-2 md:mt-4">
-			<div class="grid md:grid-cols-2 gap-4">
-				<div>
-					<h2 class="text-lg font-semibold mb-4">ANDROID DIRECT PUBLISHER IDS</h2>
-					<AdsTxtPubIDsTable entries_table={detailsData.adstxt_publishers_overview.google.direct} />
-				</div>
-				<div>
-					<h2 class="text-lg font-semibold mb-4">IOS DIRECT PUBLISHER IDS</h2>
-					<AdsTxtPubIDsTable entries_table={detailsData.adstxt_publishers_overview.apple.direct} />
-				</div>
-			</div>
-		</div>
-	{/if}
-
-	{#await data.companyTopApps}
-		<div><span>Loading...</span></div>
-	{:then tableData}
-		{#if typeof tableData == 'string'}
-			Failed to load company's apps.
-		{:else}
-			<CompanyTableGrid {tableData} {detailsData} category="all" />
-		{/if}
-	{:catch error}
-		<p style="color: red">{error.message}</p>
-	{/await}
-{/await}

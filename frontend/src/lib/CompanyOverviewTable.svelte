@@ -13,6 +13,10 @@
 
 	const rowsPerPage = 100;
 
+	function tableHasAdsTxt(table: CompanyOverviewApps[]) {
+		return !table.every((row) => row.app_ads_direct == false);
+	}
+
 	const handler = new DataHandler<CompanyOverviewApps>([], {
 		rowsPerPage: rowsPerPage,
 		totalRows: totalRows
@@ -42,16 +46,18 @@
 
 					<th class="table-cell-fit">
 						{#if !isiOS}
-							Installs (30d)
+							Monthly Installs
 						{:else}
-							Rating Count (30d)
+							Monthly iOS Ratings
 						{/if}
 					</th>
 					<th class="table-cell-fit">SDK</th>
 					{#if !isiOS}
 						<th class="table-cell-fit">API Calls</th>
 					{/if}
-					<th class="table-cell-fit">App-Ads.txt</th>
+					{#if tableHasAdsTxt(entries_table)}
+						<th class="table-cell-fit">App-Ads.txt</th>
+					{/if}
 				</tr>
 			</thead>
 			<tbody>
@@ -93,15 +99,17 @@
 								{/if}
 							</td>
 						{/if}
-						<td class="table-cell-fit">
-							{#if row.app_ads_direct == true}
-								<Check class="w-4 h-4 text-green-400" />
-							{:else if row.app_ads_direct == false}
-								<X class="w-4 h-4 text-red-400" />
-							{:else}
-								-
-							{/if}
-						</td>
+						{#if tableHasAdsTxt(entries_table)}
+							<td class="table-cell-fit">
+								{#if row.app_ads_direct == true}
+									<Check class="w-4 h-4 text-green-400" />
+								{:else if row.app_ads_direct == false}
+									<X class="w-4 h-4 text-red-400" />
+								{:else}
+									-
+								{/if}
+							</td>
+						{/if}
 					</tr>
 				{/each}
 			</tbody>

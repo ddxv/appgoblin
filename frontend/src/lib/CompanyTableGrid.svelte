@@ -7,8 +7,32 @@
 	function formatNumber(num: number) {
 		return new Intl.NumberFormat('en-US').format(num);
 	}
-	function hasAppAdsTxt(tableData: any) {}
 </script>
+
+<div class="grid grid-cols-1">
+	<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+		<WhiteCard>
+			{#snippet title()}
+				Android Top Apps
+			{/snippet}
+			{#if tableData.android.apps.length > 0}
+				<CompanyOverviewTable entries_table={tableData.android.apps} />
+			{:else}
+				<p class="text-sm md:text-lg mb-2">No Android apps found for this company.</p>
+			{/if}
+		</WhiteCard>
+		<WhiteCard>
+			{#snippet title()}
+				iOS Top Apps
+			{/snippet}
+			{#if tableData.ios.apps.length > 0}
+				<CompanyOverviewTable entries_table={tableData.ios.apps} isiOS={true} />
+			{:else}
+				<p class="text-sm md:text-lg mb-2">No iOS apps found for this company.</p>
+			{/if}
+		</WhiteCard>
+	</div>
+</div>
 
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 my-6">
 	<!-- SDK Section -->
@@ -77,21 +101,4 @@
 			</div>
 		</WhiteCard>
 	{/if}
-</div>
-
-<div class="grid grid-cols-1">
-	<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-		<WhiteCard>
-			{#snippet title()}
-				Android Apps
-			{/snippet}
-			<CompanyOverviewTable entries_table={tableData.android.apps} />
-		</WhiteCard>
-		<WhiteCard>
-			{#snippet title()}
-				iOS Apps
-			{/snippet}
-			<CompanyOverviewTable entries_table={tableData.ios.apps} isiOS={true} />
-		</WhiteCard>
-	</div>
 </div>
