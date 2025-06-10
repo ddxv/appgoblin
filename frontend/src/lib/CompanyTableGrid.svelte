@@ -7,9 +7,7 @@
 	function formatNumber(num: number) {
 		return new Intl.NumberFormat('en-US').format(num);
 	}
-	function hasAppAdsTxt(tableData: any) {
-		return tableData.android.apps.length > 0 || tableData.ios.apps.length > 0;
-	}
+	function hasAppAdsTxt(tableData: any) {}
 </script>
 
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 my-6">
@@ -85,13 +83,13 @@
 	<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 		<WhiteCard>
 			{#snippet title()}
-				Android SDK
+				Android Apps
 			{/snippet}
 			<CompanyOverviewTable entries_table={tableData.android.apps} />
 		</WhiteCard>
 		<WhiteCard>
 			{#snippet title()}
-				iOS SDK
+				iOS Apps
 			{/snippet}
 			<CompanyOverviewTable entries_table={tableData.ios.apps} isiOS={true} />
 		</WhiteCard>
