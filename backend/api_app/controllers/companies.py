@@ -74,6 +74,8 @@ def get_company_apps(
         mapped_category=category,
     )
 
+    df = df[~df["store"].isna()]
+
     android_df = df[(df["store"].str.startswith("Google"))]
     ios_df = df[(~df["store"].str.startswith("Google"))]
 
