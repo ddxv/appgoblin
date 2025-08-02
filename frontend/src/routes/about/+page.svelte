@@ -74,23 +74,29 @@
 	</div>
 	<br />
 	<div class="card preset-filled-surface-100-900 p-2 md:p-4">
-		<h2 class="h2 p-2 md:p-4">Open Source Tech Stack</h2>
+		<h2 class="h2 p-2 md:p-4">Free & Open Source Resources</h2>
 		<div class="p-2 md:p-4">
 			<p>
-				First is the underlying data which is collected and maintained from <strong
-					><a href="https://github.com/ddxv/adscrawler">github.com/ddxv/adscrawler</a></strong
-				>
-				The adscrawler uses Python & PostgreSQL to crawl app stores to collect apps and their basic information
-				like names and rating counts. This data is then stored to the PostgreSQL database.
+				AppGoblin provides mostly <strong class="text-primary-900-100"
+					>free mobile app marketing resources</strong
+				>. The goal is to provide as much free and reproducible open source app analytics for the
+				community as possible.
 			</p>
 			<br />
 			<p>
-				The website itself is also open source and can be found at
-				<strong><a href="https://github.com/ddxv/appgoblin">github.com/ddxv/appgoblin</a></strong> The
-				website is built from a Python backend API based on LiteStar which manages queries to the PostgreSQL
-				database. The API is used by a JavaScript Svelte frontend with Tailwind and Skeleton for CSS.
-				All projects are glued together with systemd and websockets where needed. Everything is hosted
-				on AWS in the small EC2 instances.
+				Some of the data sets are available for free download. They can be found on
+				<strong
+					><a href="https://github.com/ddxv/appgoblin-data">github.com/ddxv/appgoblin-data</a
+					></strong
+				>. Feel free to reach out if there are other parts of data you'd like to see exported.
+			</p>
+		</div>
+		<div class="p-2 md:p-4">
+			<p>
+				The code is maintained open source for transparency. The data is collected with
+				<strong><a href="https://github.com/ddxv/adscrawler">github.com/ddxv/adscrawler</a></strong>
+				and the website code can be found at
+				<strong><a href="https://github.com/ddxv/appgoblin">github.com/ddxv/appgoblin</a></strong>.
 			</p>
 		</div>
 		<br />
@@ -98,21 +104,60 @@
 			<h2 class="h2 p-2 md:p-4">Paid Features</h2>
 			<div class="p-4">
 				<p>
-					AppGoblin provides mostly <strong class="text-primary-900-100"
-						>free mobile app marketing resources</strong
-					>. The goal is to provide as much free and reproducible open source app analytics for the
-					community as possible.
+					AppGoblin is committed to providing open, reproducible mobile app analytics to the
+					community. Most of the data and insights on the site are free to access and built on
+					open-source pipelines. However, some datasets and services require significant resources
+					to maintain and are offered as paid features.
 				</p>
+
 				<br />
-				<p>
-					Some advanced datasets are available for purchase. For example full app-ads.txt data
-					(~50GB of data updated daily) is available for $100/month.
-				</p>
+				<h3 class="h3 p-2 md:p-4">Available Datasets & Reports</h3>
+
+				<div class="space-y-6">
+					<div class="card preset-filled-surface-50-950 p-4">
+						<h4 class="h4 font-semibold text-primary-900-100">
+							Full App-Ads.txt Datasets— $300/month
+						</h4>
+						<p class="mt-2">
+							Updated daily, and available as a single compressed dataset of all known app-ads.txt
+							files (~50GB) or broken out for individual ad networks.
+						</p>
+					</div>
+
+					<div class="card preset-filled-surface-50-950 p-4">
+						<h4 class="h4 font-semibold text-primary-900-100">
+							Competitor SDK Client Lists — $500 base + $300 per additional company
+						</h4>
+						<p class="mt-2">
+							A flat-file report listing all known apps using a given SDK or company, based on our
+							SDK detection pipeline. Ideal for competitor analysis, sales prospecting, and market
+							research. Includes install estimates, category data, and timestamps. Includes install
+							estimates, category data, and timestamps.
+						</p>
+						<p class="mt-2 text-sm opacity-80">
+							Ongoing reports (e.g., monthly tracking) are available upon request.
+						</p>
+					</div>
+
+					<div class="card preset-filled-surface-50-950 p-4">
+						<h4 class="h4 font-semibold text-primary-900-100">Custom Reports and Analysis</h4>
+						<p class="mt-2">
+							Need something specific? Custom reports, API integrations, or deeper analytics can be
+							arranged. Pricing depends on the scope and frequency of the request. Please reach out
+							with your requirements for a quote.
+						</p>
+					</div>
+				</div>
+
 				<br />
-				<p>
-					Additional custom reports or analysis are available on request. Please reach out to me
-					directly if you'd like to get a quote for a custom report or analysis.
-				</p>
+				<h3 class="h3 p-2 md:p-4">For Researchers, Journalists, and Academics</h3>
+				<div class="card preset-filled-surface-50-950 p-4">
+					<p>
+						AppGoblin supports independent research and journalism. If you're a student, academic
+						researcher, or investigative journalist working on mobile advertising, privacy, or app
+						ecosystems, you're welcome to reach out for collaboration.
+					</p>
+				</div>
 			</div>
 		</div>
 
@@ -164,12 +209,6 @@
 		</div>
 
 		<br />
-		<p>
-			Finally, some of the data is also available for download. The data can be found on
-			<strong
-				><a href="https://github.com/ddxv/appgoblin-data">github.com/ddxv/appgoblin-data</a></strong
-			>. Feelf free to reach out if there are other parts of data you'd like to see exported.
-		</p>
 
 		You can also reach me personally:
 		<a href="https://jamesoclaire.com">
