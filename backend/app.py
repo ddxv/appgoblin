@@ -15,6 +15,7 @@ from api_app.controllers.keywords import KeywordsController
 from api_app.controllers.rankings import RankingsController
 from api_app.controllers.scry import ScryController
 from api_app.controllers.sdks import SdksController
+from api_app.controllers.creatives import CreativesController
 
 cors_config = CORSConfig(
     allow_origins=[
@@ -64,6 +65,7 @@ private_controllers = [
     RankingsController,
     CompaniesController,
     SdksController,
+    CreativesController,
 ]
 
 # Set the guard on private controllers
@@ -81,6 +83,7 @@ app = Litestar(
         SdksController,
         KeywordsController,
         ScryController,
+        CreativesController,
     ],
     cors_config=cors_config,
     openapi_config=OpenAPIConfig(
