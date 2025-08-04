@@ -117,6 +117,10 @@ QUERY_COMPANY_API_CALL_COUNTRYS = load_sql_file("query_company_api_call_countrys
 # Used for generating sitemaps
 QUERY_SITEMAP_APPS = load_sql_file("query_sitemap_apps.sql")
 QUERY_SITEMAP_COMPANIES = load_sql_file("query_sitemap_companies.sql")
+QUERY_CREATIVES = load_sql_file("query_creatives.sql")
+QUERY_ADVERTISER_CREATIVE_RANKINGS = load_sql_file(
+    "query_advertiser_creative_rankings.sql"
+)
 
 INSERT_SDK_SCAN_REQUEST = load_sql_file("insert_sdk_scan_request.sql")
 
@@ -234,6 +238,19 @@ def get_adtech_categories() -> pd.DataFrame:
 def get_total_counts() -> pd.DataFrame:
     """Get total counts."""
     df = pd.read_sql(QUERY_TOTAL_COUNTS, con=DBCON.engine)
+    return df
+
+
+def get_advertiser_creatives(store_id: str) -> pd.DataFrame:
+    """Get creatives."""
+    df = pd.read_sql(QUERY_CREATIVES, con=DBCON.engine, params={"store_id": store_id})
+    return df
+
+
+@lru_cache(maxsize=1)
+def get_advertiser_creative_rankings() -> pd.DataFrame:
+    """Get advertiser creative rankings."""
+    df = pd.read_sql(QUERY_ADVERTISER_CREATIVE_RANKINGS, con=DBCON.engine)
     return df
 
 
