@@ -44,7 +44,8 @@ SELECT
     sdk_successful_last_crawled,
     api_last_crawled,
     run_result AS api_crawl_result,
-    api_successful_last_crawled
+    api_successful_last_crawled,
+    COALESCE(ad_creative_count, 0) AS ad_creative_count
 FROM
     frontend.store_apps_overview
 WHERE

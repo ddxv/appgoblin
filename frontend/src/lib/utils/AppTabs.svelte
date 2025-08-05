@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import { ChartLine, ChartBar, Boxes, Key, TrendingUp, FileText } from 'lucide-svelte';
+	import { ChartLine, ChartBar, Boxes, Key, TrendingUp, FileText, Image } from 'lucide-svelte';
 
 	let { isAndroidApp, myapp } = $props();
 
@@ -39,6 +39,11 @@
 							name: 'Data & API Calls',
 							url_slug: 'data-flows',
 							icon: FileText
+						},
+						{
+							name: 'Ad Creatives',
+							url_slug: 'ad-creatives',
+							icon: Image
 						}
 					]
 				: []),
@@ -84,6 +89,8 @@
 		} else if (tab === 'data-flows' && !myapp.api_successful_last_crawled) {
 			return textGreyedOutColor;
 		} else if (tab === 'ads-txt' && myapp.adstxt_crawl_result != 1) {
+			return textGreyedOutColor;
+		} else if (tab === 'ad-creatives' && myapp.ad_creative_count == 0) {
 			return textGreyedOutColor;
 		} else {
 			return '';

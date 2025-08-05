@@ -9,6 +9,8 @@
 		getFilteredRowModel
 	} from '@tanstack/table-core';
 
+	import CompanyButton from '$lib/CompanyButton.svelte';
+
 	import Pagination from '$lib/components/data-table/Pagination.svelte';
 	import ExportAsCSV from '$lib/components/data-table/ExportAsCSV.svelte';
 	import type { RankedApps } from '../types';
@@ -36,11 +38,6 @@
 			isSortable: true
 		},
 		{
-			title: 'Advertiser',
-			accessorKey: 'adv_name',
-			isSortable: true
-		},
-		{
 			title: 'Creative',
 			accessorKey: 'md5_hash',
 			isSortable: true
@@ -51,8 +48,18 @@
 			isSortable: true
 		},
 		{
-			title: 'Updated At',
-			accessorKey: 'updated_at',
+			title: 'Scanned At',
+			accessorKey: 'run_at',
+			isSortable: true
+		},
+		{
+			title: 'Host Domain',
+			accessorKey: 'host_domain',
+			isSortable: true
+		},
+		{
+			title: 'Ad Domain',
+			accessorKey: 'ad_domain',
 			isSortable: true
 		}
 	]);
@@ -165,20 +172,6 @@
 								</div>
 							</a>
 						</td>
-						<td>
-							<a href="/apps/{row.original.adv_store_id}">
-								<div class="inline-flex">
-									<img
-										src={row.original.adv_icon_url_512}
-										alt={row.original.adv_name}
-										width="100 md:200"
-										class="p-2"
-										referrerpolicy="no-referrer"
-									/>
-									<h3 class="p-2">{row.original.adv_name}</h3>
-								</div>
-							</a>
-						</td>
 
 						<td>
 							<img
@@ -188,7 +181,20 @@
 							/>
 						</td>
 						<td>{row.original.file_extension}</td>
-						<td>{row.original.updated_at}</td>
+						<td>{row.original.run_at}</td>
+
+						<td>
+							<CompanyButton
+								companyName={`${row.original.host_domain_company_name} (${row.original.host_domain})`}
+								companyDomain={row.original.host_domain_company_domain}
+							/>
+						</td>
+						<td>
+							<CompanyButton
+								companyName={`${row.original.ad_domain_company_name} (${row.original.ad_domain})`}
+								companyDomain={row.original.ad_domain_company_domain}
+							/>
+						</td>
 					</tr>
 				{/each}
 			</tbody>

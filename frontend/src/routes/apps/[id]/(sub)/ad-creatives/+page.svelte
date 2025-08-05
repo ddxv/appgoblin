@@ -11,7 +11,7 @@
 	<!-- Standard meta tags -->
 	<meta
 		name="description"
-		content="Explore ad creatives and advertising insights on AppGoblin. Discover mobile advertising trends and creative strategies."
+		content="Explore ad creatives, competitor analytics, and more on AppGoblin. Discover mobile advertising trends and creative strategies."
 	/>
 	<meta
 		name="keywords"
@@ -47,16 +47,6 @@
 	<h1 class="text-3xl font-bold text-primary-900-100">Ad Creatives</h1>
 
 	<br />
-
-	<div class="card preset-filled-surface-100-900 p-2 md:p-8">
-		<h2 class="h2 p-2 md:p-4">Coming Soon</h2>
-		<div class="p-4">
-			<p>
-				This page is under development. We're working on bringing you comprehensive ad creative
-				insights and analytics.
-			</p>
-		</div>
-	</div>
 
 	<div class="card preset-tonal p-2 md:p-8 mt-2 md:mt-4">
 		<h1 class="text-2xl font-bold">Ad Creatives</h1>
