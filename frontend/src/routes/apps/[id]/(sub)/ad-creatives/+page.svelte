@@ -15,7 +15,7 @@
 	/>
 	<meta
 		name="keywords"
-		content="ad creatives, mobile advertising, app marketing, advertising insights, AppGoblin"
+		content="ad creatives, mobile advertising, app marketing, advertising insights, competitor analytics, AppGoblin"
 	/>
 
 	<!-- Open Graph meta tags -->
