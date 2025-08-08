@@ -38,6 +38,12 @@
 			</p>
 		</a>
 		<div class={myDivider}></div>
+		<a href="/ad-creatives">
+			<p class={isHighlighted('/ad-creatives') ? topBarHighlightedFont : topBarFont}>
+				AD CREATIVES
+			</p>
+		</a>
+		<div class={myDivider}></div>
 		<a href="/blog">
 			<p class={isHighlighted('/blog') ? topBarHighlightedFont : topBarFont}>BLOG</p>
 		</a>
