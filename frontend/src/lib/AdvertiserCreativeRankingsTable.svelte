@@ -21,7 +21,7 @@
 		data: RankedApps[];
 	};
 
-	let pagination = $state<PaginationState>({ pageIndex: 0, pageSize: 40 });
+	let pagination = $state<PaginationState>({ pageIndex: 0, pageSize: 10 });
 	let sorting = $state<SortingState>([]);
 	let columnFilters = $state<ColumnFiltersState>([]);
 
@@ -36,13 +36,14 @@
 			isSortable: true
 		},
 		{
-			title: 'Advertiser Category',
-			accessorKey: 'advertiser_category',
+			title: 'Top Creatives',
+			accessorKey: 'top_md5_hashes',
 			isSortable: true
 		},
+
 		{
-			title: 'Advertiser Installs',
-			accessorKey: 'advertiser_installs',
+			title: 'Advertiser Category',
+			accessorKey: 'advertiser_category',
 			isSortable: true
 		},
 		{
@@ -58,11 +59,6 @@
 		{
 			title: 'Last Seen',
 			accessorKey: 'last_seen',
-			isSortable: true
-		},
-		{
-			title: 'Top Creatives',
-			accessorKey: 'top_md5_hashes',
 			isSortable: true
 		}
 	]);
@@ -141,7 +137,7 @@
 		/>
 	</div>
 	<div class="overflow-x-auto pl-0">
-		<table class="md:table table-hover md:table-compact table-auto w-full">
+		<table class="table table-hover table-auto w-full">
 			<thead>
 				{#each table.getHeaderGroups() as headerGroup (headerGroup.id)}
 					<tr>
@@ -161,25 +157,19 @@
 			<tbody>
 				{#each table.getRowModel().rows as row (row.id)}
 					<tr class="px-0">
-						<td>
+						<td class="text-xs md:text-base">
 							<a href="/apps/{row.original.advertiser_store_id}/ad-creatives">
 								<div class="col-1">
-									{row.original.advertiser_name}
 									<img
 										src={row.original.advertiser_icon_url_512}
 										alt={row.original.advertiser_name}
-										width="100 md:200"
-										class="p-2"
+										class="w-12 md:w-24 h-auto object-cover rounded"
 										referrerpolicy="no-referrer"
 									/>
 								</div>
+								{row.original.advertiser_name}
 							</a>
 						</td>
-						<td>{row.original.advertiser_category}</td>
-						<td>{row.original.advertiser_installs}</td>
-						<td>{row.original.unique_creatives}</td>
-						<td>{row.original.unique_publishers}</td>
-						<td>{row.original.last_seen}</td>
 						<td>
 							<div class="overvlow-y-auto">
 								<div class="grid grid-cols-2 gap-1">
@@ -195,6 +185,10 @@
 								</div>
 							</div>
 						</td>
+						<td>{row.original.advertiser_category}</td>
+						<td>{row.original.unique_creatives}</td>
+						<td>{row.original.unique_publishers}</td>
+						<td>{row.original.last_seen}</td>
 					</tr>
 				{/each}
 			</tbody>

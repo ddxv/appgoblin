@@ -33,15 +33,23 @@
 
 	const columns = genericColumns([
 		{
-			title: 'Publishing App',
-			accessorKey: 'pub_name',
-			isSortable: true
-		},
-		{
 			title: 'Creative',
 			accessorKey: 'md5_hash',
 			isSortable: true
 		},
+
+		{
+			title: 'Publisher',
+			accessorKey: 'pub_name',
+			isSortable: true
+		},
+
+		{
+			title: 'Ad Networks',
+			accessorKey: 'host_domain',
+			isSortable: true
+		},
+
 		{
 			title: 'File Type',
 			accessorKey: 'file_extension',
@@ -50,16 +58,6 @@
 		{
 			title: 'Scanned At',
 			accessorKey: 'run_at',
-			isSortable: true
-		},
-		{
-			title: 'Host Domain',
-			accessorKey: 'host_domain',
-			isSortable: true
-		},
-		{
-			title: 'Ad Domain',
-			accessorKey: 'ad_domain',
 			isSortable: true
 		}
 	]);
@@ -138,7 +136,7 @@
 		/>
 	</div>
 	<div class="overflow-x-auto pl-0">
-		<table class="md:table table-hover md:table-compact table-auto w-full">
+		<table class="table table-hover table-auto w-full">
 			<thead>
 				{#each table.getHeaderGroups() as headerGroup (headerGroup.id)}
 					<tr>
@@ -157,15 +155,24 @@
 			</thead>
 			<tbody>
 				{#each table.getRowModel().rows as row (row.id)}
-					<tr class="px-0">
+					<tr class="px-0 text-xs md:text-base">
+						<td>
+							<img
+								src="https://appgoblin-data.sgp1.digitaloceanspaces.com/creatives/thumbs/{row
+									.original.md5_hash}.jpg"
+								class="w-24 md:w-64 h-auto object-cover rounded"
+								alt="Creative: {row.original.md5_hash}"
+							/>
+						</td>
+
 						<td>
 							<a href="/apps/{row.original.pub_store_id}">
 								<div class="col-1 items-center">
 									<img
 										src={row.original.pub_icon_url_512}
 										alt={row.original.pub_name}
-										width="100 md:100"
-										class="p-2"
+										width="200"
+										class="w-12 md:w-24 h-auto object-cover rounded"
 										referrerpolicy="no-referrer"
 									/>
 									<h3 class="p-2">{row.original.pub_name}</h3>
@@ -174,27 +181,19 @@
 						</td>
 
 						<td>
-							<img
-								src="https://appgoblin-data.sgp1.digitaloceanspaces.com/creatives/thumbs/{row
-									.original.md5_hash}.jpg"
-								alt="Creative: {row.original.md5_hash}"
-							/>
+							<div class="flex flex-col gap-1">
+								<CompanyButton
+									companyName={`Host: ${row.original.host_domain_company_name} (${row.original.host_domain})`}
+									companyDomain={row.original.host_domain_company_domain}
+								/>
+								<CompanyButton
+									companyName={`Ad: ${row.original.ad_domain_company_name} (${row.original.ad_domain})`}
+									companyDomain={row.original.ad_domain_company_domain}
+								/>
+							</div>
 						</td>
 						<td>{row.original.file_extension}</td>
 						<td>{row.original.run_at}</td>
-
-						<td>
-							<CompanyButton
-								companyName={`${row.original.host_domain_company_name} (${row.original.host_domain})`}
-								companyDomain={row.original.host_domain_company_domain}
-							/>
-						</td>
-						<td>
-							<CompanyButton
-								companyName={`${row.original.ad_domain_company_name} (${row.original.ad_domain})`}
-								companyDomain={row.original.ad_domain_company_domain}
-							/>
-						</td>
 					</tr>
 				{/each}
 			</tbody>

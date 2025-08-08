@@ -43,7 +43,7 @@
 	<link rel="canonical" href="https://appgoblin.info/ad-creatives" />
 </svelte:head>
 
-<div class="p-2 px-8 md:px-32 lg:px-72">
+<div class="p-2 px-2 md:px-16 lg:px-72">
 	<h1 class="text-3xl font-bold text-primary-900-100">Ad Creatives</h1>
 
 	<br />
