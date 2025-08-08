@@ -48,18 +48,32 @@
 
 	<br />
 
-	<div class="card preset-tonal p-2 md:p-8 mt-2 md:mt-4">
-		<h1 class="text-2xl font-bold">Ad Creatives</h1>
-		{#await data.creatives}
-			loading...
-		{:then creatives}
+	{#await data.creatives}
+		loading...
+	{:then creatives}
+		<WhiteCard>
+			{#if creatives && creatives.by_creative.length > 0}
+				<div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+					{#each creatives.by_creative.slice(0, 8) as creative}
+						<img
+							src="https://appgoblin-data.sgp1.digitaloceanspaces.com/creatives/thumbs/{creative.md5_hash}.jpg"
+							alt=""
+							onerror={(e) => (e.target.style.display = 'none')}
+						/>
+					{/each}
+				</div>
+			{:else}
+				<p>No apps found</p>
+			{/if}
+		</WhiteCard>
+		<div class="card preset-tonal p-2 md:p-8 mt-2 md:mt-4">
 			<WhiteCard>
-				{#if creatives && creatives.length > 0}
-					<CreativesTable data={creatives} />
+				{#if creatives && creatives.by_publisher.length > 0}
+					<CreativesTable data={creatives.by_publisher} />
 				{:else}
 					<p>No apps found</p>
 				{/if}
 			</WhiteCard>
-		{/await}
-	</div>
+		</div>
+	{/await}
 </div>

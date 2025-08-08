@@ -50,11 +50,10 @@
 	<br />
 
 	<div class="card preset-filled-surface-100-900 p-2 md:p-8">
-		<h2 class="h2 p-2 md:p-4">Coming Soon</h2>
 		<div class="p-4">
 			<p>
-				This page is under development. We're working on bringing you comprehensive ad creative
-				insights and analytics.
+				The following table shows the top advertisers and their creatives as scraped from various ad
+				network API calls in Android.
 			</p>
 		</div>
 	</div>

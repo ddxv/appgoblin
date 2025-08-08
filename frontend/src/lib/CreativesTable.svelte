@@ -23,7 +23,7 @@
 		data: RankedApps[];
 	};
 
-	let pagination = $state<PaginationState>({ pageIndex: 0, pageSize: 40 });
+	let pagination = $state<PaginationState>({ pageIndex: 0, pageSize: 20 });
 	let sorting = $state<SortingState>([]);
 	let columnFilters = $state<ColumnFiltersState>([]);
 
@@ -33,7 +33,7 @@
 
 	const columns = genericColumns([
 		{
-			title: 'Publisher',
+			title: 'Publishing App',
 			accessorKey: 'pub_name',
 			isSortable: true
 		},
@@ -43,7 +43,7 @@
 			isSortable: true
 		},
 		{
-			title: 'File Extension',
+			title: 'File Type',
 			accessorKey: 'file_extension',
 			isSortable: true
 		},
@@ -160,11 +160,11 @@
 					<tr class="px-0">
 						<td>
 							<a href="/apps/{row.original.pub_store_id}">
-								<div class="inline-flex">
+								<div class="col-1 items-center">
 									<img
 										src={row.original.pub_icon_url_512}
 										alt={row.original.pub_name}
-										width="100 md:200"
+										width="100 md:100"
 										class="p-2"
 										referrerpolicy="no-referrer"
 									/>

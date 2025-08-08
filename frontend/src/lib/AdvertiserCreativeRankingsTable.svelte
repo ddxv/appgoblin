@@ -164,7 +164,7 @@
 						<td>
 							<a href="/apps/{row.original.advertiser_store_id}/ad-creatives">
 								<div class="col-1">
-									<h3 class="p-2">{row.original.advertiser_name}</h3>
+									{row.original.advertiser_name}
 									<img
 										src={row.original.advertiser_icon_url_512}
 										alt={row.original.advertiser_name}

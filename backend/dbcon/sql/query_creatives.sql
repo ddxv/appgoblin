@@ -9,7 +9,9 @@ SELECT
     ad_domain,
     ad_domain_company_domain,
     ad_domain_company_name,
+    vhash,
     md5_hash,
-    file_extension
+    file_extension,
+    pub_icon_url_512
 FROM frontend.advertiser_creatives
 WHERE advertiser_store_id = :store_id;
