@@ -16,6 +16,8 @@ export const load: PageServerLoad = async ({ setHeaders, parent }) => {
 
 	const topCompanies = fetch(`http://localhost:8000/api/companies/topshort`);
 
+	const topAdvertisers = fetch(`http://localhost:8000/api/creatives/top`);
+
 	const { appsOverview } = await parent();
 
 	try {
@@ -25,6 +27,7 @@ export const load: PageServerLoad = async ({ setHeaders, parent }) => {
 			androidGameRanks: androidGameRanks.then((resp) => resp.json()),
 			iOSGameRanks: iOSGameRanks.then((resp) => resp.json()),
 			topCompanies: topCompanies.then((resp) => resp.json()),
+			topAdvertisers: topAdvertisers.then((resp) => resp.json()),
 			appsOverview: appsOverview
 		};
 	} catch (error) {

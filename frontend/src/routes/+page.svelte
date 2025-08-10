@@ -2,6 +2,7 @@
 	import AppRankTableShort from '$lib/AppRankTableShort.svelte';
 
 	import CompaniesBarChart from '$lib/CompaniesBarChart.svelte';
+	import AdvertiserCreativeRankingsTableTop from '$lib/AdvertiserCreativeRankingsTableTop.svelte';
 	import WhiteCard from '$lib/WhiteCard.svelte';
 
 	import SDKOverview from '$lib/utils/SDKOverview.svelte';
@@ -49,17 +50,32 @@
 
 <div class="grid grid-cols-1 gap-4 md:gap-8 p-2 md:p-4 px-2 md:px-20 lg:px-48">
 	<br />
-	<div class="card preset-tonal p-2 md:p-8">
-		<h1 class="p-2 md:p-4 text-3xl text-primary-900-100">{title}</h1>
-		<p class="p-2 md:p-4">
-			AppGoblin contains <span class="font-bold text-primary-900-100"
-				>free marketing tools for app developers</span
-			>
-			including ASO, App Rankings, Keyword Ranking. AppGoblin has the best
-			<span class="font-bold text-primary-900-100">competitor analysis tools</span> to research mobile
-			app installs, keywords and SDKs. Advanced advertising data includes mobile ad networks by their
-			SDKs and app-ads.txt data.
-		</p>
+	<div class="p-2 md:p-8 space-y-4">
+		<div class=" p-2 md:p-8">
+			<h1 class="p-2 md:p-4 text-3xl text-primary-900-100">{title}</h1>
+			<p class="p-2 md:p-4">
+				AppGoblin contains <span class="font-bold text-primary-900-100"
+					>free marketing tools for app developers</span
+				>
+				including ASO, App Rankings, Keyword Ranking. AppGoblin has the best
+				<span class="font-bold text-primary-900-100">competitor analysis tools</span> to research mobile
+				app installs, keywords and SDKs. Advanced advertising data includes mobile ad networks by their
+				SDKs and app-ads.txt data.
+			</p>
+		</div>
+
+		<div class="card preset-tonal p-2 md:p-8">
+			<a href="/ad-creatives">
+				<h2 class="h2 p-2 md:p-4">Top Monthly Advertisers & Creatives</h2>
+			</a>
+			{#await data.topAdvertisers}
+				Loading ...
+			{:then topAdvertisers}
+				{#if topAdvertisers && topAdvertisers.length > 0}
+					<AdvertiserCreativeRankingsTableTop data={topAdvertisers.slice(0, 5)} />
+				{/if}
+			{/await}
+		</div>
 
 		<div class="card preset-tonal p-2 md:p-8">
 			<a href="/companies">
@@ -77,7 +93,7 @@
 				<a href="/companies/types/ad-networks">
 					<div class="card preset-tonal md:p-4">
 						<div class="card-header">
-							<h3 class="h3">Top SDK Advertising Networks</h3>
+							<h4 class="h4">Ad Network SDKs</h4>
 						</div>
 						<div class="card-content">
 							These are the top Mobile Advertising Networks based on SDKs we found in iOS and
@@ -86,12 +102,7 @@
 								Loading ...
 							{:then myTops}
 								{#if myTops.adnetworks}
-									<WhiteCard>
-										{#snippet title()}
-											Top SDK Ad Networks (Android)
-										{/snippet}
-										<CompaniesBarChart plotData={myTops.adnetworks.sdk_android} />
-									</WhiteCard>
+									<CompaniesBarChart plotData={myTops.adnetworks.sdk_android} />
 								{/if}
 							{/await}
 						</div>
@@ -101,7 +112,7 @@
 				<a href="/companies/types/ad-attribution">
 					<div class="card preset-tonal md:p-4">
 						<div class="card-header">
-							<h3 class="h3">Top iOS MMPs & Ad Tracking</h3>
+							<h4 class="h4">MMPs</h4>
 						</div>
 						<div class="card-content">
 							See which MMPs and mobile app tracking companies are used most often in Android and
@@ -110,12 +121,7 @@
 								Loading ...
 							{:then myTops}
 								{#if myTops.attribution}
-									<WhiteCard>
-										{#snippet title()}
-											Top MMPs & Attribution Companies (iOS)
-										{/snippet}
-										<CompaniesBarChart plotData={myTops.attribution.sdk_ios} />
-									</WhiteCard>
+									<CompaniesBarChart plotData={myTops.attribution.sdk_ios} />
 								{/if}
 							{/await}
 						</div>
@@ -125,7 +131,7 @@
 				<a href="/companies/types/product-analytics">
 					<div class="card preset-tonal md:p-4">
 						<div class="card-header">
-							<h3 class="h3">Top Product Analytics</h3>
+							<h4 class="h4">Product Analytics</h4>
 						</div>
 						<div class="card-content">
 							These are the most popular Product Analytics companies or open source libraries based
@@ -134,12 +140,7 @@
 								Loading ...
 							{:then myTops}
 								{#if myTops.analytics}
-									<WhiteCard>
-										{#snippet title()}
-											Top Product Analytics Companies (iOS)
-										{/snippet}
-										<CompaniesBarChart plotData={myTops.analytics.sdk_ios} />
-									</WhiteCard>
+									<CompaniesBarChart plotData={myTops.analytics.sdk_ios} />
 								{/if}
 							{/await}
 						</div>

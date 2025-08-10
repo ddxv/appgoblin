@@ -158,7 +158,7 @@
 				{#each table.getRowModel().rows as row (row.id)}
 					<tr class="px-0">
 						<td class="text-xs md:text-base">
-							<a href="/apps/{row.original.advertiser_store_id}/ad-creatives">
+							<a href="/apps/{row.original.advertiser_store_id}/ad-placements">
 								<div class="col-1">
 									<img
 										src={row.original.advertiser_icon_url_512}
@@ -174,7 +174,7 @@
 							<div class="overvlow-y-auto">
 								<div class="grid grid-cols-2 gap-1">
 									{#each row.original.top_md5_hashes.slice(0, 4) as md5_hash}
-										<a href="/apps/{row.original.advertiser_store_id}/ad-creatives">
+										<a href="/apps/{row.original.advertiser_store_id}/ad-placements">
 											<img
 												src="https://appgoblin-data.sgp1.digitaloceanspaces.com/creatives/thumbs/{md5_hash}.jpg"
 												alt=""
