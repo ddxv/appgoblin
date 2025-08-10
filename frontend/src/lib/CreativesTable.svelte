@@ -157,12 +157,14 @@
 				{#each table.getRowModel().rows as row (row.id)}
 					<tr class="px-0 text-xs md:text-base">
 						<td>
-							<img
-								src="https://appgoblin-data.sgp1.digitaloceanspaces.com/creatives/thumbs/{row
-									.original.md5_hash}.jpg"
-								class="w-24 md:w-64 h-auto object-cover rounded"
-								alt="Creative: {row.original.md5_hash}"
-							/>
+							<a href={`ad-placements/${row.original.vhash}`}>
+								<img
+									src="https://appgoblin-data.sgp1.digitaloceanspaces.com/creatives/thumbs/{row
+										.original.md5_hash}.jpg"
+									class="w-24 md:w-64 h-auto object-cover rounded"
+									alt="Creative: {row.original.md5_hash}"
+								/>
+							</a>
 						</td>
 
 						<td>

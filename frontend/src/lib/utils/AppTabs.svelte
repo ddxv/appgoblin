@@ -44,6 +44,11 @@
 							name: 'Ad Creatives',
 							url_slug: 'ad-creatives',
 							icon: Image
+						},
+						{
+							name: 'Ad Placements',
+							url_slug: 'ad-placements',
+							icon: Image
 						}
 					]
 				: []),
@@ -91,6 +96,8 @@
 		} else if (tab === 'ads-txt' && myapp.adstxt_crawl_result != 1) {
 			return textGreyedOutColor;
 		} else if (tab === 'ad-creatives' && myapp.ad_creative_count == 0) {
+			return textGreyedOutColor;
+		} else if (tab === 'ad-placements' && myapp.ad_creative_count == 0) {
 			return textGreyedOutColor;
 		} else {
 			return '';

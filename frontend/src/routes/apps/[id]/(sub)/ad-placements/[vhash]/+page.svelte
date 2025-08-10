@@ -1,4 +1,5 @@
 <script>
+	import CreativesTable from '$lib/CreativesTable.svelte';
 	import WhiteCard from '$lib/WhiteCard.svelte';
 	let { data } = $props();
 </script>
@@ -39,38 +40,29 @@
 	<!-- Additional meta tags -->
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	<meta name="robots" content="index, follow" />
-	<link rel="canonical" href="https://appgoblin.info/apps/{data.myapp.id}/ad-creatives" />
+	<link rel="canonical" href="https://appgoblin.info/apps/{data.myapp.id}/ad-placements" />
 </svelte:head>
 
-<div class="p-2 px-2 md:p-8">
-	<h1 class="text-3xl font-bold text-primary-900-100">{data.myapp.name}: Ad Creatives</h1>
+<div class="p-2 px-2 md:px-16 lg:px-72">
+	<h1 class="text-3xl font-bold text-primary-900-100">{data.myapp.name}: Ad Placements</h1>
 	<p>
-		This is an overview of the creatives that are advertising for {data.myapp.name}. Below are the
-		thumbnails of the images and videos found.
+		This is an overview of the records of ad placements advertising for {data.myapp.name}. The
+		publishing apps are the apps that were opened and where the creatives were found.
 	</p>
 
 	<br />
-	{#await data.creatives}
+
+	{#await data.creativerecords}
 		loading...
-	{:then creatives}
-		<WhiteCard>
-			{#if creatives && creatives.by_creative.length > 0}
-				<div class="grid grid-cols-2 md:grid-cols-4 gap-2">
-					{#each creatives.by_creative as creative}
-						<div class="flex flex-col items-center justify-center">
-							<div class="card">
-								<img
-									src="https://appgoblin-data.sgp1.digitaloceanspaces.com/creatives/thumbs/{creative.md5_hash}.jpg"
-									alt=""
-								/>
-								<p>{creative.file_extension}</p>
-							</div>
-						</div>
-					{/each}
-				</div>
-			{:else}
-				<p>No creatives found</p>
-			{/if}
-		</WhiteCard>
+	{:then creativerecords}
+		<div class="card preset-tonal p-2 md:p-8 mt-2 md:mt-4">
+			<WhiteCard>
+				{#if creativerecords && creativerecords.by_publisher.length > 0}
+					<CreativesTable data={creativerecords.by_publisher} />
+				{:else}
+					<p>No apps found</p>
+				{/if}
+			</WhiteCard>
+		</div>
 	{/await}
 </div>

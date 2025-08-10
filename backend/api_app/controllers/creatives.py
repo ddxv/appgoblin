@@ -32,9 +32,7 @@ class CreativesController(Controller):
         return df.to_dict(orient="records")
 
     @get(path="/apps/{store_id: str}", cache=86400)
-    async def get_advertiser_creatives(
-        self: Self, store_id: str, groupby: str = "publisher"
-    ) -> dict:
+    async def get_advertiser_creatives(self: Self, store_id: str) -> dict:
         """Handle GET request for a list of creatives for an app.
 
         Returns
@@ -77,4 +75,43 @@ class CreativesController(Controller):
         return {
             "by_publisher": pdf.to_dict(orient="records"),
             "by_creative": cdf.to_dict(orient="records"),
+        }
+
+    @get(path="/apps/{store_id: str}/{vhash: str}", cache=86400)
+    async def get_advertiser_creative_records(
+        self: Self, store_id: str, vhash: str
+    ) -> dict:
+        """Handle GET request for a list of creatives for an app.
+
+        Returns
+        -------
+            A dictionary representation of the total counts
+
+        """
+        df = get_advertiser_creatives(store_id)
+        df["run_at"] = df["run_at"].dt.strftime("%Y-%m-%d")
+        df = df[df["vhash"] == vhash]
+        pdf = (
+            df.groupby(
+                [
+                    "run_at",
+                    "pub_name",
+                    "pub_store_id",
+                    "host_domain",
+                    "host_domain_company_domain",
+                    "host_domain_company_name",
+                    "ad_domain",
+                    "ad_domain_company_domain",
+                    "ad_domain_company_name",
+                    "vhash",
+                    "file_extension",
+                    "pub_icon_url_512",
+                ]
+            )[["md5_hash"]]
+            .first()
+            .reset_index()
+        )
+
+        return {
+            "by_publisher": pdf.to_dict(orient="records"),
         }

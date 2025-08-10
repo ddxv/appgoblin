@@ -1,5 +1,4 @@
 <script>
-	import { page } from '$app/state';
 	import AdvertiserCreativeRankingsTable from '$lib/AdvertiserCreativeRankingsTable.svelte';
 	import WhiteCard from '$lib/WhiteCard.svelte';
 	let { data } = $props();
