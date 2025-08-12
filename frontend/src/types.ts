@@ -391,6 +391,15 @@ export interface CompanyFullDetails {
 	companyTree: ParentCompanyTree;
 	companySdks: CompanySDKsDict;
 	companyParentCategories: ChartTabularData;
+	companyCreatives: {
+		company_domain: string;
+		md5_hash: string;
+		file_extension: string;
+		advertiser_store_app_id: string;
+		advertiser_store_id: string;
+		icon_url_512: string;
+		last_seen: string;
+	}[];
 }
 export interface CompanyCategoryDetails {
 	status?: number;

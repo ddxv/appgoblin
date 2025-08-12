@@ -124,6 +124,7 @@ QUERY_ADVERTISER_CREATIVE_RANKINGS = load_sql_file(
 QUERY_ADVERTISER_CREATIVE_RANKINGS_TOP = load_sql_file(
     "query_advertiser_creative_rankings_top.sql"
 )
+QUERY_COMPANY_CREATIVES = load_sql_file("query_company_creatives.sql")
 
 INSERT_SDK_SCAN_REQUEST = load_sql_file("insert_sdk_scan_request.sql")
 
@@ -261,6 +262,17 @@ def get_advertiser_creative_rankings() -> pd.DataFrame:
 def get_advertiser_creative_rankings_top() -> pd.DataFrame:
     """Get advertiser creative rankings."""
     df = pd.read_sql(QUERY_ADVERTISER_CREATIVE_RANKINGS_TOP, con=DBCON.engine)
+    return df
+
+
+@lru_cache(maxsize=100)
+def get_company_creatives(company_domain: str) -> pd.DataFrame:
+    """Get company creatives."""
+    df = pd.read_sql(
+        QUERY_COMPANY_CREATIVES,
+        con=DBCON.engine,
+        params={"company_domain": company_domain},
+    )
     return df
 
 

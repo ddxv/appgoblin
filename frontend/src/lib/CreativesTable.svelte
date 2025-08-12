@@ -18,6 +18,7 @@
 	import { createSvelteTable, FlexRender } from '$lib/components/data-table/index.js';
 
 	import { genericColumns } from '$lib/components/data-table/generic-column';
+	import { page } from '$app/state';
 
 	type DataTableProps<RankedApps, TValue> = {
 		data: RankedApps[];
@@ -26,6 +27,8 @@
 	let pagination = $state<PaginationState>({ pageIndex: 0, pageSize: 20 });
 	let sorting = $state<SortingState>([]);
 	let columnFilters = $state<ColumnFiltersState>([]);
+
+	let vhash = page.params.vhash;
 
 	let globalFilter = $state<string>('');
 
@@ -168,14 +171,25 @@
 				{#each table.getRowModel().rows as row (row.id)}
 					<tr class="px-0 text-xs md:text-base">
 						<td>
-							<a href={`ad-placements/${row.original.vhash}`}>
+							{#if vhash != row.original.vhash}
+								<a href={`ad-placements/${row.original.vhash}`}>
+									<img
+										src="https://appgoblin-data.sgp1.digitaloceanspaces.com/creatives/thumbs/{row
+											.original.md5_hash}.jpg"
+										class="w-24 md:w-64 h-auto object-cover rounded text-xs"
+										alt="Creative: {row.original.md5_hash}"
+									/>
+									{row.original.md5_hash}
+								</a>
+							{:else}
 								<img
 									src="https://appgoblin-data.sgp1.digitaloceanspaces.com/creatives/thumbs/{row
 										.original.md5_hash}.jpg"
 									class="w-24 md:w-64 h-auto object-cover rounded text-xs"
 									alt="Creative: {row.original.md5_hash}"
 								/>
-							</a>
+								{row.original.md5_hash}
+							{/if}
 						</td>
 
 						<td>{row.original.file_extension}</td>

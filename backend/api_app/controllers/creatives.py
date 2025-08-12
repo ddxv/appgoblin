@@ -12,6 +12,7 @@ from dbcon.queries import (
     get_advertiser_creative_rankings,
     get_advertiser_creative_rankings_top,
     get_advertiser_creatives,
+    get_company_creatives,
 )
 
 logger = get_logger(__name__)
@@ -32,6 +33,19 @@ class CreativesController(Controller):
 
         """
         df = get_advertiser_creative_rankings_top()
+        df["last_seen"] = df["last_seen"].dt.strftime("%Y-%m-%d")
+        return df.to_dict(orient="records")
+
+    @get(path="/companies/{company_domain: str}", cache=86400)
+    async def company_creatives(self: Self, company_domain: str) -> dict:
+        """Handle GET request for a list of top advertiser creative rankings.
+
+        Returns
+        -------
+            A dictionary representation of the total counts
+
+        """
+        df = get_company_creatives(company_domain)
         df["last_seen"] = df["last_seen"].dt.strftime("%Y-%m-%d")
         return df.to_dict(orient="records")
 

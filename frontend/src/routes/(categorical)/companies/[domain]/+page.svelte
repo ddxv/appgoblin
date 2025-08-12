@@ -12,6 +12,7 @@
 	import CompanySDKs from '$lib/CompanySDKs.svelte';
 	import WhiteCard from '$lib/WhiteCard.svelte';
 	import CompaniesLayout from '../../../../lib/CompaniesLayout.svelte';
+	import CompanyCreativeRankingsTableTop from '$lib/CompanyCreativeRankingsTableTop.svelte';
 	interface Props {
 		data: CompanyFullDetails;
 	}
@@ -130,6 +131,45 @@
 		</WhiteCard>
 	{/snippet}
 </CompaniesLayout>
+
+{#await data.companyCreatives}
+	<div><span>Loading...</span></div>
+{:then myCreatives}
+	{#if myCreatives && myCreatives.length > 0}
+		<WhiteCard>
+			{#snippet title()}
+				<span>Recent Advertised Creatives</span>
+			{/snippet}
+			<div class="grid grid-cols-3 gap-2 p-2">
+				{#each myCreatives as creative}
+					<div class="flex flex-row gap-2 mt-8">
+						<a href="/apps/{creative.advertiser_store_id}/ad-placements">
+							<div class="col-1">
+								<img
+									src={creative.icon_url_512}
+									alt={creative.advertiser_store_id}
+									class="w-8 md:w-16 h-auto object-cover rounded"
+									referrerpolicy="no-referrer"
+								/>
+							</div>
+						</a>
+						<div class="overvlow-y-auto">
+							<div class="grid grid-cols-2 md:grid-cols-4 gap-1">
+								<a href="/apps/{creative.advertiser_store_id}/ad-placements">
+									<img
+										src="https://appgoblin-data.sgp1.digitaloceanspaces.com/creatives/thumbs/{creative.md5_hash}.jpg"
+										alt=""
+										class="w-12 md:w-24 h-auto"
+									/>
+								</a>
+							</div>
+						</div>
+					</div>
+				{/each}
+			</div>
+		</WhiteCard>
+	{/if}
+{/await}
 
 {#await data.companyDetails}
 	<div><span>Loading...</span></div>

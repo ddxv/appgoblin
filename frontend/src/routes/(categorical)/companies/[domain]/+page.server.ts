@@ -11,6 +11,7 @@ export const load: PageServerLoad = async ({ parent, params }) => {
 	);
 	const res_apps = fetch(`http://localhost:8000/api/companies/${companyDomain}/topapps`);
 	const res_sdks = fetch(`http://localhost:8000/api/companies/${companyDomain}/sdks`);
+	const res_creatives = fetch(`http://localhost:8000/api/creatives/companies/${companyDomain}`);
 
 	const { companyDetails, companyTree, companyDomains } = await parent();
 
@@ -68,6 +69,19 @@ export const load: PageServerLoad = async ({ parent, params }) => {
 					} else if (resp.status === 500) {
 						console.log('API Server error');
 						return 'Backend Error';
+					}
+				})
+				.then(
+					(json) => json,
+					(error) => {
+						console.log('Uncaught error', error);
+						return 'Uncaught Error';
+					}
+				),
+			companyCreatives: res_creatives
+				.then((resp) => {
+					if (resp.status === 200) {
+						return resp.json();
 					}
 				})
 				.then(
