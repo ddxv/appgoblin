@@ -37,6 +37,11 @@
 			accessorKey: 'md5_hash',
 			isSortable: true
 		},
+		{
+			title: 'File Type',
+			accessorKey: 'file_extension',
+			isSortable: true
+		},
 
 		{
 			title: 'Publisher',
@@ -49,12 +54,18 @@
 			accessorKey: 'host_domain',
 			isSortable: true
 		},
-
 		{
-			title: 'File Type',
-			accessorKey: 'file_extension',
+			title: 'Additional Ad Domain URLs',
+			accessorKey: 'additional_ad_domain_urls',
 			isSortable: true
 		},
+
+		{
+			title: 'MMP',
+			accessorKey: 'mmp_name',
+			isSortable: true
+		},
+
 		{
 			title: 'Scanned At',
 			accessorKey: 'run_at',
@@ -161,12 +172,13 @@
 								<img
 									src="https://appgoblin-data.sgp1.digitaloceanspaces.com/creatives/thumbs/{row
 										.original.md5_hash}.jpg"
-									class="w-24 md:w-64 h-auto object-cover rounded"
+									class="w-24 md:w-64 h-auto object-cover rounded text-xs"
 									alt="Creative: {row.original.md5_hash}"
 								/>
 							</a>
 						</td>
 
+						<td>{row.original.file_extension}</td>
 						<td>
 							<a href="/apps/{row.original.pub_store_id}">
 								<div class="col-1 items-center">
@@ -187,14 +199,25 @@
 								<CompanyButton
 									companyName={`Host: ${row.original.host_domain_company_name} (${row.original.host_domain})`}
 									companyDomain={row.original.host_domain_company_domain}
+									size="sm"
 								/>
 								<CompanyButton
 									companyName={`Ad: ${row.original.ad_domain_company_name} (${row.original.ad_domain})`}
 									companyDomain={row.original.ad_domain_company_domain}
+									size="sm"
 								/>
 							</div>
 						</td>
-						<td>{row.original.file_extension}</td>
+						<td class="flex flex-col gap-1"
+							>{#each row.original.additional_ad_domain_urls as url}
+								{#if url !== row.original.ad_domain_company_domain && url !== row.original.host_domain_company_domain && url !== row.original.mmp_domain && url !== row.original.ad_domain && url !== row.original.host_domain}
+									<div class="grid grid-cols-2 gap-1">
+										<CompanyButton companyName={url} companyDomain={url} size="sm" />
+									</div>
+								{/if}
+							{/each}
+						</td>
+						<td>{row.original.mmp_name}</td>
 						<td>{row.original.run_at}</td>
 					</tr>
 				{/each}

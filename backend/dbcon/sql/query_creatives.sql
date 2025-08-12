@@ -12,6 +12,10 @@ SELECT
     vhash,
     md5_hash,
     file_extension,
-    pub_icon_url_512
+    pub_icon_url_512,
+    mmp_name,
+    mmp_domain,
+    mmp_urls,
+    additional_ad_domain_urls
 FROM frontend.advertiser_creatives
 WHERE advertiser_store_id = :store_id;

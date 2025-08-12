@@ -10,5 +10,6 @@ SELECT
     last_seen,
     file_types,
     avg_publisher_installs,
-    top_md5_hashes
+    top_md5_hashes,
+    mmp_domains
 FROM frontend.advertiser_creative_rankings;

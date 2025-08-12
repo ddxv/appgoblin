@@ -74,9 +74,22 @@ class CreativesController(Controller):
                     "vhash",
                     "file_extension",
                     "pub_icon_url_512",
-                ]
-            )[["md5_hash"]]
-            .first()
+                    "mmp_name",
+                    "mmp_domain",
+                ],
+                dropna=False,
+            )[["md5_hash", "additional_ad_domain_urls", "mmp_urls"]]
+            .agg(
+                {
+                    "md5_hash": "first",
+                    "additional_ad_domain_urls": lambda x: list(
+                        set([item for sublist in x for item in sublist])
+                    ),
+                    "mmp_urls": lambda x: list(
+                        set([item for sublist in x for item in sublist])
+                    ),
+                }
+            )
             .reset_index()
         )
         cdf = (

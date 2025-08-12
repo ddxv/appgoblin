@@ -42,8 +42,8 @@
 		},
 
 		{
-			title: 'Advertiser Category',
-			accessorKey: 'advertiser_category',
+			title: 'MMP',
+			accessorKey: 'mmp_domains',
 			isSortable: true
 		},
 		{
@@ -185,7 +185,7 @@
 								</div>
 							</div>
 						</td>
-						<td>{row.original.advertiser_category}</td>
+						<td>{row.original.mmp_domains}</td>
 						<td>{row.original.unique_creatives}</td>
 						<td>{row.original.unique_publishers}</td>
 						<td>{row.original.last_seen}</td>

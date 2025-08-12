@@ -34,7 +34,7 @@
 
 	const columns = genericColumns([
 		{
-			title: 'Data',
+			title: 'Tracking',
 			accessorKey: 'percent_open_source',
 			isSortable: true
 		},
