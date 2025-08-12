@@ -12,7 +12,6 @@
 	import CompanySDKs from '$lib/CompanySDKs.svelte';
 	import WhiteCard from '$lib/WhiteCard.svelte';
 	import CompaniesLayout from '../../../../lib/CompaniesLayout.svelte';
-	import CompanyCreativeRankingsTableTop from '$lib/CompanyCreativeRankingsTableTop.svelte';
 	interface Props {
 		data: CompanyFullDetails;
 	}
