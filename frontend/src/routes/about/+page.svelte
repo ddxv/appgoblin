@@ -14,7 +14,7 @@
 	<!-- Standard meta tags -->
 	<meta
 		name="description"
-		content="Discover AppGoblin: an open source, self-funded app analytics platform. Learn about our mission, join our community on Discord, and contribute on GitHub to shape the future of app market intelligence."
+		content="Discover AppGoblin: app advertising and marketing analytics platform. Tools for competitor analysis, app-ads.txt analysis, and more."
 	/>
 	<meta
 		name="keywords"
