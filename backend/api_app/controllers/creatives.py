@@ -72,7 +72,8 @@ class CreativesController(Controller):
 
         """
         df = get_advertiser_creatives(store_id)
-        df["run_at"] = df["run_at"].dt.strftime("%Y-%m-%d")
+        if not df.empty:
+            df["run_at"] = df["run_at"].dt.strftime("%Y-%m-%d")
         pdf = (
             df.groupby(
                 [
