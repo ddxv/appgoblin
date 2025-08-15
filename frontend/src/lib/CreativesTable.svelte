@@ -77,7 +77,7 @@
 	]);
 
 	const globalFilterFn = (row: any, columnId: string, filterValue: string) => {
-		const name = row.original.name?.toLowerCase() ?? '';
+		const name = row.original.pub_name?.toLowerCase() ?? '';
 		const query = filterValue.toLowerCase();
 		return name.includes(query);
 	};
@@ -137,7 +137,6 @@
 	});
 </script>
 
-xx
 <div class="table-container">
 	<div class="flex items-center p-2">
 		<input
