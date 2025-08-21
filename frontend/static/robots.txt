@@ -1,7 +1,5 @@
 User-agent: *
 Allow: /
-# Blocks SvelteKit client-side scripts
-Disallow: /_app/
 
 Sitemap: https://appgoblin.info/sitemap.xml
 
