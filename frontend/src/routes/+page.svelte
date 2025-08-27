@@ -13,9 +13,9 @@
 		return num.toLocaleString();
 	}
 	const description =
-		'Free app analytics, keywords, ASO, app SDKs and app-ads.txt data for marketing Android and iOS apps. AppGoblin is an open source project for collecting Google & Apple App Store data and presenting it for developers and marketers.';
+		'Free app analytics, app store marketing, competitor analysis, app SDKs and app-ads.txt data for marketing Android and iOS apps. AppGoblin is an open source project for collecting Google & Apple App Store data and presenting it for developers and marketers.';
 
-	const title = 'AppGoblin: Free Mobile App Marketing Tools';
+	const title = 'AppGoblin Mobile App Marketing Tools';
 </script>
 
 <svelte:head>
