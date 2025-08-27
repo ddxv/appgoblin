@@ -19,18 +19,18 @@
 	{:then myapps}
 		{#if typeof myapps != 'string'}
 			<title>{myapps.title} App Stats & Info</title>
+			<meta
+				name="description"
+				content="Explore newest apps in {myapps.title} app analytics and market trends for Google and Apple App Stores. See which apps have been released in the past week, month, year, or all time."
+			/>
+			<meta
+				name="keywords"
+				content="new apps, market reserach, new ios apps, new android apps, new app analytics, app market data, mobile app rankings, app reviews, download statistics, Google Play data, iTunes app data, app comparison, mobile app insights"
+			/>
 		{:else}
-			<title>App Stats & Info</title>
+			<title>New Apps</title>
 		{/if}
 	{/await}
-	<meta
-		name="description"
-		content="Explore app analytics and market trends across Google Play and iTunes with AppGoblin. Dive into detailed app rankings and download statistics to inform your app strategy and discover top-performing apps."
-	/>
-	<meta
-		name="keywords"
-		content="app analytics, app market data, mobile app rankings, app reviews, download statistics, Google Play data, iTunes app data, app comparison, mobile app insights"
-	/>
 </svelte:head>
 
 {#await data.AppCollections}
@@ -39,7 +39,6 @@
 	</div>
 {:then myapps}
 	{#if typeof myapps != 'string'}
-		<!-- <h2 class="h3 md:h2 p-2">Apps: {myapps.title}</h2> -->
 		{#each Object.entries(myapps.categories) as [_key, cat]}
 			{#if cat.key == $homeCategorySelection}
 				<AppsCard apps={cat[$homeStoreSelection]} />

@@ -6,7 +6,7 @@ from functools import lru_cache
 
 import numpy as np
 import pandas as pd
-from sqlalchemy import text
+from sqlalchemy import bindparam, text
 
 from config import MODULE_DIR, get_logger
 from dbcon.connections import get_db_connection
@@ -491,8 +491,9 @@ def get_app_api_details(store_id: str) -> pd.DataFrame:
 @lru_cache(maxsize=1000)
 def get_apps_sdk_overview(store_ids: tuple[str, ...]) -> pd.DataFrame:
     """Get SDK overview for multiple store_ids."""
-    df = pd.read_sql(
-        QUERY_APPS_SDK_OVERVIEW,
+    query = QUERY_APPS_SDK_OVERVIEW.bindparams(bindparam("store_ids", expanding=True))
+    df = pd.read_sql_query(
+        query,
         DBCON.engine,
         params={"store_ids": store_ids},
     )

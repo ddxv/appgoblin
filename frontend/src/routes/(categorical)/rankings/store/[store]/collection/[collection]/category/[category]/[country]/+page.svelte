@@ -32,7 +32,7 @@
 	}
 
 	const title = `Top App Rankings: Android & iOS | Free ASO Tools | AppGoblin`;
-	const description = `Explore top ranking apps on Android and iOS to analyze which apps and games are at the top of the app store charts. Sort by category and view historical data all for free. Get valuable ASO insights for your app strategy with AppGoblin.`;
+	const description = `Top ranked Android and iOS Apps. Explore apps and games that are at the top of the app store charts. Sort by category and view historical data all for free. Get valuable ASO insights for your app strategy with AppGoblin.`;
 </script>
 
 <svelte:head>
@@ -44,10 +44,19 @@
 		].category_name} in {country}
 	</title>
 	<!-- Standard meta tags -->
-	<meta name="description" content={description} />
+
+	<meta
+		name="description"
+		content="{collectionIDLookup[store][collection].collection_name} for {categoryIDLookup[
+			collection
+		][category].category_name} in {country} {description} "
+	/>
+
 	<meta
 		name="keywords"
-		content="app rankings, top apps, Google Play charts, iOS App Store charts, free, ASO, marketing, competitor analysis, app category rankings, app performance tracking, mobile app trends"
+		content="{country} {storeIDLookup[store].store_name} {collectionIDLookup[store][collection]
+			.collection_name} {categoryIDLookup[collection][category]
+			.category_name} app rankings, top apps, Google Play charts, iOS App Store charts, free, ASO, marketing, competitor analysis, app category rankings, app performance tracking, mobile app trends"
 	/>
 
 	<!-- Open Graph meta tags -->
