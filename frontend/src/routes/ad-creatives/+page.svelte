@@ -43,32 +43,27 @@
 	<link rel="canonical" href="https://appgoblin.info/ad-creatives" />
 </svelte:head>
 
-<div class="p-2 px-8 md:px-32 lg:px-72">
-	<h1 class="text-3xl font-bold text-primary-900-100">Ad Creatives</h1>
+<div class="p-2 px-2 md:px-16 lg:px-32">
+	<h1 class="text-3xl font-bold text-primary-900-100">Top Advertising Apps & Their Ad Creatives</h1>
 
 	<br />
 
-	<div class="card preset-filled-surface-100-900 p-2 md:p-8">
-		<div class="p-4">
-			<p>
-				The following table shows the top advertisers and their creatives as scraped from various ad
-				network API calls in Android.
-			</p>
-		</div>
+	<div class="p-4">
+		<p>
+			These are top mobile ad buyers from this month. The top advertisers and their creatives are
+			based on actual ads from various publishing apps in the past month.
+		</p>
 	</div>
 
-	<div class="card preset-tonal p-2 md:p-8 mt-2 md:mt-4">
-		<h1 class="text-2xl font-bold">Ad Creatives</h1>
-		{#await data.creatives}
-			loading...
-		{:then creatives}
-			<WhiteCard>
-				{#if creatives && creatives.length > 0}
-					<AdvertiserCreativeRankingsTable data={creatives} />
-				{:else}
-					<p>No apps found</p>
-				{/if}
-			</WhiteCard>
-		{/await}
-	</div>
+	{#await data.creatives}
+		loading...
+	{:then creatives}
+		<WhiteCard>
+			{#if creatives && creatives.length > 0}
+				<AdvertiserCreativeRankingsTable data={creatives} />
+			{:else}
+				<p>No apps found</p>
+			{/if}
+		</WhiteCard>
+	{/await}
 </div>

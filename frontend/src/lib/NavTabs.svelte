@@ -40,7 +40,7 @@
 		<div class={myDivider}></div>
 		<a href="/ad-creatives">
 			<p class={isHighlighted('/ad-creatives') ? topBarHighlightedFont : topBarFont}>
-				AD CREATIVES
+				TOP ADVERTISERS
 			</p>
 		</a>
 		<div class={myDivider}></div>
