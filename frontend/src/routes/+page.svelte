@@ -6,12 +6,10 @@
 	import WhiteCard from '$lib/WhiteCard.svelte';
 
 	import SDKOverview from '$lib/utils/SDKOverview.svelte';
+	import { formatNumberLocale } from '$lib/utils/formatNumber';
 
 	let { data } = $props();
 
-	function formatNumber(num: number) {
-		return num.toLocaleString();
-	}
 	const description =
 		'Free app analytics, app store marketing, competitor analysis, app SDKs and app-ads.txt data for marketing Android and iOS apps. AppGoblin is an open source project for collecting Google & Apple App Store data and presenting it for developers and marketers.';
 
@@ -297,27 +295,27 @@
 								<tr class="text-xs md:text-base">
 									<td>
 										<span class="text-success-900-100">
-											{formatNumber(appsOverview.success_android_apps)}
+											{formatNumberLocale(appsOverview.success_android_apps)}
 										</span>
-										/ {formatNumber(appsOverview.android_apps)}
+										/ {formatNumberLocale(appsOverview.android_apps)}
 									</td>
 									<td>
 										<span class="text-success-900-100">
-											{formatNumber(appsOverview.success_ios_apps)}
+											{formatNumberLocale(appsOverview.success_ios_apps)}
 										</span>
-										/ {formatNumber(appsOverview.ios_apps)}
+										/ {formatNumberLocale(appsOverview.ios_apps)}
 									</td>
 									<td>
 										<span class="text-success-900-100">
-											{formatNumber(appsOverview.weekly_success_scanned_android_apps)}
+											{formatNumberLocale(appsOverview.weekly_success_scanned_android_apps)}
 										</span>
-										/ {formatNumber(appsOverview.weekly_scanned_android_apps)}
+										/ {formatNumberLocale(appsOverview.weekly_scanned_android_apps)}
 									</td>
 									<td>
 										<span class="text-success-900-100">
-											{formatNumber(appsOverview.weekly_success_scanned_ios_apps)}
+											{formatNumberLocale(appsOverview.weekly_success_scanned_ios_apps)}
 										</span>
-										/ {formatNumber(appsOverview.weekly_scanned_ios_apps)}
+										/ {formatNumberLocale(appsOverview.weekly_scanned_ios_apps)}
 									</td>
 								</tr>
 							</tbody>
@@ -353,16 +351,16 @@
 								<tr>
 									<td>
 										<span class="text-success-900-100">
-											{formatNumber(appsOverview.appads_success_urls)}
+											{formatNumberLocale(appsOverview.appads_success_urls)}
 										</span>
-										/ {formatNumber(appsOverview.appads_urls)}
+										/ {formatNumberLocale(appsOverview.appads_urls)}
 									</td>
 
 									<td>
 										<span class="text-success-900-100">
-											{formatNumber(appsOverview.appads_weekly_success_urls)}
+											{formatNumberLocale(appsOverview.appads_weekly_success_urls)}
 										</span>
-										/ {formatNumber(appsOverview.appads_weekly_urls)}
+										/ {formatNumberLocale(appsOverview.appads_weekly_urls)}
 									</td>
 								</tr>
 							</tbody>

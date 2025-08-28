@@ -4,6 +4,7 @@
 	import { DataHandler } from '@vincjo/datatables/legacy/remote';
 	import type { State } from '@vincjo/datatables/legacy/remote';
 	import type { CompanyOverviewApps } from '../types';
+	import { formatNumber } from '$lib/utils/formatNumber';
 
 	export let entries_table: CompanyOverviewApps[];
 
@@ -30,10 +31,6 @@
 	console.log(`TABLE Company: ${totalRows}`);
 
 	$: firstRowInstalls = entries_table && entries_table.length > 0 && entries_table[0].installs > 0;
-
-	function formatNumber(num: number) {
-		return new Intl.NumberFormat('en-US').format(num);
-	}
 
 	function formatDate(date: string) {
 		return new Date(date).toLocaleDateString('en-US', {

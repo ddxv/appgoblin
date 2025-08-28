@@ -7,6 +7,7 @@
 	import type { SdksOverview } from '../types';
 
 	import CompanyButton from './CompanyButton.svelte';
+	import { formatNumber } from '$lib/utils/formatNumber';
 
 	let { entries_table }: { entries_table: SdksOverview[] } = $props();
 
@@ -32,9 +33,7 @@
 	handler.invalidate();
 	console.log(`TABLE sdks: ${totalRows}`);
 
-	function formatNumber(num: number) {
-		return num.toLocaleString();
-	}
+	// Remove the local formatNumber function (lines 34-40)
 </script>
 
 <div class="table-container space-y-4">

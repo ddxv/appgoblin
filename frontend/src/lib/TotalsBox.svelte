@@ -1,15 +1,5 @@
 <script lang="ts">
-	function formatNumber(num: number) {
-		if (num < 1000) {
-			return num.toString();
-		} else if (num < 1000000) {
-			return (num / 1000).toFixed(1) + 'K';
-		} else if (num < 1000000000) {
-			return (num / 1000000).toFixed(1) + 'M';
-		} else {
-			return (num / 1000000000).toFixed(1) + 'B';
-		}
-	}
+	import { formatNumberLocale } from '$lib/utils/formatNumber';
 
 	let { myTotals, myType, hideAdstxtApps = false } = $props();
 
@@ -22,27 +12,27 @@
 <div class="stat-container">
 	<div class={subTitleFont}>Total Apps Scanned</div>
 	<div class={subContentFont}>
-		Apps: {formatNumber(myTotals.sdk_total_apps)}
+		Apps: {formatNumberLocale(myTotals.sdk_total_apps)}
 	</div>
 </div>
 <div class="grid grid-cols-2 gap-4 p-4">
 	<div class="stat-container">
 		<div class={subTitleFont}>Android</div>
 		<div class={subContentFont}>
-			Apps: {formatNumber(myTotals.sdk_android_total_apps)}
+			Apps: {formatNumberLocale(myTotals.sdk_android_total_apps)}
 		</div>
 		<div class={subContentFont}>
-			Monthly Installs: {formatNumber(myTotals.sdk_android_installs_d30)}
+			Monthly Installs: {formatNumberLocale(myTotals.sdk_android_installs_d30)}
 		</div>
 	</div>
 
 	<div class="stat-container">
 		<div class={subTitleFont}>iOS</div>
 		<div class={subContentFont}>
-			Apps: {formatNumber(myTotals.sdk_ios_total_apps)}
+			Apps: {formatNumberLocale(myTotals.sdk_ios_total_apps)}
 		</div>
 		<div class={subContentFont}>
-			Monthly Installs: {formatNumber(myTotals.sdk_ios_rating_count_d30 * 100)}
+			Monthly Installs: {formatNumberLocale(myTotals.sdk_ios_rating_count_d30 * 100)}
 		</div>
 	</div>
 </div>
@@ -54,13 +44,13 @@
 			<div class="stat-container">
 				<div class={subTitleFont}>Android Adstxt companies</div>
 				<div class="text-2xl font-bold text-primary-900">
-					{formatNumber(myTotals.adstxt_direct_android_total_companies)}
+					{formatNumberLocale(myTotals.adstxt_direct_android_total_companies)}
 				</div>
 			</div>
 			<div class="stat-container">
 				<div class={subTitleFont}>iOS Adstxt companies</div>
 				<div class="text-2xl font-bold text-primary-900">
-					{formatNumber(myTotals.adstxt_direct_ios_total_companies)}
+					{formatNumberLocale(myTotals.adstxt_direct_ios_total_companies)}
 				</div>
 			</div>
 
@@ -72,7 +62,7 @@
 				{/if}
 
 				<div class="text-2xl font-bold text-primary-900">
-					{formatNumber(myTotals.total_companies)}
+					{formatNumberLocale(myTotals.total_companies)}
 				</div>
 			</div>
 		</div>
@@ -83,13 +73,13 @@
 			<div class="stat-container">
 				<div class={subTitleFont}>Android Adstxt apps</div>
 				<div class="text-2xl font-bold text-primary-900">
-					{formatNumber(myTotals.adstxt_direct_android_total_apps)}
+					{formatNumberLocale(myTotals.adstxt_direct_android_total_apps)}
 				</div>
 			</div>
 			<div class="stat-container">
 				<div class={subTitleFont}>iOS Adstxt apps</div>
 				<div class="text-2xl font-bold text-primary-900">
-					{formatNumber(myTotals.adstxt_direct_ios_total_apps)}
+					{formatNumberLocale(myTotals.adstxt_direct_ios_total_apps)}
 				</div>
 			</div>
 		</div>

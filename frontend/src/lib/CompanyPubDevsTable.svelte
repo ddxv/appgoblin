@@ -4,6 +4,7 @@
 	import { DataHandler } from '@vincjo/datatables/legacy/remote';
 	import type { State } from '@vincjo/datatables/legacy/remote';
 	import type { CompanyOverviewApps } from '../types';
+	import { formatNumber } from '$lib/utils/formatNumber';
 
 	export let entries_table: CompanyOverviewApps[];
 
@@ -31,9 +32,7 @@
 
 	$: firstRowInstalls = entries_table && entries_table.length > 0 && entries_table[0].installs > 0;
 
-	function formatNumber(num: number) {
-		return new Intl.NumberFormat('en-US').format(num);
-	}
+	// Remove the local formatNumber function (lines 33-39)
 </script>
 
 <div class="table-container space-y-4">

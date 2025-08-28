@@ -18,6 +18,8 @@
 	import { genericColumns } from '$lib/components/data-table/generic-column';
 	import { Shield, Eye, HelpCircle } from 'lucide-svelte';
 
+	import { formatNumber } from '$lib/utils/formatNumber';
+
 	type DataTableProps<CompaniesOverviewEntries, TValue> = {
 		data: CompaniesOverviewEntries[];
 	};
@@ -153,14 +155,6 @@
 		getPaginationRowModel: getPaginationRowModel(),
 		getFilteredRowModel: getFilteredRowModel()
 	});
-
-	function formatNumber(num: number) {
-		if (num >= 1000000000000) return (num / 1000000000000).toFixed(1).replace(/\.0$/, '') + 'T';
-		if (num >= 1000000000) return (num / 1000000000).toFixed(1).replace(/\.0$/, '') + 'B';
-		if (num >= 1000000) return (num / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
-		if (num >= 1000) return (num / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
-		return num;
-	}
 
 	function formatPercentage(num: number) {
 		if (num && num > 0) {

@@ -1,12 +1,12 @@
 <script lang="ts">
 	import WhiteCard from './WhiteCard.svelte';
 	import CompanyOverviewTable from './CompanyOverviewTable.svelte';
+	import { formatNumberLocale } from '$lib/utils/formatNumber';
 
 	let { detailsData, tableData, category } = $props();
 
-	function formatNumber(num: number) {
-		return new Intl.NumberFormat('en-US').format(num);
-	}
+	// Remove the local formatNumber function (lines 6-8)
+	// Replace all formatNumber calls with formatNumberLocale
 </script>
 
 <div class="grid grid-cols-1">
@@ -50,14 +50,16 @@
 			<!-- Android SDK -->
 			<div class="card preset-tonal">
 				<p class="text-lg">
-					Total Android Apps: {formatNumber(
+					Total Android Apps: {formatNumberLocale(
 						detailsData.categories[category]?.sdk_android_total_apps || 0
 					)}
 				</p>
 			</div>
 			<div class="card preset-tonal">
 				<p class="text-lg">
-					Total iOS Apps: {formatNumber(detailsData.categories[category]?.sdk_ios_total_apps || 0)}
+					Total iOS Apps: {formatNumberLocale(
+						detailsData.categories[category]?.sdk_ios_total_apps || 0
+					)}
 				</p>
 			</div>
 		</div>
@@ -80,7 +82,7 @@
 				<div class="card preset-tonal">
 					<div class="card-header">
 						<p class="text-sm md:text-lg">
-							Total Android Apps: {formatNumber(
+							Total Android Apps: {formatNumberLocale(
 								detailsData.categories[category]?.adstxt_direct_android_total_apps || 0
 							)}
 						</p>
@@ -91,7 +93,7 @@
 				<div class="card preset-tonal">
 					<div class="card-header">
 						<p class="text-sm md:text-lg">
-							Total iOS Apps: {formatNumber(
+							Total iOS Apps: {formatNumberLocale(
 								detailsData.categories[category]?.adstxt_direct_ios_total_apps || 0
 							)}
 						</p>

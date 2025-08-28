@@ -2,6 +2,7 @@
 	import { TrendingUpIcon, TrendingDownIcon } from 'lucide-svelte';
 	import IconDownload from '$lib/svg/IconDownload.svelte';
 	import Star from './Star.svelte';
+	import { formatNumber } from '$lib/utils/formatNumber';
 	import type { AppFullDetail } from '../types';
 	interface Props {
 		app: AppFullDetail;
@@ -9,13 +10,7 @@
 
 	let { app }: Props = $props();
 
-	function formatNumber(num: number) {
-		if (num >= 1000000000000) return (num / 1000000000000).toFixed(1).replace(/\.0$/, '') + 'T';
-		if (num >= 1000000000) return (num / 1000000000).toFixed(1).replace(/\.0$/, '') + 'B';
-		if (num >= 1000000) return (num / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
-		if (num >= 1000) return (num / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
-		return num;
-	}
+	// Remove the local formatNumber function (lines 11-16)
 </script>
 
 <div class="inline-block">

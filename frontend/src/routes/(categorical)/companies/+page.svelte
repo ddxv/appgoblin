@@ -6,6 +6,7 @@
 	import CompaniesLayout from '$lib/CompaniesLayout.svelte';
 	import CompaniesTableGrid from '$lib/CompaniesTableGrid.svelte';
 	import TotalsBox from '$lib/TotalsBox.svelte';
+	import { formatNumber } from '$lib/utils/formatNumber';
 	interface Props {
 		data: CompaniesOverview;
 	}

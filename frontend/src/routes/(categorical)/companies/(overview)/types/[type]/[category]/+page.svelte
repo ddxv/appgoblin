@@ -3,12 +3,11 @@
 	import CompaniesTableGrid from '$lib/CompaniesTableGrid.svelte';
 
 	import type { PageData } from './$types';
+	import { formatNumber } from '$lib/utils/formatNumber';
 
 	let { data }: { data: PageData } = $props();
 
-	function formatNumber(num: number) {
-		return new Intl.NumberFormat('en-US').format(num);
-	}
+	// Remove the local formatNumber function (lines 11-16)
 </script>
 
 {#await data.companiesOverview}
