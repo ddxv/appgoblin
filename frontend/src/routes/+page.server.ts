@@ -2,40 +2,49 @@ import type { PageServerLoad } from './$types.js';
 
 export const prerender = false;
 
-export const load: PageServerLoad = async ({ setHeaders, parent }) => {
-	const emptyResponse = {};
+export const load: PageServerLoad = async ({ setHeaders, parent, fetch }) => {
 	setHeaders({
 		'cache-control': 'max-age=3600'
 	});
 
-	const androidAppRanks = fetch(`http://localhost:8000/api/rankings/1/1/short`);
-	const iOSAppRanks = fetch(`http://localhost:8000/api/rankings/4/120/short`);
-
-	const androidGameRanks = fetch(`http://localhost:8000/api/rankings/1/36/short`);
-	const iOSGameRanks = fetch(`http://localhost:8000/api/rankings/4/62/short`);
-
-	const topCompanies = fetch(`http://localhost:8000/api/companies/topshort`);
-
-	const topAdvertisers = fetch(`http://localhost:8000/api/creatives/top`);
-
 	const { appsOverview } = await parent();
 
 	try {
+		const [
+			androidAppRanks,
+			iOSAppRanks,
+			androidGameRanks,
+			iOSGameRanks,
+			topCompanies,
+			topAdvertisers
+		] = await Promise.all([
+			fetch(`http://localhost:8000/api/rankings/1/1/short`).then((r) => r.json()),
+			fetch(`http://localhost:8000/api/rankings/4/120/short`).then((r) => r.json()),
+			fetch(`http://localhost:8000/api/rankings/1/36/short`).then((r) => r.json()),
+			fetch(`http://localhost:8000/api/rankings/4/62/short`).then((r) => r.json()),
+			fetch(`http://localhost:8000/api/companies/topshort`).then((r) => r.json()),
+			fetch(`http://localhost:8000/api/creatives/top`).then((r) => r.json())
+		]);
+
 		return {
-			androidAppRanks: androidAppRanks.then((resp) => resp.json()),
-			iOSAppRanks: iOSAppRanks.then((resp) => resp.json()),
-			androidGameRanks: androidGameRanks.then((resp) => resp.json()),
-			iOSGameRanks: iOSGameRanks.then((resp) => resp.json()),
-			topCompanies: topCompanies.then((resp) => resp.json()),
-			topAdvertisers: topAdvertisers.then((resp) => resp.json()),
-			appsOverview: appsOverview
+			androidAppRanks,
+			iOSAppRanks,
+			androidGameRanks,
+			iOSGameRanks,
+			topCompanies,
+			topAdvertisers,
+			appsOverview
 		};
-	} catch (error) {
-		console.error('Failed to load app data:', error);
+	} catch (err) {
+		console.error('Failed to load homepage data:', err);
 		return {
-			ranks: emptyResponse,
-			history: emptyResponse,
-			status: 500,
+			androidAppRanks: null,
+			iOSAppRanks: null,
+			androidGameRanks: null,
+			iOSGameRanks: null,
+			topCompanies: null,
+			topAdvertisers: null,
+			appsOverview,
 			error: 'Failed to load ranked apps'
 		};
 	}

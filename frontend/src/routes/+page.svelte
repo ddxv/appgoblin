@@ -26,7 +26,7 @@
 	<meta name="description" content={description} />
 	<meta
 		name="keywords"
-		content="app, aso, keywords, keyword analytics, ios, android, marketing, advertising, analytics, Google Play data, iTunes app data, app rankings, download statistics, competitor analysis, mobile app insights, app store intelligence"
+		content="app, aso, app competitory analysis, ad creatives, ios, android, marketing, advertising, analytics, keyword analytics,  Google Play data, iTunes app data, app rankings, download statistics, competitor analysis, mobile app insights, app store intelligence"
 	/>
 
 	<!-- Open Graph meta tags -->
@@ -68,13 +68,9 @@
 			<a href="/ad-creatives">
 				<h2 class="h2 p-2 md:p-4">Top Monthly Advertisers & Creatives</h2>
 			</a>
-			{#await data.topAdvertisers}
-				Loading ...
-			{:then topAdvertisers}
-				{#if topAdvertisers && topAdvertisers.length > 0}
-					<AdvertiserCreativeRankingsTableTop data={topAdvertisers.slice(0, 5)} />
-				{/if}
-			{/await}
+			{#if data.topAdvertisers && data.topAdvertisers.length > 0}
+				<AdvertiserCreativeRankingsTableTop data={data.topAdvertisers.slice(0, 5)} />
+			{/if}
 		</div>
 
 		<div class="card preset-tonal p-2 md:p-8">
@@ -90,62 +86,68 @@
 			</p>
 
 			<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-				<a href="/companies/types/ad-networks">
-					<div class="card preset-tonal md:p-4">
-						<div class="card-header">
+				<div class="card preset-tonal md:p-4">
+					<div class="card-header">
+						<a href="/companies/types/ad-networks">
 							<h4 class="h4">Ad Network SDKs</h4>
-						</div>
-						<div class="card-content">
+						</a>
+					</div>
+					<div class="card-content">
+						<a href="/companies/types/ad-networks">
 							These are the top Mobile Advertising Networks based on SDKs we found in iOS and
 							Android apps.
-							{#await data.topCompanies}
-								Loading ...
-							{:then myTops}
-								{#if myTops.adnetworks}
-									<CompaniesBarChart plotData={myTops.adnetworks.sdk_android} />
-								{/if}
-							{/await}
-						</div>
+						</a>
+						{#await data.topCompanies}
+							Loading ...
+						{:then myTops}
+							{#if myTops.adnetworks}
+								<CompaniesBarChart plotData={myTops.adnetworks.sdk_android} />
+							{/if}
+						{/await}
 					</div>
-				</a>
+				</div>
 
-				<a href="/companies/types/ad-attribution">
-					<div class="card preset-tonal md:p-4">
-						<div class="card-header">
+				<div class="card preset-tonal md:p-4">
+					<div class="card-header">
+						<a href="/companies/types/ad-attribution">
 							<h4 class="h4">MMPs</h4>
-						</div>
-						<div class="card-content">
+						</a>
+					</div>
+					<div class="card-content">
+						<a href="/companies/types/ad-attribution">
 							See which MMPs and mobile app tracking companies are used most often in Android and
 							iOS apps.
-							{#await data.topCompanies}
-								Loading ...
-							{:then myTops}
-								{#if myTops.attribution}
-									<CompaniesBarChart plotData={myTops.attribution.sdk_ios} />
-								{/if}
-							{/await}
-						</div>
+						</a>
+						{#await data.topCompanies}
+							Loading ...
+						{:then myTops}
+							{#if myTops.attribution}
+								<CompaniesBarChart plotData={myTops.attribution.sdk_ios} />
+							{/if}
+						{/await}
 					</div>
-				</a>
+				</div>
 
-				<a href="/companies/types/product-analytics">
-					<div class="card preset-tonal md:p-4">
-						<div class="card-header">
+				<div class="card preset-tonal md:p-4">
+					<div class="card-header">
+						<a href="/companies/types/product-analytics">
 							<h4 class="h4">Product Analytics</h4>
-						</div>
-						<div class="card-content">
+						</a>
+					</div>
+					<div class="card-content">
+						<a href="/companies/types/product-analytics">
 							These are the most popular Product Analytics companies or open source libraries based
 							on SDKs we found in iOS and Android apps.
-							{#await data.topCompanies}
-								Loading ...
-							{:then myTops}
-								{#if myTops.analytics}
-									<CompaniesBarChart plotData={myTops.analytics.sdk_ios} />
-								{/if}
-							{/await}
-						</div>
+						</a>
+						{#await data.topCompanies}
+							Loading ...
+						{:then myTops}
+							{#if myTops.analytics}
+								<CompaniesBarChart plotData={myTops.analytics.sdk_ios} />
+							{/if}
+						{/await}
 					</div>
-				</a>
+				</div>
 			</div>
 		</div>
 
