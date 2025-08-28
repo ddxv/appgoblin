@@ -880,7 +880,6 @@ class CompaniesController(Controller):
         start = time.perf_counter() * 1000
 
         df = get_company_api_call_countrys()
-        company_domain = "unity.com"
 
         reg_df = df[df["company_domain"] == company_domain]
         p_df = df[df["parent_company_domain"] == company_domain]

@@ -16,6 +16,7 @@
 	import { createSvelteTable, FlexRender } from '$lib/components/data-table/index.js';
 
 	import { genericColumns } from '$lib/components/data-table/generic-column';
+	import { Shield, Eye, HelpCircle } from 'lucide-svelte';
 
 	type DataTableProps<CompaniesOverviewEntries, TValue> = {
 		data: CompaniesOverviewEntries[];
@@ -294,13 +295,37 @@
 					<tr class="px-0">
 						<td class="text-center">
 							{#if row.original.percent_open_source > 0.75}
-								<div class="w-3 h-3 rounded-full bg-success-200 mx-auto"></div>
+								<div
+									class="flex items-center justify-center gap-1 text-green-600"
+									title="Mostly open source - minimal tracking"
+								>
+									<Shield class="w-4 h-4" />
+									<span class="text-xs font-medium">Open</span>
+								</div>
 							{:else if row.original.percent_open_source > 0.3}
-								<div class="w-3 h-3 rounded-full bg-warning-200 mx-auto"></div>
+								<div
+									class="flex items-center justify-center gap-1 text-yellow-600"
+									title="Mixed open/closed source"
+								>
+									<Shield class="w-4 h-4" />
+									<span class="text-xs font-medium">Mixed</span>
+								</div>
 							{:else if row.original.percent_open_source == 0}
-								<div class="w-3 h-3 rounded-full bg-error-200 mx-auto"></div>
+								<div
+									class="flex items-center justify-center gap-1 text-red-600"
+									title="Closed source - likely tracking"
+								>
+									<Eye class="w-4 h-4" />
+									<span class="text-xs font-medium">Tracks</span>
+								</div>
 							{:else}
-								<div class="w-3 h-3 rounded-full bg-gray-500 mx-auto"></div>
+								<div
+									class="flex items-center justify-center gap-1 text-gray-500"
+									title="Unknown tracking status"
+								>
+									<HelpCircle class="w-4 h-4" />
+									<span class="text-xs font-medium">Unknown</span>
+								</div>
 							{/if}
 						</td>
 						<td class="text-center">
