@@ -16,7 +16,7 @@
 	import { createSvelteTable, FlexRender } from '$lib/components/data-table/index.js';
 
 	import { genericColumns } from '$lib/components/data-table/generic-column';
-	import { Shield, Eye, HelpCircle } from 'lucide-svelte';
+	import { Shield, Eye } from 'lucide-svelte';
 
 	import { formatNumber } from '$lib/utils/formatNumber';
 

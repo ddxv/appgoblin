@@ -7,25 +7,36 @@
 	let { children, data } = $props();
 	const { domain, category } = page.params;
 
-	let category_title: string = $state(category);
+	let category_title: string = $state(category || '');
 
-	let categoryName = $derived(getAppCategories(page.params.category));
+	let categoryName = $derived(getAppCategory(page.params.category || ''));
 
-	function getAppCategories(category: string) {
+	function getAppCategory(category: string) {
 		if (category) {
-			return category.split('_').map((c) => c.charAt(0).toUpperCase() + c.slice(1));
+			return category
+				.split('_')
+				.map((c) => c.charAt(0).toUpperCase() + c.slice(1))
+				.join(' ');
 		} else {
-			return 'All App Categories';
+			return 'All Apps';
 		}
 	}
 
+	function getPageTitle(myTree: any, categoryName: string) {
+		if (myTree.parent_company_domain == myTree.queried_company_domain) {
+			return `${myTree.parent_company_name || myTree.parent_company_domain}: ${categoryName}`;
+		} else {
+			return `${myTree.queried_company_name} / ${categoryName}`;
+		}
+	}
+	let pageTitle = $derived(getPageTitle(data.companyTree, categoryName));
 	let titleClass = 'h1 text-2xl md:text-3xl font-bold text-primary-900-100';
 	let titleSecondaryClass = 'text-xl font-bold text-primary-900-100 mr-2';
 	let titleDividerClass = 'md:h-8 w-px bg-gray-300 mx-2';
 </script>
 
 <svelte:head>
-	<title>{domain} {category_title} Company Profile & Analytics | AppGoblin</title>
+	<title>{pageTitle}</title>
 	<meta
 		name="description"
 		content="{domain} {category_title} biggest apps by most users. Explore detailed analytics, market presence, and insights about {domain}'s role in the mobile ecosystem."
