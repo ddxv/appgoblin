@@ -1,49 +1,93 @@
 <script lang="ts">
-	import Pagination from './Pagination.svelte';
+	import {
+		type PaginationState,
+		type SortingState,
+		type ColumnFiltersState,
+		getCoreRowModel,
+		getPaginationRowModel,
+		getSortedRowModel,
+		getFilteredRowModel
+	} from '@tanstack/table-core';
 
 	import { Check, X } from 'lucide-svelte';
 
-	import { DataHandler } from '@vincjo/datatables/legacy/remote';
-	import type { State } from '@vincjo/datatables/legacy/remote';
+	import ExportAsCSV from '$lib/components/data-table/ExportAsCSV.svelte';
 	import type { CompanyOverviewApps, AppFullDetail } from '../types';
-	export let entries_table: CompanyOverviewApps[] | AppFullDetail[];
-	export let isiOS: boolean = false;
+	import { formatNumber } from '$lib/utils/formatNumber';
+	// export let entries_table: CompanyOverviewApps[] | AppFullDetail[];
+	// export let isiOS: boolean = false;
+	import { createSvelteTable, FlexRender } from '$lib/components/data-table/index.js';
 
-	const totalRows = entries_table.length;
+	import { genericColumns } from '$lib/components/data-table/generic-column';
 
-	const rowsPerPage = 100;
+	type DataTableProps<RankedApps, TValue> = {
+		data: RankedApps[];
+		isiOS: boolean;
+	};
+
+	// const totalRows = entries_table.length;
 
 	function tableHasAdsTxt(table: CompanyOverviewApps[]) {
 		return !table.every((row) => row.app_ads_direct == false);
 	}
 
-	const handler = new DataHandler<CompanyOverviewApps>([], {
-		rowsPerPage: rowsPerPage,
-		totalRows: totalRows
+	let { data, isiOS }: DataTableProps<CompanyOverviewApps, TValue> = $props();
+
+	const columns = genericColumns([
+		{
+			title: 'App',
+			accessorKey: 'name',
+			isSortable: true
+		},
+		{
+			title: 'Monthly Installs',
+			accessorKey: 'installs_d30',
+			isSortable: true
+		},
+
+		{
+			title: 'Monthly Ratings',
+			accessorKey: 'rating_count_d30',
+			isSortable: true
+		},
+		{
+			title: 'SDK',
+			accessorKey: 'sdk',
+			isSortable: true
+		},
+		{
+			title: 'API Calls',
+			accessorKey: 'api_call',
+			isSortable: true
+		},
+		{
+			title: 'App-Ads.txt',
+			accessorKey: 'app_ads_direct',
+			isSortable: true
+		}
+	]);
+
+	const table = createSvelteTable({
+		get data() {
+			return data;
+		},
+		columns,
+
+		getSortedRowModel: getSortedRowModel(),
+
+		getCoreRowModel: getCoreRowModel(),
+		getPaginationRowModel: getPaginationRowModel(),
+		getFilteredRowModel: getFilteredRowModel()
 	});
-	const rows = handler.getRows();
-
-	handler.onChange((state: State) =>
-		Promise.resolve(
-			entries_table.slice(
-				0 + (state.pageNumber - 1) * state.rowsPerPage,
-				state.rowsPerPage * state.pageNumber
-			)
-		)
-	);
-
-	handler.invalidate();
-	console.log(`TABLE Company: ${totalRows}`);
 </script>
 
 <div class="table-container space-y-4">
 	<div class="overflow-x-auto pl-0">
-		<table class="md:table table-hover md:table-compact table-auto w-full text-xs">
+		<table class="table table-hover table-auto w-full text-xs md:text-sm">
 			<thead>
 				<tr>
 					<th class="table-cell-fit"></th>
 					<th class="table-cell-fit">App</th>
-
 					<th class="table-cell-fit">
 						{#if !isiOS}
 							Monthly Installs
@@ -55,34 +99,34 @@
 					{#if !isiOS}
 						<th class="table-cell-fit">API Calls</th>
 					{/if}
-					{#if tableHasAdsTxt(entries_table)}
+					{#if tableHasAdsTxt(data)}
 						<th class="table-cell-fit">App-Ads.txt</th>
 					{/if}
 				</tr>
 			</thead>
 			<tbody>
-				{#each $rows as row, index}
+				{#each table.getRowModel().rows as row (row.id)}
 					<tr class="px-0">
-						<td class="table-cell-fit">
-							{index + 1}
+						<td class="table-cell-fit text-gray-500 text-xs md:text-sm">
+							{row.index + 1}
 						</td>
 						<td class="table-cell-fit">
-							<a href="/apps/{row.store_id}" style="cursor: pointer;">
-								{row.name}
+							<a href="/apps/{row.original.store_id}" style="cursor: pointer;">
+								{row.original.name}
 							</a>
 						</td>
 
 						<td class="table-cell-fit">
 							{#if !isiOS}
-								{row.installs_d30}
+								{formatNumber(row.original.installs_d30)}
 							{:else}
-								{row.rating_count_d30}
+								{formatNumber(row.original.rating_count_d30)}
 							{/if}
 						</td>
 						<td class="table-cell-fit">
-							{#if row.sdk == true}
+							{#if row.original.sdk == true}
 								<Check class="w-4 h-4 text-green-400" />
-							{:else if row.sdk == false}
+							{:else if row.original.sdk == false}
 								<X class="w-4 h-4 text-red-400" />
 							{:else}
 								-
@@ -90,20 +134,20 @@
 						</td>
 						{#if !isiOS}
 							<td class="table-cell-fit">
-								{#if row.api_call == true}
+								{#if row.original.api_call == true}
 									<Check class="w-4 h-4 text-green-400" />
-								{:else if row.api_call == false}
+								{:else if row.original.api_call == false}
 									<X class="w-4 h-4 text-red-400" />
 								{:else}
 									-
 								{/if}
 							</td>
 						{/if}
-						{#if tableHasAdsTxt(entries_table)}
+						{#if tableHasAdsTxt(data)}
 							<td class="table-cell-fit">
-								{#if row.app_ads_direct == true}
+								{#if row.original.app_ads_direct == true}
 									<Check class="w-4 h-4 text-green-400" />
-								{:else if row.app_ads_direct == false}
+								{:else if row.original.app_ads_direct == false}
 									<X class="w-4 h-4 text-red-400" />
 								{:else}
 									-
@@ -115,9 +159,12 @@
 			</tbody>
 		</table>
 		<footer class="flex justify-between">
-			{#if totalRows > rowsPerPage}
-				<Pagination {handler} />
-			{/if}
+			<div class="flex items-center justify-end space-x-2 py-4 gap-2">
+				<ExportAsCSV {table} filename="appgoblin_apps" />
+				<span class="text-xs md:text-sm text-gray-500">
+					For full client list see <a href="/about">about pricing page</a>.
+				</span>
+			</div>
 		</footer>
 	</div>
 </div>

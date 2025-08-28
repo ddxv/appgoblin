@@ -872,18 +872,6 @@ def clean_app_df(df: pd.DataFrame) -> pd.DataFrame:
 
     """
     df["store"] = df["store"].replace({1: "Google Play", 2: "Apple App Store"})
-    string_nums = [
-        "installs",
-        "review_count",
-        "rating_count",
-        "installs_d30",
-        "rating_count_d30",
-    ]
-    for col in [x for x in string_nums if x in df.columns]:
-        df[f"{col}_num"] = df[col]
-        df[col] = df[col].apply(
-            lambda x: "N/A" if (x is None or np.isnan(x)) else f"{x:,.0f}",
-        )
     df["rating"] = df["rating"].apply(lambda x: round(x, 2) if x else 0)
     ios_link = "https://apps.apple.com/us/app/-/id"
     play_link = "https://play.google.com/store/apps/details?id="

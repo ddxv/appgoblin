@@ -49,7 +49,7 @@
 					/>
 					{#if devs.google.apps.apps.length > 10}
 						<h2 class="h2 p-2">Google Apps: {devs.google.developer_name} All Apps</h2>
-						<CompanyOverviewTable entries_table={devs.google.apps.apps} />
+						<CompanyOverviewTable data={devs.google.apps.apps} isiOS={false} />
 					{/if}
 				{:else}
 					<p class="p-2">No apps found for Google Play developer or matched developer URLs.</p>
@@ -80,7 +80,7 @@
 					/>
 					{#if devs.apple.apps.apps.length > 10}
 						<h2 class="h2 p-2">Apple Apps: {devs.apple.developer_name} All Apps</h2>
-						<CompanyOverviewTable entries_table={devs.apple.apps.apps} />
+						<CompanyOverviewTable data={devs.apple.apps.apps} isiOS={true} />
 					{/if}
 				{:else}
 					<p class="p-2">No apps found for Apple developer or matched developer URLs.</p>
