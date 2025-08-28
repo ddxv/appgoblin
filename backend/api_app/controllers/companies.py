@@ -878,11 +878,37 @@ class CompaniesController(Controller):
     async def company_domains(self: Self, company_domain: str) -> dict:
         """Handle GET request for company api call countrys."""
         start = time.perf_counter() * 1000
-        df = get_company_api_call_countrys()
 
-        df = df[df["company_domain"] == company_domain]
+        df = get_company_api_call_countrys()
+        company_domain = "unity.com"
+
+        reg_df = df[df["company_domain"] == company_domain]
+        p_df = df[df["parent_company_domain"] == company_domain]
+
+        df = pd.concat([reg_df, p_df]).drop_duplicates()
+
         if df.empty:
             return []
+
+        df = (
+            df.groupby(["tld_url"])[["country", "org"]]
+            .agg(
+                country=pd.NamedAgg(column="country", aggfunc="unique"),
+                org=pd.NamedAgg(column="org", aggfunc="unique"),
+            )
+            .reset_index()
+        )
+
+        df["country"] = df["country"].apply(
+            lambda x: x.tolist() if isinstance(x, np.ndarray) else x
+        )
+        df["org"] = df["org"].apply(
+            lambda x: x.tolist() if isinstance(x, np.ndarray) else x
+        )
+
+        df["country"] = df["country"].apply(
+            lambda x: x.tolist() if isinstance(x, np.ndarray) else x
+        )
 
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(f"GET /api/companies/{company_domain}/domains took {duration}ms")

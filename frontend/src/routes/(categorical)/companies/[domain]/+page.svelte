@@ -112,15 +112,33 @@
 				{:else if myDomains && myDomains.domains && myDomains.domains.length > 1}
 					<h2 class="text-lg font-semibold mb-4">Associated Domains</h2>
 
-					<div class="flex flex-col gap-2">
+					<div class="flex flex-col gap-1">
 						{#each myDomains.domains as domain}
-							<span
-								class="text-md p-2"
-								title={`IP addresses for this domain commonly resolve to: ${domain.country}`}
-							>
-								{countryCodeToEmoji(domain.country)}
-								{domain.tld_url}
-							</span>
+							<div class="">
+								<!-- Domain URL -->
+								<div
+									class="font-semibold text-md"
+									title={`IP addresses for this domain commonly resolve to: ${domain.country.join(', ')}`}
+								>
+									<span
+										>{domain.tld_url}
+										<!-- Countries as flags -->
+										{#if domain.country.length > 0}
+											<span class="gap-2 ml-2">
+												{#each domain.country as country}
+													<span class="text-lg">{countryCodeToEmoji(country)}</span>
+												{/each}
+											</span>
+										{/if}
+									</span>
+								</div>
+								<!-- Organizations -->
+								{#if domain.org.length > 0}
+									<div class="text-sm text-gray-600">
+										<span class="text-gray-500">{domain.org.join(', ')}</span>
+									</div>
+								{/if}
+							</div>
 						{/each}
 					</div>
 				{/if}

@@ -386,7 +386,7 @@ export interface CompanyFullDetails {
 	companyDetails: CompanyCategoryOverview;
 	companyTopApps: CompanyOverviewSections;
 	companyDomains: {
-		domains: { company_domain: string; tld_url: string; country: string; org: string }[];
+		domains: { company_domain: string; tld_url: string; country: string[]; org: string[] }[];
 	};
 	companyTree: ParentCompanyTree;
 	companySdks: CompanySDKsDict;
