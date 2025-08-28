@@ -13,9 +13,6 @@
 
 	let { data }: Props = $props();
 
-	function formatNumber(num: number) {
-		return new Intl.NumberFormat('en-US').format(num);
-	}
 	const title = 'Top Mobile Ad Networks, Development Tools & MMPs | AppGoblin Free Marketing Tools';
 	const description =
 		'Explore top mobile adtech advertising networks, data trackers, MMPs, and programmatic networks based on SDK data and app-ads.txt files. Covering hundreds of companies and millions of apps all for free.';
