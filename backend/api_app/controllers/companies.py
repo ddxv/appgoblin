@@ -782,7 +782,7 @@ class CompaniesController(Controller):
 
         queried_company_name = df[(queried_domain == df["company_domain"])][
             "company_name"
-        ].tolist()[0]
+        ].tolist()
 
         if parent_company == queried_domain:
             parent_company = None

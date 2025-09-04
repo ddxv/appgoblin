@@ -1,32 +1,38 @@
-WITH mytree AS (
-    SELECT
-        c.name AS company_name,
-        ad.domain AS company_domain,
-        COALESCE(
-            parad.domain,
-            ad.domain
-        ) AS parent_company_domain,
-        COALESCE(
-            pc.name,
-            c.name,
-            ad.domain
-        ) AS parent_company_name
-    FROM
-        adtech.companies AS c
-    LEFT JOIN adtech.companies AS pc
-        ON
-            c.parent_company_id = pc.id
-    FULL OUTER JOIN ad_domains AS ad
-        ON
-            c.domain_id = ad.id
-    LEFT JOIN ad_domains AS parad
-        ON
-            pc.domain_id = parad.id
-)
-
-SELECT *
+SELECT DISTINCT
+    c.name AS company_name,
+    cad.domain AS company_domain,
+    subad.domain AS sub_domain,
+    COALESCE(
+        pc.name,
+        c.name,
+        ad.domain
+    ) AS parent_company_name,
+    COALESCE(paad.domain, cad.domain) AS parent_company_domain
 FROM
-    mytree
+    ad_domains AS ad
+LEFT JOIN adtech.company_domain_mapping AS cdm
+    ON
+        ad.id = cdm.domain_id
+LEFT JOIN adtech.companies AS c
+    ON
+        cdm.company_id = c.id
+LEFT JOIN ad_domains AS cad
+    ON
+        c.domain_id = cad.id
+LEFT JOIN adtech.companies AS pc
+    ON
+        c.parent_company_id = pc.id
+LEFT JOIN ad_domains AS paad
+    ON
+        pc.domain_id = paad.id
+LEFT JOIN adtech.company_domain_mapping AS subcdm
+    ON
+        c.id = subcdm.company_id
+LEFT JOIN ad_domains AS subad
+    ON
+        subcdm.domain_id = subad.id
 WHERE
-    company_domain = :company_domain
-    OR parent_company_domain = :company_domain;
+    ad.domain = :company_domain
+    OR
+    ad.domain = :company_domain
+    OR paad.domain = :company_domain;

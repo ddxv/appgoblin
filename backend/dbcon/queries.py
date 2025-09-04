@@ -726,6 +726,7 @@ def get_company_adstxt_ad_domain_overview(ad_domain_url: str) -> pd.DataFrame:
     return df
 
 
+@lru_cache(maxsize=1000)
 def get_company_tree(company_domain: str) -> pd.DataFrame:
     """Get a company tree with parent companies and domains."""
     logger.info(f"query company tree: {company_domain=}")

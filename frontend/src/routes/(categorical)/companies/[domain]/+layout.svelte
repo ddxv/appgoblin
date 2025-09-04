@@ -94,7 +94,7 @@
 						</h1>
 						<div class={titleDividerClass}></div>
 						<ExternalLink domain={myTree.parent_company_domain} />
-					{:else}
+					{:else if myTree.company_domain == myTree.queried_company_domain}
 						<h1 class={titleClass}>{myTree.queried_company_name} / {categoryName}</h1>
 						<div class={titleDividerClass}></div>
 						<ExternalLink domain={myTree.queried_company_domain} />
@@ -107,6 +107,22 @@
 								companyDomain={myTree.parent_company_domain}
 							/>
 						</span>
+					{:else}
+						<!-- IS SUB DOMAIN ONLY -->
+						<h1 class={titleClass}>{myTree.queried_company_domain} / {categoryName}</h1>
+						<div class={titleDividerClass}></div>
+						<ExternalLink domain={myTree.queried_company_domain} />
+						<!-- HAS PARENT COMPANY -->
+						{#if myTree.parent_company_name}
+							<div class={titleDividerClass}></div>
+							<span class="flex row">
+								<h2 class={titleSecondaryClass}>Parent Company:</h2>
+								<CompanyButton
+									companyName={myTree.parent_company_name}
+									companyDomain={myTree.parent_company_domain}
+								/>
+							</span>
+						{/if}
 					{/if}
 				{/if}
 			</div>
