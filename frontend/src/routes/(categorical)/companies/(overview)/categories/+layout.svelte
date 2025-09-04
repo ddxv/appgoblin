@@ -3,7 +3,7 @@
 
 	let { data, children } = $props();
 
-	let category_title = $derived(getCategoryName(page.params.category));
+	let category_title = $derived(getCategoryName(page.params.category || ''));
 
 	function getCategoryName(category: string) {
 		if (category) {
