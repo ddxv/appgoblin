@@ -51,6 +51,7 @@ QUERY_STORE_COLLECTION_CATEGORY_MAP = load_sql_file(
     "query_store_collection_category_map.sql",
 )
 QUERY_PARENT_COMPANIES = load_sql_file("query_parent_companies.sql")
+QUERY_COMPANY_SECONDARY_DOMAINS = load_sql_file("query_company_secondary_domains.sql")
 QUERY_CHILD_COMPANIES = load_sql_file("query_child_companies.sql")
 QUERY_COMPANY_COUNTRIES = load_sql_file("query_company_countries.sql")
 QUERY_ADTECH_CATEGORIES = load_sql_file(
@@ -64,6 +65,10 @@ QUERY_COMPANIES_TAG_TYPE_STATS = load_sql_file(
 )
 QUERY_COMPANY_TOPAPPS = load_sql_file("query_company_top_apps.sql")
 QUERY_COMPANY_TOPAPPS_PARENT = load_sql_file("query_company_top_apps_parent.sql")
+QUERY_COMPANY_TOPAPPS_SECONDARY = load_sql_file("query_company_secondary_top_apps.sql")
+QUERY_COMPANY_TOPAPPS_CATEGORY_SECONDARY = load_sql_file(
+    "query_company_secondary_top_apps_category.sql"
+)
 QUERY_COMPANY_TOPAPPS_CATEGORY = load_sql_file("query_company_top_apps_category.sql")
 QUERY_COMPANY_TOPAPPS_CATEGORY_PARENT = load_sql_file(
     "query_company_top_apps_category_parent.sql"
@@ -213,6 +218,13 @@ def get_store_collection_category_map() -> pd.DataFrame:
 def get_parent_companies() -> list[str]:
     """Get parent companies."""
     df = pd.read_sql(QUERY_PARENT_COMPANIES, con=DBCON.engine)
+    return df["domain"].tolist()
+
+
+@lru_cache(maxsize=1)
+def get_company_secondary_domains() -> list[str]:
+    """Get company secondary domains."""
+    df = pd.read_sql(QUERY_COMPANY_SECONDARY_DOMAINS, con=DBCON.engine)
     return df["domain"].tolist()
 
 
@@ -958,14 +970,19 @@ def get_topapps_for_company(
         mapped_category = "game%"
 
     parent_companies = get_parent_companies()
+    secondary_domains = get_company_secondary_domains()
     is_parent_company = company_domain in parent_companies
+    is_secondary_domain = company_domain in secondary_domains
 
     if mapped_category:
-        query = (
-            QUERY_COMPANY_TOPAPPS_CATEGORY_PARENT
-            if is_parent_company
-            else QUERY_COMPANY_TOPAPPS_CATEGORY
-        )
+        if is_secondary_domain:
+            query = QUERY_COMPANY_TOPAPPS_CATEGORY_SECONDARY
+        else:
+            query = (
+                QUERY_COMPANY_TOPAPPS_CATEGORY_PARENT
+                if is_parent_company
+                else QUERY_COMPANY_TOPAPPS_CATEGORY
+            )
         df = pd.read_sql(
             query,
             con=DBCON.engine,
@@ -976,9 +993,14 @@ def get_topapps_for_company(
             },
         )
     else:
-        query = (
-            QUERY_COMPANY_TOPAPPS_PARENT if is_parent_company else QUERY_COMPANY_TOPAPPS
-        )
+        if is_secondary_domain:
+            query = QUERY_COMPANY_TOPAPPS_SECONDARY
+        else:
+            query = (
+                QUERY_COMPANY_TOPAPPS_PARENT
+                if is_parent_company
+                else QUERY_COMPANY_TOPAPPS
+            )
         df = pd.read_sql(
             query,
             con=DBCON.engine,

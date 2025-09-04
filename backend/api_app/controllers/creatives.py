@@ -46,7 +46,8 @@ class CreativesController(Controller):
 
         """
         df = get_company_creatives(company_domain)
-        df["last_seen"] = df["last_seen"].dt.strftime("%Y-%m-%d")
+        if not df.empty:
+            df["last_seen"] = df["last_seen"].dt.strftime("%Y-%m-%d")
         return df.to_dict(orient="records")
 
     @get(path="/", cache=86400)
