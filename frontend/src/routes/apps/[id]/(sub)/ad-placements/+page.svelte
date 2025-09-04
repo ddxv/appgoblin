@@ -44,10 +44,11 @@
 </svelte:head>
 
 <div class="p-2 px-2 md:px-16 lg:px-72">
-	<h1 class="text-3xl font-bold text-primary-900-100">{data.myapp.name}: Ad Placements</h1>
+	<h1 class="text-3xl font-bold text-primary-900-100">Ad Placements for {data.myapp.name}</h1>
 	<p>
 		This is an overview of the records of ad placements advertising for {data.myapp.name}. The
-		publishing apps are the apps that were opened and where the creatives were found.
+		publishing apps are the apps that were opened and where the creatives for {data.myapp.name} were
+		found.
 	</p>
 
 	<br />
@@ -60,7 +61,10 @@
 				{#if creatives && creatives.by_publisher.length > 0}
 					<CreativesTable data={creatives.by_publisher} />
 				{:else}
-					<p>No apps found</p>
+					<p>
+						No app ad placements found. This means that AppGoblin has not found any ads that this
+						app is running in other apps.
+					</p>
 				{/if}
 			</WhiteCard>
 		</div>

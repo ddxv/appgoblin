@@ -162,23 +162,21 @@
 						</a>
 					{/if}
 
-					<a href="/categories/{myapp.category}" class="block">
-						<div class="btn preset-tonal hover:preset-tonal-primary w-full">
-							<span class="flex items-center gap-1 md:gap-2 text-xs md:text-sm">
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									class="h-5 w-5"
-									viewBox="0 0 20 20"
-									fill="currentColor"
-								>
-									<path
-										d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z"
-									/>
-								</svg>
-								Category: {getCategoryName(myapp.category)}
-							</span>
-						</div>
-					</a>
+					<div class="btn preset-tonal hover:preset-tonal-primary w-full">
+						<span class="flex items-center gap-1 md:gap-2 text-xs md:text-sm">
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								class="h-5 w-5"
+								viewBox="0 0 20 20"
+								fill="currentColor"
+							>
+								<path
+									d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z"
+								/>
+							</svg>
+							Category: {getCategoryName(myapp.category)}
+						</span>
+					</div>
 				</div>
 			</div>
 			<!-- COL 2  -->

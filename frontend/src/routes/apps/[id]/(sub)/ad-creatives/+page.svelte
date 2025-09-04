@@ -69,7 +69,10 @@
 					{/each}
 				</div>
 			{:else}
-				<p>No creatives found</p>
+				<p>
+					No ad creatives found. This means that AppGoblin has not found any ads that this app is
+					running in other apps.
+				</p>
 			{/if}
 		</WhiteCard>
 	{/await}
