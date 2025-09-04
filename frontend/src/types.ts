@@ -310,6 +310,8 @@ export interface ChildrenCompanyTree {
 }
 
 export interface ParentCompanyTree {
+	is_parent_company: boolean;
+	is_secondary_domain: boolean;
 	parent_company_name: string;
 	parent_company_domain: string;
 	queried_company_domain: string;

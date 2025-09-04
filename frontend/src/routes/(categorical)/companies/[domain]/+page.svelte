@@ -32,59 +32,62 @@
 
 <CompaniesLayout>
 	{#snippet card1()}
-		<WhiteCard>
-			{#await data.companyParentCategories}
-				<span class="text-lg">Loading...</span>
-			{:then myData}
-				{#if typeof myData == 'string'}
-					<p class="text-red-500 text-center">Failed to load company details.</p>
-				{:else if myData && myData.length > 0}
-					<WhiteCard>
-						{#snippet title()}
-							<span>Company Apps</span>
-						{/snippet}
-
-						{#await data.companyDetails}
-							<div><span>Loading...</span></div>
-						{:then detailsData}
-							<TotalsBox
-								myTotals={detailsData.categories.all}
-								myType={{ name: 'All Companies & Domains', url_slug: 'all-companies' }}
-								hideAdstxtApps={true}
-							/>
-							{#if detailsData && detailsData.adstxt_ad_domain_overview && detailsData.adstxt_ad_domain_overview.google}
-								<AdsTxtTotalsBox myTotals={detailsData.adstxt_ad_domain_overview} />
-							{/if}
-						{/await}
-					</WhiteCard>
-				{/if}
-			{:catch error}
-				<p class="text-red-500 text-center">{error.message}</p>
-			{/await}
-		</WhiteCard>
-	{/snippet}
-
-	{#snippet card2()}
-		<WhiteCard>
-			{#snippet title()}
-				<span>Apps by Category</span>
-			{/snippet}
-			<div>
+		{#if !data.companyTree.is_secondary_domain}
+			<WhiteCard>
 				{#await data.companyParentCategories}
 					<span class="text-lg">Loading...</span>
-				{:then myPieData}
-					{#if typeof myPieData == 'string'}
-						<p class="text-red-500 text-center">Failed to load parent categories.</p>
-					{:else if myPieData}
-						<CompanyCategoryPie plotData={myPieData} />
+				{:then myData}
+					{#if typeof myData == 'string'}
+						<p class="text-red-500 text-center">Failed to load company details.</p>
+					{:else if myData && myData.length > 0}
+						<WhiteCard>
+							{#snippet title()}
+								<span>Company Apps</span>
+							{/snippet}
+
+							{#await data.companyDetails}
+								<div><span>Loading...</span></div>
+							{:then detailsData}
+								<TotalsBox
+									myTotals={detailsData.categories.all}
+									myType={{ name: 'All Companies & Domains', url_slug: 'all-companies' }}
+									hideAdstxtApps={true}
+								/>
+								{#if detailsData && detailsData.adstxt_ad_domain_overview && detailsData.adstxt_ad_domain_overview.google}
+									<AdsTxtTotalsBox myTotals={detailsData.adstxt_ad_domain_overview} />
+								{/if}
+							{/await}
+						</WhiteCard>
 					{/if}
 				{:catch error}
 					<p class="text-red-500 text-center">{error.message}</p>
 				{/await}
-			</div>
-		</WhiteCard>
+			</WhiteCard>
+		{/if}
 	{/snippet}
 
+	{#snippet card2()}
+		{#if !data.companyTree.is_secondary_domain}
+			<WhiteCard>
+				{#snippet title()}
+					<span>Apps by Category</span>
+				{/snippet}
+				<div>
+					{#await data.companyParentCategories}
+						<span class="text-lg">Loading...</span>
+					{:then myPieData}
+						{#if typeof myPieData == 'string'}
+							<p class="text-red-500 text-center">Failed to load parent categories.</p>
+						{:else if myPieData}
+							<CompanyCategoryPie plotData={myPieData} />
+						{/if}
+					{:catch error}
+						<p class="text-red-500 text-center">{error.message}</p>
+					{/await}
+				</div>
+			</WhiteCard>
+		{/if}
+	{/snippet}
 	{#snippet card3()}
 		<WhiteCard>
 			{#snippet title()}
@@ -155,44 +158,46 @@
 	{/snippet}
 </CompaniesLayout>
 
-{#await data.companyCreatives}
-	<div><span>Loading...</span></div>
-{:then myCreatives}
-	{#if myCreatives && myCreatives.length > 0}
-		<WhiteCard>
-			{#snippet title()}
-				<span>Recent Advertised Creatives</span>
-			{/snippet}
-			<div class="grid grid-cols-3 gap-2 p-2">
-				{#each myCreatives as creative}
-					<div class="flex flex-row gap-2 mt-8">
-						<a href="/apps/{creative.advertiser_store_id}/ad-placements">
-							<div class="col-1">
-								<img
-									src={creative.icon_url_512}
-									alt={creative.advertiser_store_id}
-									class="w-8 md:w-16 h-auto object-cover rounded"
-									referrerpolicy="no-referrer"
-								/>
-							</div>
-						</a>
-						<div class="overvlow-y-auto">
-							<div class="grid grid-cols-2 md:grid-cols-4 gap-1">
-								<a href="/apps/{creative.advertiser_store_id}/ad-placements">
+{#if !data.companyTree.is_secondary_domain}
+	{#await data.companyCreatives}
+		<div><span>Loading...</span></div>
+	{:then myCreatives}
+		{#if myCreatives && myCreatives.length > 0}
+			<WhiteCard>
+				{#snippet title()}
+					<span>Recent Advertised Creatives</span>
+				{/snippet}
+				<div class="grid grid-cols-3 gap-2 p-2">
+					{#each myCreatives as creative}
+						<div class="flex flex-row gap-2 mt-8">
+							<a href="/apps/{creative.advertiser_store_id}/ad-placements">
+								<div class="col-1">
 									<img
-										src="https://appgoblin-data.sgp1.digitaloceanspaces.com/creatives/thumbs/{creative.md5_hash}.jpg"
-										alt=""
-										class="w-12 md:w-24 h-auto"
+										src={creative.icon_url_512}
+										alt={creative.advertiser_store_id}
+										class="w-8 md:w-16 h-auto object-cover rounded"
+										referrerpolicy="no-referrer"
 									/>
-								</a>
+								</div>
+							</a>
+							<div class="overvlow-y-auto">
+								<div class="grid grid-cols-2 md:grid-cols-4 gap-1">
+									<a href="/apps/{creative.advertiser_store_id}/ad-placements">
+										<img
+											src="https://appgoblin-data.sgp1.digitaloceanspaces.com/creatives/thumbs/{creative.md5_hash}.jpg"
+											alt=""
+											class="w-12 md:w-24 h-auto"
+										/>
+									</a>
+								</div>
 							</div>
 						</div>
-					</div>
-				{/each}
-			</div>
-		</WhiteCard>
-	{/if}
-{/await}
+					{/each}
+				</div>
+			</WhiteCard>
+		{/if}
+	{/await}
+{/if}
 
 {#await data.companyDetails}
 	<div><span>Loading...</span></div>
@@ -203,7 +208,12 @@
 		{#if typeof tableData == 'string'}
 			Failed to load company's apps.
 		{:else}
-			<CompanyTableGrid {tableData} {detailsData} category="all" />
+			<CompanyTableGrid
+				{tableData}
+				{detailsData}
+				category="all"
+				isSecondaryDomain={data.companyTree.is_secondary_domain}
+			/>
 		{/if}
 	{:catch error}
 		<p style="color: red">{error.message}</p>
@@ -224,17 +234,19 @@
 	{/if}
 {/await}
 
-<WhiteCard>
-	{#snippet title()}
-		<span>Company SDKs</span>
-	{/snippet}
-	{#await data.companySdks}
-		<span class="text-lg">Loading...</span>
-	{:then mySdks}
-		{#if typeof mySdks == 'string'}
-			<p class="text-red-500 text-center">Failed to load company SDKs.</p>
-		{:else if mySdks}
-			<CompanySDKs {mySdks} />
-		{/if}
-	{/await}
-</WhiteCard>
+{#if !data.companyTree.is_secondary_domain}
+	<WhiteCard>
+		{#snippet title()}
+			<span>Company SDKs</span>
+		{/snippet}
+		{#await data.companySdks}
+			<span class="text-lg">Loading...</span>
+		{:then mySdks}
+			{#if typeof mySdks == 'string'}
+				<p class="text-red-500 text-center">Failed to load company SDKs.</p>
+			{:else if mySdks}
+				<CompanySDKs {mySdks} />
+			{/if}
+		{/await}
+	</WhiteCard>
+{/if}

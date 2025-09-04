@@ -204,6 +204,8 @@ class ChildrenCompanyTree:
 class ParentCompanyTree:
     """A company tree with parent companies and domains."""
 
+    is_secondary_domain: bool
+    is_parent_company: bool
     parent_company_name: str | None
     parent_company_domain: str | None
     queried_company_domain: str

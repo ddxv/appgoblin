@@ -48,9 +48,13 @@ from dbcon.queries import (
     get_company_sdks,
     get_company_stats,
     get_company_tree,
+    get_company_secondary_domains,
     get_tag_source_category_totals,
     get_topapps_for_company,
     search_companies,
+    get_parent_companies,
+    get_topapps_for_company_secondary,
+    get_topapps_for_company_parent,
 )
 
 logger = get_logger(__name__)
@@ -69,10 +73,25 @@ def get_company_apps(
     category: str | None = None,
 ) -> CompanyPlatformOverview:
     """Get the overview data from the database."""
-    df = get_topapps_for_company(
-        company_domain=company_domain,
-        mapped_category=category,
-    )
+    parent_companies = get_parent_companies()
+    secondary_domains = get_company_secondary_domains()
+    is_secondary_domain = company_domain in secondary_domains
+    is_parent_company = company_domain in parent_companies
+    if is_secondary_domain:
+        df = get_topapps_for_company_secondary(
+            company_domain=company_domain,
+            mapped_category=category,
+        )
+    elif is_parent_company:
+        df = get_topapps_for_company_parent(
+            company_domain=company_domain,
+            mapped_category=category,
+        )
+    else:
+        df = get_topapps_for_company(
+            company_domain=company_domain,
+            mapped_category=category,
+        )
 
     df = df[~df["store"].isna()]
 
@@ -780,12 +799,21 @@ class CompaniesController(Controller):
         parent_company = df["parent_company_name"].tolist()[0]
         parent_company_domain = df["parent_company_domain"].tolist()[0]
 
-        queried_company_name = df[(queried_domain == df["company_domain"])][
+        queried_company_names = df[(queried_domain == df["company_domain"])][
             "company_name"
         ].tolist()
+        if len(queried_company_names) > 0:
+            queried_company_name = queried_company_names[0]
+        else:
+            queried_company_name = queried_domain
 
         if parent_company == queried_domain:
             parent_company = None
+
+        parent_companies = get_parent_companies()
+        secondary_domains = get_company_secondary_domains()
+        is_secondary_domain = queried_domain in secondary_domains
+        is_parent_company = queried_domain in parent_companies
 
         domains = (
             df[
@@ -810,6 +838,8 @@ class CompaniesController(Controller):
         )
 
         tree = ParentCompanyTree(
+            is_secondary_domain=is_secondary_domain,
+            is_parent_company=is_parent_company,
             parent_company_name=parent_company,
             parent_company_domain=parent_company_domain,
             queried_company_domain=queried_domain,

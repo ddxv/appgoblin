@@ -3,7 +3,7 @@
 	import CompanyOverviewTable from './CompanyOverviewTable.svelte';
 	import { formatNumberLocale } from '$lib/utils/formatNumber';
 
-	let { detailsData, tableData, category } = $props();
+	let { detailsData, tableData, category, isSecondaryDomain = false } = $props();
 
 	// Remove the local formatNumber function (lines 6-8)
 	// Replace all formatNumber calls with formatNumberLocale
@@ -21,16 +21,18 @@
 				<p class="text-sm md:text-lg mb-2">No Android apps found for this company.</p>
 			{/if}
 		</WhiteCard>
-		<WhiteCard>
-			{#snippet title()}
-				iOS Top Apps
-			{/snippet}
-			{#if tableData.ios.apps.length > 0}
-				<CompanyOverviewTable data={tableData.ios.apps} isiOS={true} />
-			{:else}
-				<p class="text-sm md:text-lg mb-2">No iOS apps found for this company.</p>
-			{/if}
-		</WhiteCard>
+		{#if !isSecondaryDomain}
+			<WhiteCard>
+				{#snippet title()}
+					iOS Top Apps
+				{/snippet}
+				{#if tableData.ios.apps.length > 0}
+					<CompanyOverviewTable data={tableData.ios.apps} isiOS={true} />
+				{:else}
+					<p class="text-sm md:text-lg mb-2">No iOS apps found for this company.</p>
+				{/if}
+			</WhiteCard>
+		{/if}
 	</div>
 </div>
 

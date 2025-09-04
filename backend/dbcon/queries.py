@@ -962,29 +962,18 @@ def get_single_apps_adstxt(store_id: str) -> pd.DataFrame:
     return df
 
 
-def get_topapps_for_company(
-    company_domain: str, mapped_category: str | None = None, limit: int = 10
+def get_topapps_for_company_secondary(
+    company_domain: str,
+    mapped_category: str | None = None,
+    limit: int = 10,
 ) -> pd.DataFrame:
     """Get top apps for for a company."""
     if mapped_category == "games":
         mapped_category = "game%"
 
-    parent_companies = get_parent_companies()
-    secondary_domains = get_company_secondary_domains()
-    is_parent_company = company_domain in parent_companies
-    is_secondary_domain = company_domain in secondary_domains
-
     if mapped_category:
-        if is_secondary_domain:
-            query = QUERY_COMPANY_TOPAPPS_CATEGORY_SECONDARY
-        else:
-            query = (
-                QUERY_COMPANY_TOPAPPS_CATEGORY_PARENT
-                if is_parent_company
-                else QUERY_COMPANY_TOPAPPS_CATEGORY
-            )
         df = pd.read_sql(
-            query,
+            QUERY_COMPANY_TOPAPPS_CATEGORY_SECONDARY,
             con=DBCON.engine,
             params={
                 "company_domain": company_domain,
@@ -993,16 +982,79 @@ def get_topapps_for_company(
             },
         )
     else:
-        if is_secondary_domain:
-            query = QUERY_COMPANY_TOPAPPS_SECONDARY
-        else:
-            query = (
-                QUERY_COMPANY_TOPAPPS_PARENT
-                if is_parent_company
-                else QUERY_COMPANY_TOPAPPS
-            )
         df = pd.read_sql(
-            query,
+            QUERY_COMPANY_TOPAPPS_SECONDARY,
+            con=DBCON.engine,
+            params={"company_domain": company_domain, "mylimit": limit},
+        )
+    if not df.empty:
+        df["review_count"] = 0
+        df["rating"] = 5
+        df["installs"] = 0
+        df["rating_count"] = 0
+        df = clean_app_df(df)
+        df = df.sort_values(by="rank", ascending=True)
+    return df
+
+
+def get_topapps_for_company_parent(
+    company_domain: str,
+    mapped_category: str | None = None,
+    limit: int = 10,
+) -> pd.DataFrame:
+    """Get top apps for for a company."""
+    if mapped_category == "games":
+        mapped_category = "game%"
+
+    if mapped_category:
+        df = pd.read_sql(
+            QUERY_COMPANY_TOPAPPS_CATEGORY_PARENT,
+            con=DBCON.engine,
+            params={
+                "company_domain": company_domain,
+                "mapped_category": mapped_category,
+                "mylimit": limit,
+            },
+        )
+    else:
+        df = pd.read_sql(
+            QUERY_COMPANY_TOPAPPS_PARENT,
+            con=DBCON.engine,
+            params={"company_domain": company_domain, "mylimit": limit},
+        )
+
+    if not df.empty:
+        df["review_count"] = 0
+        df["rating"] = 5
+        df["installs"] = 0
+        df["rating_count"] = 0
+        df = clean_app_df(df)
+        df = df.sort_values(by="rank", ascending=True)
+    return df
+
+
+def get_topapps_for_company(
+    company_domain: str,
+    mapped_category: str | None = None,
+    limit: int = 10,
+) -> pd.DataFrame:
+    """Get top apps for for a company."""
+    if mapped_category == "games":
+        mapped_category = "game%"
+
+    if mapped_category:
+        df = pd.read_sql(
+            QUERY_COMPANY_TOPAPPS_CATEGORY,
+            con=DBCON.engine,
+            params={
+                "company_domain": company_domain,
+                "mapped_category": mapped_category,
+                "mylimit": limit,
+            },
+        )
+    else:
+        df = pd.read_sql(
+            QUERY_COMPANY_TOPAPPS,
             con=DBCON.engine,
             params={"company_domain": company_domain, "mylimit": limit},
         )

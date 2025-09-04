@@ -11,6 +11,10 @@
 
 	let categoryName = $derived(getAppCategory(page.params.category || ''));
 
+	function getIsSecondaryDomain(myTree: any) {
+		return myTree.is_secondary_domain;
+	}
+
 	function getAppCategory(category: string) {
 		if (category) {
 			return category
@@ -87,27 +91,14 @@
 						>
 					</h1>
 				{:else if myTree.queried_company_domain}
-					{#if myTree.parent_company_domain == myTree.queried_company_domain}
+					{#if myTree.is_parent_company}
 						<!-- IS PARENT COMPANY -->
 						<h1 class={titleClass}>
 							{myTree.parent_company_name || myTree.parent_company_domain} / Category: {categoryName}
 						</h1>
 						<div class={titleDividerClass}></div>
 						<ExternalLink domain={myTree.parent_company_domain} />
-					{:else if myTree.company_domain == myTree.queried_company_domain}
-						<h1 class={titleClass}>{myTree.queried_company_name} / {categoryName}</h1>
-						<div class={titleDividerClass}></div>
-						<ExternalLink domain={myTree.queried_company_domain} />
-						<div class={titleDividerClass}></div>
-						<!-- HAS PARENT COMPANY -->
-						<span class="flex row">
-							<h2 class={titleSecondaryClass}>Parent Company:</h2>
-							<CompanyButton
-								companyName={myTree.parent_company_name}
-								companyDomain={myTree.parent_company_domain}
-							/>
-						</span>
-					{:else}
+					{:else if myTree.is_secondary_domain}
 						<!-- IS SUB DOMAIN ONLY -->
 						<h1 class={titleClass}>{myTree.queried_company_domain} / {categoryName}</h1>
 						<div class={titleDividerClass}></div>
@@ -115,6 +106,21 @@
 						<!-- HAS PARENT COMPANY -->
 						{#if myTree.parent_company_name}
 							<div class={titleDividerClass}></div>
+							<span class="flex row">
+								<h2 class={titleSecondaryClass}>Parent Company:</h2>
+								<CompanyButton
+									companyName={myTree.parent_company_name}
+									companyDomain={myTree.parent_company_domain}
+								/>
+							</span>
+						{/if}
+					{:else}
+						<h1 class={titleClass}>{myTree.queried_company_name} / {categoryName}</h1>
+						<div class={titleDividerClass}></div>
+						<ExternalLink domain={myTree.queried_company_domain} />
+						{#if myTree.parent_company_name}
+							<div class={titleDividerClass}></div>
+							<!-- HAS PARENT COMPANY -->
 							<span class="flex row">
 								<h2 class={titleSecondaryClass}>Parent Company:</h2>
 								<CompanyButton
