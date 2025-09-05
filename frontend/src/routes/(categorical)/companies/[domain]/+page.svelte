@@ -108,6 +108,13 @@
 						/>
 					{:else}
 						<!-- Render nothing if there are no child companies -->
+						{#if myTree.is_secondary_domain}
+							<p class="text-red-200 text-center">
+								This domain is not associated with any other companies yet. If you have information
+								about this domain and related SDKs feel free to reach out. Or if you would like this
+								domain and related SDKs mapped please contact us.
+							</p>
+						{/if}
 					{/if}
 				{:catch error}
 					<p class="text-red-500 text-center">{error.message}</p>

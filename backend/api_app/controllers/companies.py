@@ -46,15 +46,15 @@ from dbcon.queries import (
     get_company_countries,
     get_company_open_source,
     get_company_sdks,
+    get_company_secondary_domains,
     get_company_stats,
     get_company_tree,
-    get_company_secondary_domains,
+    get_parent_companies,
     get_tag_source_category_totals,
     get_topapps_for_company,
-    search_companies,
-    get_parent_companies,
-    get_topapps_for_company_secondary,
     get_topapps_for_company_parent,
+    get_topapps_for_company_secondary,
+    search_companies,
 )
 
 logger = get_logger(__name__)
@@ -795,6 +795,18 @@ class CompaniesController(Controller):
         start = time.perf_counter() * 1000
 
         df = get_company_tree(company_domain=queried_domain)
+
+        if df.empty:
+            return ParentCompanyTree(
+                is_secondary_domain=True,
+                is_parent_company=False,
+                parent_company_name=None,
+                parent_company_domain=None,
+                queried_company_domain=queried_domain,
+                queried_company_name=queried_domain,
+                domains=[],
+                children_companies=[],
+            )
 
         parent_company = df["parent_company_name"].tolist()[0]
         parent_company_domain = df["parent_company_domain"].tolist()[0]
