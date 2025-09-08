@@ -2,8 +2,7 @@
 	import {
 		storeIDLookup,
 		collectionIDLookup,
-		categoryIDLookup,
-		countries
+		categoryIDLookup
 	} from '../../../../../../../../../../stores.js';
 
 	import type { StoreCategoryRanks } from '../../../../../../../../../../types.js';
@@ -11,6 +10,7 @@
 	import { page } from '$app/state';
 	import RankChart from '$lib/RankChart.svelte';
 	import AppRankTable from '$lib/AppRankTable.svelte';
+	import { countryCodeToEmoji } from '$lib/utils/countryCodeToEmoji';
 	interface Props {
 		data: StoreCategoryRanks;
 	}
@@ -22,14 +22,6 @@
 	let category = $derived(+page.params.category);
 
 	let country = $state(page.params.country || 'US');
-
-	function countryCodeToEmoji(code: string): string {
-		return code
-			.toUpperCase()
-			.split('')
-			.map((char) => String.fromCodePoint(char.charCodeAt(0) + 127397))
-			.join('');
-	}
 
 	const title = `Top App Rankings: Android & iOS | Free ASO Tools | AppGoblin`;
 	const description = `Top ranked Android and iOS Apps. Explore apps and games that are at the top of the app store charts. Sort by category and view historical data all for free. Get valuable ASO insights for your app strategy with AppGoblin.`;
@@ -101,7 +93,7 @@
 					window.location.href = newUrl;
 				}}
 			>
-				{#each Object.entries(countries) as [key, value]}
+				{#each Object.entries(data.countries) as [key, value]}
 					<option value={key}>{countryCodeToEmoji(key)} {value}</option>
 				{/each}
 			</select>

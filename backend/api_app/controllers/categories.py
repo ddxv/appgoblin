@@ -12,7 +12,11 @@ from litestar.config.response_cache import CACHE_FOREVER
 
 from api_app.models import AppGroup, CategoriesOverview, Category
 from config import get_logger
-from dbcon.queries import get_appstore_categories, get_category_top_apps_by_installs
+from dbcon.queries import (
+    get_appstore_categories,
+    get_category_top_apps_by_installs,
+    get_country_map,
+)
 
 logger = get_logger(__name__)
 
@@ -56,6 +60,13 @@ class CategoryController(Controller):
     """App Store Categories API."""
 
     path = "/api/categories"
+
+    @get(path="/countries", cache=CACHE_FOREVER)
+    async def get_countries(self: Self) -> dict:
+        """Handle GET request for all countries."""
+        df = get_country_map()
+        country_dict = df.set_index("alpha2")["langen"].to_dict()
+        return country_dict
 
     @get(path="/", cache=CACHE_FOREVER)
     async def get_categories_overview(self: Self) -> CategoriesOverview:

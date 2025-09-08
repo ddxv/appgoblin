@@ -19,6 +19,7 @@
 	import { Shield, Eye } from 'lucide-svelte';
 
 	import { formatNumber } from '$lib/utils/formatNumber';
+	import { countryCodeToEmoji } from '$lib/utils/countryCodeToEmoji';
 
 	type DataTableProps<CompaniesOverviewEntries, TValue> = {
 		data: CompaniesOverviewEntries[];
@@ -208,14 +209,6 @@
 			}
 		}
 		return '';
-	}
-
-	function countryCodeToEmoji(code: string): string {
-		return code
-			.toUpperCase()
-			.split('')
-			.map((char) => String.fromCodePoint(char.charCodeAt(0) + 127397))
-			.join('');
 	}
 </script>
 

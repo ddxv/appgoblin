@@ -12,22 +12,12 @@
 	import CompanySDKs from '$lib/CompanySDKs.svelte';
 	import WhiteCard from '$lib/WhiteCard.svelte';
 	import CompaniesLayout from '../../../../lib/CompaniesLayout.svelte';
+	import { countryCodeToEmoji } from '$lib/utils/countryCodeToEmoji';
 	interface Props {
 		data: CompanyFullDetails;
 	}
 
 	let { data }: Props = $props();
-
-	function countryCodeToEmoji(code: string): string {
-		if (!code) return '';
-		return (
-			code
-				.toUpperCase()
-				.split('')
-				.map((char) => String.fromCodePoint(char.charCodeAt(0) + 127397))
-				.join('') || ''
-		);
-	}
 </script>
 
 <CompaniesLayout>

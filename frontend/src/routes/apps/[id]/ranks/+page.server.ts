@@ -27,7 +27,8 @@ function checkStatus(resp: Response, name: string) {
 	}
 }
 
-export const load: PageServerLoad = async ({ params, url }) => {
+export const load: PageServerLoad = async ({ params, url, parent }) => {
+	const { countries } = await parent();
 	const id = params.id;
 	const country = url.searchParams.get('country') || 'US';
 
@@ -43,6 +44,7 @@ export const load: PageServerLoad = async ({ params, url }) => {
 
 	return {
 		myranks: myranks(),
-		myranksOverview: myranksOverview()
+		myranksOverview: myranksOverview(),
+		countries: countries
 	};
 };

@@ -4,12 +4,14 @@ import type { ServerInit } from '@sveltejs/kit';
 let appCats: any[] = [];
 let appsOverview: any = {};
 let companyTypes: any[] = [];
+let countries: any[] = [];
 
 export const init: ServerInit = async () => {
-	[appCats, appsOverview, companyTypes] = await Promise.all([
+	[appCats, appsOverview, companyTypes, countries] = await Promise.all([
 		fetch(`http://localhost:8000/api/categories`).then((res) => res.json()),
 		fetch(`http://localhost:8000/api/apps/overview`).then((res) => res.json()),
-		fetch(`http://localhost:8000/api/companies/types`).then((res) => res.json())
+		fetch(`http://localhost:8000/api/companies/types`).then((res) => res.json()),
+		fetch(`http://localhost:8000/api/categories/countries`).then((res) => res.json())
 	]);
 	console.log('Data initialized on server start');
 };
@@ -17,7 +19,8 @@ export const init: ServerInit = async () => {
 export const getCachedData = () => ({
 	appCats,
 	appsOverview,
-	companyTypes
+	companyTypes,
+	countries
 });
 
 export const handle: Handle = async ({ event, resolve }) => {

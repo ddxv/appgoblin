@@ -3,7 +3,8 @@ export const csr: boolean = true;
 
 import type { PageServerLoad } from '../$types.js';
 
-export const load: PageServerLoad = async ({ params, setHeaders }) => {
+export const load: PageServerLoad = async ({ params, setHeaders, parent }) => {
+	const { countries } = await parent();
 	const emptyResponse = {};
 	setHeaders({
 		'cache-control': 'max-age=3600'
@@ -21,7 +22,8 @@ export const load: PageServerLoad = async ({ params, setHeaders }) => {
 
 		return {
 			ranks: res.then((resp) => resp.json()),
-			history: history.then((resp) => resp.json())
+			history: history.then((resp) => resp.json()),
+			countries: countries
 		};
 	} catch (error) {
 		console.error('Failed to load app data:', error);

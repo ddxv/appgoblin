@@ -148,6 +148,7 @@ export interface RankedAppList {
 
 export interface StoreCategoryRanks {
 	ranks: Promise<{ ranks: RankedApps[] }>;
+	countries: { [key: string]: string };
 	status?: number;
 	error?: string;
 	history: Promise<{ history: RankedApps[] }>;
@@ -445,6 +446,7 @@ export interface AppFullDetails {
 	myapp: AppFullDetail;
 	companyTypes: CompanyTypes;
 	appCats: CatData;
+	countries: { [key: string]: string };
 	status?: number;
 	error?: string;
 	myranks: Promise<{ history: AppRankDetail[]; countries: string[] }>;

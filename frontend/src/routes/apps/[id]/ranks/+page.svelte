@@ -2,15 +2,16 @@
 	import { goto } from '$app/navigation';
 	import type { AppFullDetails } from '../../../../types';
 	import RankChart from '$lib/RankChart.svelte';
+	import { countryCodeToEmoji } from '$lib/utils/countryCodeToEmoji';
+
 	interface Props {
 		data: AppFullDetails;
 	}
 	import { page } from '$app/state';
-	import { countries } from '../../../../stores.js';
 	let { data }: Props = $props();
 
 	let country = $state(page.url.searchParams.get('country'));
-	let countryTitle = $derived(countries[country as keyof typeof countries]);
+	let countryTitle = $derived(data.countries[country as keyof typeof data.countries]);
 
 	function updateCountry(newCountry: string) {
 		country = newCountry;
@@ -45,7 +46,8 @@
 							#{myrow.best_rank}
 							in: {myrow.collection}
 							{myrow.category}
-							({myrow.country})
+							({countryCodeToEmoji(myrow.country)}
+							{data.countries[myrow.country as keyof typeof data.countries]})
 						</div>
 					{/each}
 					{#if ranks.best_ranks.length > 10}
@@ -60,26 +62,26 @@
 		</div>
 		<div class="">
 			<h4 class="h4 md:h3 p-2 mt-2">App Store Ranks: {countryTitle}</h4>
-			{#await data.myranksOverview}
-				Loading app ranks...
-			{:then ranks}
+			{#await data.myranksOverview then ranks}
 				<div class="max-w-sm">
 					<p class="p-2">Breakdown App Store Ranks by Country</p>
 					<select
-						class="select"
+						class="select p-1 md:p-2 m-2"
 						bind:value={country}
 						onchange={(e) => updateCountry(e.currentTarget.value)}
 					>
 						{#if typeof ranks != 'string' && ranks.countries && ranks.countries.length > 0}
 							{#each ranks.countries as countryCode}
 								<option value={countryCode}
-									>{countries[countryCode as keyof typeof countries]}</option
+									>{countryCodeToEmoji(countryCode)}
+									{data.countries[countryCode as keyof typeof data.countries]}</option
 								>
 							{/each}
 						{:else}
-							{#each Object.keys(countries) as countryCode}
+							{#each Object.keys(data.countries) as countryCode}
 								<option value={countryCode}
-									>{countries[countryCode as keyof typeof countries]}</option
+									>{countryCodeToEmoji(countryCode)}
+									{data.countries[countryCode as keyof typeof data.countries]}</option
 								>
 							{/each}
 						{/if}
