@@ -3,12 +3,16 @@
 	import IconDownload from '$lib/svg/IconDownload.svelte';
 	import Star from './Star.svelte';
 	import { formatNumber } from '$lib/utils/formatNumber';
+
 	import type { AppFullDetail } from '../types';
 	interface Props {
 		app: AppFullDetail;
 	}
 
 	let { app }: Props = $props();
+
+	let app_install_estimate_min = $derived(app.rating_count * 50);
+	let app_install_estimate_max = $derived(app.rating_count * 100);
 
 	// Remove the local formatNumber function (lines 11-16)
 </script>
@@ -18,17 +22,17 @@
 		class="grid grid-cols-2 md:grid-cols-1 p-0 md:p-2 text-primary-900-100 text-xl gap-0 md:gap-4"
 	>
 		<div class="items-center">
-			{#if app.installs != '0' && app.installs != 'N/A'}
+			{#if app.installs && app.installs != 0}
 				<div class="flex items-center gap-2">
 					<IconDownload />
-					<span class="font-medium">{app.installs}</span>
+					<span class="font-medium">{formatNumber(app.installs)}</span> installs
 				</div>
-			{:else if app.rating_count != '0' && app.rating_count != 'N/A'}
+			{:else if app.rating_count != 0}
 				<div class="flex items-center">
 					<IconDownload />
 					<span class="font-medium">
-						~{formatNumber(Number(app.rating_count.replace(/,/g, '')) * 50)}
-						- {formatNumber(Number(app.rating_count.replace(/,/g, '')) * 100)}</span
+						~{formatNumber(app_install_estimate_min)}
+						- {formatNumber(app_install_estimate_max)}</span
 					>
 				</div>
 			{:else}
@@ -36,10 +40,10 @@
 			{/if}
 		</div>
 
-		{#if app.rating_count != '0' && app.rating_count != 'N/A'}
+		{#if app.rating_count != 0}
 			<div class="flex items-center gap-2">
 				<Star />
-				<span class="font-medium"> {app.rating_count}</span>
+				<span class="font-medium"> {formatNumber(app.rating_count)}</span> ratings
 			</div>
 		{:else}
 			<span class="text-primary-600-400">Ratings not yet available</span>
@@ -91,11 +95,11 @@
 		{/if}
 
 		<!-- ratings week trend -->
-		{#if app.installs == 'N/A'}
+		{#if !app.installs && app.rating_count}
 			{#if app.ratings_sum_1w > 0}
 				<div class="flex items-center gap-1 text-primary-800-200">
-					<span>+{formatNumber(app.ratings_sum_1w)}</span>
-					<span class="text-primary-600-400 text-sm md:text-base">(week)</span>
+					<span>~{formatNumber(app.ratings_sum_1w * 50)}</span>
+					<span class="text-primary-600-400 text-sm md:text-base">(installs week)</span>
 					{#if app.ratings_z_score_2w > 1}
 						<div class="flex items-center gap-1 text-success-900-100">
 							<TrendingUpIcon />
@@ -114,8 +118,8 @@
 			<!-- ratings month trend -->
 			{#if app.ratings_sum_4w > 0}
 				<div class="flex items-center gap-1 text-primary-800-200">
-					<span>+{formatNumber(app.ratings_sum_4w)}</span>
-					<span class="text-primary-600-400 text-sm md:text-base">(month)</span>
+					<span>~{formatNumber(app.ratings_sum_4w * 50)}</span>
+					<span class="text-primary-600-400 text-sm md:text-base">(installs month)</span>
 					{#if app.ratings_z_score_4w > 1}
 						<div class="flex items-center gap-1 text-success-900-100">
 							<TrendingUpIcon />

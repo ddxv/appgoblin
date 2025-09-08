@@ -497,7 +497,7 @@ export interface CompaniesLayoutResponse {
 export interface AppFullDetail {
 	icon_url_512?: string;
 	name: string;
-	installs?: string;
+	installs?: number;
 	store_id: string;
 	id: number;
 	developer_id?: string;
@@ -507,8 +507,8 @@ export interface AppFullDetail {
 	developer_url?: string;
 	updated_at: string;
 	rating?: number;
-	rating_count: string;
-	review_count: string;
+	rating_count: number;
+	review_count: number;
 	installs_sum_1w: number;
 	installs_sum_4w: number;
 	ratings_sum_1w: number;

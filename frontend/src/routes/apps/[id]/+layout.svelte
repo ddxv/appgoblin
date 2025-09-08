@@ -3,6 +3,9 @@
 	import RatingInstallsLarge from '$lib/RatingInstallsLarge.svelte';
 	import StarsRating from '$lib/StarsRating.svelte';
 	import type { CompanyTypes, AppFullDetail, CatData } from '../../../types';
+	import AvailableOniOs from '$lib/svg/AvailableOniOS.svelte';
+	import AppTabs from '$lib/utils/AppTabs.svelte';
+
 	let {
 		data,
 		children
@@ -15,12 +18,8 @@
 		children: any;
 	} = $props();
 
-	import AvailableOniOs from '$lib/svg/AvailableOniOS.svelte';
-
-	import AppTabs from '$lib/utils/AppTabs.svelte';
-
 	function isAndroid() {
-		return !/^\d+$/.test(page.params.id);
+		return !/^\d+$/.test(page.params.id!);
 	}
 
 	let isAndroidApp = $derived(isAndroid());
@@ -181,7 +180,7 @@
 			</div>
 			<!-- COL 2  -->
 			<div>
-				{#if myapp.installs}
+				{#if myapp.installs || myapp.rating_count}
 					<RatingInstallsLarge app={myapp} />
 				{/if}
 			</div>
