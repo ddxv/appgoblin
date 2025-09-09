@@ -1,12 +1,11 @@
-# AppGoblin Analytics Dashboard for Mobile App Ecosystem
+# AppGoblin Free App Analytics & SDK Analysis
 
-Visit [AppGoblin](https://appgoblin.info) for free app marketing aso tools, app analytics and ad tech company analysis for over 4 million apps.
+[AppGoblin is a site for free app marketing aso tools, iOS and Android SDK analysis and ad tech company analysis for over 4 million apps](https://appgoblin.info).  This repo is the frontend and backend of [AppGoblin](https://appgoblin.info) website itself. The data is crawled by [ddxv/adscrawler](https://github.com/ddxv/adscrawler).
 
 [<img src="/frontend/static/appgoblin_screenshot.png" width="500"/>](/frontend/static/appgoblin_screenshot.png)
 
-This is the code used to create [AppGoblin](https://appgoblin.info) for tracking app store ranks, app marketing keyword analysis, adtech SDKs, trackers and other mobile app companies.  Please don't hesitate to reach out if you have any questions or suggestions, Discord below.
 
-## Features
+## AppGoblin Features
 
 - **[App Intelligence](https://appgoblin.info/)**: AppGoblin has data on over 4 million iOS and Android apps with more added daily.
   - Keywords: Track your or competitors' keywords and the top apps associated with those keywords
@@ -27,13 +26,6 @@ This is the code used to create [AppGoblin](https://appgoblin.info) for tracking
 1.  Python Litestar backend API found in `backend/`
 2.  Javascript SvelteKit+Tailwind UI found in `frontend/`
 
-### Data & Database
-
-The database referred to in this repository is created by [adscrawler](https://github.com/ddxv/adscrawler), a crawler for scraping the Google & Apple play stores and storing that to a PostgreSQL database. That repo also contains a number of materialized views prepping data for the dashboard. It generally would be difficult to recreate it as it's only ever been managed by me the original creator, but I'm open to sharing data if you have something you need.
-
-### API Service
-
-`litestar run --debug` to start API. Once run, api documentation can be found at `api/docs`
 
 ### Setup
 
@@ -48,7 +40,7 @@ The database referred to in this repository is created by [adscrawler](https://g
 - This repo includes the scripts used to run in production as well. These are located in the steps in `.github/actions` as well as `scripts` for systemd services for frontend and backend.
 - Additionally, you will need a proxy. I used Nginx. This is wherever you have your nginx configuration set, possibly sites-available `/etc/nginx/sites-available/appgoblin-api` or `/etc/nginx/conf.d/appgoblin-api.conf`
 
-### AppGoblin Community
+## AppGoblin Community
 
 **Have questions or suggestions? Let's connect!**
 
