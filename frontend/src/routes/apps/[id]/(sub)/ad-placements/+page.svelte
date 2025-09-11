@@ -6,34 +6,38 @@
 
 <svelte:head>
 	<!-- Title -->
-	<title>Ad Creatives - AppGoblin</title>
+	<title>{data.myapp.name} Ad Creatives</title>
 
 	<!-- Standard meta tags -->
 	<meta
 		name="description"
-		content="Explore ad creatives, competitor analytics, and more on AppGoblin. Discover mobile advertising trends and creative strategies."
+		content="Explore {data.myapp
+			.name} ad creatives used to aquire new users on ad networks and their publisher apps."
 	/>
 	<meta
 		name="keywords"
-		content="ad creatives, mobile advertising, app marketing, advertising insights, competitor analytics, AppGoblin"
+		content="{data.myapp
+			.name}, ad creatives, mobile advertising, app marketing, advertising insights, competitor analytics, AppGoblin"
 	/>
 
 	<!-- Open Graph meta tags -->
-	<meta property="og:title" content="Ad Creatives - AppGoblin" />
+	<meta property="og:title" content="{data.myapp.name} Ad Creatives - AppGoblin" />
 	<meta
 		property="og:description"
-		content="Explore ad creatives and advertising insights on AppGoblin."
+		content="Explore {data.myapp
+			.name} ad creatives used to aquire new users on ad networks and their publisher apps."
 	/>
 	<meta property="og:image" content="https://appgoblin.info/goblin_purple_hat_250.png" />
-	<meta property="og:url" content="https://appgoblin.info/ad-creatives" />
+	<meta property="og:url" content="https://appgoblin.info/apps/{data.myapp.id}/ad-creatives" />
 	<meta property="og:type" content="website" />
 
 	<!-- Twitter Card meta tags -->
 	<meta name="twitter:card" content="summary_large_image" />
-	<meta name="twitter:title" content="Ad Creatives - AppGoblin" />
+	<meta name="twitter:title" content="{data.myapp.name} Ad Creatives - AppGoblin" />
 	<meta
 		name="twitter:description"
-		content="Explore ad creatives and advertising insights on AppGoblin."
+		content="Explore {data.myapp
+			.name} ad creatives used to aquire new users on ad networks and their publisher apps."
 	/>
 	<meta name="twitter:image" content="https://appgoblin.info/goblin_purple_hat_250.png" />
 
@@ -58,7 +62,7 @@
 		<div class="card preset-tonal p-2 md:p-8 mt-2 md:mt-4">
 			<WhiteCard>
 				{#if creatives && creatives.by_publisher.length > 0}
-					<CreativesTable data={creatives.by_publisher} />
+					<CreativesTable data={creatives.by_publisher} is_monetization={false} />
 				{:else}
 					<p>
 						No app ad placements found. This means that AppGoblin has not found any ads that this

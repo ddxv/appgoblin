@@ -1,3 +1,6 @@
+WITH has_monetized_creatives AS (
+-- TODO: move this to store_apps_overview MV
+SELECT DISTINCT 1 AS admon_count, pub_store_id FROM frontend.advertiser_creatives)
 SELECT
     id,
     name,
@@ -45,8 +48,10 @@ SELECT
     api_last_crawled,
     run_result AS api_crawl_result,
     api_successful_last_crawled,
-    COALESCE(ad_creative_count, 0) AS ad_creative_count
+    COALESCE(ad_creative_count, 0) AS ad_creative_count,
+    COALESCE(hmc.admon_count, 0) AS ad_monetized_creative_count
 FROM
-    frontend.store_apps_overview
+    frontend.store_apps_overview AS sa
+LEFT JOIN has_monetized_creatives hmc ON sa.store_id = hmc.pub_store_id 
 WHERE
     store_id = :store_id;

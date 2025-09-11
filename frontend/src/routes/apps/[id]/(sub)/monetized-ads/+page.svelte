@@ -6,26 +6,28 @@
 
 <svelte:head>
 	<!-- Title -->
-	<title>Ad Creatives - AppGoblin</title>
+	<title>{data.myapp.name} Ad Monetized Creatives</title>
 
 	<!-- Standard meta tags -->
 	<meta
 		name="description"
-		content="Explore ad creatives, competitor analytics, and more on AppGoblin. Discover mobile advertising trends and creative strategies."
+		content="Explore the ad creatives used shown by {data.myapp
+			.name} for app monetization from the mobile app ad networks they work with."
 	/>
 	<meta
 		name="keywords"
-		content="ad creatives, mobile advertising, app marketing, advertising insights, competitor analytics, AppGoblin"
+		content="app monetization, ad creatives, mobile advertising, app marketing, advertising insights, competitor analytics, AppGoblin"
 	/>
 
 	<!-- Open Graph meta tags -->
-	<meta property="og:title" content="Ad Creatives - AppGoblin" />
+	<meta property="og:title" content="{data.myapp.name} Ad Monetized Creatives - AppGoblin" />
 	<meta
 		property="og:description"
-		content="Explore ad creatives and advertising insights on AppGoblin."
+		content="Explore the ad creatives used shown by {data.myapp
+			.name} for app monetization from the mobile app ad networks they work with."
 	/>
 	<meta property="og:image" content="https://appgoblin.info/goblin_purple_hat_250.png" />
-	<meta property="og:url" content="https://appgoblin.info/ad-creatives" />
+	<meta property="og:url" content="https://appgoblin.info/apps/{data.myapp.id}/monetized-ads" />
 	<meta property="og:type" content="website" />
 
 	<!-- Twitter Card meta tags -->
@@ -40,11 +42,13 @@
 	<!-- Additional meta tags -->
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	<meta name="robots" content="index, follow" />
-	<link rel="canonical" href="https://appgoblin.info/apps/{data.myapp.id}/ad-placements" />
+	<link rel="canonical" href="https://appgoblin.info/apps/{data.myapp.id}/monetized-ads" />
 </svelte:head>
 
-<div class="p-2 px-2 md:px-16 lg:px-72">
-	<h1 class="text-3xl font-bold text-primary-900-100">Ad Placements for {data.myapp.name}</h1>
+<div class="p-2 px-2 md:px-8 lg:px-16">
+	<h1 class="text-3xl font-bold text-primary-900-100">
+		Monetized Ad Creatives shown by {data.myapp.name}
+	</h1>
 	<p>
 		These are ad creatives used for monetization by {data.myapp.name}. The advertiser apps are the
 		apps paid for the creatives.

@@ -22,6 +22,7 @@
 
 	type DataTableProps<RankedApps, TValue> = {
 		data: RankedApps[];
+		is_monetization: boolean;
 	};
 
 	let pagination = $state<PaginationState>({ pageIndex: 0, pageSize: 20 });
@@ -47,8 +48,8 @@
 		},
 
 		{
-			title: data.is_monetization ? 'Publisher' : 'Advertiser',
-			accessorKey: data.is_monetization ? 'pub_name' : 'adv_name',
+			title: is_monetization ? 'Publisher' : 'Advertiser',
+			accessorKey: is_monetization ? 'pub_name' : 'adv_name',
 			isSortable: true
 		},
 
