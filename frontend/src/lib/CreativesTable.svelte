@@ -32,7 +32,7 @@
 
 	let globalFilter = $state<string>('');
 
-	let { data }: DataTableProps<RankedApps, TValue> = $props();
+	let { data, is_monetization = false }: DataTableProps<RankedApps, TValue> = $props();
 
 	const columns = genericColumns([
 		{
@@ -47,8 +47,8 @@
 		},
 
 		{
-			title: 'Publisher',
-			accessorKey: 'pub_name',
+			title: data.is_monetization ? 'Publisher' : 'Advertiser',
+			accessorKey: data.is_monetization ? 'pub_name' : 'adv_name',
 			isSortable: true
 		},
 
@@ -77,7 +77,9 @@
 	]);
 
 	const globalFilterFn = (row: any, columnId: string, filterValue: string) => {
-		const name = row.original.pub_name?.toLowerCase() ?? '';
+		const name = is_monetization
+			? row.original.adv_name?.toLowerCase()
+			: (row.original.pub_name?.toLowerCase() ?? '');
 		const query = filterValue.toLowerCase();
 		return name.includes(query);
 	};
@@ -194,16 +196,24 @@
 
 						<td>{row.original.file_extension}</td>
 						<td>
-							<a href="/apps/{row.original.pub_store_id}">
+							<a
+								href="/apps/{is_monetization
+									? row.original.adv_store_id
+									: row.original.pub_store_id}"
+							>
 								<div class="col-1 items-center">
 									<img
-										src={row.original.pub_icon_url_512}
-										alt={row.original.pub_name}
+										src={is_monetization
+											? row.original.adv_icon_url_512
+											: row.original.pub_icon_url_512}
+										alt={is_monetization ? row.original.adv_name : row.original.pub_name}
 										width="200"
 										class="w-12 md:w-24 h-auto object-cover rounded"
 										referrerpolicy="no-referrer"
 									/>
-									<h3 class="p-2">{row.original.pub_name}</h3>
+									<h3 class="p-2">
+										{is_monetization ? row.original.adv_name : row.original.pub_name}
+									</h3>
 								</div>
 							</a>
 						</td>

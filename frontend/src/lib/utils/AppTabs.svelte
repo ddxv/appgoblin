@@ -49,6 +49,11 @@
 							name: 'Ad Placements',
 							url_slug: 'ad-placements',
 							icon: Image
+						},
+						{
+							name: 'Monetized Ad Creatives',
+							url_slug: 'monetized-ads',
+							icon: Image
 						}
 					]
 				: []),

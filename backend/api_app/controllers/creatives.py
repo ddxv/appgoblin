@@ -63,8 +63,68 @@ class CreativesController(Controller):
         df["last_seen"] = df["last_seen"].dt.strftime("%Y-%m-%d")
         return df.to_dict(orient="records")
 
-    @get(path="/apps/{store_id: str}", cache=86400)
-    async def get_advertiser_creatives(self: Self, store_id: str) -> dict:
+    @get(path="/apps/{store_id: str}/monetized", cache=86400)
+    async def monetized_creatives(self: Self, store_id: str) -> dict:
+        """Handle GET request for a list of creatives used for monetization by an app.
+
+        Returns
+        -------
+            A dictionary representation of the total counts
+
+        """
+        df = get_advertiser_creatives(pub_store_id=store_id)
+        if not df.empty:
+            df["run_at"] = df["run_at"].dt.strftime("%Y-%m-%d")
+        pdf = (
+            df.groupby(
+                [
+                    "run_at",
+                    "adv_name",
+                    "adv_store_id",
+                    "host_domain",
+                    "host_domain_company_domain",
+                    "host_domain_company_name",
+                    "ad_domain",
+                    "ad_domain_company_domain",
+                    "ad_domain_company_name",
+                    "vhash",
+                    "file_extension",
+                    "adv_icon_url_512",
+                    "mmp_name",
+                    "mmp_domain",
+                ],
+                dropna=False,
+            )[["md5_hash", "additional_ad_domain_urls", "mmp_urls"]]
+            .agg(
+                {
+                    "md5_hash": "first",
+                    "additional_ad_domain_urls": lambda x: list(
+                        set([item for sublist in x for item in sublist])
+                    ),
+                    "mmp_urls": lambda x: list(
+                        set([item for sublist in x for item in sublist])
+                    ),
+                }
+            )
+            .reset_index()
+        )
+        cdf = (
+            df.groupby(
+                [
+                    "vhash",
+                    "file_extension",
+                ]
+            )[["md5_hash"]]
+            .first()
+            .reset_index()
+        )
+        return {
+            "by_publisher": pdf.to_dict(orient="records"),
+            "by_creative": cdf.to_dict(orient="records"),
+        }
+
+    @get(path="/apps/{store_id: str}/ads", cache=86400)
+    async def advertiser_creatives(self: Self, store_id: str) -> dict:
         """Handle GET request for a list of creatives for an app.
 
         Returns
@@ -72,7 +132,7 @@ class CreativesController(Controller):
             A dictionary representation of the total counts
 
         """
-        df = get_advertiser_creatives(store_id)
+        df = get_advertiser_creatives(advertiser_store_id=store_id)
         if not df.empty:
             df["run_at"] = df["run_at"].dt.strftime("%Y-%m-%d")
         pdf = (
@@ -123,7 +183,7 @@ class CreativesController(Controller):
             "by_creative": cdf.to_dict(orient="records"),
         }
 
-    @get(path="/apps/{store_id: str}/{vhash: str}", cache=86400)
+    @get(path="/apps/{store_id: str}/ads/{vhash: str}", cache=86400)
     async def get_advertiser_creative_records(
         self: Self, store_id: str, vhash: str
     ) -> dict:
@@ -134,7 +194,7 @@ class CreativesController(Controller):
             A dictionary representation of the total counts
 
         """
-        df = get_advertiser_creatives(store_id)
+        df = get_advertiser_creatives(advertiser_store_id=store_id)
         df["run_at"] = df["run_at"].dt.strftime("%Y-%m-%d")
         df = df[df["vhash"] == vhash]
         pdf = (

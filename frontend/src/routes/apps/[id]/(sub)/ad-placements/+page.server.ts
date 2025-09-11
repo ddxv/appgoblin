@@ -18,7 +18,7 @@ export const load: PageServerLoad = async ({ parent, params }) => {
 	const { myapp } = await parent();
 	const id = params.id;
 	const creatives = async () => {
-		const resp = await fetch(`http://localhost:8000/api/creatives/apps/${id}`);
+		const resp = await fetch(`http://localhost:8000/api/creatives/apps/${id}/ads`);
 		return checkStatus(resp, 'Creatives');
 	};
 
