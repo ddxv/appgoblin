@@ -32,20 +32,20 @@
 
 	{#if Number(values.android) > 0 || values.name == 'Games'}
 		<div class="justify-end mr-2 md:mr-5">
-			<IconGoogle size="10" />
+			<IconGoogle size="16" />
 		</div>
 	{:else}
 		<div class="opacity-20 justify-end mr-2 md:mr-5">
-			<IconGoogle size="10" />
+			<IconGoogle size="16" />
 		</div>
 	{/if}
 	{#if Number(values.ios) > 0}
 		<div class="justify-end mr-2 md:mr-5">
-			<IconiOS size="10" />
+			<IconiOS size="16" />
 		</div>
 	{:else}
 		<div class="opacity-20 justify-end mr-2 md:mr-5">
-			<IconiOS size="10" />
+			<IconiOS size="16" />
 		</div>
 	{/if}
 </div>

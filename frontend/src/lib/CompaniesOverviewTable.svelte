@@ -310,7 +310,6 @@
 									class="flex items-center justify-center gap-1 text-gray-500"
 									title="Unknown tracking status"
 								>
-									<HelpCircle class="w-4 h-4" />
 									<span class="text-xs font-medium">Unknown</span>
 								</div>
 							{/if}

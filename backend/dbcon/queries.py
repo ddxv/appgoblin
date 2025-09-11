@@ -257,9 +257,21 @@ def get_total_counts() -> pd.DataFrame:
     return df
 
 
-def get_advertiser_creatives(store_id: str) -> pd.DataFrame:
+def get_advertiser_creatives(
+    advertiser_store_id: str | None = None, pub_store_id: str | None = None
+) -> pd.DataFrame:
     """Get creatives."""
-    df = pd.read_sql(QUERY_CREATIVES, con=DBCON.engine, params={"store_id": store_id})
+    if not advertiser_store_id and not pub_store_id:
+        msg = "At least one of advertiser_store_id or pub_store_id must be provided"
+        raise ValueError(msg)
+    df = pd.read_sql(
+        QUERY_CREATIVES,
+        con=DBCON.engine,
+        params={
+            "advertiser_store_id": advertiser_store_id,
+            "pub_store_id": pub_store_id,
+        },
+    )
     return df
 
 

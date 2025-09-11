@@ -1,4 +1,4 @@
-import type { PageServerLoad } from '../../../$types.js';
+import type { PageServerLoad } from './$types.js';
 
 function checkStatus(resp: Response, name: string) {
 	if (resp.status === 200) {
@@ -17,14 +17,13 @@ function checkStatus(resp: Response, name: string) {
 export const load: PageServerLoad = async ({ parent, params }) => {
 	const { myapp } = await parent();
 	const id = params.id;
-	const vhash = params.vhash;
-	const creativerecords = async () => {
-		const resp = await fetch(`http://localhost:8000/api/creatives/apps/${id}/ads/${vhash}`);
-		return checkStatus(resp, 'CreativeRecords');
+	const creatives = async () => {
+		const resp = await fetch(`http://localhost:8000/api/creatives/apps/${id}/monetized`);
+		return checkStatus(resp, 'Creatives');
 	};
 
 	return {
-		creativerecords: creativerecords(),
+		creatives: creatives(),
 		myapp
 	};
 };

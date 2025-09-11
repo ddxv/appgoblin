@@ -49,6 +49,11 @@
 							name: 'Ad Placements',
 							url_slug: 'ad-placements',
 							icon: Image
+						},
+						{
+							name: 'Monetized Ad Creatives',
+							url_slug: 'monetized-ads',
+							icon: Image
 						}
 					]
 				: []),
@@ -99,13 +104,15 @@
 			return textGreyedOutColor;
 		} else if (tab === 'ad-placements' && myapp.ad_creative_count == 0) {
 			return textGreyedOutColor;
+		} else if (tab === 'monetized-ads' && myapp.ad_monetized_creative_count == 0) {
+			return textGreyedOutColor;
 		} else {
 			return '';
 		}
 	}
 </script>
 
-<div class="flex flex-wrap gap-1 text-sm md:text-base overflow-x-auto">
+<div class="flex flex-wrap gap-1 text-xs md:text-sm overflow-x-auto">
 	{#each myTabs.types as tab}
 		{@const Component = tab.icon}
 		<a

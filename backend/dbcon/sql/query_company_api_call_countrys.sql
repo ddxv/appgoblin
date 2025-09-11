@@ -7,6 +7,7 @@ WITH domain_totals AS (
     GROUP BY
         tld_url
 ),
+
 domain_percent AS (
     SELECT
         a.company_domain,
@@ -18,10 +19,11 @@ domain_percent AS (
         dt.total_count,
         a.store_app_count::float / dt.total_count AS pct
     FROM
-        frontend.api_call_countries a
-    JOIN domain_totals dt
-            USING (tld_url)
+        frontend.api_call_countries AS a
+    INNER JOIN domain_totals AS dt
+        ON a.tld_url = dt.tld_url
 )
+
 SELECT
     parent_company_domain,
     company_domain,
@@ -34,5 +36,5 @@ FROM
 WHERE
     pct >= 0.10
 ORDER BY
-    tld_url,
+    tld_url ASC,
     store_app_count DESC;

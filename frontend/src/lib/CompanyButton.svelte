@@ -12,14 +12,14 @@
 {#if size === 'sm'}
 	<a href={`${baseUrl}/${companyDomain}`}>
 		<div class="btn preset-tonal hover:preset-tonal-primary text-xs md:text-sm">
-			{companyName}
+			{companyName ?? companyDomain}
 		</div>
 	</a>
 {/if}
 {#if size === 'md'}
 	<a href={`${baseUrl}/${companyDomain}`}>
 		<div class="btn preset-tonal hover:preset-tonal-primary text-sm md:text-base">
-			{companyName}
+			{companyName ?? companyDomain}
 		</div>
 	</a>
 {/if}
