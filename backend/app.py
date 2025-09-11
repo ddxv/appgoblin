@@ -10,12 +10,12 @@ from litestar.openapi import OpenAPIConfig, OpenAPIController
 from api_app.controllers.apps import AppController
 from api_app.controllers.categories import CategoryController
 from api_app.controllers.companies import CompaniesController
+from api_app.controllers.creatives import CreativesController
 from api_app.controllers.developers import DeveloperController
 from api_app.controllers.keywords import KeywordsController
 from api_app.controllers.rankings import RankingsController
 from api_app.controllers.scry import ScryController
 from api_app.controllers.sdks import SdksController
-from api_app.controllers.creatives import CreativesController
 
 cors_config = CORSConfig(
     allow_origins=[

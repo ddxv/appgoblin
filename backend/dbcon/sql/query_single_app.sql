@@ -1,6 +1,11 @@
 WITH has_monetized_creatives AS (
 -- TODO: move this to store_apps_overview MV
-SELECT DISTINCT 1 AS admon_count, pub_store_id FROM frontend.advertiser_creatives)
+    SELECT DISTINCT
+        1 AS admon_count,
+        pub_store_id
+    FROM frontend.advertiser_creatives
+)
+
 SELECT
     id,
     name,
@@ -52,6 +57,6 @@ SELECT
     COALESCE(hmc.admon_count, 0) AS ad_monetized_creative_count
 FROM
     frontend.store_apps_overview AS sa
-LEFT JOIN has_monetized_creatives hmc ON sa.store_id = hmc.pub_store_id 
+LEFT JOIN has_monetized_creatives AS hmc ON sa.store_id = hmc.pub_store_id
 WHERE
     store_id = :store_id;
