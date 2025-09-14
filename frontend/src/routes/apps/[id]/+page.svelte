@@ -207,7 +207,7 @@
 						<img
 							class="h-auto max-w-full rounded-lg p-4 mx-auto"
 							src={myapp.featured_image_url}
-							alt=""
+							alt="App screenshot"
 						/>
 					</div>
 				{/if}
@@ -215,7 +215,7 @@
 					{#each [myapp.phone_image_url_1, myapp.phone_image_url_2, myapp.phone_image_url_3, myapp.tablet_image_url_1, myapp.tablet_image_url_2, myapp.tablet_image_url_3] as imageUrl}
 						{#if imageUrl && imageUrl != 'null'}
 							<div>
-								<img class="h-auto max-w-full rounded-lg" src={imageUrl} alt="" />
+								<img class="h-auto max-w-full rounded-lg" src={imageUrl} alt="App screenshot" />
 							</div>
 						{/if}
 					{/each}

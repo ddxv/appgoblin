@@ -177,8 +177,7 @@
 							{#if vhash != row.original.vhash}
 								<a href={`ad-placements/${row.original.vhash}`}>
 									<img
-										src="https://appgoblin-data.sgp1.digitaloceanspaces.com/creatives/thumbs/{row
-											.original.md5_hash}.jpg"
+										src="https://media.appgoblin.info/creatives/thumbs/{row.original.md5_hash}.jpg"
 										class="w-24 md:w-64 h-auto object-cover rounded text-xs"
 										alt="Creative: {row.original.md5_hash}"
 									/>
@@ -186,8 +185,7 @@
 								</a>
 							{:else}
 								<img
-									src="https://appgoblin-data.sgp1.digitaloceanspaces.com/creatives/thumbs/{row
-										.original.md5_hash}.jpg"
+									src="https://media.appgoblin.info/creatives/thumbs/{row.original.md5_hash}.jpg"
 									class="w-24 md:w-64 h-auto object-cover rounded text-xs"
 									alt="Creative: {row.original.md5_hash}"
 								/>

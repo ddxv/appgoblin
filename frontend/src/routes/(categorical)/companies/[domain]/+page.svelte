@@ -181,8 +181,8 @@
 								<div class="grid grid-cols-2 md:grid-cols-4 gap-1">
 									<a href="/apps/{creative.advertiser_store_id}/ad-placements">
 										<img
-											src="https://appgoblin-data.sgp1.digitaloceanspaces.com/creatives/thumbs/{creative.md5_hash}.jpg"
-											alt=""
+											src="https://media.appgoblin.info/creatives/thumbs/{creative.md5_hash}.jpg"
+											alt="Creative for {creative.advertiser_store_id}"
 											class="w-12 md:w-24 h-auto"
 										/>
 									</a>

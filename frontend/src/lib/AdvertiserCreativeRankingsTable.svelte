@@ -176,8 +176,8 @@
 									{#each row.original.top_md5_hashes.slice(0, 4) as md5_hash}
 										<a href="/apps/{row.original.advertiser_store_id}/ad-placements">
 											<img
-												src="https://appgoblin-data.sgp1.digitaloceanspaces.com/creatives/thumbs/{md5_hash}.jpg"
-												alt=""
+												src="https://media.appgoblin.info/creatives/thumbs/{md5_hash}.jpg"
+												alt="Creative for {row.original.advertiser_name}"
 												class="object-cover rounded"
 											/>
 										</a>
