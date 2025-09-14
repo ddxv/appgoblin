@@ -1,17 +1,17 @@
 repos:
   # Ruff
-  - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: v0.11.11
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.13.0
     hooks:
       - id: ruff
         args: [--fix]
       - id: ruff-format
   # Mypy
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.15.0
+    rev: v1.18.1
     hooks:
       - id: mypy
-        additional_dependencies: ['types-requests', 'types-PyYAML']
+        additional_dependencies: ["types-requests", "types-PyYAML"]
   ## JS ##
   - repo: https://github.com/pre-commit/mirrors-prettier
     rev: v4.0.0-alpha.8
@@ -19,11 +19,11 @@ repos:
       - id: prettier
         args:
           [
-            '--config',
-            'frontend/.prettierrc',
-            '--ignore-unknown',
-            '--write',
-            '--check',
+            "--config",
+            "frontend/.prettierrc",
+            "--ignore-unknown",
+            "--write",
+            "--check",
           ]
         language: node
         entry: frontend/node_modules/.bin/prettier
@@ -33,7 +33,7 @@ repos:
           - prettier
           - prettier-plugin-svelte
   - repo: https://github.com/pre-commit/mirrors-eslint
-    rev: v9.27.0
+    rev: v9.35.0
     hooks:
       - id: eslint
         name: eslint
@@ -47,8 +47,8 @@ repos:
           - svelte
           - typescript
           - eslint-plugin-svelte
-          - '@typescript-eslint/eslint-plugin'
-          - '@typescript-eslint/parser'
+          - "@typescript-eslint/eslint-plugin"
+          - "@typescript-eslint/parser"
           - svelte-eslint-parser
   - repo: local
     hooks:
@@ -61,12 +61,12 @@ repos:
         require_serial: true
   ## SQL ##
   - repo: https://github.com/sqlfluff/sqlfluff
-    rev: 3.4.0
+    rev: 3.4.2
     hooks:
       - id: sqlfluff-lint
-        args: ['--config', 'backend/pyproject.toml'] # Specify the config file location here
+        args: ["--config", "backend/pyproject.toml"] # Specify the config file location here
       - id: sqlfluff-fix
-        args: ['--config', 'backend/pyproject.toml'] # Specify the config file location here
+        args: ["--config", "backend/pyproject.toml"] # Specify the config file location here
         # Arbitrary arguments to show an example
         # args: [--rules, "LT02,CP02"]
         # additional_dependencies: ['<dbt-adapter>', 'sqlfluff-templater-dbt']

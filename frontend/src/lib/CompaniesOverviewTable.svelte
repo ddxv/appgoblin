@@ -330,12 +330,21 @@
 								style="cursor: pointer;"
 								class=" text-xs md:text-sm"
 							>
-								{#if row.original.company_name}
-									{row.original.company_name}
-									({row.original.company_domain})
-								{:else}
-									{row.original.company_domain}
-								{/if}
+								<div class="flex items-center">
+									{#if row.original.company_logo_url}
+										<img
+											src={`https://media.appgoblin.info/${row.original.company_logo_url}`}
+											alt={row.original.company_name}
+											class="w-8 h-8 rounded-sm mr-2"
+										/>
+									{/if}
+									{#if row.original.company_name}
+										{row.original.company_name}
+										({row.original.company_domain})
+									{:else}
+										{row.original.company_domain}
+									{/if}
+								</div>
 							</a>
 						</td>
 

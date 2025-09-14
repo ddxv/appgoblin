@@ -60,8 +60,8 @@
 						<div class="flex flex-col items-center justify-center">
 							<div class="card">
 								<img
-									src="https://appgoblin-data.sgp1.digitaloceanspaces.com/creatives/thumbs/{creative.md5_hash}.jpg"
-									alt=""
+									src="https://media.appgoblin.info/creatives/thumbs/{creative.md5_hash}.jpg"
+									alt="Creative thumbnail for {creative.md5_hash}"
 								/>
 								<p>{creative.file_extension}</p>
 							</div>

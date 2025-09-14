@@ -44,6 +44,7 @@ from dbcon.queries import (
     get_company_api_call_countrys,
     get_company_categories_topn,
     get_company_countries,
+    get_company_logos_df,
     get_company_open_source,
     get_company_sdks,
     get_company_secondary_domains,
@@ -254,6 +255,12 @@ def get_overviews(
 
     overview_df = overview_df.merge(
         countries_df,
+        on="company_domain",
+        how="left",
+        validate="1:1",
+    )
+    overview_df = overview_df.merge(
+        get_company_logos_df(),
         on="company_domain",
         how="left",
         validate="1:1",
@@ -810,14 +817,20 @@ class CompaniesController(Controller):
 
         parent_company = df["parent_company_name"].tolist()[0]
         parent_company_domain = df["parent_company_domain"].tolist()[0]
+        parent_company_logo_url = df["parent_company_logo_url"].tolist()[0]
 
-        queried_company_names = df[(queried_domain == df["company_domain"])][
-            "company_name"
-        ].tolist()
+        is_queried_company = queried_domain == df["company_domain"]
+        queried_company_names = df[is_queried_company]["company_name"].tolist()
+        queried_company_logo_urls = df[is_queried_company]["company_logo_url"].tolist()
         if len(queried_company_names) > 0:
             queried_company_name = queried_company_names[0]
         else:
             queried_company_name = queried_domain
+
+        if len(queried_company_logo_urls) > 0:
+            queried_company_logo_url = queried_company_logo_urls[0]
+        else:
+            queried_company_logo_url = None
 
         if parent_company == queried_domain:
             parent_company = None
@@ -830,7 +843,6 @@ class CompaniesController(Controller):
         domains = (
             df[
                 ~(parent_company == df["company_name"])
-                # & (queried_domain == df["company_name"])
                 & (queried_domain == df["company_domain"])
             ]["company_domain"]
             .unique()
@@ -841,11 +853,10 @@ class CompaniesController(Controller):
             df[
                 ~(parent_company == df["company_name"])
                 & (queried_domain != df["company_domain"])
-            ]
-            .rename(columns={"company_domain": "domains"})
-            .groupby(["company_name"])["domains"]
-            .apply(lambda x: list(x))
-            .reset_index()
+            ][["company_name", "company_domain", "company_logo_url"]]
+            .drop_duplicates()
+            .rename(columns={"company_domain": "domain"})
+            .reset_index(drop=True)
             .to_dict(orient="records")
         )
 
@@ -856,6 +867,8 @@ class CompaniesController(Controller):
             parent_company_domain=parent_company_domain,
             queried_company_domain=queried_domain,
             queried_company_name=queried_company_name,
+            queried_company_logo_url=queried_company_logo_url,
+            parent_company_logo_url=parent_company_logo_url,
             domains=domains,
             children_companies=children_companies,
         )

@@ -236,6 +236,18 @@ def get_company_countries() -> pd.DataFrame:
 
 
 @lru_cache(maxsize=1)
+def get_company_logos_df() -> pd.DataFrame:
+    """Get company logos."""
+    query = """SELECT ad."domain" as company_domain, 
+    c.logo_url as company_logo_url 
+    FROM adtech.companies as c 
+    LEFT JOIN ad_domains as ad ON c."domain_id" = ad."id";
+    """
+    df = pd.read_sql(query, con=DBCON.engine)
+    return df
+
+
+@lru_cache(maxsize=1)
 def get_child_companies() -> list[str]:
     """Get child companies."""
     df = pd.read_sql(QUERY_CHILD_COMPANIES, con=DBCON.engine)

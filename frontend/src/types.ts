@@ -307,7 +307,8 @@ export interface CategoryAppStats {
 
 export interface ChildrenCompanyTree {
 	company_name: string;
-	domains: string[];
+	domain: string;
+	company_logo_url: string;
 }
 
 export interface ParentCompanyTree {
@@ -315,8 +316,10 @@ export interface ParentCompanyTree {
 	is_secondary_domain: boolean;
 	parent_company_name: string;
 	parent_company_domain: string;
+	parent_company_logo_url: string;
 	queried_company_domain: string;
 	queried_company_name: string;
+	queried_company_logo_url: string;
 	domains: string[];
 	children_companies: ChildrenCompanyTree[];
 }

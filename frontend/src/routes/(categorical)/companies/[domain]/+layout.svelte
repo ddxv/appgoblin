@@ -91,6 +91,20 @@
 						>
 					</h1>
 				{:else if myTree.queried_company_domain}
+					{#if myTree.queried_company_logo_url}
+						<img
+							src="https://media.appgoblin.info/{myTree.queried_company_logo_url}"
+							alt={myTree.queried_company_logo_url}
+							class="w-20 h-20 rounded-sm mr-2 md:mr-8"
+						/>
+					{:else if myTree.parent_company_logo_url}
+						<img
+							src="https://media.appgoblin.info/{myTree.parent_company_logo_url}"
+							alt={myTree.parent_company_logo_url}
+							class="w-20 h-20 rounded-sm mr-2 md:mr-8"
+						/>
+					{/if}
+
 					{#if myTree.is_parent_company}
 						<!-- IS PARENT COMPANY -->
 						<h1 class={titleClass}>
@@ -111,6 +125,7 @@
 								<CompanyButton
 									companyName={myTree.parent_company_name}
 									companyDomain={myTree.parent_company_domain}
+									companyLogoUrl={myTree.parent_company_logo_url}
 								/>
 							</span>
 						{/if}
@@ -126,6 +141,7 @@
 								<CompanyButton
 									companyName={myTree.parent_company_name}
 									companyDomain={myTree.parent_company_domain}
+									companyLogoUrl={myTree.parent_company_logo_url}
 								/>
 							</span>
 						{/if}

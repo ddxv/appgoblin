@@ -92,9 +92,11 @@
 					{:else if myTree && myTree.children_companies.length > 0}
 						<CompanyTree {myTree} />
 					{:else if myTree && myTree.parent_company_domain}
-						Parent Company: <CompanyButton
+						<p class="text-lg font-semibold mb-4">Parent Company:</p>
+						<CompanyButton
 							companyName={myTree.parent_company_name}
 							companyDomain={myTree.parent_company_domain}
+							companyLogoUrl={myTree.parent_company_logo_url}
 						/>
 					{:else}
 						<!-- Render nothing if there are no child companies -->
@@ -181,8 +183,8 @@
 								<div class="grid grid-cols-2 md:grid-cols-4 gap-1">
 									<a href="/apps/{creative.advertiser_store_id}/ad-placements">
 										<img
-											src="https://appgoblin-data.sgp1.digitaloceanspaces.com/creatives/thumbs/{creative.md5_hash}.jpg"
-											alt=""
+											src="https://media.appgoblin.info/creatives/thumbs/{creative.md5_hash}.jpg"
+											alt="Creative for {creative.advertiser_store_id}"
 											class="w-12 md:w-24 h-auto"
 										/>
 									</a>

@@ -212,6 +212,8 @@ class ParentCompanyTree:
     queried_company_name: str
     domains: list[str]
     children_companies: list[ChildrenCompanyTree]
+    queried_company_logo_url: str | None = None
+    parent_company_logo_url: str | None = None
 
 
 @dataclass
