@@ -1,7 +1,9 @@
 SELECT DISTINCT
     c.name AS company_name,
     cad.domain AS company_domain,
+    c.logo_url AS company_logo_url,
     subad.domain AS sub_domain,
+    pc.logo_url AS parent_company_logo_url,
     COALESCE(
         pc.name,
         c.name,
