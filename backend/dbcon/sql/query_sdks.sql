@@ -13,7 +13,7 @@ FROM (
                 PARTITION BY store
                 ORDER BY app_count DESC
             )
-        AS row_num
+            AS row_num
     FROM frontend.companies_version_details_count
 ) AS ranked
 WHERE row_num <= 100
