@@ -853,6 +853,7 @@ class CompaniesController(Controller):
             df[
                 ~(parent_company == df["company_name"])
                 & (queried_domain != df["company_domain"])
+                & df["company_domain"].notna()
             ][["company_name", "company_domain", "company_logo_url"]]
             .drop_duplicates()
             .rename(columns={"company_domain": "domain"})
