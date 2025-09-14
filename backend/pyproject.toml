@@ -18,10 +18,6 @@ dependencies = [
 dev = ["pre-commit", "sshtunnel", "umami-analytics"]
 
 
-[build-system]
-requires = ["setuptools", "wheel"]
-
-
 [tool.ruff]
 #select = ["E", "W", "F", "B", "I", "N", "UP"]
 lint.select = ["ALL"]
