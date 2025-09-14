@@ -18,7 +18,7 @@
 					<CompanyButton
 						companyName={child.company_name}
 						companyDomain={child.domain}
-						companyLogoUrl={child.company_logo_url || null}
+						companyLogoUrl={child.company_logo_url}
 					/>
 					<div class="h-6 w-px bg-gray-300"></div>
 					<ExternalLink domain={child.domain} />

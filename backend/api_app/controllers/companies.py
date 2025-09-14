@@ -815,25 +815,31 @@ class CompaniesController(Controller):
                 children_companies=[],
             )
 
-        parent_company = df["parent_company_name"].tolist()[0]
-        parent_company_domain = df["parent_company_domain"].tolist()[0]
-        parent_company_logo_url = df["parent_company_logo_url"].tolist()[0]
-
         is_queried_company = queried_domain == df["company_domain"]
         queried_company_names = df[is_queried_company]["company_name"].tolist()
+
         queried_company_logo_urls = df[is_queried_company]["company_logo_url"].tolist()
+
         if len(queried_company_names) > 0:
             queried_company_name = queried_company_names[0]
         else:
             queried_company_name = queried_domain
+
+        parent_company_name = df["parent_company_name"].tolist()[0]
+        if parent_company_name == queried_company_name:
+            parent_company_name = None
+        parent_company_domain = df["parent_company_domain"].tolist()[0]
+        if parent_company_domain == queried_domain:
+            parent_company_domain = None
+        parent_company_logo_url = df["parent_company_logo_url"].tolist()[0]
 
         if len(queried_company_logo_urls) > 0:
             queried_company_logo_url = queried_company_logo_urls[0]
         else:
             queried_company_logo_url = None
 
-        if parent_company == queried_domain:
-            parent_company = None
+        if parent_company_name == queried_domain:
+            parent_company_name = None
 
         parent_companies = get_parent_companies()
         secondary_domains = get_company_secondary_domains()
@@ -842,7 +848,7 @@ class CompaniesController(Controller):
 
         domains = (
             df[
-                ~(parent_company == df["company_name"])
+                ~(parent_company_name == df["company_name"])
                 & (queried_domain == df["company_domain"])
             ]["company_domain"]
             .unique()
@@ -851,7 +857,7 @@ class CompaniesController(Controller):
 
         children_companies = (
             df[
-                ~(parent_company == df["company_name"])
+                ~(parent_company_name == df["company_name"])
                 & (queried_domain != df["company_domain"])
                 & df["company_domain"].notna()
             ][["company_name", "company_domain", "company_logo_url"]]
@@ -864,7 +870,7 @@ class CompaniesController(Controller):
         tree = ParentCompanyTree(
             is_secondary_domain=is_secondary_domain,
             is_parent_company=is_parent_company,
-            parent_company_name=parent_company,
+            parent_company_name=parent_company_name,
             parent_company_domain=parent_company_domain,
             queried_company_domain=queried_domain,
             queried_company_name=queried_company_name,

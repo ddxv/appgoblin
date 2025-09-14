@@ -121,7 +121,7 @@
 						{#if myTree.parent_company_name}
 							<div class={titleDividerClass}></div>
 							<span class="flex row">
-								<h2 class={titleSecondaryClass}>Parent Company:</h2>
+								<h2 class={titleSecondaryClass}>hppppParent Company:</h2>
 								<CompanyButton
 									companyName={myTree.parent_company_name}
 									companyDomain={myTree.parent_company_domain}
@@ -130,6 +130,7 @@
 							</span>
 						{/if}
 					{:else}
+						<!-- REGULAR COMPANY  -->
 						<h1 class={titleClass}>{myTree.queried_company_name} / {categoryName}</h1>
 						<div class={titleDividerClass}></div>
 						<ExternalLink domain={myTree.queried_company_domain} />
@@ -137,7 +138,7 @@
 							<div class={titleDividerClass}></div>
 							<!-- HAS PARENT COMPANY -->
 							<span class="flex row">
-								<h2 class={titleSecondaryClass}>Parent Company:</h2>
+								<h2 class={titleSecondaryClass}>rcccParent Company:</h2>
 								<CompanyButton
 									companyName={myTree.parent_company_name}
 									companyDomain={myTree.parent_company_domain}

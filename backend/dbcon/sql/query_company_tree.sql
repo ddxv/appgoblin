@@ -36,5 +36,5 @@ LEFT JOIN ad_domains AS subad
 WHERE
     ad.domain = :company_domain
     OR
-    ad.domain = :company_domain
+    cad.domain = :company_domain
     OR paad.domain = :company_domain;
