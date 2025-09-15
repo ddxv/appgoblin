@@ -33,13 +33,27 @@ export const load: PageServerLoad = async ({ params, url, parent }) => {
 	const country = url.searchParams.get('country') || 'US';
 
 	const myranksOverview = async () => {
-		const resp = await fetch(`http://localhost:8000/api/apps/${id}/ranks/overview`);
-		return checkStatus(resp, 'App Ranks Overview');
+		try {
+			const resp = await fetch(`http://localhost:8000/api/apps/${id}/ranks/overview`, {
+				signal: AbortSignal.timeout(10000) // 10 second timeout
+			});
+			return checkStatus(resp, 'App Ranks Overview');
+		} catch (error: any) {
+			console.error('App Ranks Overview fetch failed:', error.message);
+			return 'App Ranks Overview API Error'; // Return fallback instead of crashing
+		}
 	};
 
 	const myranks = async () => {
-		const resp = await fetch(`http://localhost:8000/api/apps/${id}/ranks?country=${country}`);
-		return checkStatus(resp, 'App Ranks');
+		try {
+			const resp = await fetch(`http://localhost:8000/api/apps/${id}/ranks?country=${country}`, {
+				signal: AbortSignal.timeout(10000)
+			});
+			return checkStatus(resp, 'App Ranks');
+		} catch (error: any) {
+			console.error('App Ranks fetch failed:', error.message);
+			return 'App Ranks API Error';
+		}
 	};
 
 	return {

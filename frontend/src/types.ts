@@ -320,7 +320,7 @@ export interface ParentCompanyTree {
 	queried_company_domain: string;
 	queried_company_name: string;
 	queried_company_logo_url: string;
-	domains: string[];
+	domains: { company_domain: string; tld_url: string; country: string[]; org: string[] }[];
 	children_companies: ChildrenCompanyTree[];
 }
 
@@ -391,9 +391,7 @@ export interface CompanyFullDetails {
 	error?: string;
 	companyDetails: CompanyCategoryOverview;
 	companyTopApps: CompanyOverviewSections;
-	companyDomains: {
-		domains: { company_domain: string; tld_url: string; country: string[]; org: string[] }[];
-	};
+
 	companyTree: ParentCompanyTree;
 	companySdks: CompanySDKsDict;
 	companyParentCategories: ChartTabularData;

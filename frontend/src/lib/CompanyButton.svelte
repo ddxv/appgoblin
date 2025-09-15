@@ -2,7 +2,7 @@
 	interface Props {
 		companyDomain: string;
 		companyName?: string;
-		companyLogoUrl?: string | null;
+		companyLogoUrl?: string;
 		size?: 'sm' | 'md';
 	}
 

@@ -63,3 +63,8 @@ export const handle: Handle = async ({ event, resolve }) => {
 
 	return response;
 };
+
+// Temporary fix for api unhandled rejection
+// process.on('unhandledRejection', (reason, promise) => {
+// 	console.error('UNHANDLED REJECTION - API call failed:', reason.message || reason);
+// });

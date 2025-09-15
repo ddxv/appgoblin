@@ -13,13 +13,12 @@ export const load: PageServerLoad = async ({ parent, params }) => {
 	const res_sdks = fetch(`http://localhost:8000/api/companies/${companyDomain}/sdks`);
 	const res_creatives = fetch(`http://localhost:8000/api/creatives/companies/${companyDomain}`);
 
-	const { companyDetails, companyTree, companyDomains } = await parent();
+	const { companyDetails, companyTree } = await parent();
 
 	console.log(`start load overview for company=${companyDomain}`);
 	try {
 		return {
 			companyDetails: companyDetails,
-			companyDomains: companyDomains,
 			companyParentCategories: res_parent_categories
 				.then((resp) => {
 					if (resp.status === 200) {

@@ -108,19 +108,10 @@
 							</p>
 						{/if}
 					{/if}
-				{:catch error}
-					<p class="text-red-500 text-center">{error.message}</p>
-				{/await}
-
-				{#await data.companyDomains}
-					<span class="text-lg">Loading...</span>
-				{:then myDomains}
-					{#if typeof myDomains == 'string'}
-						<p class="text-red-500">Failed to load company domains.</p>
-					{:else if myDomains && myDomains.domains && myDomains.domains.length > 1}
+					{#if myTree && myTree.domains && myTree.domains.length > 1}
 						<h2 class="text-lg font-semibold mb-4">Associated Domains</h2>
 						<div class="flex flex-col gap-1">
-							{#each myDomains.domains as domain}
+							{#each myTree.domains as domain}
 								<div class="">
 									<!-- Domain URL -->
 									<div
@@ -217,17 +208,25 @@
 	{:catch error}
 		<p style="color: red">{error.message}</p>
 	{/await}
-	{#if detailsData && detailsData.adstxt_publishers_overview && detailsData.adstxt_publishers_overview.google && detailsData.adstxt_publishers_overview.apple}
+	{#if detailsData && detailsData.adstxt_publishers_overview && detailsData.adstxt_publishers_overview.google.direct && detailsData.adstxt_publishers_overview.apple.direct}
 		<div class="card preset-tonal p-2 md:p-8 mt-2 md:mt-4">
 			<div class="grid md:grid-cols-2 gap-4">
-				<div>
-					<h2 class="text-lg font-semibold mb-4">ANDROID DIRECT PUBLISHER IDS</h2>
-					<AdsTxtPubIDsTable entries_table={detailsData.adstxt_publishers_overview.google.direct} />
-				</div>
-				<div>
-					<h2 class="text-lg font-semibold mb-4">IOS DIRECT PUBLISHER IDS</h2>
-					<AdsTxtPubIDsTable entries_table={detailsData.adstxt_publishers_overview.apple.direct} />
-				</div>
+				{#if detailsData.adstxt_publishers_overview.google && detailsData.adstxt_publishers_overview.google.direct}
+					<div>
+						<h2 class="text-lg font-semibold mb-4">ANDROID DIRECT PUBLISHER IDS</h2>
+						<AdsTxtPubIDsTable
+							entries_table={detailsData.adstxt_publishers_overview.google.direct}
+						/>
+					</div>
+				{/if}
+				{#if detailsData.adstxt_publishers_overview.apple && detailsData.adstxt_publishers_overview.apple.direct}
+					<div>
+						<h2 class="text-lg font-semibold mb-4">IOS DIRECT PUBLISHER IDS</h2>
+						<AdsTxtPubIDsTable
+							entries_table={detailsData.adstxt_publishers_overview.apple.direct}
+						/>
+					</div>
+				{/if}
 			</div>
 		</div>
 	{/if}

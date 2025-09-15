@@ -61,6 +61,47 @@ from dbcon.queries import (
 logger = get_logger(__name__)
 
 
+def make_company_api_domains_dict(company_domains: list[str]) -> list[dict]:
+    """Make company api domains dict."""
+    df = get_company_api_call_countrys()
+    reg_df = df[df["company_domain"].isin(company_domains)]
+    p_df = df[df["parent_company_domain"].isin(company_domains)]
+
+    df = pd.concat([reg_df, p_df]).drop_duplicates()
+
+    if df.empty:
+        return []
+
+    df = (
+        df.groupby(["tld_url"])[["country", "org"]]
+        .agg(
+            country=pd.NamedAgg(column="country", aggfunc="unique"),
+            org=pd.NamedAgg(column="org", aggfunc="unique"),
+        )
+        .reset_index()
+    )
+
+    df["country"] = df["country"].apply(
+        lambda x: x.tolist() if isinstance(x, np.ndarray) else x
+    )
+    df["org"] = df["org"].apply(
+        lambda x: x.tolist() if isinstance(x, np.ndarray) else x
+    )
+
+    df["country"] = df["country"].apply(
+        lambda x: x.tolist() if isinstance(x, np.ndarray) else x
+    )
+
+    missing_domains = [
+        {"tld_url": x, "country": [], "org": []}
+        for x in company_domains
+        if x not in df["tld_url"].tolist()
+    ]
+    df = pd.concat([df, pd.DataFrame(missing_domains)])
+
+    return df.to_dict(orient="records")
+
+
 def get_search_results(search_term: str) -> pd.DataFrame:
     """Parse search term and return resulting AppGroup."""
     decoded_input = urllib.parse.unquote(search_term)
@@ -847,13 +888,14 @@ class CompaniesController(Controller):
         is_parent_company = queried_domain in parent_companies
 
         domains = (
-            df[
-                ~(parent_company_name == df["company_name"])
-                & (queried_domain == df["company_domain"])
-            ]["company_domain"]
+            df[~(parent_company_name == df["company_name"])]["company_domain"]
             .unique()
             .tolist()
         )
+        sub_domains = df["sub_domain"].unique().tolist()
+        domains = list(set(domains + sub_domains))
+
+        detailed_domains = make_company_api_domains_dict(domains)
 
         children_companies = (
             df[
@@ -876,7 +918,7 @@ class CompaniesController(Controller):
             queried_company_name=queried_company_name,
             queried_company_logo_url=queried_company_logo_url,
             parent_company_logo_url=parent_company_logo_url,
-            domains=domains,
+            domains=detailed_domains,
             children_companies=children_companies,
         )
 
@@ -935,46 +977,6 @@ class CompaniesController(Controller):
         logger.info(f"GET /api/companies/{company_domain}/sdks took {duration}ms")
 
         return mydict
-
-    @get(path="/companies/{company_domain:str}/domains", cache=86400)
-    async def company_domains(self: Self, company_domain: str) -> dict:
-        """Handle GET request for company api call countrys."""
-        start = time.perf_counter() * 1000
-
-        df = get_company_api_call_countrys()
-
-        reg_df = df[df["company_domain"] == company_domain]
-        p_df = df[df["parent_company_domain"] == company_domain]
-
-        df = pd.concat([reg_df, p_df]).drop_duplicates()
-
-        if df.empty:
-            return []
-
-        df = (
-            df.groupby(["tld_url"])[["country", "org"]]
-            .agg(
-                country=pd.NamedAgg(column="country", aggfunc="unique"),
-                org=pd.NamedAgg(column="org", aggfunc="unique"),
-            )
-            .reset_index()
-        )
-
-        df["country"] = df["country"].apply(
-            lambda x: x.tolist() if isinstance(x, np.ndarray) else x
-        )
-        df["org"] = df["org"].apply(
-            lambda x: x.tolist() if isinstance(x, np.ndarray) else x
-        )
-
-        df["country"] = df["country"].apply(
-            lambda x: x.tolist() if isinstance(x, np.ndarray) else x
-        )
-
-        duration = round((time.perf_counter() * 1000 - start), 2)
-        logger.info(f"GET /api/companies/{company_domain}/domains took {duration}ms")
-
-        return {"domains": df.to_dict(orient="records")}
 
     @get(path="/companies/types/", cache=CACHE_FOREVER)
     async def all_adtech_types(self: Self) -> CompanyTypes:
