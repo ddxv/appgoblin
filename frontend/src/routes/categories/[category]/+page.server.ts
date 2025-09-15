@@ -4,7 +4,7 @@ export const csr: boolean = true;
 import type { Category, CategoryResponse } from '../../../types.js';
 
 /** @type {import('../[category]/$types').PageServerLoad} */
-export async function load({ params }): Promise<CategoryResponse> {
+export async function load({ fetch, params }): Promise<CategoryResponse> {
 	const category = params.category;
 	console.log(`load started collection=${category}`);
 	try {

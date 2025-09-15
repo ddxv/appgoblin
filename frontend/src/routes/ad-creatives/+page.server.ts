@@ -14,7 +14,7 @@ function checkStatus(resp: Response, name: string) {
 	}
 }
 
-export const load: PageServerLoad = async () => {
+export const load: PageServerLoad = async ({ fetch }) => {
 	const creatives = async () => {
 		const resp = await fetch(`http://localhost:8000/api/creatives`);
 		return checkStatus(resp, 'Creatives');

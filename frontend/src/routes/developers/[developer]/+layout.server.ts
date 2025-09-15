@@ -14,7 +14,7 @@ function checkStatus(resp: Response, name: string) {
 	}
 }
 
-export const load: LayoutServerLoad = async ({ params }) => {
+export const load: LayoutServerLoad = async ({ fetch, params }) => {
 	const mydevs = async () => {
 		const resp = await fetch(`http://localhost:8000/api/developers/${params.developer}`);
 		return checkStatus(resp, params.developer);

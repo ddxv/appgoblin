@@ -36,7 +36,7 @@
 							{/snippet}
 
 							{#await data.companyDetails}
-								<div><span>Loading...</span></div>
+								<span>Loading...</span>
 							{:then detailsData}
 								<TotalsBox
 									myTotals={detailsData.categories.all}

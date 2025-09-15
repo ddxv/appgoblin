@@ -1,6 +1,6 @@
 import type { LayoutServerLoad } from './$types';
 
-export const load: LayoutServerLoad = async ({ params }) => {
+export const load: LayoutServerLoad = async ({ fetch, params }) => {
 	const companyDomain = params.domain;
 	const category = params.category;
 

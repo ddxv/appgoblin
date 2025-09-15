@@ -14,7 +14,7 @@ function checkStatus(resp: Response, name: string) {
 	}
 }
 
-export const load: LayoutServerLoad = async ({ params, parent }) => {
+export const load: LayoutServerLoad = async ({ fetch, params, parent }) => {
 	const { companyTypes } = await parent();
 
 	const myapp = async () => {

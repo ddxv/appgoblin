@@ -14,7 +14,7 @@ function checkStatus(resp: Response, name: string) {
 	}
 }
 
-export const load: PageServerLoad = async ({ params }) => {
+export const load: PageServerLoad = async ({ fetch, params }) => {
 	const id = params.id;
 
 	const myhistory = async () => {

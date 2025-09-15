@@ -3,7 +3,7 @@ import type { PageServerLoad } from './$types.js';
 import type { Actions } from './$types';
 
 export const actions = {
-	updateRanks: async ({ request, params }) => {
+	updateRanks: async ({ request, fetch, params }) => {
 		const formData = await request.formData();
 		const country = formData.get('country');
 		const id = params.id;
@@ -27,7 +27,7 @@ function checkStatus(resp: Response, name: string) {
 	}
 }
 
-export const load: PageServerLoad = async ({ params, url, parent }) => {
+export const load: PageServerLoad = async ({ fetch, params, url, parent }) => {
 	const { countries } = await parent();
 	const id = params.id;
 	const country = url.searchParams.get('country') || 'US';

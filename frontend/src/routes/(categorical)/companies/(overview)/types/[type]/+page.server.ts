@@ -4,7 +4,7 @@ import type { PageServerLoad } from './$types.js';
 export const ssr: boolean = true;
 export const csr: boolean = true;
 
-export const load: PageServerLoad = async ({ params }) => {
+export const load: PageServerLoad = async ({ fetch, params }) => {
 	const res = fetch(`http://localhost:8000/api/companies/types/${params.type}`);
 	try {
 		return {

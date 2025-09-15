@@ -3,7 +3,7 @@ export const csr: boolean = true;
 
 import type { PageServerLoad } from './$types.js';
 
-export const load: PageServerLoad = async ({ params, setHeaders }) => {
+export const load: PageServerLoad = async ({ fetch, params, setHeaders }) => {
 	const collectionValue = params.collection;
 	console.log(`load started collection=${collectionValue}`);
 	setHeaders({ 'cache-control': 'max-age=40000' });

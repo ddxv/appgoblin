@@ -3,7 +3,7 @@ import type { PageServerLoad } from './$types';
 export const ssr: boolean = true;
 export const csr: boolean = true;
 
-export const load: PageServerLoad = async ({ params }) => {
+export const load: PageServerLoad = async ({ fetch, params }) => {
 	const companyDomain = params.domain;
 	const publisher_id = params.publisher_id;
 

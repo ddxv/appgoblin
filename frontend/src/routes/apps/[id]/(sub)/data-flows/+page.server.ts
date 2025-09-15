@@ -19,7 +19,7 @@ export const actions = {
 	}
 } satisfies Actions;
 
-export const load: PageServerLoad = async ({ params }) => {
+export const load: PageServerLoad = async ({ fetch, params }) => {
 	const id = params.id;
 
 	console.log('id', id);

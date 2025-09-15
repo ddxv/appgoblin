@@ -4,7 +4,7 @@ import type { PageServerLoad } from './$types.js';
 export const ssr: boolean = true;
 export const csr: boolean = true;
 
-export const load: PageServerLoad = async ({ params, parent }) => {
+export const load: PageServerLoad = async ({ fetch, params, parent }) => {
 	const { appCats } = await parent();
 	const res = fetch(
 		`http://localhost:8000/api/companies/types/${params.type}?category=${params.category}`

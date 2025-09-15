@@ -1,7 +1,7 @@
 // src/routes/mypath/download/+server.ts
 import type { RequestHandler } from '@sveltejs/kit';
 
-export const GET: RequestHandler = async ({ params }) => {
+export const GET: RequestHandler = async ({ fetch, params }) => {
 	const domain = params.domain || '';
 	const publisher_id = params.publisher_id || '';
 

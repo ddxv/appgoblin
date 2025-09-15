@@ -14,7 +14,7 @@ function checkStatus(resp: Response, name: string) {
 	}
 }
 
-export const load: PageServerLoad = async ({ params, parent }) => {
+export const load: PageServerLoad = async ({ fetch, params, parent }) => {
 	const id = params.id;
 	// Load parent data first because it is cached
 	const { myapp } = await parent();

@@ -3,7 +3,7 @@ export const csr: boolean = true;
 
 import type { PageServerLoad } from '../$types.js';
 
-export const load: PageServerLoad = async ({ params, setHeaders, parent }) => {
+export const load: PageServerLoad = async ({ fetch, params, setHeaders, parent }) => {
 	const { countries } = await parent();
 	const emptyResponse = {};
 	setHeaders({

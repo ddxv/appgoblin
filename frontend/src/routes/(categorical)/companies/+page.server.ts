@@ -3,7 +3,7 @@ import type { PageServerLoad } from './$types.js';
 // This worked well to speed up page, but caused multiple canonical rel_urls
 //export const prerender = 'auto';
 
-export const load: PageServerLoad = async ({}) => {
+export const load: PageServerLoad = async ({ fetch }) => {
 	const res = fetch(`http://localhost:8000/api/companies`);
 	console.log(`start load overview for companies`);
 	try {

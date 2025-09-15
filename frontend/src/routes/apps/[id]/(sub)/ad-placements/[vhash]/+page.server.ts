@@ -14,7 +14,7 @@ function checkStatus(resp: Response, name: string) {
 	}
 }
 
-export const load: PageServerLoad = async ({ parent, params }) => {
+export const load: PageServerLoad = async ({ fetch, parent, params }) => {
 	const { myapp } = await parent();
 	const id = params.id;
 	const vhash = params.vhash;
