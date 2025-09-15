@@ -1,6 +1,5 @@
 <script lang="ts">
 	import WhiteCard from '$lib/WhiteCard.svelte';
-	import RequestSDKScanButton from '$lib/RequestSDKScanButton.svelte';
 	import CompanyButton from '$lib/CompanyButton.svelte';
 
 	import { page } from '$app/state';
@@ -58,6 +57,7 @@
 									<CompanyButton
 										companyName={company.company_name}
 										companyDomain={company.company_domain}
+										companyLogoUrl={company.company_logo_url}
 									/>
 								{/each}
 							</div>

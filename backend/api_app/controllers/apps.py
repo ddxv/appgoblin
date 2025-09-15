@@ -46,6 +46,7 @@ from dbcon.queries import (
     get_total_counts,
     insert_sdk_scan_request,
     search_apps,
+    get_company_logos_df,
 )
 
 logger = get_logger(__name__)
@@ -392,11 +393,19 @@ class AppController(Controller):
 
         df = get_app_sdk_overview(store_id)
 
+        df = df.merge(
+            get_company_logos_df(),
+            left_on="company_domain",
+            right_on="company_domain",
+            how="left",
+            validate="m:1",
+        )
+
         cats = df.loc[df["category_slug"].notna(), "category_slug"].unique().tolist()
         company_cats = {}
         for cat in cats:
             company_cats[cat] = df[df["category_slug"] == cat][
-                ["company_name", "company_domain"]
+                ["company_name", "company_domain", "company_logo_url"]
             ].to_dict(orient="records")
 
         sdk_overview_dict = AppSDKsOverview(

@@ -19,7 +19,7 @@
 			{#await data.myapp}
 				Loading app details...
 			{:then myapp}
-				<div class="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4">
+				<div class="grid grid-cols-1 gap-2 md:gap-4">
 					<!-- Developer Information Section -->
 					<WhiteCard>
 						{#snippet title()}
@@ -32,133 +32,135 @@
 						{/await}
 					</WhiteCard>
 					<!-- Developer Information Section -->
-					<WhiteCard>
-						{#snippet title()}
-							App Details
-						{/snippet}
-						<div class="space-y-2 p-2">
-							<div class="flex items-center gap-2">
-								<span class="font-medium">Store ID:</span>
-								<span class="text-primary-900-100">{myapp.store_id}</span>
-							</div>
-							<div class="flex items-center gap-2">
-								<span class="font-medium">First Released:</span>
-								<span class="text-primary-900-100">{myapp.release_date}</span>
-							</div>
-							<div class="flex items-center gap-2">
-								<span class="font-medium">Store Last Updated:</span>
-								<span class="text-primary-900-100">{myapp.store_last_updated}</span>
-							</div>
-							<div class="flex items-center gap-2">
-								<span class="font-medium">In-App Purchases:</span>
-								<span class="text-primary-900-100">{myapp.in_app_purchases ? 'Yes' : 'No'}</span>
-							</div>
-							<div class="flex items-center gap-2">
-								<span class="font-medium">Ads:</span>
-								<span class="text-primary-900-100">{myapp.ad_supported ? 'Yes' : 'No'}</span>
-							</div>
-
-							{#if myapp.developer_url}
+					<div class="grid grid-cols-2 gap-2 md:gap-4">
+						<WhiteCard>
+							{#snippet title()}
+								App Details
+							{/snippet}
+							<div class="space-y-2 p-2">
 								<div class="flex items-center gap-2">
-									<span class="font-medium">Website:</span>
-									<a
-										href="https://{myapp.developer_url}"
-										target="_blank"
-										class="anchor inline-flex"
-									>
-										{myapp.developer_url}
-										<ExternalLinkSvg />
-									</a>
+									<span class="font-medium">Store ID:</span>
+									<span class="text-primary-900-100">{myapp.store_id}</span>
 								</div>
-							{/if}
-						</div>
-					</WhiteCard>
+								<div class="flex items-center gap-2">
+									<span class="font-medium">First Released:</span>
+									<span class="text-primary-900-100">{myapp.release_date}</span>
+								</div>
+								<div class="flex items-center gap-2">
+									<span class="font-medium">Store Last Updated:</span>
+									<span class="text-primary-900-100">{myapp.store_last_updated}</span>
+								</div>
+								<div class="flex items-center gap-2">
+									<span class="font-medium">In-App Purchases:</span>
+									<span class="text-primary-900-100">{myapp.in_app_purchases ? 'Yes' : 'No'}</span>
+								</div>
+								<div class="flex items-center gap-2">
+									<span class="font-medium">Ads:</span>
+									<span class="text-primary-900-100">{myapp.ad_supported ? 'Yes' : 'No'}</span>
+								</div>
 
-					<!-- App Information Section -->
-					<WhiteCard>
-						{#snippet title()}
-							App Store
-						{/snippet}
-						<div class="space-y-2 p-2">
-							<div class="flex items-center gap-2">
-								<span class="font-medium">Crawl Status:</span>
-								<span
-									class={myapp.crawl_result == 1 ? 'text-success-900-100' : 'text-error-900-100'}
-								>
-									{myapp.crawl_result == 1 ? 'Success' : 'Failed'}
-								</span>
-							</div>
-							<div class="flex items-center gap-2">
-								<span class="font-medium">Store First Crawled:</span>
-								<span class="text-primary-900-100">{myapp.created_at}</span>
-							</div>
-							<div class="flex items-center gap-2">
-								<span class="font-medium">Store Last Crawled:</span>
-								<span class="text-primary-900-100">{myapp.updated_at}</span>
-							</div>
-						</div>
-					</WhiteCard>
-
-					<!-- Tracking Information Section -->
-					<WhiteCard>
-						{#snippet title()}
-							Ads & App-Ads.txt
-						{/snippet}
-						{#if myapp.ad_supported || myapp.adstxt_crawl_result == 1}
-							{#if myapp.adstxt_last_crawled}
-								<div class="space-y-2 p-2">
+								{#if myapp.developer_url}
 									<div class="flex items-center gap-2">
-										<span class="font-medium">Ads.txt Last Crawled:</span>
-										<span class="text-primary-900-100">{myapp.adstxt_last_crawled}</span>
+										<span class="font-medium">Website:</span>
+										<a
+											href="https://{myapp.developer_url}"
+											target="_blank"
+											class="anchor inline-flex"
+										>
+											{myapp.developer_url}
+											<ExternalLinkSvg />
+										</a>
+									</div>
+								{/if}
+							</div>
+						</WhiteCard>
+
+						<!-- App Information Section -->
+						<WhiteCard>
+							{#snippet title()}
+								App Store
+							{/snippet}
+							<div class="space-y-2 p-2">
+								<div class="flex items-center gap-2">
+									<span class="font-medium">Crawl Status:</span>
+									<span
+										class={myapp.crawl_result == 1 ? 'text-success-900-100' : 'text-error-900-100'}
+									>
+										{myapp.crawl_result == 1 ? 'Success' : 'Failed'}
+									</span>
+								</div>
+								<div class="flex items-center gap-2">
+									<span class="font-medium">Store First Crawled:</span>
+									<span class="text-primary-900-100">{myapp.created_at}</span>
+								</div>
+								<div class="flex items-center gap-2">
+									<span class="font-medium">Store Last Crawled:</span>
+									<span class="text-primary-900-100">{myapp.updated_at}</span>
+								</div>
+							</div>
+						</WhiteCard>
+
+						<!-- Tracking Information Section -->
+						<WhiteCard>
+							{#snippet title()}
+								Ads & App-Ads.txt
+							{/snippet}
+							{#if myapp.ad_supported || myapp.adstxt_crawl_result == 1}
+								{#if myapp.adstxt_last_crawled}
+									<div class="space-y-2 p-2">
+										<div class="flex items-center gap-2">
+											<span class="font-medium">Ads.txt Last Crawled:</span>
+											<span class="text-primary-900-100">{myapp.adstxt_last_crawled}</span>
+										</div>
+										<div class="flex items-center gap-2">
+											<span class="font-medium">Ads.txt Crawl Status:</span>
+											<span
+												class={myapp.adstxt_crawl_result == 1
+													? 'text-success-900-100'
+													: 'text-error-900-100'}
+											>
+												{myapp.adstxt_crawl_result == 1 ? 'Success' : 'Failed'}
+											</span>
+										</div>
+									</div>
+								{:else}
+									App not yet analyzed for ads.
+								{/if}
+							{:else}
+								App does not have ads.
+							{/if}
+						</WhiteCard>
+						<WhiteCard>
+							{#snippet title()}
+								SDK Tracking Status
+							{/snippet}
+							<div class="space-y-2 p-2">
+								{#if myapp.sdk_last_crawled}
+									<div class="flex items-center gap-2">
+										<span class="font-medium">Successful Last Crawled:</span>
+										<span class="text-primary-900-100">{myapp.sdk_successful_last_crawled}</span>
 									</div>
 									<div class="flex items-center gap-2">
-										<span class="font-medium">Ads.txt Crawl Status:</span>
+										<span class="font-medium">Last Crawled:</span>
+										<span class="text-primary-900-100">{myapp.sdk_last_crawled}</span>
+									</div>
+									<div class="flex items-center gap-2">
+										<span class="font-medium">Last Crawl Status:</span>
 										<span
-											class={myapp.adstxt_crawl_result == 1
+											class={myapp.sdk_last_crawl_result == 1
 												? 'text-success-900-100'
 												: 'text-error-900-100'}
 										>
-											{myapp.adstxt_crawl_result == 1 ? 'Success' : 'Failed'}
+											{myapp.sdk_last_crawl_result == 1 ? 'Success' : 'Failed'}
 										</span>
 									</div>
-								</div>
-							{:else}
-								App not yet analyzed for ads.
-							{/if}
-						{:else}
-							App does not have ads.
-						{/if}
-					</WhiteCard>
-					<WhiteCard>
-						{#snippet title()}
-							SDK Tracking Status
-						{/snippet}
-						<div class="space-y-2 p-2">
-							{#if myapp.sdk_last_crawled}
-								<div class="flex items-center gap-2">
-									<span class="font-medium">Successful Last Crawled:</span>
-									<span class="text-primary-900-100">{myapp.sdk_successful_last_crawled}</span>
-								</div>
-								<div class="flex items-center gap-2">
-									<span class="font-medium">Last Crawled:</span>
-									<span class="text-primary-900-100">{myapp.sdk_last_crawled}</span>
-								</div>
-								<div class="flex items-center gap-2">
-									<span class="font-medium">Last Crawl Status:</span>
-									<span
-										class={myapp.sdk_last_crawl_result == 1
-											? 'text-success-900-100'
-											: 'text-error-900-100'}
-									>
-										{myapp.sdk_last_crawl_result == 1 ? 'Success' : 'Failed'}
-									</span>
-								</div>
-							{:else}
-								App not yet analyzed for SDKs.
-								<RequestSDKScanButton />
-							{/if}
-						</div>
-					</WhiteCard>
+								{:else}
+									App not yet analyzed for SDKs.
+									<RequestSDKScanButton />
+								{/if}
+							</div>
+						</WhiteCard>
+					</div>
 				</div>
 			{/await}
 		</div>

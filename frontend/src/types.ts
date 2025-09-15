@@ -423,7 +423,7 @@ export interface KeywordScore extends Row {
 }
 
 export interface AppSDKsOverview {
-	company_categories: { [key: string]: Array<{ company_name: string; company_domain: string }> };
+	company_categories: { [key: string]: Array<{ company_name: string; company_domain: string; company_logo_url: string }> };
 }
 
 export interface AppAPIsOverview {
