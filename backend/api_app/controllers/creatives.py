@@ -106,6 +106,7 @@ class CreativesController(Controller):
                     ),
                 }
             )
+            .sort_values(by="run_at", ascending=False)
             .reset_index()
         )
         cdf = (
@@ -167,6 +168,7 @@ class CreativesController(Controller):
                 }
             )
             .reset_index()
+            .sort_values(by="run_at", ascending=False)
         )
         cdf = (
             df.groupby(
