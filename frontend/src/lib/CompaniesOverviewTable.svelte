@@ -337,6 +337,12 @@
 											alt={row.original.company_name}
 											class="w-8 h-8 rounded-sm mr-2"
 										/>
+									{:else}
+										<img
+											src="/default_company_logo.png"
+											alt="Default Company Logo"
+											class="w-8 h-8 rounded-sm mr-2"
+										/>
 									{/if}
 									{#if row.original.company_name}
 										{row.original.company_name}

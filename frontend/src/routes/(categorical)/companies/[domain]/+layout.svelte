@@ -103,6 +103,12 @@
 							alt={myTree.parent_company_logo_url}
 							class="w-20 h-20 rounded-sm mr-2 md:mr-8"
 						/>
+					{:else}
+						<img
+							src="/default_company_logo.png"
+							alt="Default Company Logo"
+							class="w-20 h-20 rounded-sm mr-2 md:mr-8"
+						/>
 					{/if}
 
 					{#if myTree.is_parent_company}
