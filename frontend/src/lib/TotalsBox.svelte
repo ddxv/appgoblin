@@ -10,7 +10,7 @@
 
 <div class="table-container p-4">
 	{#if myType.url_slug === 'ad-networks' || myType.url_slug === 'all-companies'}
-		<div class={titleFont}>Total Apps Scanned for SDKs</div>
+		<div class={titleFont}>SDKs</div>
 	{:else}
 		<div class={titleFont}>Apps with SDK</div>
 	{/if}

@@ -11,7 +11,7 @@
 	let { data } = $props();
 
 	const description =
-		'Free app analytics, app store marketing, competitor analysis, app SDKs and app-ads.txt data for marketing Android and iOS apps. AppGoblin is an open source project for collecting Google & Apple App Store data and presenting it for developers and marketers.';
+		'Free app analytics, ASO tools and app competitor analysis. The most in depth SDK and API analysis for mobile advertising industry, free for all.';
 
 	const title = 'AppGoblin Mobile App Marketing Tools';
 </script>
@@ -24,7 +24,7 @@
 	<meta name="description" content={description} />
 	<meta
 		name="keywords"
-		content="app, aso, app competitory analysis, ad creatives, ios, android, marketing, advertising, analytics, keyword analytics,  Google Play data, iTunes app data, app rankings, download statistics, competitor analysis, mobile app insights, app store intelligence"
+		content="app, aso, app competitor analysis, ad creatives, ios, android, marketing, advertising, analytics, keyword analytics,  Google Play data, app data, app rankings, download statistics, competitor analysis, mobile app insights, app store intelligence"
 	/>
 
 	<!-- Open Graph meta tags -->
@@ -52,13 +52,13 @@
 		<div class=" p-2 md:p-8">
 			<h1 class="p-2 md:p-4 text-3xl text-primary-900-100">{title}</h1>
 			<p class="p-2 md:p-4">
-				AppGoblin contains <span class="font-bold text-primary-900-100"
+				AppGoblin offers <span class="font-bold text-primary-900-100"
 					>free marketing tools for app developers</span
 				>
-				including ASO, App Rankings, Keyword Ranking. AppGoblin has the best
+				including ASO, app rankings, competitor analysis and keyword ranking. AppGoblin has the best
 				<span class="font-bold text-primary-900-100">competitor analysis tools</span> to research mobile
-				app installs, keywords and SDKs. Advanced advertising data includes mobile ad networks by their
-				SDKs and app-ads.txt data.
+				SDKs, API calls, app installs and keywords. Advanced advertising data includes who is currently
+				buying ads from which mobile ad networks.
 			</p>
 		</div>
 
