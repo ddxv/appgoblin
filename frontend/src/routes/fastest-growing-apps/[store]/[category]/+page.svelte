@@ -26,7 +26,7 @@
 
 	let title = $derived(`${storeTitle} ${category_title} Fastest Growing Apps`);
 	let description = $derived(
-		`Explore ${storeTitle} ${category_title} apps' fastest growing apps. See the most recent high growth apps for marketing research and competitor analysis.`
+		`Explore ${storeTitle} ${category_title} fastest growing apps by weekly installs. See the most recent high growth apps for marketing research and competitor analysis.`
 	);
 	let keywords = $derived(
 		`${storeTitle}, ${category_title}, growth apps, growth hacking, marketing, marketing research, competitor analysis, apps by advertising, apps by in app purchases`
@@ -55,11 +55,7 @@
 	<p class="text-sm text-primary-900-100">
 		AppGoblin's weekly list of the fastest growing apps on the Apple and Google Play App Stores.
 	</p>
-	{#await data.growthApps}
-		<p>Loading...</p>
-	{:then growthApps}
-		<div class="card preset-tonal">
-			<FastestGrowingAppsTable data={growthApps.apps} />
-		</div>
-	{/await}
+	<div class="card preset-tonal">
+		<FastestGrowingAppsTable data={data.resParts.apps} />
+	</div>
 </div>

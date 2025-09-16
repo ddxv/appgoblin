@@ -1,5 +1,4 @@
-// import type { PageServerLoad } from '../../$types.js';
-import type { PageServerLoad } from './$types.js';
+import type { PageServerLoad } from './$types';
 
 export const ssr: boolean = true;
 export const csr: boolean = true;

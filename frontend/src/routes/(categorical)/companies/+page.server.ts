@@ -1,4 +1,4 @@
-import type { PageServerLoad } from './$types.js';
+import type { PageServerLoad } from './$types';
 
 // This worked well to speed up page, but caused multiple canonical rel_urls
 //export const prerender = 'auto';
