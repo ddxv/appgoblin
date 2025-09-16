@@ -1,27 +1,102 @@
-import type { Handle } from '@sveltejs/kit';
-import type { ServerInit } from '@sveltejs/kit';
+import type { Handle, ServerInit } from '@sveltejs/kit';
 
-let appCats: any[] = [];
-let appsOverview: any = {};
-let companyTypes: any[] = [];
-let countries: any[] = [];
+// Define types for your cached data
+interface AppCategory {
+	id: string;
+	name: string;
+	// add other properties
+}
 
-export const init: ServerInit = async () => {
-	[appCats, appsOverview, companyTypes, countries] = await Promise.all([
-		fetch(`http://localhost:8000/api/categories`).then((res) => res.json()),
-		fetch(`http://localhost:8000/api/apps/overview`).then((res) => res.json()),
-		fetch(`http://localhost:8000/api/companies/types`).then((res) => res.json()),
-		fetch(`http://localhost:8000/api/categories/countries`).then((res) => res.json())
-	]);
-	console.log('Data initialized on server start');
+interface CompanyType {
+	id: string;
+	name: string;
+	// add other properties
+}
+
+interface Country {
+	code: string;
+	name: string;
+	// add other properties
+}
+
+interface CachedData {
+	appCats: AppCategory[];
+	appsOverview: any; // Define proper type based on your API response
+	companyTypes: CompanyType[];
+	countries: Country[];
+}
+
+// Cache with default empty values
+let cachedData: CachedData = {
+	appCats: [],
+	appsOverview: {},
+	companyTypes: [],
+	countries: []
 };
 
-export const getCachedData = () => ({
-	appCats,
-	appsOverview,
-	companyTypes,
-	countries
-});
+let isInitialized = false;
+let initializationPromise: Promise<void> | null = null;
+
+const API_BASE_URL = 'http://localhost:8000/api';
+
+async function fetchWithRetry(url: string, retries = 3): Promise<any> {
+	for (let i = 0; i < retries; i++) {
+		try {
+			const response = await fetch(url);
+			if (!response.ok) {
+				throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+			}
+			return await response.json();
+		} catch (error) {
+			console.error(`Attempt ${i + 1} failed for ${url}:`, error);
+			if (i === retries - 1) throw error;
+			// Wait before retrying (exponential backoff)
+			await new Promise((resolve) => setTimeout(resolve, Math.pow(2, i) * 1000));
+		}
+	}
+}
+
+async function initializeCache(): Promise<void> {
+	if (isInitialized) return;
+
+	console.log('Initializing cache on server start...');
+
+	try {
+		const [appCats, appsOverview, companyTypes, countries] = await Promise.all([
+			fetchWithRetry(`${API_BASE_URL}/categories`),
+			fetchWithRetry(`${API_BASE_URL}/apps/overview`),
+			fetchWithRetry(`${API_BASE_URL}/companies/types`),
+			fetchWithRetry(`${API_BASE_URL}/categories/countries`)
+		]);
+
+		cachedData = {
+			appCats,
+			appsOverview,
+			companyTypes,
+			countries
+		};
+
+		isInitialized = true;
+		console.log('Cache initialized successfully');
+	} catch (error) {
+		console.error('Failed to initialize cache:', error);
+		// Keep default empty values, don't throw - let the app start
+	}
+}
+
+export const init: ServerInit = async () => {
+	initializationPromise = initializeCache();
+	await initializationPromise;
+};
+
+export const getCachedData = async (): Promise<CachedData> => {
+	// Ensure initialization is complete
+	if (!isInitialized && initializationPromise) {
+		await initializationPromise;
+	}
+
+	return cachedData;
+};
 
 export const handle: Handle = async ({ event, resolve }) => {
 	const route = event.url.pathname;
@@ -63,8 +138,3 @@ export const handle: Handle = async ({ event, resolve }) => {
 
 	return response;
 };
-
-// Temporary fix for api unhandled rejection
-// process.on('unhandledRejection', (reason, promise) => {
-// 	console.error('UNHANDLED REJECTION - API call failed:', reason.message || reason);
-// });

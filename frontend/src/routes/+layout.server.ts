@@ -3,12 +3,10 @@ import type { LayoutServerLoad } from './$types';
 import { getCachedData } from '../hooks.server';
 
 export const load: LayoutServerLoad = async () => {
-	const { appCats, appsOverview, companyTypes, countries } = getCachedData();
-
+	// const { appCats, appsOverview, companyTypes, countries } = getCachedData();
+	const cachedData = await getCachedData();
 	return {
-		appCats: appCats,
-		appsOverview: appsOverview,
-		companyTypes: companyTypes,
-		countries: countries
+		...cachedData,
+		cacheTimestamp: new Date().toISOString()
 	};
 };

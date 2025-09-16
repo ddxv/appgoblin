@@ -95,13 +95,9 @@
 							These are the top Mobile Advertising Networks based on SDKs we found in iOS and
 							Android apps.
 						</a>
-						{#await data.topCompanies}
-							Loading ...
-						{:then myTops}
-							{#if myTops.adnetworks}
-								<CompaniesBarChart plotData={myTops.adnetworks.sdk_android} />
-							{/if}
-						{/await}
+						{#if data.topCompanies.adnetworks}
+							<CompaniesBarChart plotData={data.topCompanies.adnetworks.sdk_android} />
+						{/if}
 					</div>
 				</div>
 
@@ -116,13 +112,9 @@
 							See which MMPs and mobile app tracking companies are used most often in Android and
 							iOS apps.
 						</a>
-						{#await data.topCompanies}
-							Loading ...
-						{:then myTops}
-							{#if myTops.attribution}
-								<CompaniesBarChart plotData={myTops.attribution.sdk_ios} />
-							{/if}
-						{/await}
+						{#if data.topCompanies.attribution}
+							<CompaniesBarChart plotData={data.topCompanies.attribution.sdk_ios} />
+						{/if}
 					</div>
 				</div>
 
@@ -137,13 +129,9 @@
 							These are the most popular Product Analytics companies or open source libraries based
 							on SDKs we found in iOS and Android apps.
 						</a>
-						{#await data.topCompanies}
-							Loading ...
-						{:then myTops}
-							{#if myTops.analytics}
-								<CompaniesBarChart plotData={myTops.analytics.sdk_ios} />
-							{/if}
-						{/await}
+						{#if data.topCompanies.analytics}
+							<CompaniesBarChart plotData={data.topCompanies.analytics.sdk_ios} />
+						{/if}
 					</div>
 				</div>
 			</div>
@@ -159,65 +147,47 @@
 			<div
 				class="snap-x scroll-px-4 snap-mandatory scroll-smooth flex gap-4 overflow-x-auto px-4 py-10"
 			>
-				{#await data.androidAppRanks}
-					Loading Android App Ranks...
-				{:then androidApps}
-					<a href="/rankings/store/1/collection/1/category/1/US">
-						<div class="snap-center shrink-0 card preset-tonal w-48 md:w-56">
-							<div class="table-container card-header">
-								<h3 class="h3">Android Apps</h3>
-								<AppRankTableShort myTable={androidApps} />
-							</div>
-						</div>
-					</a>
-				{:catch}
-					Trouble Loading Android App Ranks.
-				{/await}
+				<div class="snap-center shrink-0 card preset-tonal w-48 md:w-56">
+					<div class="table-container card-header">
+						<a href="/rankings/store/1/collection/1/category/1/US">
+							<h3 class="h3">Android Apps</h3>
+						</a>
+						{#if data.androidAppRanks}
+							<AppRankTableShort myTable={data.androidAppRanks} />
+						{/if}
+					</div>
+				</div>
 
-				{#await data.iOSAppRanks}
-					Loading iOS App Ranks...
-				{:then iOSApps}
-					<a href="/rankings/store/2/collection/4/category/120/US">
-						<div class="snap-center shrink-0 card preset-tonal w-48 md:w-56">
-							<div class="table-container card-header">
-								<h3 class="h3">iOS Apps</h3>
-								<AppRankTableShort myTable={iOSApps} />
-							</div>
-						</div>
-					</a>
-				{:catch}
-					Trouble Loading iOS App Ranks.
-				{/await}
-
-				{#await data.androidGameRanks}
-					Loading Android Game Ranks...
-				{:then androidGames}
-					<a href="/rankings/store/1/collection/1/category/36/US">
-						<div class="snap-center shrink-0 card preset-tonal w-48 md:w-56">
-							<div class="table-container card-header">
-								<h3 class="h3">Android Games</h3>
-								<AppRankTableShort myTable={androidGames} />
-							</div>
-						</div>
-					</a>
-				{:catch}
-					Trouble loading android games
-				{/await}
-
-				{#await data.iOSGameRanks}
-					Loading iOS Game Ranks...
-				{:then iOSGames}
-					<a href="/rankings/store/2/collection/4/category/62/US">
-						<div class="snap-center shrink-0 card preset-tonal w-48 md:w-56">
-							<div class="table-container card-header">
-								<h3 class="h3">iOS Games</h3>
-								<AppRankTableShort myTable={iOSGames} />
-							</div>
-						</div>
-					</a>
-				{:catch}
-					Trouble Loading iOS Game Ranks.
-				{/await}
+				<div class="snap-center shrink-0 card preset-tonal w-48 md:w-56">
+					<div class="table-container card-header">
+						<a href="/rankings/store/2/collection/4/category/120/US">
+							<h3 class="h3">iOS Apps</h3>
+						</a>
+						{#if data.iOSAppRanks}
+							<AppRankTableShort myTable={data.iOSAppRanks} />
+						{/if}
+					</div>
+				</div>
+				<div class="snap-center shrink-0 card preset-tonal w-48 md:w-56">
+					<div class="table-container card-header">
+						<a href="/rankings/store/1/collection/1/category/36/US">
+							<h3 class="h3">Android Games</h3>
+						</a>
+						{#if data.androidGameRanks}
+							<AppRankTableShort myTable={data.androidGameRanks} />
+						{/if}
+					</div>
+				</div>
+				<div class="snap-center shrink-0 card preset-tonal w-48 md:w-56">
+					<div class="table-container card-header">
+						<a href="/rankings/store/2/collection/4/category/62/US">
+							<h3 class="h3">Top iOS Games</h3>
+						</a>
+						{#if data.iOSGameRanks}
+							<AppRankTableShort myTable={data.iOSGameRanks} />
+						{/if}
+					</div>
+				</div>
 			</div>
 		</div>
 
@@ -273,9 +243,7 @@
 				{#snippet title()}
 					App Store Scanned Apps
 				{/snippet}
-				{#await data.appsOverview}
-					Loading Overview...
-				{:then appsOverview}
+				{#if data.appsOverview}
 					<p class="p-2 md:p-4 text-sm md:text-base">
 						These are the apps we are currently have in our databases. Green represents apps that
 						are currently live on the store while the others are older apps that are no longer
@@ -295,81 +263,73 @@
 								<tr class="text-xs md:text-base">
 									<td>
 										<span class="text-success-900-100">
-											{formatNumberLocale(appsOverview.success_android_apps)}
+											{formatNumberLocale(data.appsOverview.success_android_apps)}
 										</span>
-										/ {formatNumberLocale(appsOverview.android_apps)}
+										/ {formatNumberLocale(data.appsOverview.android_apps)}
 									</td>
 									<td>
 										<span class="text-success-900-100">
-											{formatNumberLocale(appsOverview.success_ios_apps)}
+											{formatNumberLocale(data.appsOverview.success_ios_apps)}
 										</span>
-										/ {formatNumberLocale(appsOverview.ios_apps)}
+										/ {formatNumberLocale(data.appsOverview.ios_apps)}
 									</td>
 									<td>
 										<span class="text-success-900-100">
-											{formatNumberLocale(appsOverview.weekly_success_scanned_android_apps)}
+											{formatNumberLocale(data.appsOverview.weekly_success_scanned_android_apps)}
 										</span>
-										/ {formatNumberLocale(appsOverview.weekly_scanned_android_apps)}
+										/ {formatNumberLocale(data.appsOverview.weekly_scanned_android_apps)}
 									</td>
 									<td>
 										<span class="text-success-900-100">
-											{formatNumberLocale(appsOverview.weekly_success_scanned_ios_apps)}
+											{formatNumberLocale(data.appsOverview.weekly_success_scanned_ios_apps)}
 										</span>
-										/ {formatNumberLocale(appsOverview.weekly_scanned_ios_apps)}
+										/ {formatNumberLocale(data.appsOverview.weekly_scanned_ios_apps)}
 									</td>
 								</tr>
 							</tbody>
 						</table>
 					</div>
-				{:catch}
-					Error Loading Overview
-				{/await}
+				{/if}
 			</WhiteCard>
 
-			{#await data.appsOverview}
-				Loading Overview...
-			{:then appsOverview}
-				<div class="grid grid-cols-1 md:grid-cols-2 gap-4 p-2 md:p-4">
-					<SDKOverview {data} />
-					<WhiteCard>
-						{#snippet title()}
-							App Ads.txt URLs
-						{/snippet}
-						<p class="p-2 md:p-4">
-							These are the app-ads.txt URLs we have found on app developer websites. Green
-							represents URLs that we have successfully crawled and parsed while the others are
-							developer URLs that do not host app-ads.txt files.
-						</p>
-						<table class="table mt-4">
-							<thead>
-								<tr class="border-b">
-									<th>Total URLs</th>
-									<th>URLs Scanned This Week</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td>
-										<span class="text-success-900-100">
-											{formatNumberLocale(appsOverview.appads_success_urls)}
-										</span>
-										/ {formatNumberLocale(appsOverview.appads_urls)}
-									</td>
+			<div class="grid grid-cols-1 md:grid-cols-2 gap-4 p-2 md:p-4">
+				<SDKOverview {data} />
+				<WhiteCard>
+					{#snippet title()}
+						App Ads.txt URLs
+					{/snippet}
+					<p class="p-2 md:p-4">
+						These are the app-ads.txt URLs we have found on app developer websites. Green represents
+						URLs that we have successfully crawled and parsed while the others are developer URLs
+						that do not host app-ads.txt files.
+					</p>
+					<table class="table mt-4">
+						<thead>
+							<tr class="border-b">
+								<th>Total URLs</th>
+								<th>URLs Scanned This Week</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>
+									<span class="text-success-900-100">
+										{formatNumberLocale(data.appsOverview.appads_success_urls)}
+									</span>
+									/ {formatNumberLocale(data.appsOverview.appads_urls)}
+								</td>
 
-									<td>
-										<span class="text-success-900-100">
-											{formatNumberLocale(appsOverview.appads_weekly_success_urls)}
-										</span>
-										/ {formatNumberLocale(appsOverview.appads_weekly_urls)}
-									</td>
-								</tr>
-							</tbody>
-						</table>
-					</WhiteCard>
-				</div>
-			{:catch}
-				Error Loading Overview
-			{/await}
+								<td>
+									<span class="text-success-900-100">
+										{formatNumberLocale(data.appsOverview.appads_weekly_success_urls)}
+									</span>
+									/ {formatNumberLocale(data.appsOverview.appads_weekly_urls)}
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</WhiteCard>
+			</div>
 		</div>
 	</div>
 </div>

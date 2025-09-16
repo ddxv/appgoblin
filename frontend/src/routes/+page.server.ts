@@ -1,51 +1,33 @@
 import type { PageServerLoad } from './$types.js';
+import { createApiClient } from '$lib/server/api';
 
 export const prerender = false;
 
+export const ssr = true;
+// export const csr = true;
+
 export const load: PageServerLoad = async ({ setHeaders, parent, fetch }) => {
 	setHeaders({
-		'cache-control': 'max-age=3600'
+		'cache-control': 'max-age=86400'
 	});
+
+	const api = createApiClient(fetch);
+	const topAdvertisers = await api.get('/creatives/top', 'Top Advertisers');
+	const androidAppRanks = await api.get('/rankings/1/1/short', 'Android App Ranks');
+	const iOSAppRanks = await api.get('/rankings/4/120/short', 'iOS App Ranks');
+	const androidGameRanks = await api.get('/rankings/1/36/short', 'Android Game Ranks');
+	const iOSGameRanks = await api.get('/rankings/4/62/short', 'iOS Game Ranks');
+	const topCompanies = await api.get('/companies/topshort', 'Top Companies');
 
 	const { appsOverview } = await parent();
 
-	try {
-		const [
-			androidAppRanks,
-			iOSAppRanks,
-			androidGameRanks,
-			iOSGameRanks,
-			topCompanies,
-			topAdvertisers
-		] = await Promise.all([
-			fetch(`http://localhost:8000/api/rankings/1/1/short`).then((r) => r.json()),
-			fetch(`http://localhost:8000/api/rankings/4/120/short`).then((r) => r.json()),
-			fetch(`http://localhost:8000/api/rankings/1/36/short`).then((r) => r.json()),
-			fetch(`http://localhost:8000/api/rankings/4/62/short`).then((r) => r.json()),
-			fetch(`http://localhost:8000/api/companies/topshort`).then((r) => r.json()),
-			fetch(`http://localhost:8000/api/creatives/top`).then((r) => r.json())
-		]);
-
-		return {
-			androidAppRanks,
-			iOSAppRanks,
-			androidGameRanks,
-			iOSGameRanks,
-			topCompanies,
-			topAdvertisers,
-			appsOverview
-		};
-	} catch (err) {
-		console.error('Failed to load homepage data:', err);
-		return {
-			androidAppRanks: null,
-			iOSAppRanks: null,
-			androidGameRanks: null,
-			iOSGameRanks: null,
-			topCompanies: null,
-			topAdvertisers: null,
-			appsOverview,
-			error: 'Failed to load ranked apps'
-		};
-	}
+	return {
+		androidAppRanks,
+		iOSAppRanks,
+		androidGameRanks,
+		iOSGameRanks,
+		topCompanies,
+		topAdvertisers,
+		appsOverview
+	};
 };
