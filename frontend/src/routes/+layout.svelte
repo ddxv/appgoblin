@@ -29,13 +29,14 @@
 
 	import NavTabs from '$lib/NavTabs.svelte';
 	interface Props {
-		data: any;
+		// data: any;
 		children?: import('svelte').Snippet;
 	}
 
-	let { data, children }: Props = $props();
+	// let { data, children }: Props = $props();
+	let { children }: Props = $props();
 
-	homeCategoryMap.set(data.appCats);
+	// homeCategoryMap.set(data.appCats);
 
 	let menuBarOpenState = $state(false);
 
@@ -112,28 +113,13 @@
 		</AppBar>
 	</header>
 
-	<div class="grid grid-cols-1 md:grid-cols-[auto_1fr]">
-		<aside class="hidden md:block">
-			<div>
-				{#await data.appCats then myCatData}
-					<SideBar {myCatData} />
-				{/await}
-			</div>
-		</aside>
+	<!-- <div class="grid grid-cols-1 md:grid-cols-[auto_1fr]"> -->
+	<main>
+		{@render children?.()}
+	</main>
+	<!-- </div> -->
 
-		<main>
-			{@render children?.()}
-		</main>
-	</div>
-
-	<footer class="sticky bottom-0 z-10 bg-surface-50-950 p-2">
-		<div class="md:hidden p-2">
-			{#if page.url.pathname.startsWith('/collections') || page.url.pathname.startsWith('/rankings') || page.url.pathname.startsWith('/companies') || page.url.pathname.startsWith('/fastest-growing-apps')}
-				{#await data.appCats then myCatData}
-					<OpenSideBarDrawer {myCatData} />
-				{/await}
-			{/if}
-		</div>
+	<footer class="sticky bottom-0 z-10 p-2">
 		{#if page.url.pathname.startsWith('/blog/')}
 			<div class="inline-flex md:hidden">
 				<NavTabs hideLinks={true} />

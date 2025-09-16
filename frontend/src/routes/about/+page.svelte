@@ -46,7 +46,7 @@
 	<link rel="canonical" href="https://appgoblin.info/about" />
 </svelte:head>
 
-<div class="p-2 px-8 md:px-32 lg:px-72">
+<div class="p-2 px-8 md:px-32 lg:px-72 grid grid-cols-1 gap-4 md:gap-8">
 	<h1 class="text-3xl font-bold text-primary-900-100">Welcome to AppGoblin</h1>
 	<p>
 		AppGoblin has marketing and advertising tools to help illuminate the world of in app advertising

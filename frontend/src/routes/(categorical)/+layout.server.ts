@@ -1,9 +1,8 @@
 import type { LayoutServerLoad } from './$types';
 
-import { getCachedData } from '../hooks.server';
+import { getCachedData } from '../../hooks.server';
 
 export const load: LayoutServerLoad = async () => {
-	// const { appCats, appsOverview, companyTypes, countries } = getCachedData();
 	const cachedData = await getCachedData();
 	return {
 		...cachedData,

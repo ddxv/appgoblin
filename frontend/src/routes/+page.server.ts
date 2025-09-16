@@ -1,5 +1,6 @@
 import type { PageServerLoad } from './$types.js';
 import { createApiClient } from '$lib/server/api';
+import { getCachedData } from '../hooks.server.js';
 
 export const prerender = false;
 
@@ -19,7 +20,9 @@ export const load: PageServerLoad = async ({ setHeaders, parent, fetch }) => {
 	const iOSGameRanks = await api.get('/rankings/4/62/short', 'iOS Game Ranks');
 	const topCompanies = await api.get('/companies/topshort', 'Top Companies');
 
-	const { appsOverview } = await parent();
+	const cachedData = await getCachedData();
+
+	const appsOverview = cachedData.appsOverview;
 
 	return {
 		androidAppRanks,
