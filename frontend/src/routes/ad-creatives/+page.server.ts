@@ -1,26 +1,34 @@
-import type { PageServerLoad } from './$types.js';
+import type { PageServerLoad } from './$types';
+
+export const csr = false;
 
 function checkStatus(resp: Response, name: string) {
 	if (resp.status === 200) {
 		return resp.json();
 	} else if (resp.status === 404) {
 		console.log(`${name} Not found`);
-		return `${name} Not Found`;
+		return { error: `${name} Not Found` };
 	} else if (resp.status === 500) {
 		console.log(`${name} API Server error`);
-		return `${name} API Server error`;
+		return { error: `${name} API Server error` };
 	} else {
-		throw new Error('Unknown error');
+		console.log(`${name} Unexpected status: ${resp.status}`);
+		return { error: `${name} Unexpected error (${resp.status})` };
 	}
 }
 
 export const load: PageServerLoad = async ({ fetch }) => {
-	const creatives = async () => {
+	try {
 		const resp = await fetch(`http://localhost:8000/api/creatives`);
-		return checkStatus(resp, 'Creatives');
-	};
+		const creatives = await checkStatus(resp, 'Creatives');
 
-	return {
-		creatives: creatives()
-	};
+		return {
+			creatives
+		};
+	} catch (error) {
+		console.error('Failed to load creatives:', error);
+		return {
+			creatives: { error: 'Failed to load creatives' }
+		};
+	}
 };

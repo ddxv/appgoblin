@@ -11,7 +11,7 @@
 	<!-- Standard meta tags -->
 	<meta
 		name="description"
-		content="Explore ad creatives and advertising insights on AppGoblin. Discover mobile advertising trends and creative strategies."
+		content="Explore ad creatives and monetized ads on AppGoblin. See the top mobile ad buyers this month and their creative strategies."
 	/>
 	<meta
 		name="keywords"
@@ -55,15 +55,11 @@
 		</p>
 	</div>
 
-	{#await data.creatives}
-		loading...
-	{:then creatives}
-		<WhiteCard>
-			{#if creatives && creatives.length > 0}
-				<AdvertiserCreativeRankingsTable data={creatives} />
-			{:else}
-				<p>No apps found</p>
-			{/if}
-		</WhiteCard>
-	{/await}
+	<WhiteCard>
+		{#if data.creatives && data.creatives.length > 0}
+			<AdvertiserCreativeRankingsTable data={data.creatives} />
+		{:else}
+			<p>No apps found</p>
+		{/if}
+	</WhiteCard>
 </div>

@@ -23,6 +23,20 @@ class CreativesController(Controller):
 
     path = "/api/creatives"
 
+    @get(path="/", cache=86400)
+    async def advertiser_creative_rankings(self: Self) -> dict:
+        """Handle GET request for a list of apps.
+
+        Returns
+        -------
+            A dictionary representation of the total counts
+
+        """
+        df = get_advertiser_creative_rankings()
+        df["last_seen"] = df["last_seen"].dt.strftime("%Y-%m-%d")
+        df = df.head(100)
+        return df.to_dict(orient="records")
+
     @get(path="/top", cache=86400)
     async def top_advertiser_creative_rankings(self: Self) -> dict:
         """Handle GET request for a list of top advertiser creative rankings.
@@ -48,19 +62,6 @@ class CreativesController(Controller):
         df = get_company_creatives(company_domain)
         if not df.empty:
             df["last_seen"] = df["last_seen"].dt.strftime("%Y-%m-%d")
-        return df.to_dict(orient="records")
-
-    @get(path="/", cache=86400)
-    async def advertiser_creative_rankings(self: Self) -> dict:
-        """Handle GET request for a list of apps.
-
-        Returns
-        -------
-            A dictionary representation of the total counts
-
-        """
-        df = get_advertiser_creative_rankings()
-        df["last_seen"] = df["last_seen"].dt.strftime("%Y-%m-%d")
         return df.to_dict(orient="records")
 
     @get(path="/apps/{store_id: str}/monetized", cache=86400)
