@@ -56,6 +56,6 @@
 		AppGoblin's weekly list of the fastest growing apps on the Apple and Google Play App Stores.
 	</p>
 	<div class="card preset-tonal">
-		<FastestGrowingAppsTable data={data.resParts.apps} />
+		<FastestGrowingAppsTable data={data.growthApps.apps} />
 	</div>
 </div>

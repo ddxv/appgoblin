@@ -14,7 +14,10 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 	}
 	const api = createApiClient(fetch);
 
-	const resParts = await api.get(`/apps/growth/${storeId}?app_category=${category}`, 'Growth Apps');
+	const growthApps = await api.get(
+		`/apps/growth/${storeId}?app_category=${category}`,
+		'Growth Apps'
+	);
 
-	return { resParts };
+	return { growthApps };
 };

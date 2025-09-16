@@ -11,38 +11,38 @@
 	}
 </script>
 
-{#await data.companiesOverview}
-	<div><span>Loading...</span></div>
-{:then tableData}
-	{#if typeof tableData == 'string'}
-		Failed to load companies.
-	{:else if tableData.categories.categories}
-		<CompaniesTableGrid>
-			{#snippet mainTable()}
-				{#if tableData && tableData.companies_overview.length > 0}
-					<CompaniesOverviewTable data={tableData.companies_overview} />
-				{/if}
-			{/snippet}
+{#if typeof data.companiesOverview == 'string'}
+	Failed to load companies.
+{:else if data.companiesOverview.categories.categories}
+	<CompaniesTableGrid>
+		{#snippet mainTable()}
+			{#if data.companiesOverview && data.companiesOverview.companies_overview.length > 0}
+				<CompaniesOverviewTable data={data.companiesOverview.companies_overview} />
+			{/if}
+		{/snippet}
 
-			{#snippet sdkAndroidTotalApps()}
-				Android Companies: {formatNumber(
-					tableData.categories.categories.all.sdk_android_total_companies
-				)}
-			{/snippet}
-			{#snippet sdkIosTotalApps()}
-				iOS Companies: {formatNumber(tableData.categories.categories.all.sdk_ios_total_companies)}
-			{/snippet}
-			{#snippet adstxtAndroidTotalApps()}
-				Android Companies:
-				{formatNumber(tableData.categories.categories.all.adstxt_direct_android_total_companies)}
-			{/snippet}
-			{#snippet adstxtIosTotalApps()}
-				iOS Companies: {formatNumber(
-					tableData.categories.categories.all.adstxt_direct_ios_total_companies
-				)}
-			{/snippet}
-		</CompaniesTableGrid>
-	{:else}
-		<p>categegories.all is missing!</p>
-	{/if}
-{/await}
+		{#snippet sdkAndroidTotalApps()}
+			Android Companies: {formatNumber(
+				data.companiesOverview.categories.categories.all.sdk_android_total_companies
+			)}
+		{/snippet}
+		{#snippet sdkIosTotalApps()}
+			iOS Companies: {formatNumber(
+				data.companiesOverview.categories.categories.all.sdk_ios_total_companies
+			)}
+		{/snippet}
+		{#snippet adstxtAndroidTotalApps()}
+			Android Companies:
+			{formatNumber(
+				data.companiesOverview.categories.categories.all.adstxt_direct_android_total_companies
+			)}
+		{/snippet}
+		{#snippet adstxtIosTotalApps()}
+			iOS Companies: {formatNumber(
+				data.companiesOverview.categories.categories.all.adstxt_direct_ios_total_companies
+			)}
+		{/snippet}
+	</CompaniesTableGrid>
+{:else}
+	<p>categegories.all is missing!</p>
+{/if}

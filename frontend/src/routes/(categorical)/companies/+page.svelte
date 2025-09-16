@@ -13,9 +13,9 @@
 
 	let { data }: Props = $props();
 
-	const title = 'Top Mobile Ad Networks, Development Tools & MMPs | AppGoblin Free Marketing Tools';
+	const title = 'Top App Ad Networks, Dev Tools & App Analytics';
 	const description =
-		'Explore top mobile adtech advertising networks, data trackers, MMPs, and programmatic networks based on SDK data and app-ads.txt files. Covering hundreds of companies and millions of apps all for free.';
+		'See which apps use which mobile ad networks, data trackers, MMPs, and programmatic networks based on SDK data and app-ads.txt files. Data on these pages is free and open source.';
 </script>
 
 <svelte:head>
@@ -42,81 +42,67 @@
 	<h1 class="h1 text-3xl font-bold text-primary-900-100">Companies Overview</h1>
 	<div class="h-8 w-px bg-gray-300 mx-2"></div>
 </div>
-{#await data.companiesOverview}
-	<div class="card preset-tonal p-6 rounded-lg shadow-md flex justify-center items-center h-40">
-		<span class="text-lg">Loading...</span>
-	</div>
-{:then myData}
-	{#if typeof myData == 'string'}
-		<p class="text-red-500 text-center">Failed to load companies details.</p>
-	{:else if myData && myData.categories}
-		<CompaniesLayout>
-			{#snippet card1()}
-				<WhiteCard>
-					{#snippet title()}
-						Totals
-					{/snippet}
-					<TotalsBox
-						myTotals={myData.categories.categories.all}
-						myType={{ name: 'All Companies & Domains', url_slug: 'all-companies' }}
-					/>
-				</WhiteCard>
-			{/snippet}
 
-			{#snippet card2()}
-				<WhiteCard>
-					{#snippet title()}
-						Top Companies (Android SDKs)
-					{/snippet}
+{#if typeof data.companiesOverview == 'string'}
+	<p class="text-red-500 text-center">Failed to load companies details.</p>
+{:else if data.companiesOverview && data.companiesOverview.categories}
+	<CompaniesLayout>
+		{#snippet card1()}
+			<WhiteCard>
+				{#snippet title()}
+					Totals
+				{/snippet}
+				<TotalsBox
+					myTotals={data.companiesOverview.categories.categories.all}
+					myType={{ name: 'All Companies & Domains', url_slug: 'all-companies' }}
+				/>
+			</WhiteCard>
+		{/snippet}
 
-					<CompaniesBarChart plotData={myData.top.sdk_android} />
-				</WhiteCard>
-			{/snippet}
-			{#snippet card3()}
-				<WhiteCard>
-					{#snippet title()}
-						Top Companies (iOS SDKs)
-					{/snippet}
-					<CompaniesBarChart plotData={myData.top.sdk_ios} />
-				</WhiteCard>
-			{/snippet}
-		</CompaniesLayout>
-	{/if}
-{:catch error}
-	<p class="text-red-500 text-center">{error.message}</p>
-{/await}
+		{#snippet card2()}
+			<WhiteCard>
+				{#snippet title()}
+					Top Companies (Android SDKs)
+				{/snippet}
+				<CompaniesBarChart plotData={data.companiesOverview.top.sdk_android} />
+			</WhiteCard>
+		{/snippet}
+		{#snippet card3()}
+			<WhiteCard>
+				{#snippet title()}
+					Top Companies (iOS SDKs)
+				{/snippet}
+				<CompaniesBarChart plotData={data.companiesOverview.top.sdk_ios} />
+			</WhiteCard>
+		{/snippet}
+	</CompaniesLayout>
 
-{#await data.companiesOverview}
-	<div><span>Loading...</span></div>
-{:then tableData}
-	{#if typeof tableData == 'string'}
-		Failed to load companies.
-	{:else if tableData.categories}
-		<CompaniesTableGrid>
-			{#snippet mainTable()}
-				{#if tableData && tableData.companies_overview.length > 0}
-					<CompaniesOverviewTable data={tableData.companies_overview} />
-				{/if}
-			{/snippet}
+	<CompaniesTableGrid>
+		{#snippet mainTable()}
+			{#if data.companiesOverview && data.companiesOverview.companies_overview.length > 0}
+				<CompaniesOverviewTable data={data.companiesOverview.companies_overview} />
+			{/if}
+		{/snippet}
 
-			{#snippet sdkAndroidTotalApps()}
-				Android Companies: {formatNumber(
-					tableData.categories.categories.all.sdk_android_total_companies
-				)}
-			{/snippet}
-			{#snippet sdkIosTotalApps()}
-				iOS Companies: {formatNumber(tableData.categories.categories.all.sdk_ios_total_companies)}
-			{/snippet}
-			{#snippet adstxtAndroidTotalApps()}
-				Android Companies: {formatNumber(
-					tableData.categories.categories.all.adstxt_direct_android_total_companies
-				)}
-			{/snippet}
-			{#snippet adstxtIosTotalApps()}
-				iOS Companies: {formatNumber(
-					tableData.categories.categories.all.adstxt_direct_ios_total_companies
-				)}
-			{/snippet}
-		</CompaniesTableGrid>
-	{/if}
-{/await}
+		{#snippet sdkAndroidTotalApps()}
+			Android Companies: {formatNumber(
+				data.companiesOverview.categories.categories.all.sdk_android_total_companies
+			)}
+		{/snippet}
+		{#snippet sdkIosTotalApps()}
+			iOS Companies: {formatNumber(
+				data.companiesOverview.categories.categories.all.sdk_ios_total_companies
+			)}
+		{/snippet}
+		{#snippet adstxtAndroidTotalApps()}
+			Android Companies: {formatNumber(
+				data.companiesOverview.categories.categories.all.adstxt_direct_android_total_companies
+			)}
+		{/snippet}
+		{#snippet adstxtIosTotalApps()}
+			iOS Companies: {formatNumber(
+				data.companiesOverview.categories.categories.all.adstxt_direct_ios_total_companies
+			)}
+		{/snippet}
+	</CompaniesTableGrid>
+{/if}
