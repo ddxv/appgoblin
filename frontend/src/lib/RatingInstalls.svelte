@@ -1,14 +1,14 @@
 <script lang="ts">
 	import Rating from '$lib/StarsRating.svelte';
 	import IconDownload from '$lib/svg/IconDownload.svelte';
-	import type { AppFullDetail, CompanyCreative } from '../types';
+	import type { AppFullDetail, CompanyCreative, RankedApps } from '../types';
 	import IconGoogle from './svg/IconGoogle.svelte';
 	import IconiOs from './svg/IconiOS.svelte';
 	import { formatNumber } from '$lib/utils/formatNumber';
 	import { TrendingUpIcon, TrendingDownIcon } from 'lucide-svelte';
 
 	interface Props {
-		app: AppFullDetail | CompanyCreative;
+		app: AppFullDetail | CompanyCreative | RankedApps;
 	}
 
 	let { app }: Props = $props();

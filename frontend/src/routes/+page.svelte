@@ -144,49 +144,39 @@
 			<a href="/rankings/store/1/collection/1/category/1/US">
 				<p class="p-2 md:p-4">Click through for full app store categories and rankings.</p>
 			</a>
-			<div
-				class="snap-x scroll-px-4 snap-mandatory scroll-smooth flex gap-4 overflow-x-auto px-4 py-10"
-			>
-				<div class="snap-center shrink-0 card preset-tonal w-48 md:w-56">
-					<div class="table-container card-header">
-						<a href="/rankings/store/1/collection/1/category/1/US">
-							<h3 class="h3">Android Apps</h3>
-						</a>
-						{#if data.androidAppRanks}
-							<AppRankTableShort myTable={data.androidAppRanks} />
-						{/if}
-					</div>
+			<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+				<div class="table-container card-header">
+					<a href="/rankings/store/1/collection/1/category/1/US">
+						<h3 class="h3">Android Apps</h3>
+					</a>
+					{#if data.androidAppRanks}
+						<AppRankTableShort myTable={data.androidAppRanks} />
+					{/if}
+				</div>
+				<div class="table-container card-header">
+					<a href="/rankings/store/1/collection/1/category/36/US">
+						<h3 class="h3">Android Games</h3>
+					</a>
+					{#if data.androidGameRanks}
+						<AppRankTableShort myTable={data.androidGameRanks} />
+					{/if}
+				</div>
+				<div class="table-container card-header">
+					<a href="/rankings/store/2/collection/4/category/120/US">
+						<h3 class="h3">iOS Apps</h3>
+					</a>
+					{#if data.iOSAppRanks}
+						<AppRankTableShort myTable={data.iOSAppRanks} />
+					{/if}
 				</div>
 
-				<div class="snap-center shrink-0 card preset-tonal w-48 md:w-56">
-					<div class="table-container card-header">
-						<a href="/rankings/store/2/collection/4/category/120/US">
-							<h3 class="h3">iOS Apps</h3>
-						</a>
-						{#if data.iOSAppRanks}
-							<AppRankTableShort myTable={data.iOSAppRanks} />
-						{/if}
-					</div>
-				</div>
-				<div class="snap-center shrink-0 card preset-tonal w-48 md:w-56">
-					<div class="table-container card-header">
-						<a href="/rankings/store/1/collection/1/category/36/US">
-							<h3 class="h3">Android Games</h3>
-						</a>
-						{#if data.androidGameRanks}
-							<AppRankTableShort myTable={data.androidGameRanks} />
-						{/if}
-					</div>
-				</div>
-				<div class="snap-center shrink-0 card preset-tonal w-48 md:w-56">
-					<div class="table-container card-header">
-						<a href="/rankings/store/2/collection/4/category/62/US">
-							<h3 class="h3">Top iOS Games</h3>
-						</a>
-						{#if data.iOSGameRanks}
-							<AppRankTableShort myTable={data.iOSGameRanks} />
-						{/if}
-					</div>
+				<div class="table-container card-header">
+					<a href="/rankings/store/2/collection/4/category/62/US">
+						<h3 class="h3">Top iOS Games</h3>
+					</a>
+					{#if data.iOSGameRanks}
+						<AppRankTableShort myTable={data.iOSGameRanks} />
+					{/if}
 				</div>
 			</div>
 		</div>

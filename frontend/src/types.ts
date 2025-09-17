@@ -159,6 +159,13 @@ export interface RankedApps extends Row {
 	name: string;
 	store_id: string;
 	icon_url_100?: string;
+	store: number;
+	installs: number;
+	rating_count: number;
+	rating: number;
+	review_count: number;
+	installs_sum_1w: number;
+	installs_sum_4w: number;
 	icon_url_512: string;
 }
 export interface AppRankDetail {

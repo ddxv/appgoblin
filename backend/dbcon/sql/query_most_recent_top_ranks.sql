@@ -29,4 +29,5 @@ WHERE
     ar.store_collection = :collection_id
     AND ar.store_category = :category_id
     AND c.alpha2 = :country
+ORDER BY ar.rank ASC
 LIMIT :mylimit;
