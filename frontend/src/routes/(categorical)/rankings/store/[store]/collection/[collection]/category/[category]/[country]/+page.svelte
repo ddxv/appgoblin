@@ -17,38 +17,50 @@
 
 	let { data }: Props = $props();
 
-	let store = $derived(+page.params.store);
-	let collection = $derived(+page.params.collection);
-	let category = $derived(+page.params.category);
+	let store = $derived(+page.params.store!);
+	let collection = $derived(+page.params.collection!);
+	let category = $derived(+page.params.category!);
 
 	let country = $state(page.params.country || 'US');
 
-	const title = `Top App Rankings: Android & iOS | Free ASO Tools | AppGoblin`;
-	const description = `Top ranked Android and iOS Apps. Explore apps and games that are at the top of the app store charts. Sort by category and view historical data all for free. Get valuable ASO insights for your app strategy with AppGoblin.`;
+	function getTitle(): string {
+		const title =
+			storeIDLookup[store].store_name +
+			' ' +
+			'Daily App Ranks ' +
+			collectionIDLookup[store][collection].collection_name +
+			' for ' +
+			categoryIDLookup[collection][category].category_name +
+			' in ' +
+			country +
+			' ';
+		return title;
+	}
+
+	function getDescription(): string {
+		const description =
+			'Free app store charts. Top ranked ' +
+			storeIDLookup[store].store_name +
+			' ' +
+			collectionIDLookup[store][collection].collection_name +
+			' ' +
+			categoryIDLookup[collection][category].category_name +
+			' Apps. Sort by category and view historical data all for free. Get valuable ASO insights for your app strategy with AppGoblin.';
+		return description;
+	}
+	const title = $derived(getTitle());
+	const description = $derived(getDescription());
 </script>
 
 <svelte:head>
-	<!-- Title -->
-	<title>
-		App Ranks {storeIDLookup[store].store_name}
-		{collectionIDLookup[store][collection].collection_name} for {categoryIDLookup[collection][
-			category
-		].category_name} in {country}
-	</title>
-	<!-- Standard meta tags -->
-
-	<meta
-		name="description"
-		content="{collectionIDLookup[store][collection].collection_name} for {categoryIDLookup[
-			collection
-		][category].category_name} in {country} {description} "
-	/>
-
+	<title>{title}</title>
+	<meta name="description" content={description} />
 	<meta
 		name="keywords"
-		content="{country} {storeIDLookup[store].store_name} {collectionIDLookup[store][collection]
-			.collection_name} {categoryIDLookup[collection][category]
-			.category_name} app rankings, top apps, Google Play charts, iOS App Store charts, free, ASO, marketing, competitor analysis, app category rankings, app performance tracking, mobile app trends"
+		content="free, free aso, {storeIDLookup[store].store_name}, {collectionIDLookup[store][
+			collection
+		].collection_name}, {categoryIDLookup[collection][category]
+			.category_name}, app rankings, top apps, Google Play charts, iOS App Store charts, free, ASO, marketing, competitor analysis, app category rankings, app performance tracking, mobile app trends"
 	/>
 
 	<!-- Open Graph meta tags -->
@@ -72,14 +84,21 @@
 
 <div class="card p-2 md:p-8">
 	<!-- <h1 class="h4 md:h3 p-4"> -->
-	<h1 class="text-2xl font-bold text-primary-900-100">
-		<p>
+	<h1 class="text-2xl grid grid-cols-4 gap-2">
+		<p class="text-primary-800-200">App Store:</p>
+		<p class="text-primary-800-200">Collection:</p>
+		<p class="text-primary-800-200">Category:</p>
+		<p class="text-primary-800-200">Country:</p>
+
+		<p class="text-primary-900-100">
 			{storeIDLookup[store].store_name}
-			{collectionIDLookup[store][collection].collection_name}
+		</p>
+		<p class="text-primary-900-100">{collectionIDLookup[store][collection].collection_name}</p>
+		<p class="text-primary-900-100">
 			{categoryIDLookup[collection][category].category_name}
 		</p>
-		<p>
-			Country: {country}
+		<p class="text-primary-900-100">
+			{country}
 		</p>
 	</h1>
 	<div class="card preset-tonal p-1 md:p-2">

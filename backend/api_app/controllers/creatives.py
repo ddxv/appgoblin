@@ -6,7 +6,7 @@
 from typing import Self
 
 from litestar import Controller, get
-
+import numpy as np
 from config import get_logger
 from dbcon.queries import (
     get_advertiser_creative_rankings,
@@ -33,6 +33,14 @@ class CreativesController(Controller):
 
         """
         df = get_advertiser_creative_rankings()
+        df["advertiser_icon_url_100"] = np.where(
+            df["advertiser_icon_url_100"].notna(),
+            "https://media.appgoblin.info/app-icons/"
+            + df["advertiser_store_id"]
+            + "/"
+            + df["advertiser_icon_url_100"],
+            None,
+        )
         df["last_seen"] = df["last_seen"].dt.strftime("%Y-%m-%d")
         df = df.head(100)
         return df.to_dict(orient="records")
@@ -47,6 +55,14 @@ class CreativesController(Controller):
 
         """
         df = get_advertiser_creative_rankings_top()
+        np.where(
+            df["advertiser_icon_url_100"].notna(),
+            "https://media.appgoblin.info/app-icons/"
+            + df["advertiser_store_id"]
+            + "/"
+            + df["advertiser_icon_url_100"],
+            None,
+        )
         df["last_seen"] = df["last_seen"].dt.strftime("%Y-%m-%d")
         return df.to_dict(orient="records")
 

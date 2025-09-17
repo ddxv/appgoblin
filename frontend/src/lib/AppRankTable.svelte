@@ -141,7 +141,7 @@
 							<a href="/apps/{row.original.store_id}">
 								<div class="inline-flex">
 									<img
-										src={row.original.icon_url_512}
+										src={row.original.icon_url_100 || row.original.icon_url_512}
 										alt={row.original.name}
 										width="100 md:200"
 										class="p-2"

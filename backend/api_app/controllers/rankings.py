@@ -7,6 +7,7 @@ import datetime
 import time
 from typing import Self
 
+import numpy as np
 import pandas as pd
 from litestar import Controller, get
 from litestar.config.response_cache import CACHE_FOREVER
@@ -99,6 +100,9 @@ class RankingsController(Controller):
             category_id=category,
             limit=5,
         )
+        df.loc[df["icon_url_100"].notna(), "icon_url_100"] = df["icon_url_100"].apply(
+            lambda x: f"https://media.appgoblin.info/app-icons/{x}"
+        )
         ranks_dict = df.to_dict(orient="records")
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(f"{self.path}/{collection}/{category}/short took {duration}ms")
@@ -120,11 +124,20 @@ class RankingsController(Controller):
 
         """
         start = time.perf_counter() * 1000
+
         df = get_most_recent_top_ranks(
             collection_id=collection,
             category_id=category,
             country=country,
             limit=200,
+        )
+        df["icon_url_100"] = np.where(
+            df["icon_url_100"].notna(),
+            "https://media.appgoblin.info/app-icons/"
+            + df["store_id"]
+            + "/"
+            + df["icon_url_100"],
+            None,
         )
         ranks_dict = df.to_dict(orient="records")
         duration = round((time.perf_counter() * 1000 - start), 2)

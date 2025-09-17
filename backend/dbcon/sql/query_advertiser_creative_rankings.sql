@@ -1,6 +1,7 @@
 SELECT
     advertiser_name,
     advertiser_store_id,
+    advertiser_icon_url_100,
     advertiser_icon_url_512,
     advertiser_category,
     advertiser_installs,
