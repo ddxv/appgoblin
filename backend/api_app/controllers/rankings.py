@@ -100,8 +100,13 @@ class RankingsController(Controller):
             category_id=category,
             limit=5,
         )
-        df.loc[df["icon_url_100"].notna(), "icon_url_100"] = df["icon_url_100"].apply(
-            lambda x: f"https://media.appgoblin.info/app-icons/{x}"
+        df["icon_url_100"] = np.where(
+            df["icon_url_100"].notna(),
+            "https://media.appgoblin.info/app-icons/"
+            + df["store_id"]
+            + "/"
+            + df["icon_url_100"],
+            None,
         )
         ranks_dict = df.to_dict(orient="records")
         duration = round((time.perf_counter() * 1000 - start), 2)
