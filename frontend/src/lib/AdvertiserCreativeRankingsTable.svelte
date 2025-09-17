@@ -156,12 +156,13 @@
 			</thead>
 			<tbody>
 				{#each table.getRowModel().rows as row (row.id)}
-					<tr class="px-0">
-						<td class="text-xs md:text-base">
+					<tr class="px-0 text-base md:text-xl">
+						<td>
 							<a href="/apps/{row.original.advertiser_store_id}/ad-placements">
 								<div class="col-1">
 									<img
-										src={row.original.advertiser_icon_url_512}
+										src={row.original.advertiser_icon_url_100 ||
+											row.original.advertiser_icon_url_512}
 										alt={row.original.advertiser_name}
 										class="w-12 md:w-24 h-auto object-cover rounded"
 										referrerpolicy="no-referrer"
@@ -178,7 +179,7 @@
 											<img
 												src="https://media.appgoblin.info/creatives/thumbs/{md5_hash}.jpg"
 												alt="Creative for {row.original.advertiser_name}"
-												class="object-cover rounded"
+												class="object-cover rounded w-12 md:w-36 h-auto"
 											/>
 										</a>
 									{/each}
