@@ -5,12 +5,8 @@
 
 	import IconSearch from '$lib/svg/IconSearch.svelte';
 	import { Menu } from 'lucide-svelte';
-	import OpenSideBarDrawer from '$lib/utils/OpenSideBarDrawer.svelte';
-	import SideBar from '$lib/SideBar.svelte';
 
 	import { AppBar } from '@skeletonlabs/skeleton-svelte';
-
-	import { homeCategoryMap } from '../stores';
 
 	import githubIcon from '$lib/svg/github-mark.svg?raw';
 	import discordIcon from '$lib/svg/discord-mark-black.svg?raw';
@@ -29,20 +25,12 @@
 
 	import NavTabs from '$lib/NavTabs.svelte';
 	interface Props {
-		// data: any;
 		children?: import('svelte').Snippet;
 	}
 
-	// let { data, children }: Props = $props();
 	let { children }: Props = $props();
 
-	// homeCategoryMap.set(data.appCats);
-
 	let menuBarOpenState = $state(false);
-
-	function popoverClose() {
-		menuBarOpenState = false;
-	}
 </script>
 
 <div class="grid h-screen grid-rows-[auto_1fr_auto]">

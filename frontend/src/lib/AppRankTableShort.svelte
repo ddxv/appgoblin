@@ -8,7 +8,7 @@
 	let { myTable }: Props = $props();
 </script>
 
-<div class="card preset-filled-surface-100-900 rounded-md">
+<div class="card preset-filled-surface-100-900 rounded-md table-container">
 	<table class="table table-hover table-compact">
 		<thead> </thead>
 		<tbody>
@@ -26,7 +26,9 @@
 						<a href="/apps/{values.store_id}">
 							<div class="inline-flex">
 								<img
-									src={values.icon_url_512}
+									src={values.icon_url_100
+										? 'https://media.appgoblin.info/app-icons/' + values.icon_url_100
+										: values.icon_url_512}
 									alt={values.name}
 									width="50 md:100"
 									referrerpolicy="no-referrer"

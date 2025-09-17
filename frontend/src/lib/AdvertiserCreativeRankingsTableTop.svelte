@@ -64,7 +64,10 @@
 							<a href="/apps/{row.original.advertiser_store_id}/ad-placements">
 								<div class="col-1">
 									<img
-										src={row.original.advertiser_icon_url_512}
+										src={row.original.advertiser_icon_url_100
+											? 'https://media.appgoblin.info/app-icons/' +
+												row.original.advertiser_icon_url_100
+											: row.original.advertiser_icon_url_512}
 										alt={row.original.advertiser_name}
 										class="w-8 md:w-16 h-auto object-cover rounded"
 										referrerpolicy="no-referrer"

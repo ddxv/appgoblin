@@ -9,6 +9,7 @@ SELECT
     ar.rank,
     sa.name,
     sa.store_id,
+    sa.icon_url_100,
     sa.icon_url_512
 FROM
     frontend.store_app_ranks_weekly AS ar
