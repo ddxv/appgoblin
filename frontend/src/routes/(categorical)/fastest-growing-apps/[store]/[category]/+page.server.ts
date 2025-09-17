@@ -1,7 +1,8 @@
 import type { PageServerLoad } from './$types';
 import { createApiClient } from '$lib/server/api';
 
-export const csr: boolean = false;
+export const csr: boolean = true;
+export const ssr: boolean = true;
 
 export const load: PageServerLoad = async ({ params, fetch }) => {
 	const category = params.category;

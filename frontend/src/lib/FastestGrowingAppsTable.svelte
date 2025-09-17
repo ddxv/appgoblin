@@ -3,13 +3,13 @@
 		type PaginationState,
 		type SortingState,
 		type ColumnFiltersState,
-		type VisibilityState,
 		getCoreRowModel,
 		getPaginationRowModel,
 		getSortedRowModel,
 		getFilteredRowModel
 	} from '@tanstack/table-core';
 
+	import { Popover } from '@skeletonlabs/skeleton-svelte';
 	import Pagination from '$lib/components/data-table/Pagination.svelte';
 	import ExportAsCSV from '$lib/components/data-table/ExportAsCSV.svelte';
 	import type { CompaniesOverviewEntries } from '../types';
@@ -47,10 +47,14 @@
 		installs_z_score_4w: false
 	};
 
-	let hiddenDefaults =
-		page.params.store === 'google' ? ratingsHiddenDefaults : installsHiddenDefaults;
-
-	let columnVisibility = $state<VisibilityState>(hiddenDefaults);
+	function getHiddenDefaults(store: string) {
+		console.log('CHECK store', store);
+		if (store === 'google') {
+			return ratingsHiddenDefaults;
+		} else {
+			return installsHiddenDefaults;
+		}
+	}
 
 	let globalFilter = $state<string>('');
 	let dataSource = $state<string>('both');
@@ -170,7 +174,7 @@
 				return globalFilter;
 			},
 			get columnVisibility() {
-				return columnVisibility;
+				return getHiddenDefaults(page.params.store!);
 			}
 		},
 
@@ -194,9 +198,13 @@
 		},
 		onColumnVisibilityChange: (updater) => {
 			if (typeof updater === 'function') {
-				columnVisibility = updater(columnVisibility);
+				// This updater is not used in the current table state,
+				// but keeping it for consistency if it were to be added.
+				// columnVisibility = updater(columnVisibility);
 			} else {
-				columnVisibility = updater;
+				// This updater is not used in the current table state,
+				// but keeping it for consistency if it were to be added.
+				// columnVisibility = updater;
 			}
 		},
 		onPaginationChange: (updater) => {
@@ -214,15 +222,7 @@
 		getFilteredRowModel: getFilteredRowModel()
 	});
 
-	// Remove the local formatNumber function (lines 214-220)
-
-	import { Popover } from '@skeletonlabs/skeleton-svelte';
-
 	let openState = $state(false);
-
-	function popoverClose() {
-		openState = false;
-	}
 </script>
 
 <div class="table-container p-0 md:p-2">
