@@ -14,9 +14,29 @@
 	let { app }: Props = $props();
 </script>
 
-<div class="grid grid-cols-1">
+<div class="grid grid-cols-1 p-2">
 	<div class="flex flex-1">
-		<p class="text-base md:text-xl text-primary-900-100 p-2">{app.name}</p>
+		<p class="text-base md:text-xl text-primary-900-100">{app.name}</p>
+	</div>
+
+	<div class="flex flex-row gap-2">
+		<div class="flex flex-row gap-2">
+			<div class="flex flex-1 items-center justify-center gap-2">
+				{#if app.store_link.includes('google.com')}
+					<IconGoogle size="20" />
+				{/if}
+				{#if app.store_link.includes('apple.com')}
+					<IconiOs size="20" />
+				{/if}
+			</div>
+		</div>
+		<!-- Ratings: STARS (123) -->
+		{#if app.rating_count && app.rating_count != 0}
+			<div class="inline-flex p-1 gap-2">
+				<Rating total={5} size={20} rating={app.rating} />
+				{formatNumber(app.rating_count)} ratings
+			</div>
+		{/if}
 	</div>
 	<div class="flex flex-row gap-2 text-primary-900-100 text-sm md:text-base">
 		<!-- Installs DownloadIcon -->
@@ -42,24 +62,5 @@
 				{/if}
 			</span>
 		</div>
-	</div>
-	<div class="flex flex-row gap-2">
-		<div class="flex flex-row gap-2">
-			<div class="flex flex-1 items-center justify-center gap-2">
-				{#if app.store_link.includes('google.com')}
-					<IconGoogle size="20" />
-				{/if}
-				{#if app.store_link.includes('apple.com')}
-					<IconiOs size="20" />
-				{/if}
-			</div>
-		</div>
-		<!-- Ratings: STARS (123) -->
-		{#if app.rating_count && app.rating_count != 0}
-			<div class="inline-flex p-1 gap-2">
-				<Rating total={5} size={20} rating={app.rating} />
-				{formatNumber(app.rating_count)} ratings
-			</div>
-		{/if}
 	</div>
 </div>
