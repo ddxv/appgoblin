@@ -12,6 +12,7 @@
 	import Pagination from '$lib/components/data-table/Pagination.svelte';
 	import ExportAsCSV from '$lib/components/data-table/ExportAsCSV.svelte';
 	import type { RankedApps } from '../types';
+	import AppCard from './AppCard.svelte';
 
 	import { createSvelteTable, FlexRender } from '$lib/components/data-table/index.js';
 
@@ -135,21 +136,12 @@
 			</thead>
 			<tbody>
 				{#each table.getRowModel().rows as row (row.id)}
-					<tr class="px-0">
-						<td>{row.original.rank}</td>
+					<tr>
+						<td class="text-base md:text-xl"
+							><span class="ml-2 md:ml-8">{row.original.rank}</span></td
+						>
 						<td>
-							<a href="/apps/{row.original.store_id}">
-								<div class="inline-flex">
-									<img
-										src={row.original.icon_url_100 || row.original.icon_url_512}
-										alt={row.original.name}
-										width="100 md:200"
-										class="p-2"
-										referrerpolicy="no-referrer"
-									/>
-									<h3 class="h4 md:h3 p-2">{row.original.name}</h3>
-								</div>
-							</a>
+							<AppCard app={row.original} showHeader={false} />
 						</td>
 					</tr>
 				{/each}

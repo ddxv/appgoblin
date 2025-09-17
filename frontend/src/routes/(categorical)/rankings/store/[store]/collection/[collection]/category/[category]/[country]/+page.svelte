@@ -10,6 +10,7 @@
 	import { page } from '$app/state';
 	import RankChart from '$lib/RankChart.svelte';
 	import AppRankTable from '$lib/AppRankTable.svelte';
+	import AppCard from '$lib/AppCard.svelte';
 	import { countryCodeToEmoji } from '$lib/utils/countryCodeToEmoji';
 	interface Props {
 		data: StoreCategoryRanks;
@@ -128,7 +129,7 @@
 		{/await}
 	</div>
 	<br />
-	<div class="card preset-tonal p-2 md:p-4">
+	<div class="card preset-tonal p-2 md:mx-16">
 		{#await data.ranks}
 			Loading App Ranks...
 		{:then ranks}
