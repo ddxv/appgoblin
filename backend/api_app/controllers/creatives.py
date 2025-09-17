@@ -5,8 +5,9 @@
 
 from typing import Self
 
-from litestar import Controller, get
 import numpy as np
+from litestar import Controller, get
+
 from config import get_logger
 from dbcon.queries import (
     get_advertiser_creative_rankings,
@@ -76,6 +77,18 @@ class CreativesController(Controller):
 
         """
         df = get_company_creatives(company_domain)
+        df = df.rename(columns={"advertiser_store_id": "store_id"})
+        df["icon_url_100"] = np.where(
+            df["icon_url_100"].notna(),
+            "https://media.appgoblin.info/app-icons/"
+            + df["store_id"]
+            + "/"
+            + df["icon_url_100"],
+            None,
+        )
+        df["featured_image_url"] = (
+            "https://media.appgoblin.info/creatives/thumbs/" + df["md5_hash"] + ".jpg"
+        )
         if not df.empty:
             df["last_seen"] = df["last_seen"].dt.strftime("%Y-%m-%d")
         return df.to_dict(orient="records")

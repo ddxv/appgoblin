@@ -387,6 +387,29 @@ export interface CompaniesCategoryOverview {
 	};
 }
 
+export interface CompanyCreative {
+	name: string;
+	store: number;
+	company_domain: string;
+	md5_hash: string;
+	file_extension: string;
+	store_id: string;
+	advertiser_store_app_id: string;
+	installs_sum_1w: number;
+	installs_sum_4w: number;
+	ratings_sum_4w: number;
+	installs: number;
+	rating_count: number;
+	rating: number;
+	icon_url_100: string;
+	icon_url_512: string;
+	featured_image_url: string;
+	last_seen: string;
+	tablet_image_url_1?: string;
+	phone_image_url_1?: string;
+	store_link?: string;
+}
+
 export interface CompanyFullDetails {
 	status?: number;
 	error?: string;
@@ -396,15 +419,7 @@ export interface CompanyFullDetails {
 	companyTree: ParentCompanyTree;
 	companySdks: CompanySDKsDict;
 	companyParentCategories: ChartTabularData;
-	companyCreatives: {
-		company_domain: string;
-		md5_hash: string;
-		file_extension: string;
-		advertiser_store_app_id: string;
-		advertiser_store_id: string;
-		icon_url_512: string;
-		last_seen: string;
-	}[];
+	companyCreatives: CompanyCreative[];
 }
 export interface CompanyCategoryDetails {
 	status?: number;
@@ -505,6 +520,7 @@ export interface CompaniesLayoutResponse {
 }
 
 export interface AppFullDetail {
+	store: number;
 	icon_url_512: string;
 	icon_url_100?: string;
 	name: string;

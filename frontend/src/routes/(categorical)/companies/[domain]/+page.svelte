@@ -2,6 +2,7 @@
 	import type { CompanyFullDetails } from '../../../../types';
 
 	import AdsTxtPubIDsTable from '$lib/AdsTxtPubIDsTable.svelte';
+	import AppCard from '$lib/AppCard.svelte';
 
 	import TotalsBox from '$lib/TotalsBox.svelte';
 	import CompanyButton from '$lib/CompanyButton.svelte';
@@ -155,33 +156,15 @@
 		{#if myCreatives && myCreatives.length > 0}
 			<WhiteCard>
 				{#snippet title()}
-					<span>Recent Advertised Creatives</span>
+					<span>Recent Ad Buyers & Ad Creatives</span>
 				{/snippet}
 				<div class="grid grid-cols-3 gap-2 p-2">
 					{#each myCreatives as creative}
-						<div class="flex flex-row gap-2 mt-8">
-							<a href="/apps/{creative.advertiser_store_id}/ad-placements">
-								<div class="col-1">
-									<img
-										src={creative.icon_url_512}
-										alt={creative.advertiser_store_id}
-										class="w-8 md:w-16 h-auto object-cover rounded"
-										referrerpolicy="no-referrer"
-									/>
-								</div>
-							</a>
-							<div class="overvlow-y-auto">
-								<div class="grid grid-cols-2 md:grid-cols-4 gap-1">
-									<a href="/apps/{creative.advertiser_store_id}/ad-placements">
-										<img
-											src="https://media.appgoblin.info/creatives/thumbs/{creative.md5_hash}.jpg"
-											alt="Creative for {creative.advertiser_store_id}"
-											class="w-12 md:w-24 h-auto"
-										/>
-									</a>
-								</div>
-							</div>
-						</div>
+						<card class="card bg-surface-100-900 p-2">
+							<AppCard app={creative} showHeader={true} />
+							Last Seen: {creative.last_seen}
+							Creative Type: {creative.file_extension}
+						</card>
 					{/each}
 				</div>
 			</WhiteCard>

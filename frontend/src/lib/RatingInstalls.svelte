@@ -1,14 +1,14 @@
 <script lang="ts">
 	import Rating from '$lib/StarsRating.svelte';
 	import IconDownload from '$lib/svg/IconDownload.svelte';
-	import type { AppFullDetail } from '../types';
+	import type { AppFullDetail, CompanyCreative } from '../types';
 	import IconGoogle from './svg/IconGoogle.svelte';
 	import IconiOs from './svg/IconiOS.svelte';
 	import { formatNumber } from '$lib/utils/formatNumber';
 	import { TrendingUpIcon, TrendingDownIcon } from 'lucide-svelte';
 
 	interface Props {
-		app: AppFullDetail;
+		app: AppFullDetail | CompanyCreative;
 	}
 
 	let { app }: Props = $props();
@@ -22,10 +22,10 @@
 	<div class="flex flex-row gap-2">
 		<div class="flex flex-row gap-2">
 			<div class="flex flex-1 items-center justify-center gap-2">
-				{#if app.store_link.includes('google.com')}
+				{#if app.store == 1 || (app.store_link && app.store_link.includes('google.com'))}
 					<IconGoogle size="20" />
 				{/if}
-				{#if app.store_link.includes('apple.com')}
+				{#if app.store == 2 || (app.store_link && app.store_link.includes('apple.com'))}
 					<IconiOs size="20" />
 				{/if}
 			</div>
@@ -48,19 +48,18 @@
 				</div>
 			</div>
 		{/if}
-		<!-- installs week trend -->
-		<div class="flex items-center gap-1 text-primary-800-200 text-xs md:text-sm">
-			<span>
-				{#if app.installs_sum_1w > 0}
-					+{formatNumber(app.installs_sum_4w)}
-					monthly installs
-				{/if}
-
-				{#if !app.installs && app.ratings_sum_4w > 0}
-					<span>~{formatNumber(app.ratings_sum_4w * 50)}</span>
-					monthly installs
-				{/if}
-			</span>
-		</div>
+	</div>
+	<!-- installs week trend -->
+	<div class="flex items-center gap-1 text-primary-800-200 text-xs md:text-sm">
+		<span class="inline-flex items-center gap-1">
+			{#if app.installs_sum_1w > 0}
+				+{formatNumber(app.installs_sum_4w)}
+				<TrendingUpIcon /> monthly installs
+			{/if}
+			{#if !app.installs && app.ratings_sum_4w > 0}
+				~{formatNumber(app.ratings_sum_4w * 50)}
+				<TrendingUpIcon /> monthly installs
+			{/if}
+		</span>
 	</div>
 </div>

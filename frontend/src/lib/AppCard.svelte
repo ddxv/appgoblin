@@ -1,15 +1,15 @@
 <script lang="ts">
-	import type { AppFullDetail } from '../types';
-
+	import type { AppFullDetail, CompanyCreative } from '../types';
 	import RatingInstalls from './RatingInstalls.svelte';
+
 	interface Props {
-		app: AppFullDetail;
+		app: AppFullDetail | CompanyCreative;
 		showHeader: boolean;
 	}
 
 	let { app, showHeader = false }: Props = $props();
 
-	function getHeaderImage(app: AppFullDetail) {
+	function getHeaderImage(app: AppFullDetail | CompanyCreative) {
 		if (app.featured_image_url && app.featured_image_url != 'null') {
 			return app.featured_image_url;
 		} else if (app.tablet_image_url_1 && app.tablet_image_url_1 != 'null') {
