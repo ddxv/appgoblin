@@ -6,7 +6,7 @@ import type { PageServerLoad } from './$types.js';
 export const load: PageServerLoad = async ({ fetch, params, setHeaders }) => {
 	const collectionValue = params.collection;
 	console.log(`load started collection=${collectionValue}`);
-	setHeaders({ 'cache-control': 'max-age=40000' });
+	setHeaders({ 'cache-control': 'max-age=86400' });
 	const res = fetch(`http://localhost:8000/api/apps/collections/${collectionValue}`);
 	return {
 		AppCollections: res

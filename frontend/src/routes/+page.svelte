@@ -222,13 +222,6 @@
 						</div>
 					</div>
 				</a>
-				<a href="/collections/top">
-					<div class="snap-center shrink-0 card preset-tonal w-48 md:w-56 md:p-4">
-						<div class="table-container card-header">
-							<h3 class="h3">Alltime Most Popular</h3>
-						</div>
-					</div>
-				</a>
 			</div>
 		</div>
 

@@ -59,7 +59,7 @@
 			</thead>
 			<tbody>
 				{#each table.getRowModel().rows as row (row.id)}
-					<tr class="px-0 text-xs md:text-2xl">
+					<tr class="px-0 text-xs md:base">
 						<td class="text-xs md:base">
 							<a href="/apps/{row.original.advertiser_store_id}/ad-placements">
 								<div class="col-1">

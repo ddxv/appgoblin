@@ -147,34 +147,10 @@ def get_recent_apps(collection: str, limit: int = 20) -> pd.DataFrame:
         table_name = "top_categories"
     else:
         table_name = "apps_new_weekly"
-    cols = [
-        "name",
-        "store",
-        "mapped_category",
-        "store_id",
-        "installs",
-        "review_count",
-        "rating_count",
-        "rating",
-        "icon_url_512",
-        "featured_image_url",
-        "phone_image_url_1",
-        "tablet_image_url_1",
-    ]
-    my_cols = ", ".join(cols)
-    sel_query = f"""WITH NumberedRows AS (
-                    SELECT 
-                        {my_cols},
-                        ROW_NUMBER() OVER (PARTITION BY store, mapped_category
-                    ORDER BY 
-                        CASE WHEN store = 1 THEN installs ELSE rating_count 
-                            END DESC NULLS LAST
-                ) AS rn
-                FROM {table_name}
-            )
+    sel_query = f"""
             SELECT 
-                {my_cols}
-            FROM NumberedRows
+            *
+            FROM frontend.{table_name}
             WHERE rn <= {limit}
             ;
             """  # noqa: S608 worried about SQL injection but all data is set internal
@@ -184,7 +160,7 @@ def get_recent_apps(collection: str, limit: int = 20) -> pd.DataFrame:
         overall = group.sort_values(["installs", "rating_count"], ascending=False).head(
             limit,
         )
-        overall["mapped_category"] = "overall"
+        overall["app_category"] = "overall"
         df = pd.concat([df, overall], axis=0)
     df = clean_app_df(df)
     return df

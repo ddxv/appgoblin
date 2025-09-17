@@ -229,8 +229,16 @@ def get_app_overview_dict(collection: str) -> Collection:
     """Get collection overview."""
     category_limit = 20
     df = get_recent_apps(collection=collection, limit=category_limit)
+    df["icon_url_100"] = np.where(
+        df["icon_url_100"].notna(),
+        "https://media.appgoblin.info/app-icons/"
+        + df["store_id"]
+        + "/"
+        + df["icon_url_100"],
+        None,
+    )
     categories_dicts = []
-    groups = df.groupby(["mapped_category"])
+    groups = df.groupby(["app_category"])
     for category_key, apps in groups:
         ios_dicts = (
             apps[~apps["store"].str.contains("oogl")]
@@ -739,5 +747,4 @@ COLLECTIONS = {
     "new_weekly": {"title": "New Apps this Week"},
     "new_monthly": {"title": "New Apps this Month"},
     "new_yearly": {"title": "New Apps this Year"},
-    "top": {"title": "Alltime Top"},
 }

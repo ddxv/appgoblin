@@ -115,9 +115,6 @@
 			<a href="/collections/new_weekly">
 				<p class={classesActive('/collections/new_weekly')}>New this Week</p>
 			</a>
-			<a href="/collections/top">
-				<p class={classesActive('/collections/top')}>Alltime Top</p>
-			</a>
 		</div>
 	</CardFirst>
 </div>

@@ -505,7 +505,8 @@ export interface CompaniesLayoutResponse {
 }
 
 export interface AppFullDetail {
-	icon_url_512?: string;
+	icon_url_512: string;
+	icon_url_100?: string;
 	name: string;
 	installs?: number;
 	store_id: string;
