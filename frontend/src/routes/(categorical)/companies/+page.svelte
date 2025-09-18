@@ -15,7 +15,7 @@
 
 	const title = 'Top App Ad Networks, Dev Tools & App Analytics';
 	const description =
-		'See which apps use which mobile ad networks, data trackers, MMPs, and programmatic networks based on SDK data and app-ads.txt files. Data on these pages is free and open source.';
+		'Free analytics for top mobile ad networks, trackers, app analytics and more. See who the biggest clients of the top mobile SDKs are.';
 </script>
 
 <svelte:head>
