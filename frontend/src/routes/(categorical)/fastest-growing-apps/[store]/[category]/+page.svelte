@@ -50,7 +50,7 @@
 	<meta name="twitter:image" content="https://appgoblin.info/goblin_purple_hat_250.png" />
 </svelte:head>
 
-<div>
+<div class="p-2 px-2 md:px-16 lg:px-32">
 	<h1 class="text-3xl text-primary-900-100">Fastest Growing Apps</h1>
 	<p class="text-sm text-primary-900-100">
 		AppGoblin's weekly list of the fastest growing apps on the Apple and Google Play App Stores.

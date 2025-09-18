@@ -23,6 +23,7 @@
 	import { Check, X } from 'lucide-svelte';
 
 	import { formatNumber } from '$lib/utils/formatNumber';
+	import ZScoreMeter from '$lib/components/ZScoreMeter.svelte';
 
 	type DataTableProps<CompaniesOverviewEntries, TValue> = {
 		data: CompaniesOverviewEntries[];
@@ -47,9 +48,12 @@
 		installs_z_score_4w: false
 	};
 
+	function isGoogleStore(store: string) {
+		return store === 'google';
+	}
+
 	function getHiddenDefaults(store: string) {
-		console.log('CHECK store', store);
-		if (store === 'google') {
+		if (isGoogleStore(store)) {
 			return ratingsHiddenDefaults;
 		} else {
 			return installsHiddenDefaults;
@@ -79,44 +83,44 @@
 		},
 		// Weekly growth metrics
 		{
-			title: 'Installs (1w)',
+			title: 'Installs (7d)',
 			accessorKey: 'installs_sum_1w',
 			isSortable: true
 		},
 		{
-			title: 'Ratings (1w)',
+			title: 'Ratings (7d)',
 			accessorKey: 'ratings_sum_1w',
 			isSortable: true
 		},
 		// 2-Week growth metrics
 		{
-			title: 'Avg Installs (2w)',
+			title: 'Installs (14d)',
 			accessorKey: 'installs_avg_2w',
 			isSortable: true
 		},
 		{
-			title: 'Z-Score Installs (2w)',
+			title: 'Installs Growth Score (14d)',
 			accessorKey: 'installs_z_score_2w',
 			isSortable: true
 		},
 		{
-			title: 'Z-Score Ratings (2w)',
+			title: 'Ratings Growth Score (14d)',
 			accessorKey: 'ratings_z_score_2w',
 			isSortable: true
 		},
 		// Monthly growth metrics
 		{
-			title: 'Installs (4w)',
+			title: 'Installs (30d)',
 			accessorKey: 'installs_sum_4w',
 			isSortable: true
 		},
 		{
-			title: 'Z-Score Installs (4w)',
+			title: 'Installs Growth Score (30d)',
 			accessorKey: 'installs_z_score_4w',
 			isSortable: true
 		},
 		{
-			title: 'Z-Score Ratings (4w)',
+			title: 'Ratings Growth Score (30d)',
 			accessorKey: 'ratings_z_score_4w',
 			isSortable: true
 		},
@@ -138,7 +142,7 @@
 	const hideableColumns = $state<string[]>(
 		columns
 			.filter((column) => {
-				const key = column.accessorKey as string;
+				const key = (column as any).accessorKey as string;
 				return (
 					key === 'in_app_purchases' ||
 					key === 'ad_supported' ||
@@ -146,7 +150,7 @@
 					key?.includes('installs')
 				);
 			})
-			.map((column) => column.accessorKey as string)
+			.map((column) => (column as any).accessorKey as string)
 	);
 
 	const globalFilterFn = (row: any, columnId: string, filterValue: string) => {
@@ -347,15 +351,23 @@
 										>
 											<div class="inline-flex gap-2">
 												<!-- <img
-											src={row.original.icon_url_512}
-											alt="App icon"
-											class="w-10 h-10 rounded-lg"
-											loading="lazy"
-										/> -->
+													src={row.original.icon_url_100}
+													alt={row.original.app_name}
+													class="w-10 h-10 rounded-lg"
+													loading="lazy"
+												/> -->
 												{row.original.app_name}
 											</div>
 										</a>
-									{:else if ['installs', 'rating_count', 'installs_sum_1w', 'ratings_sum_1w', 'installs_avg_2w', 'installs_z_score_2w', 'ratings_z_score_2w', 'installs_sum_4w', 'installs_z_score_4w', 'ratings_z_score_4w'].includes(cell.column.id)}
+									{:else if ['installs_z_score_2w', 'ratings_z_score_2w', 'installs_z_score_4w', 'ratings_z_score_4w'].includes(cell.column.id)}
+										<ZScoreMeter
+											value={cell.getValue() as number}
+											min={isGoogleStore(page.params.store!) ? 0 : 0}
+											max={isGoogleStore(page.params.store!) ? 1000 : 500}
+											size="sm"
+											showValue={false}
+										/>
+									{:else if ['installs', 'rating_count', 'installs_sum_1w', 'ratings_sum_1w', 'installs_avg_2w', 'installs_sum_4w'].includes(cell.column.id)}
 										<p class="text-xs md:text-sm">
 											{formatNumber(cell.getValue() as number)}
 										</p>
