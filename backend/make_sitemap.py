@@ -73,6 +73,10 @@ def create_static_sitemap() -> str:
     # Static URLs to include
     static_urls = [
         "https://appgoblin.info",
+        "https://appgoblin.info/ad-creatives",
+        "https://appgoblin.info/blog",
+        "https://appgoblin.info/fastest-growing-apps/google/overall",
+        "https://appgoblin.info/fastest-growing-apps/ios/overall",
         "https://appgoblin.info/about",
         "https://appgoblin.info/companies",
         "https://appgoblin.info/sdks",
