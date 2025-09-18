@@ -25,34 +25,24 @@
 	{#snippet card1()}
 		{#if !data.companyTree.is_secondary_domain}
 			<WhiteCard>
-				{#await data.companyParentCategories}
-					<span class="text-lg">Loading...</span>
-				{:then myData}
-					{#if typeof myData == 'string'}
-						<p class="text-red-500 text-center">Failed to load company details.</p>
-					{:else if myData && myData.length > 0}
-						<WhiteCard>
-							{#snippet title()}
-								<span>Company Apps</span>
-							{/snippet}
+				{#if typeof data.companyParentCategories == 'string'}
+					<p class="text-red-500 text-center">Failed to load company details.</p>
+				{:else if data.companyParentCategories && data.companyParentCategories.length > 0}
+					<WhiteCard>
+						{#snippet title()}
+							<span>Company Apps</span>
+						{/snippet}
 
-							{#await data.companyDetails}
-								<span>Loading...</span>
-							{:then detailsData}
-								<TotalsBox
-									myTotals={detailsData.categories.all}
-									myType={{ name: 'All Companies & Domains', url_slug: 'all-companies' }}
-									hideAdstxtApps={true}
-								/>
-								{#if detailsData && detailsData.adstxt_ad_domain_overview && detailsData.adstxt_ad_domain_overview.google}
-									<AdsTxtTotalsBox myTotals={detailsData.adstxt_ad_domain_overview} />
-								{/if}
-							{/await}
-						</WhiteCard>
-					{/if}
-				{:catch error}
-					<p class="text-red-500 text-center">{error.message}</p>
-				{/await}
+						<TotalsBox
+							myTotals={data.companyDetails.categories.all}
+							myType={{ name: 'All Companies & Domains', url_slug: 'all-companies' }}
+							hideAdstxtApps={true}
+						/>
+						{#if data.companyDetails && data.companyDetails.adstxt_ad_domain_overview && data.companyDetails.adstxt_ad_domain_overview.google}
+							<AdsTxtTotalsBox myTotals={data.companyDetails.adstxt_ad_domain_overview} />
+						{/if}
+					</WhiteCard>
+				{/if}
 			</WhiteCard>
 		{/if}
 	{/snippet}
@@ -85,135 +75,116 @@
 				<span>Related Entities</span>
 			{/snippet}
 			<div class="p-2">
-				{#await data.companyTree}
-					<span class="text-lg">Loading...</span>
-				{:then myTree}
-					{#if typeof myTree == 'string'}
-						<p class="text-red-500 text-center">Failed to load company tree.</p>
-					{:else if myTree && myTree.children_companies.length > 0}
-						<CompanyTree {myTree} />
-					{:else if myTree && myTree.parent_company_domain}
-						<p class="text-lg font-semibold mb-4">Parent Company:</p>
-						<CompanyButton
-							companyName={myTree.parent_company_name}
-							companyDomain={myTree.parent_company_domain}
-							companyLogoUrl={myTree.parent_company_logo_url}
-						/>
-					{:else}
-						<!-- Render nothing if there are no child companies -->
-						{#if myTree.is_secondary_domain}
-							<p class="text-red-200 text-center">
-								This domain is not associated with any other companies yet. If you have information
-								about this domain and related SDKs feel free to reach out. Or if you would like this
-								domain and related SDKs mapped please contact us.
-							</p>
-						{/if}
+				{#if typeof data.companyTree == 'string'}
+					<p class="text-red-500 text-center">Failed to load company tree.</p>
+				{:else if data.companyTree && data.companyTree.children_companies.length > 0}
+					<CompanyTree myTree={data.companyTree} />
+				{:else if data.companyTree && data.companyTree.parent_company_domain}
+					<p class="text-lg font-semibold mb-4">Parent Company:</p>
+					<CompanyButton
+						companyName={data.companyTree.parent_company_name}
+						companyDomain={data.companyTree.parent_company_domain}
+						companyLogoUrl={data.companyTree.parent_company_logo_url}
+					/>
+				{:else}
+					<!-- Render nothing if there are no child companies -->
+					{#if data.companyTree.is_secondary_domain}
+						<p class="text-red-200 text-center">
+							This domain is not associated with any other companies yet. If you have information
+							about this domain and related SDKs feel free to reach out. Or if you would like this
+							domain and related SDKs mapped please contact us.
+						</p>
 					{/if}
-					{#if myTree && myTree.domains && myTree.domains.length > 1}
-						<h2 class="text-lg font-semibold mb-4">Associated Domains</h2>
-						<div class="flex flex-col gap-1">
-							{#each myTree.domains as domain}
-								<div class="">
-									<!-- Domain URL -->
-									<div
-										class="font-semibold text-md"
-										title={`IP addresses for this domain commonly resolve to: ${domain.country.join(', ')}`}
-									>
-										<span
-											><a href="/companies/{domain.tld_url}">{domain.tld_url}</a>
-											<!-- Countries as flags -->
-											{#if domain.country.length > 0}
-												<span class="gap-2 ml-2">
-													{#each domain.country as country}
-														<span class="text-lg">{countryCodeToEmoji(country)}</span>
-													{/each}
-												</span>
-											{/if}
-										</span>
-									</div>
-									<!-- Organizations -->
-									{#if domain.org.length > 0}
-										<div class="text-sm text-gray-600">
-											<span class="text-gray-500">{domain.org.join(', ')}</span>
-										</div>
-									{/if}
+				{/if}
+				{#if data.companyTree && data.companyTree.domains && data.companyTree.domains.length > 1}
+					<h2 class="text-lg font-semibold mb-4">Associated Domains</h2>
+					<div class="flex flex-col gap-1">
+						{#each data.companyTree.domains as domain}
+							<div class="">
+								<!-- Domain URL -->
+								<div
+									class="font-semibold text-md"
+									title={`IP addresses for this domain commonly resolve to: ${domain.country.join(', ')}`}
+								>
+									<span
+										><a href="/companies/{domain.tld_url}">{domain.tld_url}</a>
+										<!-- Countries as flags -->
+										{#if domain.country.length > 0}
+											<span class="gap-2 ml-2">
+												{#each domain.country as country}
+													<span class="text-lg">{countryCodeToEmoji(country)}</span>
+												{/each}
+											</span>
+										{/if}
+									</span>
 								</div>
-							{/each}
-						</div>
-					{/if}
-				{:catch error}
-					<p class="text-red-500">{error.message}</p>
-				{/await}
+								<!-- Organizations -->
+								{#if domain.org.length > 0}
+									<div class="text-sm text-gray-600">
+										<span class="text-gray-500">{domain.org.join(', ')}</span>
+									</div>
+								{/if}
+							</div>
+						{/each}
+					</div>
+				{/if}
 			</div>
 		</WhiteCard>
 	{/snippet}
 </CompaniesLayout>
 
 {#if !data.companyTree.is_secondary_domain}
-	{#await data.companyCreatives}
-		<div><span>Loading...</span></div>
-	{:then myCreatives}
-		{#if myCreatives && myCreatives.length > 0}
-			<WhiteCard>
-				{#snippet title()}
-					<span>Recent Ad Buyers & Ad Creatives</span>
-				{/snippet}
-				<div class="grid grid-cols-3 gap-2 p-2">
-					{#each myCreatives as creative}
-						<card class="card bg-surface-100-900 p-2">
-							<AppCard app={creative} showHeader={true} />
-							Last Seen: {creative.last_seen}
-							Creative Type: {creative.file_extension}
-						</card>
-					{/each}
-				</div>
-			</WhiteCard>
-		{/if}
-	{/await}
+	{#if data.companyCreatives && data.companyCreatives.length > 0}
+		<WhiteCard>
+			{#snippet title()}
+				<span>Recent Ad Buyers & Ad Creatives</span>
+			{/snippet}
+			<div class="grid grid-cols-3 gap-2 p-2">
+				{#each data.companyCreatives as creative}
+					<card class="card bg-surface-100-900 p-2">
+						<AppCard app={creative} showHeader={true} />
+						Last Seen: {creative.last_seen}
+						Creative Type: {creative.file_extension}
+					</card>
+				{/each}
+			</div>
+		</WhiteCard>
+	{/if}
 {/if}
 
-{#await data.companyDetails}
-	<div><span>Loading...</span></div>
-{:then detailsData}
-	{#await data.companyTopApps}
-		<div><span>Loading...</span></div>
-	{:then tableData}
-		{#if typeof tableData == 'string'}
-			Failed to load company's apps.
-		{:else}
-			<CompanyTableGrid
-				{tableData}
-				{detailsData}
-				category="all"
-				isSecondaryDomain={data.companyTree.is_secondary_domain}
-			/>
-		{/if}
-	{:catch error}
-		<p style="color: red">{error.message}</p>
-	{/await}
-	{#if detailsData && detailsData.adstxt_publishers_overview && detailsData.adstxt_publishers_overview.google.direct && detailsData.adstxt_publishers_overview.apple.direct}
-		<div class="card preset-tonal p-2 md:p-8 mt-2 md:mt-4">
-			<div class="grid md:grid-cols-2 gap-4">
-				{#if detailsData.adstxt_publishers_overview.google && detailsData.adstxt_publishers_overview.google.direct}
-					<div>
-						<h2 class="text-lg font-semibold mb-4">ANDROID DIRECT PUBLISHER IDS</h2>
-						<AdsTxtPubIDsTable
-							entries_table={detailsData.adstxt_publishers_overview.google.direct}
-						/>
-					</div>
-				{/if}
-				{#if detailsData.adstxt_publishers_overview.apple && detailsData.adstxt_publishers_overview.apple.direct}
-					<div>
-						<h2 class="text-lg font-semibold mb-4">IOS DIRECT PUBLISHER IDS</h2>
-						<AdsTxtPubIDsTable
-							entries_table={detailsData.adstxt_publishers_overview.apple.direct}
-						/>
-					</div>
-				{/if}
-			</div>
+{#if typeof data.companyTopApps == 'string'}
+	Failed to load company's apps.
+{:else}
+	<CompanyTableGrid
+		tableData={data.companyTopApps}
+		detailsData={data.companyDetails}
+		category="all"
+		isSecondaryDomain={data.companyTree.is_secondary_domain}
+	/>
+{/if}
+
+{#if data.companyDetails && data.companyDetails.adstxt_publishers_overview && data.companyDetails.adstxt_publishers_overview.google.direct && data.companyDetails.adstxt_publishers_overview.apple.direct}
+	<div class="card preset-tonal p-2 md:p-8 mt-2 md:mt-4">
+		<div class="grid md:grid-cols-2 gap-4">
+			{#if data.companyDetails.adstxt_publishers_overview.google && data.companyDetails.adstxt_publishers_overview.google.direct}
+				<div>
+					<h2 class="text-lg font-semibold mb-4">ANDROID DIRECT PUBLISHER IDS</h2>
+					<AdsTxtPubIDsTable
+						entries_table={data.companyDetails.adstxt_publishers_overview.google.direct}
+					/>
+				</div>
+			{/if}
+			{#if data.companyDetails.adstxt_publishers_overview.apple && data.companyDetails.adstxt_publishers_overview.apple.direct}
+				<div>
+					<h2 class="text-lg font-semibold mb-4">IOS DIRECT PUBLISHER IDS</h2>
+					<AdsTxtPubIDsTable
+						entries_table={data.companyDetails.adstxt_publishers_overview.apple.direct}
+					/>
+				</div>
+			{/if}
 		</div>
-	{/if}
-{/await}
+	</div>
+{/if}
 
 {#if !data.companyTree.is_secondary_domain}
 	<WhiteCard>

@@ -4,9 +4,6 @@
 	import { formatNumberLocale } from '$lib/utils/formatNumber';
 
 	let { detailsData, tableData, category, isSecondaryDomain = false } = $props();
-
-	// Remove the local formatNumber function (lines 6-8)
-	// Replace all formatNumber calls with formatNumberLocale
 </script>
 
 <div class="grid grid-cols-1">
@@ -15,7 +12,7 @@
 			{#snippet title()}
 				Android Top Apps
 			{/snippet}
-			{#if tableData.android.apps.length > 0}
+			{#if tableData.android.apps && tableData.android.apps.length > 0}
 				<CompanyOverviewTable data={tableData.android.apps} isiOS={false} />
 			{:else}
 				<p class="text-sm md:text-lg mb-2">No Android apps found for this company.</p>
@@ -26,7 +23,7 @@
 				{#snippet title()}
 					iOS Top Apps
 				{/snippet}
-				{#if tableData.ios.apps.length > 0}
+				{#if tableData.ios.apps && tableData.ios.apps.length > 0}
 					<CompanyOverviewTable data={tableData.ios.apps} isiOS={true} />
 				{:else}
 					<p class="text-sm md:text-lg mb-2">No iOS apps found for this company.</p>

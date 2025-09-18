@@ -407,30 +407,6 @@
 								</td>
 							{/if}
 						{/if}
-
-						<!-- {#if dataSource == 'reseller'}
-							<td class="table-cell-fit">
-								<p class="text-xs md:text-sm">
-									{formatNumber(row.original.google_app_ads_reseller_installs_d30)}
-								</p>
-							</td>
-
-							<td class="table-cell-fit">
-								<p class="text-xs md:text-sm">
-									{formatNumber(row.original.apple_app_ads_reseller_installs_d30)}
-								</p>
-							</td>
-							<td class="table-cell-fit">
-								<p class="text-xs md:text-sm">
-									{(row.original.google_app_ads_reseller_percentage * 100).toFixed(2)}%
-								</p>
-							</td>
-							<td class="table-cell-fit">
-								<p class="text-xs md:text-sm">
-									{(row.original.apple_app_ads_reseller_percentage * 100).toFixed(2)}%
-								</p>
-							</td>
-						{/if} -->
 					</tr>
 				{/each}
 			</tbody>

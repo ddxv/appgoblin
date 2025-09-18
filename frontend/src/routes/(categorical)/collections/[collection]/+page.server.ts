@@ -1,32 +1,17 @@
+import type { PageServerLoad } from './$types.js';
+import { createApiClient } from '$lib/server/api';
+
 export const ssr: boolean = true;
 export const csr: boolean = true;
 
-import type { PageServerLoad } from './$types.js';
-
 export const load: PageServerLoad = async ({ fetch, params, setHeaders }) => {
+	const api = createApiClient(fetch);
 	const collectionValue = params.collection;
+
 	console.log(`load started collection=${collectionValue}`);
 	setHeaders({ 'cache-control': 'max-age=86400' });
-	const res = fetch(`http://localhost:8000/api/apps/collections/${collectionValue}`);
+	const AppCollections = await api.get(`/apps/collections/${collectionValue}`, 'App Collections');
 	return {
-		AppCollections: res
-			.then((resp) => {
-				if (resp.status === 200) {
-					return resp.json();
-				} else if (resp.status === 404) {
-					console.log('Collection Not found');
-					return 'Collection Not Found';
-				} else if (resp.status === 500) {
-					console.log('API Server error');
-					return 'Backend Error';
-				}
-			})
-			.then(
-				(json) => json,
-				(error) => {
-					console.log('Uncaught error', error);
-					return 'Uncaught Error';
-				}
-			)
+		AppCollections
 	};
 };

@@ -1,39 +1,25 @@
 import type { LayoutServerLoad } from './$types';
+import { createApiClient } from '$lib/server/api';
 
 export const load: LayoutServerLoad = async ({ fetch, params }) => {
+	const api = createApiClient(fetch);
 	const companyDomain = params.domain;
 	const category = params.category;
 
-	let res;
+	let url;
 
 	if (category) {
-		res = fetch(`http://localhost:8000/api/companies/${companyDomain}?category=${category}`);
+		url = `/companies/${companyDomain}?category=${category}`;
 	} else {
-		res = fetch(`http://localhost:8000/api/companies/${companyDomain}`);
+		url = `/companies/${companyDomain}`;
 	}
 
-	const res_tree = await fetch(`http://localhost:8000/api/companies/${companyDomain}/tree`);
+	const companyDetails = await api.get(url, 'Company Details');
+
+	const companyTree = await api.get(`/companies/${companyDomain}/tree`, 'Company Tree');
 
 	return {
-		companyDetails: res
-			.then((resp) => {
-				if (resp.status === 200) {
-					return resp.json();
-				} else if (resp.status === 404) {
-					console.log('Company Not found');
-					return 'Company Not Found';
-				} else if (resp.status === 500) {
-					console.log('API Server error');
-					return 'Backend Error';
-				}
-			})
-			.then(
-				(json) => json,
-				(error) => {
-					console.log('Uncaught error', error);
-					return 'Uncaught Error';
-				}
-			),
-		companyTree: await res_tree.json()
+		companyDetails,
+		companyTree
 	};
 };

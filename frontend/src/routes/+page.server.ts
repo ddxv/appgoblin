@@ -5,7 +5,7 @@ import { getCachedData } from '../hooks.server.js';
 export const prerender = false;
 
 export const ssr = true;
-// export const csr = true;
+export const csr = true;
 
 export const load: PageServerLoad = async ({ setHeaders, parent, fetch }) => {
 	setHeaders({
