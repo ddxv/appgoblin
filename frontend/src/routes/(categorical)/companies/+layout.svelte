@@ -36,13 +36,9 @@
 	</Breadcrumbs>
 </div>
 
-{#await data.companyTypes}
-	Loading company types ...
-{:then companyTypes}
-	{#if !page.url.pathname.includes('adstxt') && companyTypes && companyTypes.types.length > 0 && !domain}
-		<CompanyTypesTabs {companyTypes} />
-	{/if}
-{/await}
+{#if !page.url.pathname.includes('adstxt') && data.companyTypes && data.companyTypes.types.length > 0 && !domain}
+	<CompanyTypesTabs companyTypes={data.companyTypes} />
+{/if}
 
 <div class="card-content p-1 md:p-6 shadow-md rounded-lg">
 	{@render children?.()}

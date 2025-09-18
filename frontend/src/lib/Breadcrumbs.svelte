@@ -1,17 +1,14 @@
 <script lang="ts" generics="Metadata = any">
 	import type { Crumb, ModuleData } from '.././types';
-	import { onMount } from 'svelte';
 
 	export function titleSanitizer(title: string) {
 		return title.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase());
 	}
 	interface Props {
-		// Relative path to the routes folder for the glob import
 		relPathToRoutes?: string;
-		// The route from the routers perspective, e.g. page.route.id
 		routeId: string | null;
 		url: URL;
-		crumbs?: Crumb<Metadata>[] | undefined;
+		crumbs?: Crumb<any>[] | undefined;
 		routeModules?: Record<string, ModuleData> | undefined;
 		pageData: any;
 		children?: import('svelte').Snippet<[any]>;
@@ -22,19 +19,17 @@
 		routeId,
 		url,
 		crumbs = undefined,
-		routeModules = $bindable(undefined),
+		routeModules = import.meta.glob('/src/routes/**/*.svelte', { eager: true }),
 		pageData,
 		children
 	}: Props = $props();
 
-	onMount(async () => {
-		// If nothing is passed to routeModules, populate it
-		if (routeModules === undefined) {
-			routeModules = import.meta.glob('/src/routes/**/*.svelte', {
-				eager: true
-			});
-		}
-	});
+	// If nothing is passed to routeModules, populate it
+	if (routeModules === undefined) {
+		routeModules = import.meta.glob('/src/routes/**/*.svelte', {
+			eager: true
+		});
+	}
 
 	// Given a module and a crumb, determine the page title
 	function getPageTitleFromModule(module: ModuleData | undefined) {

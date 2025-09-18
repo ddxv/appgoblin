@@ -17,23 +17,20 @@
 
 	let currentCategoryName = $derived(getCategoryName(page.params.category));
 
-	function getCategoryName(category: string) {
+	function getCategoryName(category: string | undefined) {
 		return (
 			page.data?.appCats?.categories?.find((cat: { id: string }) => cat.id == category)?.name ||
-			category
+			category ||
+			'All'
 		);
 	}
 </script>
 
 <div class="flex items-center mb-2">
 	<h1 class="h1 text-3xl font-bold text-primary-900-100">
-		Top {#await currentType then currentType}
-			<span class="text-primary-700-300">{currentType ? currentType.name : ''}</span>
-		{/await}
-		companies for
-		{#await currentCategoryName then currentCategoryName}
-			<span class="text-primary-700-300">{currentCategoryName ? currentCategoryName : 'All'}</span>
-		{/await}
+		<span class="text-primary-700-300">{currentType ? currentType.name : ''}</span>
+		for
+		<span class="text-primary-700-300">{currentCategoryName ? currentCategoryName : 'All'}</span>
 		Apps
 	</h1>
 </div>
@@ -44,13 +41,14 @@
 			{#snippet title()}
 				Totals
 			{/snippet}
-			{#await page.data.companiesOverview then myData}
-				{#if typeof myData == 'string'}
-					<p class="text-red-500 text-center">Failed to load company details.</p>
-				{:else}
-					<TotalsBox myTotals={myData.categories.categories.all} myType={currentType} />
-				{/if}
-			{/await}
+			{#if typeof page.data.companiesOverview == 'string'}
+				<p class="text-red-500 text-center">Failed to load company details.</p>
+			{:else}
+				<TotalsBox
+					myTotals={page.data.companiesOverview.categories.categories.all}
+					myType={currentType}
+				/>
+			{/if}
 		</WhiteCard>
 	{/snippet}
 
@@ -59,11 +57,7 @@
 			{#snippet title()}
 				Top Companies (Android SDKs)
 			{/snippet}
-			{#await page.data.companiesOverview}
-				Loading...
-			{:then myData}
-				<CompaniesBarChart plotData={myData.top.sdk_android} />
-			{/await}
+			<CompaniesBarChart plotData={page.data.companiesOverview.top.sdk_android} />
 		</WhiteCard>
 	{/snippet}
 	{#snippet card3()}
@@ -71,11 +65,7 @@
 			{#snippet title()}
 				Top Companies (iOS SDKs)
 			{/snippet}
-			{#await page.data.companiesOverview}
-				Loading...
-			{:then myData}
-				<CompaniesBarChart plotData={myData.top.sdk_ios} />
-			{/await}
+			<CompaniesBarChart plotData={page.data.companiesOverview.top.sdk_ios} />
 		</WhiteCard>
 	{/snippet}
 </CompaniesLayout>
