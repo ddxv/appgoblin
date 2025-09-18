@@ -6,23 +6,23 @@
 
 <svelte:head>
 	<!-- Title -->
-	<title>Ad Creatives - AppGoblin</title>
+	<title>Top Mobile Ad Buyers & Ad Creatives</title>
 
 	<!-- Standard meta tags -->
 	<meta
 		name="description"
-		content="Explore ad creatives and monetized ads on AppGoblin. See the top mobile ad buyers this month and their creative strategies."
+		content="The largest mobile ad buyers based on recently seen ad creatives across hundreds of ad networks. See the top mobile ad buyers this month and their creative strategies."
 	/>
 	<meta
 		name="keywords"
-		content="ad creatives, mobile advertising, app marketing, advertising insights, AppGoblin"
+		content="ad buyers, mobile advertisers, ad creatives, mobile advertising, app marketing, advertising insights, AppGoblin"
 	/>
 
 	<!-- Open Graph meta tags -->
-	<meta property="og:title" content="Ad Creatives - AppGoblin" />
+	<meta property="og:title" content="Top Mobile Ad Buyers & Ad Creatives" />
 	<meta
 		property="og:description"
-		content="Explore ad creatives and advertising insights on AppGoblin."
+		content="The largest mobile ad buyers based on recently seen ad creatives across hundreds of ad networks. See the top mobile ad buyers this month and their creative strategies."
 	/>
 	<meta property="og:image" content="https://appgoblin.info/goblin_purple_hat_250.png" />
 	<meta property="og:url" content="https://appgoblin.info/ad-creatives" />
@@ -30,10 +30,10 @@
 
 	<!-- Twitter Card meta tags -->
 	<meta name="twitter:card" content="summary_large_image" />
-	<meta name="twitter:title" content="Ad Creatives - AppGoblin" />
+	<meta name="twitter:title" content="Top Mobile Ad Buyers & Their Ad Creatives" />
 	<meta
 		name="twitter:description"
-		content="Explore ad creatives and advertising insights on AppGoblin."
+		content="The largest mobile ad buyers based on recently seen ad creatives across hundreds of ad networks. See the top mobile ad buyers this month and their creative strategies."
 	/>
 	<meta name="twitter:image" content="https://appgoblin.info/goblin_purple_hat_250.png" />
 

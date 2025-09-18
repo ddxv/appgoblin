@@ -43,12 +43,6 @@
 			title: 'Top Creatives',
 			accessorKey: 'top_md5_hashes',
 			isSortable: true
-		},
-
-		{
-			title: 'Last Seen',
-			accessorKey: 'last_seen',
-			isSortable: true
 		}
 	]);
 
@@ -114,7 +108,7 @@
 
 	function getCreativesColumnWidth(header: any) {
 		if (header.column.id === 'top_md5_hashes') {
-			return 'w-[40%]';
+			return 'w-[50%]';
 		}
 		return '';
 	}
@@ -245,7 +239,6 @@
 								</div>
 							</div> -->
 						</td>
-						<td>{row.original.last_seen}</td>
 					</tr>
 				{/each}
 			</tbody>
