@@ -49,6 +49,5 @@ SELECT
     COALESCE(ad_mon_creatives, 0) AS ad_monetized_creative_count
 FROM
     frontend.store_apps_overview AS sa
-LEFT JOIN has_monetized_creatives AS hmc ON sa.store_id = hmc.pub_store_id
 WHERE
     store_id = :store_id;
