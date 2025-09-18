@@ -1,33 +1,23 @@
-WITH latest_crawled_date AS (
-    SELECT max(arr.crawled_date) AS crawled_date
-    FROM frontend.store_app_ranks_weekly AS arr
-    INNER JOIN countries AS c ON arr.country = c.id
-    WHERE arr.store_collection = :collection_id AND c.alpha2 = :country
-)
-
 SELECT
-    ar.rank,
-    sa.name,
-    sa.store_id,
-    sa.store,
-    sa.installs,
-    sa.rating_count,
-    sa.rating,
-    sa.review_count,
-    sa.installs_sum_1w,
-    sa.installs_sum_4w,
-    sa.ratings_sum_1w,
-    sa.ratings_sum_4w,
-    sa.icon_url_100,
-    sa.icon_url_512
+    rank,
+    name,
+    store_id,
+    store,
+    installs,
+    rating_count,
+    rating,
+    review_count,
+    installs_sum_1w,
+    installs_sum_4w,
+    ratings_sum_1w,
+    ratings_sum_4w,
+    icon_url_100,
+    icon_url_512
 FROM
-    frontend.store_app_ranks_weekly AS ar
-INNER JOIN latest_crawled_date AS lcd ON ar.crawled_date = lcd.crawled_date
-INNER JOIN countries AS c ON ar.country = c.id
-LEFT JOIN frontend.store_apps_overview AS sa ON ar.store_app = sa.id
+    frontend.store_app_ranks_latest
 WHERE
-    ar.store_collection = :collection_id
-    AND ar.store_category = :category_id
-    AND c.alpha2 = :country
-ORDER BY ar.rank ASC
+    store_collection = :collection_id
+    AND store_category = :category_id
+    AND country = :country
+ORDER BY rank ASC
 LIMIT :mylimit;
