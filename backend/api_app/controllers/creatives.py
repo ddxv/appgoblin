@@ -3,6 +3,7 @@
 /creatives/app/{store_id} creatives for a specific app
 """
 
+import time
 from typing import Self
 
 import numpy as np
@@ -14,6 +15,7 @@ from dbcon.queries import (
     get_advertiser_creative_rankings_top,
     get_advertiser_creatives,
     get_company_creatives,
+    get_company_logos_df,
 )
 
 logger = get_logger(__name__)
@@ -33,17 +35,46 @@ class CreativesController(Controller):
             A dictionary representation of the total counts
 
         """
+        start = time.perf_counter() * 1000
         df = get_advertiser_creative_rankings()
-        df["advertiser_icon_url_100"] = np.where(
+
+        company_logos_df = get_company_logos_df()
+
+        def get_logo_url(domain: str) -> str:
+            try:
+                return company_logos_df[company_logos_df["company_domain"] == domain][
+                    "company_logo_url"
+                ].iloc[0]
+            except:  # noqa: E722
+                return "default_company_logo.png"
+
+        df["ad_networks"] = df["ad_network_domains"].apply(
+            lambda x: [
+                {"domain": d, "company_logo_url": get_logo_url(d)}
+                for d in x
+                if d is not None
+            ]
+        )
+
+        df = df.rename(
+            columns={
+                "advertiser_icon_url_512": "icon_url_512",
+                "advertiser_name": "name",
+                "advertiser_store_id": "store_id",
+            }
+        )
+        df["icon_url_100"] = np.where(
             df["advertiser_icon_url_100"].notna(),
             "https://media.appgoblin.info/app-icons/"
-            + df["advertiser_store_id"]
+            + df["store_id"]
             + "/"
             + df["advertiser_icon_url_100"],
             None,
         )
         df["last_seen"] = df["last_seen"].dt.strftime("%Y-%m-%d")
         df = df.head(100)
+        duration = round((time.perf_counter() * 1000 - start), 2)
+        logger.info(f"{self.path} took {duration}ms")
         return df.to_dict(orient="records")
 
     @get(path="/top", cache=86400)
@@ -55,8 +86,9 @@ class CreativesController(Controller):
             A dictionary representation of the total counts
 
         """
+        start = time.perf_counter() * 1000
         df = get_advertiser_creative_rankings_top()
-        np.where(
+        df["icon_url_100"] = np.where(
             df["advertiser_icon_url_100"].notna(),
             "https://media.appgoblin.info/app-icons/"
             + df["advertiser_store_id"]
@@ -65,6 +97,8 @@ class CreativesController(Controller):
             None,
         )
         df["last_seen"] = df["last_seen"].dt.strftime("%Y-%m-%d")
+        duration = round((time.perf_counter() * 1000 - start), 2)
+        logger.info(f"{self.path}/top took {duration}ms")
         return df.to_dict(orient="records")
 
     @get(path="/companies/{company_domain: str}", cache=86400)
@@ -76,6 +110,7 @@ class CreativesController(Controller):
             A dictionary representation of the total counts
 
         """
+        start = time.perf_counter() * 1000
         df = get_company_creatives(company_domain)
         df = df.rename(columns={"advertiser_store_id": "store_id"})
         df["icon_url_100"] = np.where(
@@ -91,6 +126,8 @@ class CreativesController(Controller):
         )
         if not df.empty:
             df["last_seen"] = df["last_seen"].dt.strftime("%Y-%m-%d")
+        duration = round((time.perf_counter() * 1000 - start), 2)
+        logger.info(f"{self.path}/companies/{company_domain} took {duration}ms")
         return df.to_dict(orient="records")
 
     @get(path="/apps/{store_id: str}/monetized", cache=86400)

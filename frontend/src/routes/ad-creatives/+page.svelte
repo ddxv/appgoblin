@@ -44,14 +44,14 @@
 </svelte:head>
 
 <div class="p-2 px-2 md:px-16 lg:px-32">
-	<h1 class="text-3xl font-bold text-primary-900-100">Top Advertising Apps & Their Ad Creatives</h1>
+	<h1 class="text-3xl font-bold text-primary-900-100">Top Mobile Ad Buyers & Their Ad Creatives</h1>
 
 	<br />
 
 	<div class="p-4">
 		<p>
-			These are top mobile ad buyers from this month. The top advertisers and their creatives are
-			based on actual ads from various publishing apps in the past month.
+			These are top mobile ad buyers (advertisers) from this month. The top advertisers and their
+			creatives are based on actual ads seen in publishing apps in the past month.
 		</p>
 	</div>
 

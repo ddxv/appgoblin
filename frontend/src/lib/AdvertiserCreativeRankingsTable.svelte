@@ -9,6 +9,10 @@
 		getFilteredRowModel
 	} from '@tanstack/table-core';
 
+	import AppCard from './AppCard.svelte';
+
+	import CompanyButton from './CompanyButton.svelte';
+
 	import Pagination from '$lib/components/data-table/Pagination.svelte';
 	import ExportAsCSV from '$lib/components/data-table/ExportAsCSV.svelte';
 	import type { RankedApps } from '../types';
@@ -32,7 +36,7 @@
 	const columns = genericColumns([
 		{
 			title: 'Advertiser',
-			accessorKey: 'advertiser_name',
+			accessorKey: 'name',
 			isSortable: true
 		},
 		{
@@ -42,21 +46,6 @@
 		},
 
 		{
-			title: 'MMP',
-			accessorKey: 'mmp_domains',
-			isSortable: true
-		},
-		{
-			title: 'Unique Creatives',
-			accessorKey: 'unique_creatives',
-			isSortable: true
-		},
-		{
-			title: 'Unique Publishers',
-			accessorKey: 'unique_publishers',
-			isSortable: true
-		},
-		{
 			title: 'Last Seen',
 			accessorKey: 'last_seen',
 			isSortable: true
@@ -64,7 +53,7 @@
 	]);
 
 	const globalFilterFn = (row: any, columnId: string, filterValue: string) => {
-		const name = row.original.advertiser_name?.toLowerCase() ?? '';
+		const name = row.original.name?.toLowerCase() ?? '';
 		const query = filterValue.toLowerCase();
 		return name.includes(query);
 	};
@@ -122,6 +111,13 @@
 		getPaginationRowModel: getPaginationRowModel(),
 		getFilteredRowModel: getFilteredRowModel()
 	});
+
+	function getCreativesColumnWidth(header: any) {
+		if (header.column.id === 'top_md5_hashes') {
+			return 'w-[40%]';
+		}
+		return '';
+	}
 </script>
 
 <div class="table-container">
@@ -138,11 +134,11 @@
 	</div>
 	<div class="overflow-x-auto pl-0">
 		<table class="table table-hover table-auto w-full">
-			<thead>
+			<thead class="text-base md:text-xl">
 				{#each table.getHeaderGroups() as headerGroup (headerGroup.id)}
 					<tr>
 						{#each headerGroup.headers as header (header.id)}
-							<th class="">
+							<th class={getCreativesColumnWidth(header)}>
 								{#if !header.isPlaceholder}
 									<FlexRender
 										content={header.column.columnDef.header}
@@ -158,37 +154,97 @@
 				{#each table.getRowModel().rows as row (row.id)}
 					<tr class="px-0 text-base md:text-xl">
 						<td>
-							<a href="/apps/{row.original.advertiser_store_id}/ad-placements">
-								<div class="col-1">
-									<img
-										src={row.original.advertiser_icon_url_100 ||
-											row.original.advertiser_icon_url_512}
-										alt={row.original.advertiser_name}
-										class="w-12 md:w-24 h-auto object-cover rounded"
-										referrerpolicy="no-referrer"
-									/>
-								</div>
-								{row.original.advertiser_name}
-							</a>
-						</td>
-						<td>
-							<div class="overvlow-y-auto">
-								<div class="grid grid-cols-2 gap-1">
-									{#each row.original.top_md5_hashes.slice(0, 4) as md5_hash}
-										<a href="/apps/{row.original.advertiser_store_id}/ad-placements">
-											<img
-												src="https://media.appgoblin.info/creatives/thumbs/{md5_hash}.jpg"
-												alt="Creative for {row.original.advertiser_name}"
-												class="object-cover rounded w-12 md:w-36 h-auto"
-											/>
-										</a>
-									{/each}
+							<div class="grid grid-cols-1 gap-2">
+								<AppCard app={row.original} showHeader={false} />
+								<div>
+									<p class="text-primary-100-900">
+										Ads Last Seen:<span class="text-primary-900-100 mx-2"
+											>{row.original.last_seen}</span
+										>
+									</p>
+									<p class="text-primary-100-900">
+										Creatives:<span class="text-primary-900-100 mx-2"
+											>{row.original.unique_creatives}</span
+										>
+									</p>
+									<p class="text-primary-100-900">
+										Apps seen publishing ads:<span class="text-primary-900-100 mx-2"
+											>{row.original.unique_publishers}</span
+										>
+									</p>
+									{#if row.original.mmp_domains && row.original.mmp_domains.length > 0}
+										<p class="text-primary-100-900">
+											MMPs:<span class="text-primary-900-100 mx-2"
+												>{row.original.mmp_domains.length}</span
+											>
+										</p>
+									{/if}
+
+									<p class="text-primary-100-900">
+										File Types:<span class="text-primary-900-100 mx-2"
+											>{row.original.file_types.join(', ')}</span
+										>
+									</p>
+									{#if row.original.ad_networks && row.original.ad_networks.length > 0}
+										<p class="text-primary-100-900">Ad Networks:</p>
+										<div class="grid grid-cols-2 md:grid-cols-3">
+											{#each row.original.ad_networks as ad_network}
+												<CompanyButton
+													companyDomain={ad_network.domain}
+													companyLogoUrl={ad_network.company_logo_url}
+													size="lg"
+												/>
+											{/each}
+										</div>
+									{/if}
 								</div>
 							</div>
 						</td>
-						<td>{row.original.mmp_domains}</td>
-						<td>{row.original.unique_creatives}</td>
-						<td>{row.original.unique_publishers}</td>
+
+						<td>
+							<div class="overflow-x-auto relative">
+								<div
+									class="flex gap-3 snap-x snap-mandatory overflow-x-auto scrollbar-hide border-2 border-surface-100-900 p-4 pr-4"
+								>
+									{#each row.original.top_md5_hashes.slice(0, 6) as md5_hash}
+										<a
+											href="/apps/{row.original.advertiser_store_id}/ad-placements"
+											class="snap-start shrink-0"
+										>
+											<card class="card-hover">
+												<div class="card-header justify-center">
+													<img
+														src="https://media.appgoblin.info/creatives/thumbs/{md5_hash}.jpg"
+														alt="Creative for {row.original.advertiser_name}"
+														class="h-88 w-full object-cover rounded-lg"
+													/>
+												</div>
+											</card>
+										</a>
+									{/each}
+								</div>
+								<div
+									class="pointer-events-none absolute top-0 right-0 h-full w-12 bg-gradient-to-l from-surface-100-900 to-transparent"
+								></div>
+							</div>
+							<!-- <div class="overflow-auto">
+								<div class="flex gap-1 overflow-x-auto">
+									{#each row.original.top_md5_hashes.slice(0, 6) as md5_hash}
+										<a href="/apps/{row.original.advertiser_store_id}/ad-placements">
+											<card class="card-hover">
+												<div class="card-header justify-center">
+													<img
+														src="https://media.appgoblin.info/creatives/thumbs/{md5_hash}.jpg"
+														alt="Creative for {row.original.advertiser_name}"
+														class="h-88 w-full object-middle object-none rounded-lg"
+													/>
+												</div>
+											</card>
+										</a>
+									{/each}
+								</div>
+							</div> -->
+						</td>
 						<td>{row.original.last_seen}</td>
 					</tr>
 				{/each}
