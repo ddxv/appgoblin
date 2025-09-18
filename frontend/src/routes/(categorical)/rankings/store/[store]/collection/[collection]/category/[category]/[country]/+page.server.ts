@@ -2,9 +2,10 @@ export const ssr: boolean = true;
 export const csr: boolean = true;
 
 import type { PageServerLoad } from '../$types.js';
+import { getCachedData } from '../../../../../../../../../../hooks.server.js';
 
-export const load: PageServerLoad = async ({ fetch, params, setHeaders, parent }) => {
-	const { countries } = await parent();
+export const load: PageServerLoad = async ({ fetch, params, setHeaders }) => {
+	const { countries } = await getCachedData();
 	const emptyResponse = {};
 	setHeaders({
 		'cache-control': 'max-age=3600'

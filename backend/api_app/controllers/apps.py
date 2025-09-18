@@ -36,6 +36,7 @@ from dbcon.queries import (
     get_app_history,
     get_app_sdk_details,
     get_app_sdk_overview,
+    get_company_logos_df,
     get_growth_apps,
     get_ranks_for_app,
     get_ranks_for_app_overview,
@@ -46,7 +47,6 @@ from dbcon.queries import (
     get_total_counts,
     insert_sdk_scan_request,
     search_apps,
-    get_company_logos_df,
 )
 
 logger = get_logger(__name__)
@@ -285,13 +285,13 @@ class AppController(Controller):
         logger.info(f"{self.path}/overview took {duration}ms")
         return overview_dict
 
-    @get(path="/collections/{collection:str}", cache=3600)
+    @get(path="/collections/{collection:str}", cache=86400)
     async def get_apps_overview(self: Self, collection: str) -> Collection:
         """Handle GET request for a list of apps.
 
         Args:
         ----
-            collection:collection
+            collection: these are appgoblin specific collections of 'new' apps
 
         Returns:
         -------
@@ -305,7 +305,7 @@ class AppController(Controller):
         logger.info(f"{self.path}/collections/{collection} took {duration}ms")
         return home_dict
 
-    @get(path="/growth/{store:int}", cache=3600)
+    @get(path="/growth/{store:int}", cache=86400)
     async def get_growth_apps(
         self: Self, store: int, app_category: str | None = None
     ) -> list[dict]:

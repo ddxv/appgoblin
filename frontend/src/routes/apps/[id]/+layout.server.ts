@@ -1,29 +1,14 @@
 import type { LayoutServerLoad } from './$types';
+import { createApiClient } from '$lib/server/api';
 
-function checkStatus(resp: Response, name: string) {
-	if (resp.status === 200) {
-		return resp.json();
-	} else if (resp.status === 404) {
-		console.log(`App ${name} Not found`);
-		return `${name} Not Found`;
-	} else if (resp.status === 500) {
-		console.log(`App ${name} API Server error`);
-		return `${name} API Server error`;
-	} else {
-		throw new Error('Unknown error');
-	}
-}
+import { getCachedData } from '../../../hooks.server';
 
 export const load: LayoutServerLoad = async ({ fetch, params, parent }) => {
-	const { companyTypes } = await parent();
+	const api = createApiClient(fetch);
 
-	const myapp = async () => {
-		const resp = await fetch(`http://localhost:8000/api/apps/${params.id}`);
-		return checkStatus(resp, 'App');
-	};
+	const myapp = await api.get(`/apps/${params.id}`, 'App Details');
+	const cachedData = await getCachedData();
+	const { appCats, companyTypes } = cachedData;
 
-	// Get the app data first
-	const app = await myapp();
-
-	return { myapp: app, companyTypes: await companyTypes };
+	return { myapp, companyTypes, appCats };
 };

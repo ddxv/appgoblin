@@ -6,8 +6,10 @@ export const csr = false;
 
 export const load: LayoutServerLoad = async () => {
 	const cachedData = await getCachedData();
+	const { appCats, companyTypes } = cachedData;
 	return {
-		...cachedData,
+		companyTypes,
+		appCats,
 		cacheTimestamp: new Date().toISOString()
 	};
 };

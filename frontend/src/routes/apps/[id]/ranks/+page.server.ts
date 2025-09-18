@@ -1,6 +1,7 @@
 import type { PageServerLoad } from './$types.js';
 
 import type { Actions } from './$types';
+import { getCachedData } from '../../../../hooks.server.js';
 
 export const actions = {
 	updateRanks: async ({ request, fetch, params }) => {
@@ -28,7 +29,6 @@ function checkStatus(resp: Response, name: string) {
 }
 
 export const load: PageServerLoad = async ({ fetch, params, url, parent }) => {
-	const { countries } = await parent();
 	const id = params.id;
 	const country = url.searchParams.get('country') || 'US';
 
@@ -55,6 +55,8 @@ export const load: PageServerLoad = async ({ fetch, params, url, parent }) => {
 			return 'App Ranks API Error';
 		}
 	};
+
+	const { countries } = await getCachedData();
 
 	return {
 		myranks: myranks(),
