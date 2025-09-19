@@ -14,9 +14,7 @@
 					<tr class="px-0 text-sm md:text-base">
 						<td>
 							<AppAdvertiserCard app={row} size="md" />
-						</td>
 
-						<td>
 							<AppAdvertiserCreativeCarousel data={row} size="md" />
 						</td>
 					</tr>
