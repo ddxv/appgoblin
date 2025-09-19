@@ -22,20 +22,24 @@ from dbcon.queries import (
 logger = get_logger(__name__)
 
 
-def expand_icon_url_100_to_full(df: pd.DataFrame) -> pd.DataFrame:
+def expand_icon_url_100_to_full(
+    df: pd.DataFrame, column_name: str, store_id_column_name: str = "store_id"
+) -> pd.DataFrame:
     """Expand the icon_url_100 column to a full URL."""
-    df["icon_url_100"] = np.where(
-        df["advertiser_icon_url_100"].notna(),
+    df[column_name] = np.where(
+        df[column_name].notna(),
         "https://media.appgoblin.info/app-icons/"
-        + df["store_id"]
+        + df[store_id_column_name]
         + "/"
-        + df["advertiser_icon_url_100"],
+        + df[column_name],
         None,
     )
     return df
 
 
-def append_company_logos_to_df(df: pd.DataFrame) -> pd.DataFrame:
+def append_ad_networks_dict_to_df(
+    df: pd.DataFrame, company_domain_column_name: str = "ad_network_domains"
+) -> pd.DataFrame:
     """Append a dictionary of company names, domains and logos to a dataframe."""
     company_logos_df = get_company_logos_df()
 
@@ -47,7 +51,7 @@ def append_company_logos_to_df(df: pd.DataFrame) -> pd.DataFrame:
         except:  # noqa: E722
             return "default_company_logo.png"
 
-    df["ad_networks"] = df["ad_network_domains"].apply(
+    df["ad_networks"] = df[company_domain_column_name].apply(
         lambda x: [
             {"domain": d, "company_logo_url": get_logo_url(d)}
             for d in x
@@ -82,8 +86,9 @@ class CreativesController(Controller):
             }
         )
 
-        df = expand_icon_url_100_to_full(df)
-        df = append_company_logos_to_df(df)
+        df = expand_icon_url_100_to_full(df, column_name="advertiser_icon_url_100")
+        df = df.rename(columns={"advertiser_icon_url_100": "icon_url_100"})
+        df = append_ad_networks_dict_to_df(df)
         df["last_seen"] = df["last_seen"].dt.strftime("%Y-%m-%d")
         df = df.head(100)
         duration = round((time.perf_counter() * 1000 - start), 2)
@@ -109,8 +114,9 @@ class CreativesController(Controller):
             }
         )
 
-        df = append_company_logos_to_df(df)
-        df = expand_icon_url_100_to_full(df)
+        df = append_ad_networks_dict_to_df(df)
+        df = expand_icon_url_100_to_full(df, column_name="advertiser_icon_url_100")
+        df = df.rename(columns={"advertiser_icon_url_100": "icon_url_100"})
         df["last_seen"] = df["last_seen"].dt.strftime("%Y-%m-%d")
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(f"{self.path}/top took {duration}ms")
@@ -128,7 +134,8 @@ class CreativesController(Controller):
         start = time.perf_counter() * 1000
         df = get_company_creatives(company_domain)
         df = df.rename(columns={"advertiser_store_id": "store_id"})
-        df = expand_icon_url_100_to_full(df)
+        df = expand_icon_url_100_to_full(df, column_name="advertiser_icon_url_100")
+        df = df.rename(columns={"advertiser_icon_url_100": "icon_url_100"})
         df["featured_image_url"] = (
             "https://media.appgoblin.info/creatives/thumbs/" + df["md5_hash"] + ".jpg"
         )
@@ -211,40 +218,85 @@ class CreativesController(Controller):
         df = get_advertiser_creatives(advertiser_store_id=store_id)
         if not df.empty:
             df["run_at"] = df["run_at"].dt.strftime("%Y-%m-%d")
+
+        # df = expand_icon_url_100_to_full(df, column_name="adv_icon_url_100")
+        df = expand_icon_url_100_to_full(
+            df, column_name="pub_icon_url_100", store_id_column_name="pub_store_id"
+        )
+
+        df["pubs"] = df.apply(
+            lambda row: {
+                "store_id": row["pub_store_id"],
+                "name": row["pub_name"],
+                "icon_url_512": row["pub_icon_url_512"],
+                "icon_url_100": row["pub_icon_url_100"],
+            },
+            axis=1,
+        )
+        company_logos_df = get_company_logos_df()
+
+        df = df.merge(
+            company_logos_df,
+            left_on="host_domain_company_domain",
+            right_on="company_domain",
+            how="left",
+            validate="m:1",
+        ).merge(
+            company_logos_df,
+            left_on="ad_domain_company_domain",
+            right_on="company_domain",
+            how="left",
+            validate="m:1",
+            suffixes=("_host_domain", "_ad_domain"),
+        )
+
         pdf = (
             df.groupby(
                 [
-                    "run_at",
-                    "pub_name",
-                    "pub_store_id",
+                    "vhash",
                     "host_domain",
                     "host_domain_company_domain",
                     "host_domain_company_name",
                     "ad_domain",
                     "ad_domain_company_domain",
                     "ad_domain_company_name",
-                    "vhash",
+                    "company_logo_url_ad_domain",
+                    "company_logo_url_host_domain",
                     "file_extension",
-                    "pub_icon_url_512",
                     "mmp_name",
                     "mmp_domain",
                 ],
                 dropna=False,
-            )[["md5_hash", "additional_ad_domain_urls", "mmp_urls"]]
+            )[
+                [
+                    "md5_hash",
+                    "additional_ad_domain_urls",
+                    "mmp_urls",
+                    "run_at",
+                    "pubs",
+                ]
+            ]
             .agg(
                 {
+                    "pubs": lambda x: list(x),
                     "md5_hash": "first",
+                    "run_at": "max",
                     "additional_ad_domain_urls": lambda x: list(
-                        set([item for sublist in x for item in sublist])
+                        {item for sublist in x for item in sublist}
                     ),
                     "mmp_urls": lambda x: list(
-                        set([item for sublist in x for item in sublist])
+                        {item for sublist in x for item in sublist}
                     ),
                 }
             )
             .reset_index()
             .sort_values(by="run_at", ascending=False)
         )
+
+        pdf["pubs_count"] = pdf["pubs"].apply(lambda x: len(x))
+
+        pdf = pdf.sort_values(by="pubs_count", ascending=False)
+
         cdf = (
             df.groupby(
                 [
@@ -256,7 +308,7 @@ class CreativesController(Controller):
             .reset_index()
         )
         return {
-            "by_publisher": pdf.to_dict(orient="records"),
+            "by_vhash": pdf.to_dict(orient="records"),
             "by_creative": cdf.to_dict(orient="records"),
         }
 

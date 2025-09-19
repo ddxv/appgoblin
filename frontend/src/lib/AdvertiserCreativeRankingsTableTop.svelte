@@ -9,12 +9,10 @@
 	<div class="overflow-x-auto pl-0">
 		<table class="table table-hover table-auto w-full border-separate border-spacing-y-4">
 			<tbody>
-				<!-- {#each data as row (row.id)} -->
 				{#each Object.entries(data) as [_prop, row]}
 					<tr class="px-0 text-sm md:text-base">
 						<td class="flex flex-col md:flex-row gap-4">
 							<AppAdvertiserCard app={row} size="md" />
-
 							<AppAdvertiserCreativeCarousel data={row} height="20" />
 						</td>
 					</tr>
