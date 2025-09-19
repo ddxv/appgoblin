@@ -1,93 +1,23 @@
 <script lang="ts" generics="TData, TValue">
-	import { getCoreRowModel, getSortedRowModel } from '@tanstack/table-core';
+	import AppAdvertiserCard from './AppAdvertiserCard.svelte';
+	import AppAdvertiserCreativeCarousel from './AppAdvertiserCreativeCarousel.svelte';
 
-	import type { RankedApps } from '../types';
-
-	import { createSvelteTable, FlexRender } from '$lib/components/data-table/index.js';
-
-	import { genericColumns } from '$lib/components/data-table/generic-column';
-
-	type DataTableProps<RankedApps, TValue> = {
-		data: RankedApps[];
-	};
-
-	let { data }: DataTableProps<RankedApps, TValue> = $props();
-
-	const columns = genericColumns([
-		{
-			title: 'Advertiser',
-			accessorKey: 'advertiser_name',
-			isSortable: true
-		},
-		{
-			title: 'Top Creatives',
-			accessorKey: 'top_md5_hashes',
-			isSortable: true
-		}
-	]);
-
-	const table = createSvelteTable({
-		get data() {
-			return data;
-		},
-		columns,
-
-		getSortedRowModel: getSortedRowModel(),
-
-		getCoreRowModel: getCoreRowModel()
-	});
+	let { data } = $props();
 </script>
 
 <div class="table-container">
 	<div class="overflow-x-auto pl-0">
-		<table class="table table-hover table-auto w-full">
-			<thead>
-				{#each table.getHeaderGroups() as headerGroup (headerGroup.id)}
-					<tr>
-						{#each headerGroup.headers as header (header.id)}
-							<th class="">
-								{#if !header.isPlaceholder}
-									<FlexRender
-										content={header.column.columnDef.header}
-										context={header.getContext()}
-									/>
-								{/if}
-							</th>
-						{/each}
-					</tr>
-				{/each}
-			</thead>
+		<table class="table table-hover table-auto w-full border-separate border-spacing-y-4">
 			<tbody>
-				{#each table.getRowModel().rows as row (row.id)}
-					<tr class="px-0 text-xs md:base">
-						<td class="text-xs md:base">
-							<a href="/apps/{row.original.advertiser_store_id}/ad-placements">
-								<div class="col-1">
-									<img
-										src={row.original.advertiser_icon_url_100 ||
-											row.original.advertiser_icon_url_512}
-										alt={row.original.advertiser_name}
-										class="w-8 md:w-16 h-auto object-cover rounded"
-										referrerpolicy="no-referrer"
-									/>
-								</div>
-								{row.original.advertiser_name}
-							</a>
-						</td>
+				<!-- {#each data as row (row.id)} -->
+				{#each Object.entries(data) as [_prop, row]}
+					<tr class="px-0 text-sm md:text-base">
 						<td>
-							<div class="overvlow-y-auto">
-								<div class="grid grid-cols-2 md:grid-cols-4 gap-1">
-									{#each row.original.top_md5_hashes.slice(0, 4) as md5_hash}
-										<a href="/apps/{row.original.advertiser_store_id}/ad-placements">
-											<img
-												src="https://media.appgoblin.info/creatives/thumbs/{md5_hash}.jpg"
-												alt="Creative for {row.original.advertiser_name}"
-												class="w-12 md:w-24 h-auto"
-											/>
-										</a>
-									{/each}
-								</div>
-							</div>
+							<AppAdvertiserCard app={row} size="md" />
+						</td>
+
+						<td>
+							<AppAdvertiserCreativeCarousel data={row} size="md" />
 						</td>
 					</tr>
 				{/each}

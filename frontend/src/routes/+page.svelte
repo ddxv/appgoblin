@@ -13,7 +13,7 @@
 	const description =
 		'Free app analytics, ASO tools and app competitor analysis. The most in depth SDK and API analysis for mobile advertising industry, free for all.';
 
-	const title = 'AppGoblin Mobile App Marketing Tools';
+	const title = 'AppGoblin Free App Marketing Tools';
 </script>
 
 <svelte:head>
@@ -46,32 +46,40 @@
 	<link rel="canonical" href="https://appgoblin.info" />
 </svelte:head>
 
-<div class="grid grid-cols-1 gap-4 md:gap-8 p-2 md:p-4 px-2 md:px-20 lg:px-48">
+<div class="grid grid-cols-1 gap-4 md:gap-8 px-2 md:px-20 lg:px-48">
 	<br />
-	<div class="p-2 md:p-8 space-y-4">
-		<div class=" p-2 md:p-8">
-			<h1 class="p-2 md:p-4 text-3xl text-primary-900-100">{title}</h1>
-			<p class="p-2 md:p-4">
-				AppGoblin offers <span class="font-bold text-primary-900-100"
-					>free marketing tools for app developers</span
+	<div class="space-y-0">
+		<div class="p-2 md:p-8">
+			<h1 class="text-3xl text-primary-900-100">{title}</h1>
+			<p class="">
+				<span class="font-bold text-primary-900-100"
+					>Free marketing tools for app marketers, app developers and researchers.</span
 				>
-				including ASO, app rankings, competitor analysis and keyword ranking. AppGoblin has the best
+				Free data and tools include ASO, competitor analysis, app trends, live ad creatives and SDK data
+				on 100k apps. AppGoblin has the best
 				<span class="font-bold text-primary-900-100">competitor analysis tools</span> to research mobile
 				SDKs, API calls, app installs and keywords. Advanced advertising data includes who is currently
-				buying ads from which mobile ad networks.
+				buying ads from which mobile ad networks including AppLovin, Unity, Yandex, Mintegral`` and more.
 			</p>
 		</div>
 
 		<div class="card preset-tonal p-2 md:p-8">
 			<a href="/ad-creatives">
-				<h2 class="h2 p-2 md:p-4">Top Monthly Advertisers & Creatives</h2>
+				<h2 class="h2 p-2 md:p-4">This Month's Biggest Advertisers</h2>
 			</a>
+			<p class="p-2 md:p-4">
+				The biggest mobile ad buyers this month, their creatives and the ad networks they are
+				running ads on. This data is collected from live ad requests sent from apps. <a
+					href="/ad-creatives"
+					>See the full list of all mobile app advertisers.
+				</a>
+			</p>
 			{#if data.topAdvertisers && data.topAdvertisers.length > 0}
-				<AdvertiserCreativeRankingsTableTop data={data.topAdvertisers.slice(0, 5)} />
+				<AdvertiserCreativeRankingsTableTop data={data.topAdvertisers.slice(0, 3)} />
 			{/if}
 		</div>
 
-		<div class="card preset-tonal p-2 md:p-8">
+		<div class="card preset-tonal px-2 md:px-8">
 			<a href="/companies">
 				<h2 class="h2 p-2 md:p-4">Most Popular Ad Networks, MMPs & Analytics</h2>
 			</a>
@@ -139,7 +147,7 @@
 
 		<div class="card preset-tonal p-2 md:p-8">
 			<a href="/rankings/store/1/collection/1/category/1/US">
-				<h2 class="h2 p-2 md:p-4">Latest App Store Ranks</h2>
+				<h2 class="h2 p-2 md:p-4">Today's App Store Ranks</h2>
 			</a>
 			<a href="/rankings/store/1/collection/1/category/1/US">
 				<p class="p-2 md:p-4">Click through for full app store categories and rankings.</p>
@@ -185,6 +193,7 @@
 			<a href="/collections/new_monthly">
 				<h2 class="h2 p-2 md:p-4">Explore New Apps</h2>
 				<p class="p-2 md:p-4">
+					These are new apps that have recently been released on the app stores.
 					<strong> Click here to see explore all categories.</strong>
 				</p>
 			</a>

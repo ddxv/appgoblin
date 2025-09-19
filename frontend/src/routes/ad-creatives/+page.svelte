@@ -5,7 +5,6 @@
 </script>
 
 <svelte:head>
-	<!-- Title -->
 	<title>Top Mobile Ad Buyers & Ad Creatives</title>
 
 	<!-- Standard meta tags -->

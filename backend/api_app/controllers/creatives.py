@@ -7,6 +7,7 @@ import time
 from typing import Self
 
 import numpy as np
+import pandas as pd
 from litestar import Controller, get
 
 from config import get_logger
@@ -19,6 +20,41 @@ from dbcon.queries import (
 )
 
 logger = get_logger(__name__)
+
+
+def expand_icon_url_100_to_full(df: pd.DataFrame) -> pd.DataFrame:
+    """Expand the icon_url_100 column to a full URL."""
+    df["icon_url_100"] = np.where(
+        df["advertiser_icon_url_100"].notna(),
+        "https://media.appgoblin.info/app-icons/"
+        + df["store_id"]
+        + "/"
+        + df["advertiser_icon_url_100"],
+        None,
+    )
+    return df
+
+
+def append_company_logos_to_df(df: pd.DataFrame) -> pd.DataFrame:
+    """Append a dictionary of company names, domains and logos to a dataframe."""
+    company_logos_df = get_company_logos_df()
+
+    def get_logo_url(domain: str) -> str:
+        try:
+            return company_logos_df[company_logos_df["company_domain"] == domain][
+                "company_logo_url"
+            ].iloc[0]
+        except:  # noqa: E722
+            return "default_company_logo.png"
+
+    df["ad_networks"] = df["ad_network_domains"].apply(
+        lambda x: [
+            {"domain": d, "company_logo_url": get_logo_url(d)}
+            for d in x
+            if d is not None
+        ]
+    )
+    return df
 
 
 class CreativesController(Controller):
@@ -38,24 +74,6 @@ class CreativesController(Controller):
         start = time.perf_counter() * 1000
         df = get_advertiser_creative_rankings()
 
-        company_logos_df = get_company_logos_df()
-
-        def get_logo_url(domain: str) -> str:
-            try:
-                return company_logos_df[company_logos_df["company_domain"] == domain][
-                    "company_logo_url"
-                ].iloc[0]
-            except:  # noqa: E722
-                return "default_company_logo.png"
-
-        df["ad_networks"] = df["ad_network_domains"].apply(
-            lambda x: [
-                {"domain": d, "company_logo_url": get_logo_url(d)}
-                for d in x
-                if d is not None
-            ]
-        )
-
         df = df.rename(
             columns={
                 "advertiser_icon_url_512": "icon_url_512",
@@ -63,14 +81,9 @@ class CreativesController(Controller):
                 "advertiser_store_id": "store_id",
             }
         )
-        df["icon_url_100"] = np.where(
-            df["advertiser_icon_url_100"].notna(),
-            "https://media.appgoblin.info/app-icons/"
-            + df["store_id"]
-            + "/"
-            + df["advertiser_icon_url_100"],
-            None,
-        )
+
+        df = expand_icon_url_100_to_full(df)
+        df = append_company_logos_to_df(df)
         df["last_seen"] = df["last_seen"].dt.strftime("%Y-%m-%d")
         df = df.head(100)
         duration = round((time.perf_counter() * 1000 - start), 2)
@@ -88,14 +101,16 @@ class CreativesController(Controller):
         """
         start = time.perf_counter() * 1000
         df = get_advertiser_creative_rankings_top()
-        df["icon_url_100"] = np.where(
-            df["advertiser_icon_url_100"].notna(),
-            "https://media.appgoblin.info/app-icons/"
-            + df["advertiser_store_id"]
-            + "/"
-            + df["advertiser_icon_url_100"],
-            None,
+        df = df.rename(
+            columns={
+                "advertiser_icon_url_512": "icon_url_512",
+                "advertiser_name": "name",
+                "advertiser_store_id": "store_id",
+            }
         )
+
+        df = append_company_logos_to_df(df)
+        df = expand_icon_url_100_to_full(df)
         df["last_seen"] = df["last_seen"].dt.strftime("%Y-%m-%d")
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(f"{self.path}/top took {duration}ms")
@@ -113,14 +128,7 @@ class CreativesController(Controller):
         start = time.perf_counter() * 1000
         df = get_company_creatives(company_domain)
         df = df.rename(columns={"advertiser_store_id": "store_id"})
-        df["icon_url_100"] = np.where(
-            df["icon_url_100"].notna(),
-            "https://media.appgoblin.info/app-icons/"
-            + df["store_id"]
-            + "/"
-            + df["icon_url_100"],
-            None,
-        )
+        df = expand_icon_url_100_to_full(df)
         df["featured_image_url"] = (
             "https://media.appgoblin.info/creatives/thumbs/" + df["md5_hash"] + ".jpg"
         )

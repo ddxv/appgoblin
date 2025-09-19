@@ -12,7 +12,6 @@
 
 <div class="card preset-filled-surface-100-900 rounded-md table-container">
 	<table class="table table-hover table-compact">
-		<thead> </thead>
 		<tbody>
 			{#each Object.entries(myTable.ranks) as [_prop, values]}
 				<tr>
