@@ -12,7 +12,7 @@
 				<!-- {#each data as row (row.id)} -->
 				{#each Object.entries(data) as [_prop, row]}
 					<tr class="px-0 text-sm md:text-base">
-						<td>
+						<td class="flex flex-col md:flex-row gap-4">
 							<AppAdvertiserCard app={row} size="md" />
 
 							<AppAdvertiserCreativeCarousel data={row} size="md" />
