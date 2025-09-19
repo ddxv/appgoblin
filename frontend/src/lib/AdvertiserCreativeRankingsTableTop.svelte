@@ -15,7 +15,7 @@
 						<td class="flex flex-col md:flex-row gap-4">
 							<AppAdvertiserCard app={row} size="md" />
 
-							<AppAdvertiserCreativeCarousel data={row} size="md" />
+							<AppAdvertiserCreativeCarousel data={row} height="20" />
 						</td>
 					</tr>
 				{/each}

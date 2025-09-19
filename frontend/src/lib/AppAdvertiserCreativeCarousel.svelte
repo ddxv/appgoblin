@@ -1,5 +1,5 @@
 <script lang="ts">
-	let { data, size = 'md' } = $props();
+	let { data, height } = $props();
 </script>
 
 <div class="overflow-x-auto relative">
@@ -7,17 +7,14 @@
 		class="flex gap-3 snap-x snap-mandatory overflow-x-auto scrollbar-hide border-2 border-surface-100-900 p-4 pr-4"
 	>
 		{#each data.top_md5_hashes.slice(0, 4) as md5_hash}
-			<a href="/apps/{data.advertiser_store_id}/ad-placements" class="snap-start shrink-0">
+			<a href="/apps/{data.store_id}/ad-placements" class="snap-start shrink-0">
 				<card class="card-hover">
 					<div class="card-header justify-center">
 						<img
 							src="https://media.appgoblin.info/creatives/thumbs/{md5_hash}.jpg"
-							alt="Creative for {data.advertiser_name}"
-							class="h-{size === 'lg'
-								? '88'
-								: size === 'sm'
-									? '24'
-									: '44'} w-full object-cover rounded-lg"
+							alt="Creative for {data.name}"
+							class="w-full object-cover rounded-lg"
+							style="height: {height}rem;"
 						/>
 					</div>
 				</card>
