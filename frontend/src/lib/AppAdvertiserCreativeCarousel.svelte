@@ -13,11 +13,11 @@
 						<img
 							src="https://media.appgoblin.info/creatives/thumbs/{md5_hash}.jpg"
 							alt="Creative for {data.advertiser_name}"
-							class="h-{size === 'md'
-								? '44'
+							class="h-{size === 'lg'
+								? '88'
 								: size === 'sm'
 									? '24'
-									: '88'} w-full object-cover rounded-lg"
+									: '44'} w-full object-cover rounded-lg"
 						/>
 					</div>
 				</card>

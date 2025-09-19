@@ -147,11 +147,11 @@
 				{#each table.getRowModel().rows as row (row.id)}
 					<tr class="px-0 text-base md:text-xl">
 						<td>
-							<AppAdvertiserCard app={row.original} />
+							<AppAdvertiserCard app={row.original} size="md" />
 						</td>
 
 						<td>
-							<AppAdvertiserCreativeCarousel data={row.original} />
+							<AppAdvertiserCreativeCarousel data={row.original} size="lg" />
 						</td>
 					</tr>
 				{/each}
