@@ -118,6 +118,9 @@ class CreativesController(Controller):
         df = expand_icon_url_100_to_full(df, column_name="advertiser_icon_url_100")
         df = df.rename(columns={"advertiser_icon_url_100": "icon_url_100"})
         df["last_seen"] = df["last_seen"].dt.strftime("%Y-%m-%d")
+
+        df = df.sort_values(by="unique_publishers", ascending=False)
+
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(f"{self.path}/top took {duration}ms")
         return df.to_dict(orient="records")
@@ -294,7 +297,6 @@ class CreativesController(Controller):
         )
 
         pdf["pubs_count"] = pdf["pubs"].apply(lambda x: len(x))
-
         pdf = pdf.sort_values(by="pubs_count", ascending=False)
 
         cdf = (
