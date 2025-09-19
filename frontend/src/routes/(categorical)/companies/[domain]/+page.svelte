@@ -137,14 +137,18 @@
 	{#if data.companyCreatives && data.companyCreatives.length > 0}
 		<WhiteCard>
 			{#snippet title()}
-				<span>Recent Ad Buyers & Ad Creatives</span>
+				<span>Recent Ads Run by {data.companyTree.queried_company_name}</span>
 			{/snippet}
 			<div class="grid grid-cols-3 gap-2 p-2">
 				{#each data.companyCreatives as creative}
 					<card class="card bg-surface-100-900 p-2">
 						<AppCard app={creative} showHeader={true} />
-						Last Seen: {creative.last_seen}
-						Creative Type: {creative.file_extension}
+						<div class="flex flex-row gap-1">
+							<p class="text-primary-600-400">Last Seen:</p>
+							{creative.last_seen}
+							<p class="text-primary-600-400 ml-2">Creative Type:</p>
+							{creative.file_extension}
+						</div>
 					</card>
 				{/each}
 			</div>
