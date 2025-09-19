@@ -48,8 +48,8 @@
 		},
 
 		{
-			title: is_monetization ? 'Publisher' : 'Advertiser',
-			accessorKey: is_monetization ? 'pub_name' : 'adv_name',
+			title: is_monetization ? 'Advertiser' : 'Publisher',
+			accessorKey: is_monetization ? 'adv_name' : 'pub_name',
 			isSortable: true
 		},
 
@@ -175,7 +175,7 @@
 					<tr class="px-0 text-xs md:text-base">
 						<td>
 							{#if vhash != row.original.vhash}
-								<a href={`ad-placements/${row.original.vhash}`}>
+								<a href={`/apps/${row.original.adv_store_id}/ad-placements/${row.original.vhash}`}>
 									<img
 										src="https://media.appgoblin.info/creatives/thumbs/{row.original.md5_hash}.jpg"
 										class="w-24 md:w-64 h-auto object-cover rounded text-xs"
