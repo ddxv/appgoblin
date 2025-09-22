@@ -9,7 +9,6 @@ import { unified } from 'unified';
 
 import { blogPosts, getMetadataFromMatter } from '$lib/content';
 
-
 export const load: PageServerLoad = async ({ params }) => {
 	const matchPath = `/src/content/blog/${params.id}.mdx`;
 	const rawContent = blogPosts[matchPath];
@@ -29,6 +28,6 @@ export const load: PageServerLoad = async ({ params }) => {
 
 	return {
 		...postMetaData,
-		contentHTML,
+		contentHTML
 	};
 };

@@ -2,14 +2,13 @@ import matter from 'gray-matter';
 import * as v from 'valibot';
 
 // import { BASE_URL } from './constants';
-const BASE_URL = 'http://localhost:5173'
+const BASE_URL = 'http://localhost:5173';
 
 export const blogPosts = import.meta.glob('/src/content/blog/*.mdx', {
 	query: '?raw',
 	import: 'default',
-	eager: true,
+	eager: true
 });
-
 
 export function getMetadataFromMatter(
 	id: string,
@@ -19,7 +18,7 @@ export function getMetadataFromMatter(
 ) {
 	const post = v.parse(blogPostMetadataSchema, {
 		id,
-		...data,
+		...data
 	});
 	const canonicalURL = new URL(`/blog/${post.id}`, BASE_URL).toString();
 	const relativeURL = `/blog/${post.id}`;
@@ -28,18 +27,16 @@ export function getMetadataFromMatter(
 	return { ...post, canonicalURL, relativeURL, ogImage };
 }
 
-
-
 export const blogPostMetadataSchema = v.object({
 	id: v.pipe(v.string(), v.trim()),
 	title: v.pipe(v.string(), v.trim()),
 	description: v.pipe(v.string(), v.trim()),
-    heroImage: v.pipe(v.string(), v.trim()),
+	heroImage: v.pipe(v.string(), v.trim()),
 	pubDate: v.pipe(
 		v.string(),
 		v.transform((i) => new Date(i)),
 		v.date()
-	),
+	)
 });
 
 // export function getBlogPostsMetadata() {
@@ -66,8 +63,6 @@ export const blogPostMetadataSchema = v.object({
 
 // 	return posts;
 // }
-
-
 
 export function getBlogPostsMetadata() {
 	const posts = Object.entries(blogPosts)
