@@ -7,6 +7,10 @@ import remarkParse from 'remark-parse';
 import remarkRehype from 'remark-rehype';
 import { unified } from 'unified';
 
+
+export const ssr = true;
+export const csr = false;
+
 import { blogPosts, getMetadataFromMatter } from '$lib/content';
 
 export const load: PageServerLoad = async ({ params }) => {
