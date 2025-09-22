@@ -40,7 +40,7 @@
 					<div class="mx-auto block text-center">
 						<img
 							class="h-48 w-48 rounded-lg mx-auto"
-							src={app.icon_url_512}
+							src={app.icon_url_100 || app.icon_url_512}
 							alt={app.name}
 							referrerpolicy="no-referrer"
 							loading="lazy"
