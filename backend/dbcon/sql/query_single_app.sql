@@ -48,6 +48,6 @@ SELECT
     COALESCE(ad_creative_count, 0) AS ad_creative_count,
     COALESCE(ad_mon_creatives, 0) AS ad_monetized_creative_count
 FROM
-    frontend.store_apps_overview AS sa
+    frontend.store_apps_overview
 WHERE
     store_id = :store_id;

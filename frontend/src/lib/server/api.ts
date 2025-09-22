@@ -28,7 +28,6 @@ export class ApiClient {
 			return { error: `Failed to load ${name}` };
 		}
 	}
-
 }
 
 // Convenience function to create API client
