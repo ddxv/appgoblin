@@ -1,14 +1,74 @@
 @import 'tailwindcss';
-/* @plugin '@tailwindcss/forms'; */
-
-@source '../node_modules/@skeletonlabs/skeleton-svelte/dist';
 
 @import '@skeletonlabs/skeleton';
 @import '@skeletonlabs/skeleton/optional/presets';
 @import '@skeletonlabs/skeleton/themes/catppuccin';
 
+@source '../node_modules/@skeletonlabs/skeleton-svelte/dist';
+
 @custom-variant dark (&:where(.dark, .dark *));
 
 a {
 	color: var(--color-tertiary-900-100);
+}
+
+/* Blog post styles from markdown to raw HTML*/
+.post h1 {
+	@apply h1;
+}
+
+.post h2 {
+	@apply h2;
+}
+
+.post h3 {
+	@apply h3;
+}
+
+.post h4 {
+	@apply h4;
+}
+
+.post h5 {
+	@apply h5;
+}
+
+.post h6 {
+	@apply h6;
+}
+
+.post p {
+	@apply mb-4 leading-relaxed;
+}
+
+.post ul {
+	@apply list-disc pl-6 mb-4;
+}
+
+.post ol {
+	@apply list-decimal pl-6 mb-4;
+}
+
+.post li {
+	@apply mb-1;
+}
+
+.post blockquote {
+	@apply border-l-4 pl-4 italic my-4 text-base;
+}
+
+.post strong {
+	@apply font-bold;
+}
+
+.post em {
+	@apply italic;
+}
+
+.post hr {
+	@apply my-8;
+}
+
+.post img {
+	@apply mx-auto rounded-lg my-4;
 }
