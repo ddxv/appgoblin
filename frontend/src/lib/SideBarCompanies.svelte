@@ -1,7 +1,10 @@
 <script lang="ts">
 	import { page } from '$app/state';
+	import SideBarCatsListBoxItem from './SideBarCatsListBoxItem.svelte';
+	import type { CatData } from '../types';
+	import CardFirst from './CardFirst.svelte';
 
-	function getBaseUrl(url: string, type: string) {
+	function getBaseUrl(url: string, type: string | undefined) {
 		const parts = url.split('/').filter(Boolean);
 		let newUrl = url;
 
@@ -38,30 +41,20 @@
 
 	let baseUrl = $derived(getBaseUrl(page.url.pathname.toString(), page.params.type));
 
-	import type { CatData } from '../types';
 	interface Props {
 		myCatData: CatData;
 	}
 
 	let { myCatData }: Props = $props();
 
-	import SideBarCatsListBoxItem from './SideBarCatsListBoxItem.svelte';
-
-	import { homeCategorySelection } from '../stores';
-	let localHomeCategorySelect = $state($homeCategorySelection);
-	$effect(() => {
-		homeCategorySelection.set(localHomeCategorySelect);
-	});
-
+	let selectedCategory = $state('overall');
 	$effect(() => {
 		if (page.params.category) {
-			localHomeCategorySelect = page.params.category;
+			selectedCategory = page.params.category;
 		} else {
-			localHomeCategorySelect = 'overall';
+			selectedCategory = 'overall';
 		}
 	});
-
-	import CardFirst from './CardFirst.svelte';
 </script>
 
 <div class="p-1 md:p-2">
@@ -74,15 +67,15 @@
 				{#if values.id && (Number(values.android) > 0 || values.name == 'Games')}
 					{#if values.id != 'overall'}
 						<a href="{baseUrl}/{values.id}" class="text-tertiary-900-100 hover:underline">
-							<SideBarCatsListBoxItem {values} {localHomeCategorySelect} />
+							<SideBarCatsListBoxItem {values} {selectedCategory} />
 						</a>
 					{:else if baseUrl == '/companies/categories' && values.id == 'overall'}
 						<a href="/companies" class="text-tertiary-900-100 hover:underline">
-							<SideBarCatsListBoxItem {values} {localHomeCategorySelect} />
+							<SideBarCatsListBoxItem {values} {selectedCategory} />
 						</a>
 					{:else}
 						<a href={baseUrl} class="text-tertiary-900-100 hover:underline">
-							<SideBarCatsListBoxItem {values} {localHomeCategorySelect} />
+							<SideBarCatsListBoxItem {values} {selectedCategory} />
 						</a>
 					{/if}
 				{/if}

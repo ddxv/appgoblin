@@ -1,38 +1,30 @@
 <script lang="ts">
 	import { page } from '$app/state';
-
-	let baseUrl = '/fastest-growing-apps';
-
-	import { storeIDLookup } from '../stores';
-
+	import SideBarCatsListBoxItem from './SideBarCatsListBoxItem.svelte';
+	import { storeIDLookup } from './constants';
+	import CardFirst from './CardFirst.svelte';
 	import type { CatData } from '../types';
+
 	interface Props {
 		myCatData: CatData;
+		baseUrl: string;
 	}
 	let store = $state('google');
 
 	$effect(() => {
 		store = page.params.store!;
 	});
-	let { myCatData }: Props = $props();
+	let { myCatData, baseUrl }: Props = $props();
 
-	import SideBarCatsListBoxItem from './SideBarCatsListBoxItem.svelte';
-
-	import { homeCategorySelection } from '../stores';
-	let localHomeCategorySelect = $state($homeCategorySelection);
-	$effect(() => {
-		homeCategorySelection.set(localHomeCategorySelect);
-	});
+	let selectedCategory = $state('overall');
 
 	$effect(() => {
 		if (page.params.category) {
-			localHomeCategorySelect = page.params.category;
+			selectedCategory = page.params.category;
 		} else {
-			localHomeCategorySelect = 'overall';
+			selectedCategory = 'overall';
 		}
 	});
-
-	import CardFirst from './CardFirst.svelte';
 
 	const buttonSelectedClass =
 		'preset-outlined-primary-900-100 text-left relative text-primary-900-100 rounded-md p-2';
@@ -55,9 +47,7 @@
 			<ul>
 				{#each Object.entries(storeIDLookup) as [_prop, values]}
 					<li>
-						<a
-							href={`/fastest-growing-apps/${values.store_name.toLowerCase()}/${localHomeCategorySelect}`}
-						>
+						<a href={`${baseUrl}/${values.store_name.toLowerCase()}/${selectedCategory}`}>
 							<p class={classesActiveStore(values.store_name)}>
 								{values.store_name}
 							</p>
@@ -74,11 +64,11 @@
 		{#snippet header()}
 			<h4 class="h5 md:h4">App Categories</h4>
 		{/snippet}
-		{#if myCatData}
+		{#if myCatData && myCatData.categories}
 			{#each Object.entries(myCatData.categories) as [_prop, values]}
 				{#if values.id && (Number(values.android) > 0 || values.name == 'Games')}
 					<a href="{baseUrl}/{store}/{values.id}" class="text-tertiary-900-100 hover:underline">
-						<SideBarCatsListBoxItem {values} {localHomeCategorySelect} />
+						<SideBarCatsListBoxItem {values} {selectedCategory} />
 					</a>
 				{/if}
 			{/each}

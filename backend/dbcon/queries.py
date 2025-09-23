@@ -130,39 +130,36 @@ QUERY_ADVERTISER_CREATIVE_RANKINGS_TOP = load_sql_file(
     "query_advertiser_creative_rankings_top.sql"
 )
 QUERY_COMPANY_CREATIVES = load_sql_file("query_company_creatives.sql")
+QUERY_NEW_APPS_WEEKLY = load_sql_file("query_new_apps_weekly.sql")
+QUERY_NEW_APPS_MONTHLY = load_sql_file("query_new_apps_monthly.sql")
+QUERY_NEW_APPS_YEARLY = load_sql_file("query_new_apps_yearly.sql")
 
 INSERT_SDK_SCAN_REQUEST = load_sql_file("insert_sdk_scan_request.sql")
 
 
-def get_recent_apps(collection: str, limit: int = 20) -> pd.DataFrame:
+def get_recent_apps(
+    collection: str, store: int, category: str, limit: int = 20
+) -> pd.DataFrame:
     """Get app collections by time."""
     logger.info(f"Query app_store for recent apps {collection=}")
     if collection == "new_weekly":
-        table_name = "apps_new_weekly"
+        query = QUERY_NEW_APPS_WEEKLY
     elif collection == "new_monthly":
-        table_name = "apps_new_monthly"
+        query = QUERY_NEW_APPS_MONTHLY
     elif collection == "new_yearly":
-        table_name = "apps_new_yearly"
-    elif collection == "top":
-        table_name = "top_categories"
-    else:
-        table_name = "apps_new_weekly"
-    sel_query = f"""
-            SELECT 
-            *
-            FROM frontend.{table_name}
-            WHERE rn <= {limit}
-            ;
-            """  # noqa: S608 worried about SQL injection but all data is set internal
-    df = pd.read_sql(sel_query, con=DBCON.engine)
-    groups = df.groupby("store")
-    for _store, group in groups:
-        overall = group.sort_values(["installs", "rating_count"], ascending=False).head(
-            limit,
-        )
-        overall["app_category"] = "overall"
-        df = pd.concat([df, overall], axis=0)
-    df = clean_app_df(df)
+        query = QUERY_NEW_APPS_YEARLY
+    if category == "overall":
+        category = None
+
+    df = pd.read_sql(
+        query,
+        con=DBCON.engine,
+        params={"store": store, "category": category, "limit": limit},
+    )
+    if not category:
+        df["app_category"] = "overall"
+    if not df.empty:
+        df = clean_app_df(df)
     return df
 
 

@@ -25,8 +25,6 @@ from api_app.models import (
     AppRank,
     AppRankOverview,
     AppSDKsOverview,
-    Category,
-    Collection,
     SDKsDetails,
 )
 from config import get_logger
@@ -225,10 +223,13 @@ def get_string_date_from_days_ago(days: int) -> str:
     return mydate_str
 
 
-def get_app_overview_dict(collection: str) -> Collection:
+def get_new_apps_dict(period: str, store: int, category: str) -> AppGroup:
     """Get collection overview."""
     category_limit = 20
-    df = get_recent_apps(collection=collection, limit=category_limit)
+
+    df = get_recent_apps(
+        collection=period, store=store, category=category, limit=category_limit
+    )
     df["icon_url_100"] = np.where(
         df["icon_url_100"].notna(),
         "https://media.appgoblin.info/app-icons/"
@@ -237,31 +238,14 @@ def get_app_overview_dict(collection: str) -> Collection:
         + df["icon_url_100"],
         None,
     )
-    categories_dicts = []
-    groups = df.groupby(["app_category"])
-    for category_key, apps in groups:
-        ios_dicts = (
-            apps[~apps["store"].str.contains("oogl")]
-            .head(category_limit)
-            .to_dict(orient="records")
-        )
-        google_dicts = (
-            apps[apps["store"].str.contains("oogl")]
-            .head(category_limit)
-            .to_dict(orient="records")
-        )
-        categories_dicts.append(
-            Category(
-                key=category_key,
-                google=AppGroup(title="Google", apps=google_dicts),
-                ios=AppGroup(title="iOS", apps=ios_dicts),
-            ),
-        )
-    response_collection = Collection(
-        title=COLLECTIONS[collection]["title"],
-        categories=categories_dicts,
+    df = df.sort_values(["installs", "rating_count"], ascending=False).head(
+        category_limit
     )
-    return response_collection
+    appgroup = AppGroup(
+        title=COLLECTIONS[period]["title"],
+        apps=df.to_dict(orient="records"),
+    )
+    return appgroup
 
 
 class AppController(Controller):
@@ -285,13 +269,17 @@ class AppController(Controller):
         logger.info(f"{self.path}/overview took {duration}ms")
         return overview_dict
 
-    @get(path="/collections/{collection:str}", cache=86400)
-    async def get_apps_overview(self: Self, collection: str) -> Collection:
+    @get(path="/new-apps/{period:str}/{store:int}/{category:str}", cache=86400)
+    async def get_new_apps(
+        self: Self, period: str, store: int, category: str
+    ) -> AppGroup:
         """Handle GET request for a list of apps.
 
         Args:
         ----
-            collection: these are appgoblin specific collections of 'new' apps
+            period: these are appgoblin specific collections of 'new' apps
+            store: which store to query
+            category: app category
 
         Returns:
         -------
@@ -299,10 +287,10 @@ class AppController(Controller):
 
         """
         start = time.perf_counter() * 1000
-        home_dict = get_app_overview_dict(collection=collection)
+        home_dict = get_new_apps_dict(period=period, store=store, category=category)
 
         duration = round((time.perf_counter() * 1000 - start), 2)
-        logger.info(f"{self.path}/collections/{collection} took {duration}ms")
+        logger.info(f"{self.path}/collections/{period} took {duration}ms")
         return home_dict
 
     @get(path="/growth/{store:int}", cache=86400)

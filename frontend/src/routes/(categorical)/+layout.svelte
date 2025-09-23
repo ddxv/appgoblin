@@ -2,16 +2,12 @@
 	import OpenSideBarDrawer from '$lib/utils/OpenSideBarDrawer.svelte';
 	import SideBar from '$lib/SideBar.svelte';
 
-	import { homeCategoryMap } from '../../stores';
-
 	interface Props {
 		data: any;
 		children?: import('svelte').Snippet;
 	}
 
 	let { data, children }: Props = $props();
-
-	homeCategoryMap.set(data.appCats);
 </script>
 
 <div class="grid grid-cols-1 md:grid-cols-[auto_1fr]">

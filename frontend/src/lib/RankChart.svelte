@@ -2,7 +2,7 @@
 	import { onMount } from 'svelte';
 	import * as echarts from 'echarts';
 
-	import { plotColors } from '../stores';
+	import { plotColors } from './constants';
 
 	let myInterval;
 	let topPadding;

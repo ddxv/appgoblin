@@ -9,15 +9,15 @@
 
 	interface Props {
 		values: any;
-		localHomeCategorySelect: string;
+		selectedCategory: string;
 	}
 
-	let { values, localHomeCategorySelect = $bindable() }: Props = $props();
+	let { values, selectedCategory: selectedCategory = $bindable() }: Props = $props();
 
 	let isSelected = $derived(checkSelected());
 
 	function checkSelected() {
-		return localHomeCategorySelect == values.id;
+		return selectedCategory == values.id;
 	}
 
 	function setSelectedClass(isSelected: boolean) {

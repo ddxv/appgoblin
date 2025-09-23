@@ -98,16 +98,6 @@ export interface AppleStoreSearchResponse {
 	status?: number;
 	error?: string;
 }
-export interface Collection {
-	categories: AppGroup;
-	title: string;
-}
-
-export interface Collections {
-	AppCollections: Collection;
-	status?: number;
-	error?: string;
-}
 
 export interface CategoryInfo {
 	id: string;
@@ -117,7 +107,7 @@ export interface CategoryInfo {
 }
 
 export interface CatData {
-	categories: Array<{ id: string; name: string }>;
+	categories: Array<{ id: string; name: string; android: number; ios: number }>;
 }
 
 export interface CategoriesInfo {

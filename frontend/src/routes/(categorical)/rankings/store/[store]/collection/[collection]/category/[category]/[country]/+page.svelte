@@ -1,9 +1,5 @@
 <script lang="ts">
-	import {
-		storeIDLookup,
-		collectionIDLookup,
-		categoryIDLookup
-	} from '../../../../../../../../../../stores.js';
+	import { storeIDLookup, collectionIDLookup, categoryIDLookup } from '$lib/constants';
 
 	import type { StoreCategoryRanks } from '../../../../../../../../../../types.js';
 
@@ -118,7 +114,9 @@
 			</select>
 		</div>
 		<div class="card">
-			<RankChart plotData={data.history.history} maxValue={10} />
+			{#await data.history then history}
+				<RankChart plotData={history.history} maxValue={10} />
+			{/await}
 		</div>
 	</div>
 	<br />

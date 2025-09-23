@@ -1,16 +1,10 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import { homeCollectionSelection } from '../stores';
-	import { homeStoreSelection } from '../stores';
-	import { homeCategorySelection } from '../stores';
 
 	import SideBarRankings from './SideBarRankings.svelte';
 	import SideBarCollections from './SideBarCollections.svelte';
 	import SideBarCompanies from './SideBarCompanies.svelte';
 	import SideBarFastestGrowingApps from './SideBarFastestGrowingApps.svelte';
-	let localHomeCollectionSelect = $homeCollectionSelection;
-	let localHomeStoreSelect = $state($homeStoreSelection);
-	let localHomeCategorySelect = $state($homeCategorySelection);
 	import type { CatData } from '../types';
 
 	interface Props {
@@ -19,22 +13,6 @@
 
 	let { myCatData }: Props = $props();
 
-	// Reactive statement to update the store when localValue changes
-	$effect(() => {
-		homeCollectionSelection.set(localHomeCollectionSelect);
-	});
-	$effect(() => {
-		homeStoreSelection.set(localHomeStoreSelect);
-	});
-	$effect(() => {
-		if (page.params.category) {
-			localHomeCategorySelect = page.params.category;
-		}
-	});
-	$effect(() => {
-		homeCategorySelection.set(localHomeCategorySelect);
-	});
-	// For adtech
 	let store = $state(1);
 	$effect(() => {
 		store = +page.params.store!;
@@ -69,7 +47,7 @@
 </script>
 
 {#if page.url.pathname.startsWith('/collections')}
-	<SideBarCollections {myCatData} />
+	<SideBarCollections {myCatData} baseUrl="/collections" />
 {/if}
 
 {#if page.url.pathname == '/rankings' || page.url.pathname.startsWith('/rankings')}
@@ -81,5 +59,5 @@
 {/if}
 
 {#if page.url.pathname == '/fastest-growing-apps' || page.url.pathname.startsWith('/fastest-growing-apps')}
-	<SideBarFastestGrowingApps {myCatData} />
+	<SideBarFastestGrowingApps {myCatData} baseUrl="/fastest-growing-apps" />
 {/if}

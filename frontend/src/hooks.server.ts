@@ -1,22 +1,18 @@
 import type { Handle, ServerInit } from '@sveltejs/kit';
 
-// Define types for your cached data
 interface AppCategory {
 	id: string;
 	name: string;
-	// add other properties
 }
 
 interface CompanyType {
 	id: string;
 	name: string;
-	// add other properties
 }
 
 interface Country {
 	code: string;
 	name: string;
-	// add other properties
 }
 
 interface CachedData {
@@ -98,17 +94,6 @@ export const getCachedData = async (): Promise<CachedData> => {
 	return cachedData;
 };
 
-
-
-
-
-
-
-
-
-
-
-
 export const handle: Handle = async ({ event, resolve }) => {
 	const route = event.url.pathname;
 
@@ -146,13 +131,11 @@ export const handle: Handle = async ({ event, resolve }) => {
 	// let duration = end - start;
 	// duration = duration.toFixed(2);
 	// console.log(`${route} took ${duration}ms`);
-    const cacheablePaths = ['/companies', '/about', '/apps', '/ad-creatives'];
-	const shouldCache = cacheablePaths.some(path => 
-	  event.url.pathname.startsWith(path)
-	);
-	
+	const cacheablePaths = ['/companies', '/about', '/apps', '/ad-creatives'];
+	const shouldCache = cacheablePaths.some((path) => event.url.pathname.startsWith(path));
+
 	if (shouldCache) {
-	  response.headers.set('cache-control', 'public, max-age=86400, stale-while-revalidate=3600');
+		response.headers.set('cache-control', 'public, max-age=86400, stale-while-revalidate=3600');
 	}
 	return response;
 };

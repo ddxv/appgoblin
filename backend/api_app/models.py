@@ -108,24 +108,6 @@ class DeveloperSDKs:
 
 
 @dataclass
-class Collection:
-    """A single Collection to combine ios and Google collections."""
-
-    title: str  # Title like "Weekly by Downloads"
-    categories: list[Category]  # Dict of category_id to Category
-
-
-@dataclass
-class AppsOverview:
-    """All collections together for the frontend."""
-
-    new_weekly: Collection
-    new_monthly: Collection
-    new_yearly: Collection
-    top: Collection
-
-
-@dataclass
 class CategoryDetail:
     """Represents detailed information about a category.
 

@@ -1,15 +1,15 @@
-import { writable } from 'svelte/store';
-import type { CategoriesInfo, Store, CategoryRanks, CollectionRanks } from './types';
+// import { writable } from 'svelte/store';
+import type { Store, CategoryRanks, CollectionRanks } from '../types';
 
-export const homeCollectionSelection = writable('new_monthly');
-export const homeStoreSelection = writable('google');
-export const homeCategorySelection = writable<string>('overall');
+// export const homeCollectionSelection = writable('new_monthly');
+// export const homeStoreSelection = writable('google');
+// export const homeCategorySelection = writable<string>('overall');
 
-export const idStoreSelection = writable(1);
-export const idCollectionSelection = writable(1);
-export const idCategorySelection = writable(1);
+// export const idStoreSelection = writable(1);
+// export const idCollectionSelection = writable(1);
+// export const idCategorySelection = writable(1);
 
-export const homeCategoryMap = writable<CategoriesInfo>({ appCats: { categories: {} } });
+// export const homeCategoryMap = writable<CategoriesInfo>({ appCats: { categories: {} } });
 
 const myStoreRankingsMap = {
 	stores_rankings: [

@@ -1,18 +1,18 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import CardFirst from './CardFirst.svelte';
-	import { homeCollectionSelection } from '../stores';
-	import { homeStoreSelection } from '../stores';
-	import { homeCategorySelection } from '../stores';
+	// import { homeCollectionSelection } from './constants';
+	// import { homeStoreSelection } from './constants';
+	// import { homeCategorySelection } from './constants';
 
-	import { storeIDLookup, collectionIDLookup, categoryIDLookup } from '../stores';
+	import { storeIDLookup, collectionIDLookup, categoryIDLookup } from './constants';
 
 	const buttonSelectedClass = 'btn preset-outlined-primary-900-100 relative text-primary-900-100';
 	const buttonDeselectedClass = 'p-1 md:p-2 hover:text-primary-900-100';
 
-	let localHomeCollectionSelect = $homeCollectionSelection;
-	let localHomeStoreSelect = $state($homeStoreSelection);
-	let localHomeCategorySelect = $state($homeCategorySelection);
+	let localHomeCollectionSelect = $state('new_monthly');
+	let localHomeStoreSelect = $state('google');
+	let localHomeCategorySelect = $state('overall');
 
 	let country = $state(page.params.country);
 
@@ -20,21 +20,21 @@
 		page.url.pathname.startsWith(href) ? buttonSelectedClass : buttonDeselectedClass
 	);
 
-	// Reactive statement to update the store when localValue changes
-	$effect(() => {
-		homeCollectionSelection.set(localHomeCollectionSelect);
-	});
-	$effect(() => {
-		homeStoreSelection.set(localHomeStoreSelect);
-	});
-	$effect(() => {
-		if (page.params.category) {
-			localHomeCategorySelect = page.params.category;
-		}
-	});
-	$effect(() => {
-		homeCategorySelection.set(localHomeCategorySelect);
-	});
+	// // Reactive statement to update the store when localValue changes
+	// $effect(() => {
+	// 	homeCollectionSelection.set(localHomeCollectionSelect);
+	// });
+	// $effect(() => {
+	// 	homeStoreSelection.set(localHomeStoreSelect);
+	// });
+	// $effect(() => {
+	// 	if (page.params.category) {
+	// 		localHomeCategorySelect = page.params.category;
+	// 	}
+	// });
+	// $effect(() => {
+	// 	homeCategorySelection.set(localHomeCategorySelect);
+	// });
 	// For adtech
 	let store = $state(1);
 	$effect(() => {
