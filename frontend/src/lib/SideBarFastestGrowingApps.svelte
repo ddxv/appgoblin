@@ -40,7 +40,7 @@
 		'p-1 md:p-2 text-tertiary-900-100 text-left hover:text-primary-900-100';
 
 	function classesActiveStore(store: string) {
-		return page.params.store.toLowerCase() == store.toLowerCase()
+		return page.params.store!.toLowerCase() == store.toLowerCase()
 			? buttonSelectedClass
 			: buttonDeselectedClass;
 	}
