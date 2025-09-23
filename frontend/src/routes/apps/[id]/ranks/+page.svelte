@@ -12,7 +12,7 @@
 
 	let country = $state(page.url.searchParams.get('country'));
 	let countryTitle = $derived(data.countries[country as keyof typeof data.countries]);
-
+	$effect(() => setDefaultCountry(data.myranksOverview));
 	function updateCountry(newCountry: string) {
 		country = newCountry;
 		const url = new URL(window.location.href);
@@ -20,11 +20,11 @@
 		goto(url.toString(), { replaceState: true, noScroll: true });
 	}
 
-	data.myranksOverview.then((ranks) => {
+	function setDefaultCountry(ranks: { countries: string[] }) {
 		if (country == '' && ranks.countries && ranks.countries.length > 0) {
 			country = ranks.countries[0];
 		}
-	});
+	}
 </script>
 
 <div class="card preset-tonal p-2 md:p-8 mt-2 md:mt-4">

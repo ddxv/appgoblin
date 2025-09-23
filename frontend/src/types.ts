@@ -495,7 +495,7 @@ export interface AppFullDetails {
 	status?: number;
 	error?: string;
 	myranks: Promise<{ history: AppRankDetail[]; countries: string[] }>;
-	myranksOverview: Promise<{ countries: string[]; best_ranks: AppRankDetail[] }>;
+	myranksOverview: { countries: string[]; best_ranks: AppRankDetail[] };
 	myhistory: Promise<{
 		histogram: number[];
 		plot_data?: {

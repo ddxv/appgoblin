@@ -1,4 +1,4 @@
-import type { PageServerLoad } from './$types.js';
+import type { PageServerLoad } from './$types';
 
 export const ssr: boolean = true;
 export const csr: boolean = true;
@@ -17,7 +17,7 @@ function checkStatus(resp: Response, name: string) {
 	}
 }
 
-export const load: PageServerLoad = async ({ parent }) => {
+export const load: PageServerLoad = async ({ parent, fetch }) => {
 	const { devs } = await parent();
 
 	const google_store_ids = devs.google.apps.apps.map((app: any) => app.store_id);

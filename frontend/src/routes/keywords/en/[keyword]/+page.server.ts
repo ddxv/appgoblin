@@ -1,34 +1,15 @@
-import type { PageServerLoad } from './$types.js';
-
-function checkStatus(resp: Response, name: string) {
-	if (resp.status === 200) {
-		return resp.json();
-	} else if (resp.status === 404) {
-		console.log(`${name} Not found`);
-		return `${name} Not Found`;
-	} else if (resp.status === 500) {
-		console.log(`${name} API Server error`);
-		return `${name} API Server error`;
-	} else {
-		throw new Error('Unknown error');
-	}
-}
+import type { PageServerLoad } from './$types';
+import { createApiClient } from '$lib/server/api';
 
 export const load: PageServerLoad = async ({ params }) => {
 	const keyword = params.keyword;
+	const api = createApiClient(fetch);
 
-	const keywordDetails = async () => {
-		const resp = await fetch(`http://localhost:8000/api/keywords/${keyword}`);
-		return checkStatus(resp, 'Keyword Details');
-	};
-
-	const keywordApps = async () => {
-		const resp = await fetch(`http://localhost:8000/api/keywords/${keyword}/ranks`);
-		return checkStatus(resp, 'Keyword Apps');
-	};
+	const keywordDetails = await api.get(`/keywords/${keyword}`, 'Keyword Details');
+	const keywordApps = await api.get(`/keywords/${keyword}/ranks`, 'Keyword Apps');
 
 	return {
-		keywordDetails: keywordDetails(),
-		keywordApps: keywordApps()
+		keywordDetails,
+		keywordApps
 	};
 };

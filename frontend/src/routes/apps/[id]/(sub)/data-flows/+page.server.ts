@@ -1,4 +1,5 @@
-import type { PageServerLoad } from './$types.js';
+import type { PageServerLoad } from './$types';
+import { createApiClient } from '$lib/server/api';
 
 import type { Actions } from './$types';
 
@@ -20,14 +21,12 @@ export const actions = {
 } satisfies Actions;
 
 export const load: PageServerLoad = async ({ fetch, params }) => {
+	const api = createApiClient(fetch);
 	const id = params.id;
 
-	console.log('id', id);
-
-	const apisResp = await fetch(`http://localhost:8000/api/apps/${id}/apis`);
-	const apis = await apisResp.json();
+	const apis = await api.get(`/apps/${id}/apis`, 'App APIs');
 
 	return {
-		apis: apis
+		apis
 	};
 };
