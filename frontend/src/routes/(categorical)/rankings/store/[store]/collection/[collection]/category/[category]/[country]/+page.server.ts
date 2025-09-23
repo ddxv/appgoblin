@@ -25,6 +25,6 @@ export const load: PageServerLoad = async ({ fetch, params }) => {
 	return {
 		ranks,
 		history,
-		s: countries
+		countries
 	};
 };

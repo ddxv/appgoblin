@@ -102,11 +102,9 @@
 		</AppBar>
 	</header>
 
-	<!-- <div class="grid grid-cols-1 md:grid-cols-[auto_1fr]"> -->
 	<main>
 		{@render children?.()}
 	</main>
-	<!-- </div> -->
 
 	<footer class="sticky bottom-0 z-10 p-2">
 		{#if page.url.pathname.startsWith('/blog/')}
