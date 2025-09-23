@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	const topBarFont = 'text-xs md:text-base hover:text-primary-900-100';
-	const topBarHighlightedFont = 'text-xs md:text-base text-primary-900-100';
+	const topBarFont = 'text-xs md:text-sm xxl:text-base hover:text-primary-900-100';
+	const topBarHighlightedFont = 'text-xs md:text-sm xxl:text-base text-primary-900-100';
 	const myDivider = 'h-px w-[50%] md:h-12 md:w-px bg-secondary-100-900';
 	const topDivider =
-		'w-full border-t-[1px] md:border-t-0 md:border-b-[1px] border-secondary-100-900 p-2';
+		'w-full border-t-[1px] md:border-t-0 md:border-b-[1px] border-secondary-100-900 p-1 xxl:p-2';
 	function isHighlighted(path: string) {
 		return page.url.pathname.startsWith(path);
 	}
@@ -12,7 +12,9 @@
 	let { hideLinks = false } = $props();
 </script>
 
-<div class="flex flex-col md:flex-row gap-1 md:gap-6 text-center items-center {topDivider} mx-2">
+<div
+	class="flex flex-col md:flex-row gap-1 md:gap-2 xxl:gap-6 text-center items-center {topDivider} mx-2"
+>
 	<a href="/companies" class={topBarFont}>
 		<p class={isHighlighted('/companies') ? topBarHighlightedFont : topBarFont}>COMPANY RANKS</p>
 	</a>

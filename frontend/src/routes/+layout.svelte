@@ -51,7 +51,8 @@
 								src="/goblin_purple_hat_60.png"
 								alt="AppGoblin Icon"
 							/>
-							<strong class="text-xs ml-1 md:ml-2 md:text-xl uppercase text-primary-900-100"
+							<strong
+								class="text-xs ml-1 md:ml-2 md:text-lg xl:text-xl uppercase text-primary-900-100"
 								>AppGoblin</strong
 							>
 						</div>
