@@ -10,8 +10,6 @@
 	}
 
 	let { data }: Props = $props();
-
-	// Remove the local formatNumber function (lines 11-16)
 </script>
 
 {#if typeof data.companiesOverview == 'string'}

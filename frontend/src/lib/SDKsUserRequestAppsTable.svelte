@@ -2,32 +2,9 @@
 	import IconGoogle from './svg/IconGoogle.svelte';
 	import IconiOs from './svg/IconiOS.svelte';
 
-	import { DataHandler } from '@vincjo/datatables/legacy/remote';
-	import type { State } from '@vincjo/datatables/legacy/remote';
 	import type { CompanyOverviewApps } from '../types';
 
-	export let entries_table: CompanyOverviewApps[];
-
-	const totalRows = entries_table.length;
-
-	const rowsPerPage = 100;
-
-	const handler = new DataHandler<CompanyOverviewApps>([], {
-		rowsPerPage: rowsPerPage,
-		totalRows: totalRows
-	});
-	const rows = handler.getRows();
-
-	handler.onChange((state: State) =>
-		Promise.resolve(
-			entries_table.slice(
-				0 + (state.pageNumber - 1) * state.rowsPerPage,
-				state.rowsPerPage * state.pageNumber
-			)
-		)
-	);
-
-	handler.invalidate();
+	let { entries_table }: { entries_table: CompanyOverviewApps[] } = $props();
 </script>
 
 <div class="table-container space-y-4">
@@ -45,7 +22,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				{#each $rows as row, index}
+				{#each entries_table as row, index}
 					<tr class="px-0">
 						<td class="table-cell-fit">
 							{#if row.store == 1}

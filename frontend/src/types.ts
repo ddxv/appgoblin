@@ -1,5 +1,4 @@
 import type { ChartTabularData } from '@carbon/charts-svelte';
-import type { Row } from '@vincjo/datatables/legacy';
 
 export type Crumb<M = any> = {
 	title?: string;
@@ -154,8 +153,9 @@ export interface StoreCategoryRanks {
 	history: Promise<{ history: RankedApps[] }>;
 }
 
-export interface RankedApps extends Row {
+export interface RankedApps {
 	rank: number;
+	store_link: string;
 	name: string;
 	store_id: string;
 	icon_url_100?: string;
@@ -166,6 +166,7 @@ export interface RankedApps extends Row {
 	review_count: number;
 	installs_sum_1w: number;
 	installs_sum_4w: number;
+	ratings_sum_4w: number;
 	icon_url_512: string;
 }
 export interface AppRankDetail {
@@ -186,7 +187,7 @@ export interface CompanySDKParts {
 	[key: string]: { [key: string]: { [key: string]: string[] } };
 }
 
-export interface AppHistoryInfo extends Row {
+export interface AppHistoryInfo {
 	crawled_date: string;
 	review_count: number;
 	rating: number;
@@ -194,7 +195,8 @@ export interface AppHistoryInfo extends Row {
 	country: string;
 	rating_count: number;
 }
-export interface AdsTxtEntries extends Row {
+export interface AdsTxtEntries {
+	app_count: number;
 	company_name: string;
 	ad_domain: number;
 	ad_domain_url: string;
@@ -204,12 +206,12 @@ export interface AdsTxtEntries extends Row {
 	developer_domain_crawled_at: number;
 }
 
-export interface AdsTxtEntriesResult extends Row {
+export interface AdsTxtEntriesResult {
 	direct_entries: AdsTxtEntries[];
 	reseller_entries: AdsTxtEntries[];
 }
 
-export interface CompaniesOverviewEntries extends Row {
+export interface CompaniesOverviewEntries {
 	company_domain: string;
 	company_name: string;
 	tag_source: string;
@@ -255,12 +257,25 @@ export interface OverviewAppList {
 	apps: CompanyOverviewApps[];
 }
 
-export interface CompanyOverviewApps extends Row {
+export interface CompanyOverviewApps {
 	name: string;
 	store_id: string;
+	store: number;
+	installs: number;
+	rating_count: number;
+	requested_at: string;
+	app_scanned_at: string;
+	crawl_result: number;
+	version_code: string;
+	sdk_crawled_at: string;
+	app_name: string;
+	icon_url_512: string;
+	developer_domain_url: string;
+	relationship: string;
+	developer_domain_crawled_at: string;
 }
 
-export interface SdksOverview extends Row {
+export interface SdksOverview {
 	store: string;
 	company_name: string;
 	company_domain: string;
@@ -269,7 +284,7 @@ export interface SdksOverview extends Row {
 	app_count: number;
 }
 
-export interface SdkOverview extends Row {
+export interface SdkOverview {
 	xml_path: string;
 	value_name: string;
 	store: string;
@@ -436,7 +451,7 @@ export interface CompanyCategoryDetails {
 	companyTree: ParentCompanyTree;
 }
 
-export interface KeywordScore extends Row {
+export interface KeywordScore {
 	keyword_id: number;
 	keyword_text: string;
 	app_count: number;

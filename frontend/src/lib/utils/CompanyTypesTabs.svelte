@@ -42,12 +42,12 @@
 
 <div class="flex flex-row flex-wrap text-sm md:text-base">
 	<a
-		href={getCategoryUrlPart(page.url.pathname.toString(), '', page.params.category)}
+		href={getCategoryUrlPart(page.url.pathname.toString(), '', page.params.category!)}
 		class={typeTabClass('all')}>All</a
 	>
 	{#each companyTypes.types as tab}
 		<a
-			href={getCategoryUrlPart(page.url.pathname.toString(), tab.url_slug, page.params.category)}
+			href={getCategoryUrlPart(page.url.pathname.toString(), tab.url_slug, page.params.category!)}
 			class={typeTabClass(tab.url_slug)}>{tab.name}</a
 		>
 	{/each}

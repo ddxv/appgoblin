@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { DataHandler } from '@vincjo/datatables/legacy/remote';
-	import type { State } from '@vincjo/datatables/legacy/remote';
 	import type { AdsTxtEntries } from '../types';
 	import { page } from '$app/state';
 
@@ -9,27 +7,6 @@
 	}
 
 	let { entries_table }: Props = $props();
-
-	const totalRows = entries_table.length;
-
-	const rowsPerPage = 50;
-
-	const handler = new DataHandler<AdsTxtEntries>([], {
-		rowsPerPage: rowsPerPage,
-		totalRows: totalRows
-	});
-	const rows = handler.getRows();
-
-	handler.onChange((state: State) =>
-		Promise.resolve(
-			entries_table.slice(
-				0 + (state.pageNumber - 1) * state.rowsPerPage,
-				state.rowsPerPage * state.pageNumber
-			)
-		)
-	);
-
-	handler.invalidate();
 </script>
 
 <div class="table-container space-y-4">
@@ -42,7 +19,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				{#each $rows as row}
+				{#each entries_table as row}
 					<tr>
 						<td class="table-cell-fit text-sm md:text-base max-w-[100px] truncate">
 							<a href={`/companies/${page.params.domain}/app-adstxt/publisher/${row.publisher_id}`}

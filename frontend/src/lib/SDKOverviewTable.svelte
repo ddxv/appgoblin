@@ -1,48 +1,12 @@
 <script lang="ts">
-	import Pagination from './Pagination.svelte';
-
-	import { DataHandler } from '@vincjo/datatables/legacy/remote';
-	import type { State } from '@vincjo/datatables/legacy/remote';
-
 	import StoreIcon from './StoreIcon.svelte';
-
+	import { formatNumber } from '$lib/utils/formatNumber';
 	import { page } from '$app/state';
+	import type { SdkOverview } from '../types';
 
 	let pattern = page.params.pattern;
 
-	import type { SdkOverview } from '../types';
-
 	let { entries_table, is_ios }: { entries_table: SdkOverview[]; is_ios: boolean } = $props();
-
-	const totalRows = entries_table.length;
-
-	const rowsPerPage = 100;
-
-	const handler = new DataHandler<SdkOverview>([], {
-		rowsPerPage: rowsPerPage,
-		totalRows: totalRows
-	});
-	const rows = handler.getRows();
-
-	handler.onChange((state: State) =>
-		Promise.resolve(
-			entries_table.slice(
-				0 + (state.pageNumber - 1) * state.rowsPerPage,
-				state.rowsPerPage * state.pageNumber
-			)
-		)
-	);
-
-	handler.invalidate();
-	console.log(`TABLE sdks: ${totalRows}`);
-
-	function formatNumber(num: number) {
-		if (num >= 1000000000000) return (num / 1000000000000).toFixed(1).replace(/\.0$/, '') + 'T';
-		if (num >= 1000000000) return (num / 1000000000).toFixed(1).replace(/\.0$/, '') + 'B';
-		if (num >= 1000000) return (num / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
-		if (num >= 1000) return (num / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
-		return num;
-	}
 </script>
 
 <div class="table-container space-y-4 p-2 md:p-4">
@@ -59,7 +23,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				{#each $rows as row}
+				{#each entries_table as row}
 					<tr class="px-0">
 						<td class="truncate">
 							{#if row.value_name != pattern}
@@ -91,11 +55,5 @@
 				{/each}
 			</tbody>
 		</table>
-		<footer class="flex justify-between">
-			<!-- <RowCount {handler} /> -->
-			{#if totalRows > rowsPerPage}
-				<Pagination {handler} />
-			{/if}
-		</footer>
 	</div>
 </div>

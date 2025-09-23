@@ -53,15 +53,15 @@
 	// For adtech
 	let store = $state(1);
 	$effect(() => {
-		store = +page.params.store;
+		store = +page.params.store!;
 	});
 	let collection = $state(1);
 	$effect(() => {
-		collection = +page.params.collection;
+		collection = +page.params.collection!;
 	});
 	let category = $state(1);
 	$effect(() => {
-		category = +page.params.category;
+		category = +page.params.category!;
 	});
 	// Logic to adjust collection and category based on the store's value
 	$effect(() => {

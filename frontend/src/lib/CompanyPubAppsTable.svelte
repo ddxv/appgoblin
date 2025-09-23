@@ -1,36 +1,12 @@
 <script lang="ts">
-	import Pagination from './Pagination.svelte';
-
-	import { DataHandler } from '@vincjo/datatables/legacy/remote';
-	import type { State } from '@vincjo/datatables/legacy/remote';
 	import type { CompanyOverviewApps } from '../types';
 	import { formatNumber } from '$lib/utils/formatNumber';
 
-	export let entries_table: CompanyOverviewApps[];
+	let { entries_table }: { entries_table: CompanyOverviewApps[] } = $props();
 
-	const totalRows = entries_table.length;
-
-	const rowsPerPage = 100;
-
-	const handler = new DataHandler<CompanyOverviewApps>([], {
-		rowsPerPage: rowsPerPage,
-		totalRows: totalRows
-	});
-	const rows = handler.getRows();
-
-	handler.onChange((state: State) =>
-		Promise.resolve(
-			entries_table.slice(
-				0 + (state.pageNumber - 1) * state.rowsPerPage,
-				state.rowsPerPage * state.pageNumber
-			)
-		)
+	let firstRowInstalls = $derived(
+		entries_table && entries_table.length > 0 && entries_table[0].installs > 0
 	);
-
-	handler.invalidate();
-	console.log(`TABLE Company: ${totalRows}`);
-
-	$: firstRowInstalls = entries_table && entries_table.length > 0 && entries_table[0].installs > 0;
 
 	function formatDate(date: string) {
 		return new Date(date).toLocaleDateString('en-US', {
@@ -59,7 +35,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				{#each $rows as row, index}
+				{#each entries_table as row, index}
 					<tr class="px-0">
 						<td class="table-cell-fit">
 							{index + 1}
@@ -84,11 +60,5 @@
 				{/each}
 			</tbody>
 		</table>
-		<footer class="flex justify-between">
-			<!-- <RowCount {handler} /> -->
-			{#if totalRows > rowsPerPage}
-				<Pagination {handler} />
-			{/if}
-		</footer>
 	</div>
 </div>

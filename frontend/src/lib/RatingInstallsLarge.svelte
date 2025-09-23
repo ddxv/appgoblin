@@ -13,8 +13,6 @@
 
 	let app_install_estimate_min = $derived(app.rating_count * 50);
 	let app_install_estimate_max = $derived(app.rating_count * 100);
-
-	// Remove the local formatNumber function (lines 11-16)
 </script>
 
 <div class="inline-block">

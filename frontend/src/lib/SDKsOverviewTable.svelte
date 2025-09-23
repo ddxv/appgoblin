@@ -1,39 +1,10 @@
 <script lang="ts">
-	import Pagination from './Pagination.svelte';
-
-	import { DataHandler } from '@vincjo/datatables/legacy/remote';
-	import type { State } from '@vincjo/datatables/legacy/remote';
-
 	import type { SdksOverview } from '../types';
 
 	import CompanyButton from './CompanyButton.svelte';
 	import { formatNumber } from '$lib/utils/formatNumber';
 
 	let { entries_table }: { entries_table: SdksOverview[] } = $props();
-
-	const totalRows = entries_table.length;
-
-	const rowsPerPage = 100;
-
-	const handler = new DataHandler<SdksOverview>([], {
-		rowsPerPage: rowsPerPage,
-		totalRows: totalRows
-	});
-	const rows = handler.getRows();
-
-	handler.onChange((state: State) =>
-		Promise.resolve(
-			entries_table.slice(
-				0 + (state.pageNumber - 1) * state.rowsPerPage,
-				state.rowsPerPage * state.pageNumber
-			)
-		)
-	);
-
-	handler.invalidate();
-	console.log(`TABLE sdks: ${totalRows}`);
-
-	// Remove the local formatNumber function (lines 34-40)
 </script>
 
 <div class="table-container space-y-4">
@@ -48,7 +19,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			{#each $rows as row, index}
+			{#each entries_table as row, index}
 				<tr class="px-0">
 					<td class="table-cell-fit">
 						{index + 1}
@@ -79,10 +50,4 @@
 			{/each}
 		</tbody>
 	</table>
-	<footer class="flex justify-between">
-		<!-- <RowCount {handler} /> -->
-		{#if totalRows > rowsPerPage}
-			<Pagination {handler} />
-		{/if}
-	</footer>
 </div>

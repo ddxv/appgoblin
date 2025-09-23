@@ -12,7 +12,7 @@
 	let store = $state('google');
 
 	$effect(() => {
-		store = page.params.store;
+		store = page.params.store!;
 	});
 	let { myCatData }: Props = $props();
 

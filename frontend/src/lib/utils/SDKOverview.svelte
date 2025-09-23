@@ -3,8 +3,6 @@
 	import { formatNumber } from '$lib/utils/formatNumber';
 
 	let { data } = $props();
-
-	// Remove the local formatNumber function (lines 11-16)
 </script>
 
 <WhiteCard>
