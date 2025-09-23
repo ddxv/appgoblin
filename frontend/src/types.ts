@@ -598,12 +598,12 @@ export type CollectionRanks = {
 	categories: CategoryRanks[];
 };
 
-export type Store = {
+export type AppStore = {
 	store_id: number;
 	store_name: string;
 	collections: CollectionRanks[];
 };
 
 export type StoreRankingsMap = {
-	stores_rankings: Store[];
+	stores_rankings: AppStore[];
 };

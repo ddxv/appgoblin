@@ -1,15 +1,5 @@
-// import { writable } from 'svelte/store';
-import type { Store, CategoryRanks, CollectionRanks } from '../types';
+import type { AppStore, CategoryRanks, CollectionRanks } from '../types';
 
-// export const homeCollectionSelection = writable('new_monthly');
-// export const homeStoreSelection = writable('google');
-// export const homeCategorySelection = writable<string>('overall');
-
-// export const idStoreSelection = writable(1);
-// export const idCollectionSelection = writable(1);
-// export const idCategorySelection = writable(1);
-
-// export const homeCategoryMap = writable<CategoriesInfo>({ appCats: { categories: {} } });
 
 const myStoreRankingsMap = {
 	stores_rankings: [
@@ -493,12 +483,12 @@ const myStoreRankingsMap = {
 };
 
 // Lookup tables with TypeScript type annotations
-export const storeIDLookup: Record<number, Store> = {};
+export const storeIDLookup: Record<number, AppStore> = {};
 export const collectionIDLookup: Record<number, Record<number, CollectionRanks>> = {};
 export const categoryIDLookup: Record<number, Record<number, CategoryRanks>> = {};
 
 // Populate the lookup tables with type safety
-myStoreRankingsMap.stores_rankings.forEach((store: Store) => {
+myStoreRankingsMap.stores_rankings.forEach((store: AppStore) => {
 	storeIDLookup[store.store_id] = store;
 
 	store.collections.forEach((collection: CollectionRanks) => {

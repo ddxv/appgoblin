@@ -7,11 +7,6 @@
 
 	const listClass = 'flex flex-col';
 
-	function swapPeriod(newPeriod: string) {
-		const { store, category } = page.params;
-		return `/${newPeriod}/${store}/${category}`;
-	}
-
 	interface Props {
 		myCatData: CatData;
 		baseUrl: string;
@@ -23,7 +18,12 @@
 	});
 	let { myCatData, baseUrl }: Props = $props();
 
+	let selectedStore = $state('google');
 	let selectedCategory = $state('overall');
+
+	$effect(() => {
+		selectedStore = page.params.store!;
+	});
 
 	$effect(() => {
 		if (page.params.category) {
