@@ -117,15 +117,9 @@
 				{/each}
 			</select>
 		</div>
-		{#await data.history}
-			Loading rank history...
-		{:then history}
-			<div class="card">
-				<RankChart plotData={history.history} maxValue={10} />
-			</div>
-		{:catch}
-			Failed to load history
-		{/await}
+		<div class="card">
+			<RankChart plotData={data.history.history} maxValue={10} />
+		</div>
 	</div>
 	<br />
 	<div class="card preset-tonal p-2 md:mx-16">

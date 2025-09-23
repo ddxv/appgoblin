@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { run } from 'svelte/legacy';
-
 	import { onMount } from 'svelte';
 	import * as echarts from 'echarts';
 
@@ -49,8 +47,8 @@
 
 	const plotSeries = makeSeries(plotData);
 
-	let myChartDiv: HTMLDivElement = document.createElement('div');
-	let myChart: echarts.ECharts = $state(echarts.init(myChartDiv, 'dark'));
+	let myChartDiv: HTMLDivElement;
+	let myChart: echarts.ECharts;
 	if (narrowBool) {
 		// Legend at top!
 		topPadding = 40;
@@ -118,32 +116,42 @@
 	}
 
 	onMount(() => {
-		// Create the echarts instance
-		myChart = echarts.init(myChartDiv);
-		// Draw the chart
-		myChart.setOption(chartoption);
-		myChart.resize();
+		myChart = echarts.init(myChartDiv, 'dark');
 
-		const myfun = () => {
-			myChart.resize();
+		const myInterval = maxValue && maxValue <= 10 ? 1 : undefined;
+
+		const chartOption: echarts.EChartsOption = {
+			color: plotColors,
+			dataset: { source: plotData },
+			dimensions: ['crawled_date'],
+			grid: { left: 50, top: topPadding, right: rightPadding, bottom: 40 },
+			tooltip: { trigger: 'item' },
+			xAxis: {
+				type: 'category',
+				splitLine: { show: true },
+				axisLabel: { margin: 10, fontSize: 18 }
+			},
+			yAxis: {
+				type: 'value',
+				axisLabel: { margin: 10, fontSize: 22, formatter: '#{value}' },
+				inverse: true,
+				min: 1,
+				interval: myInterval,
+				max: maxValue
+			},
+			series: plotSeries,
+			legend: narrowBool ? {} : undefined
 		};
 
-		window.addEventListener('resize', myfun);
+		myChart.setOption(chartOption);
+
+		const resizeFn = () => myChart.resize();
+		window.addEventListener('resize', resizeFn);
 
 		return () => {
-			window.removeEventListener('resize', myfun);
-		};
-	});
-
-	run(() => {
-		if (myChart) {
-			// Create the echarts instance
+			window.removeEventListener('resize', resizeFn);
 			myChart.dispose();
-			myChart = echarts.init(myChartDiv, 'dark');
-			// Draw the chart
-			myChart.setOption(chartoption);
-			myChart.resize();
-		}
+		};
 	});
 </script>
 
