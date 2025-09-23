@@ -82,9 +82,12 @@ def create_static_sitemap() -> str:
         "https://appgoblin.info/sdks",
         "https://appgoblin.info/rankings/store/1/collection/1/category/1/US",
         "https://appgoblin.info/rankings/store/2/collection/4/category/120/US",
-        "https://appgoblin.info/collections/new_monthly",
-        "https://appgoblin.info/collections/new_weekly",
-        "https://appgoblin.info/collections/new_yearly",
+        "https://appgoblin.info/collections/new_monthly/google/overall",
+        "https://appgoblin.info/collections/new_weekly/apple/overall",
+        "https://appgoblin.info/collections/new_weekly/google/overall",
+        "https://appgoblin.info/collections/new_yearly/apple/overall",
+        "https://appgoblin.info/collections/new_yearly/google/overall",
+        "https://appgoblin.info/collections/new_weekly/apple/overall",
     ]
 
     static_df = pd.DataFrame({"url": static_urls})

@@ -30,7 +30,7 @@
 		</a>
 
 		<div class={myDivider}></div>
-		<a href="/collections/new_monthly">
+		<a href="/collections/new_monthly/google/overall">
 			<p class={isHighlighted('/collections') ? topBarHighlightedFont : topBarFont}>NEW APPS</p>
 		</a>
 		<div class={myDivider}></div>

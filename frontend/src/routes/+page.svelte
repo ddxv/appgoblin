@@ -190,7 +190,7 @@
 		</div>
 
 		<div class="card preset-tonal p-2 md:p-8">
-			<a href="/collections/new_monthly">
+			<a href="/collections/new_monthly/google/overall">
 				<h2 class="h2 p-2 md:p-4">Explore New Apps</h2>
 				<p class="p-2 md:p-4">
 					These are new apps that have recently been released on the app stores.
@@ -207,7 +207,7 @@
 						</div>
 					</div>
 				</a>
-				<a href="/collections/new_monthly">
+				<a href="/collections/new_monthly/google/overall">
 					<div class="snap-center shrink-0 card preset-tonal w-48 md:w-56 md:p-4">
 						<div class="table-container card-header">
 							<h3 class="h3">Newest Apps This Month</h3>
