@@ -83,7 +83,7 @@
 					<div class="flex items-center p-1 gap-1 md:gap-2">
 						<a href="https://github.com/ddxv/appgoblin" target="_blank" rel="noreferrer">
 							<button type="button" class="btn preset-tonal hover:preset-tonal-primary p-1 md:p-2">
-								<div class="inline-flex items-center text-xs md:text-base gap-1 md:gap-2">
+								<div class="inline-flex items-center text-xs md:text-sm gap-1 md:gap-2">
 									{@html githubIcon} Star on GitHub
 								</div>
 							</button>
@@ -91,7 +91,7 @@
 
 						<a href="https://discord.gg/7jpWEhkXRW" target="_blank" rel="noreferrer">
 							<button type="button" class="btn preset-tonal hover:preset-tonal-primary p-1 md:p-2">
-								<div class="inline-flex items-center text-xs md:text-base gap-1 md:gap-2">
+								<div class="inline-flex items-center text-xs md:text-sm gap-1 md:gap-2">
 									{@html discordIcon} Discord
 								</div>
 							</button>
