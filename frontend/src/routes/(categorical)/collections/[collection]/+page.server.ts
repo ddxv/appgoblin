@@ -8,9 +8,12 @@ export const load: PageServerLoad = async ({ fetch, params, setHeaders }) => {
 	const api = createApiClient(fetch);
 	const collectionValue = params.collection;
 
-	console.log(`load started collection=${collectionValue}`);
-	setHeaders({ 'cache-control': 'max-age=86400' });
+	setHeaders({
+		'cache-control': 'public, max-age=86400, stale-while-revalidate=3600'
+	});
+
 	const AppCollections = await api.get(`/apps/collections/${collectionValue}`, 'App Collections');
+
 	return {
 		AppCollections
 	};

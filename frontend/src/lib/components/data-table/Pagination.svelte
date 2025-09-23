@@ -1,5 +1,8 @@
 <script lang="ts">
-	import { ChevronRight, ChevronLeft, ChevronsLeft, ChevronsRight } from 'lucide-svelte';
+	import ChevronRight from 'lucide-svelte/icons/chevron-right';
+	import ChevronLeft from 'lucide-svelte/icons/chevron-left';
+	import ChevronsLeft from 'lucide-svelte/icons/chevrons-left';
+	import ChevronsRight from 'lucide-svelte/icons/chevrons-right';
 
 	let { tableModel } = $props();
 	const buttonSize = 16;

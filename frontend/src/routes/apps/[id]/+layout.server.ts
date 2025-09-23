@@ -3,7 +3,12 @@ import { createApiClient } from '$lib/server/api';
 
 import { getCachedData } from '../../../hooks.server';
 
-export const load: LayoutServerLoad = async ({ fetch, params, parent }) => {
+export const load: LayoutServerLoad = async ({ fetch, params, setHeaders }) => {
+	setHeaders({
+		// cache in the browser and any CDN for 1 day
+		'cache-control': 'public, max-age=86400, stale-while-revalidate=3600'
+	});
+
 	const api = createApiClient(fetch);
 
 	const myapp = await api.get(`/apps/${params.id}`, 'App Details');

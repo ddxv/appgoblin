@@ -5,7 +5,8 @@
 	import IconGoogle from './svg/IconGoogle.svelte';
 	import IconiOs from './svg/IconiOS.svelte';
 	import { formatNumber } from '$lib/utils/formatNumber';
-	import { TrendingUpIcon, TrendingDownIcon } from 'lucide-svelte';
+	import TrendingDownIcon from 'lucide-svelte/icons/trending-down';
+	import TrendingUpIcon from 'lucide-svelte/icons/trending-up';
 
 	interface Props {
 		app: AppFullDetail | CompanyCreative | RankedApps;

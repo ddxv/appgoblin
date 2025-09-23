@@ -4,7 +4,7 @@
 	import { Popover } from '@skeletonlabs/skeleton-svelte';
 
 	import IconSearch from '$lib/svg/IconSearch.svelte';
-	import { Menu } from 'lucide-svelte';
+	import Menu from 'lucide-svelte/icons/menu';
 
 	import { AppBar } from '@skeletonlabs/skeleton-svelte';
 

@@ -1,6 +1,12 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import { ChartLine, ChartBar, Boxes, Key, TrendingUp, FileText, Image } from 'lucide-svelte';
+	import ChartLine from 'lucide-svelte/icons/chart-line';
+	import ChartBar from 'lucide-svelte/icons/chart-bar';
+	import Boxes from 'lucide-svelte/icons/boxes';
+	import Key from 'lucide-svelte/icons/key';
+	import TrendingUp from 'lucide-svelte/icons/trending-up';
+	import FileText from 'lucide-svelte/icons/file-text';
+	import Image from 'lucide-svelte/icons/image';
 
 	let { isAndroidApp, myapp } = $props();
 

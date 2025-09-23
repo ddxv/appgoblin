@@ -20,7 +20,8 @@
 
 	import { page } from '$app/state';
 
-	import { Check, X } from 'lucide-svelte';
+	import Check from 'lucide-svelte/icons/check';
+	import X from 'lucide-svelte/icons/x';
 
 	import { formatNumber } from '$lib/utils/formatNumber';
 	import ZScoreMeter from '$lib/components/ZScoreMeter.svelte';

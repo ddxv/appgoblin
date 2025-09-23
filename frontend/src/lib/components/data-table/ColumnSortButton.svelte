@@ -1,5 +1,7 @@
 <script lang="ts">
-	import { ChevronUp, ChevronDown, ChevronsUpDown } from 'lucide-svelte';
+	import ChevronUp from 'lucide-svelte/icons/chevron-up';
+	import ChevronDown from 'lucide-svelte/icons/chevron-down';
+	import ChevronsUpDown from 'lucide-svelte/icons/chevrons-up-down';
 
 	interface Props {
 		columnTitle: string;

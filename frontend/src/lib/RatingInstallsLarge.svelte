@@ -1,5 +1,7 @@
 <script lang="ts">
-	import { TrendingUpIcon, TrendingDownIcon } from 'lucide-svelte';
+	import TrendingUpIcon from 'lucide-svelte/icons/trending-up';
+	import TrendingDownIcon from 'lucide-svelte/icons/trending-down';
+
 	import IconDownload from '$lib/svg/IconDownload.svelte';
 	import Star from './Star.svelte';
 	import { formatNumber } from '$lib/utils/formatNumber';
