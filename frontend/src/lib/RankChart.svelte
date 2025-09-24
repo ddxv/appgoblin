@@ -149,7 +149,6 @@
 		}
 	}
 
-	// Initialize chart on mount
 	onMount(() => {
 		mounted = true;
 		// Small delay to ensure DOM is fully ready
@@ -158,7 +157,6 @@
 		}, 10);
 	});
 
-	// Watch for data changes and reinitialize chart
 	$effect(() => {
 		if (mounted && plotData) {
 			// Small delay to prevent rapid updates
@@ -168,7 +166,6 @@
 		}
 	});
 
-	// Cleanup on destroy
 	onDestroy(() => {
 		mounted = false;
 		if (resizeHandler) {

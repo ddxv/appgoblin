@@ -10,6 +10,28 @@
 	}
 	let { data }: Props = $props();
 	let sum = (arr: number[]) => arr.reduce((acc, curr) => acc + curr, 0);
+
+	function isProbablyValidHTML(str: string): boolean {
+		if (!str) return false;
+
+		// Catch invalid tags like <.b>
+		if (/<\.[^>]+>/.test(str)) return false;
+
+		// Check that all <tag> have matching </tag>
+		const tagPattern = /<([a-zA-Z0-9]+)(\s[^>]*)?>/g;
+		const stack: string[] = [];
+		let match;
+
+		while ((match = tagPattern.exec(str))) {
+			const tag = match[1].toLowerCase();
+			if (str.includes(`</${tag}>`)) continue;
+			if (!['br', 'img', 'hr', 'input'].includes(tag)) {
+				stack.push(tag);
+			}
+		}
+
+		return stack.length === 0;
+	}
 </script>
 
 <section class="grid grid-flow-cols-1 md:grid-cols-2 md:gap-4 p-2">
@@ -223,7 +245,15 @@
 					<p class="text-strong">{data.myapp.description_short}</p>
 				</div>
 				<div>
-					<p>{@html data.myapp.description?.replace(/\r?\n/g, '<br>')}</p>
+					{#if data.myapp.description}
+						{#if isProbablyValidHTML(data.myapp.description)}
+							<p>
+								{@html data.myapp.description?.replace(/\r?\n/g, '<br>')}
+							</p>
+						{:else}
+							{data.myapp.description}
+						{/if}
+					{/if}
 				</div>
 			</section>
 		</div>
