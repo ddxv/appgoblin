@@ -1,8 +1,8 @@
 <script lang="ts">
 	import IconGoogle from './svg/IconGoogle.svelte';
 	import IconiOs from './svg/IconiOS.svelte';
-
 	import type { CompanyOverviewApps } from '../types';
+	import { formatNumber } from '$lib/utils/formatNumber';
 
 	let { entries_table }: { entries_table: CompanyOverviewApps[] } = $props();
 </script>
@@ -57,10 +57,10 @@
 						</td>
 
 						<td class="table-cell-fit">
-							{row.installs}
+							{formatNumber(row.installs)}
 						</td>
 						<td class="table-cell-fit">
-							{row.rating_count}
+							{formatNumber(row.rating_count)}
 						</td>
 					</tr>
 				{/each}
