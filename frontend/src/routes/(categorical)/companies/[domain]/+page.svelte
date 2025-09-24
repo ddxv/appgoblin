@@ -167,7 +167,7 @@
 	/>
 {/if}
 
-{#if data.companyDetails && data.companyDetails.adstxt_publishers_overview && data.companyDetails.adstxt_publishers_overview.google.direct && data.companyDetails.adstxt_publishers_overview.apple.direct}
+{#if data.companyDetails && data.companyDetails.adstxt_publishers_overview}
 	<div class="card preset-tonal p-2 md:p-8 mt-2 md:mt-4">
 		<div class="grid md:grid-cols-2 gap-4">
 			{#if data.companyDetails.adstxt_publishers_overview.google && data.companyDetails.adstxt_publishers_overview.google.direct}
