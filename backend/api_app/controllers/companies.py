@@ -439,6 +439,8 @@ def make_companies_stats(
 def make_company_stats(df: pd.DataFrame) -> CompanyCategoryOverview:
     """Make category sums for overview."""
     overview = CompanyCategoryOverview()
+    if df.empty:
+        return overview
     conditions = {
         "sdk_ios": (df["store"].str.contains("Apple")) & (df["tag_source"] == "sdk"),
         "sdk_android": (df["store"].str.contains("Google"))

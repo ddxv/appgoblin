@@ -649,7 +649,8 @@ def get_company_stats(
                     "store",
                     "tag_source",
                     "app_category",
-                ]
+                ],
+                dropna=False,
             )[
                 [
                     "app_count",
