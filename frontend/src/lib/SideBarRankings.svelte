@@ -1,18 +1,11 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import CardFirst from './CardFirst.svelte';
-	// import { homeCollectionSelection } from './constants';
-	// import { homeStoreSelection } from './constants';
-	// import { homeCategorySelection } from './constants';
-
 	import { storeIDLookup, collectionIDLookup, categoryIDLookup } from './constants';
+	import { prettyName } from '$lib/utils/prettyNames';
 
 	const buttonSelectedClass = 'btn preset-outlined-primary-900-100 relative text-primary-900-100';
 	const buttonDeselectedClass = 'p-1 md:p-2 hover:text-primary-900-100';
-
-	let localHomeCollectionSelect = $state('new_monthly');
-	let localHomeStoreSelect = $state('google');
-	let localHomeCategorySelect = $state('overall');
 
 	let country = $state(page.params.country);
 
@@ -20,22 +13,6 @@
 		page.url.pathname.startsWith(href) ? buttonSelectedClass : buttonDeselectedClass
 	);
 
-	// // Reactive statement to update the store when localValue changes
-	// $effect(() => {
-	// 	homeCollectionSelection.set(localHomeCollectionSelect);
-	// });
-	// $effect(() => {
-	// 	homeStoreSelection.set(localHomeStoreSelect);
-	// });
-	// $effect(() => {
-	// 	if (page.params.category) {
-	// 		localHomeCategorySelect = page.params.category;
-	// 	}
-	// });
-	// $effect(() => {
-	// 	homeCategorySelection.set(localHomeCategorySelect);
-	// });
-	// For adtech
 	let store = $state(1);
 	$effect(() => {
 		store = +page.params.store!;
@@ -72,7 +49,7 @@
 <div class="p-1 md:p-2">
 	<CardFirst>
 		{#snippet header()}
-			<h4 class="h5 md:h4">Stores</h4>
+			<h4 class="h5 md:h4">App Stores</h4>
 		{/snippet}
 		<nav class="list-nav">
 			<ul>
@@ -100,7 +77,7 @@
 <div class="p-1 md:p-2">
 	<CardFirst>
 		{#snippet header()}
-			<h4 class="h5 md:h4">Collections</h4>
+			<h4 class="h5 md:h4">Store Collections</h4>
 		{/snippet}
 		<nav class="list-nav">
 			<ul>
@@ -114,7 +91,7 @@
 									`/rankings/store/${store}/collection/${values.collection_id}/`
 								)}
 							>
-								{values.collection_name}
+								{prettyName(values.collection_name)}
 							</p>
 						</a>
 					</li>
@@ -126,7 +103,7 @@
 <div class="p-1 md:p-2">
 	<CardFirst>
 		{#snippet header()}
-			<h4 class="h5 md:h4">Categories</h4>
+			<h4 class="h5 md:h4">App Categories</h4>
 		{/snippet}
 		<nav class="list-nav">
 			<ul>
@@ -140,7 +117,7 @@
 									`/rankings/store/${store}/collection/${collection}/category/${values.category_id}`
 								)}
 							>
-								{values.category_name}
+								{prettyName(values.category_name)}
 							</p>
 						</a>
 					</li>

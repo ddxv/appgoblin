@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { storeIDLookup, collectionIDLookup, categoryIDLookup } from '$lib/constants';
-
 	import type { StoreCategoryRanks } from '../../../../../../../../../../types.js';
-
 	import { page } from '$app/state';
 	import RankChart from '$lib/RankChart.svelte';
 	import AppRankTable from '$lib/AppRankTable.svelte';
 	import { countryCodeToEmoji } from '$lib/utils/countryCodeToEmoji';
+	import { prettyName } from '$lib/utils/prettyNames';
+
 	interface Props {
 		data: StoreCategoryRanks;
 	}
@@ -17,6 +17,9 @@
 	let collection = $derived(+page.params.collection!);
 	let category = $derived(+page.params.category!);
 
+	let collectionName = $derived(prettyName(collectionIDLookup[store][collection].collection_name));
+	let categoryName = $derived(prettyName(categoryIDLookup[collection][category].category_name));
+
 	let country = $state(page.params.country || 'US');
 
 	function getTitle(): string {
@@ -24,9 +27,9 @@
 			storeIDLookup[store].store_name +
 			' ' +
 			'Daily App Ranks ' +
-			collectionIDLookup[store][collection].collection_name +
+			collectionName +
 			' for ' +
-			categoryIDLookup[collection][category].category_name +
+			categoryName +
 			' in ' +
 			country +
 			' ';
@@ -38,9 +41,9 @@
 			'Free app store charts. Top ranked ' +
 			storeIDLookup[store].store_name +
 			' ' +
-			collectionIDLookup[store][collection].collection_name +
+			collectionName +
 			' ' +
-			categoryIDLookup[collection][category].category_name +
+			categoryName +
 			' Apps. Sort by category and view historical data all for free. Get valuable ASO insights for your app strategy with AppGoblin.';
 		return description;
 	}
@@ -79,58 +82,69 @@
 </svelte:head>
 
 <div class="card p-2 md:p-8">
-	<!-- <h1 class="h4 md:h3 p-4"> -->
-	<h1 class="text-2xl grid grid-cols-4 gap-2">
-		<p class="text-primary-800-200">App Store:</p>
-		<p class="text-primary-800-200">Collection:</p>
-		<p class="text-primary-800-200">Category:</p>
-		<p class="text-primary-800-200">Country:</p>
-
-		<p class="text-primary-900-100">
-			{storeIDLookup[store].store_name}
-		</p>
-		<p class="text-primary-900-100">{collectionIDLookup[store][collection].collection_name}</p>
-		<p class="text-primary-900-100">
-			{categoryIDLookup[collection][category].category_name}
-		</p>
-		<p class="text-primary-900-100">
-			{country}
-		</p>
-	</h1>
-	<div class="card preset-tonal p-1 md:p-2">
-		<div class="max-w-sm">
-			<p class=" p-1 md:p-2 text-primary-900-100">Select Country</p>
-			<select
-				class="select p-1 md:p-2 m-2"
-				bind:value={country}
-				onchange={() => {
-					const newUrl = `/rankings/store/${store}/collection/${collection}/category/${category}/${country}`;
-					window.location.href = newUrl;
-				}}
-			>
-				{#each Object.entries(data.countries) as [key, value]}
-					<option value={key}>{countryCodeToEmoji(key)} {value}</option>
-				{/each}
-			</select>
+	<div class="mx-16">
+		<h1 class="text-2xl p-2">
+			<p class="text-primary-900-100">
+				The {collectionName}
+				{categoryName} Apps on
+				{storeIDLookup[store].store_name}
+				in
+				{country}
+			</p>
+		</h1>
+		<div class="card preset-tonal p-1 md:p-2">
+			<div class="max-w-sm mb-2 md:mb-8">
+				<p class=" p-1 md:p-2 text-primary-900-100">Select Country</p>
+				<select
+					class="select p-1 md:p-2 m-2"
+					bind:value={country}
+					onchange={() => {
+						const newUrl = `/rankings/store/${store}/collection/${collection}/category/${category}/${country}`;
+						window.location.href = newUrl;
+					}}
+				>
+					{#each Object.entries(data.countries) as [key, value]}
+						<option value={key}>{countryCodeToEmoji(key)} {value}</option>
+					{/each}
+				</select>
+			</div>
+			<table class="table table-compact">
+				<thead>
+					<tr>
+						<th>App Store</th>
+						<th>Collection</th>
+						<th>Category</th>
+						<th>Country</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>{storeIDLookup[store].store_name}</td>
+						<td>{collectionName}</td>
+						<td>{categoryName}</td>
+						<td>{country}</td>
+					</tr>
+				</tbody>
+			</table>
+			<div class="card">
+				{#await data.history then history}
+					<RankChart plotData={history.history} maxValue={10} />
+				{/await}
+			</div>
 		</div>
-		<div class="card">
-			{#await data.history then history}
-				<RankChart plotData={history.history} maxValue={10} />
+		<br />
+		<div class="card preset-tonal p-1 md:p-2">
+			{#await data.ranks}
+				Loading App Ranks...
+			{:then ranks}
+				{#if ranks && ranks.ranks.length > 0}
+					<AppRankTable data={ranks.ranks} />
+				{:else}
+					No data found
+				{/if}
+			{:catch}
+				Problem loading data
 			{/await}
 		</div>
-	</div>
-	<br />
-	<div class="card preset-tonal p-2 md:mx-16">
-		{#await data.ranks}
-			Loading App Ranks...
-		{:then ranks}
-			{#if ranks && ranks.ranks.length > 0}
-				<AppRankTable data={ranks.ranks} />
-			{:else}
-				No data found
-			{/if}
-		{:catch}
-			Problem loading data
-		{/await}
 	</div>
 </div>

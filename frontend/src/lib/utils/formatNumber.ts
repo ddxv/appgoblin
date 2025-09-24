@@ -18,5 +18,9 @@ export function formatNumber(num: number): string | number {
  * @returns Formatted string with commas
  */
 export function formatNumberLocale(num: number): string {
-	return num.toLocaleString();
+	if (num) {
+		return num.toLocaleString();
+	} else {
+		return '';
+	}
 }

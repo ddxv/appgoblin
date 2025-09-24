@@ -1,157 +1,183 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { onMount, onDestroy } from 'svelte';
 	import * as echarts from 'echarts';
-
-	import { plotColors } from './constants';
-
-	let myInterval;
-	let topPadding;
-	let rightPadding;
+	import { plotColors } from '$lib/constants';
 
 	interface Props {
-		plotData: any;
+		plotData: any[];
 		maxValue?: number | undefined;
 		narrowBool?: boolean;
 	}
 
 	let { plotData, maxValue = undefined, narrowBool = false }: Props = $props();
 
-	const dimensions = ['crawled_date'];
-
-	if (maxValue && maxValue <= 10) {
-		myInterval = 1;
-	} else {
-		myInterval = undefined;
-	}
-
-	const defaultSeries: echarts.SeriesOption = {
-		type: 'line',
-		symbolSize: 20,
-		smooth: true,
-		emphasis: {
-			focus: 'series'
-		},
-		lineStyle: {
-			width: 4
-		}
-	};
-
-	function makeSeries(plotData: Object[]) {
-		const numberOfSeries = Object.keys(plotData[plotData.length - 1]).length - 1;
-		const myArray = [];
-		for (let i = 0; i < numberOfSeries; i++) {
-			myArray.push(defaultSeries);
-		}
-		return myArray;
-	}
-
-	const plotSeries = makeSeries(plotData);
-
 	let myChartDiv: HTMLDivElement;
-	let myChart: echarts.ECharts;
-	if (narrowBool) {
-		// Legend at top!
-		topPadding = 40;
-		rightPadding = 20;
-	} else {
-		// No Legend at top, at right
-		topPadding = 20;
-		rightPadding = 55;
-	}
+	let myChart: echarts.ECharts | null = null;
+	let resizeHandler: () => void;
+	let mounted = false;
 
-	let gridoption: echarts.GridComponentOption = {
-		left: 50,
-		top: topPadding,
-		right: rightPadding,
-		bottom: 40
-		// containLabel: true
-	};
-
-	let chartoption: echarts.EChartsOption = $state({
-		color: plotColors,
-		dataset: { source: plotData },
-		dimensions: dimensions,
-		grid: gridoption,
-		tooltip: {
-			trigger: 'item'
-		},
-		xAxis: {
-			type: 'category',
-			splitLine: {
-				show: true
-			},
-			axisLabel: {
-				margin: 10,
-				fontSize: 18
-			}
-			// boundaryGap: false,
-			//data: myX
-		},
-		yAxis: {
-			type: 'value',
-			axisLabel: {
-				margin: 10,
-				fontSize: 22,
-				formatter: '#{value}'
-			},
-			inverse: true,
-			min: 1,
-			interval: myInterval,
-			max: maxValue
-		},
-		series: plotSeries
+	// Reactive derivations
+	let myInterval = $derived.by(() => {
+		if (maxValue && maxValue <= 10) {
+			return 1;
+		}
+		return undefined;
 	});
 
-	if (narrowBool) {
-		// Legend at top!
-		chartoption['legend'] = {};
-	} else {
-		// No Legend at top, at right
-		defaultSeries['endLabel'] = {
-			show: true,
-			formatter: '{a}',
-			distance: 20,
-			valueAnimation: true
-		};
+	let topPadding = $derived.by(() => (narrowBool ? 40 : 20));
+	let rightPadding = $derived.by(() => (narrowBool ? 20 : 55));
+
+	const dimensions = ['crawled_date'];
+
+	function createSeries(data: any[]) {
+		if (!data || data.length === 0) return [];
+
+		const numberOfSeries = Object.keys(data[data.length - 1]).length - 1;
+		const series = [];
+
+		for (let i = 0; i < numberOfSeries; i++) {
+			const seriesConfig: echarts.SeriesOption = {
+				type: 'line',
+				symbolSize: 20,
+				smooth: true,
+				emphasis: {
+					focus: 'series'
+				},
+				lineStyle: {
+					width: 4
+				}
+			};
+
+			if (!narrowBool) {
+				seriesConfig.endLabel = {
+					show: true,
+					formatter: '{a}',
+					distance: 20,
+					valueAnimation: true
+				};
+			}
+
+			series.push(seriesConfig);
+		}
+
+		return series;
 	}
 
-	onMount(() => {
-		myChart = echarts.init(myChartDiv, 'dark');
+	function createChartOption() {
+		if (!plotData || plotData.length === 0) {
+			return null;
+		}
 
-		const myInterval = maxValue && maxValue <= 10 ? 1 : undefined;
-
-		const chartOption: echarts.EChartsOption = {
+		const option: echarts.EChartsOption = {
 			color: plotColors,
 			dataset: { source: plotData },
-			dimensions: ['crawled_date'],
-			grid: { left: 50, top: topPadding, right: rightPadding, bottom: 40 },
-			tooltip: { trigger: 'item' },
+			dimensions: dimensions,
+			grid: {
+				left: 50,
+				top: topPadding,
+				right: rightPadding,
+				bottom: 40
+			},
+			tooltip: {
+				trigger: 'item'
+			},
 			xAxis: {
 				type: 'category',
-				splitLine: { show: true },
-				axisLabel: { margin: 10, fontSize: 18 }
+				splitLine: {
+					show: true
+				},
+				axisLabel: {
+					margin: 10,
+					fontSize: 18
+				}
 			},
 			yAxis: {
 				type: 'value',
-				axisLabel: { margin: 10, fontSize: 22, formatter: '#{value}' },
+				axisLabel: {
+					margin: 10,
+					fontSize: 22,
+					formatter: '#{value}'
+				},
 				inverse: true,
 				min: 1,
 				interval: myInterval,
 				max: maxValue
 			},
-			series: plotSeries,
-			legend: narrowBool ? {} : undefined
+			series: createSeries(plotData)
 		};
 
-		myChart.setOption(chartOption);
+		if (narrowBool) {
+			option.legend = {};
+		}
 
-		const resizeFn = () => myChart.resize();
-		window.addEventListener('resize', resizeFn);
+		return option;
+	}
 
-		return () => {
-			window.removeEventListener('resize', resizeFn);
+	function initializeChart() {
+		if (!myChartDiv || !plotData || plotData.length === 0) {
+			return;
+		}
+
+		// Dispose existing chart if it exists
+		if (myChart) {
 			myChart.dispose();
-		};
+			myChart = null;
+		}
+
+		try {
+			myChart = echarts.init(myChartDiv, 'dark');
+			const option = createChartOption();
+
+			if (option) {
+				myChart.setOption(option);
+			}
+
+			// Set up resize handler
+			if (resizeHandler) {
+				window.removeEventListener('resize', resizeHandler);
+			}
+
+			resizeHandler = () => {
+				if (myChart && !myChart.isDisposed()) {
+					myChart.resize();
+				}
+			};
+
+			window.addEventListener('resize', resizeHandler);
+		} catch (error) {
+			console.error('Error initializing chart:', error);
+		}
+	}
+
+	// Initialize chart on mount
+	onMount(() => {
+		mounted = true;
+		// Small delay to ensure DOM is fully ready
+		setTimeout(() => {
+			initializeChart();
+		}, 10);
+	});
+
+	// Watch for data changes and reinitialize chart
+	$effect(() => {
+		if (mounted && plotData) {
+			// Small delay to prevent rapid updates
+			setTimeout(() => {
+				initializeChart();
+			}, 10);
+		}
+	});
+
+	// Cleanup on destroy
+	onDestroy(() => {
+		mounted = false;
+		if (resizeHandler) {
+			window.removeEventListener('resize', resizeHandler);
+		}
+		if (myChart && !myChart.isDisposed()) {
+			myChart.dispose();
+			myChart = null;
+		}
 	});
 </script>
 
