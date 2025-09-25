@@ -532,7 +532,8 @@ export interface CompaniesLayoutResponse {
 }
 
 export interface AppFullDetail {
-	store: number;
+	// from cleaned -> string, maybe from db -> int, should rename to store_name and always use
+	store: string;
 	icon_url_512: string;
 	icon_url_100?: string;
 	name: string;

@@ -360,11 +360,12 @@ class AppController(Controller):
         app_df = get_single_app(store_id)
 
         if app_df.empty:
-            msg = f"Store ID not found: {store_id!r}"
-            raise NotFoundException(
-                msg,
-                status_code=404,
+            logger.info(f"App history not found: {store_id}")
+            return AppHistory(
+                histogram=[],
+                plot_data={},
             )
+
         app_dict = app_df.to_dict(orient="records")[0]
         store_app = app_dict["id"]
         app_name = app_dict["name"]
@@ -427,10 +428,11 @@ class AppController(Controller):
         df = get_app_sdk_details(store_id)
 
         if df.empty or df.isna().all().all():
-            msg = f"SDK info for store ID not found: {store_id!r}"
-            raise NotFoundException(
-                msg,
-                status_code=404,
+            logger.info(f"SDK info not found: {store_id}")
+            return SDKsDetails(
+                company_categories={},
+                permissions=[],
+                leftovers={},
             )
 
         df.loc[df["value_name"].isna(), "value_name"] = ""
@@ -540,11 +542,8 @@ class AppController(Controller):
         start = time.perf_counter() * 1000
         df_overview = get_ranks_for_app_overview(store_id=store_id, days=90)
         if df_overview.empty:
-            msg = f"Ranks not found for {store_id!r}"
-            raise NotFoundException(
-                msg,
-                status_code=404,
-            )
+            logger.info(f"No ranks found for {store_id!r}")
+            return AppRankOverview(countries=[], best_ranks=[])
         countries = df_overview["country"].unique().tolist()
         countries = sorted(countries)
         duration = round((time.perf_counter() * 1000 - start), 2)
@@ -570,11 +569,8 @@ class AppController(Controller):
         start = time.perf_counter() * 1000
         df = get_ranks_for_app(store_id=store_id, country=country, days=90)
         if df.empty:
-            msg = f"Ranks not found for {store_id!r}"
-            raise NotFoundException(
-                msg,
-                status_code=404,
-            )
+            logger.info(f"No ranks found for {store_id!r}")
+            return AppRank(history={})
         df["rank_group"] = df["collection"] + ": " + df["category"]
         df["crawled_date"] = pd.to_datetime(df["crawled_date"]).dt.strftime("%Y-%m-%d")
         pdf = df[df["country"] == country][
@@ -649,11 +645,8 @@ class AppController(Controller):
         adstxt_df = get_single_apps_adstxt(store_id)
 
         if adstxt_df.empty:
-            msg = f"App's ads-txt entries not found: {store_id!r}"
-            raise NotFoundException(
-                msg,
-                status_code=404,
-            )
+            logger.info(f"No ads-txt entries found for {store_id!r}")
+            return AdsTxtEntries(direct_entries=[], reseller_entries=[])
         direct_adstxt_dict = adstxt_df[
             adstxt_df["relationship"].str.upper() == "DIRECT"
         ].to_dict(orient="records")

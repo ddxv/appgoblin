@@ -33,62 +33,53 @@
 		}
 		return '';
 	}
+
+	function getPageTitle(myapp: AppFullDetail | string) {
+		let pageTitle = '';
+		if (typeof myapp == 'string') pageTitle = myapp;
+		else {
+			if (myapp.store.includes('Google')) {
+				pageTitle = `${myapp.name} Android Analytics`;
+			} else if (myapp.store.includes('Apple')) {
+				pageTitle = `${myapp.name} iOS Analytics`;
+			}
+		}
+		return pageTitle;
+	}
+
+	function getPageDescription(myapp: AppFullDetail | string) {
+		let pageDescription = '';
+		if (typeof myapp == 'string') pageDescription = myapp;
+		else {
+			if (myapp.store.includes('Google')) {
+				pageDescription = `${myapp.name} by ${myapp.developer_name} Android app's analytics and competitor analysis. Check out detailed app SDK, partners, ads, rankings, and more.`;
+			} else {
+				pageDescription = `${myapp.name} by ${myapp.developer_name} iOS app's analytics and competitor analysis. Check out detailed app SDK, partners, ads, rankings, and more.`;
+			}
+		}
+		return pageDescription;
+	}
+
+	let pageTitle = $derived(getPageTitle(data.myapp));
+	let pageDescription = $derived(getPageDescription(data.myapp));
 </script>
 
 <svelte:head>
 	<link rel="canonical" href="https://appgoblin.info/apps/{page.params.id}" />
-	{#if data.myapp.store_link.includes('google')}
-		<title>{data.myapp.name} Android Analysis</title>
-		<meta
-			name="description"
-			content="{data.myapp.name} by {data.myapp
-				.developer_name} Android app's analytics and competitor analysis. Check out detailed app SDK, partners, ads, rankings, and more."
-		/>
-		<meta
-			name="keywords"
-			content="{data.myapp.name}, {data.myapp.developer_name}, {data.myapp
-				.developer_id}, {getCategoryName(
-				data.myapp.category
-			)}, competitor analysis, creatives, analytics, ads, market data, Android app rankings, app reviews, download statistics, Google Play data, app comparison, mobile app insights, Android"
-		/>
-		<meta property="og:title" content="{data.myapp.name} Android Analysis" />
-		<meta
-			property="og:description"
-			content="{data.myapp.name} by {data.myapp
-				.developer_name} Android app's analytics and competitor analysis. Check out detailed app SDK, partners, ads, rankings, and more."
-		/>
-		<meta name="twitter:title" content="{data.myapp.name} Android Analysis" />
-		<meta
-			name="twitter:description"
-			content="{data.myapp.name} by {data.myapp
-				.developer_name} Android app's analytics and competitor analysis. Check out detailed app SDK, partners, ads, rankings, and more."
-		/>
-	{:else}
-		<title>{data.myapp.name} iOS Analysis & Data</title>
-		<meta
-			name="description"
-			content="{data.myapp.name} by {data.myapp
-				.developer_name} iOS app's analytics and competitor analysis. Check out detailed app SDK, partners, ads, rankings, and more."
-		/>
-		<meta
-			name="keywords"
-			content="{data.myapp.name}, {data.myapp.developer_name}, {data.myapp.developer_id}, {data
-				.myapp
-				.category} competitor analysis, creatives, analytics, ads, market data, iOS app rankings, app reviews, download statistics, App Store data, app comparison, mobile app insights, iOS"
-		/>
-		<meta property="og:title" content="{data.myapp.name} iOS Analysis" />
-		<meta
-			property="og:description"
-			content="{data.myapp.name} by {data.myapp
-				.developer_name} iOS app's analytics and competitor analysis. Check out detailed app SDK, partners, ads, rankings, and more."
-		/>
-		<meta name="twitter:title" content="{data.myapp.name} iOS Analysis" />
-		<meta
-			name="twitter:description"
-			content="{data.myapp.name} by {data.myapp
-				.developer_name} iOS app's analytics and competitor analysis. Check out detailed app SDK, partners, ads, rankings, and more."
-		/>
-	{/if}
+	<title>{pageTitle}</title>
+	<meta name="description" content={pageDescription} />
+	<meta
+		name="keywords"
+		content="{data.myapp.name}, {data.myapp.developer_name}, {data.myapp
+			.developer_id}, {getCategoryName(
+			data.myapp.category
+		)}, competitor analysis, creatives, analytics, ads, market data, Android app rankings, app reviews, download statistics, Google Play data, app comparison, mobile app insights, Android"
+	/>
+	<meta property="og:title" content={pageTitle} />
+	<meta property="og:description" content={pageDescription} />
+	<meta name="twitter:title" content={pageTitle} />
+	<meta name="twitter:description" content={pageDescription} />
+
 	<meta property="og:image" content="https://appgoblin.info/goblin_purple_hat_250.png" />
 	<meta property="og:url" content={page.url.href} />
 	<meta property="og:type" content="website" />
@@ -127,13 +118,13 @@
 						target="_blank"
 						class="anchor inline-flex items-center hover:scale-105 transition-transform"
 					>
-						{#if data.myapp.store_link.includes('google')}
+						{#if data.myapp.store == 1}
 							<img
 								class="w-32 md:w-48 md:w-64"
 								src="/gp_en_badge_web_generic.png"
 								alt={data.myapp.name}
 							/>
-						{:else}
+						{:else if data.myapp.store == 2}
 							<AvailableOniOs size={180} />
 						{/if}
 					</a>

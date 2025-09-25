@@ -35,7 +35,7 @@ let initializationPromise: Promise<void> | null = null;
 
 const API_BASE_URL = 'http://localhost:8000/api';
 
-async function fetchWithRetry(url: string, retries = 3): Promise<any> {
+async function fetchWithRetry(url: string, retries = 10): Promise<any> {
 	for (let i = 0; i < retries; i++) {
 		try {
 			const response = await fetch(url);
@@ -76,7 +76,6 @@ async function initializeCache(): Promise<void> {
 		console.log('Cache initialized successfully');
 	} catch (error) {
 		console.error('Failed to initialize cache:', error);
-		// Keep default empty values, don't throw - let the app start
 	}
 }
 
