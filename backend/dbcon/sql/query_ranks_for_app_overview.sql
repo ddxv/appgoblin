@@ -16,7 +16,7 @@ LEFT JOIN store_categories AS sca
         sarw.store_category = sca.id
 LEFT JOIN countries AS c ON sarw.country = c.id
 WHERE
-    sa.store_id = :store_id
-    AND sarw.crawled_date >= :start_date
+    sarw.crawled_date >= :start_date
+    AND sa.store_id = :store_id
 GROUP BY c.alpha2, sc.collection, sca.category
 ORDER BY best_rank ASC;
