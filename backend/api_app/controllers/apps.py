@@ -432,6 +432,8 @@ class AppController(Controller):
             return SDKsDetails(
                 company_categories={},
                 permissions=[],
+                app_queries=[],
+                skadnetwork=[],
                 leftovers={},
             )
 
