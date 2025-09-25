@@ -118,13 +118,13 @@
 						target="_blank"
 						class="anchor inline-flex items-center hover:scale-105 transition-transform"
 					>
-						{#if data.myapp.store == 1}
+						{#if data.myapp.store.includes('Google')}
 							<img
 								class="w-32 md:w-48 md:w-64"
 								src="/gp_en_badge_web_generic.png"
 								alt={data.myapp.name}
 							/>
-						{:else if data.myapp.store == 2}
+						{:else if data.myapp.store.includes('Apple')}
 							<AvailableOniOs size={180} />
 						{/if}
 					</a>
