@@ -4,6 +4,7 @@ PUBLIC
 
 """
 
+import time
 from typing import Self
 
 import pandas as pd
@@ -16,6 +17,7 @@ from config import CONFIG, get_logger
 from dbcon.queries import (
     get_apps_sdk_overview,
     insert_sdk_scan_request,
+    get_company_logos_df,
 )
 
 logger = get_logger(__name__)
@@ -91,9 +93,25 @@ class ScryController(Controller):
     @post(path="sdks/apps")
     async def lookup_apps(self: Self, headers: dict[str, str], data: dict) -> dict:
         """Lookup apps' SDKs by store_ids."""
+        start = time.perf_counter() * 1000
         store_ids = data.get("store_ids", [])
 
         df = get_apps_sdk_overview(tuple(store_ids))
+        df = df.merge(
+            get_company_logos_df(),
+            left_on="company_domain",
+            right_on="company_domain",
+            how="left",
+            validate="m:1",
+        )
+        df["company_logo_url"] = df["company_logo_url"].fillna(
+            "default_company_logo.png"
+        )
+        df["company_logo_url"] = df["company_logo_url"].apply(
+            lambda x: f"https://media.appgoblin.info/{x}"
+        )
+        duration = round((time.perf_counter() * 1000 - start), 2)
+        logger.info(f"Scry: lookup_apps db query took {duration}ms")
 
         if df["company_domain"].isna().sum() > 0:
             logger.error(
@@ -113,7 +131,14 @@ class ScryController(Controller):
         for cat in cats:
             company_cats[cat] = (
                 df[df["category_slug"] == cat]
-                .groupby(["company_name", "company_domain", "percent_open_source"])
+                .groupby(
+                    [
+                        "company_name",
+                        "company_domain",
+                        "percent_open_source",
+                        "company_logo_url",
+                    ]
+                )
                 .apply(
                     lambda x: pd.Series(
                         {
@@ -135,6 +160,7 @@ class ScryController(Controller):
                         "category_slug",
                         "company_name",
                         "company_domain",
+                        "company_logo_url",
                         "percent_open_source",
                     ]
                 ]
@@ -162,6 +188,8 @@ class ScryController(Controller):
         logger.info(
             f"Scry: store_ids:{len(success_store_ids)} found SDKs:{df.shape[0]}"
         )
+        duration = round((time.perf_counter() * 1000 - start), 2)
+        logger.info(f"Scry: lookup_apps response took {duration}ms")
         return Response(
             my_dict,
             background=BackgroundTask(process_get_sdks, store_ids_dict, ip),
