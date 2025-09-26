@@ -16,8 +16,8 @@ from litestar.background_tasks import BackgroundTask
 from config import CONFIG, get_logger
 from dbcon.queries import (
     get_apps_sdk_overview,
-    insert_sdk_scan_request,
     get_company_logos_df,
+    insert_sdk_scan_request,
 )
 
 logger = get_logger(__name__)

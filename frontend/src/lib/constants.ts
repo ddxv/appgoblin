@@ -1,6 +1,5 @@
 import type { AppStore, CategoryRanks, CollectionRanks } from '../types';
 
-
 const myStoreRankingsMap = {
 	stores_rankings: [
 		{

@@ -1,8 +1,6 @@
 import type { Handle, ServerInit } from '@sveltejs/kit';
 import type { CatData, CompanyTypes } from './types';
 
-
-
 interface Country {
 	code: string;
 	name: string;

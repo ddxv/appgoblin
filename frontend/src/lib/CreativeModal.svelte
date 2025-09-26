@@ -36,13 +36,16 @@
 	<div
 		class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 p-4"
 		onclick={closeModal}
+		onkeydown={(e) => e.key === 'Enter' && closeModal()}
 		aria-modal="true"
 		role="dialog"
 		aria-labelledby="media-title"
+		tabindex="-1"
 	>
-		<div class="relative w-full max-w-6xl" onclick={(e) => e.stopPropagation()}>
+		<div class="relative w-full max-w-6xl" onclick={(e) => e.stopPropagation()} role="presentation">
 			<!-- Close button -->
 			<button
+				type="button"
 				class="absolute -top-12 right-0 text-white text-3xl hover:text-gray-300 transition-colors z-10 bg-black bg-opacity-50 rounded-full w-10 h-10 flex items-center justify-center"
 				onclick={closeModal}
 				aria-label="Close media"

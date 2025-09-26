@@ -7,7 +7,6 @@ import remarkParse from 'remark-parse';
 import remarkRehype from 'remark-rehype';
 import { unified } from 'unified';
 
-
 export const ssr = true;
 export const csr = false;
 
