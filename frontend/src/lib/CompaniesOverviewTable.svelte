@@ -337,12 +337,14 @@
 											src={`https://media.appgoblin.info/${row.original.company_logo_url}`}
 											alt={row.original.company_name}
 											class="w-8 h-8 rounded-sm mr-2"
+											loading="lazy"
 										/>
 									{:else}
 										<img
 											src="/default_company_logo.png"
 											alt="Default Company Logo"
 											class="w-8 h-8 rounded-sm mr-2"
+											loading="lazy"
 										/>
 									{/if}
 									{#if row.original.company_name}

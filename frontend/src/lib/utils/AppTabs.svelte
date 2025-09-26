@@ -21,44 +21,44 @@
 			},
 			{
 				name: 'Trends',
-				url_slug: 'trends',
+				url_slug: '/trends',
 				icon: TrendingUp
 			},
 			{
 				name: 'SDKs',
-				url_slug: 'sdks',
+				url_slug: '/sdks',
 				icon: Boxes
 			},
 			{
 				name: 'Keywords',
-				url_slug: 'keywords',
+				url_slug: '/keywords',
 				icon: Key
 			},
 			{
 				name: 'Store Rankings',
-				url_slug: 'ranks',
+				url_slug: '/ranks',
 				icon: ChartBar
 			},
 			...(isAndroidApp
 				? [
 						{
 							name: 'Data & API Calls',
-							url_slug: 'data-flows',
+							url_slug: '/data-flows',
 							icon: FileText
 						},
 						{
 							name: 'Ad Creatives',
-							url_slug: 'ad-creatives',
+							url_slug: '/ad-creatives',
 							icon: Image
 						},
 						{
 							name: 'Ad Placements',
-							url_slug: 'ad-placements',
+							url_slug: '/ad-placements',
 							icon: Image
 						},
 						{
 							name: 'Monetized Ad Creatives',
-							url_slug: 'monetized-ads',
+							url_slug: '/monetized-ads',
 							icon: Image
 						}
 					]
@@ -66,7 +66,7 @@
 
 			{
 				name: 'App-Ads.txt',
-				url_slug: 'ads-txt',
+				url_slug: '/ads-txt',
 				icon: FileText
 			}
 		]
@@ -88,10 +88,10 @@
 			}
 		}
 
-		if (page.url.pathname.startsWith(`/apps/${page.params.id}/${tab}`)) {
+		if (page.url.pathname.startsWith(`/apps/${page.params.id}${tab}`)) {
 			return `${baseClass} ${selectedClass}`;
 		} else {
-			if (tab === 'sdks') {
+			if (tab === '/sdks') {
 				return `${baseClass} ${unselectedGreyClass}`;
 			} else {
 				return `${baseClass} ${unselectedClass}`;
@@ -100,17 +100,17 @@
 	}
 
 	function tabTextClass(tab: string) {
-		if (tab === 'sdks' && !myapp.sdk_successful_last_crawled) {
+		if (tab === '/sdks' && !myapp.sdk_successful_last_crawled) {
 			return textGreyedOutColor;
-		} else if (tab === 'data-flows' && !myapp.api_successful_last_crawled) {
+		} else if (tab === '/data-flows' && !myapp.api_successful_last_crawled) {
 			return textGreyedOutColor;
-		} else if (tab === 'ads-txt' && myapp.adstxt_crawl_result != 1) {
+		} else if (tab === '/ads-txt' && myapp.adstxt_crawl_result != 1) {
 			return textGreyedOutColor;
-		} else if (tab === 'ad-creatives' && myapp.ad_creative_count == 0) {
+		} else if (tab === '/ad-creatives' && myapp.ad_creative_count == 0) {
 			return textGreyedOutColor;
-		} else if (tab === 'ad-placements' && myapp.ad_creative_count == 0) {
+		} else if (tab === '/ad-placements' && myapp.ad_creative_count == 0) {
 			return textGreyedOutColor;
-		} else if (tab === 'monetized-ads' && myapp.ad_monetized_creative_count == 0) {
+		} else if (tab === '/monetized-ads' && myapp.ad_monetized_creative_count == 0) {
 			return textGreyedOutColor;
 		} else {
 			return '';
@@ -122,7 +122,7 @@
 	{#each myTabs.types as tab}
 		{@const Component = tab.icon}
 		<a
-			href={`/apps/${page.params.id}/${tab.url_slug}`}
+			href={`/apps/${page.params.id}${tab.url_slug}`}
 			class={typeTabClass(tab.url_slug)}
 			data-sveltekit-preload-data
 		>

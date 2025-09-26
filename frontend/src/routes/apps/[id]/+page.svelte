@@ -227,6 +227,7 @@
 						class="h-auto max-w-full rounded-lg p-4 mx-auto"
 						src={data.myapp.featured_image_url}
 						alt="App screenshot"
+						loading="lazy"
 					/>
 				</div>
 			{/if}
@@ -234,7 +235,12 @@
 				{#each [data.myapp.phone_image_url_1, data.myapp.phone_image_url_2, data.myapp.phone_image_url_3, data.myapp.tablet_image_url_1, data.myapp.tablet_image_url_2, data.myapp.tablet_image_url_3] as imageUrl}
 					{#if imageUrl && imageUrl != 'null'}
 						<div>
-							<img class="h-auto max-w-full rounded-lg" src={imageUrl} alt="App screenshot" />
+							<img
+								class="h-auto max-w-full rounded-lg"
+								src={imageUrl}
+								alt="App screenshot"
+								loading="lazy"
+							/>
 						</div>
 					{/if}
 				{/each}

@@ -127,7 +127,7 @@
 			</table>
 			<div class="card">
 				{#await data.history then history}
-					<RankChart plotData={history.history} maxValue={10} />
+					<RankChart plotData={history.history} maxValue={10.5} />
 				{/await}
 			</div>
 		</div>

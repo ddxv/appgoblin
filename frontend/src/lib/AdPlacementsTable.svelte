@@ -180,6 +180,7 @@
 												.md5_hash}.jpg"
 											class="w-24 md:w-64 h-auto object-cover rounded text-xs"
 											alt="Creative: {row.original.md5_hash}"
+											loading="lazy"
 										/>
 										<!-- Play button overlay -->
 										<div
@@ -212,6 +213,7 @@
 												width="200"
 												class="w-12 md:w-24 h-auto object-cover rounded"
 												referrerpolicy="no-referrer"
+												loading="lazy"
 											/>
 										</div>
 									</a>

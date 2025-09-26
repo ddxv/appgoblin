@@ -18,7 +18,7 @@
 
 	// Reactive derivations
 	let myInterval = $derived.by(() => {
-		if (maxValue && maxValue <= 10) {
+		if (maxValue && maxValue <= 11) {
 			return 1;
 		}
 		return undefined;
@@ -75,8 +75,8 @@
 			grid: {
 				left: 50,
 				top: topPadding,
-				right: rightPadding,
-				bottom: 40
+				right: rightPadding
+				// bottom: 80
 			},
 			tooltip: {
 				trigger: 'item'
@@ -87,7 +87,7 @@
 					show: true
 				},
 				axisLabel: {
-					margin: 10,
+					// margin: 10,
 					fontSize: 18
 				}
 			},
@@ -95,7 +95,7 @@
 				type: 'value',
 				axisLabel: {
 					margin: 10,
-					fontSize: 22,
+					fontSize: 18,
 					formatter: '#{value}'
 				},
 				inverse: true,

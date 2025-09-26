@@ -351,12 +351,6 @@
 											class="text-xs md:text-sm font-medium text-blue-600 hover:text-blue-800"
 										>
 											<div class="inline-flex gap-2">
-												<!-- <img
-													src={row.original.icon_url_100}
-													alt={row.original.app_name}
-													class="w-10 h-10 rounded-lg"
-													loading="lazy"
-												/> -->
 												{row.original.app_name}
 											</div>
 										</a>

@@ -24,6 +24,7 @@
 					src={`https://media.appgoblin.info/${companyLogoUrl}`}
 					alt={companyLogoUrl}
 					class="w-10 h-10 rounded-sm"
+					loading="lazy"
 				/>
 			{/if}
 			{companyName ?? companyDomain}
@@ -37,6 +38,7 @@
 					src={`https://media.appgoblin.info/${companyLogoUrl}`}
 					alt={companyLogoUrl}
 					class="w-20 h-20 rounded-sm"
+					loading="lazy"
 				/>
 			{/if}
 			{companyName ?? companyDomain}

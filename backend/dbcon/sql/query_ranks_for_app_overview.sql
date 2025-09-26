@@ -19,4 +19,4 @@ WHERE
     sarw.crawled_date >= :start_date
     AND sa.store_id = :store_id
 GROUP BY c.alpha2, sc.collection, sca.category
-ORDER BY sarw.best_rank ASC;
+ORDER BY best_rank ASC;
