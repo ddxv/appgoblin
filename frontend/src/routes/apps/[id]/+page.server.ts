@@ -24,9 +24,11 @@ export const load: PageServerLoad = async ({ fetch, params, parent }) => {
 	const id = params.id;
 
 	const appSDKsOverview = await api.get(`/apps/${params.id}/sdksoverview`, 'App SDKs Overview');
-	const myhistory = api.get(`/apps/${id}/history`, 'App History');
 
 	const { myapp } = await parent();
+
+	// Streaming
+	const myhistory = await api.get(`/apps/${id}/history`, 'App History');
 
 	return {
 		myapp,

@@ -21,9 +21,9 @@ export const load: PageServerLoad = async ({ fetch, params, url, parent }) => {
 	const country = url.searchParams.get('country') || 'US';
 	const api = createApiClient(fetch);
 	const myranksOverview = await api.get(`/apps/${id}/ranks/overview`, 'App Ranks Overview');
-	const myranks = api.get(`/apps/${id}/ranks?country=${country}`, 'App Ranks');
 	const { countries } = await getCachedData();
 	const { myapp } = await parent();
+	const myranks = await api.get(`/apps/${id}/ranks?country=${country}`, 'App Ranks');
 
 	return {
 		myranks,
