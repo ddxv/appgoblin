@@ -76,7 +76,6 @@
 	<meta name="twitter:image" content="https://appgoblin.info/goblin_purple_hat_250.png" />
 
 	<!-- Additional meta tags -->
-	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	<meta name="robots" content="index, follow" />
 	<link rel="canonical" href={page.url.href} />
 </svelte:head>

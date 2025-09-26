@@ -17,7 +17,7 @@ export const load: PageServerLoad = async ({ fetch, parent, params }) => {
 		`/creatives/companies/${companyDomain}`,
 		'Company Creatives'
 	);
-	const companySdks = api.get(`/companies/${companyDomain}/sdks`, 'Company SDKs');
+	const companySdks = await api.get(`/companies/${companyDomain}/sdks`, 'Company SDKs');
 
 	const { companyDetails, companyTree } = await parent();
 
