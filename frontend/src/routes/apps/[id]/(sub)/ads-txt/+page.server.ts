@@ -14,6 +14,9 @@ export const load: PageServerLoad = async ({ fetch, params, parent }) => {
 	return {
 		myAdsTxt,
 		appCats,
-		companyTypes
+		companyTypes,
+		title: `App-Ads.txt for ${myapp.name}`,
+		description: `Explore the programmatic ad networks used for ${myapp.name}. Browse their Publisher IDs, ad networks and app-ads.txt entries.`,
+		keywords: `ads.txt, app-ads.txt, ad publishers, ad networks`
 	};
 };

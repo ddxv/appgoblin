@@ -12,7 +12,7 @@
 
 	let { data }: Props = $props();
 
-	let company_category = $derived(page.params.category);
+	let company_category = $derived(page.params.category!);
 </script>
 
 {#await data.companyDetails}

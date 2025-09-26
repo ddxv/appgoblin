@@ -13,14 +13,14 @@
 
 	import Pagination from '$lib/components/data-table/Pagination.svelte';
 	import ExportAsCSV from '$lib/components/data-table/ExportAsCSV.svelte';
-	import type { AppAPIsOverview } from '../types';
+	import type { AppAPIs } from '../types';
 
 	import { createSvelteTable, FlexRender } from '$lib/components/data-table/index.js';
 
 	import { genericColumns } from '$lib/components/data-table/generic-column';
 
-	type DataTableProps<AppAPIsOverview, TValue> = {
-		data: AppAPIsOverview[];
+	type DataTableProps<AppAPIs, TValue> = {
+		data: AppAPIs;
 	};
 
 	let pagination = $state<PaginationState>({ pageIndex: 0, pageSize: 40 });
@@ -29,7 +29,7 @@
 
 	let globalFilter = $state<string>('');
 
-	let { data }: DataTableProps<AppAPIsOverview, TValue> = $props();
+	let { data }: DataTableProps<AppAPIs, TValue> = $props();
 
 	const columns = genericColumns([
 		{

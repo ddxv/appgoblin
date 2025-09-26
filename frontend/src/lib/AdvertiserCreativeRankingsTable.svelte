@@ -151,7 +151,7 @@
 						</td>
 
 						<td>
-							<AppAdvertiserCreativeCarousel data={row.original} size="lg" />
+							<AppAdvertiserCreativeCarousel data={row.original} height="16" />
 						</td>
 					</tr>
 				{/each}

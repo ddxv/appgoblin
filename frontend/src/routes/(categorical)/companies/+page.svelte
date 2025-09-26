@@ -13,9 +13,9 @@
 
 	let { data }: Props = $props();
 
-	const title = 'Top App Ad Networks, Dev Tools & App Analytics';
+	const title = 'Top App Ad Networks, Dev Tools & Analytics for Apps';
 	const description =
-		'Free analytics for top mobile ad networks, trackers, app analytics and more. See who the biggest clients of the top mobile SDKs are.';
+		'See who really uses the biggest app ad networks, analytics and trackers. Competitor analysis based on API, SDK and tracker usage across all apps for mobile app companies.';
 </script>
 
 <svelte:head>

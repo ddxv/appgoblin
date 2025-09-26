@@ -1,8 +1,5 @@
-<script lang="ts">
+<script lang="ts" generics="TValue">
 	import {
-		type PaginationState,
-		type SortingState,
-		type ColumnFiltersState,
 		getCoreRowModel,
 		getPaginationRowModel,
 		getSortedRowModel,
@@ -13,11 +10,9 @@
 	import X from 'lucide-svelte/icons/x';
 
 	import ExportAsCSV from '$lib/components/data-table/ExportAsCSV.svelte';
-	import type { CompanyOverviewApps, AppFullDetail } from '../types';
+	import type { CompanyOverviewApps } from '../types';
 	import { formatNumber } from '$lib/utils/formatNumber';
-	// export let entries_table: CompanyOverviewApps[] | AppFullDetail[];
-	// export let isiOS: boolean = false;
-	import { createSvelteTable, FlexRender } from '$lib/components/data-table/index.js';
+	import { createSvelteTable } from '$lib/components/data-table/index.js';
 
 	import { genericColumns } from '$lib/components/data-table/generic-column';
 
@@ -25,8 +20,6 @@
 		data: RankedApps[];
 		isiOS: boolean;
 	};
-
-	// const totalRows = entries_table.length;
 
 	function tableHasAdsTxt(table: CompanyOverviewApps[]) {
 		return !table.every((row) => row.app_ads_direct == false);

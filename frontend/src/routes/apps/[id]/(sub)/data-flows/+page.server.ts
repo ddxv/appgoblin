@@ -20,13 +20,18 @@ export const actions = {
 	}
 } satisfies Actions;
 
-export const load: PageServerLoad = async ({ fetch, params }) => {
+export const load: PageServerLoad = async ({ fetch, params, parent }) => {
 	const api = createApiClient(fetch);
 	const id = params.id;
 
 	const apis = await api.get(`/apps/${id}/apis`, 'App APIs');
+	const { myapp } = await parent();
 
 	return {
-		apis
+		apis,
+		// Meta Tags
+		title: `API Calls for ${myapp.name}`,
+		description: `Explore the API calls used for ${myapp.name}. See which companies ${myapp.name} is sharing data with.`,
+		keywords: `tracking, data sharing, data flows, api calls, api, data`
 	};
 };

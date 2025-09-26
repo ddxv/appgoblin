@@ -60,25 +60,25 @@
 		return pageDescription;
 	}
 
-	let pageTitle = $derived(getPageTitle(data.myapp));
-	let pageDescription = $derived(getPageDescription(data.myapp));
+	let defaultTitle = $derived(getPageTitle(data.myapp));
+	let defaultDescription = $derived(getPageDescription(data.myapp));
 </script>
 
 <svelte:head>
-	<link rel="canonical" href="https://appgoblin.info/apps/{page.params.id}" />
-	<title>{pageTitle}</title>
-	<meta name="description" content={pageDescription} />
+	<link rel="canonical" href={page.url.href} />
+	<title>{page.data.title ?? defaultTitle}</title>
+	<meta name="description" content={page.data.description ?? defaultDescription} />
 	<meta
 		name="keywords"
-		content="{data.myapp.name}, {data.myapp.developer_name}, {data.myapp
+		content="{page.data.keywords}, {data.myapp.name}, {data.myapp.developer_name}, {data.myapp
 			.developer_id}, {getCategoryName(
 			data.myapp.category
 		)}, competitor analysis, creatives, analytics, ads, market data, Android app rankings, app reviews, download statistics, Google Play data, app comparison, mobile app insights, Android"
 	/>
-	<meta property="og:title" content={pageTitle} />
-	<meta property="og:description" content={pageDescription} />
-	<meta name="twitter:title" content={pageTitle} />
-	<meta name="twitter:description" content={pageDescription} />
+	<meta property="og:title" content={defaultTitle} />
+	<meta property="og:description" content={defaultDescription} />
+	<meta name="twitter:title" content={defaultTitle} />
+	<meta name="twitter:description" content={defaultDescription} />
 
 	<meta property="og:image" content="https://appgoblin.info/goblin_purple_hat_250.png" />
 	<meta property="og:url" content={page.url.href} />

@@ -13,7 +13,7 @@
 					<tr class="px-0 text-sm md:text-base">
 						<td class="flex flex-col md:flex-row gap-4">
 							<AppAdvertiserCard app={row} size="md" />
-							<AppAdvertiserCreativeCarousel data={row} height="20" />
+							<AppAdvertiserCreativeCarousel data={row} height="16" />
 						</td>
 					</tr>
 				{/each}

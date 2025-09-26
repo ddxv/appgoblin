@@ -9,6 +9,10 @@ export const load: PageServerLoad = async ({ fetch, parent, params }) => {
 
 	return {
 		creatives,
-		myapp
+		myapp,
+		// Meta Tags
+		title: `Ad Placements for ${myapp.name}`,
+		description: `Explore the ad placements used for ${myapp.name}. See the ad placements they are running and their ad and creative strategies.`,
+		keywords: `ad placements, ad publishers, ad networks, videos, images, ads`
 	};
 };

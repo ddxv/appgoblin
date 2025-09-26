@@ -16,17 +16,22 @@ export const actions = {
 	}
 } satisfies Actions;
 
-export const load: PageServerLoad = async ({ fetch, params, url }) => {
+export const load: PageServerLoad = async ({ fetch, params, url, parent }) => {
 	const id = params.id;
 	const country = url.searchParams.get('country') || 'US';
 	const api = createApiClient(fetch);
 	const myranksOverview = await api.get(`/apps/${id}/ranks/overview`, 'App Ranks Overview');
 	const myranks = api.get(`/apps/${id}/ranks?country=${country}`, 'App Ranks');
 	const { countries } = await getCachedData();
+	const { myapp } = await parent();
 
 	return {
 		myranks,
 		myranksOverview,
-		countries
+		countries,
+		// Meta Tags
+		title: `${myapp.name} App Store Ranks`,
+		description: `Explore the ranks for ${myapp.name} and see which countries and categories it ranks highest. See the ranks for ${myapp.name}.`,
+		keywords: `ranks, app store ranks, app rankings, app rank, app rank history`
 	};
 };

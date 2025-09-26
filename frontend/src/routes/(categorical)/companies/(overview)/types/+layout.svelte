@@ -9,7 +9,7 @@
 	let type_title: string = $derived(getTypeTitle(companyTypes, page.params.type));
 	let category_title = $derived(getCategoryName(page.params.category));
 
-	function getTypeTitle(myTypes: CompanyTypes, currentType: string) {
+	function getTypeTitle(myTypes: CompanyTypes, currentType: string | undefined) {
 		if (myTypes.types && currentType) {
 			return (
 				myTypes.types.find((type: { url_slug: string }) => type.url_slug === currentType)?.name ||
@@ -19,7 +19,7 @@
 		return '';
 	}
 
-	function getCategoryName(category: string) {
+	function getCategoryName(category: string | undefined) {
 		if (category) {
 			return (
 				data?.appCats?.categories?.find((cat: { id: string }) => cat.id == category)?.name ||

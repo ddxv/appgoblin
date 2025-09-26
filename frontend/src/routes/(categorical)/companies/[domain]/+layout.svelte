@@ -22,15 +22,15 @@
 				.map((c) => c.charAt(0).toUpperCase() + c.slice(1))
 				.join(' ');
 		} else {
-			return 'All Apps';
+			return 'All ';
 		}
 	}
 
 	function getPageTitle(myTree: any, categoryName: string) {
 		if (myTree.parent_company_domain == myTree.queried_company_domain) {
-			return `${myTree.parent_company_name || myTree.parent_company_domain}: ${categoryName}`;
+			return `${myTree.parent_company_name || myTree.parent_company_domain}: ${categoryName} Clients, Apps and Competitors`;
 		} else {
-			return `${myTree.queried_company_name} / ${categoryName}`;
+			return `${myTree.queried_company_name} ${categoryName} Apps, Clients, and Competitors`;
 		}
 	}
 	let pageTitle = $derived(getPageTitle(data.companyTree, categoryName));
@@ -43,28 +43,19 @@
 	<title>{pageTitle}</title>
 	<meta
 		name="description"
-		content="{domain} {category_title} biggest apps by most users. Explore detailed analytics, market presence, and insights about {domain}'s role in the mobile ecosystem."
+		content="{domain} {category_title}. Explore detailed analytics, market presence, and insights about {domain}'s role in the mobile ecosystem based on real API, SDK and tracker usage."
 	/>
 	<meta
 		name="keywords"
 		content="{domain}, {category_title}, adtech, advertising network, data tracking, mobile measurement, programmatic advertising, app-ads.txt, mobile advertising, ad tech analytics, AppGoblin"
 	/>
-	<meta
-		property="og:title"
-		content="{domain} {category_title} | Adtech Company Insights | AppGoblin Analytics"
-	/>
+	<meta property="og:title" content={pageTitle} />
 	<meta
 		property="og:description"
 		content="Discover {domain}'s impact in the {category_title} adtech industry. Analyze data on their apps, market presence, and role in mobile advertising. Powered by AppGoblin's comprehensive adtech research."
 	/>
-	<meta
-		name="twitter:title"
-		content="{domain} {category_title} Company Apps | AppGoblin Insights"
-	/>
-	<meta
-		name="twitter:description"
-		content="Uncover insights on {domain}'s {category_title} adtech operations. Explore data on their apps, industry connections, and market influence in mobile advertising and data tracking."
-	/>
+	<meta name="twitter:title" content={pageTitle} />
+	<meta name="twitter:description" content={pageTitle} />
 
 	<meta property="og:image" content="https://appgoblin.info/goblin_purple_hat_250.png" />
 	<meta property="og:url" content={page.url.href} />

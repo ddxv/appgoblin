@@ -9,7 +9,7 @@
 
 	const { pattern } = page.params;
 
-	let sdk_title: string = $state(pattern);
+	let sdk_title: string = $state(pattern!);
 </script>
 
 <svelte:head>

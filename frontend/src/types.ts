@@ -158,6 +158,9 @@ export interface RankedApps {
 	installs_sum_4w: number;
 	ratings_sum_4w: number;
 	icon_url_512: string;
+	phone_image_url_1?: string;
+	tablet_image_url_1?: string;
+	featured_image_url?: string;
 }
 export interface AppRankDetail {
 	crawled_date: string;
@@ -197,8 +200,10 @@ export interface AdsTxtEntries {
 }
 
 export interface AdsTxtEntriesResult {
-	direct_entries: AdsTxtEntries[];
-	reseller_entries: AdsTxtEntries[];
+	myAdsTxt: {
+		direct_entries: AdsTxtEntries[];
+		reseller_entries: AdsTxtEntries[];
+	};
 }
 
 export interface CompaniesOverviewEntries {
@@ -460,8 +465,10 @@ export interface AppSDKsOverview {
 	};
 }
 
+export type AppAPIs = Array<{ tld_url: string; url: string }>;
+
 export interface AppAPIsOverview {
-	apis: { apis: Array<{ tld_url: string; url: string }> };
+	apis: { apis: AppAPIs };
 }
 
 export interface AppSDKs {

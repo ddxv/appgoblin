@@ -1,9 +1,5 @@
 import type { Handle, ServerInit } from '@sveltejs/kit';
-
-interface AppCategory {
-	id: string;
-	name: string;
-}
+import type { CatData, CompanyTypes } from './types';
 
 interface CompanyType {
 	id: string;
@@ -16,17 +12,17 @@ interface Country {
 }
 
 interface CachedData {
-	appCats: AppCategory[];
+	appCats: CatData;
 	appsOverview: any; // Define proper type based on your API response
-	companyTypes: CompanyType[];
+	companyTypes: CompanyTypes;
 	countries: Country[];
 }
 
 // Cache with default empty values
 let cachedData: CachedData = {
-	appCats: [],
+	appCats: { categories: [] },
 	appsOverview: {},
-	companyTypes: [],
+	companyTypes: { types: [] },
 	countries: []
 };
 

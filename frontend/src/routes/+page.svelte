@@ -200,7 +200,7 @@
 			<div
 				class="snap-x scroll-px-4 snap-mandatory scroll-smooth flex gap-4 md:flex-row flex-col px-4 py-10"
 			>
-				<a href="/collections/new_weekly">
+				<a href="/collections/new_weekly/google/overall">
 					<div class="snap-center shrink-0 card preset-tonal w-48 md:w-56 md:p-4">
 						<div class="table-container card-header">
 							<h3 class="h3">Newest Apps This Week</h3>
@@ -214,7 +214,7 @@
 						</div>
 					</div>
 				</a>
-				<a href="/collections/new_yearly">
+				<a href="/collections/new_yearly/google/overall">
 					<div class="snap-center shrink-0 card preset-tonal w-48 md:w-56 md:p-4">
 						<div class="table-container card-header">
 							<h3 class="h3">Newest Apps This Year</h3>

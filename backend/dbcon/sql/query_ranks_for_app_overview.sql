@@ -2,7 +2,7 @@ SELECT
     c.alpha2 AS country,
     sc.collection,
     sca.category,
-    min(best_rank) AS best_rank
+    min(sarw.best_rank) AS best_rank
 FROM
     frontend.store_app_ranks_weekly AS sarw
 LEFT JOIN store_apps AS sa
@@ -19,4 +19,4 @@ WHERE
     sarw.crawled_date >= :start_date
     AND sa.store_id = :store_id
 GROUP BY c.alpha2, sc.collection, sca.category
-ORDER BY best_rank ASC;r
+ORDER BY sarw.best_rank ASC;
