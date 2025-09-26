@@ -114,6 +114,24 @@ export const handle: Handle = async ({ event, resolve }) => {
 			headers: { Location: '/companies/types/ad-networks' }
 		});
 	}
+	if (route == '/collections/new_weekly') {
+		return new Response(undefined, {
+			status: 301,
+			headers: { Location: '/collections/new_weekly/google/overall' }
+		});
+	}
+	if (route == '/collections/new_monthly') {
+		return new Response(undefined, {
+			status: 301,
+			headers: { Location: '/collections/new_monthly/google/overall' }
+		});
+	}
+	if (route == '/collections/new_yearly') {
+		return new Response(undefined, {
+			status: 301,
+			headers: { Location: '/collections/new_yearly/google/overall' }
+		});
+	}
 
 	// let start = performance.now();
 	const response = await resolve(event);
