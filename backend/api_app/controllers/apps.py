@@ -12,7 +12,6 @@ from typing import Self
 import numpy as np
 import pandas as pd
 from adscrawler.app_stores import apple, google, scrape_stores
-from adscrawler.dbcon import connection as write_conn
 from litestar import Controller, Response, get, post
 from litestar.background_tasks import BackgroundTask
 from litestar.exceptions import NotFoundException
@@ -29,6 +28,7 @@ from api_app.models import (
 )
 from config import get_logger
 from dbcon.queries import (
+    DBCONWRITE,
     get_app_adstxt_overview,
     get_app_api_details,
     get_app_history,
@@ -78,11 +78,8 @@ def get_search_results(search_term: str) -> AppGroup:
 
 def process_search_results(results: list[dict]) -> None:
     """After having queried an external app store send results to db."""
-    logger.info("background:search results to try opening connection")
-    db_conn = write_conn.get_db_connection(use_ssh_tunnel=True)
-    db_conn.set_engine()
     logger.info("background:search results to be processed")
-    scrape_stores.process_scraped(db_conn, results, "appgoblin_search")
+    scrape_stores.process_scraped(DBCONWRITE, results, "appgoblin_search")
     logger.info("background:search results done")
 
 

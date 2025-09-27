@@ -127,9 +127,7 @@ def start_ssh_tunnel(server_name: str) -> int:
     return ssh_local_port
 
 
-def get_db_connection(
-    use_ssh_tunnel: bool = False, server_name: str = "madrone"
-) -> PostgresCon:
+def get_db_connection(server_name: str = "madrone") -> PostgresCon:
     """Get a database connection, optionally using an SSH tunnel.
 
     Args:
@@ -141,12 +139,12 @@ def get_db_connection(
     """
     host = CONFIG[server_name]["host"]
 
-    if use_ssh_tunnel:
+    if host == "localhost" or host.startswith("192.168.0"):
+        db_port = "5432"
+    else:
         ssh_local_port = start_ssh_tunnel(server_name)
         host = "127.0.0.1"
         db_port = str(ssh_local_port)
-    else:
-        db_port = "5432"
     conn = PostgresCon(server_name, host, db_port)
     conn.set_engine()
     return conn

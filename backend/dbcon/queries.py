@@ -1218,10 +1218,12 @@ def insert_sdk_scan_request(store_id: str | list[str]) -> None:
 
 
 logger.info("set db engine")
-DBCON = get_db_connection("madrone")
+
+DBCON = get_db_connection(server_name="madrone")
+
 DBCON.set_engine()
 try:
-    DBCONWRITE = get_db_connection("madrone-write")
+    DBCONWRITE = get_db_connection(server_name="madrone-write")
     DBCONWRITE.set_engine()
 except Exception:
     logger.exception("Error setting up madrone-write engine")

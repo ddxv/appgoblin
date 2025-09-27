@@ -9,12 +9,12 @@ from typing import Self
 
 import pandas as pd
 from adscrawler.app_stores import scrape_stores
-from adscrawler.dbcon import connection as write_conn
 from litestar import Controller, Response, post
 from litestar.background_tasks import BackgroundTask
 
 from config import CONFIG, get_logger
 from dbcon.queries import (
+    DBCONWRITE,
     get_apps_sdk_overview,
     get_company_logos_df,
     insert_sdk_scan_request,
@@ -77,11 +77,8 @@ def process_get_sdks(store_ids_dict: list[dict], ip: str | None) -> None:
 
 def add_store_ids(store_ids_dict: list[dict]) -> None:
     """After having queried an external app store send results to db."""
-    logger.info("background:search results to try opening connection")
-    db_conn = write_conn.get_db_connection(use_ssh_tunnel=True)
-    db_conn.set_engine()
     logger.info("background:search results to be processed")
-    scrape_stores.process_scraped(db_conn, store_ids_dict, "appgoblin_android")
+    scrape_stores.process_scraped(DBCONWRITE, store_ids_dict, "appgoblin_android")
     logger.info("background:search results done")
 
 
