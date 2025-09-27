@@ -2,7 +2,7 @@
 authors = [{ name = "James O'Claire" }]
 name = "appgoblin-backend"
 description = "Backend server for AppGoblin"
-version = "0.0.1"
+version = "0.0.2"
 
 dependencies = [
     "psycopg-binary",
@@ -15,17 +15,17 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pre-commit", "sshtunnel", "umami-analytics"]
-
+dev = ["pre-commit", "umami-analytics"]
 
 [tool.ruff]
-#select = ["E", "W", "F", "B", "I", "N", "UP"]
-lint.select = ["ALL"]
+target-version = 'py313'
+exclude = ["tests/*"]
 
-target-version = 'py312'
+[tool.ruff.lint]
+select = ["ALL"]
 
-lint.ignore = [
-    # "E501",   # line length
+
+ignore = [
     "W291",   # trailing space at end of line
     "G",      # Ignore pyflake logging as it does not like f-strings in log messages.
     "RET504", # Unnecessary assignment to variable before return, but I prefer for readability.
@@ -39,11 +39,10 @@ lint.ignore = [
 
 
 # Avoid trying to fix flake8-bugbear (`B`) violations.
-lint.unfixable = ["B"]
+unfixable = ["B"]
 
-lint.fixable = ["ALL"]
+fixable = ["ALL"]
 
-exclude = ["tests/*"]
 
 [tool.ruff.format]
 docstring-code-format = true

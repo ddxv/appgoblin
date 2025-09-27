@@ -18,6 +18,7 @@ CONFIG_FILENAME = "config.toml"
 CONFIG_FILE_PATH = pathlib.Path(CONFIG_DIR, CONFIG_FILENAME)
 LOG_DIR = pathlib.Path(CONFIG_DIR, pathlib.Path("logs"))
 MODULE_DIR = pathlib.Path(__file__).resolve().parent.parent
+SSH_KNOWN_HOSTS = pathlib.Path(HOME, pathlib.Path(".ssh/known_hosts"))
 
 
 def handle_exception(exc_type, exc_value, exc_traceback) -> None:  # noqa: ANN001

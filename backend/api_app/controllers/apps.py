@@ -11,8 +11,8 @@ from typing import Self
 
 import numpy as np
 import pandas as pd
-from adscrawler import connection as write_conn
 from adscrawler.app_stores import apple, google, scrape_stores
+from adscrawler.dbcon import connection as write_conn
 from litestar import Controller, Response, get, post
 from litestar.background_tasks import BackgroundTask
 from litestar.exceptions import NotFoundException

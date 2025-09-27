@@ -8,8 +8,8 @@ import time
 from typing import Self
 
 import pandas as pd
-from adscrawler import connection as write_conn
 from adscrawler.app_stores import scrape_stores
+from adscrawler.dbcon import connection as write_conn
 from litestar import Controller, Response, post
 from litestar.background_tasks import BackgroundTask
 
