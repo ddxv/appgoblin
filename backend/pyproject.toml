@@ -11,7 +11,7 @@ dependencies = [
     "pandas",
     "numpy",
     "sqlalchemy",
-    "adscrawler @ https://github.com/ddxv/adscrawler",
+    "adscrawler @ git+https://github.com/ddxv/adscrawler@main",
 ]
 
 [project.optional-dependencies]
