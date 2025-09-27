@@ -8,7 +8,7 @@ export const load: PageServerLoad = async ({ fetch, parent, params }) => {
 	const api = createApiClient(fetch);
 	const companyDomain = params.domain;
 	const category = params.category;
-	const companyCategoryApps = api.get(
+	const companyCategoryApps = await api.get(
 		`/companies/${companyDomain}/topapps?category=${category}`,
 		'Company Top Apps'
 	);

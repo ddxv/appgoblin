@@ -1,6 +1,12 @@
 """API endoipoints for companies.
 
 /companies/ returns list of top companies overall.
+/companies/{company_domain} returns detail for a specific company.
+/companies/{company_domain}/topapps returns top apps for a specific company.
+/companies/{company_domain}/tree returns parent/child company tree for a specific company.
+/companies/categories/{category} returns list of top companies for a specific category.
+/companies/countries returns list of countries where companies are located.
+
 
 """
 
