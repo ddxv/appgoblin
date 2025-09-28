@@ -15,7 +15,7 @@
 
 	const title = 'Top App Ad Networks, Dev Tools & Analytics for Apps';
 	const description =
-		'See who really uses the biggest app ad networks, analytics and trackers. Competitor analysis based on API, SDK and tracker usage across all apps for mobile app companies.';
+		'See which apps use which app ad networks, analytics and trackers. Competitor analysis based on API, SDK and trackers used on all apps for mobile app companies.';
 </script>
 
 <svelte:head>

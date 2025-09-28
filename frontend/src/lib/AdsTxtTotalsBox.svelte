@@ -5,6 +5,8 @@
 
 	const rowTitleFont = 'text-sm text-primary-800-200 tracking-wide';
 
+	const greyFont = 'text-xs text-surface-500';
+
 	let { myTotals } = $props();
 </script>
 
@@ -22,34 +24,34 @@
 			<tr>
 				<td class="py-2 px-1 {rowTitleFont}">Pub IDs</td>
 				<td class="py-2 px-1">
-					{#if myTotals.google.direct.publisher_id_count}
+					{#if myTotals.google.direct && myTotals.google.direct.publisher_id_count}
 						{formatNumberLocale(myTotals.google.direct.publisher_id_count)}
 					{:else}
-						<p class="text-sm">No Direct Pub IDs</p>
+						<p class={greyFont}>No Direct Pub IDs</p>
 					{/if}
 				</td>
 				<td class="py-2 px-1">
-					{#if myTotals.apple && myTotals.apple.direct.publisher_id_count}
+					{#if myTotals.apple.direct && myTotals.apple.direct.publisher_id_count}
 						{formatNumberLocale(myTotals.apple.direct.publisher_id_count)}
 					{:else}
-						<p class="text-sm">No Direct Pub IDs</p>
+						<p class={greyFont}>No Direct Pub IDs</p>
 					{/if}
 				</td>
 			</tr>
 			<tr>
 				<td class="py-2 px-1 {rowTitleFont}">Developers</td>
 				<td class="py-2 px-1">
-					{#if myTotals.google.direct.developer_count}
+					{#if myTotals.google.direct && myTotals.google.direct.developer_count}
 						{formatNumberLocale(myTotals.google.direct.developer_count)}
 					{:else}
-						<p class="text-sm">No Direct Developers</p>
+						<p class={greyFont}>No Direct Developers</p>
 					{/if}
 				</td>
 				<td class="py-2 px-1">
-					{#if myTotals.apple && myTotals.apple.direct.developer_count}
+					{#if myTotals.apple.direct && myTotals.apple.direct.developer_count}
 						{formatNumberLocale(myTotals.apple.direct.developer_count)}
 					{:else}
-						<p class="text-sm">No Direct Developers</p>
+						<p class={greyFont}>No Direct Developers</p>
 					{/if}
 				</td>
 			</tr>
@@ -59,14 +61,14 @@
 					{#if myTotals.google && myTotals.google.direct}
 						{formatNumberLocale(myTotals.google.direct.app_count)}
 					{:else}
-						<p class="text-sm">No Direct Apps</p>
+						<p class={greyFont}>No Direct Apps</p>
 					{/if}
 				</td>
 				<td class="py-2 px-1">
 					{#if myTotals.apple && myTotals.apple.direct}
 						{formatNumberLocale(myTotals.apple.direct.app_count)}
 					{:else}
-						<p class="text-sm">No Direct Apps</p>
+						<p class={greyFont}>No Direct Apps</p>
 					{/if}
 				</td>
 			</tr>
@@ -90,14 +92,14 @@
 					{#if myTotals.google && myTotals.google.reseller}
 						{formatNumberLocale(myTotals.google.reseller.app_count)}
 					{:else}
-						<p class="text-sm">No Reseller Apps</p>
+						<p class={greyFont}>No Reseller Apps</p>
 					{/if}
 				</td>
 				<td class="py-2 px-1">
 					{#if myTotals.apple && myTotals.apple.reseller}
 						{formatNumberLocale(myTotals.apple.reseller.app_count)}
 					{:else}
-						<p class="text-sm">No Reseller Apps</p>
+						<p class={greyFont}>No Reseller Apps</p>
 					{/if}
 				</td>
 			</tr>

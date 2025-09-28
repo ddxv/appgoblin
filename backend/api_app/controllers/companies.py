@@ -428,12 +428,12 @@ def make_companies_stats(
         "sdk_android_total_apps": int(
             tag_source_category_app_counts[is_sdk & is_google][
                 "cat_total_app_count"
-            ].to_numpy()[0]
+            ].sum()
         ),
         "sdk_ios_total_apps": int(
             tag_source_category_app_counts[is_sdk & is_apple][
                 "cat_total_app_count"
-            ].to_numpy()[0]
+            ].sum()
         ),
     }
 
