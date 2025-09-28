@@ -15,7 +15,7 @@
 
 <svelte:head>
 	<title>{title}</title>
-	<link rel="canonical" href="https://appgoblin.com/blog" />
+	<link rel="canonical" href="https://appgoblin.info/blog" />
 	<meta property="og:title" content={title} />
 	<meta name="twitter:title" content={title} />
 	<meta name="description" content={description} />
