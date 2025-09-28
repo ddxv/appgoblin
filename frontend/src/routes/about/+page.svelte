@@ -122,7 +122,7 @@
 					</ul>
 					<a
 						class="btn preset-outlined-tertiary-500 p-2 md:p-4 mt-4"
-						href="mailto:jamesoclaire@gmail.com?subject=Full%20App-Ads.txt%20Datasets"
+						href="mailto:contact@appgoblin.info?subject=Full%20App-Ads.txt%20Datasets"
 					>
 						<p class="text-center text-sm md:text-base">Get App-Ads.txt Datasets</p>
 					</a>
@@ -152,7 +152,7 @@
 					</ul>
 					<a
 						class="btn preset-outlined-tertiary-500 p-2 md:p-4 mt-4"
-						href="mailto:jamesoclaire@gmail.com?subject=Competitor%20SDK%20Client%20List"
+						href="mailto:contact@appgoblin.info?subject=Competitor%20SDK%20Client%20List"
 					>
 						<p class="text-center text-sm md:text-base">Get Client List</p>
 					</a>
@@ -167,7 +167,7 @@
 					</p>
 					<a
 						class="btn preset-outlined-tertiary-500 p-2 md:p-4 mt-4"
-						href="mailto:jamesoclaire@gmail.com?subject=Custom%20Reports%20and%20API%20Integrations"
+						href="mailto:contact@appgoblin.info?subject=Custom%20Reports%20and%20API%20Integrations"
 					>
 						<p class="text-center text-sm md:text-base">Contact for Quote</p>
 					</a>
@@ -205,11 +205,8 @@
 			</p>
 			<br />
 			<p>If you have questions or suggestions please feel free to reach out.</p>
-			<a href="https://jamesoclaire.com">
-				<h2>
-					<span>jamesoclaire.com</span>
-				</h2>
-			</a>
+			<br />
+			<a href="mailto:contact@appgoblin.info">contact@appgoblin.info</a>
 		</div>
 	</div>
 	<br />
