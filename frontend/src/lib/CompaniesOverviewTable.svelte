@@ -17,6 +17,7 @@
 
 	import { genericColumns } from '$lib/components/data-table/generic-column';
 	import Shield from 'lucide-svelte/icons/shield';
+	import CircleHalf from 'lucide-svelte/icons/shield-half';
 	import Eye from 'lucide-svelte/icons/eye';
 
 	import { formatNumber } from '$lib/utils/formatNumber';
@@ -284,34 +285,34 @@
 						<td class="text-center">
 							{#if row.original.percent_open_source > 0.75}
 								<div
-									class="flex items-center justify-center gap-1 text-green-600"
+									class="flex items-center justify-center gap-1 text-success-900-100"
 									title="Mostly open source - minimal tracking"
 								>
 									<Shield class="w-4 h-4" />
-									<span class="text-xs font-medium">Open</span>
+									<span class="text-xs ">Open Source</span>
 								</div>
 							{:else if row.original.percent_open_source > 0.3}
 								<div
-									class="flex items-center justify-center gap-1 text-yellow-600"
+									class="flex items-center justify-center gap-1 text-warning-900-100"
 									title="Mixed open/closed source"
 								>
-									<Shield class="w-4 h-4" />
-									<span class="text-xs font-medium">Mixed</span>
+									<CircleHalf class="w-4 h-4" />
+									<span class="text-xs">Mixed</span>
 								</div>
 							{:else if row.original.percent_open_source == 0}
 								<div
-									class="flex items-center justify-center gap-1 text-red-600"
+									class="flex items-center justify-center gap-1 text-error-900-100"
 									title="Closed source - likely tracking"
 								>
 									<Eye class="w-4 h-4" />
-									<span class="text-xs font-medium">Tracks</span>
+									<span class="text-xs">Tracking</span>
 								</div>
 							{:else}
 								<div
 									class="flex items-center justify-center gap-1 text-gray-500"
 									title="Unknown tracking status"
 								>
-									<span class="text-xs font-medium">Unknown</span>
+									<span class="text-xs">Unknown</span>
 								</div>
 							{/if}
 						</td>

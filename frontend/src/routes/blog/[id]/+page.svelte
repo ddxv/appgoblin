@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { page } from '$app/state';
 	let { data } = $props();
 	console.log(data);
 </script>
@@ -8,6 +9,7 @@
 	<meta property="og:title" content={data.title} />
 	<meta name="twitter:title" content={data.title} />
 	<meta name="description" content={data.description} />
+	<link rel="canonical" href={page.url.href} />
 	<meta
 		name="keywords"
 		content="appgoblin, blog, competitor analysis, aso, app research, sdk analysis, advertising, apps"

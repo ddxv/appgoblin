@@ -1,5 +1,7 @@
 import type { PageServerLoad } from './$types';
 
+import { getCachedData } from '../../../../hooks.server';
+
 export const ssr: boolean = true;
 export const csr: boolean = true;
 
@@ -37,9 +39,12 @@ export const load: PageServerLoad = async ({ parent, fetch }) => {
 		return checkStatus(res, 'Developer SDKs');
 	};
 
+	const { companyTypes } = await getCachedData();
+
 	try {
 		return {
-			devSDKs: mySDKs()
+			devSDKs: mySDKs(),
+			companyTypes
 		};
 	} catch (error) {
 		console.error('Failed to load data:', error);
