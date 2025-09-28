@@ -5,7 +5,7 @@ SELECT
     min(sarw.best_rank) AS best_rank
 FROM
     frontend.store_app_ranks_weekly AS sarw
-LEFT JOIN store_apps AS sa
+LEFT JOIN frontend.store_apps_overview AS sa
     ON
         sarw.store_app = sa.id
 LEFT JOIN store_collections AS sc
