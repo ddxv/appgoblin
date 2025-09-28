@@ -249,10 +249,10 @@ export interface CompaniesOverview {
 }
 
 export interface OverviewAppList {
-	apps: CompanyOverviewApps[];
+	apps: SDKAppsOverview[];
 }
 
-export interface CompanyOverviewApps {
+export interface SDKAppsOverview {
 	name: string;
 	store_id: string;
 	store: number;
@@ -268,6 +268,22 @@ export interface CompanyOverviewApps {
 	developer_domain_url: string;
 	relationship: string;
 	developer_domain_crawled_at: string;
+}
+
+export interface CompanyOverviewAppsNEW {
+	name: string;
+	store_id: string;
+	store: number;
+	installs: number;
+	rating_count: number;
+	requested_at: string;
+	crawl_result: number;
+	app_name: string;
+	icon_url_512: string;
+	api_call: boolean;
+	app_ads_direct: boolean;
+	app_ads_reseller: boolean;
+	app_sdk: boolean;
 }
 
 export interface SdksOverview {

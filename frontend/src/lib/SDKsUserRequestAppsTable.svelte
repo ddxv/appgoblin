@@ -1,10 +1,10 @@
 <script lang="ts">
 	import IconGoogle from './svg/IconGoogle.svelte';
 	import IconiOs from './svg/IconiOS.svelte';
-	import type { CompanyOverviewApps } from '../types';
+	import type { SDKAppsOverview } from '../types';
 	import { formatNumber } from '$lib/utils/formatNumber';
 
-	let { entries_table }: { entries_table: CompanyOverviewApps[] } = $props();
+	let { entries_table }: { entries_table: SDKAppsOverview[] } = $props();
 </script>
 
 <div class="table-container space-y-4">

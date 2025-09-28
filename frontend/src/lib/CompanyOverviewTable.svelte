@@ -10,22 +10,22 @@
 	import X from 'lucide-svelte/icons/x';
 
 	import ExportAsCSV from '$lib/components/data-table/ExportAsCSV.svelte';
-	import type { CompanyOverviewApps } from '../types';
+	import type { Company, CompanyOverviewAppsNEW } from '../types';
 	import { formatNumber } from '$lib/utils/formatNumber';
 	import { createSvelteTable } from '$lib/components/data-table/index.js';
 
 	import { genericColumns } from '$lib/components/data-table/generic-column';
 
 	type DataTableProps<RankedApps, TValue> = {
-		data: RankedApps[];
+		data: CompanyOverviewAppsNEW[];
 		isiOS: boolean;
 	};
 
-	function tableHasAdsTxt(table: CompanyOverviewApps[]) {
+	function tableHasAdsTxt(table: CompanyOverviewAppsNEW[]) {
 		return !table.every((row) => row.app_ads_direct == false);
 	}
 
-	let { data, isiOS }: DataTableProps<CompanyOverviewApps, TValue> = $props();
+	let { data, isiOS }: DataTableProps<CompanyOverviewAppsNEW, TValue> = $props();
 
 	const columns = genericColumns([
 		{

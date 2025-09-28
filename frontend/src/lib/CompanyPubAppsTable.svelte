@@ -1,8 +1,8 @@
 <script lang="ts">
-	import type { CompanyOverviewApps } from '../types';
+	import type { SDKAppsOverview } from '../types';
 	import { formatNumber } from '$lib/utils/formatNumber';
 
-	let { entries_table }: { entries_table: CompanyOverviewApps[] } = $props();
+	let { entries_table }: { entries_table: SDKAppsOverview[] } = $props();
 
 	let firstRowInstalls = $derived(
 		entries_table && entries_table.length > 0 && entries_table[0].installs > 0
