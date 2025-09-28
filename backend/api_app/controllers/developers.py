@@ -132,7 +132,9 @@ class DeveloperController(Controller):
         for cat in cats:
             company_cats[cat] = (
                 df[df["category_slug"] == cat]
-                .groupby(["company_name", "company_domain"])[['app_name', 'store', 'store_id']]
+                .groupby(["company_name", "company_domain"])[
+                    ["app_name", "store", "store_id"]
+                ]
                 .apply(
                     lambda x: pd.Series(
                         {

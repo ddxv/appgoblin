@@ -289,7 +289,7 @@
 									title="Mostly open source - minimal tracking"
 								>
 									<Shield class="w-4 h-4" />
-									<span class="text-xs ">Open Source</span>
+									<span class="text-xs">Open Source</span>
 								</div>
 							{:else if row.original.percent_open_source > 0.3}
 								<div

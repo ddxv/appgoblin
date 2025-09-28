@@ -39,35 +39,10 @@ export const blogPostMetadataSchema = v.object({
 	)
 });
 
-// export function getBlogPostsMetadata() {
-// 	const posts = Object.entries(blogPosts)
-// 		.map(([filePath, rawContent]) => {
-// 			const { data } = matter(rawContent);
-// 			const id = filePath
-// 				.split('/')
-// 				.pop()
-// 				?.replace(/\.mdx$/, '') as string;
-
-// 			const post = v.parse(blogPostMetadataSchema, {
-// 				id,
-// 				...data,
-// 			});
-// 			const canonicalURL = new URL(`/blog/${post.id}`, BASE_URL).toString();
-// 			const relativeURL = `/blog/${post.id}`;
-// 			const ogImage = `/content/${post.id}/og.jpg`;
-// 			const heroImage = `/content/${post.id}/hero.webp`;
-
-// 			return { ...post, canonicalURL, relativeURL, ogImage, heroImage };
-// 		})
-// 		.sort((a, b) => b.pubDate.valueOf() - a.pubDate.valueOf());
-
-// 	return posts;
-// }
-
 export function getBlogPostsMetadata() {
 	const posts = Object.entries(blogPosts)
 		.map(([filePath, rawContent]) => {
-			const { data } = matter(rawContent);
+			const { data } = matter(rawContent as string);
 			const id = filePath
 				.split('/')
 				.pop()
