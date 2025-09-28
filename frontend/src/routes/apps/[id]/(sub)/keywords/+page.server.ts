@@ -15,6 +15,7 @@ export const load: PageServerLoad = async ({ fetch, params, parent }) => {
 
 	return {
 		// Meta Tags
+		toFollow: 'noindex, nofollow',
 		title: `Keywords for ${myapp.name}`,
 		description: `Keywords used for ${myapp.name}. Browse the keyword rankings for ${myapp.name}.`,
 		keywords: `keywords, aso`,

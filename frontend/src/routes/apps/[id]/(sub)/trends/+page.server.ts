@@ -11,6 +11,7 @@ export const load: PageServerLoad = async ({ fetch, params, parent }) => {
 	return {
 		myhistory,
 		// Meta Tags
+		toFollow: 'noindex, nofollow',
 		title: `Install and Rating History for ${myapp.name}`,
 		description: `Explore the install and rating history for ${myapp.name}. See the install and rating history for ${myapp.name}.`,
 		keywords: `trends, install history, rating history, install and rating history`

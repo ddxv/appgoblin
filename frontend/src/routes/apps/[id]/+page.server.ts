@@ -31,6 +31,9 @@ export const load: PageServerLoad = async ({ fetch, params, parent }) => {
 	const myhistory = await api.get(`/apps/${id}/history`, 'App History');
 
 	return {
+		//Meta
+		toFollow: 'index, follow',
+		//Data
 		myapp,
 		myhistory,
 		appSDKsOverview

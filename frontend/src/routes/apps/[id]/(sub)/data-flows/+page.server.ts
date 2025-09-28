@@ -30,6 +30,7 @@ export const load: PageServerLoad = async ({ fetch, params, parent }) => {
 	return {
 		apis,
 		// Meta Tags
+		toFollow: 'noindex, follow',
 		title: `API Calls for ${myapp.name}`,
 		description: `Explore the API calls used for ${myapp.name}. See which companies ${myapp.name} is sharing data with.`,
 		keywords: `tracking, data sharing, data flows, api calls, api, data`

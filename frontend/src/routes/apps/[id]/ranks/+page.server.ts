@@ -30,6 +30,7 @@ export const load: PageServerLoad = async ({ fetch, params, url, parent }) => {
 		myranksOverview,
 		countries,
 		// Meta Tags
+		toFollow: 'noindex, nofollow',
 		title: `${myapp.name} App Store Ranks`,
 		description: `Explore the ranks for ${myapp.name} and see which countries and categories it ranks highest. See the ranks for ${myapp.name}.`,
 		keywords: `ranks, app store ranks, app rankings, app rank, app rank history`

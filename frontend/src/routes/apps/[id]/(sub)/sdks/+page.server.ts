@@ -33,6 +33,7 @@ export const load: PageServerLoad = async ({ fetch, params, parent }) => {
 		companyTypes,
 		myapp,
 		// Meta Tags
+		toFollow: 'index, follow',
 		title: `SDKs and Trackers in ${myapp.name}`,
 		description: `Explore the SDKs, trackers and permissions in ${myapp.name}. See which SDKs, trackers and permissions are used in ${myapp.name}.`,
 		keywords: `SDKs, competitor analysis, trackers, permissions, ad networks, ad publishers, ad networks, ad publishers`
