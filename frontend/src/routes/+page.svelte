@@ -19,6 +19,7 @@
 	const cardTitleClass = 'text-lg font-bold text-primary-900-100 transition-colors';
 	const cardDescriptionClass = 'text-sm text-gray-400 mb-4';
 	const iconContainerClass = 'p-2 rounded-lg mr-3';
+	const buttonTextColor = 'text-black';
 	const gradientButtonClass =
 		'bg-gradient-to-r text-white font-bold px-6 py-3 rounded-xl shadow-lg group-hover:shadow-xl transition-shadow';
 
@@ -58,67 +59,43 @@
 
 <div class="flex flex-col gap-8 px-2 md:px-20 lg:px-48">
 	<!-- Hero Header Section -->
-	<section class="w-full flex flex-col items-center text-center mt-8 mb-8">
-		<div
-			class="bg-gradient-to-r from-primary-900-100 to-success-900-100 bg-clip-text text-transparent mb-4"
-		>
-			<h1 class="text-5xl md:text-7xl font-black tracking-tight">AppGoblin</h1>
-		</div>
-		<div class="text-xl md:text-2xl font-bold text-primary-900-100 mb-4">
+	<section class="text-center mt-8 mb-8">
+		<h1 class="text-5xl md:text-7xl font-black tracking-tight bg-gradient-to-r from-primary-900-100 to-success-900-100 bg-clip-text text-transparent mb-4">
+			AppGoblin
+		</h1>
+		<h2 class="text-xl md:text-2xl font-bold text-primary-900-100 mb-4">
 			Free App Marketing Insights and Research
-		</div>
-		<p class="text-large md:text-xl max-w-3xl mb-6 text-primary-700 leading-relaxed">
+		</h2>
+		<p class="text-lg md:text-xl max-w-3xl mb-6 text-primary-700 mx-auto">
 			Real-time app intelligence • Live advertising data • Competitor insights • No signup required
 		</p>
-		<div class="flex flex-wrap justify-center gap-4 text-sm text-primary-600">
+		<div class="flex flex-wrap justify-center gap-4 text-sm text-primary-600 mb-6">
 			<span class="px-3 py-1 bg-primary-900-100/20 rounded-full">⚡ Real-time Data</span>
 			<span class="px-3 py-1 bg-warning-900-100/20 rounded-full">🚀 Free Data</span>
 			<span class="px-3 py-1 bg-success-900-100/20 rounded-full">✨ Ad and Creative Insights</span>
 			<span class="px-3 py-1 bg-surface-900-100/20 rounded-full">🔍 Open Source</span>
 		</div>
-
-		<!-- Minimal Intro Section -->
-		<section class="w-full flex flex-col items-center text-center mt-2 mb-2">
-			<p class="text-primary-700 text-base md:text-lg max-w-2xl">
-				<span class="font-bold text-primary-900-100">AppGoblin</span> is a free resource for app
-				marketers, developers, and researchers. Analyze
-				<span class="font-bold text-success-900-100"
-					>{formatNumber(data.appsOverview.android_apps)}</span
-				>
-				Android apps and
-				<span class="font-bold text-success-900-100"
-					>{formatNumber(data.appsOverview.ios_apps)}</span
-				>
-				iOS apps, track ad buyers, SDKs, and more.
-			</p>
-		</section>
+		<p class="text-primary-700 text-base md:text-lg max-w-2xl mx-auto">
+			<span class="font-bold text-primary-900-100">AppGoblin</span> is a free resource for app
+			marketers, developers, and researchers. Analyze
+			<span class="font-bold text-success-900-100">{formatNumber(data.appsOverview.android_apps)}</span>
+			Android apps and
+			<span class="font-bold text-success-900-100">{formatNumber(data.appsOverview.ios_apps)}</span>
+			iOS apps, track ad buyers, SDKs, and more.
+		</p>
 	</section>
 
 	<!-- Top Advertiser Section -->
-	<section
-		class="group relative overflow-hidden card preset-tonal p-1 md:p-8 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500 border border-success-900-100/20"
-	>
-		<div class="relative z-8">
-			<div class="flex items-center justify-between mb-6">
-				<div class="flex items-center space-x-4">
-					<div
-						class="bg-gradient-to-br from-success-900-100 to-success-600 p-4 rounded-2xl shadow-lg"
-					>
-						<svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-							<path
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								stroke-width="2"
-								d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
-							/>
-						</svg>
-					</div>
-					<div>
-						<h2 class={sectionTitleClass}>
-							{monthYear} Top Android Advertiser
-						</h2>
-						<p class={sectionSubtitleClass}>Live advertising intelligence</p>
-					</div>
+	<section class="card preset-tonal p-4 md:p-8 rounded-2xl shadow-xl border border-success-900-100/20">
+			<div class="flex items-center mb-6">
+				<div class="bg-gradient-to-br from-success-900-100 to-success-600 p-4 rounded-2xl shadow-lg mr-4">
+					<svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+					</svg>
+				</div>
+				<div>
+					<h2 class={sectionTitleClass}>{monthYear} Top Android Advertiser</h2>
+					<p class={sectionSubtitleClass}>Live advertising intelligence</p>
 				</div>
 			</div>
 
@@ -129,50 +106,34 @@
 			</p>
 
 			{#if data.topAdvertisers && data.topAdvertisers.length > 0}
-				<div class="mb-6 p-4">
+				<div class="mb-6 md:p-4">
 					<AdvertiserCreativeRankingsTableTop data={data.topAdvertisers.slice(0, 1)} />
 				</div>
 			{/if}
 
-			<div class="flex flex-col md:flex-row space-y-1 md:space-y-0 md:space-x-4">
-				<div class="flex items-center justify-between gap-2">
+			<div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
+				<div class="flex gap-4">
 					<span class={featureBulletClass}>📱 Mobile ad tracking</span>
 					<span class={featureBulletClass}>🎨 Creative analysis</span>
 					<span class={featureBulletClass}>📊 Network insights</span>
 				</div>
-				<a
-					href="/ad-creatives"
-					class="{gradientButtonClass} from-success-900-100 to-success-700-300"
-				>
-					<p class="text-black">Browse All Ad Buyers →</p>
+				<a href="/ad-creatives" class="{gradientButtonClass} from-success-900-100 to-success-700-300 text-black">
+					<span class={buttonTextColor}>Browse All Ad Buyers →</span>
 				</a>
 			</div>
-		</div>
 	</section>
 
 	<!-- Popular Companies/SDKs Section -->
-	<section
-		class="group relative overflow-hidden card preset-tonal p-8 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500 border border-primary-900-100/20"
-	>
-		<div class="relative z-8">
-			<div class="flex items-center justify-between mb-6">
-				<div class="flex items-center space-x-4">
-					<div
-						class="bg-gradient-to-br from-primary-900-100 to-primary-600 p-4 rounded-2xl shadow-lg"
-					>
-						<svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-							<path
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								stroke-width="2"
-								d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
-							/>
-						</svg>
-					</div>
-					<div>
-						<h2 class={sectionTitleClass}>Most Popular SDKs & Analytics</h2>
-						<p class={sectionSubtitleClass}>Mobile SDK intelligence</p>
-					</div>
+	<section class="card preset-tonal p-1 md:p-8 rounded-2xl shadow-xl border border-primary-900-100/20">
+			<div class="flex items-center mb-6">
+				<div class="bg-gradient-to-br from-primary-900-100 to-primary-600 rounded-2xl shadow-lg mr-4">
+					<svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+					</svg>
+				</div>
+				<div>
+					<h2 class={sectionTitleClass}>Most Popular SDKs & Analytics</h2>
+					<p class={sectionSubtitleClass}>Mobile SDK intelligence</p>
 				</div>
 			</div>
 
@@ -230,42 +191,29 @@
 				</div>
 			</div>
 
-			<div class="flex flex-col md:flex-row space-y-1 md:space-y-0 md:space-x-4">
-				<div class="flex items-center justify-between">
+			<div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
+				<div class="flex gap-4">
 					<span class={featureBulletClass}>🔍 SDK detection</span>
 					<span class={featureBulletClass}>📈 Market share analytics</span>
 					<span class={featureBulletClass}>🏢 Company profiles</span>
 				</div>
-				<a href="/companies" class="{gradientButtonClass} from-primary-900-100 to-primary-700-300">
-					<p class="text-black">Browse 500+ Companies →</p>
+				<a href="/companies" class="{gradientButtonClass} from-primary-900-100 to-primary-700-300 text-black">
+					<span class={buttonTextColor}>Browse 500+ Companies →</span>
 				</a>
 			</div>
-		</div>
 	</section>
 
 	<!-- App Store Rankings Section -->
-	<section
-		class="group relative overflow-hidden card preset-tonal p-1 md:p-8 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500 border border-warning-900-100/20"
-	>
-		<div class="relative z-8">
-			<div class="flex items-center justify-between mb-6">
-				<div class="flex items-center md:space-x-4">
-					<div
-						class="bg-gradient-to-br from-warning-900-100 to-warning-600 p-4 rounded-2xl shadow-lg"
-					>
-						<svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-							<path
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								stroke-width="2"
-								d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-							/>
-						</svg>
-					</div>
-					<div>
-						<h2 class={sectionTitleClass}>Today's App Store Rankings</h2>
-						<p class={sectionSubtitleClass}>Live app store data</p>
-					</div>
+	<section class="card preset-tonal p-1 md:p-4 md:p-8 rounded-2xl shadow-xl border border-warning-900-100/20">
+			<div class="flex items-center mb-6">
+				<div class="bg-gradient-to-br from-warning-900-100 to-warning-600 p-1 md:p-4 rounded-2xl shadow-lg mr-4">
+					<svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+					</svg>
+				</div>
+				<div>
+					<h2 class={sectionTitleClass}>Today's App Store Rankings</h2>
+					<p class={sectionSubtitleClass}>Live app store data</p>
 				</div>
 			</div>
 
@@ -357,47 +305,29 @@
 				</div>
 			</div>
 
-			<div class="flex flex-col md:flex-row space-y-1 md:space-y-0 md:space-x-4">
-				<div class="flex items-center justify-between">
+			<div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
+				<div class="flex gap-4">
 					<span class={featureBulletClass}>📱 Real-time rankings</span>
 					<span class={featureBulletClass}>🌍 Global + country data</span>
 					<span class={featureBulletClass}>📈 Historical tracking</span>
 				</div>
-				<a
-					href="/rankings/store/1/collection/1/category/1/US"
-					class="{gradientButtonClass} from-warning-900-100 to-warning-700-300"
-				>
-					<p class="text-black">See All Rankings →</p>
+				<a href="/rankings/store/1/collection/1/category/1/US" class="{gradientButtonClass} from-warning-900-100 to-warning-700-300 text-black">
+					<span class={buttonTextColor}>See All Rankings →</span>
 				</a>
 			</div>
-		</div>
 	</section>
 
 	<!-- New Apps Section -->
-	<section
-		class="group relative overflow-hidden card preset-tonal p-8 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500 border border-info-900-100/20"
-	>
-		<div
-			class="absolute inset-0 bg-gradient-to-br from-info-900-100/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-		></div>
-
-		<div class="relative z-10">
-			<div class="flex items-center justify-between mb-6">
-				<div class="flex items-center space-x-4">
-					<div class="bg-gradient-to-br from-info-900-100 to-info-600 p-4 rounded-2xl shadow-lg">
-						<svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-							<path
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								stroke-width="2"
-								d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
-							/>
-						</svg>
-					</div>
-					<div>
-						<h2 class="{sectionTitleClass} group-hover:text-info-900-100">Discover New Apps</h2>
-						<p class={sectionSubtitleClass}>Latest releases & trending apps</p>
-					</div>
+	<section class="card preset-tonal p-8 rounded-2xl shadow-xl border border-info-900-100/20">
+			<div class="flex items-center mb-6">
+				<div class="bg-gradient-to-br from-info-900-100 to-info-600 p-4 rounded-2xl shadow-lg mr-4">
+					<svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+					</svg>
+				</div>
+				<div>
+					<h2 class={sectionTitleClass}>Discover New Apps</h2>
+					<p class={sectionSubtitleClass}>Latest releases & trending apps</p>
 				</div>
 			</div>
 
@@ -506,20 +436,16 @@
 				</a>
 			</div>
 
-			<div class="flex flex-col md:flex-row space-y-1 md:space-y-0 md:space-x-4">
-				<div class="flex items-center justify-between">
+			<div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
+				<div class="flex gap-4">
 					<span class={featureBulletClass}>📱 Cross-platform tracking</span>
 					<span class={featureBulletClass}>📈 Trending analysis</span>
 					<span class={featureBulletClass}>🎯 Category insights</span>
 				</div>
-				<a
-					href="/collections/new_monthly/google/overall"
-					class="bg-gradient-to-r from-info-900-100 to-info-600 text-white font-bold px-6 py-3 rounded-xl shadow-lg group-hover:shadow-xl transition-shadow"
-				>
-					Explore New Apps →
+				<a href="/collections/new_monthly/google/overall" class="{gradientButtonClass} from-info-900-100 to-info-600">
+					<span class={buttonTextColor}>Explore New Apps →</span>
 				</a>
 			</div>
-		</div>
 	</section>
 
 	<!-- Footer -->
