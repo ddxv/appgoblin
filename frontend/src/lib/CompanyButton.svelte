@@ -18,7 +18,7 @@
 	</a>
 {:else if size === 'md'}
 	<a href={`${baseUrl}/${companyDomain}`}>
-		<div class="btn preset-tonal hover:preset-tonal-primary text-sm md:text-base">
+		<div class="btn preset-tonal hover:preset-tonal-primary text-sm md:text-base gap-2">
 			{#if companyLogoUrl}
 				<img
 					src={`https://media.appgoblin.info/${companyLogoUrl}`}
@@ -32,7 +32,7 @@
 	</a>
 {:else if size === 'lg'}
 	<a href={`${baseUrl}/${companyDomain}`}>
-		<div class="btn preset-tonal hover:preset-tonal-primary text-base md:text-lg">
+		<div class="btn preset-tonal hover:preset-tonal-primary text-base md:text-lg gap-4">
 			{#if companyLogoUrl}
 				<img
 					src={`https://media.appgoblin.info/${companyLogoUrl}`}

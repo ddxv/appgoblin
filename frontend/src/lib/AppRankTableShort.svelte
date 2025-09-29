@@ -18,7 +18,7 @@
 					<td
 						><div class="inline-flex">
 							<p class="text-sm md:text-base">#</p>
-							<p class="text-xl md:text-xl2">
+							<p class="text-sm md:text-xl2">
 								{values.rank}
 							</p>
 						</div>

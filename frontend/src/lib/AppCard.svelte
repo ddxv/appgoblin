@@ -50,7 +50,7 @@
 
 				<div class="flex text-left">
 					<img
-						class="h-24 w-24 p-2 rounded-lg"
+						class="h-16 md:h-24 w-16 md:w-24 p-2 rounded-lg"
 						src={app.icon_url_100 || app.icon_url_512}
 						alt={app.name}
 						referrerpolicy="no-referrer"

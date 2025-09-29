@@ -33,9 +33,11 @@
 		</div>
 		<!-- Ratings: STARS (123) -->
 		{#if app.rating_count && app.rating_count != 0}
-			<div class="inline-flex p-1 gap-2">
+			<div class="md:inline-flex p-1 gap-2 text-primary-800-200">
+				<!-- <span class='text-white'> -->
 				<Rating total={5} size={20} rating={app.rating} />
 				{formatNumber(app.rating_count)} ratings
+				<!-- </span> -->
 			</div>
 		{/if}
 	</div>
