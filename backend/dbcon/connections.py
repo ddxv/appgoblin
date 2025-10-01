@@ -53,9 +53,9 @@ class PostgresCon:
                 pool_size=10,
                 max_overflow=20,
                 connect_args={
-                    "connect_timeout": 30,
+                    "connect_timeout": 10,
                     "application_name": "appgoblin",
-                    "options": "-c lock_timeout=3000 -c statement_timeout=40000",
+                    "options": "-c lock_timeout=30000 -c statement_timeout=40000",
                 },
             )
         except Exception as error:
