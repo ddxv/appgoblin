@@ -4,6 +4,7 @@
 """
 
 from typing import Self
+import pandas as pd
 
 from litestar import Controller, get
 from litestar.datastructures import State
@@ -28,7 +29,8 @@ class KeywordsController(Controller):
             A dictionary representation of the total counts
 
         """
-        df = get_keyword_details(state, keyword)
+        # df = get_keyword_details(state, keyword)
+        df = pd.DataFrame()  # Temporary placeholder
         return df.to_dict(orient="records")
 
     @get(path="/{keyword:str}/ranks", cache=86400)
@@ -40,7 +42,8 @@ class KeywordsController(Controller):
             A dictionary representation of the total counts
 
         """
-        df = get_keyword_apps(state, keyword)
+        # df = get_keyword_apps(state, keyword)
+        df = pd.DataFrame()  # Temporary placeholder
         df_android = df[df["store"] == 1]
         df_ios = df[df["store"] == 2]
         return {
