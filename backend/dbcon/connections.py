@@ -49,13 +49,18 @@ class PostgresCon:
             self.engine = sqlalchemy.create_engine(
                 db_uri,
                 pool_pre_ping=True,
-                pool_recycle=3600,
-                pool_size=10,
-                max_overflow=20,
+                pool_recycle=300,  # 5 minutes for better connection health
+                pool_size=5,       # Reduced pool size
+                max_overflow=10,   # Reduced overflow
+                pool_timeout=30,   # Timeout waiting for connection from pool
                 connect_args={
-                    "connect_timeout": 10,
+                    "connect_timeout": 15,
                     "application_name": "appgoblin",
-                    "options": "-c lock_timeout=30000 -c statement_timeout=40000",
+                    "options": "-c lock_timeout=10000 -c statement_timeout=90000",  # 90s statement timeout
+                    "keepalives": 1,
+                    "keepalives_idle": 30,
+                    "keepalives_interval": 10,
+                    "keepalives_count": 5,
                 },
             )
         except Exception as error:

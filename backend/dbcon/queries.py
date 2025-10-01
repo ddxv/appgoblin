@@ -164,12 +164,17 @@ def get_ranks_for_app_overview(
     start_date = (
         datetime.datetime.now(datetime.UTC) - datetime.timedelta(days=days)
     ).strftime("%Y-%m-%d")
-    df = pd.read_sql(
-        sql.ranks_for_app_overview,
-        con=state.dbcon.engine,
-        params={"store_id": store_id, "start_date": start_date},
-    )
-    return df
+    try:
+        df = pd.read_sql(
+            sql.ranks_for_app_overview,
+            con=state.dbcon.engine,
+            params={"store_id": store_id, "start_date": start_date},
+        )
+        return df
+    except Exception as e:
+        logger.warning(f"Query timeout or error for store_id={store_id}, days={days}: {e}")
+        # Return empty DataFrame with expected columns on timeout
+        return pd.DataFrame(columns=["country", "collection", "category", "best_rank"])
 
 
 def get_most_recent_top_ranks(
