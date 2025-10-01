@@ -778,7 +778,7 @@ def get_topapps_for_company(
 
     if mapped_category:
         df = pd.read_sql(
-            sql.company_topapps_category,
+            sql.company_top_apps_category,
             con=state.dbcon.engine,
             params={
                 "company_domain": company_domain,
