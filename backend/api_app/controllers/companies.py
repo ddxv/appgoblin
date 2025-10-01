@@ -1027,7 +1027,7 @@ class CompaniesController(Controller):
         company_types = CompanyTypes(types=company_types_df.to_dict(orient="records"))
 
         duration = round((time.perf_counter() * 1000 - start), 2)
-        logger.info(f"{self.path} took {duration}ms")
+        logger.info(f"GET /api/companies/types took {duration}ms")
 
         return company_types
 
