@@ -50,7 +50,7 @@ class PostgresCon:
                 db_uri,
                 pool_pre_ping=True,
                 pool_recycle=3600,
-                connect_args={"connect_timeout": 10, "application_name": "appgoblin"},
+                connect_args={"connect_timeout": 30, "application_name": "appgoblin"},
             )
         except Exception as error:
             logger.exception(
