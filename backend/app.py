@@ -93,7 +93,9 @@ def on_startup(app: Litestar) -> None:
         logger.info("Static data preloading complete")
 
         try:
-            app.state.dbconwrite = get_db_connection(server_name="madrone-write")
+            # app.state.dbconwrite = get_db_connection(server_name="madrone-write")
+            # temp test
+            app.state.dbconwrite = None
             logger.info("Connected to madrone-write")
         except Exception:
             logger.exception("Failed to connect to madrone-write, will use read-only")
