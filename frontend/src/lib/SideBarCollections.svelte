@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import SideBarCatsListBoxItem from './SideBarCatsListBoxItem.svelte';
-	import { storeIDLookup } from './constants';
+	// import { storeIDLookup } from './constants';
 	import CardFirst from './CardFirst.svelte';
 	import type { CatData } from '../types';
 
@@ -10,13 +10,14 @@
 	interface Props {
 		myCatData: CatData;
 		baseUrl: string;
+		storeIDLookup: Record<number, any>;
 	}
 	let store = $state('google');
 
 	$effect(() => {
 		store = page.params.store!;
 	});
-	let { myCatData, baseUrl }: Props = $props();
+	let { myCatData, baseUrl, storeIDLookup }: Props = $props();
 
 	let selectedStore = $state('google');
 	let selectedCategory = $state('overall');

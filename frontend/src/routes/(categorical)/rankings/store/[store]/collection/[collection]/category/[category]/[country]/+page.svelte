@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { storeIDLookup, collectionIDLookup, categoryIDLookup } from '$lib/constants';
 	import type { StoreCategoryRanks } from '../../../../../../../../../../types.js';
 	import { page } from '$app/state';
 	import RankChart from '$lib/RankChart.svelte';
@@ -17,14 +16,14 @@
 	let collection = $derived(+page.params.collection!);
 	let category = $derived(+page.params.category!);
 
-	let collectionName = $derived(prettyName(collectionIDLookup[store][collection].collection_name));
-	let categoryName = $derived(prettyName(categoryIDLookup[collection][category].category_name));
+	let collectionName = $derived(prettyName(data.collectionIDLookup[store][collection].collection_name));
+	let categoryName = $derived(prettyName(data.categoryIDLookup[collection][category].category_name));
 
 	let country = $state(page.params.country || 'US');
 
 	function getTitle(): string {
 		const title =
-			storeIDLookup[store].store_name +
+			data.storeIDLookup[store].store_name +
 			' ' +
 			'Daily App Ranks ' +
 			collectionName +

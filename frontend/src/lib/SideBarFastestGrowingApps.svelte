@@ -1,20 +1,21 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import SideBarCatsListBoxItem from './SideBarCatsListBoxItem.svelte';
-	import { storeIDLookup } from './constants';
+	// import { storeIDLookup } from './constants';
 	import CardFirst from './CardFirst.svelte';
-	import type { CatData } from '../types';
+	import type { CatData, StoreIDLookup } from '../types';
 
 	interface Props {
 		myCatData: CatData;
 		baseUrl: string;
+		storeIDLookup: StoreIDLookup;
 	}
 	let store = $state('google');
 
 	$effect(() => {
 		store = page.params.store!;
 	});
-	let { myCatData, baseUrl }: Props = $props();
+	let { myCatData, baseUrl, storeIDLookup }: Props = $props();
 
 	let selectedCategory = $state('overall');
 

@@ -5,13 +5,14 @@
 	import SideBarCollections from './SideBarCollections.svelte';
 	import SideBarCompanies from './SideBarCompanies.svelte';
 	import SideBarFastestGrowingApps from './SideBarFastestGrowingApps.svelte';
-	import type { CatData } from '../types';
+	import type { CatData, StoreIDLookup } from '../types';
 
 	interface Props {
 		myCatData: CatData;
+		storeIDLookup: StoreIDLookup;
 	}
 
-	let { myCatData }: Props = $props();
+	let { myCatData, storeIDLookup }: Props = $props();
 
 	let store = $state(1);
 	$effect(() => {
@@ -47,7 +48,7 @@
 </script>
 
 {#if page.url.pathname.startsWith('/collections')}
-	<SideBarCollections {myCatData} baseUrl="/collections" />
+	<SideBarCollections {myCatData} baseUrl="/collections" storeIDLookup={storeIDLookup} />
 {/if}
 
 {#if page.url.pathname == '/rankings' || page.url.pathname.startsWith('/rankings')}
@@ -59,5 +60,5 @@
 {/if}
 
 {#if page.url.pathname == '/fastest-growing-apps' || page.url.pathname.startsWith('/fastest-growing-apps')}
-	<SideBarFastestGrowingApps {myCatData} baseUrl="/fastest-growing-apps" />
+	<SideBarFastestGrowingApps {myCatData} baseUrl="/fastest-growing-apps" storeIDLookup={storeIDLookup} />
 {/if}

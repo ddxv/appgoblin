@@ -141,6 +141,9 @@ export interface StoreCategoryRanks {
 	status?: number;
 	error?: string;
 	history: Promise<{ history: RankedApps[] }>;
+	storeIDLookup: StoreIDLookup;
+	collectionIDLookup: { [key: number]: CollectionRanks };
+	categoryIDLookup: { [key: number]: CategoryRanks };
 }
 
 export interface RankedApps {
@@ -620,6 +623,10 @@ export type CollectionRanks = {
 	collection_id: number;
 	collection_name: string;
 	categories: CategoryRanks[];
+};
+
+export type StoreIDLookup = {
+	[key: number]: AppStore;
 };
 
 export type AppStore = {

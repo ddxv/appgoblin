@@ -1,5 +1,6 @@
 import type { Handle, ServerInit } from '@sveltejs/kit';
-import type { CatData, CompanyTypes } from './types';
+import type { CatData, CompanyTypes, AppStore, CollectionRanks, CategoryRanks } from './types';
+
 
 interface Country {
 	code: string;
@@ -12,6 +13,9 @@ interface CachedData {
 	companyTypes: CompanyTypes;
 	countries: Country[];
 	myRankingsMap?: any; // Define proper type based on your API response
+    storeIDLookup: Record<number, AppStore>;
+    collectionIDLookup: Record<number, Record<number, CollectionRanks>>;
+    categoryIDLookup: Record<number, Record<number, CategoryRanks>>;
 }
 
 // Cache with default empty values
@@ -20,7 +24,9 @@ let cachedData: CachedData = {
 	appsOverview: {},
 	companyTypes: { types: [] },
 	countries: [],
-	myRankingsMap: {}
+	    storeIDLookup: {},
+    collectionIDLookup: {},
+    categoryIDLookup: {}
 };
 
 let isInitialized = false;
@@ -45,13 +51,35 @@ async function fetchWithRetry(url: string, retries = 10): Promise<any> {
 	}
 }
 
+
+
+function buildRankingsLookups(rankings: { stores_rankings: AppStore[] }) {
+    const storeIDLookup: Record<number, AppStore> = {};
+    const collectionIDLookup: Record<number, Record<number, CollectionRanks>> = {};
+    const categoryIDLookup: Record<number, Record<number, CategoryRanks>> = {};
+
+    rankings.stores_rankings.forEach((store) => {
+        storeIDLookup[store.store_id] = store;
+        store.collections.forEach((collection) => {
+            if (!collectionIDLookup[store.store_id]) collectionIDLookup[store.store_id] = {};
+            collectionIDLookup[store.store_id][collection.collection_id] = collection;
+            collection.categories.forEach((category) => {
+                if (!categoryIDLookup[collection.collection_id]) categoryIDLookup[collection.collection_id] = {};
+                categoryIDLookup[collection.collection_id][category.category_id] = category;
+            });
+        });
+    });
+
+    return { storeIDLookup, collectionIDLookup, categoryIDLookup };
+}
+
 async function initializeCache(): Promise<void> {
 	if (isInitialized) return;
 
 	console.log('Initializing cache on server start...');
 
 	try {
-		const [appCats, appsOverview, companyTypes, countries, myRankingsMap] = await Promise.all([
+		const [appCats, appsOverview, companyTypes, countries, myStoreRankingsMap] = await Promise.all([
 			fetchWithRetry(`${API_BASE_URL}/categories`),
 			fetchWithRetry(`${API_BASE_URL}/apps/overview`),
 			fetchWithRetry(`${API_BASE_URL}/companies/types`),
@@ -59,12 +87,16 @@ async function initializeCache(): Promise<void> {
 			fetchWithRetry(`${API_BASE_URL}/rankings`)
 		]);
 
+		const { storeIDLookup, collectionIDLookup, categoryIDLookup } = buildRankingsLookups(myStoreRankingsMap);
+
 		cachedData = {
 			appCats,
 			appsOverview,
 			companyTypes,
 			countries,
-			myRankingsMap
+			storeIDLookup,
+			collectionIDLookup,
+			categoryIDLookup,
 		};
 
 		isInitialized = true;

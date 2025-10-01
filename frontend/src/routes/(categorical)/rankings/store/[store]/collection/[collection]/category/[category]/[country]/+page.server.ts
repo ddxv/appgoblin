@@ -20,11 +20,14 @@ export const load: PageServerLoad = async ({ fetch, params }) => {
 		`/rankings/${collectionValue}/${categoryValue}/history?country=${countryValue}`,
 		'Rankings History'
 	);
-	const { countries } = await getCachedData();
+	const { countries, storeIDLookup, collectionIDLookup, categoryIDLookup } = await getCachedData();
 
 	return {
 		ranks,
 		history,
-		countries
+		countries,
+		storeIDLookup,
+		collectionIDLookup,
+		categoryIDLookup
 	};
 };
