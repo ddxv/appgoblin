@@ -50,6 +50,8 @@ class PostgresCon:
                 db_uri,
                 pool_pre_ping=True,
                 pool_recycle=3600,
+                pool_size=10,
+                max_overflow=20,
                 connect_args={"connect_timeout": 30, "application_name": "appgoblin"},
             )
         except Exception as error:
