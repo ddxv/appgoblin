@@ -18,15 +18,44 @@ export class ApiClient {
 			return { status: resp.status, error: `${name} Unexpected error (${resp.status})` };
 		}
 	}
+	async get(endpoint: string, name: string, timeoutMs: number = 30000) {
+		console.log(`${API_BASE_URL}${endpoint} fetch ${name}`);
 
-	async get(endpoint: string, name: string) {
-		console.log(`${API_BASE_URL}${endpoint} fetch ${name} `);
-		const resp = await this.fetch(`${API_BASE_URL}${endpoint}`);
-		const checkedResp = await this.checkStatus(resp, name);
-		if (checkedResp.error) {
-			throw error(checkedResp.status, checkedResp.error);
+		try {
+			const controller = new AbortController();
+			const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+
+			const resp = await this.fetch(`${API_BASE_URL}${endpoint}`, {
+				signal: controller.signal
+			});
+
+			clearTimeout(timeoutId);
+			const checkedResp = await this.checkStatus(resp, name);
+
+			if (checkedResp.error) {
+				throw error(checkedResp.status, checkedResp.error);
+			}
+
+			return checkedResp;
+		} catch (err) {
+			// Handle abort/timeout - throw SvelteKit error for +error.svelte
+			if (err instanceof DOMException && err.name === 'AbortError') {
+				console.error(`${name} Request timeout after ${timeoutMs}ms`);
+				throw error(504, `${name}: Request timeout - backend may be restarting`);
+			}
+
+			// Handle network errors - throw SvelteKit error for +error.svelte
+			if (
+				err instanceof TypeError &&
+				(err.message.includes('fetch') || err.message.includes('terminated'))
+			) {
+				console.error(`${name} Network error: ${err.message}`);
+				throw error(503, `${name}: Service temporarily unavailable - backend may be restarting`);
+			}
+
+			// If it's already a SvelteKit error, re-throw it
+			throw err;
 		}
-		return checkedResp;
 	}
 }
 

@@ -59,8 +59,6 @@ def get_advertiser_creatives(
     )
     return df
 
-    return df
-
 
 def get_company_creatives(state: State, company_domain: str) -> pd.DataFrame:
     """Get company creatives."""
