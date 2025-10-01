@@ -17,7 +17,7 @@
 	/>
 	<meta
 		name="keywords"
-		content="new apps, market reserach, new ios apps, new android apps, new app analytics, app market data, mobile app rankings, app reviews, download statistics, Google Play data, iTunes app data, app comparison, mobile app insights"
+		content="new apps, market reserach, new ios apps, new android apps, new app analytics, app market data, mobile app rankings, app reviews, download statistics, Google Play data, Apple iTunes app data, app comparison, mobile app insights"
 	/>
 </svelte:head>
 

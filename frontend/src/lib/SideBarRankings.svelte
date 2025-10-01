@@ -1,11 +1,12 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import CardFirst from './CardFirst.svelte';
-	import { storeIDLookup, collectionIDLookup, categoryIDLookup } from './constants';
 	import { prettyName } from '$lib/utils/prettyNames';
 
 	const buttonSelectedClass = 'btn preset-outlined-primary-900-100 relative text-primary-900-100';
 	const buttonDeselectedClass = 'p-1 md:p-2 hover:text-primary-900-100';
+
+	let { storeIDLookup, collectionIDLookup, categoryIDLookup } = $props();
 
 	let country = $state(page.params.country);
 

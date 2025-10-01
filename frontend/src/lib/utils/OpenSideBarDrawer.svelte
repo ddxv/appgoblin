@@ -4,7 +4,7 @@
 
 	let drawerState = $state(false);
 
-	let { myCatData } = $props();
+	let { myCatData, storeIDLookup, collectionIDLookup, categoryIDLookup } = $props();
 
 	function drawerClose() {
 		drawerState = false;
@@ -33,7 +33,7 @@ Tips for Drawer modals:
 >
 	{#snippet trigger()}APP FILTERS{/snippet}
 	{#snippet content()}
-		<SideBar {myCatData} />
+		<SideBar {myCatData} {storeIDLookup} {collectionIDLookup} {categoryIDLookup} />
 		<footer>
 			<button type="button" class="btn preset-filled" onclick={drawerClose}>Close</button>
 		</footer>

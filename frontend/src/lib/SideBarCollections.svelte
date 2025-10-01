@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import SideBarCatsListBoxItem from './SideBarCatsListBoxItem.svelte';
-	// import { storeIDLookup } from './constants';
 	import CardFirst from './CardFirst.svelte';
 	import type { CatData } from '../types';
 

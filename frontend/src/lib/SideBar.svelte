@@ -10,9 +10,11 @@
 	interface Props {
 		myCatData: CatData;
 		storeIDLookup: StoreIDLookup;
+		collectionIDLookup: Record<number, any>;
+		categoryIDLookup: Record<number, any>;
 	}
 
-	let { myCatData, storeIDLookup }: Props = $props();
+	let { myCatData, storeIDLookup, collectionIDLookup, categoryIDLookup }: Props = $props();
 
 	let store = $state(1);
 	$effect(() => {
@@ -48,11 +50,11 @@
 </script>
 
 {#if page.url.pathname.startsWith('/collections')}
-	<SideBarCollections {myCatData} baseUrl="/collections" storeIDLookup={storeIDLookup} />
+	<SideBarCollections {myCatData} baseUrl="/collections" {storeIDLookup} />
 {/if}
 
 {#if page.url.pathname == '/rankings' || page.url.pathname.startsWith('/rankings')}
-	<SideBarRankings />
+	<SideBarRankings {storeIDLookup} {collectionIDLookup} {categoryIDLookup} />
 {/if}
 
 {#if (page.url.pathname == '/companies' || page.url.pathname.startsWith('/companies')) && !page.url.pathname.includes('adstxt')}
@@ -60,5 +62,5 @@
 {/if}
 
 {#if page.url.pathname == '/fastest-growing-apps' || page.url.pathname.startsWith('/fastest-growing-apps')}
-	<SideBarFastestGrowingApps {myCatData} baseUrl="/fastest-growing-apps" storeIDLookup={storeIDLookup} />
+	<SideBarFastestGrowingApps {myCatData} baseUrl="/fastest-growing-apps" {storeIDLookup} />
 {/if}

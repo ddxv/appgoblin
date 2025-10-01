@@ -16,8 +16,12 @@
 	let collection = $derived(+page.params.collection!);
 	let category = $derived(+page.params.category!);
 
-	let collectionName = $derived(prettyName(data.collectionIDLookup[store][collection].collection_name));
-	let categoryName = $derived(prettyName(data.categoryIDLookup[collection][category].category_name));
+	let collectionName = $derived(
+		prettyName(data.collectionIDLookup[store][collection].collection_name)
+	);
+	let categoryName = $derived(
+		prettyName(data.categoryIDLookup[collection][category].category_name)
+	);
 
 	let country = $state(page.params.country || 'US');
 
@@ -38,7 +42,7 @@
 	function getDescription(): string {
 		const description =
 			'Free app store charts. Top ranked ' +
-			storeIDLookup[store].store_name +
+			data.storeIDLookup[store].store_name +
 			' ' +
 			collectionName +
 			' ' +
@@ -55,9 +59,9 @@
 	<meta name="description" content={description} />
 	<meta
 		name="keywords"
-		content="free, free aso, {storeIDLookup[store].store_name}, {collectionIDLookup[store][
-			collection
-		].collection_name}, {categoryIDLookup[collection][category]
+		content="free, free aso, {data.storeIDLookup[store].store_name}, {data.collectionIDLookup[
+			store
+		][collection].collection_name}, {data.categoryIDLookup[collection][category]
 			.category_name}, app rankings, top apps, Google Play charts, iOS App Store charts, free, ASO, marketing, competitor analysis, app category rankings, app performance tracking, mobile app trends"
 	/>
 
@@ -85,7 +89,7 @@
 			<p class="text-primary-900-100">
 				The {collectionName}
 				{categoryName} Apps on
-				{storeIDLookup[store].store_name}
+				{data.storeIDLookup[store].store_name}
 				in
 				{country}
 			</p>
@@ -117,7 +121,7 @@
 				</thead>
 				<tbody>
 					<tr>
-						<td>{storeIDLookup[store].store_name}</td>
+						<td>{data.storeIDLookup[store].store_name}</td>
 						<td>{collectionName}</td>
 						<td>{categoryName}</td>
 						<td>{country}</td>
