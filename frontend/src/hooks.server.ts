@@ -36,6 +36,7 @@ const API_BASE_URL = 'http://localhost:8000/api';
 async function fetchWithRetry(url: string, retries = 10): Promise<any> {
 	for (let i = 0; i < retries; i++) {
 		try {
+			// console.log(`[fetchWithRetry] Calling fetch for: ${url}`);
 			const response = await fetch(url);
 			if (!response.ok) {
 				throw new Error(`HTTP ${response.status}: ${response.statusText}`);

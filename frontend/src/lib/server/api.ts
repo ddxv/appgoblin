@@ -20,7 +20,7 @@ export class ApiClient {
 	}
 
 	async get(endpoint: string, name: string) {
-		console.log(`Fetching ${name} from ${API_BASE_URL}${endpoint}`);
+		console.log(`${API_BASE_URL}${endpoint} fetch ${name} `);
 		const resp = await this.fetch(`${API_BASE_URL}${endpoint}`);
 		const checkedResp = await this.checkStatus(resp, name);
 		if (checkedResp.error) {
