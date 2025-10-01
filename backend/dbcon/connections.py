@@ -3,7 +3,6 @@
 import asyncio
 import socket
 import threading
-from contextlib import contextmanager
 from socket import gethostbyname
 
 import asyncssh
@@ -69,21 +68,6 @@ class PostgresCon:
             )
             raise
 
-    @contextmanager
-    def get_cursor(self):
-        """Context manager for database connection and cursor."""
-        conn = self.engine.raw_connection()
-        try:
-            cursor = conn.cursor()
-            yield cursor
-            conn.commit()
-        except Exception as e:
-            conn.rollback()
-            logger.exception(f"Database operation error: {e!s}")
-            raise
-        finally:
-            cursor.close()
-            conn.close()
 
 
 def manage_tunnel_thread(
