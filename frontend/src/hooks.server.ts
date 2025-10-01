@@ -30,6 +30,7 @@ let cachedData: CachedData = {
 
 let isInitialized = false;
 let initializationPromise: Promise<void> | null = null;
+let initStartTime: number | null = null;
 
 const API_BASE_URL = 'http://localhost:8000/api';
 
@@ -75,7 +76,8 @@ function buildRankingsLookups(rankings: { stores_rankings: AppStore[] }) {
 async function initializeCache(): Promise<void> {
 	if (isInitialized) return;
 
-	console.log('Initializing cache on server start...');
+	initStartTime = Date.now();
+	console.log('[Cache] Initializing cache on server start...');
 
 	try {
 		const [appCats, appsOverview, companyTypes, countries, myStoreRankingsMap] = await Promise.all([
@@ -100,9 +102,12 @@ async function initializeCache(): Promise<void> {
 		};
 
 		isInitialized = true;
-		console.log('Cache initialized successfully');
+		const duration = Date.now() - initStartTime!;
+		console.log(`[Cache] Cache initialized successfully in ${duration}ms`);
 	} catch (error) {
-		console.error('Failed to initialize cache:', error);
+		const duration = initStartTime ? Date.now() - initStartTime : 0;
+		console.error(`[Cache] Failed to initialize cache after ${duration}ms:`, error);
+		// Keep default empty values so app can still function
 	}
 }
 
@@ -112,9 +117,17 @@ export const init: ServerInit = async () => {
 };
 
 export const getCachedData = async (): Promise<CachedData> => {
-	// Ensure initialization is complete
+	// Ensure initialization is complete before returning data
 	if (!isInitialized && initializationPromise) {
+		console.log('[Cache] Waiting for cache initialization...');
+		const waitStart = Date.now();
 		await initializationPromise;
+		const waitDuration = Date.now() - waitStart;
+		console.log(`[Cache] Cache ready after ${waitDuration}ms wait`);
+	}
+
+	if (!isInitialized) {
+		console.warn('[Cache] Cache not initialized, returning empty defaults');
 	}
 
 	return cachedData;
@@ -122,6 +135,16 @@ export const getCachedData = async (): Promise<CachedData> => {
 
 export const handle: Handle = async ({ event, resolve }) => {
 	const route = event.url.pathname;
+
+	// Block requests until cache is ready (except for static assets)
+	if (!route.startsWith('/_app') && !route.startsWith('/favicon') && !isInitialized && initializationPromise) {
+		const waitStart = Date.now();
+		await initializationPromise;
+		const waitDuration = Date.now() - waitStart;
+		if (waitDuration > 100) {
+			console.log(`[Handle] Request to ${route} waited ${waitDuration}ms for cache`);
+		}
+	}
 
 	if (route.startsWith('/networks')) {
 		return new Response(undefined, {
