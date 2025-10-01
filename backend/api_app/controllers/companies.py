@@ -51,7 +51,6 @@ from dbcon.queries import (
     get_company_sdks,
     get_company_stats,
     get_company_tree,
-    get_parent_companies,
     get_tag_source_category_totals,
     get_topapps_for_company,
     get_topapps_for_company_parent,
@@ -114,10 +113,10 @@ def make_company_api_domains_dict(
     return df.to_dict(orient="records")
 
 
-def get_search_results(search_term: str) -> pd.DataFrame:
+def get_search_results(state: State, search_term: str) -> pd.DataFrame:
     """Parse search term and return resulting AppGroup."""
     decoded_input = urllib.parse.unquote(search_term)
-    df = search_companies(search_input=decoded_input, limit=20)
+    df = search_companies(state, search_input=decoded_input, limit=20)
     logger.info(f"{decoded_input=} returned rows: {df.shape[0]}")
     return df
 
@@ -1104,11 +1103,11 @@ class CompaniesController(Controller):
 
         """
         start = time.perf_counter() * 1000
-        results = get_search_results(search_term=search_term)
+        results = get_search_results(state, search_term=search_term)
 
         results["app_category"] = "all"
 
-        category_totals_df = get_tag_source_category_totals()
+        category_totals_df = get_tag_source_category_totals(state)
 
         overview_df = results.merge(
             category_totals_df,
@@ -1151,11 +1150,13 @@ class CompaniesController(Controller):
         start = time.perf_counter() * 1000
 
         df_apps = get_company_adstxt_publisher_id_apps_overview(
+            state=state,
             ad_domain_url=company_domain,
             publisher_id=publisher_id,
         )
 
         df_pub_id_overview = get_company_adstxt_publishers_overview(
+            state=state,
             ad_domain_url=company_domain,
             publisher_id=publisher_id,
         )

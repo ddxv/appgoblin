@@ -318,7 +318,7 @@ class CreativesController(Controller):
 
     @get(path="/apps/{store_id: str}/ads/{vhash: str}", cache=86400)
     async def get_advertiser_creative_records(
-        self: Self, store_id: str, vhash: str
+        self: Self, state: State, store_id: str, vhash: str
     ) -> dict:
         """Handle GET request for a list of creatives for an app.
 
@@ -327,7 +327,7 @@ class CreativesController(Controller):
             A dictionary representation of the total counts
 
         """
-        df = get_advertiser_creatives(advertiser_store_id=store_id)
+        df = get_advertiser_creatives(state=state, advertiser_store_id=store_id)
         df["run_at"] = df["run_at"].dt.strftime("%Y-%m-%d")
         df = df[df["vhash"] == vhash]
         pdf = (

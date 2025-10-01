@@ -1,4 +1,3 @@
-
 export const plotColors = [
 	'#636efa',
 	'#EF553B',

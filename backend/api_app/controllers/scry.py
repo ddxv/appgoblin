@@ -46,7 +46,7 @@ def log_umami_event(ip: str | None, url: str) -> None:
     )
 
 
-def process_sdk_scan_request(store_ids: list[str], ip: str | None) -> None:
+def process_sdk_scan_request(state, store_ids: list[str], ip: str | None) -> None:
     """Process a sdk scan request."""
     url = "/api/public/sdks/apps/requestSDKScan"
     try:
@@ -55,7 +55,7 @@ def process_sdk_scan_request(store_ids: list[str], ip: str | None) -> None:
     except Exception:
         logger.exception("Error logging umami event")
     try:
-        insert_sdk_scan_request(store_ids)
+        insert_sdk_scan_request(state, store_ids)
         logger.info(f"inserted sdk scan request for {len(store_ids)} store_ids")
     except Exception:
         logger.exception("Error inserting sdk scan request")
@@ -95,9 +95,9 @@ class ScryController(Controller):
         start = time.perf_counter() * 1000
         store_ids = data.get("store_ids", [])
 
-        df = get_apps_sdk_overview(tuple(store_ids))
+        df = get_apps_sdk_overview(state, store_ids=tuple(store_ids))
         df = df.merge(
-            get_company_logos_df(),
+            get_company_logos_df(state),
             left_on="company_domain",
             right_on="company_domain",
             how="left",
@@ -196,7 +196,7 @@ class ScryController(Controller):
 
     @post(path="sdks/apps/requestSDKScan")
     async def lookup_apps_request(
-        self: Self, headers: dict[str, str], data: dict
+        self: Self, state: State, headers: dict[str, str], data: dict
     ) -> dict:
         """Lookup apps' SDKs by store_ids."""
         store_ids = data.get("store_ids", [])
@@ -211,5 +211,5 @@ class ScryController(Controller):
         logger.info(f"Scry: store_ids:{len(store_ids)} request SDK Scan")
         return Response(
             {"status": "ok"},
-            background=BackgroundTask(process_sdk_scan_request, store_ids, ip),
+            background=BackgroundTask(process_sdk_scan_request, state, store_ids, ip),
         )

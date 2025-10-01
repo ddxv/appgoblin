@@ -14,7 +14,7 @@ logger = get_logger(__name__)
 
 
 def get_recent_apps(
-    state: State, collection: str, store: int, category: str, limit: int = 20
+    state: State, collection: str, store: int, category: str | None, limit: int = 20
 ) -> pd.DataFrame:
     """Get app collections by time."""
     logger.info(f"Query app_store for recent apps {collection=}")

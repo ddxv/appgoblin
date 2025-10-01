@@ -29,7 +29,7 @@ from dbcon.static import get_store_collection_category_map
 logger = get_logger(__name__)
 
 
-def ranking_map(state:State) -> RankingOverview:
+def ranking_map(state: State) -> RankingOverview:
     """Get Ranking data and translate to RankingOverview class."""
     df = get_store_collection_category_map(state=state)
     overview = RankingOverview()

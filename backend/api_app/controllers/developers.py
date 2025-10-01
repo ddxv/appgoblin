@@ -9,6 +9,7 @@ from typing import Self
 
 import pandas as pd
 from litestar import Controller, get, post
+from litestar.datastructures import State
 from litestar.exceptions import NotFoundException
 
 from api_app.models import (
@@ -32,7 +33,9 @@ class DeveloperController(Controller):
     path = "/api/developers"
 
     @get(path="/{developer_id:str}", cache=3600)
-    async def get_developer_apps(self: Self, developer_id: str) -> DeveloperApps:
+    async def get_developer_apps(
+        self: Self, state: State, developer_id: str
+    ) -> DeveloperApps:
         """Handle GET request for a specific developer.
 
         Args:
@@ -46,7 +49,7 @@ class DeveloperController(Controller):
         """
         start = time.perf_counter() * 1000
 
-        apps_df = get_single_developer(developer_id)
+        apps_df = get_single_developer(state, developer_id)
 
         if apps_df.empty:
             msg = f"Developer ID not found: {developer_id!r}"
@@ -103,7 +106,9 @@ class DeveloperController(Controller):
         return developer_apps
 
     @post(path="/sdks")
-    async def get_developer_sdks(self: Self, data: dict) -> DeveloperSDKsOverview:
+    async def get_developer_sdks(
+        self: Self, state: State, data: dict
+    ) -> DeveloperSDKsOverview:
         """Handle GET request for a specific developer.
 
         Args:
@@ -121,7 +126,7 @@ class DeveloperController(Controller):
         store_ids_log_str = ",".join(store_ids[0:2])
         logger.info(f"looked up store_ids:{store_ids_log_str} start")
 
-        df = get_apps_sdk_overview(tuple(store_ids))
+        df = get_apps_sdk_overview(state, store_ids=tuple(store_ids))
 
         success_store_ids = df["store_id"].unique().tolist()
         failed_store_ids = [

@@ -53,7 +53,7 @@ def search_both_stores(state: State, search_term: str) -> None:
     """Search both stores and return resulting AppGroup."""
     google_full_results = google.search_play_store(search_term)
     if len(google_full_results) > 0:
-        process_search_results(google_full_results)
+        process_search_results(state.dbconwrite, google_full_results)
     apple_ids = apple.search_app_store_for_ids(search_term)
     if len(apple_ids) > 0:
         apple_full_results = [
@@ -96,7 +96,9 @@ def attach_rating_history(app_hist: pd.DataFrame, star_cols: list[str]) -> pd.Da
     return app_hist
 
 
-def app_history(state, store_app: int, app_name: str, country: str) -> AppHistory:
+def app_history(
+    state: State, store_app: int, app_name: str, country: str
+) -> AppHistory:
     """Get the history of app scraping."""
     app_hist = get_app_history(state, store_app, country)
     if app_hist.empty:

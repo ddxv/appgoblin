@@ -6,6 +6,7 @@
 from typing import Self
 
 from litestar import Controller, get
+from litestar.datastructures import State
 
 from config import get_logger
 from dbcon.queries import get_keyword_apps, get_keyword_details
@@ -19,7 +20,7 @@ class KeywordsController(Controller):
     path = "/api/keywords"
 
     @get(path="/{keyword:str}", cache=86400)
-    async def get_keyword_details(self: Self, keyword: str) -> dict:
+    async def get_keyword_details(self: Self, state: State, keyword: str) -> dict:
         """Handle GET request for a list of apps.
 
         Returns
@@ -27,11 +28,11 @@ class KeywordsController(Controller):
             A dictionary representation of the total counts
 
         """
-        df = get_keyword_details(keyword)
+        df = get_keyword_details(state, keyword)
         return df.to_dict(orient="records")
 
     @get(path="/{keyword:str}/ranks", cache=86400)
-    async def get_keyword_apps(self: Self, keyword: str) -> dict:
+    async def get_keyword_apps(self: Self, state: State, keyword: str) -> dict:
         """Handle GET request for a list of apps.
 
         Returns
@@ -39,7 +40,7 @@ class KeywordsController(Controller):
             A dictionary representation of the total counts
 
         """
-        df = get_keyword_apps(keyword)
+        df = get_keyword_apps(state, keyword)
         df_android = df[df["store"] == 1]
         df_ios = df[df["store"] == 2]
         return {
