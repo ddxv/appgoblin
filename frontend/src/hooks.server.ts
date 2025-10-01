@@ -11,6 +11,7 @@ interface CachedData {
 	appsOverview: any; // Define proper type based on your API response
 	companyTypes: CompanyTypes;
 	countries: Country[];
+	myRankingsMap?: any; // Define proper type based on your API response
 }
 
 // Cache with default empty values
@@ -18,7 +19,8 @@ let cachedData: CachedData = {
 	appCats: { categories: [] },
 	appsOverview: {},
 	companyTypes: { types: [] },
-	countries: []
+	countries: [],
+	myRankingsMap: {}
 };
 
 let isInitialized = false;
@@ -49,18 +51,20 @@ async function initializeCache(): Promise<void> {
 	console.log('Initializing cache on server start...');
 
 	try {
-		const [appCats, appsOverview, companyTypes, countries] = await Promise.all([
+		const [appCats, appsOverview, companyTypes, countries, myRankingsMap] = await Promise.all([
 			fetchWithRetry(`${API_BASE_URL}/categories`),
 			fetchWithRetry(`${API_BASE_URL}/apps/overview`),
 			fetchWithRetry(`${API_BASE_URL}/companies/types`),
-			fetchWithRetry(`${API_BASE_URL}/categories/countries`)
+			fetchWithRetry(`${API_BASE_URL}/categories/countries`),
+			fetchWithRetry(`${API_BASE_URL}/rankings`)
 		]);
 
 		cachedData = {
 			appCats,
 			appsOverview,
 			companyTypes,
-			countries
+			countries,
+			myRankingsMap
 		};
 
 		isInitialized = true;

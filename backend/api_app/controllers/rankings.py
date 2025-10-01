@@ -11,6 +11,7 @@ import numpy as np
 import pandas as pd
 from litestar import Controller, get
 from litestar.config.response_cache import CACHE_FOREVER
+from litestar.datastructures import State
 
 from api_app.models import (
     RankingOverview,
@@ -22,15 +23,15 @@ from config import get_logger
 from dbcon.queries import (
     get_history_top_ranks,
     get_most_recent_top_ranks,
-    get_store_collection_category_map,
 )
+from dbcon.static import get_store_collection_category_map
 
 logger = get_logger(__name__)
 
 
-def ranking_map() -> RankingOverview:
+def ranking_map(state:State) -> RankingOverview:
     """Get Ranking data and translate to RankingOverview class."""
-    df = get_store_collection_category_map()
+    df = get_store_collection_category_map(state=state)
     overview = RankingOverview()
     groups = df.groupby(["store_id", "store_name"])
     for store_idx, group in groups:
@@ -66,7 +67,7 @@ class RankingsController(Controller):
     path = "/api/rankings/"
 
     @get(path="/", cache=CACHE_FOREVER)
-    async def get_ranking_overview(self: Self) -> RankingOverview:
+    async def get_ranking_overview(self: Self, state: State) -> RankingOverview:
         """Handle GET request for a list of ranking collecitons and categories.
 
         Returns
@@ -76,13 +77,14 @@ class RankingsController(Controller):
 
         """
         logger.info(f"{self.path} start")
-        overview = ranking_map()
+        overview = ranking_map(state=state)
 
         return overview
 
     @get(path="/{collection:int}/{category:int}/short", cache=86400)
     async def get_short_ranks_for_category(
         self: Self,
+        state: State,
         collection: int,
         category: int,
     ) -> dict:
@@ -96,6 +98,7 @@ class RankingsController(Controller):
         """
         start = time.perf_counter() * 1000
         df = get_most_recent_top_ranks(
+            state,
             collection_id=collection,
             category_id=category,
             limit=5,
@@ -116,6 +119,7 @@ class RankingsController(Controller):
     @get(path="/{collection:int}/{category:int}", cache=86400)
     async def get_ranks_for_category(
         self: Self,
+        state: State,
         collection: int,
         category: int,
         country: str = "US",
@@ -131,6 +135,7 @@ class RankingsController(Controller):
         start = time.perf_counter() * 1000
 
         df = get_most_recent_top_ranks(
+            state,
             collection_id=collection,
             category_id=category,
             country=country,
@@ -152,6 +157,7 @@ class RankingsController(Controller):
     @get(path="/{collection:int}/{category:int}/history", cache=86400)
     async def get_ranks_history_for_category(
         self: Self,
+        state: State,
         collection: int,
         category: int,
         country: str = "US",
@@ -166,6 +172,7 @@ class RankingsController(Controller):
         """
         start = time.perf_counter() * 1000
         df = get_history_top_ranks(
+            state,
             collection_id=collection,
             category_id=category,
             country=country,

@@ -19,6 +19,7 @@ import numpy as np
 import pandas as pd
 from litestar import Controller, get
 from litestar.config.response_cache import CACHE_FOREVER
+from litestar.datastructures import State
 from litestar.response import Stream
 
 from api_app.models import (
@@ -38,7 +39,6 @@ from api_app.models import (
 )
 from config import get_logger
 from dbcon.queries import (
-    get_adtech_categories,
     get_companies_category_tag_type_stats,
     get_companies_parent_category_stats,
     get_companies_tag_type_stats,
@@ -47,13 +47,8 @@ from dbcon.queries import (
     get_company_adstxt_publisher_id_apps_overview,
     get_company_adstxt_publisher_id_apps_raw,
     get_company_adstxt_publishers_overview,
-    get_company_api_call_countrys,
     get_company_categories_topn,
-    get_company_countries,
-    get_company_logos_df,
-    get_company_open_source,
     get_company_sdks,
-    get_company_secondary_domains,
     get_company_stats,
     get_company_tree,
     get_parent_companies,
@@ -63,13 +58,24 @@ from dbcon.queries import (
     get_topapps_for_company_secondary,
     search_companies,
 )
+from dbcon.static import (
+    get_adtech_categories,
+    get_company_api_call_countrys,
+    get_company_countries,
+    get_company_logos_df,
+    get_company_open_source,
+    get_company_secondary_domains,
+    get_parent_companies,
+)
 
 logger = get_logger(__name__)
 
 
-def make_company_api_domains_dict(company_domains: list[str]) -> list[dict]:
+def make_company_api_domains_dict(
+    state: State, company_domains: list[str]
+) -> list[dict]:
     """Make company api domains dict."""
-    df = get_company_api_call_countrys()
+    df = get_company_api_call_countrys(state)
     reg_df = df[df["company_domain"].isin(company_domains)]
     p_df = df[df["parent_company_domain"].isin(company_domains)]
 
@@ -117,26 +123,30 @@ def get_search_results(search_term: str) -> pd.DataFrame:
 
 
 def get_company_apps(
+    state: State,
     company_domain: str,
     category: str | None = None,
 ) -> CompanyPlatformOverview:
     """Get the overview data from the database."""
-    parent_companies = get_parent_companies()
-    secondary_domains = get_company_secondary_domains()
+    parent_companies = get_parent_companies(state)
+    secondary_domains = get_company_secondary_domains(state)
     is_secondary_domain = company_domain in secondary_domains
     is_parent_company = company_domain in parent_companies
     if is_secondary_domain:
         df = get_topapps_for_company_secondary(
+            state=state,
             company_domain=company_domain,
             mapped_category=category,
         )
     elif is_parent_company:
         df = get_topapps_for_company_parent(
+            state=state,
             company_domain=company_domain,
             mapped_category=category,
         )
     else:
         df = get_topapps_for_company(
+            state=state,
             company_domain=company_domain,
             mapped_category=category,
         )
@@ -255,28 +265,33 @@ def prep_companies_overview_df(
 
 
 def get_overviews(
+    state: State,
     category: str | None = None,
     type_slug: str | None = None,
 ) -> CompaniesOverview:
     """Get the overview data from the database."""
     # Get Top 5 Companies for Plots
-    top_df = get_companies_top(type_slug=type_slug, app_category=category, limit=5)
+    top_df = get_companies_top(
+        state=state, type_slug=type_slug, app_category=category, limit=5
+    )
     top_companies_short = make_top_companies(top_df)
-    countries_df = get_company_countries()
+    countries_df = get_company_countries(state)
 
     if type_slug:
         if category:
             overview_df = get_companies_category_tag_type_stats(
-                type_slug, app_category=category
+                state=state, type_slug=type_slug, app_category=category
             )
         else:
-            overview_df = get_companies_tag_type_stats(type_slug)
+            overview_df = get_companies_tag_type_stats(state=state, type_slug=type_slug)
 
     else:
-        overview_df = get_companies_parent_category_stats(app_category=category)
+        overview_df = get_companies_parent_category_stats(
+            state=state, app_category=category
+        )
 
     tag_source_category_app_counts = get_tag_source_category_totals(
-        app_category=category
+        state=state, app_category=category
     )
 
     overview_df = overview_df.merge(
@@ -292,7 +307,7 @@ def get_overviews(
 
     overview_df = prep_companies_overview_df(overview_df)
 
-    open_source_df = get_company_open_source()
+    open_source_df = get_company_open_source(state)
 
     overview_df = overview_df.merge(
         open_source_df, on="company_domain", how="left", validate="m:1"
@@ -307,7 +322,7 @@ def get_overviews(
         validate="1:1",
     )
     overview_df = overview_df.merge(
-        get_company_logos_df(),
+        get_company_logos_df(state),
         on="company_domain",
         how="left",
         validate="1:1",
@@ -659,7 +674,7 @@ class CompaniesController(Controller):
     path = "/api/"
 
     @get(path="/companies", cache=86400)
-    async def companies(self: Self) -> CompaniesOverview:
+    async def companies(self: Self, state: State) -> CompaniesOverview:
         """Handle GET request for all companies.
 
         Returns
@@ -670,15 +685,15 @@ class CompaniesController(Controller):
         """
         start = time.perf_counter() * 1000
 
-        overview = get_overviews()
-
+        overview = get_overviews(state=state)
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(f"GET /api/companies took {duration}ms")
-
         return overview
 
     @get(path="/companies/categories/{category:str}", cache=86400)
-    async def companies_categories(self: Self, category: str) -> CompaniesOverview:
+    async def companies_categories(
+        self: Self, state: State, category: str
+    ) -> CompaniesOverview:
         """Handle GET request for all companies in a category.
 
         Returns
@@ -689,18 +704,16 @@ class CompaniesController(Controller):
         """
         start = time.perf_counter() * 1000
 
-        overview = get_overviews(category=category)
-
+        overview = get_overviews(state=state, category=category)
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(f"GET /api/companies/categories/{category} took {duration}ms")
-
         return overview
 
     @get(path="/companies/countries", cache=CACHE_FOREVER)
-    async def companies_countries(self: Self) -> dict:
+    async def companies_countries(self: Self, state: State) -> dict:
         """Handle GET request for all companies countries."""
         start = time.perf_counter() * 1000
-        df = get_company_countries()
+        df = get_company_countries(state)
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(f"GET /api/companies/countries took {duration}ms")
         return df.to_dict(orient="records")
@@ -711,6 +724,7 @@ class CompaniesController(Controller):
     )
     async def company_overview(
         self: Self,
+        state: State,
         company_domain: str,
         category: str | None = None,
     ) -> CompanyCategoryOverview:
@@ -731,10 +745,14 @@ class CompaniesController(Controller):
         """
         start = time.perf_counter() * 1000
 
-        df = get_company_stats(company_domain=company_domain, app_category=category)
+        df = get_company_stats(
+            state=state, company_domain=company_domain, app_category=category
+        )
 
         if df["tag_source"].str.contains("app_ads").any():
-            ad_domain_overview = get_company_adstxt_ad_domain_overview(company_domain)
+            ad_domain_overview = get_company_adstxt_ad_domain_overview(
+                state=state, ad_domain_url=company_domain
+            )
             final_ad_domain_overview = (
                 ad_domain_overview.set_index(["store", "relationship"])
                 .groupby(level=[0, 1])
@@ -742,7 +760,9 @@ class CompaniesController(Controller):
                 .unstack(level=0)
                 .to_dict()
             )
-            publishers_overview = get_company_adstxt_publishers_overview(company_domain)
+            publishers_overview = get_company_adstxt_publishers_overview(
+                state=state, ad_domain_url=company_domain
+            )
             final_publishers_overview = (
                 publishers_overview.set_index(["store", "relationship"])
                 .groupby(level=[0, 1])
@@ -769,6 +789,7 @@ class CompaniesController(Controller):
     )
     async def company_apps(
         self: Self,
+        state: State,
         company_domain: str,
         category: str | None = None,
     ) -> CompanyPlatformOverview:
@@ -788,7 +809,9 @@ class CompaniesController(Controller):
 
         """
         start = time.perf_counter() * 1000
-        results = get_company_apps(company_domain=company_domain, category=category)
+        results = get_company_apps(
+            state=state, company_domain=company_domain, category=category
+        )
 
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(
@@ -802,6 +825,7 @@ class CompaniesController(Controller):
     )
     async def company_parent_categories(
         self: Self,
+        state: State,
         company_domain: str,
     ) -> dict:
         """Handle GET request for a specific company parent categories.
@@ -819,7 +843,7 @@ class CompaniesController(Controller):
         """
         start = time.perf_counter() * 1000
 
-        df = get_company_categories_topn(company_domain=company_domain)
+        df = get_company_categories_topn(state=state, company_domain=company_domain)
 
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(
@@ -833,6 +857,7 @@ class CompaniesController(Controller):
     )
     async def company_tree(
         self: Self,
+        state: State,
         queried_domain: str,
     ) -> ParentCompanyTree:
         """Handle GET request for company tree.
@@ -850,7 +875,7 @@ class CompaniesController(Controller):
         """
         start = time.perf_counter() * 1000
 
-        df = get_company_tree(company_domain=queried_domain)
+        df = get_company_tree(state=state, company_domain=queried_domain)
 
         if df.empty:
             return ParentCompanyTree(
@@ -890,8 +915,8 @@ class CompaniesController(Controller):
         if parent_company_name == queried_domain:
             parent_company_name = None
 
-        parent_companies = get_parent_companies()
-        secondary_domains = get_company_secondary_domains()
+        parent_companies = get_parent_companies(state)
+        secondary_domains = get_company_secondary_domains(state)
         is_secondary_domain = queried_domain in secondary_domains
         is_parent_company = queried_domain in parent_companies
 
@@ -903,7 +928,7 @@ class CompaniesController(Controller):
         sub_domains = df["sub_domain"].unique().tolist()
         domains = list(set(domains + sub_domains))
 
-        detailed_domains = make_company_api_domains_dict(domains)
+        detailed_domains = make_company_api_domains_dict(state, domains)
 
         children_companies = (
             df[
@@ -941,6 +966,7 @@ class CompaniesController(Controller):
     )
     async def company_sdks(
         self: Self,
+        state: State,
         company_domain: str,
     ) -> CompanyPatternsDict:
         """Handle GET request for company sdks.
@@ -958,7 +984,7 @@ class CompaniesController(Controller):
         """
         start = time.perf_counter() * 1000
 
-        df = get_company_sdks(company_domain=company_domain)
+        df = get_company_sdks(state=state, company_domain=company_domain)
 
         company_sdks: dict = {}
 
@@ -987,7 +1013,7 @@ class CompaniesController(Controller):
         return mydict
 
     @get(path="/companies/types/", cache=CACHE_FOREVER)
-    async def all_adtech_types(self: Self) -> CompanyTypes:
+    async def all_adtech_types(self: Self, state: State) -> CompanyTypes:
         """Handle GET request for a list of adtech company categories.
 
         Returns
@@ -997,7 +1023,7 @@ class CompaniesController(Controller):
 
         """
         start = time.perf_counter() * 1000
-        company_types_df = get_adtech_categories()
+        company_types_df = get_adtech_categories(state=state)
 
         company_types = CompanyTypes(types=company_types_df.to_dict(orient="records"))
 
@@ -1009,6 +1035,7 @@ class CompaniesController(Controller):
     @get(path="/companies/types/{type_slug:str}", cache=86400)
     async def adtech_type(
         self: Self,
+        state: State,
         type_slug: str,
         category: str | None = None,
     ) -> CompaniesOverview:
@@ -1021,7 +1048,7 @@ class CompaniesController(Controller):
 
         """
         start = time.perf_counter() * 1000
-        overview = get_overviews(category=category, type_slug=type_slug)
+        overview = get_overviews(state=state, category=category, type_slug=type_slug)
 
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(f"/companies/types/{type_slug}?{category=} took {duration}ms")
@@ -1029,7 +1056,9 @@ class CompaniesController(Controller):
         return overview
 
     @get(path="/companies/topshort/", cache=CACHE_FOREVER)
-    async def get_companies_shortlist_top(self: Self) -> TopCompaniesOverviewShort:
+    async def get_companies_shortlist_top(
+        self: Self, state: State
+    ) -> TopCompaniesOverviewShort:
         """Handle GET request for a list of adtech company categories.
 
         Returns
@@ -1040,11 +1069,13 @@ class CompaniesController(Controller):
         """
         start = time.perf_counter() * 1000
         adnetworks = get_companies_top(
-            type_slug="ad-networks", app_category=None, limit=5
+            state=state, type_slug="ad-networks", app_category=None, limit=5
         )
-        mmps = get_companies_top(type_slug="ad-attribution", app_category=None, limit=5)
+        mmps = get_companies_top(
+            state=state, type_slug="ad-attribution", app_category=None, limit=5
+        )
         analytics = get_companies_top(
-            type_slug="product-analytics", app_category=None, limit=5
+            state=state, type_slug="product-analytics", app_category=None, limit=5
         )
         top_ad_networks = make_top_companies(adnetworks)
         top_mmps = make_top_companies(mmps)
@@ -1062,7 +1093,9 @@ class CompaniesController(Controller):
         return top_companies
 
     @get(path="/companies/search/{search_term:str}", cache=86400)
-    async def get_companies_search(self: Self, search_term: str) -> list[CompanyDetail]:
+    async def get_companies_search(
+        self: Self, state: State, search_term: str
+    ) -> list[CompanyDetail]:
         """Handle GET request for a list of adtech company categories.
 
         Returns
@@ -1096,6 +1129,7 @@ class CompaniesController(Controller):
     )
     async def adstxt_company_overview(
         self: Self,
+        state: State,
         company_domain: str,
         publisher_id: str,
     ) -> CompanyPubIDOverview:
@@ -1224,6 +1258,7 @@ class CompaniesController(Controller):
     )
     async def adstxt_company_publisher_download(
         self: Self,
+        state: State,
         company_domain: str,
         publisher_id: str,
     ) -> CompanyPubIDOverview:
@@ -1243,6 +1278,7 @@ class CompaniesController(Controller):
 
         """
         df = get_company_adstxt_publisher_id_apps_raw(
+            state,
             ad_domain_url=company_domain,
             publisher_id=publisher_id,
         )

@@ -1,159 +1,36 @@
 """Query database for backend API."""
 
 import datetime
-import pathlib
-from functools import lru_cache
 
-import numpy as np
 import pandas as pd
-from sqlalchemy import bindparam, text
+from litestar.datastructures import State
+from sqlalchemy import bindparam
 
-from config import MODULE_DIR, get_logger
-from dbcon.connections import get_db_connection
+from config import get_logger
+from dbcon.static import get_child_companies, get_country_map, get_parent_companies
+from dbcon.utils import cache_by_params, clean_app_df, sql
 
 logger = get_logger(__name__)
 
 
-SQL_DIR = pathlib.Path(MODULE_DIR, "dbcon/sql/")
-
-
-def load_sql_file(file_name: str) -> str:
-    """Load local SQL file based on file name."""
-    file_path = pathlib.Path(SQL_DIR, file_name)
-    with file_path.open() as file:
-        return text(file.read())
-
-
-QUERY_CATEGORY_TOP_APPS_BY_INSTALLS = load_sql_file(
-    "query_category_top_apps_by_installs.sql",
-)
-QUERY_RANKS_FOR_APP = load_sql_file("query_ranks_for_app.sql")
-QUERY_RANKS_FOR_APP_OVERVIEW = load_sql_file("query_ranks_for_app_overview.sql")
-QUERY_MOST_RECENT_TOP_RANKS = load_sql_file("query_most_recent_top_ranks.sql")
-QUERY_HISTORY_TOP_RANKS = load_sql_file("query_history_top_ranks.sql")
-QUERY_COUNTRIES = load_sql_file("query_countries.sql")
-QUERY_APPSTORE_CATEGORIES = load_sql_file("query_appstore_categories.sql")
-QUERY_SEARCH_APPS = load_sql_file("query_search_apps.sql")
-QUERY_SEARCH_COMPANIES = load_sql_file("query_search_companies.sql")
-QUERY_SEARCH_DEVS = load_sql_file("query_search_devs.sql")
-QUERY_SINGLE_DEVELOPER = load_sql_file("query_single_developer.sql")
-QUERY_SINGLE_APP_ADSTXT = load_sql_file("query_single_app_adstxt.sql")
-QUERY_APP_HISTORY = load_sql_file("query_app_history.sql")
-QUERY_SINGLE_APP = load_sql_file("query_single_app.sql")
-QUERY_APP_SDK_DETAILS = load_sql_file("query_app_sdk_details.sql")
-QUERY_APP_API_DETAILS = load_sql_file("query_app_api_details.sql")
-QUERY_APP_SDK_OVERVIEW = load_sql_file("query_app_sdk_overview.sql")
-QUERY_APPS_SDK_OVERVIEW = load_sql_file("query_apps_sdk_overview.sql")
-QUERY_APP_ADSTXT_OVERVIEW = load_sql_file("query_app_adstxt_overview.sql")
-QUERY_TOTAL_COUNTS = load_sql_file("query_total_counts.sql")
-QUERY_GROWTH_APPS = load_sql_file("query_growth_apps.sql")
-QUERY_STORE_COLLECTION_CATEGORY_MAP = load_sql_file(
-    "query_store_collection_category_map.sql",
-)
-QUERY_PARENT_COMPANIES = load_sql_file("query_parent_companies.sql")
-QUERY_COMPANY_SECONDARY_DOMAINS = load_sql_file("query_company_secondary_domains.sql")
-QUERY_CHILD_COMPANIES = load_sql_file("query_child_companies.sql")
-QUERY_COMPANY_COUNTRIES = load_sql_file("query_company_countries.sql")
-QUERY_ADTECH_CATEGORIES = load_sql_file(
-    "query_adtech_categories.sql",
-)
-QUERY_COMPANIES_CATEGORY_TAG_TYPE_STATS = load_sql_file(
-    "query_companies_category_tag_type_stats.sql",
-)
-QUERY_COMPANIES_TAG_TYPE_STATS = load_sql_file(
-    "query_companies_tag_type_stats.sql",
-)
-QUERY_COMPANY_TOPAPPS = load_sql_file("query_company_top_apps.sql")
-QUERY_COMPANY_TOPAPPS_PARENT = load_sql_file("query_company_top_apps_parent.sql")
-QUERY_COMPANY_TOPAPPS_SECONDARY = load_sql_file("query_company_secondary_top_apps.sql")
-QUERY_COMPANY_TOPAPPS_CATEGORY_SECONDARY = load_sql_file(
-    "query_company_secondary_top_apps_category.sql"
-)
-QUERY_COMPANY_TOPAPPS_CATEGORY = load_sql_file("query_company_top_apps_category.sql")
-QUERY_COMPANY_TOPAPPS_CATEGORY_PARENT = load_sql_file(
-    "query_company_top_apps_category_parent.sql"
-)
-QUERY_COMPANIES_PARENT_TAG_STATS = load_sql_file("query_companies_parent_tag_stats.sql")
-QUERY_COMPANIES_TAG_STATS = load_sql_file("query_companies_tag_stats.sql")
-QUERY_COMPANIES_PARENT_CATEGORY_TAG_STATS = load_sql_file(
-    "query_companies_parent_category_tag_stats.sql"
-)
-QUERY_COMPANIES_CATEGORY_TAG_STATS = load_sql_file(
-    "query_companies_category_tag_stats.sql"
-)
-QUERY_COMPANIES_PARENT_TOP = load_sql_file("query_companies_parent_top.sql")
-QUERY_COMPANIES_CATEGORY_TYPE_TOP = load_sql_file(
-    "query_companies_category_type_top.sql",
-)
-QUERY_COMPANY_CATEGORY_TAG_STATS = load_sql_file("query_company_category_tag_stats.sql")
-QUERY_COMPANY_PARENT_CATEGORY_TAG_STATS = load_sql_file(
-    "query_company_parent_category_tag_stats.sql"
-)
-QUERY_COMPANY_TREE = load_sql_file("query_company_tree.sql")
-QUERY_COMPANY_SDKS = load_sql_file("query_company_sdks.sql")
-QUERY_PARENT_COMPANY_CATEGORY_STATS = load_sql_file(
-    "query_company_parent_category_stats.sql"
-)
-QUERY_COMPANY_CATEGORY_STATS = load_sql_file("query_company_category_stats.sql")
-QUERY_TAG_SOURCE_CATEGORY_TOTALS = load_sql_file("query_category_totals.sql")
-QUERY_SDKS = load_sql_file("query_sdks.sql")
-QUERY_LATEST_SDKS = load_sql_file("query_sdks_latest.sql")
-QUERY_USER_REQUESTED_LATEST_SDKS = load_sql_file("query_sdks_user_requested_latest.sql")
-QUERY_SDK_PATTERN = load_sql_file("query_sdk_pattern.sql")
-QUERY_SDK_PATTERN_COMPANIES = load_sql_file("query_sdk_pattern_companies.sql")
-
-QUERY_COMPANY_ADSTXT_AD_DOMAIN_OVERVIEW = load_sql_file(
-    "query_company_adstxt_ad_domain_overview.sql"
-)
-QUERY_COMPANY_ADSTXT_PUBLISHERS_OVERVIEW = load_sql_file(
-    "query_company_adstxt_publishers_overview.sql"
-)
-QUERY_COMPANY_ADSTXT_PUBLISHER_ID = load_sql_file(
-    "query_company_adstxt_publisher_id.sql"
-)
-QUERY_COMPANY_ADSTXT_PUBLISHER_ID_APPS_OVERVIEW = load_sql_file(
-    "query_company_adstxt_publisher_id_apps_overview.sql"
-)
-QUERY_COMPANY_OPEN_SOURCE = load_sql_file("query_company_open_source.sql")
-QUERY_SINGLE_APP_KEYWORDS = load_sql_file("query_single_app_keywords.sql")
-QUERY_KEYWORD_DETAILS = load_sql_file("query_keyword_details.sql")
-QUERY_KEYWORD_APPS = load_sql_file("query_keyword_apps.sql")
-QUERY_COMPANY_API_CALL_COUNTRYS = load_sql_file("query_company_api_call_countrys.sql")
-# Used for generating sitemaps
-QUERY_SITEMAP_APPS = load_sql_file("query_sitemap_apps.sql")
-QUERY_SITEMAP_COMPANIES = load_sql_file("query_sitemap_companies.sql")
-QUERY_CREATIVES = load_sql_file("query_creatives.sql")
-QUERY_ADVERTISER_CREATIVE_RANKINGS = load_sql_file(
-    "query_advertiser_creative_rankings.sql"
-)
-QUERY_ADVERTISER_CREATIVE_RANKINGS_TOP = load_sql_file(
-    "query_advertiser_creative_rankings_top.sql"
-)
-QUERY_COMPANY_CREATIVES = load_sql_file("query_company_creatives.sql")
-QUERY_NEW_APPS_WEEKLY = load_sql_file("query_new_apps_weekly.sql")
-QUERY_NEW_APPS_MONTHLY = load_sql_file("query_new_apps_monthly.sql")
-QUERY_NEW_APPS_YEARLY = load_sql_file("query_new_apps_yearly.sql")
-
-INSERT_SDK_SCAN_REQUEST = load_sql_file("insert_sdk_scan_request.sql")
-
-
 def get_recent_apps(
-    collection: str, store: int, category: str, limit: int = 20
+    state: State, collection: str, store: int, category: str, limit: int = 20
 ) -> pd.DataFrame:
     """Get app collections by time."""
     logger.info(f"Query app_store for recent apps {collection=}")
     if collection == "new_weekly":
-        query = QUERY_NEW_APPS_WEEKLY
+        query = sql.new_apps_weekly
     elif collection == "new_monthly":
-        query = QUERY_NEW_APPS_MONTHLY
+        query = sql.new_apps_monthly
     elif collection == "new_yearly":
-        query = QUERY_NEW_APPS_YEARLY
+        query = sql.new_apps_yearly
+    else:
+        query = None
     if category == "overall":
         category = None
-
     df = pd.read_sql(
         query,
-        con=DBCON.engine,
+        con=state.dbcon.engine,
         params={"store": store, "category": category, "limit": limit},
     )
     if not category:
@@ -163,95 +40,18 @@ def get_recent_apps(
     return df
 
 
-@lru_cache(maxsize=1)
-def get_appstore_categories() -> pd.DataFrame:
-    """Get categories for both appstores."""
-    df = pd.read_sql(QUERY_APPSTORE_CATEGORIES, DBCON.engine)
-    df["store"] = df["store"].replace({1: "android", 2: "ios"})
-    df = pd.pivot_table(
-        data=df,
-        index="category",
-        values="app_count",
-        columns="store",
-        fill_value=0,
-    ).reset_index()
-    df["total_apps"] = df["android"] + df["ios"]
-    df = df.sort_values("total_apps", ascending=False)
-    return df
-
-
-@lru_cache(maxsize=1)
-def get_store_collection_category_map() -> pd.DataFrame:
-    """Get store collection and category map."""
-    df = pd.read_sql(QUERY_STORE_COLLECTION_CATEGORY_MAP, con=DBCON.engine)
-    return df
-
-
-@lru_cache(maxsize=1)
-def get_parent_companies() -> list[str]:
-    """Get parent companies."""
-    df = pd.read_sql(QUERY_PARENT_COMPANIES, con=DBCON.engine)
-    return df["domain"].tolist()
-
-
-@lru_cache(maxsize=1)
-def get_company_secondary_domains() -> list[str]:
-    """Get company secondary domains."""
-    df = pd.read_sql(QUERY_COMPANY_SECONDARY_DOMAINS, con=DBCON.engine)
-    return df["domain"].tolist()
-
-
-@lru_cache(maxsize=1)
-def get_company_countries() -> pd.DataFrame:
-    """Get company countries."""
-    df = pd.read_sql(QUERY_COMPANY_COUNTRIES, con=DBCON.engine)
-    return df
-
-
-@lru_cache(maxsize=1)
-def get_company_logos_df() -> pd.DataFrame:
-    """Get company logos."""
-    query = """SELECT ad."domain" as company_domain, 
-    c.logo_url as company_logo_url 
-    FROM adtech.companies as c 
-    LEFT JOIN ad_domains as ad ON c."domain_id" = ad."id";
-    """
-    df = pd.read_sql(query, con=DBCON.engine)
-    return df
-
-
-@lru_cache(maxsize=1)
-def get_child_companies() -> list[str]:
-    """Get child companies."""
-    df = pd.read_sql(QUERY_CHILD_COMPANIES, con=DBCON.engine)
-    return df["domain"].tolist()
-
-
-@lru_cache(maxsize=1)
-def get_adtech_categories() -> pd.DataFrame:
-    """Get the categories for adtech."""
-    df = pd.read_sql(QUERY_ADTECH_CATEGORIES, con=DBCON.engine)
-    df = df.sort_values("id")
-    return df
-
-
-@lru_cache(maxsize=1)
-def get_total_counts() -> pd.DataFrame:
-    """Get total counts."""
-    df = pd.read_sql(QUERY_TOTAL_COUNTS, con=DBCON.engine)
-    return df
-
-
 def get_advertiser_creatives(
-    advertiser_store_id: str | None = None, pub_store_id: str | None = None
+    state: State,
+    advertiser_store_id: str | None = None,
+    pub_store_id: str | None = None,
 ) -> pd.DataFrame:
     """Get creatives."""
     if not advertiser_store_id and not pub_store_id:
         msg = "At least one of advertiser_store_id or pub_store_id must be provided"
         raise ValueError(msg)
     df = pd.read_sql(
-        QUERY_CREATIVES,
-        con=DBCON.engine,
+        sql.creatives,
+        con=state.dbcon.engine,
         params={
             "advertiser_store_id": advertiser_store_id,
             "pub_store_id": pub_store_id,
@@ -259,37 +59,26 @@ def get_advertiser_creatives(
     )
     return df
 
-
-@lru_cache(maxsize=1)
-def get_advertiser_creative_rankings() -> pd.DataFrame:
-    """Get advertiser creative rankings."""
-    df = pd.read_sql(QUERY_ADVERTISER_CREATIVE_RANKINGS, con=DBCON.engine)
     return df
 
 
-@lru_cache(maxsize=1)
-def get_advertiser_creative_rankings_top() -> pd.DataFrame:
-    """Get advertiser creative rankings."""
-    df = pd.read_sql(QUERY_ADVERTISER_CREATIVE_RANKINGS_TOP, con=DBCON.engine)
-    return df
-
-
-@lru_cache(maxsize=100)
-def get_company_creatives(company_domain: str) -> pd.DataFrame:
+def get_company_creatives(state: State, company_domain: str) -> pd.DataFrame:
     """Get company creatives."""
     df = pd.read_sql(
-        QUERY_COMPANY_CREATIVES,
-        con=DBCON.engine,
+        sql.company_creatives,
+        con=state.dbcon.engine,
         params={"company_domain": company_domain},
     )
     return df
 
 
-def get_growth_apps(store: int, app_category: str | None = None) -> pd.DataFrame:
+def get_growth_apps(
+    state: State, store: int, app_category: str | None = None
+) -> pd.DataFrame:
     """Get fastest growing apps."""
     df = pd.read_sql(
-        QUERY_GROWTH_APPS,
-        con=DBCON.engine,
+        sql.growth_apps,
+        con=state.dbcon.engine,
         params={"store": store, "app_category": app_category},
     )
     decimal_cols = [
@@ -303,12 +92,13 @@ def get_growth_apps(store: int, app_category: str | None = None) -> pd.DataFrame
 
 
 def get_companies_tag_type_stats(
+    state: State,
     type_slug: str,
 ) -> pd.DataFrame:
     """Get top companies for a category type."""
     df = pd.read_sql(
-        QUERY_COMPANIES_TAG_TYPE_STATS,
-        con=DBCON.engine,
+        sql.companies_tag_type_stats,
+        con=state.dbcon.engine,
         params={"type_slug": type_slug},
     )
     df["app_category"] = "all"
@@ -318,6 +108,7 @@ def get_companies_tag_type_stats(
 
 
 def get_companies_category_tag_type_stats(
+    state: State,
     type_slug: str,
     app_category: str,
 ) -> pd.DataFrame:
@@ -325,8 +116,8 @@ def get_companies_category_tag_type_stats(
     if app_category == "games":
         app_category = "game%"
     df = pd.read_sql(
-        QUERY_COMPANIES_CATEGORY_TAG_TYPE_STATS,
-        con=DBCON.engine,
+        sql.companies_category_tag_type_stats,
+        con=state.dbcon.engine,
         params={"type_slug": type_slug, "app_category": app_category},
     )
     df.loc[df["app_category"].isna(), "app_category"] = "None"
@@ -354,34 +145,37 @@ def get_companies_category_tag_type_stats(
 
 
 def get_ranks_for_app(
-    store_id: str, country: str = "US", days: int = 30
+    state: State, store_id: str, country: str = "US", days: int = 30
 ) -> pd.DataFrame:
     """Get appstore ranks for a specific app."""
     start_date = (
         datetime.datetime.now(datetime.UTC) - datetime.timedelta(days=days)
     ).strftime("%Y-%m-%d")
     df = pd.read_sql(
-        QUERY_RANKS_FOR_APP,
-        con=DBCON.engine,
+        sql.ranks_for_app,
+        con=state.dbcon.engine,
         params={"store_id": store_id, "start_date": start_date, "country": country},
     )
     return df
 
 
-def get_ranks_for_app_overview(store_id: str, days: int = 30) -> pd.DataFrame:
+def get_ranks_for_app_overview(
+    state: State, store_id: str, days: int = 30
+) -> pd.DataFrame:
     """Get appstore ranks for a specific app."""
     start_date = (
         datetime.datetime.now(datetime.UTC) - datetime.timedelta(days=days)
     ).strftime("%Y-%m-%d")
     df = pd.read_sql(
-        QUERY_RANKS_FOR_APP_OVERVIEW,
-        con=DBCON.engine,
+        sql.ranks_for_app_overview,
+        con=state.dbcon.engine,
         params={"store_id": store_id, "start_date": start_date},
     )
     return df
 
 
 def get_most_recent_top_ranks(
+    state: State,
     collection_id: int,
     category_id: int,
     country: str = "US",
@@ -389,8 +183,8 @@ def get_most_recent_top_ranks(
 ) -> pd.DataFrame:
     """Get the latest top ranks for a category."""
     df = pd.read_sql(
-        QUERY_MOST_RECENT_TOP_RANKS,
-        con=DBCON.engine,
+        sql.most_recent_top_ranks,
+        con=state.dbcon.engine,
         params={
             "collection_id": collection_id,
             "category_id": category_id,
@@ -402,22 +196,16 @@ def get_most_recent_top_ranks(
     return df
 
 
-@lru_cache(maxsize=1)
-def get_country_map() -> pd.DataFrame:
-    """Get country map."""
-    df = pd.read_sql(QUERY_COUNTRIES, con=DBCON.engine)
-    return df
-
-
-@lru_cache(maxsize=200)
-def get_country_id(country: str) -> int:
+@cache_by_params
+def get_country_id(state: State, country: str) -> int:
     """Get country id."""
-    df = get_country_map()
+    df = get_country_map(state)
     country_id = int(df[df["alpha2"] == country]["id"].to_numpy()[0])
     return country_id
 
 
 def get_history_top_ranks(
+    state: State,
     collection_id: int,
     category_id: int,
     country: str = "US",
@@ -425,13 +213,13 @@ def get_history_top_ranks(
     days: int = 30,
 ) -> pd.DataFrame:
     """Get appstore rank history for plotting."""
-    country_id = get_country_id(country)
+    country_id = get_country_id(state, country)
     start_date = (
         datetime.datetime.now(datetime.UTC) - datetime.timedelta(days=days)
     ).strftime("%Y-%m-%d")
     df = pd.read_sql(
-        QUERY_HISTORY_TOP_RANKS,
-        con=DBCON.engine,
+        sql.history_top_ranks,
+        con=state.dbcon.engine,
         params={
             "collection_id": collection_id,
             "category_id": category_id,
@@ -443,12 +231,14 @@ def get_history_top_ranks(
     return df
 
 
-def get_category_top_apps_by_installs(category: str, limit: int = 10) -> pd.DataFrame:
+def get_category_top_apps_by_installs(
+    state: State, category: str, limit: int = 10
+) -> pd.DataFrame:
     """Get category top apps sorted by installs."""
     logger.info(f"Query {category=} for top installs")
     df = pd.read_sql(
-        QUERY_CATEGORY_TOP_APPS_BY_INSTALLS,
-        DBCON.engine,
+        sql.category_top_apps_by_installs,
+        state.dbcon.engine,
         params={"category": category, "mylimit": limit},
     )
     if not df.empty:
@@ -456,31 +246,30 @@ def get_category_top_apps_by_installs(category: str, limit: int = 10) -> pd.Data
     return df
 
 
-@lru_cache(maxsize=100)
-def get_single_app(store_id: str) -> pd.DataFrame:
+def get_single_app(state: State, store_id: str) -> pd.DataFrame:
     """Get basic app details for a single store_id."""
     logger.info(f"Query for single app_id={store_id}")
-    df = pd.read_sql(QUERY_SINGLE_APP, DBCON.engine, params={"store_id": store_id})
+    df = pd.read_sql(sql.single_app, state.dbcon.engine, params={"store_id": store_id})
     if not df.empty:
         df = clean_app_df(df)
     return df
 
 
-def get_app_sdk_details(store_id: str) -> pd.DataFrame:
+def get_app_sdk_details(state: State, store_id: str) -> pd.DataFrame:
     """Get basic app details for a single store_id."""
     df = pd.read_sql(
-        QUERY_APP_SDK_DETAILS,
-        DBCON.engine,
+        sql.app_sdk_details,
+        state.dbcon.engine,
         params={"store_id": store_id},
     )
     return df
 
 
-def get_app_api_details(store_id: str) -> pd.DataFrame:
+def get_app_api_details(state: State, store_id: str) -> pd.DataFrame:
     """Get app API details for a single store_id."""
     df = pd.read_sql(
-        QUERY_APP_API_DETAILS,
-        DBCON.engine,
+        sql.app_api_details,
+        state.dbcon.engine,
         params={"store_id": store_id},
     )
     df["url"] = df["url"].str.replace("https://", "").replace("http://", "")
@@ -497,58 +286,58 @@ def get_app_api_details(store_id: str) -> pd.DataFrame:
     return df
 
 
-@lru_cache(maxsize=1000)
-def get_apps_sdk_overview(store_ids: tuple[str, ...]) -> pd.DataFrame:
+def get_apps_sdk_overview(state: State, store_ids: tuple[str, ...]) -> pd.DataFrame:
     """Get SDK overview for multiple store_ids."""
-    query = QUERY_APPS_SDK_OVERVIEW.bindparams(bindparam("store_ids", expanding=True))
+    query = sql.apps_sdk_overview.bindparams(bindparam("store_ids", expanding=True))
     df = pd.read_sql_query(
         query,
-        DBCON.engine,
+        state.dbcon.engine,
         params={"store_ids": store_ids},
     )
     df["store"] = df["store"].replace({1: "Google Play", 2: "Apple App Store"})
     return df
 
 
-def get_app_sdk_overview(store_id: str) -> pd.DataFrame:
+def get_app_sdk_overview(state: State, store_id: str) -> pd.DataFrame:
     """Get SDK overview for a single store_id."""
     df = pd.read_sql(
-        QUERY_APP_SDK_OVERVIEW,
-        DBCON.engine,
+        sql.app_sdk_overview,
+        state.dbcon.engine,
         params={"store_id": store_id},
     )
     return df
 
 
-def get_app_adstxt_overview(store_id: str) -> pd.DataFrame:
+def get_app_adstxt_overview(state: State, store_id: str) -> pd.DataFrame:
     """Get app-ads.txt overview for a single store_id."""
     logger.info(f"Query app-ads.txt overview app_id={store_id}")
     df = pd.read_sql(
-        QUERY_APP_ADSTXT_OVERVIEW,
-        DBCON.engine,
+        sql.app_adstxt_overview,
+        state.dbcon.engine,
         params={"store_id": store_id},
     )
     return df
 
 
-@lru_cache(maxsize=100)
+@cache_by_params
 def get_companies_parent_category_stats(
+    state: State,
     app_category: str | None = None,
 ) -> pd.DataFrame:
     """Get overview of companies from multiple types like sdk and app-ads.txt."""
-    parent_company_domains = get_parent_companies()
-    child_company_domains = get_child_companies()
+    parent_company_domains = get_parent_companies(state)
+    child_company_domains = get_child_companies(state)
     if app_category:
         if app_category == "games":
             app_category = "game%"
         parents_df = pd.read_sql(
-            QUERY_COMPANIES_PARENT_CATEGORY_TAG_STATS,
-            DBCON.engine,
+            sql.companies_parent_category_tag_stats,
+            state.dbcon.engine,
             params={"app_category": app_category},
         )
         child_df = pd.read_sql(
-            QUERY_COMPANIES_CATEGORY_TAG_STATS,
-            DBCON.engine,
+            sql.companies_category_tag_stats,
+            state.dbcon.engine,
             params={"app_category": app_category},
         )
         child_df = child_df[
@@ -573,8 +362,8 @@ def get_companies_parent_category_stats(
                 .reset_index()
             )
     else:
-        parents_df = pd.read_sql(QUERY_COMPANIES_PARENT_TAG_STATS, DBCON.engine)
-        child_df = pd.read_sql(QUERY_COMPANIES_TAG_STATS, DBCON.engine)
+        parents_df = pd.read_sql(sql.companies_parent_tag_stats, state.dbcon.engine)
+        child_df = pd.read_sql(sql.companies_tag_stats, state.dbcon.engine)
         child_df = child_df[
             ~child_df["company_domain"].isin(
                 parent_company_domains + child_company_domains
@@ -588,8 +377,8 @@ def get_companies_parent_category_stats(
     return df
 
 
-@lru_cache(maxsize=250)
 def get_companies_top(
+    state: State,
     type_slug: str | None = None,
     app_category: str | None = None,
     limit: int = 10,
@@ -599,8 +388,8 @@ def get_companies_top(
         app_category = "game%"
     if type_slug:
         df = pd.read_sql(
-            QUERY_COMPANIES_CATEGORY_TYPE_TOP,
-            DBCON.engine,
+            sql.companies_category_type_top,
+            state.dbcon.engine,
             params={
                 "type_slug": type_slug,
                 "app_category": app_category,
@@ -609,8 +398,8 @@ def get_companies_top(
         )
     else:
         df = pd.read_sql(
-            QUERY_COMPANIES_PARENT_TOP,
-            DBCON.engine,
+            sql.companies_parent_top,
+            state.dbcon.engine,
             params={"app_category": app_category, "mylimit": limit},
         )
     df["store"] = df["store"].replace({1: "Google Play", 2: "Apple App Store"})
@@ -618,22 +407,22 @@ def get_companies_top(
 
 
 def get_company_stats(
-    company_domain: str, app_category: str | None = None
+    state: State, company_domain: str, app_category: str | None = None
 ) -> pd.DataFrame:
     """Get overview of companies from multiple types like sdk and app-ads.txt."""
     logger.info(f"query company overview: {company_domain=}")
-    parent_companies = get_parent_companies()
+    parent_companies = get_parent_companies(state)
     is_parent_company = company_domain in parent_companies
     query = (
-        QUERY_COMPANY_PARENT_CATEGORY_TAG_STATS
+        sql.company_parent_category_tag_stats
         if is_parent_company
-        else QUERY_COMPANY_CATEGORY_TAG_STATS
+        else sql.company_category_tag_stats
     )
     if app_category == "games":
         app_category = "game%"
     df = pd.read_sql(
         query,
-        DBCON.engine,
+        state.dbcon.engine,
         params={
             "company_domain": company_domain,
             "app_category": app_category,
@@ -669,13 +458,12 @@ def get_company_stats(
 
 
 def get_company_adstxt_publisher_id_apps_overview(
-    ad_domain_url: str,
-    publisher_id: str,
+    state: State, ad_domain_url: str, publisher_id: str
 ) -> pd.DataFrame:
     """Get ad domain publisher id."""
     df = pd.read_sql(
-        QUERY_COMPANY_ADSTXT_PUBLISHER_ID_APPS_OVERVIEW,
-        DBCON.engine,
+        sql.company_adstxt_publisher_id_apps_overview,
+        state.dbcon.engine,
         params={
             "ad_domain_url": ad_domain_url,
             "publisher_id": publisher_id,
@@ -687,13 +475,12 @@ def get_company_adstxt_publisher_id_apps_overview(
 
 
 def get_company_adstxt_publisher_id_apps_raw(
-    ad_domain_url: str,
-    publisher_id: str,
+    state: State, ad_domain_url: str, publisher_id: str
 ) -> pd.DataFrame:
     """Get ad domain publisher id."""
     df = pd.read_sql(
-        QUERY_COMPANY_ADSTXT_PUBLISHER_ID,
-        DBCON.engine,
+        sql.company_adstxt_publisher_id,
+        state.dbcon.engine,
         params={
             "ad_domain_url": ad_domain_url,
             "publisher_id": publisher_id,
@@ -705,14 +492,12 @@ def get_company_adstxt_publisher_id_apps_raw(
 
 
 def get_company_adstxt_publishers_overview(
-    ad_domain_url: str,
-    publisher_id: str | None = None,
-    limit: int = 5,
+    state: State, ad_domain_url: str, publisher_id: str | None = None, limit: int = 5
 ) -> pd.DataFrame:
     """Get ad domain publishers overview."""
     df = pd.read_sql(
-        QUERY_COMPANY_ADSTXT_PUBLISHERS_OVERVIEW,
-        DBCON.engine,
+        sql.company_adstxt_publishers_overview,
+        state.dbcon.engine,
         params={
             "ad_domain_url": ad_domain_url,
             "pubrank_limit": limit,
@@ -724,11 +509,13 @@ def get_company_adstxt_publishers_overview(
     return df
 
 
-def get_company_adstxt_ad_domain_overview(ad_domain_url: str) -> pd.DataFrame:
+def get_company_adstxt_ad_domain_overview(
+    state: State, ad_domain_url: str
+) -> pd.DataFrame:
     """Get ad domain overview."""
     df = pd.read_sql(
-        QUERY_COMPANY_ADSTXT_AD_DOMAIN_OVERVIEW,
-        DBCON.engine,
+        sql.company_adstxt_ad_domain_overview,
+        state.dbcon.engine,
         params={"ad_domain_url": ad_domain_url},
     )
     df["store"] = df["store"].replace({1: "google", 2: "apple"})
@@ -736,44 +523,44 @@ def get_company_adstxt_ad_domain_overview(ad_domain_url: str) -> pd.DataFrame:
     return df
 
 
-@lru_cache(maxsize=1000)
-def get_company_tree(company_domain: str) -> pd.DataFrame:
+@cache_by_params
+def get_company_tree(state: State, company_domain: str) -> pd.DataFrame:
     """Get a company tree with parent companies and domains."""
     logger.info(f"query company tree: {company_domain=}")
     df = pd.read_sql(
-        QUERY_COMPANY_TREE,
-        DBCON.engine,
+        sql.company_tree,
+        state.dbcon.engine,
         params={"company_domain": company_domain},
     )
     return df
 
 
-def get_company_sdks(company_domain: str) -> pd.DataFrame:
+def get_company_sdks(state: State, company_domain: str) -> pd.DataFrame:
     """Get a company tree with parent companies and domains."""
     logger.info(f"query company sdks: {company_domain=}")
     df = pd.read_sql(
-        QUERY_COMPANY_SDKS,
-        DBCON.engine,
+        sql.company_sdks,
+        state.dbcon.engine,
         params={"company_domain": company_domain},
     )
     return df
 
 
 def get_company_categories_topn(
-    company_domain: str, num_categories: int = 9
+    state: State, company_domain: str, num_categories: int = 9
 ) -> pd.DataFrame:
     """Get a company parent categories."""
     logger.info(f"query company parent categories: {company_domain=}")
-    parent_companies = get_parent_companies()
+    parent_companies = get_parent_companies(state)
     is_parent_company = company_domain in parent_companies
     query = (
-        QUERY_PARENT_COMPANY_CATEGORY_STATS
+        sql.company_parent_category_stats
         if is_parent_company
-        else QUERY_COMPANY_CATEGORY_STATS
+        else sql.company_category_stats
     )
     df = pd.read_sql(
         query,
-        DBCON.engine,
+        state.dbcon.engine,
         params={"company_domain": company_domain},
     )
     df.loc[df["app_category"].isna(), "app_category"] = "None"
@@ -818,15 +605,17 @@ def get_company_categories_topn(
     return df
 
 
-@lru_cache(maxsize=100)
-def get_tag_source_category_totals(app_category: str | None = None) -> pd.DataFrame:
+@cache_by_params
+def get_tag_source_category_totals(
+    state: State, app_category: str | None = None
+) -> pd.DataFrame:
     """Get category totals."""
     if app_category:
         if app_category == "games":
             app_category = "game%"
         df = pd.read_sql(
-            QUERY_TAG_SOURCE_CATEGORY_TOTALS,
-            DBCON.engine,
+            sql.category_totals,
+            state.dbcon.engine,
             params={"app_category": app_category},
         )
         if app_category == "game%":
@@ -837,8 +626,8 @@ def get_tag_source_category_totals(app_category: str | None = None) -> pd.DataFr
 
     else:
         df = pd.read_sql(
-            QUERY_TAG_SOURCE_CATEGORY_TOTALS,
-            DBCON.engine,
+            sql.category_totals,
+            state.dbcon.engine,
             params={"app_category": "%"},
         )
         df["app_category"] = "all"
@@ -869,79 +658,23 @@ def get_tag_source_category_totals(app_category: str | None = None) -> pd.DataFr
     return df
 
 
-def clean_app_df(df: pd.DataFrame) -> pd.DataFrame:
-    """Apply generic cleaning for a DF with app data from store_apps table.
-
-    Required columns:
-    - store
-    - store_id
-    - developer_id
-    - installs
-    - review_count
-    - rating_count
-    - rating
-
-    """
-    df["store"] = df["store"].replace({1: "Google Play", 2: "Apple App Store"})
-    df["rating"] = df["rating"].apply(lambda x: round(x, 2) if x else 0)
-    ios_link = "https://apps.apple.com/us/app/-/id"
-    play_link = "https://play.google.com/store/apps/details?id="
-    play_dev_link = "play.google.com/store/apps/dev?id="
-    play_dev_name_link = "play.google.com/store/apps/developer?id="
-    ios_dev_link = "apps.apple.com/us/developer/-/id"
-    df["store_link"] = (
-        np.where(df["store"].str.contains("Google"), play_link, ios_link)
-        + df["store_id"]
-    )
-    if "developer_id" in df.columns:
-        is_dev_digits = df["developer_id"].astype(str).str.isdigit()
-        is_store_google = df["store"].str.contains("Google")
-        is_store_apple = df["store"].str.contains("Apple")
-
-        df.loc[is_store_apple, "store_developer_link"] = (
-            ios_dev_link + df["developer_id"]
-        )
-        df.loc[is_store_google, "store_developer_link"] = (
-            play_dev_link + df["developer_id"]
-        )
-        df.loc[is_store_google & ~is_dev_digits, "store_developer_link"] = (
-            play_dev_name_link + df["developer_id"]
-        )
-
-    date_cols = [
-        "created_at",
-        "store_last_updated",
-        "updated_at",
-        "adstxt_last_crawled",
-        "sdk_last_crawled",
-        "sdk_successful_last_crawled",
-        "api_successful_last_crawled",
-    ]
-    for x in date_cols:
-        if x not in df.columns:
-            continue
-        if df[x].notna().all():
-            df[x] = df[x].dt.strftime("%Y-%m-%d")
-    return df
-
-
-def get_app_history(store_app: int, country: str = "US") -> pd.DataFrame:
+def get_app_history(state: State, store_app: int, country: str = "US") -> pd.DataFrame:
     """Get scraping history for an app."""
     logger.info(f"Query for history single app_id={store_app}")
     df = pd.read_sql(
-        QUERY_APP_HISTORY,
-        DBCON.engine,
+        sql.app_history,
+        state.dbcon.engine,
         params={"store_app": store_app, "country": country},
     )
     return df
 
 
-def get_single_developer(developer_id: str) -> pd.DataFrame:
+def get_single_developer(state: State, developer_id: str) -> pd.DataFrame:
     """Get single developer details."""
     logger.info(f"Developers: {developer_id=}")
     df = pd.read_sql(
-        QUERY_SINGLE_DEVELOPER,
-        con=DBCON.engine,
+        sql.single_developer,
+        con=state.dbcon.engine,
         params={"developer_id": developer_id},
     )
     if not df.empty:
@@ -949,18 +682,19 @@ def get_single_developer(developer_id: str) -> pd.DataFrame:
     return df
 
 
-def get_single_apps_adstxt(store_id: str) -> pd.DataFrame:
+def get_single_apps_adstxt(state: State, store_id: str) -> pd.DataFrame:
     """Get single developer's app ads txt entries."""
     logger.info(f"Query app's app-ads-txt: {store_id=}")
     df = pd.read_sql(
-        QUERY_SINGLE_APP_ADSTXT,
-        con=DBCON.engine,
+        sql.single_app_adstxt,
+        con=state.dbcon.engine,
         params={"store_id": store_id},
     )
     return df
 
 
 def get_topapps_for_company_secondary(
+    state: State,
     company_domain: str,
     mapped_category: str | None = None,
     limit: int = 10,
@@ -971,8 +705,8 @@ def get_topapps_for_company_secondary(
 
     if mapped_category:
         df = pd.read_sql(
-            QUERY_COMPANY_TOPAPPS_CATEGORY_SECONDARY,
-            con=DBCON.engine,
+            sql.company_secondary_top_apps_category,
+            con=state.dbcon.engine,
             params={
                 "company_domain": company_domain,
                 "mapped_category": mapped_category,
@@ -981,8 +715,8 @@ def get_topapps_for_company_secondary(
         )
     else:
         df = pd.read_sql(
-            QUERY_COMPANY_TOPAPPS_SECONDARY,
-            con=DBCON.engine,
+            sql.company_secondary_top_apps,
+            con=state.dbcon.engine,
             params={"company_domain": company_domain, "mylimit": limit},
         )
     if not df.empty:
@@ -996,6 +730,7 @@ def get_topapps_for_company_secondary(
 
 
 def get_topapps_for_company_parent(
+    state: State,
     company_domain: str,
     mapped_category: str | None = None,
     limit: int = 10,
@@ -1006,8 +741,8 @@ def get_topapps_for_company_parent(
 
     if mapped_category:
         df = pd.read_sql(
-            QUERY_COMPANY_TOPAPPS_CATEGORY_PARENT,
-            con=DBCON.engine,
+            sql.company_top_apps_category_parent,
+            con=state.dbcon.engine,
             params={
                 "company_domain": company_domain,
                 "mapped_category": mapped_category,
@@ -1016,8 +751,8 @@ def get_topapps_for_company_parent(
         )
     else:
         df = pd.read_sql(
-            QUERY_COMPANY_TOPAPPS_PARENT,
-            con=DBCON.engine,
+            sql.company_top_apps_parent,
+            con=state.dbcon.engine,
             params={"company_domain": company_domain, "mylimit": limit},
         )
 
@@ -1032,6 +767,7 @@ def get_topapps_for_company_parent(
 
 
 def get_topapps_for_company(
+    state: State,
     company_domain: str,
     mapped_category: str | None = None,
     limit: int = 10,
@@ -1042,8 +778,8 @@ def get_topapps_for_company(
 
     if mapped_category:
         df = pd.read_sql(
-            QUERY_COMPANY_TOPAPPS_CATEGORY,
-            con=DBCON.engine,
+            sql.company_topapps_category,
+            con=state.dbcon.engine,
             params={
                 "company_domain": company_domain,
                 "mapped_category": mapped_category,
@@ -1052,8 +788,8 @@ def get_topapps_for_company(
         )
     else:
         df = pd.read_sql(
-            QUERY_COMPANY_TOPAPPS,
-            con=DBCON.engine,
+            sql.company_top_apps,
+            con=state.dbcon.engine,
             params={"company_domain": company_domain, "mylimit": limit},
         )
 
@@ -1067,31 +803,31 @@ def get_topapps_for_company(
     return df
 
 
-def search_companies(search_input: str, limit: int = 10) -> pd.DataFrame:
+def search_companies(state: State, search_input: str, limit: int = 10) -> pd.DataFrame:
     """Search companies by term in database."""
     logger.info(f"Company search: {search_input=}")
     df = pd.read_sql(
-        QUERY_SEARCH_COMPANIES,
-        DBCON.engine,
+        sql.search_companies,
+        state.dbcon.engine,
         params={"searchinput": search_input, "mylimit": limit},
     )
     df["store"] = df["store"].replace({1: "Google Play", 2: "Apple App Store"})
     return df
 
 
-def search_apps(search_input: str, limit: int = 100) -> pd.DataFrame:
+def search_apps(state: State, search_input: str, limit: int = 100) -> pd.DataFrame:
     """Search apps by term in database."""
     logger.info(f"App search: {search_input=}")
     search_input = search_input.replace("+", " & ")
     apps = pd.read_sql(
-        QUERY_SEARCH_APPS,
-        DBCON.engine,
+        sql.search_apps,
+        state.dbcon.engine,
         params={"searchinput": search_input, "mylimit": limit},
     )
     logger.info(f"App search devs: {search_input=}")
     devapps = pd.read_sql(
-        QUERY_SEARCH_DEVS,
-        DBCON.engine,
+        sql.search_devs,
+        state.dbcon.engine,
         params={"searchinput": search_input, "mylimit": limit},
     )
     logger.info(f"App search finished: {search_input=}")
@@ -1103,107 +839,82 @@ def search_apps(search_input: str, limit: int = 100) -> pd.DataFrame:
     return df
 
 
-@lru_cache(maxsize=1)
-def get_sdks() -> pd.DataFrame:
-    """Get top sdks."""
-    df = pd.read_sql(QUERY_SDKS, DBCON.engine)
-    df["store"] = df["store"].replace({1: "Google Play", 2: "Apple App Store"})
-    return df
-
-
-def get_latest_sdks() -> pd.DataFrame:
+def get_latest_sdks(state: State) -> pd.DataFrame:
     """Get latest sdks."""
-    df = pd.read_sql(QUERY_LATEST_SDKS, DBCON.engine)
+    df = pd.read_sql(sql.latest_sdks, state.dbcon.engine)
     df["store"] = df["store"].replace({1: "Google Play", 2: "Apple App Store"})
     return df
 
 
-def get_user_requested_latest_sdks() -> pd.DataFrame:
+def get_user_requested_latest_sdks(state: State) -> pd.DataFrame:
     """Get user requested latest sdks."""
-    df = pd.read_sql(QUERY_USER_REQUESTED_LATEST_SDKS, DBCON.engine)
+    df = pd.read_sql(sql.user_requested_latest_sdks, state.dbcon.engine)
     return df
 
 
-def get_sdk_pattern(value_pattern: str) -> pd.DataFrame:
+def get_sdk_pattern(state: State, value_pattern: str) -> pd.DataFrame:
     """Get sdk pattern."""
     df = pd.read_sql(
-        QUERY_SDK_PATTERN,
-        DBCON.engine,
+        sql.sdk_pattern,
+        state.dbcon.engine,
         params={"value_pattern": value_pattern},
     )
     df["store"] = df["store"].replace({1: "Google Play", 2: "Apple App Store"})
     return df
 
 
-@lru_cache(maxsize=1)
-def get_company_open_source() -> pd.DataFrame:
-    """Get company is open source."""
-    df = pd.read_sql(QUERY_COMPANY_OPEN_SOURCE, DBCON.engine)
-    return df
-
-
-def get_keyword_details(keyword: str, limit: int = 30) -> pd.DataFrame:
+def get_keyword_details(state: State, keyword: str, limit: int = 30) -> pd.DataFrame:
     """Get keyword details."""
     df = pd.read_sql(
-        QUERY_KEYWORD_DETAILS,
-        DBCON.engine,
+        sql.keyword_details,
+        state.dbcon.engine,
         params={"keyword": keyword, "limit": limit},
     )
     return df
 
 
-def get_keyword_apps(keyword: str, rank: int = 30) -> pd.DataFrame:
+def get_keyword_apps(state: State, keyword: str, rank: int = 30) -> pd.DataFrame:
     """Get keyword apps."""
     df = pd.read_sql(
-        QUERY_KEYWORD_APPS,
-        DBCON.engine,
+        sql.keyword_apps,
+        state.dbcon.engine,
         params={"keyword": keyword, "rank": rank},
     )
     return df
 
 
-def get_single_app_keywords(store_id: str) -> pd.DataFrame:
+def get_single_app_keywords(state: State, store_id: str) -> pd.DataFrame:
     """Get single app keywords."""
     df = pd.read_sql(
-        QUERY_SINGLE_APP_KEYWORDS, DBCON.engine, params={"store_id": store_id}
+        sql.single_app_keywords, state.dbcon.engine, params={"store_id": store_id}
     )
     df = df.sort_values(by="d30_best_rank", ascending=True)
     return df
 
 
-def get_sdk_pattern_companies(value_pattern: str) -> pd.DataFrame:
+def get_sdk_pattern_companies(state: State, value_pattern: str) -> pd.DataFrame:
     """Get sdk pattern companies."""
     df = pd.read_sql(
-        QUERY_SDK_PATTERN_COMPANIES,
-        DBCON.engine,
+        sql.sdk_pattern_companies,
+        state.dbcon.engine,
         params={"value_pattern": value_pattern},
     )
     return df
 
 
-@lru_cache(maxsize=1)
-def get_company_api_call_countrys() -> pd.DataFrame:
-    """Get company api call countrys."""
-    df = pd.read_sql(
-        QUERY_COMPANY_API_CALL_COUNTRYS,
-        DBCON.engine,
-    )
-    return df
-
-
-def get_sitemap_companies() -> pd.DataFrame:
+def get_sitemap_companies(state: State) -> pd.DataFrame:
     """Get sitemap companies."""
-    df = pd.read_sql(QUERY_SITEMAP_COMPANIES, DBCONWRITE.engine)
+    df = pd.read_sql(sql.sitemap_companies, state.dbconwrite.engine)
     return df
 
 
-def get_sitemap_apps() -> pd.DataFrame:
+def get_sitemap_apps(state: State) -> pd.DataFrame:
     """Get sitemap apps."""
-    df = pd.read_sql(QUERY_SITEMAP_APPS, DBCONWRITE.engine)
+    df = pd.read_sql(sql.sitemap_apps, state.dbconwrite.engine)
     return df
 
 
-def insert_sdk_scan_request(store_id: str | list[str]) -> None:
+def insert_sdk_scan_request(state: State, store_id: str | list[str]) -> None:
     """Insert a new sdk scan request."""
     logger.info(f"Inserting new sdk scan request: {store_id}")
 
@@ -1212,19 +923,6 @@ def insert_sdk_scan_request(store_id: str | list[str]) -> None:
     else:
         store_ids = [{"store_id": s} for s in store_id]
 
-    with DBCONWRITE.engine.connect() as connection:
-        connection.execute(INSERT_SDK_SCAN_REQUEST, store_ids)
+    with state.dbconwrite.engine.connect() as connection:
+        connection.execute(sql.query_insert_sdk_scan_request, store_ids)
         connection.commit()
-
-
-logger.info("set db engine")
-
-DBCON = get_db_connection(server_name="madrone")
-
-DBCON.set_engine()
-try:
-    DBCONWRITE = get_db_connection(server_name="madrone-write")
-    DBCONWRITE.set_engine()
-except Exception:
-    logger.exception("Error setting up madrone-write engine")
-    DBCONWRITE = None

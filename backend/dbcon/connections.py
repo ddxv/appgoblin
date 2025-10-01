@@ -15,7 +15,7 @@ logger = get_logger(__name__)
 
 
 class PostgresCon:
-    """Class for managing the connection to PostgreSQL with extended database operations."""
+    """Class for managing the connection to PostgreSQL."""
 
     def __init__(self, db_name: str, db_ip: str, db_port: str) -> None:
         """Initialize the PostgreSQL connection.
@@ -35,7 +35,7 @@ class PostgresCon:
             self.db_pass = CONFIG[self.db_name]["db_password"]
             self.db_user = CONFIG[self.db_name]["db_user"]
         except KeyError as error:
-            logger.error(f"Loading db_auth for {self.db_name}, error: {error}")
+            logger.exception(f"Loading db_auth for {self.db_name}, error: {error}")
             raise
 
     def set_engine(self) -> None:
@@ -49,10 +49,12 @@ class PostgresCon:
             logger.info(f"Prep PostgreSQL: {self.db_name}")
             self.engine = sqlalchemy.create_engine(
                 db_uri,
+                pool_pre_ping=True,
+                pool_recycle=3600,
                 connect_args={"connect_timeout": 10, "application_name": "appgoblin"},
             )
         except Exception as error:
-            logger.error(
+            logger.exception(
                 f"Failed to connect {self.db_name} @ {self.db_ip}, error: {error}",
             )
             raise
@@ -67,7 +69,7 @@ class PostgresCon:
             conn.commit()
         except Exception as e:
             conn.rollback()
-            logger.error(f"Database operation error: {e!s}")
+            logger.exception(f"Database operation error: {e!s}")
             raise
         finally:
             cursor.close()
@@ -82,6 +84,7 @@ def manage_tunnel_thread(
     ssh_pkey: str,
     ssh_pkey_password: str,
 ) -> int:
+    """Manage SSH tunnel in a separate thread."""
     result = {}
 
     def runner() -> None:
@@ -114,10 +117,10 @@ def manage_tunnel_thread(
 
 
 def start_ssh_tunnel(server_name: str) -> int:
+    """Start an SSH tunnel to the remote database server."""
     ssh_port = CONFIG[server_name].get("ssh_port", 22)
     remote_port = CONFIG[server_name].get("remote_port", 5432)
     host = CONFIG[server_name]["host"]
-    # host = get_host_ip(CONFIG[server_name]["host"])
     os_user = CONFIG[server_name]["os_user"]
     ssh_pkey = CONFIG[server_name].get("ssh_pkey")
     ssh_pkey_password = CONFIG[server_name].get("ssh_pkey_password")
@@ -131,7 +134,7 @@ def get_db_connection(server_name: str = "madrone") -> PostgresCon:
     """Get a database connection, optionally using an SSH tunnel.
 
     Args:
-        use_ssh_tunnel (bool): Whether to use an SSH tunnel for the connection.
+        server_name (str): The name of the server configuration to use.
 
     Returns:
         PostgresCon: A PostgreSQL connection object.

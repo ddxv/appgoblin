@@ -11,14 +11,14 @@ import pandas as pd
 from adscrawler.app_stores import scrape_stores
 from litestar import Controller, Response, post
 from litestar.background_tasks import BackgroundTask
+from litestar.datastructures import State
 
 from config import CONFIG, get_logger
 from dbcon.queries import (
-    DBCONWRITE,
     get_apps_sdk_overview,
-    get_company_logos_df,
     insert_sdk_scan_request,
 )
+from dbcon.static import get_company_logos_df
 
 logger = get_logger(__name__)
 
@@ -61,7 +61,7 @@ def process_sdk_scan_request(store_ids: list[str], ip: str | None) -> None:
         logger.exception("Error inserting sdk scan request")
 
 
-def process_get_sdks(store_ids_dict: list[dict], ip: str | None) -> None:
+def process_get_sdks(state: State, store_ids_dict: list[dict], ip: str | None) -> None:
     """Process a sdk request."""
     url = "/api/public/sdks/apps"
     try:
@@ -70,15 +70,15 @@ def process_get_sdks(store_ids_dict: list[dict], ip: str | None) -> None:
     except Exception:
         logger.exception("Error logging umami event")
     try:
-        add_store_ids(store_ids_dict)
+        add_store_ids(state, store_ids_dict)
     except Exception:
         logger.exception("Error adding store ids")
 
 
-def add_store_ids(store_ids_dict: list[dict]) -> None:
+def add_store_ids(state: State, store_ids_dict: list[dict]) -> None:
     """After having queried an external app store send results to db."""
     logger.info("background:search results to be processed")
-    scrape_stores.process_scraped(DBCONWRITE, store_ids_dict, "appgoblin_android")
+    scrape_stores.process_scraped(state.dbconwrite, store_ids_dict, "appgoblin_android")
     logger.info("background:search results done")
 
 
@@ -88,7 +88,9 @@ class ScryController(Controller):
     path = "/api/public/"
 
     @post(path="sdks/apps")
-    async def lookup_apps(self: Self, headers: dict[str, str], data: dict) -> dict:
+    async def lookup_apps(
+        self: Self, state: State, headers: dict[str, str], data: dict
+    ) -> dict:
         """Lookup apps' SDKs by store_ids."""
         start = time.perf_counter() * 1000
         store_ids = data.get("store_ids", [])
@@ -189,7 +191,7 @@ class ScryController(Controller):
         logger.info(f"Scry: lookup_apps response took {duration}ms")
         return Response(
             my_dict,
-            background=BackgroundTask(process_get_sdks, store_ids_dict, ip),
+            background=BackgroundTask(process_get_sdks, state, store_ids_dict, ip),
         )
 
     @post(path="sdks/apps/requestSDKScan")

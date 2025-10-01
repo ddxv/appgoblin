@@ -9,21 +9,22 @@ from typing import Self
 import numpy as np
 from litestar import Controller, get
 from litestar.config.response_cache import CACHE_FOREVER
+from litestar.datastructures import State
 
 from api_app.models import AppGroup, CategoriesOverview, Category
 from config import get_logger
 from dbcon.queries import (
-    get_appstore_categories,
     get_category_top_apps_by_installs,
     get_country_map,
 )
+from dbcon.static import get_appstore_categories
 
 logger = get_logger(__name__)
 
 
-def category_overview() -> CategoriesOverview:
+def category_overview(state: State) -> CategoriesOverview:
     """Categories for apps."""
-    cats = get_appstore_categories()
+    cats = get_appstore_categories(state=state)
     cats = cats[cats["total_apps"] > 100]  # noqa: PLR2004 magic number ok
 
     cats["name"] = cats["category"]
@@ -62,14 +63,14 @@ class CategoryController(Controller):
     path = "/api/categories"
 
     @get(path="/countries", cache=CACHE_FOREVER)
-    async def get_countries(self: Self) -> dict:
+    async def get_countries(self: Self, state: State) -> dict:
         """Handle GET request for all countries."""
-        df = get_country_map()
+        df = get_country_map(state)
         country_dict = df.set_index("alpha2")["langen"].to_dict()
         return country_dict
 
     @get(path="/", cache=CACHE_FOREVER)
-    async def get_categories_overview(self: Self) -> CategoriesOverview:
+    async def get_categories_overview(self: Self, state: State) -> CategoriesOverview:
         """Handle GET request for a list of categories.
 
         Returns
@@ -79,13 +80,13 @@ class CategoryController(Controller):
 
         """
         start = time.perf_counter() * 1000
-        overview = category_overview()
+        overview = category_overview(state=state)
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(f"{self.path} took {duration}ms")
         return overview
 
     @get(path="/{category_id:str}", cache=86400)
-    async def get_category(self: Self, category_id: str) -> Category:
+    async def get_category(self: Self, state: State, category_id: str) -> Category:
         """Handle GET request for a single category.
 
         Returns
@@ -95,7 +96,7 @@ class CategoryController(Controller):
 
         """
         start = time.perf_counter() * 1000
-        df = get_category_top_apps_by_installs(category_id, limit=20)
+        df = get_category_top_apps_by_installs(state, category_id, limit=20)
         google = AppGroup(
             apps=(df[df["store"].str.contains("oogle")].to_dict(orient="records")),
             title="Google",

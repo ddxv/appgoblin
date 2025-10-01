@@ -8,6 +8,7 @@ from typing import Self
 
 import pandas as pd
 from litestar import Controller, get
+from litestar.datastructures import State
 
 from api_app.models import (
     SdkCompanies,
@@ -21,9 +22,9 @@ from dbcon.queries import (
     get_latest_sdks,
     get_sdk_pattern,
     get_sdk_pattern_companies,
-    get_sdks,
     get_user_requested_latest_sdks,
 )
+from dbcon.static import get_sdks
 
 logger = get_logger(__name__)
 
@@ -34,7 +35,7 @@ class SdksController(Controller):
     path = "/api/sdks"
 
     @get(path="/latest", cache=12000)
-    async def sdks_latest_results(self: Self) -> SdksLatestResults:
+    async def sdks_latest_results(self: Self, state: State) -> SdksLatestResults:
         """Handle GET request for all sdks.
 
         Returns
@@ -45,7 +46,7 @@ class SdksController(Controller):
         """
         start = time.perf_counter() * 1000
 
-        latest_apps = get_latest_sdks()
+        latest_apps = get_latest_sdks(state)
 
         is_success = latest_apps["crawl_result"] == 1
 
@@ -76,7 +77,7 @@ class SdksController(Controller):
         )
 
     @get(path="/user_requested", cache=3600)
-    async def sdks_user_requested(self: Self) -> SdksUserRequested:
+    async def sdks_user_requested(self: Self, state: State) -> SdksUserRequested:
         """Handle GET request for all sdks.
 
         Returns
@@ -87,7 +88,7 @@ class SdksController(Controller):
         """
         start = time.perf_counter() * 1000
 
-        df = get_user_requested_latest_sdks()
+        df = get_user_requested_latest_sdks(state)
 
         df = df.replace({pd.NaT: None})
 
@@ -101,7 +102,7 @@ class SdksController(Controller):
         )
 
     @get(path="/sdkparts", cache=3600)
-    async def sdks_sdkparts(self: Self) -> SdkParts:
+    async def sdks_sdkparts(self: Self, state: State) -> SdkParts:
         """Handle GET request for all sdks.
 
         Returns
@@ -112,7 +113,7 @@ class SdksController(Controller):
         """
         start = time.perf_counter() * 1000
 
-        most_sdk_parts = get_sdks()
+        most_sdk_parts = get_sdks(state=state)
 
         is_google = most_sdk_parts["store"].str.startswith("Google")
 
@@ -130,7 +131,7 @@ class SdksController(Controller):
         )
 
     @get(path="/{value_pattern:str}", cache=3600)
-    async def sdks_pattern(self: Self, value_pattern: str) -> SdkOverview:
+    async def sdks_pattern(self: Self, state: State, value_pattern: str) -> SdkOverview:
         """Handle GET request for all sdks.
 
         Returns
@@ -141,7 +142,7 @@ class SdksController(Controller):
         """
         start = time.perf_counter() * 1000
 
-        overview = get_sdk_pattern(value_pattern)
+        overview = get_sdk_pattern(state, value_pattern)
 
         is_google = overview["store"].str.startswith("Google")
         android_overview = overview[is_google]
@@ -159,7 +160,9 @@ class SdksController(Controller):
         return overview_resp
 
     @get(path="/{value_pattern:str}/companies", cache=3600)
-    async def sdks_companies(self: Self, value_pattern: str) -> SdkCompanies:
+    async def sdks_companies(
+        self: Self, state: State, value_pattern: str
+    ) -> SdkCompanies:
         """Handle GET request for all sdks.
 
         Returns
@@ -170,7 +173,7 @@ class SdksController(Controller):
         """
         start = time.perf_counter() * 1000
 
-        overview = get_sdk_pattern_companies(value_pattern)
+        overview = get_sdk_pattern_companies(state, value_pattern)
 
         overview_dict = overview.to_dict(orient="records")
 

@@ -9,13 +9,16 @@ from typing import Self
 import numpy as np
 import pandas as pd
 from litestar import Controller, get
+from litestar.datastructures import State
 
 from config import get_logger
 from dbcon.queries import (
-    get_advertiser_creative_rankings,
-    get_advertiser_creative_rankings_top,
     get_advertiser_creatives,
     get_company_creatives,
+)
+from dbcon.static import (
+    get_advertiser_creative_rankings,
+    get_advertiser_creative_rankings_top,
     get_company_logos_df,
 )
 
@@ -38,10 +41,12 @@ def expand_icon_url_100_to_full(
 
 
 def append_ad_networks_dict_to_df(
-    df: pd.DataFrame, company_domain_column_name: str = "ad_network_domains"
+    df: pd.DataFrame,
+    state: State,
+    company_domain_column_name: str = "ad_network_domains",
 ) -> pd.DataFrame:
     """Append a dictionary of company names, domains and logos to a dataframe."""
-    company_logos_df = get_company_logos_df()
+    company_logos_df = get_company_logos_df(state)
 
     def get_logo_url(domain: str) -> str:
         try:
@@ -67,7 +72,7 @@ class CreativesController(Controller):
     path = "/api/creatives"
 
     @get(path="/", cache=86400)
-    async def advertiser_creative_rankings(self: Self) -> dict:
+    async def advertiser_creative_rankings(self: Self, state: State) -> dict:
         """Handle GET request for a list of apps.
 
         Returns
@@ -76,8 +81,7 @@ class CreativesController(Controller):
 
         """
         start = time.perf_counter() * 1000
-        df = get_advertiser_creative_rankings()
-
+        df = get_advertiser_creative_rankings(state)
         df = df.rename(
             columns={
                 "advertiser_icon_url_512": "icon_url_512",
@@ -85,10 +89,9 @@ class CreativesController(Controller):
                 "advertiser_store_id": "store_id",
             }
         )
-
         df = expand_icon_url_100_to_full(df, column_name="advertiser_icon_url_100")
         df = df.rename(columns={"advertiser_icon_url_100": "icon_url_100"})
-        df = append_ad_networks_dict_to_df(df)
+        df = append_ad_networks_dict_to_df(df=df, state=state)
         df["last_seen"] = df["last_seen"].dt.strftime("%Y-%m-%d")
         df = df.head(100)
         duration = round((time.perf_counter() * 1000 - start), 2)
@@ -96,7 +99,7 @@ class CreativesController(Controller):
         return df.to_dict(orient="records")
 
     @get(path="/top", cache=86400)
-    async def top_advertiser_creative_rankings(self: Self) -> dict:
+    async def top_advertiser_creative_rankings(self: Self, state: State) -> dict:
         """Handle GET request for a list of top advertiser creative rankings.
 
         Returns
@@ -105,7 +108,7 @@ class CreativesController(Controller):
 
         """
         start = time.perf_counter() * 1000
-        df = get_advertiser_creative_rankings_top()
+        df = get_advertiser_creative_rankings_top(state)
         df = df.rename(
             columns={
                 "advertiser_icon_url_512": "icon_url_512",
@@ -114,7 +117,7 @@ class CreativesController(Controller):
             }
         )
 
-        df = append_ad_networks_dict_to_df(df)
+        df = append_ad_networks_dict_to_df(state=state, df=df)
         df = expand_icon_url_100_to_full(df, column_name="advertiser_icon_url_100")
         df = df.rename(columns={"advertiser_icon_url_100": "icon_url_100"})
         df["last_seen"] = df["last_seen"].dt.strftime("%Y-%m-%d")
@@ -126,7 +129,7 @@ class CreativesController(Controller):
         return df.to_dict(orient="records")
 
     @get(path="/companies/{company_domain: str}", cache=86400)
-    async def company_creatives(self: Self, company_domain: str) -> dict:
+    async def company_creatives(self: Self, state: State, company_domain: str) -> dict:
         """Handle GET request for a list of top advertiser creative rankings.
 
         Returns
@@ -135,7 +138,7 @@ class CreativesController(Controller):
 
         """
         start = time.perf_counter() * 1000
-        df = get_company_creatives(company_domain)
+        df = get_company_creatives(state=state, company_domain=company_domain)
         df = df.rename(columns={"advertiser_store_id": "store_id"})
         df = expand_icon_url_100_to_full(df, column_name="icon_url_100")
         df["featured_image_url"] = (
@@ -148,7 +151,7 @@ class CreativesController(Controller):
         return df.to_dict(orient="records")
 
     @get(path="/apps/{store_id: str}/monetized", cache=86400)
-    async def monetized_creatives(self: Self, store_id: str) -> dict:
+    async def monetized_creatives(self: Self, state: State, store_id: str) -> dict:
         """Handle GET request for a list of creatives used for monetization by an app.
 
         Returns
@@ -156,7 +159,7 @@ class CreativesController(Controller):
             A dictionary representation of the total counts
 
         """
-        df = get_advertiser_creatives(pub_store_id=store_id)
+        df = get_advertiser_creatives(state=state, pub_store_id=store_id)
         if not df.empty:
             df["run_at"] = df["run_at"].dt.strftime("%Y-%m-%d")
         pdf = (
@@ -209,7 +212,7 @@ class CreativesController(Controller):
         }
 
     @get(path="/apps/{store_id: str}/ads", cache=86400)
-    async def advertiser_creatives(self: Self, store_id: str) -> dict:
+    async def advertiser_creatives(self: Self, state: State, store_id: str) -> dict:
         """Handle GET request for a list of creatives for an app.
 
         Returns
@@ -217,7 +220,7 @@ class CreativesController(Controller):
             A dictionary representation of the total counts
 
         """
-        df = get_advertiser_creatives(advertiser_store_id=store_id)
+        df = get_advertiser_creatives(state=state, advertiser_store_id=store_id)
         if not df.empty:
             df["run_at"] = df["run_at"].dt.strftime("%Y-%m-%d")
 
@@ -235,7 +238,7 @@ class CreativesController(Controller):
             },
             axis=1,
         )
-        company_logos_df = get_company_logos_df()
+        company_logos_df = get_company_logos_df(state)
 
         df = df.merge(
             company_logos_df,

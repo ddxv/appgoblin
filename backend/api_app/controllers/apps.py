@@ -14,6 +14,7 @@ import pandas as pd
 from adscrawler.app_stores import apple, google, scrape_stores
 from litestar import Controller, Response, get, post
 from litestar.background_tasks import BackgroundTask
+from litestar.datastructures import State
 from litestar.exceptions import NotFoundException
 
 from api_app.models import (
@@ -28,13 +29,11 @@ from api_app.models import (
 )
 from config import get_logger
 from dbcon.queries import (
-    DBCONWRITE,
     get_app_adstxt_overview,
     get_app_api_details,
     get_app_history,
     get_app_sdk_details,
     get_app_sdk_overview,
-    get_company_logos_df,
     get_growth_apps,
     get_ranks_for_app,
     get_ranks_for_app_overview,
@@ -42,15 +41,15 @@ from dbcon.queries import (
     get_single_app,
     get_single_app_keywords,
     get_single_apps_adstxt,
-    get_total_counts,
     insert_sdk_scan_request,
     search_apps,
 )
+from dbcon.static import get_company_logos_df, get_total_counts
 
 logger = get_logger(__name__)
 
 
-def search_both_stores(search_term: str) -> None:
+def search_both_stores(state: State, search_term: str) -> None:
     """Search both stores and return resulting AppGroup."""
     google_full_results = google.search_play_store(search_term)
     if len(google_full_results) > 0:
@@ -60,26 +59,26 @@ def search_both_stores(search_term: str) -> None:
         apple_full_results = [
             {"store_id": store_id, "store": 2} for store_id in apple_ids
         ]
-        process_search_results(apple_full_results)
+        process_search_results(state.dbconwrite, apple_full_results)
 
 
-def get_search_results(search_term: str) -> AppGroup:
+def get_search_results(state: State, search_term: str) -> AppGroup:
     """Parse search term and return resulting AppGroup."""
     decoded_input = urllib.parse.unquote(search_term)
     decoded_input = decoded_input.strip()
     if decoded_input[-1] == "+":
         decoded_input = decoded_input[:-1]
-    df = search_apps(search_input=decoded_input, limit=60)
+    df = search_apps(state, search_input=decoded_input, limit=60)
     logger.info(f"{decoded_input=} returned rows: {df.shape[0]}")
     apps_dict = df.to_dict(orient="records")
     app_group = AppGroup(title=search_term, apps=apps_dict)
     return app_group
 
 
-def process_search_results(results: list[dict]) -> None:
+def process_search_results(dbconwrite, results: list[dict]) -> None:
     """After having queried an external app store send results to db."""
     logger.info("background:search results to be processed")
-    scrape_stores.process_scraped(DBCONWRITE, results, "appgoblin_search")
+    scrape_stores.process_scraped(dbconwrite, results, "appgoblin_search")
     logger.info("background:search results done")
 
 
@@ -97,9 +96,9 @@ def attach_rating_history(app_hist: pd.DataFrame, star_cols: list[str]) -> pd.Da
     return app_hist
 
 
-def app_history(store_app: int, app_name: str, country: str) -> AppHistory:
+def app_history(state, store_app: int, app_name: str, country: str) -> AppHistory:
     """Get the history of app scraping."""
-    app_hist = get_app_history(store_app, country)
+    app_hist = get_app_history(state, store_app, country)
     if app_hist.empty:
         return AppHistory(
             histogram=[],
@@ -220,12 +219,12 @@ def get_string_date_from_days_ago(days: int) -> str:
     return mydate_str
 
 
-def get_new_apps_dict(period: str, store: int, category: str) -> AppGroup:
+def get_new_apps_dict(state: State, period: str, store: int, category: str) -> AppGroup:
     """Get collection overview."""
     category_limit = 20
 
     df = get_recent_apps(
-        collection=period, store=store, category=category, limit=category_limit
+        state, collection=period, store=store, category=category, limit=category_limit
     )
     df["icon_url_100"] = np.where(
         df["icon_url_100"].notna(),
@@ -251,7 +250,7 @@ class AppController(Controller):
     path = "/api/apps"
 
     @get(path="/overview", cache=86400)
-    async def get_overview(self: Self) -> dict:
+    async def get_overview(self: Self, state: State) -> dict:
         """Handle GET request for a list of apps.
 
         Returns
@@ -260,7 +259,7 @@ class AppController(Controller):
 
         """
         start = time.perf_counter() * 1000
-        overview_df = get_total_counts()
+        overview_df = get_total_counts(state)
         overview_dict = overview_df.to_dict(orient="records")[0]
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(f"{self.path}/overview took {duration}ms")
@@ -268,7 +267,7 @@ class AppController(Controller):
 
     @get(path="/new-apps/{period:str}/{store:int}/{category:str}", cache=86400)
     async def get_new_apps(
-        self: Self, period: str, store: int, category: str
+        self: Self, state: State, period: str, store: int, category: str
     ) -> AppGroup:
         """Handle GET request for a list of apps.
 
@@ -284,7 +283,9 @@ class AppController(Controller):
 
         """
         start = time.perf_counter() * 1000
-        home_dict = get_new_apps_dict(period=period, store=store, category=category)
+        home_dict = get_new_apps_dict(
+            state=state, period=period, store=store, category=category
+        )
 
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(f"{self.path}/collections/{period} took {duration}ms")
@@ -292,7 +293,7 @@ class AppController(Controller):
 
     @get(path="/growth/{store:int}", cache=86400)
     async def get_growth_apps(
-        self: Self, store: int, app_category: str | None = None
+        self: Self, state: State, store: int, app_category: str | None = None
     ) -> list[dict]:
         """Handle GET request for a list of fastest growing apps.
 
@@ -309,14 +310,13 @@ class AppController(Controller):
         start = time.perf_counter() * 1000
         if app_category == "overall":
             app_category = None
-        df = get_growth_apps(store=store, app_category=app_category)
-
+        df = get_growth_apps(state, store=store, app_category=app_category)
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(f"{self.path}/growth took {duration}ms")
         return {"apps": df.to_dict(orient="records")}
 
     @get(path="/{store_id:str}", cache=3600)
-    async def get_app_detail(self: Self, store_id: str) -> AppDetail:
+    async def get_app_detail(self: Self, state: State, store_id: str) -> AppDetail:
         """Handle GET request for a specific app.
 
          store_id (str): The id of the app to retrieve.
@@ -327,7 +327,7 @@ class AppController(Controller):
 
         """
         start = time.perf_counter() * 1000
-        app_df = get_single_app(store_id)
+        app_df = get_single_app(state, store_id)
         if app_df.empty:
             msg = f"Store ID not found: {store_id!r}"
             raise NotFoundException(
@@ -342,6 +342,7 @@ class AppController(Controller):
     @get(path="/{store_id:str}/history", cache=3600)
     async def get_app_history_details(
         self: Self,
+        state: State,
         store_id: str,
     ) -> AppHistory:
         """Handle GET request for a specific app.
@@ -354,7 +355,7 @@ class AppController(Controller):
 
         """
         start = time.perf_counter() * 1000
-        app_df = get_single_app(store_id)
+        app_df = get_single_app(state, store_id)
 
         if app_df.empty:
             logger.info(f"App history not found: {store_id}")
@@ -367,13 +368,17 @@ class AppController(Controller):
         store_app = app_dict["id"]
         app_name = app_dict["name"]
 
-        hist_dict = app_history(store_app=store_app, app_name=app_name, country="US")
+        hist_dict = app_history(
+            state=state, store_app=store_app, app_name=app_name, country="US"
+        )
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(f"{self.path}/{store_id}/history took {duration}ms")
         return hist_dict
 
     @get(path="/{store_id:str}/sdksoverview", cache=3600)
-    async def get_sdk_overview(self: Self, store_id: str) -> AppSDKsOverview:
+    async def get_sdk_overview(
+        self: Self, state: State, store_id: str
+    ) -> AppSDKsOverview:
         """Handle GET request for overview of SDKs for a specific app.
 
          store_id (str): The id of the app to retrieve.
@@ -385,10 +390,10 @@ class AppController(Controller):
         """
         start = time.perf_counter() * 1000
 
-        df = get_app_sdk_overview(store_id)
+        df = get_app_sdk_overview(state, store_id)
 
         df = df.merge(
-            get_company_logos_df(),
+            get_company_logos_df(state),
             left_on="company_domain",
             right_on="company_domain",
             how="left",
@@ -410,7 +415,7 @@ class AppController(Controller):
         return sdk_overview_dict
 
     @get(path="/{store_id:str}/sdks", cache=3600)
-    async def get_sdk_details(self: Self, store_id: str) -> SDKsDetails:
+    async def get_sdk_details(self: Self, state: State, store_id: str) -> SDKsDetails:
         """Handle GET request for all SDKs for a specific app.
 
          store_id (str): The id of the app to retrieve.
@@ -422,7 +427,7 @@ class AppController(Controller):
         """
         start = time.perf_counter() * 1000
 
-        df = get_app_sdk_details(store_id)
+        df = get_app_sdk_details(state, store_id)
 
         if df.empty or df.isna().all().all():
             logger.info(f"SDK info not found: {store_id}")
@@ -526,7 +531,9 @@ class AppController(Controller):
         return trackers_dict
 
     @get(path="/{store_id:str}/ranks/overview", cache=3600)
-    async def app_ranks_overview(self: Self, store_id: str) -> AppRankOverview:
+    async def app_ranks_overview(
+        self: Self, state: State, store_id: str
+    ) -> AppRankOverview:
         """Handle GET requests for a specific app ranks.
 
         Args:
@@ -539,7 +546,7 @@ class AppController(Controller):
 
         """
         start = time.perf_counter() * 1000
-        df_overview = get_ranks_for_app_overview(store_id=store_id, days=90)
+        df_overview = get_ranks_for_app_overview(state, store_id=store_id, days=90)
         if df_overview.empty:
             logger.info(f"No ranks found for {store_id!r}")
             return AppRankOverview(countries=[], best_ranks=[])
@@ -552,7 +559,9 @@ class AppController(Controller):
         )
 
     @get(path="/{store_id:str}/ranks", cache=3600)
-    async def app_ranks(self: Self, store_id: str, country: str = "US") -> AppRank:
+    async def app_ranks(
+        self: Self, state: State, store_id: str, country: str = "US"
+    ) -> AppRank:
         """Handle GET requests for a specific app ranks.
 
         Args:
@@ -566,7 +575,7 @@ class AppController(Controller):
 
         """
         start = time.perf_counter() * 1000
-        df = get_ranks_for_app(store_id=store_id, country=country, days=90)
+        df = get_ranks_for_app(state, store_id=store_id, country=country, days=90)
         if df.empty:
             logger.info(f"No ranks found for {store_id!r}")
             return AppRank(history={})
@@ -591,7 +600,9 @@ class AppController(Controller):
         return rank_dict
 
     @get(path="/{store_id:str}/adstxt/overview", cache=3600)
-    async def get_app_adstxt_overview(self: Self, store_id: str) -> AdsTxtEntries:
+    async def get_app_adstxt_overview(
+        self: Self, state: State, store_id: str
+    ) -> AdsTxtEntries:
         """Handle GET request for a store_id's related ads txt entries.
 
         Note these IDs are only connected to the app's developer's URL
@@ -607,7 +618,7 @@ class AppController(Controller):
 
         """
         start = time.perf_counter() * 1000
-        adstxt_df = get_app_adstxt_overview(store_id)
+        adstxt_df = get_app_adstxt_overview(state, store_id)
 
         direct_adstxt_dict = adstxt_df[
             adstxt_df["relationship"].str.upper() == "DIRECT"
@@ -625,7 +636,9 @@ class AppController(Controller):
         return txts
 
     @get(path="/{store_id:str}/adstxt", cache=3600)
-    async def get_developer_adstxt(self: Self, store_id: str) -> AdsTxtEntries:
+    async def get_developer_adstxt(
+        self: Self, state: State, store_id: str
+    ) -> AdsTxtEntries:
         """Handle GET request for a store_id's related ads txt entries.
 
         Note these IDs are only connected to the app's developer's URL
@@ -641,7 +654,7 @@ class AppController(Controller):
 
         """
         start = time.perf_counter() * 1000
-        adstxt_df = get_single_apps_adstxt(store_id)
+        adstxt_df = get_single_apps_adstxt(state, store_id)
 
         if adstxt_df.empty:
             logger.info(f"No ads-txt entries found for {store_id!r}")
@@ -662,7 +675,7 @@ class AppController(Controller):
         return txts
 
     @get(path="/search/{search_term:str}", cache=3600)
-    async def search(self: Self, search_term: str) -> AppGroup:
+    async def search(self: Self, state: State, search_term: str) -> AppGroup:
         """Search apps and developers.
 
         Args:
@@ -672,7 +685,7 @@ class AppController(Controller):
 
         """
         start = time.perf_counter() * 1000
-        apps_dict = get_search_results(search_term)
+        apps_dict = get_search_results(state=state, search_term=search_term)
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(f"{self.path} took {duration}ms")
         return Response(
@@ -681,14 +694,14 @@ class AppController(Controller):
         )
 
     @post(path="/{store_id:str}/requestSDKScan")
-    async def request_sdk_scan(self: Self, store_id: str) -> dict:
+    async def request_sdk_scan(self: Self, state: State, store_id: str) -> dict:
         """Request a new SDK scan for an app."""
         logger.info(f"Requesting SDK scan for {store_id}")
-        insert_sdk_scan_request(store_id)
+        insert_sdk_scan_request(state, store_id)
         return {"status": "success"}
 
     @get(path="/{store_id:str}/keywords", cache=86400)
-    async def get_app_keywords(self: Self, store_id: str) -> dict:
+    async def get_app_keywords(self: Self, state: State, store_id: str) -> dict:
         """Handle GET request for a list of apps.
 
         Returns
@@ -697,7 +710,7 @@ class AppController(Controller):
 
         """
         start = time.perf_counter() * 1000
-        keywords_df = get_single_app_keywords(store_id)
+        keywords_df = get_single_app_keywords(state, store_id)
         keyword_scores = keywords_df.to_dict(orient="records")
         keywords_list = keywords_df["keyword_text"].tolist()
         keywords_dict = {"keywords": keywords_list, "keyword_scores": keyword_scores}
@@ -706,7 +719,7 @@ class AppController(Controller):
         return keywords_dict
 
     @get(path="/{store_id:str}/apis", cache=86400)
-    async def get_app_apis(self: Self, store_id: str) -> dict:
+    async def get_app_apis(self: Self, state: State, store_id: str) -> dict:
         """Handle GET request for a list of apps.
 
         Returns
@@ -715,7 +728,7 @@ class AppController(Controller):
 
         """
         start = time.perf_counter() * 1000
-        apis_df = get_app_api_details(store_id)
+        apis_df = get_app_api_details(state, store_id)
         apis_list = apis_df.to_dict(orient="records")
         apis_dict = {"apis": apis_list}
         duration = round((time.perf_counter() * 1000 - start), 2)

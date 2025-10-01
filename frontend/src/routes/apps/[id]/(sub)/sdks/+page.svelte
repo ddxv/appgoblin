@@ -12,7 +12,7 @@
 
 <div class="card preset-tonal p-2 md:p-16 mt-2 md:mt-4">
 	<div class="grid grid-cols-1 md:grid-cols-2 justify-between items-center mb-4">
-		<h1 class="h1 md:h3 p-2">Ad SDKs, Trackers & Permissions</h1>
+		<h1 class="h1 md:h3 p-2">Ad SDKs, Trackers & Permissions for {data.myapp.name || ''}</h1>
 		<RequestSDKScanButton />
 	</div>
 
