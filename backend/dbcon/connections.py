@@ -17,7 +17,7 @@ logger = get_logger(__name__)
 class PostgresCon:
     """Class for managing the connection to PostgreSQL."""
 
-    def __init__(self, db_name: str, db_ip: str, db_port: str) -> None:
+    def __init__(self, config_name: str, db_ip: str, db_port: str) -> None:
         """Initialize the PostgreSQL connection.
 
         Args:
@@ -26,16 +26,16 @@ class PostgresCon:
             db_port (str): Port number of the database server.
 
         """
-        self.db_name = db_name
         self.db_ip = db_ip
         self.db_port = db_port
         self.engine: sqlalchemy.engine.Engine
 
         try:
-            self.db_pass = CONFIG[self.db_name]["db_password"]
-            self.db_user = CONFIG[self.db_name]["db_user"]
+            self.db_name = CONFIG[config_name]["db_name"]
+            self.db_pass = CONFIG[config_name]["db_password"]
+            self.db_user = CONFIG[config_name]["db_user"]
         except KeyError as error:
-            logger.exception(f"Loading db_auth for {self.db_name}, error: {error}")
+            logger.exception(f"Loading db_auth for {self.config_name}, error: {error}")
             raise
 
     def set_engine(self) -> None:
@@ -46,7 +46,6 @@ class PostgresCon:
             else:
                 db_login = f"postgresql+psycopg://{self.db_user}"
             db_uri = f"{db_login}@{self.db_ip}:{self.db_port}/{self.db_name}"
-            logger.info(f"Prep PostgreSQL: {self.db_name}")
             self.engine = sqlalchemy.create_engine(
                 db_uri,
                 pool_pre_ping=True,

@@ -841,14 +841,14 @@ def search_apps(state: State, search_input: str, limit: int = 100) -> pd.DataFra
 
 def get_latest_sdks(state: State) -> pd.DataFrame:
     """Get latest sdks."""
-    df = pd.read_sql(sql.latest_sdks, state.dbcon.engine)
+    df = pd.read_sql(sql.sdks_latest, state.dbcon.engine)
     df["store"] = df["store"].replace({1: "Google Play", 2: "Apple App Store"})
     return df
 
 
 def get_user_requested_latest_sdks(state: State) -> pd.DataFrame:
     """Get user requested latest sdks."""
-    df = pd.read_sql(sql.user_requested_latest_sdks, state.dbcon.engine)
+    df = pd.read_sql(sql.sdks_user_requested_latest, state.dbcon.engine)
     return df
 
 
@@ -904,25 +904,48 @@ def get_sdk_pattern_companies(state: State, value_pattern: str) -> pd.DataFrame:
 
 def get_sitemap_companies(state: State) -> pd.DataFrame:
     """Get sitemap companies."""
-    df = pd.read_sql(sql.sitemap_companies, state.dbconwrite.engine)
+    if state.dbconwrite is None:
+        logger.warning(
+            "Write connection not available, using read connection for sitemap"
+        )
+        df = pd.read_sql(sql.sitemap_companies, state.dbcon.engine)
+    else:
+        df = pd.read_sql(sql.sitemap_companies, state.dbconwrite.engine)
     return df
 
 
 def get_sitemap_apps(state: State) -> pd.DataFrame:
     """Get sitemap apps."""
-    df = pd.read_sql(sql.sitemap_apps, state.dbconwrite.engine)
+    if state.dbconwrite is None:
+        logger.warning(
+            "Write connection not available, using read connection for sitemap"
+        )
+        df = pd.read_sql(sql.sitemap_apps, state.dbcon.engine)
+    else:
+        df = pd.read_sql(sql.sitemap_apps, state.dbconwrite.engine)
     return df
 
 
 def insert_sdk_scan_request(state: State, store_id: str | list[str]) -> None:
-    """Insert a new sdk scan request."""
+    """Insert a new sdk scan request.
+
+    Args:
+        state (State): Database connection state.
+        store_id (str | list[str]): A single store_id as a string, or a list of store_id strings.
+
+    The function inserts one or more records into the sdk scan request table, each with a 'store_id' key.
+
+    """
     logger.info(f"Inserting new sdk scan request: {store_id}")
+
+    if state.dbconwrite is None:
+        logger.error("Write connection not available, cannot insert SDK scan request")
+        return
 
     if isinstance(store_id, str):
         store_ids = [{"store_id": store_id}]
     else:
         store_ids = [{"store_id": s} for s in store_id]
 
-    with state.dbconwrite.engine.connect() as connection:
-        connection.execute(sql.query_insert_sdk_scan_request, store_ids)
-        connection.commit()
+    with state.dbconwrite.engine.connect() as connection, connection.begin():
+        connection.execute(sql.insert_sdk_scan_request, store_ids)
