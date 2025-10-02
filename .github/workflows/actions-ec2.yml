@@ -28,12 +28,15 @@ jobs:
             cd $TARGETDIR
             pwd
             git pull origin main
+            echo "Enable systemd services, creates symlinks for /etc/systemd/system"
             sudo systemctl enable /home/goblin/appgoblin/scripts/appgoblin-api.service
             sudo systemctl enable /home/goblin/appgoblin/scripts/appgoblin-frontend.service
             sudo systemctl daemon-reload
             echo "Restart systemd backend"
             sudo systemctl restart appgoblin-api
             cd frontend
-            pwd
-            echo "Build and restart frontend"
-            /home/goblin/.nvm/versions/node/v22.18.0/bin/npm run build && sudo systemctl restart appgoblin-frontend
+            echo "Build frontend"
+            npm ci
+            npm run build
+            echo "restart systemd frontend"
+            sudo systemctl restart appgoblin-frontend

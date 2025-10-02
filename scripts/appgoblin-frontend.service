@@ -1,5 +1,5 @@
 [Unit]
-Description=Using node to serve frontend for App Store Dash
+Description=Using node to serve frontend for AppGoblin
 StartLimitBurst=10
 StartLimitIntervalSec=60
 After=network.target
@@ -7,15 +7,17 @@ After=network.target
 [Service]
 Type=simple
 User=goblin
-Group=goblin
+Group=www-data
+UMask=0007
 
-SupplementaryGroups=www-data
 RuntimeDirectory=appgoblin
-Environment=NODE_ENV=production SOCKET_PATH=/run/appgoblin/frontend.sock
 
-ExecStart=/bin/bash -c "source /home/goblin/.nvm/nvm.sh && exec /home/goblin/.nvm/versions/node/v22.18.0/bin/node /home/goblin/appgoblin/frontend/build"
+Environment=NODE_ENV=production
+Environment=SOCKET_PATH=/run/appgoblin/frontend.sock
 
-ExecStartPost=/bin/bash -c 'for i in {1..60}; do if [ -S /run/appgoblin/frontend.sock ]; then sudo chown www-data:www-data /run/appgoblin/frontend.sock; exit 0; fi; sleep 0.5; done; echo "Warning: socket not found, skipping chown"; exit 0'
+WorkingDirectory=/home/goblin/appgoblin/frontend
+# /usr/bin/node is a sym link for nvm latest
+ExecStart=/usr/bin/node build
 
 Restart=on-failure
 RestartSec=10   
