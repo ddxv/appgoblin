@@ -26,17 +26,8 @@ jobs:
           envs: TARGETDIR
           script: |
             cd $TARGETDIR
-            pwd
+            echo "Pulling latest code..."
             git pull origin main
-            echo "Enable systemd services, creates symlinks for /etc/systemd/system"
-            sudo systemctl enable /home/goblin/appgoblin/scripts/appgoblin-api.service
-            sudo systemctl enable /home/goblin/appgoblin/scripts/appgoblin-frontend.service
-            sudo systemctl daemon-reload
-            echo "Restart systemd backend"
-            sudo systemctl restart appgoblin-api
-            cd frontend
-            echo "Build frontend"
-            npm ci
-            npm run build
-            echo "restart systemd frontend"
-            sudo systemctl restart appgoblin-frontend
+            chmod +x /home/goblin/appgoblin/scripts/deploy.sh
+            ./scripts/deploy.sh
+          
