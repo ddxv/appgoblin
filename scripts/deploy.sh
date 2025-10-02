@@ -6,6 +6,9 @@ APPDIR="/home/goblin/appgoblin"
 cd "$APPDIR"
 echo "Deploying from: $(pwd)"
 
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
 echo "Enabling systemd services..."
 sudo systemctl enable "$APPDIR/scripts/appgoblin-api.service"
 sudo systemctl enable "$APPDIR/scripts/appgoblin-frontend.service"
