@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
+	import { enhance } from '$app/forms';
 	import type { AppFullDetails } from '../../../../types';
 	import RankChart from '$lib/RankChart.svelte';
 	import { countryCodeToEmoji } from '$lib/utils/countryCodeToEmoji';
@@ -10,27 +10,52 @@
 	import { page } from '$app/state';
 	let { data }: Props = $props();
 
-	let country = $state(page.url.searchParams.get('country'));
+	let country = $state(page.url.searchParams.get('country') || 'US');
 	let countryTitle = $derived(data.countries[country as keyof typeof data.countries]);
+	let isLoadingRanks = $state(false);
+	let currentRanks = $state(data.myranks);
+	let formElement = $state<HTMLFormElement | undefined>(undefined);
+
 	$effect(() => setDefaultCountry(data.myranksOverview));
-	function updateCountry(newCountry: string) {
-		country = newCountry;
-		const url = new URL(window.location.href);
-		url.searchParams.set('country', newCountry);
-		goto(url.toString(), { replaceState: true, noScroll: true });
-	}
+	
+	// Update currentRanks when data.myranks changes (on navigation)
+	$effect(() => {
+		currentRanks = data.myranks;
+	});
 
 	function setDefaultCountry(ranks: { countries: string[] }) {
 		if (country == '' && ranks.countries && ranks.countries.length > 0) {
 			country = ranks.countries[0];
 		}
 	}
+
+	function handleCountryChange(newCountry: string) {
+		country = newCountry;
+		// Trigger form submission
+		if (formElement) {
+			formElement.requestSubmit();
+		}
+	}
+
+	function handleEnhance() {
+		return async ({ result }: { result: any }) => {
+			isLoadingRanks = false;
+			if (result.type === 'success' && result.data) {
+				// Update the current ranks with the new data
+				currentRanks = Promise.resolve(result.data);
+				// Update URL without reload
+				const url = new URL(window.location.href);
+				url.searchParams.set('country', country);
+				window.history.replaceState({}, '', url.toString());
+			}
+		};
+	}
 </script>
 
 <div class="card preset-tonal p-2 md:p-8 mt-2 md:mt-4">
 	<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 		<div>
-			<h4 class="h4 md:h3 p-2">Highest Ranks Past 90 Days</h4>
+			<h4 class="h4 md:h3 p-2">Best App Store Ranks This Month</h4>
 			{#await data.myranksOverview}
 				Loading app ranks...
 			{:then ranks}
@@ -41,7 +66,7 @@
 						apps for it's categories.
 					</p>
 				{:else if ranks.best_ranks && ranks.best_ranks.length > 0}
-					{#each ranks.best_ranks.slice(0, 25) as myrow}
+					{#each ranks.best_ranks.slice(0, 10) as myrow}
 						<div class="px-4">
 							#{myrow.best_rank}
 							in: {myrow.collection}
@@ -63,12 +88,22 @@
 		<div class="">
 			<h4 class="h4 md:h3 p-2 mt-2">App Store Ranks: {countryTitle}</h4>
 			{#await data.myranksOverview then ranks}
-				<div class="max-w-sm">
+				<form
+					method="POST"
+					action="?/updateRanks"
+					use:enhance={handleEnhance}
+					bind:this={formElement}
+					class="max-w-sm"
+				>
 					<p class="p-2">Breakdown App Store Ranks by Country</p>
+					<input type="hidden" name="country" value={country} />
 					<select
 						class="select p-1 md:p-2 m-2"
 						bind:value={country}
-						onchange={(e) => updateCountry(e.currentTarget.value)}
+						onchange={(e) => {
+							isLoadingRanks = true;
+							handleCountryChange(e.currentTarget.value);
+						}}
 					>
 						{#if typeof ranks != 'string' && ranks.countries && ranks.countries.length > 0}
 							{#each ranks.countries as countryCode}
@@ -86,24 +121,28 @@
 							{/each}
 						{/if}
 					</select>
-				</div>
+				</form>
 			{/await}
-			{#await data.myranks}
-				Loading app ranks...
-			{:then ranks}
-				{#if typeof ranks == 'string'}
-					<p>
-						No official ranks available for this app. This app is not ranked on the store's top 200
-						apps for it's categories.
-					</p>
-				{:else if ranks.history && ranks.history.length > 0}
-					<div class="card preset-tonal mt-2 md:mt-4">
-						<RankChart plotData={ranks.history} narrowBool={true} />
-					</div>
-				{:else}
-					<p>No ranking data available for this app.</p>
-				{/if}
-			{/await}
+			{#if isLoadingRanks}
+				<p class="p-4">Loading app ranks for {countryTitle}...</p>
+			{:else}
+				{#await currentRanks}
+					Loading app ranks...
+				{:then ranks}
+					{#if typeof ranks == 'string'}
+						<p>
+							No official ranks available for this app. This app is not ranked on the store's top 200
+							apps for it's categories.
+						</p>
+					{:else if ranks.history && ranks.history.length > 0}
+						<div class="card preset-tonal mt-2 md:mt-4">
+							<RankChart plotData={ranks.history} narrowBool={true} />
+						</div>
+					{:else}
+						<p>No ranking data available for this app.</p>
+					{/if}
+				{/await}
+			{/if}
 		</div>
 	</div>
 </div>

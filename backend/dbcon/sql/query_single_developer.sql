@@ -1,12 +1,23 @@
-SELECT *
+SELECT
+    *
 FROM
     developer_store_apps
 WHERE
     developer_id = :developer_id
-    OR domain_id IN (
-        SELECT DISTINCT dd.domain_id
+UNION
+SELECT
+    dsa.*
+FROM
+    developer_store_apps dsa
+JOIN (
+        SELECT
+            DISTINCT domain_id
         FROM
-            developer_store_apps AS dd
+            developer_store_apps
         WHERE
-            dd.developer_id = :developer_id
-    );
+            developer_id = :developer_id
+    ) AS domains
+ON
+    dsa.domain_id = domains.domain_id
+WHERE
+    dsa.developer_id <> :developer_id;
