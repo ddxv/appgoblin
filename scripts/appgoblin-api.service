@@ -8,7 +8,7 @@ Group=goblin
 RuntimeDirectory=gunicorn
 WorkingDirectory=/home/goblin/appgoblin/backend
 Environment=PYTHONUNBUFFERED=1
-ExecStart=/home/goblin/venvs/appgoblin-env/bin/gunicorn -k uvicorn.workers.UvicornWorker --workers 5 --bind 127.0.0.1:8000 -m 007 --timeout 45 --graceful-timeout 35 app:app
+ExecStart=/home/goblin/venvs/appgoblin-env/bin/gunicorn -k uvicorn.workers.UvicornWorker --workers 2 --bind 127.0.0.1:8000 -m 007 --timeout 45 --graceful-timeout 35 app:app
 ExecReload=/bin/kill -s HUP $MAINPID
 Restart=on-failure
 RestartSec=5
