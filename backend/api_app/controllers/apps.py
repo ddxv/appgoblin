@@ -548,7 +548,8 @@ class AppController(Controller):
 
         """
         start = time.perf_counter() * 1000
-        df_overview = get_ranks_for_app_overview(state, store_id=store_id, days=90)
+        #df_overview = get_ranks_for_app_overview(state, store_id=store_id, days=90)
+        df_overview = pd.DataFrame()
         if df_overview.empty:
             logger.info(f"No ranks found for {store_id!r}")
             return AppRankOverview(countries=[], best_ranks=[])
@@ -577,7 +578,8 @@ class AppController(Controller):
 
         """
         start = time.perf_counter() * 1000
-        df = get_ranks_for_app(state, store_id=store_id, country=country, days=90)
+        #df = get_ranks_for_app(state, store_id=store_id, country=country, days=90)
+        df = pd.DataFrame()
         if df.empty:
             logger.info(f"No ranks found for {store_id!r}")
             return AppRank(history={})
