@@ -12,6 +12,11 @@ a {
 	color: var(--color-tertiary-900-100);
 }
 
+a:hover {
+	color: var(--color-tertiary-900-200);
+	text-decoration: underline;
+}
+
 /* Blog post styles from markdown to raw HTML*/
 .post h1 {
 	@apply h1;

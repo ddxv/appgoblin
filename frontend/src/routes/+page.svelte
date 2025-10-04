@@ -11,7 +11,7 @@
 
 	const title = 'AppGoblin Free App Marketing Tools';
 
-	const featureBulletClass = 'text-sm md:text-lg font-medium text-primary-600';
+	const featureBulletClass = 'text-sm md:text-lg font-medium';
 	const sectionTitleClass = 'text-2xl font-black text-primary-900-100 transition-colors';
 	const sectionSubtitleClass = 'text-gray-400 font-medium';
 	const sectionDescriptionClass = 'mb-6';
@@ -61,24 +61,23 @@
 	<!-- Hero Header Section -->
 	<section class="text-center mt-8 mb-8">
 		<h1
-			class="text-5xl md:text-7xl font-black tracking-tight bg-gradient-to-r from-primary-900-100 to-success-900-100 bg-clip-text text-transparent mb-4"
+			class="text-5xl md:text-7xl text-primary-900-100 font-bold mb-4"
 		>
 			AppGoblin
 		</h1>
-		<h2 class="text-xl md:text-2xl font-bold text-primary-900-100 mb-4">
+		<h2 class="text-xl md:text-2xl font-bold text-primary mb-4">
 			Free App Marketing Insights and Research
 		</h2>
-		<p class="text-lg md:text-xl max-w-3xl mb-6 text-primary-700 mx-auto">
-			Real-time app intelligence • Live advertising data • Competitor insights • No signup required
+		<p class="text-lg md:text-xl max-w-3xl mb-6 text-primary-900-100 mx-auto">
+			Real time app intelligence • Live advertising data • Competitor insights • No signup required
 		</p>
-		<div class="flex flex-wrap justify-center gap-4 text-sm text-primary-600 mb-6">
-			<span class="px-3 py-1 bg-primary-900-100/20 rounded-full">⚡ Real-time Data</span>
-			<span class="px-3 py-1 bg-warning-900-100/20 rounded-full">🚀 Free Data</span>
-			<span class="px-3 py-1 bg-success-900-100/20 rounded-full">✨ Ad and Creative Insights</span>
-			<span class="px-3 py-1 bg-surface-900-100/20 rounded-full">🔍 Open Source</span>
+		<div class="flex flex-wrap justify-center gap-4 text-sm text-primary-900-100 mb-6">
+			<span class="px-3 py-1 bg-primary-100-900/20 rounded-full">⚡ Real-time Data</span>
+			<span class="px-3 py-1 bg-warning-100-900/20 rounded-full">🚀 Free Data</span>
+			<span class="px-3 py-1 bg-success-100-900/20 rounded-full">✨ Ad and Creative Insights</span>
 		</div>
-		<p class="text-primary-700 text-base md:text-lg max-w-2xl mx-auto">
-			<span class="font-bold text-primary-900-100">AppGoblin</span> is a free resource for app
+		<p class="text-base md:text-lg max-w-2xl mx-auto">
+			AppGoblin is a free resource for app
 			marketers, developers, and researchers. Analyze
 			<span class="font-bold text-success-900-100"
 				>{formatNumber(data.appsOverview.android_apps)}</span
@@ -132,7 +131,7 @@
 			</div>
 			<a
 				href="/ad-creatives"
-				class="{gradientButtonClass} from-success-900-100 to-success-700-300 text-black"
+				class="{gradientButtonClass} from-success-700-300 to-success-900-100 text-black"
 			>
 				<span class={buttonTextColor}>Browse All Ad Buyers →</span>
 			</a>
@@ -222,7 +221,7 @@
 			</div>
 			<a
 				href="/companies"
-				class="{gradientButtonClass} from-primary-900-100 to-primary-700-300 text-black"
+				class="{gradientButtonClass} from-primary-700-300 to-primary-900-100 text-black"
 			>
 				<span class={buttonTextColor}>Browse 500+ Companies →</span>
 			</a>
@@ -348,7 +347,7 @@
 			</div>
 			<a
 				href="/rankings/store/1/collection/1/category/1/US"
-				class="{gradientButtonClass} from-warning-900-100 to-warning-700-300 text-black"
+				class="{gradientButtonClass} from-warning-700-300 to-warning-900-100 text-black"
 			>
 				<span class={buttonTextColor}>See All Rankings →</span>
 			</a>
