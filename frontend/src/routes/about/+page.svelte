@@ -45,7 +45,7 @@
 	<link rel="canonical" href="https://appgoblin.info/about" />
 </svelte:head>
 
-<div class="p-2 px-8 md:px-32 lg:px-72 grid grid-cols-1 gap-4 md:gap-8">
+<div class="p-2 px-2 md:px-16 lg:px-32 grid grid-cols-1 gap-4 md:gap-8">
 	<h1 class="text-3xl font-bold text-primary-900-100">Welcome to AppGoblin</h1>
 	<p>
 		AppGoblin has marketing and advertising tools to help illuminate the world of in app advertising
@@ -107,10 +107,48 @@
 
 			<br />
 
-			<div class="space-y-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+			<div class="space-y-6 grid grid-cols-1 md:grid-cols-4 gap-4">
+
+<div class="card preset-filled-surface-50-950 p-4">
+					<h4 class="h4 font-semibold text-primary-900-100">ASO & Marketing Tools</h4>
+					<p class={pricingText}>Free</p>
+					<p class="my-2 font-bold">
+						Use Cases: ASO, SDK analysis, tracker analysis, app trends, app competitor analysis.
+					</p>
+					<ul class="list-disc list-inside space-y-2">
+						<li class="list-disc">
+							Free access to AppGoblin's web tools for app marketing and app competitor analysis.
+						</li>
+					</ul>
+				</div>
+				<div class="card preset-filled-surface-50-950 p-4">
+					<h4 class="h4 font-semibold text-primary-900-100">B2B Competitor SDK Client List</h4>
+					<p class={pricingText}>$300 per company list</p>
+					<p class="my-2 font-bold">
+						Use Cases: B2B Competitor analysis. Sales prospecting. Market research.
+					</p>
+					<ul class="list-disc list-inside space-y-2">
+						<li class="list-disc">
+							See exactly which apps are using a company or SDK.
+						</li>
+						<li>Publisher Name and Domain</li>
+						<li class="list-disc">
+							Includes app installs
+						</li>
+						<li class="list-disc">
+							Other AppGoblin stats available on request.
+						</li>
+					</ul>
+					<a
+						class="btn preset-outlined-tertiary-500 p-2 md:p-4 mt-4"
+						href="mailto:contact@appgoblin.info?subject=Competitor%20SDK%20Client%20List"
+					>
+						<p class="text-center text-sm md:text-base">Get Client List</p>
+					</a>
+				</div>
 				<div class="card preset-filled-surface-50-950 p-4 space-y-2">
 					<h4 class="h4 font-semibold text-primary-900-100">Full App-Ads.txt Datasets</h4>
-					<p class={pricingText}>$500/month</p>
+					<p class={pricingText}>$300/month</p>
 					<p class="my-2 font-bold">
 						Use Cases: Programmatic fraud detection. Ad network analysis. DSP bid enrichment.
 					</p>
@@ -128,35 +166,6 @@
 					</a>
 				</div>
 
-				<div class="card preset-filled-surface-50-950 p-4">
-					<h4 class="h4 font-semibold text-primary-900-100">Competitor SDK Client List</h4>
-					<p class={pricingText}>$500 base + $300 per additional company</p>
-					<p class="my-2 font-bold">
-						Use Cases: Competitor analysis. Sales prospecting. Market research.
-					</p>
-					<ul class="list-disc list-inside space-y-2">
-						<li class="list-disc">
-							All apps using a company or SDK from the top 60k scanned Android and iOS apps.
-						</li>
-						<li>Publisher Name and Domain</li>
-						<li class="list-disc">
-							Includes latest app install estimates, category data, and timestamps.
-						</li>
-						<li class="list-disc">
-							Optional Add-Ons: All other SDKs of those apps, app descriptions. Other AppGoblin
-							stats available on request.
-						</li>
-						<li class="list-disc">
-							Ongoing reports (e.g., monthly tracking) are available upon request.
-						</li>
-					</ul>
-					<a
-						class="btn preset-outlined-tertiary-500 p-2 md:p-4 mt-4"
-						href="mailto:contact@appgoblin.info?subject=Competitor%20SDK%20Client%20List"
-					>
-						<p class="text-center text-sm md:text-base">Get Client List</p>
-					</a>
-				</div>
 
 				<div class="card preset-filled-surface-50-950 p-4">
 					<h4 class="h4 font-semibold text-primary-900-100">Custom Reports, API Integrations</h4>
