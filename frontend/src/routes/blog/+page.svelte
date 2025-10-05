@@ -22,6 +22,50 @@
 	<meta name="keywords" content={keywords} />
 	<meta property="og:description" content={description} />
 	<meta name="twitter:description" content={description} />
+
+	<!-- Blog Structured Data -->
+	<script type="application/ld+json">
+		{
+			"@context": "https://schema.org",
+			"@type": "Blog",
+			"name": "AppGoblin Blog",
+			"description": "Latest insights, updates, and strategies for mobile app marketing and ASO. Stay ahead with free tools and expert analysis from the AppGoblin team.",
+			"url": "https://appgoblin.info/blog",
+			"publisher": {
+				"@type": "Organization",
+				"name": "AppGoblin",
+				"url": "https://appgoblin.info",
+				"logo": {
+					"@type": "ImageObject",
+					"url": "https://appgoblin.info/AppGoblin_Large_Logo.png"
+				}
+			},
+			"blogPost": [
+				{#each data.posts as post (post.id)}
+					{
+						"@type": "BlogPosting",
+						"headline": "{post.title}",
+						"datePublished": "{post.pubDate.toISOString()}",
+						"url": "https://appgoblin.info{post.relativeURL}",
+						"image": "https://appgoblin.info{post.heroImage}",
+						"description": "{post.description}",
+						"author": {
+							"@type": "Organization",
+							"name": "AppGoblin"
+						},
+						"publisher": {
+							"@type": "Organization",
+							"name": "AppGoblin",
+							"logo": {
+								"@type": "ImageObject",
+								"url": "https://appgoblin.info/AppGoblin_Large_Logo.png"
+							}
+						}
+					}{#if !loop.last},{/if}
+				{/each}
+			]
+		}
+	</script>
 </svelte:head>
 
 <div class="container mx-auto px-4 py-8">
@@ -35,230 +79,230 @@
 	</div>
 
 	<!-- Featured Post and Other Posts Section -->
-	{#if featuredPost}
-		<div class="mb-16">
-			<h2 class="text-2xl font-semibold text-base-content mb-6">Latest Post</h2>
-			<div class="grid lg:grid-cols-3 gap-8">
-				<!-- Featured Post -->
-				<div class="lg:col-span-2">
-					<article
-						class="card bg-base-100 shadow-lg hover:shadow-xl transition-shadow duration-300"
-					>
-						<div class="card-body p-0">
-							<!-- Featured Post Image -->
-							{#if featuredPost.heroImage}
-								<figure class="overflow-hidden">
+	<div class="mb-16">
+		<h2 class="text-2xl font-semibold text-base-content mb-6">Latest Post</h2>
+		<div class="grid lg:grid-cols-3 gap-8">
+			<!-- Featured Post -->
+			<div class="lg:col-span-2">
+				<article class="card bg-base-100 shadow-lg hover:shadow-xl transition-shadow duration-300">
+					<div class="card-body p-0">
+						<!-- Featured Post Image -->
+						{#if featuredPost.heroImage}
+							<figure class="overflow-hidden">
+								<a
+									href={featuredPost.relativeURL}
+									class="hover:text-primary transition-colors duration-200"
+								>
 									<img
 										class="w-full h-64 object-cover border border-base-300"
 										src={featuredPost.heroImage}
 										alt={featuredPost.title}
 										loading="eager"
 									/>
-								</figure>
-							{/if}
-
-							<!-- Featured Post Content -->
-							<div class="p-8">
-								<div class="mb-4">
-									<time
-										class="text-sm text-primary font-medium"
-										datetime={featuredPost.pubDate.toISOString()}
-									>
-										{featuredPost.pubDate.toLocaleDateString('en-us', {
-											year: 'numeric',
-											month: 'long',
-											day: 'numeric'
-										})}
-									</time>
-								</div>
-
-								<h3 class="text-2xl md:text-3xl font-bold text-base-content mb-4 leading-tight">
-									<a
-										href={featuredPost.relativeURL}
-										class="hover:text-primary transition-colors duration-200"
-									>
-										{featuredPost.title}
-									</a>
-								</h3>
-
-								<p class="text-base-content/70 mb-6 leading-relaxed">
-									{featuredPost.description}
-								</p>
-
-								<a href={featuredPost.relativeURL} class="btn btn-primary w-fit">
-									Read More
-									<svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-										<path
-											stroke-linecap="round"
-											stroke-linejoin="round"
-											stroke-width="2"
-											d="M9 5l7 7-7 7"
-										></path>
-									</svg>
 								</a>
-							</div>
-						</div>
-					</article>
-				</div>
+							</figure>
+						{/if}
 
-				<!-- Other Posts Sidebar -->
-				{#if otherPosts.length > 0}
-					<div class="lg:col-span-1">
-						<h3 class="text-xl font-semibold text-base-content mb-6">More Posts</h3>
-						<div class="space-y-6">
-							{#each otherPosts.slice(0, 3) as post (post.id)}
-								<article
-									class="card bg-base-100 shadow-sm hover:shadow-md transition-shadow duration-300 group"
+						<!-- Featured Post Content -->
+						<div class="p-8">
+							<div class="mb-4">
+								<time
+									class="text-sm text-primary font-medium"
+									datetime={featuredPost.pubDate.toISOString()}
 								>
-									<div class="card-body p-0">
-										<!-- Post Image -->
-										{#if post.heroImage}
-											<figure class="overflow-hidden">
+									{featuredPost.pubDate.toLocaleDateString('en-us', {
+										year: 'numeric',
+										month: 'long',
+										day: 'numeric'
+									})}
+								</time>
+							</div>
+
+							<h3 class="text-2xl md:text-3xl font-bold text-base-content mb-4 leading-tight">
+								<a
+									href={featuredPost.relativeURL}
+									class="hover:text-primary transition-colors duration-200"
+								>
+									{featuredPost.title}
+								</a>
+							</h3>
+
+							<p class="text-base-content/70 mb-6 leading-relaxed">
+								{featuredPost.description}
+							</p>
+
+							<a href={featuredPost.relativeURL} class="btn btn-primary w-fit">
+								Read More
+								<svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M9 5l7 7-7 7"
+									></path>
+								</svg>
+							</a>
+						</div>
+					</div>
+				</article>
+			</div>
+
+			<!-- Other Posts Sidebar -->
+			{#if otherPosts.length > 0}
+				<div class="lg:col-span-1">
+					<h3 class="text-xl font-semibold text-base-content mb-6">More Posts</h3>
+					<div class="space-y-6">
+						{#each otherPosts.slice(0, 3) as post (post.id)}
+							<article
+								class="card bg-base-100 shadow-sm hover:shadow-md transition-shadow duration-300 group"
+							>
+								<div class="card-body p-0">
+									<!-- Post Image -->
+									{#if post.heroImage}
+										<figure class="overflow-hidden">
+											<a
+												href={post.relativeURL}
+												class="hover:text-primary transition-colors duration-200"
+											>
 												<img
 													class="w-full h-32 object-cover group-hover:scale-105 transition-transform duration-300 border border-base-300"
 													src={post.heroImage}
 													alt={post.title}
 													loading="lazy"
 												/>
-											</figure>
-										{/if}
+											</a>
+										</figure>
+									{/if}
 
-										<!-- Post Content -->
-										<div class="p-4">
-											<div class="mb-2">
-												<time
-													class="text-xs text-primary font-medium"
-													datetime={post.pubDate.toISOString()}
-												>
-													{post.pubDate.toLocaleDateString('en-us', {
-														year: 'numeric',
-														month: 'short',
-														day: 'numeric'
-													})}
-												</time>
-											</div>
+									<!-- Post Content -->
+									<div class="p-4">
+										<div class="mb-2">
+											<time
+												class="text-xs text-primary font-medium"
+												datetime={post.pubDate.toISOString()}
+											>
+												{post.pubDate.toLocaleDateString('en-us', {
+													year: 'numeric',
+													month: 'short',
+													day: 'numeric'
+												})}
+											</time>
+										</div>
 
-											<h4 class="text-base font-semibold text-base-content mb-2 leading-tight">
-												<a
-													href={post.relativeURL}
-													class="hover:text-primary transition-colors duration-200"
-												>
-													{post.title}
-												</a>
-											</h4>
-
-											<p class="text-base-content/70 text-xs leading-relaxed mb-3 line-clamp-2">
-												{post.description}
-											</p>
-
+										<h4 class="text-base font-semibold text-base-content mb-2 leading-tight">
 											<a
 												href={post.relativeURL}
-												class="text-primary hover:text-primary/80 font-medium text-xs inline-flex items-center transition-colors duration-200"
+												class="hover:text-primary transition-colors duration-200"
 											>
-												Read More
-												<svg
-													class="w-3 h-3 ml-1"
-													fill="none"
-													stroke="currentColor"
-													viewBox="0 0 24 24"
-												>
-													<path
-														stroke-linecap="round"
-														stroke-linejoin="round"
-														stroke-width="2"
-														d="M9 5l7 7-7 7"
-													></path>
-												</svg>
+												{post.title}
 											</a>
-										</div>
+										</h4>
+
+										<p class="text-base-content/70 text-xs leading-relaxed mb-3 line-clamp-2">
+											{post.description}
+										</p>
+
+										<a
+											href={post.relativeURL}
+											class="text-primary hover:text-primary/80 font-medium text-xs inline-flex items-center transition-colors duration-200"
+										>
+											Read More
+											<svg
+												class="w-3 h-3 ml-1"
+												fill="none"
+												stroke="currentColor"
+												viewBox="0 0 24 24"
+											>
+												<path
+													stroke-linecap="round"
+													stroke-linejoin="round"
+													stroke-width="2"
+													d="M9 5l7 7-7 7"
+												></path>
+											</svg>
+										</a>
 									</div>
-								</article>
-							{/each}
-						</div>
+								</div>
+							</article>
+						{/each}
 					</div>
-				{/if}
-			</div>
+				</div>
+			{/if}
 		</div>
-	{/if}
+	</div>
 
 	<!-- Remaining Posts Section -->
-	{#if otherPosts.length > 3}
-		<div>
-			<h2 class="text-2xl font-semibold text-base-content mb-6">All Posts</h2>
-			<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-				{#each otherPosts.slice(3) as post (post.id)}
-					<article
-						class="card bg-base-100 shadow-sm hover:shadow-md transition-shadow duration-300 group"
-					>
-						<div class="card-body p-0">
-							<!-- Post Image -->
-							{#if post.heroImage}
-								<figure class="overflow-hidden">
+	<div>
+		<h2 class="text-2xl font-semibold text-base-content mb-6">All Posts</h2>
+		<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+			{#each otherPosts.slice(3) as post (post.id)}
+				<article
+					class="card bg-base-100 shadow-sm hover:shadow-md transition-shadow duration-300 group"
+				>
+					<div class="card-body p-0">
+						<!-- Post Image -->
+						{#if post.heroImage}
+							<figure class="overflow-hidden">
+								<a
+									href={post.relativeURL}
+									class="hover:text-primary transition-colors duration-200"
+								>
 									<img
 										class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300 border border-base-300"
 										src={post.heroImage}
 										alt={post.title}
 										loading="lazy"
 									/>
-								</figure>
-							{/if}
+								</a>
+							</figure>
+						{/if}
 
-							<!-- Post Content -->
-							<div class="p-6">
-								<div class="mb-3">
-									<time
-										class="text-sm text-primary font-medium"
-										datetime={post.pubDate.toISOString()}
-									>
-										{post.pubDate.toLocaleDateString('en-us', {
-											year: 'numeric',
-											month: 'short',
-											day: 'numeric'
-										})}
-									</time>
-								</div>
+						<!-- Post Content -->
+						<div class="p-6">
+							<div class="mb-3">
+								<time
+									class="text-sm text-primary font-medium"
+									datetime={post.pubDate.toISOString()}
+								>
+									{post.pubDate.toLocaleDateString('en-us', {
+										year: 'numeric',
+										month: 'short',
+										day: 'numeric'
+									})}
+								</time>
+							</div>
 
-								<h3 class="text-lg font-semibold text-base-content mb-3 leading-tight">
-									<a
-										href={post.relativeURL}
-										class="hover:text-primary transition-colors duration-200"
-									>
-										{post.title}
-									</a>
-								</h3>
-
-								<p class="text-base-content/70 text-sm leading-relaxed mb-4">
-									{post.description}
-								</p>
-
+							<h3 class="text-lg font-semibold text-base-content mb-3 leading-tight">
 								<a
 									href={post.relativeURL}
-									class="text-primary hover:text-primary/80 font-medium text-sm inline-flex items-center transition-colors duration-200"
+									class="hover:text-primary transition-colors duration-200"
 								>
-									Read More
-									<svg class="w-3 h-3 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-										<path
-											stroke-linecap="round"
-											stroke-linejoin="round"
-											stroke-width="2"
-											d="M9 5l7 7-7 7"
-										></path>
-									</svg>
+									{post.title}
 								</a>
-							</div>
-						</div>
-					</article>
-				{/each}
-			</div>
-		</div>
-	{/if}
+							</h3>
 
-	<!-- Empty State -->
-	{#if data.posts.length === 0}
-		<div class="text-center py-16">
-			<div class="text-6xl mb-4">📝</div>
-			<h2 class="text-2xl font-semibold text-base-content mb-4">No Posts Yet</h2>
-			<p class="text-base-content/70">Check back soon for the latest insights and updates.</p>
+							<p class="text-base-content/70 text-sm leading-relaxed mb-4">
+								{post.description}
+							</p>
+
+							<a
+								href={post.relativeURL}
+								class="text-primary hover:text-primary/80 font-medium text-sm inline-flex items-center transition-colors duration-200"
+							>
+								Read More
+								<svg class="w-3 h-3 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M9 5l7 7-7 7"
+									></path>
+								</svg>
+							</a>
+						</div>
+					</div>
+				</article>
+			{/each}
 		</div>
-	{/if}
+	</div>
 </div>
