@@ -80,7 +80,6 @@
 
 	<!-- Featured Post and Other Posts Section -->
 	<div class="mb-16">
-		<h2 class="text-2xl font-semibold text-base-content mb-6">Latest Post</h2>
 		<div class="grid lg:grid-cols-3 gap-8">
 			<!-- Featured Post -->
 			<div class="lg:col-span-2">
@@ -106,6 +105,7 @@
 						<!-- Featured Post Content -->
 						<div class="p-8">
 							<div class="mb-4">
+								<h2 class="text-2xl font-semibold text-base-content mb-6">Latest Post</h2>
 								<time
 									class="text-sm text-primary font-medium"
 									datetime={featuredPost.pubDate.toISOString()}
@@ -233,7 +233,6 @@
 
 	<!-- Remaining Posts Section -->
 	<div>
-		<h2 class="text-2xl font-semibold text-base-content mb-6">All Posts</h2>
 		<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
 			{#each otherPosts.slice(3) as post (post.id)}
 				<article
