@@ -7,6 +7,7 @@ import remarkParse from 'remark-parse';
 import remarkRehype from 'remark-rehype';
 import { unified } from 'unified';
 
+export const prerender = true;
 export const ssr = true;
 export const csr = false;
 
@@ -17,7 +18,7 @@ export const load: PageServerLoad = async ({ params }) => {
 	const rawContent = blogPosts[matchPath];
 	if (!rawContent) return error(404);
 
-	const { content, data } = matter(rawContent);
+	const { content, data } = matter(rawContent as string);
 
 	const postMetaData = getMetadataFromMatter(params.id, data);
 
