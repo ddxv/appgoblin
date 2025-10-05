@@ -22,6 +22,40 @@ export const load: PageServerLoad = async ({ params }) => {
 
 	const postMetaData = getMetadataFromMatter(params.id, data);
 
+	const structuredData = {
+		'@context': 'https://schema.org',
+		'@type': 'BlogPosting',
+		headline: postMetaData.title,
+		description: postMetaData.description,
+		image: `https://appgoblin.info${postMetaData.heroImage}`,
+		datePublished: postMetaData.pubDate.toISOString(),
+		dateModified: postMetaData.pubDate.toISOString(),
+		url: `https://appgoblin.info${postMetaData.relativeURL}`,
+		mainEntityOfPage: {
+			'@type': 'WebPage',
+			'@id': `https://appgoblin.info${postMetaData.relativeURL}`
+		},
+		author: {
+			'@type': 'Organization',
+			name: 'AppGoblin',
+			url: 'https://appgoblin.info'
+		},
+		publisher: {
+			'@type': 'Organization',
+			name: 'AppGoblin',
+			url: 'https://appgoblin.info',
+			logo: {
+				'@type': 'ImageObject',
+				url: 'https://appgoblin.info/AppGoblin_Large_Logo.png'
+			}
+		},
+		isPartOf: {
+			'@type': 'Blog',
+			name: 'AppGoblin Blog',
+			url: 'https://appgoblin.info/blog'
+		}
+	};
+
 	const contentHTML = (
 		await unified()
 			.use(remarkParse)
@@ -32,6 +66,7 @@ export const load: PageServerLoad = async ({ params }) => {
 
 	return {
 		...postMetaData,
-		contentHTML
+		contentHTML,
+		structuredData: JSON.stringify(structuredData)
 	};
 };
