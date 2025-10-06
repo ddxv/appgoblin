@@ -3,25 +3,19 @@
 	let titlePadding = 'p-2 md:p-4';
 	let contentPadding = 'p-2 md:p-4';
 	let cardPadding = 'p-2 md:p-4';
-	let contentSpacing = 'space-y-4';
 	let pricingText = 'mt-2 text-sm opacity-80';
 </script>
 
 <svelte:head>
-	<!-- Title -->
 	<title>About AppGoblin: Competitor Analysis and App Marketing Tools</title>
-
-	<!-- Standard meta tags -->
 	<meta
 		name="description"
-		content="Discover AppGoblin: app advertising and marketing analytics platform. Tools for competitor analysis, app-ads.txt analysis, and more."
+		content="Free ASO tools, competitor analysis, lead generation and ad analytics platform for apps. Tools for competitor analysis, app-ads.txt analysis, and more."
 	/>
 	<meta
 		name="keywords"
-		content="AppGoblin, aso, app marekting, competitor analysis, app advertising, in-app advertising, app monetization, open source, app analytics, app market intelligence, mobile app insights, app advertising, app marketing"
+		content="AppGoblin, aso, app marketing, lead generation, competitor analysis, app advertising, in-app advertising, app monetization, open source, app analytics, app market intelligence, mobile app insights, app advertising, app marketing"
 	/>
-
-	<!-- Open Graph meta tags -->
 	<meta property="og:title" content="About AppGoblin: App Advertising and Marketing Tools" />
 	<meta
 		property="og:description"
@@ -30,8 +24,6 @@
 	<meta property="og:image" content="https://appgoblin.info/goblin_purple_hat_250.png" />
 	<meta property="og:url" content="https://appgoblin.info/about" />
 	<meta property="og:type" content="website" />
-
-	<!-- Twitter Card meta tags -->
 	<meta name="twitter:card" content="summary_large_image" />
 	<meta name="twitter:title" content="About AppGoblin: App Marketing and Ad Analytics" />
 	<meta
@@ -39,8 +31,6 @@
 		content="AppGoblin is a free app marketing and advertising analytics platform."
 	/>
 	<meta name="twitter:image" content="https://appgoblin.info/goblin_purple_hat_250.png" />
-
-	<!-- Additional meta tags -->
 	<meta name="robots" content="index, follow" />
 	<link rel="canonical" href="https://appgoblin.info/about" />
 </svelte:head>
