@@ -3,7 +3,7 @@ SELECT
     ad.domain_name AS ad_domain_url,
     aae.publisher_id,
     aae.relationship,
-    pd.crawled_at AS developer_domain_crawled_at
+    pdcr.crawled_at AS developer_domain_crawled_at
 FROM
     frontend.adstxt_entries_store_apps AS aesa
 LEFT JOIN store_apps AS sa
@@ -15,9 +15,9 @@ LEFT JOIN app_ads_entrys AS aae
 LEFT JOIN domains AS ad
     ON
         aesa.ad_domain_id = ad.id
-LEFT JOIN pub_domains AS pd
+LEFT JOIN adstxt_crawl_results AS pdcr
     ON
-        aesa.pub_domain_id = pd.id
+        aesa.pub_domain_id = pdcr.domain_id
 LEFT JOIN adtech.companies AS c
     ON
         aesa.company_id = c.id
