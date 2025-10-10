@@ -12,10 +12,10 @@ WITH ranked_apps AS (
     FROM frontend.adstxt_entries_store_apps AS aesa
     LEFT JOIN store_apps AS sa ON aesa.store_app = sa.id
     LEFT JOIN app_ads_entrys AS aae ON aesa.app_ad_entry_id = aae.id
-    LEFT JOIN ad_domains AS ad ON aesa.ad_domain_id = ad.id
+    LEFT JOIN domains AS ad ON aesa.ad_domain_id = ad.id
     LEFT JOIN pub_domains AS pd ON aesa.pub_domain_id = pd.id
     WHERE
-        ad.domain = :ad_domain_url
+        ad.domain_name = :ad_domain_url
         AND aae.publisher_id = :publisher_id
 )
 

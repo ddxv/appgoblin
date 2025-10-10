@@ -15,8 +15,8 @@ parent_companies AS (
 
 SELECT
     pc.id,
-    ad.domain
+    ad.domain_name
 FROM
     parent_companies AS pc
-LEFT JOIN ad_domains AS ad ON
+LEFT JOIN domains AS ad ON
     pc.domain_id = ad.id;

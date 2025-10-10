@@ -12,8 +12,8 @@ child_companies AS (
 
 SELECT
     cc.id,
-    ad.domain
+    ad.domain_name
 FROM
     child_companies AS cc
-LEFT JOIN ad_domains AS ad ON
+LEFT JOIN domains AS ad ON
     cc.domain_id = ad.id;

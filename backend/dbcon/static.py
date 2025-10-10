@@ -77,9 +77,9 @@ def load_static_data(engine) -> StaticData:
 
     # Company logos (inline query)
     company_logos_df = pd.read_sql(
-        """SELECT ad."domain" as company_domain, c.logo_url as company_logo_url 
+        """SELECT ad.domain_name as company_domain, c.logo_url as company_logo_url 
            FROM adtech.companies as c 
-           LEFT JOIN ad_domains as ad ON c."domain_id" = ad."id";""",
+           LEFT JOIN domains as ad ON c."domain_id" = ad."id";""",
         engine,
     )
 

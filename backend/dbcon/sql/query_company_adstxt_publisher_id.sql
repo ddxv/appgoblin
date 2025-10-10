@@ -18,7 +18,7 @@ LEFT JOIN store_apps AS sa
 LEFT JOIN developers AS d
     ON
         sa.developer = d.id
-LEFT JOIN ad_domains AS ad
+LEFT JOIN domains AS ad
     ON
         aesa.ad_domain_id = ad.id
 LEFT JOIN pub_domains AS pd
@@ -28,6 +28,6 @@ LEFT JOIN app_ads_entrys AS aae
     ON
         aesa.app_ad_entry_id = aae.id
 WHERE
-    ad.domain = :ad_domain_url
+    ad.domain_name = :ad_domain_url
     AND aae.publisher_id = :publisher_id
     AND sa.store IS NOT NULL;

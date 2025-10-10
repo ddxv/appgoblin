@@ -1,9 +1,9 @@
 SELECT
     cdm.company_id,
-    ad.domain
+    ad.domain_name
 FROM
     adtech.company_domain_mapping AS cdm
-LEFT JOIN ad_domains AS ad
+LEFT JOIN domains AS ad
     ON
         cdm.domain_id = ad.id
 WHERE

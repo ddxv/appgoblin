@@ -2,7 +2,7 @@ WITH all_apps AS (
     SELECT DISTINCT
         sa.store_id,
         c.name AS company_name,
-        ad.domain AS ad_domain_url,
+        ad.domain_name AS ad_domain_url,
         aae.relationship
     FROM
         frontend.adstxt_entries_store_apps AS aesa
@@ -15,7 +15,7 @@ WITH all_apps AS (
     LEFT JOIN adtech.companies AS c
         ON
             aesa.company_id = c.id
-    LEFT JOIN ad_domains AS ad ON
+    LEFT JOIN domains AS ad ON
         aesa.ad_domain_id = ad.id
 )
 

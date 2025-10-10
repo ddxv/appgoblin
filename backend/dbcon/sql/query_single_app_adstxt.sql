@@ -1,6 +1,6 @@
 SELECT
     c.name AS company_name,
-    ad.domain AS ad_domain_url,
+    ad.domain_name AS ad_domain_url,
     aae.publisher_id,
     aae.relationship,
     pd.crawled_at AS developer_domain_crawled_at
@@ -12,7 +12,7 @@ LEFT JOIN store_apps AS sa
 LEFT JOIN app_ads_entrys AS aae
     ON
         aesa.app_ad_entry_id = aae.id
-LEFT JOIN ad_domains AS ad
+LEFT JOIN domains AS ad
     ON
         aesa.ad_domain_id = ad.id
 LEFT JOIN pub_domains AS pd
