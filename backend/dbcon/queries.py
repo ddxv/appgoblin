@@ -377,6 +377,8 @@ def get_companies_parent_category_stats(
         df = pd.concat([parents_df, child_df], axis=0)
     df["store"] = df["store"].replace({1: "Google Play", 2: "Apple App Store"})
     df.loc[df["app_category"].isna(), "app_category"] = "None"
+    # NULL domains come from IP addresses called directly in api calls
+    df = df[df["company_domain"].notna()]
     # Filter out the no-xxx-found placeholder companies
     df = df[~df["company_domain"].str.startswith("no-")]
     return df
