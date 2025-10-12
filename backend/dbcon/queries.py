@@ -172,7 +172,9 @@ def get_ranks_for_app_overview(
         )
         return df
     except Exception as e:
-        logger.warning(f"Query timeout or error for store_id={store_id}, days={days}: {e}")
+        logger.warning(
+            f"Query timeout or error for store_id={store_id}, days={days}: {e}"
+        )
         # Return empty DataFrame with expected columns on timeout
         return pd.DataFrame(columns=["country", "collection", "category", "best_rank"])
 
@@ -934,9 +936,10 @@ def insert_sdk_scan_request(state: State, store_id: str | list[str]) -> None:
 
     Args:
         state (State): Database connection state.
-        store_id (str | list[str]): A single store_id as a string, or a list of store_id strings.
+        store_id (str | list[str]): A single/list of store_id as a string.
 
-    The function inserts one or more records into the sdk scan request table, each with a 'store_id' key.
+    The function inserts one or more records into the sdk scan request table.
+    Each with a 'store_id' key.
 
     """
     logger.info(f"Inserting new sdk scan request: {store_id}")

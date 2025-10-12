@@ -69,11 +69,11 @@ def load_static_data(engine) -> StaticData:
     company_api_call_countrys = pd.read_sql(sql.company_api_call_countrys, engine)
 
     # Queries that extract lists
-    parent_companies = pd.read_sql(sql.parent_companies, engine)["domain"].tolist()
+    parent_companies = pd.read_sql(sql.parent_companies, engine)["domain_name"].tolist()
     company_secondary_domains = pd.read_sql(sql.company_secondary_domains, engine)[
-        "domain"
+        "domain_name"
     ].tolist()
-    child_companies = pd.read_sql(sql.child_companies, engine)["domain"].tolist()
+    child_companies = pd.read_sql(sql.child_companies, engine)["domain_name"].tolist()
 
     # Company logos (inline query)
     company_logos_df = pd.read_sql(
