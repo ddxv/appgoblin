@@ -34,7 +34,7 @@
 
 {#if isOpen}
 	<div
-		class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 p-4"
+		class="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4"
 		onclick={closeModal}
 		onkeydown={(e) => e.key === 'Enter' && closeModal()}
 		aria-modal="true"

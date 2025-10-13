@@ -283,7 +283,7 @@ class CreativesController(Controller):
             ]
             .agg(
                 {
-                    "pubs": lambda x: list(x),
+                    "pubs": lambda x: list({d["store_id"]: d for d in x}.values()),
                     "md5_hash": "first",
                     "run_at": "max",
                     "additional_ad_domain_urls": lambda x: list(

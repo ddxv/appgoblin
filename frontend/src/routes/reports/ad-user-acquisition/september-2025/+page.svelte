@@ -1,17 +1,11 @@
 <script lang="ts">
 	import CreativeModal from '$lib/CreativeModal.svelte';
+	import { createCreativeModal } from '$lib/stores/creativeModal.svelte';
 
 	let { data } = $props();
 
-	let isModalOpen = $state(false);
-	let selectedCreativeUrl = $state('');
-	let selectedCreativeTitle = $state('');
-
-	function openCreative(md5Hash: string, fileExtension: string, appName: string, storeId: string) {
-		selectedCreativeUrl = `https://media.appgoblin.info/creatives/raw/${storeId}/${md5Hash}.${fileExtension}`;
-		selectedCreativeTitle = `${appName} - Ad Creative`;
-		isModalOpen = true;
-	}
+	// Creative modal state
+	const creativeModal = createCreativeModal();
 
 	function formatNumber(num: number): string {
 		if (num >= 1000000) {
@@ -265,11 +259,10 @@
 					<!-- Thumbnail with Play Button -->
 					<button
 						onclick={() =>
-							openCreative(
+							creativeModal.open(
 								creative.md5_hash,
 								creative.file_extension,
-								`Popular Creative #${index + 1}`,
-								creative.advertiser_store_id
+								`Popular Creative #${index + 1}`
 							)}
 						class="relative w-full aspect-video bg-gradient-to-br from-purple-200 to-pink-200 dark:from-purple-900 dark:to-pink-900 cursor-pointer group overflow-hidden"
 						title="Click to play video"
@@ -436,11 +429,10 @@
 										{#each app.creatives.slice(0, 3) as creative}
 											<button
 												onclick={() =>
-													openCreative(
+													creativeModal.open(
 														creative.md5_hash,
 														creative.file_extension,
-														app.app_name,
-														app.store_id
+														app.app_name
 													)}
 												class="relative group cursor-pointer hover:scale-110 transition-transform duration-200"
 												title="Click to view"
@@ -618,9 +610,9 @@
 
 <!-- Creative Modal -->
 <CreativeModal
-	bind:isOpen={isModalOpen}
-	creativeUrl={selectedCreativeUrl}
-	title={selectedCreativeTitle}
+	bind:isOpen={creativeModal.isOpen}
+	creativeUrl={creativeModal.creativeUrl}
+	title={creativeModal.title}
 />
 
 <style>

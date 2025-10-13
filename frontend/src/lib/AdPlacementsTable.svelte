@@ -11,6 +11,7 @@
 
 	import CompanyButton from '$lib/CompanyButton.svelte';
 	import CreativeModal from '$lib/CreativeModal.svelte';
+	import { createCreativeModal } from '$lib/stores/creativeModal.svelte';
 
 	import Pagination from '$lib/components/data-table/Pagination.svelte';
 	import ExportAsCSV from '$lib/components/data-table/ExportAsCSV.svelte';
@@ -19,7 +20,6 @@
 	import { createSvelteTable, FlexRender } from '$lib/components/data-table/index.js';
 
 	import { genericColumns } from '$lib/components/data-table/generic-column';
-	import { page } from '$app/state';
 
 	type DataTableProps<RankedApps, TValue> = {
 		data: RankedApps[];
@@ -31,10 +31,8 @@
 
 	let globalFilter = $state<string>('');
 
-	// Video modal state
-	let showVideoModal = $state(false);
-	let selectedVideoUrl = $state('');
-	let selectedVideoTitle = $state('');
+	// Creative modal state
+	const creativeModal = createCreativeModal();
 
 	let { data }: DataTableProps<RankedApps, TValue> = $props();
 
@@ -120,13 +118,6 @@
 		getPaginationRowModel: getPaginationRowModel(),
 		getFilteredRowModel: getFilteredRowModel()
 	});
-
-	// Function to open video modal
-	function openVideoModal(storeId: string, md5Hash: string, title: string, extension: string) {
-		selectedVideoUrl = `https://media.appgoblin.info/creatives/raw/${storeId}/${md5Hash}.${extension}`;
-		selectedVideoTitle = title + '.' + selectedVideoUrl;
-		showVideoModal = true;
-	}
 </script>
 
 <div class="table-container">
@@ -167,11 +158,10 @@
 								<button
 									class="text-xs text-blue-600 hover:text-blue-800 underline cursor-pointer relative group"
 									onclick={() =>
-										openVideoModal(
-											page.params.id!,
+										creativeModal.open(
 											row.original.md5_hash,
-											`Creative: ${row.original.md5_hash}`,
-											row.original.file_extension
+											row.original.file_extension,
+											`Creative: ${row.original.md5_hash}`
 										)}
 								>
 									<div class="relative">
@@ -266,9 +256,9 @@
 	</div>
 </div>
 
-<!-- Video Modal -->
+<!-- Creative Modal -->
 <CreativeModal
-	bind:isOpen={showVideoModal}
-	creativeUrl={selectedVideoUrl}
-	title={selectedVideoTitle}
+	bind:isOpen={creativeModal.isOpen}
+	creativeUrl={creativeModal.creativeUrl}
+	title={creativeModal.title}
 />
