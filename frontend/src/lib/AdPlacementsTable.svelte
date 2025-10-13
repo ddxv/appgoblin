@@ -174,9 +174,9 @@
 										/>
 										<!-- Play button overlay -->
 										<div
-											class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30 rounded opacity-30 group-hover:opacity-60 transition-opacity duration-200"
+											class="absolute inset-0 flex items-center justify-center bg-black/30 rounded opacity-70 group-hover:opacity-100 transition-opacity duration-200"
 										>
-											<div class="bg-white bg-opacity-90 rounded-full p-2 md:p-3">
+											<div class="bg-primary-500 rounded-full p-2 md:p-3">
 												<svg
 													class="w-4 h-4 md:w-6 md:h-6 text-gray-800"
 													fill="currentColor"

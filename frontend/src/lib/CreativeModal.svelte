@@ -67,7 +67,7 @@
 					controls
 					autoplay
 					muted
-					class="w-full h-auto rounded-lg shadow-2xl"
+					class="w-full h-auto max-h-[80vh] object-contain rounded-lg shadow-2xl"
 					id="media-title"
 				>
 					Your browser does not support the video tag.
