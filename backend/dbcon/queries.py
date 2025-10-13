@@ -9,6 +9,7 @@ from sqlalchemy import bindparam
 from config import get_logger
 from dbcon.static import get_child_companies, get_country_map, get_parent_companies
 from dbcon.utils import cache_by_params, clean_app_df, sql
+from dbcon.connections import PostgresCon
 
 logger = get_logger(__name__)
 
@@ -909,27 +910,15 @@ def get_sdk_pattern_companies(state: State, value_pattern: str) -> pd.DataFrame:
     return df
 
 
-def get_sitemap_companies(state: State) -> pd.DataFrame:
+def get_sitemap_companies(dbcon: PostgresCon) -> pd.DataFrame:
     """Get sitemap companies."""
-    if state.dbconwrite is None:
-        logger.warning(
-            "Write connection not available, using read connection for sitemap"
-        )
-        df = pd.read_sql(sql.sitemap_companies, state.dbcon.engine)
-    else:
-        df = pd.read_sql(sql.sitemap_companies, state.dbconwrite.engine)
+    df = pd.read_sql(sql.sitemap_companies, dbcon.engine)
     return df
 
 
-def get_sitemap_apps(state: State) -> pd.DataFrame:
+def get_sitemap_apps(dbcon: PostgresCon) -> pd.DataFrame:
     """Get sitemap apps."""
-    if state.dbconwrite is None:
-        logger.warning(
-            "Write connection not available, using read connection for sitemap"
-        )
-        df = pd.read_sql(sql.sitemap_apps, state.dbcon.engine)
-    else:
-        df = pd.read_sql(sql.sitemap_apps, state.dbconwrite.engine)
+    df = pd.read_sql(sql.sitemap_apps, dbcon.engine)
     return df
 
 

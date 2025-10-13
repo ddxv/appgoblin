@@ -8,10 +8,30 @@ import pandas as pd
 
 from config import MODULE_DIR, get_logger
 from dbcon.queries import get_sitemap_apps, get_sitemap_companies
+from dbcon.connections import get_db_connection
 
 logger = get_logger(__name__)
 
 SITEMAP_DIR = MODULE_DIR.parent / pathlib.Path("frontend/static")
+
+STATIC_URLS = [
+    "https://appgoblin.info",
+    "https://appgoblin.info/ad-creatives",
+    "https://appgoblin.info/blog",
+    "https://appgoblin.info/about",
+    "https://appgoblin.info/fastest-growing-apps/google/overall",
+    "https://appgoblin.info/fastest-growing-apps/ios/overall",
+    "https://appgoblin.info/companies",
+    "https://appgoblin.info/sdks",
+    "https://appgoblin.info/collections/new_monthly/google/overall",
+    "https://appgoblin.info/collections/new_weekly/apple/overall",
+    "https://appgoblin.info/collections/new_weekly/google/overall",
+    "https://appgoblin.info/collections/new_yearly/apple/overall",
+    "https://appgoblin.info/collections/new_yearly/google/overall",
+    "https://appgoblin.info/collections/new_weekly/apple/overall",
+    "https://appgoblin.info/rankings/store/1/collection/1/category/1/US",
+    "https://appgoblin.info/rankings/store/2/collection/4/category/120/US",
+]
 
 
 def set_df_sitemap_columns(
@@ -47,11 +67,9 @@ def create_sitemap(df: pd.DataFrame, filename: str) -> None:
     ]
 
     # Direct string formatting instead of XML DOM operations
-    template = """<url>
-    <loc>{url}</loc>
-    <priority>{priority}</priority>
-    <changefreq>{changefreq}</changefreq>
-     </url>"""
+    template = """    <url>
+        <loc>{url}</loc>
+    </url>"""
 
     # Bulk append using list comprehension
     xml_lines.extend(template.format(**row) for _, row in df.iterrows())
@@ -75,19 +93,19 @@ def create_static_sitemap() -> str:
         "https://appgoblin.info",
         "https://appgoblin.info/ad-creatives",
         "https://appgoblin.info/blog",
+        "https://appgoblin.info/about",
         "https://appgoblin.info/fastest-growing-apps/google/overall",
         "https://appgoblin.info/fastest-growing-apps/ios/overall",
-        "https://appgoblin.info/about",
         "https://appgoblin.info/companies",
         "https://appgoblin.info/sdks",
-        "https://appgoblin.info/rankings/store/1/collection/1/category/1/US",
-        "https://appgoblin.info/rankings/store/2/collection/4/category/120/US",
         "https://appgoblin.info/collections/new_monthly/google/overall",
         "https://appgoblin.info/collections/new_weekly/apple/overall",
         "https://appgoblin.info/collections/new_weekly/google/overall",
         "https://appgoblin.info/collections/new_yearly/apple/overall",
         "https://appgoblin.info/collections/new_yearly/google/overall",
         "https://appgoblin.info/collections/new_weekly/apple/overall",
+        "https://appgoblin.info/rankings/store/1/collection/1/category/1/US",
+        "https://appgoblin.info/rankings/store/2/collection/4/category/120/US",
     ]
 
     static_df = pd.DataFrame({"url": static_urls})
@@ -127,7 +145,7 @@ def create_main_sitemap(sitemaps: list[str], filename: str) -> None:
 
 
 def create_paginated_sitemaps(
-    df: pd.DataFrame, base_filename: str, chunk_size: int = 25000
+    df: pd.DataFrame, base_filename: str, chunk_size: int = 20000
 ) -> list[str]:
     """Create multiple sitemap files by paginating large DataFrame.
 
@@ -151,14 +169,24 @@ def create_paginated_sitemaps(
     return filenames
 
 
-apps = get_sitemap_apps()
-cdf = get_sitemap_companies()
+dbcon = get_db_connection("madrone")
 
-MIN_APP_COUNT = 10
+apps = get_sitemap_apps(dbcon)
+apps = apps.head(5000)
+
+
+cdf = get_sitemap_companies(dbcon)
+
+MIN_APP_COUNT = 1000
 
 # Companies with URL slugs are more likely to be relevant
 # (ie not typos from app-ads.txt)
-cdf = cdf[(cdf["app_count"] > MIN_APP_COUNT) | (cdf["type_url_slug"].notna())]
+
+is_ad_network = cdf["type_url_slug"].notnull() & cdf["type_url_slug"].isin(
+    ["ad-networks"]
+)
+is_not_ad_network = ~(is_ad_network) & cdf["type_url_slug"].notnull()
+cdf = cdf[((cdf["app_count"] > MIN_APP_COUNT) & is_ad_network) | is_not_ad_network]
 
 
 # about 6
@@ -212,57 +240,23 @@ companies["url"] = "https://appgoblin.info/companies/" + companies["company_doma
 companies = set_df_sitemap_columns(companies, 0.8)
 
 
-# about 40k
-company_domain_categories = (
-    cdf.groupby(["company_domain", "app_category"])["app_count"]
-    .sum()
-    .sort_values(ascending=False)
-    .reset_index()
-)
-# about 28k
-MIN_CD_APP_COUNT = 20
-company_domain_categories = company_domain_categories[
-    company_domain_categories["app_count"] > MIN_CD_APP_COUNT
-]
-company_domain_categories["url"] = (
-    "https://appgoblin.info/companies/"
-    + company_domain_categories["company_domain"]
-    + "/"
-    + company_domain_categories["app_category"]
-)
-company_domain_categories = set_df_sitemap_columns(company_domain_categories, 0.6)
-
-
-# about 600k
+# about 5k
 apps["url"] = "https://appgoblin.info/apps/" + apps["store_id"]
 apps = set_df_sitemap_columns(apps, 0.5, "monthly")
 
+static_pages = pd.DataFrame({"url": STATIC_URLS})
+static_pages = set_df_sitemap_columns(static_pages, 1.0, "weekly")
 
-create_sitemap(companies, "sitemap_companies.xml")
-create_sitemap(company_types, "sitemap_company_types.xml")
-create_sitemap(company_categories, "sitemap_company_categories.xml")
-create_sitemap(company_type_categories, "sitemap_company_type_categories.xml")
-
-# Larger
-paginated_sitemaps = create_paginated_sitemaps(
-    company_domain_categories,
-    "sitemap_company_domain_categories",
+allurls = pd.concat(
+    [
+        static_pages,
+        company_types,
+        company_categories,
+        company_type_categories,
+        companies,
+        apps,
+    ],
+    ignore_index=True,
 )
-paginated_sitemaps += create_paginated_sitemaps(
-    apps,
-    "sitemap_apps",
-)
 
-# List of sitemap files
-default_sitemaps = [
-    "https://appgoblin.info/sitemap_companies.xml",
-    "https://appgoblin.info/sitemap_company_types.xml",
-    "https://appgoblin.info/sitemap_company_categories.xml",
-    "https://appgoblin.info/sitemap_company_type_categories.xml",
-]
-
-# Modify your main script to:
-static_sitemap = create_static_sitemap()
-create_main_sitemap(
-    [static_sitemap, *default_sitemaps, *paginated_sitemaps], "sitemap.xml"
-)
+create_sitemap(allurls, "sitemap.xml")
