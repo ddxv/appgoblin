@@ -62,7 +62,7 @@
 	</div>
 
 	<!-- Key Metrics Dashboard -->
-	<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+	<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
 		<div class="card p-6 bg-gradient-to-br from-purple-500 to-purple-600 text-white shadow-lg">
 			<div class="text-purple-100 text-sm font-semibold mb-2">Apps Analyzed</div>
 			<div class="text-4xl font-bold mb-1">{data.summary.totalApps}</div>
@@ -140,10 +140,11 @@
 			</div>
 		</div>
 	</div>
+
 	<!-- ========================================= -->
 	<!-- SECTION 2: AD NETWORK LANDSCAPE -->
 	<!-- ========================================= -->
-	<div class="mb-16">
+	<div class="mb-24 pt-12 border-t-2 border-surface-200 dark:border-surface-700">
 		<!-- Section Header -->
 		<div class="mb-8 pb-4 border-b-2 border-indigo-200 dark:border-indigo-800">
 			<div class="flex items-center gap-3 mb-2">
@@ -192,89 +193,101 @@
 		</div>
 
 		<!-- Content -->
-		<div
-			class="card p-8 bg-gradient-to-br from-indigo-50 to-blue-50 dark:from-surface-800 dark:to-surface-700 border-2 border-indigo-200 dark:border-indigo-800"
-		>
-			<div class="flex items-center gap-2 mb-6">
-				<span class="text-3xl">🌐</span>
-				<h3 class="text-xl font-bold text-indigo-900 dark:text-indigo-100">Network Distribution</h3>
-			</div>
-			<div class="prose dark:prose-invert max-w-none mb-6">
-				<p class="text-lg leading-relaxed text-surface-700 dark:text-surface-300">
-					The mobile advertising ecosystem is powered by <strong class="text-indigo-600"
-						>{data.networkStats.totalNetworks} major ad networks</strong
-					>, connecting
-					<strong class="text-blue-600">{data.networkStats.totalAdvertisers} advertisers</strong>
-					with
-					<strong class="text-cyan-600">{data.networkStats.totalPublishers} publishers</strong>,
-					delivering
-					<strong class="text-purple-600"
-						>{data.networkStats.totalNetworkCreatives} unique creatives</strong
-					>.
-				</p>
-				<p class="text-lg leading-relaxed text-surface-700 dark:text-surface-300 mt-4">
-					<strong>Google dominates</strong> with {data.adNetworks[0].publisher_count} publishers and
-					{data.adNetworks[0].creatives_count} creatives, followed by Unity3D ({data.adNetworks[1]
-						.publisher_count} publishers) and Yandex ({data.adNetworks[2].publisher_count} publishers).
-					This concentration suggests that
-					<strong class="text-rose-600">diversification beyond Google Ads is critical</strong> for sustainable
-					growth, as smaller networks like Mintegral and Fyber provide valuable audience reach at competitive
-					rates.
-				</p>
-			</div>
+		<div class="flex items-center gap-2 mb-6">
+			<span class="text-3xl">🌐</span>
+			<h3 class="text-xl font-bold text-indigo-900 dark:text-indigo-100">Network Distribution</h3>
+		</div>
+		<div class="prose dark:prose-invert max-w-none mb-6">
+			<p class="text-lg leading-relaxed text-surface-700 dark:text-surface-300">
+				The mobile advertising ecosystem is powered by <strong class="text-indigo-600"
+					>{data.networkStats.totalNetworks} major ad networks</strong
+				>, connecting
+				<strong class="text-blue-600">{data.networkStats.totalAdvertisers} advertisers</strong>
+				with
+				<strong class="text-cyan-600">{data.networkStats.totalPublishers} publishers</strong>,
+				delivering
+				<strong class="text-purple-600"
+					>{data.networkStats.totalNetworkCreatives} unique creatives</strong
+				>.
+			</p>
+			<p class="text-lg leading-relaxed text-surface-700 dark:text-surface-300 mt-4">
+				<strong>Google dominates</strong> with {data.adNetworks[0].publisher_count} publishers and
+				{data.adNetworks[0].creatives_count} creatives, followed by Unity3D ({data.adNetworks[1]
+					.publisher_count} publishers) and Yandex ({data.adNetworks[2].publisher_count} publishers).
+				This concentration suggests that
+				<strong class="text-rose-600">diversification beyond Google Ads is critical</strong> for sustainable
+				growth, as smaller networks like Mintegral and Fyber provide valuable audience reach at competitive
+				rates.
+			</p>
+		</div>
 
-			<!-- Top Networks Table -->
+		<!-- Top Networks Table -->
+		<div class="card overflow-hidden">
 			<div class="overflow-x-auto">
 				<table class="w-full">
-					<thead>
-						<tr class="border-b-2 border-indigo-300 dark:border-indigo-700">
-							<th
-								class="px-4 py-3 text-left text-sm font-semibold text-surface-700 dark:text-surface-300"
-								>Network</th
-							>
-							<th
-								class="px-4 py-3 text-right text-sm font-semibold text-surface-700 dark:text-surface-300"
-								>Publishers</th
-							>
-							<th
-								class="px-4 py-3 text-right text-sm font-semibold text-surface-700 dark:text-surface-300"
-								>Advertisers</th
-							>
-							<th
-								class="px-4 py-3 text-right text-sm font-semibold text-surface-700 dark:text-surface-300"
-								>Creatives</th
-							>
-							<th
-								class="px-4 py-3 text-right text-sm font-semibold text-surface-700 dark:text-surface-300"
-								>Market Share</th
-							>
+					<thead class="bg-gradient-to-r from-indigo-600 to-blue-600 text-white">
+						<tr>
+							<th class="px-4 py-3 text-left text-sm font-semibold">Rank</th>
+							<th class="px-4 py-3 text-left text-sm font-semibold">Network</th>
+							<th class="px-4 py-3 text-left text-sm font-semibold">Domains</th>
+							<th class="px-4 py-3 text-right text-sm font-semibold">Publishers</th>
+							<th class="px-4 py-3 text-right text-sm font-semibold">Advertisers</th>
+							<th class="px-4 py-3 text-right text-sm font-semibold">Creatives</th>
+							<th class="px-4 py-3 text-right text-sm font-semibold">Market Share</th>
 						</tr>
 					</thead>
 					<tbody>
 						{#each data.adNetworks as network, index}
 							<tr
-								class="border-b border-surface-200 dark:border-surface-700 hover:bg-indigo-50 dark:hover:bg-surface-800 transition-colors"
+								class="border-b border-surface-200 dark:border-surface-700 hover:bg-surface-50 dark:hover:bg-surface-800 transition-colors"
 							>
-								<td class="px-4 py-3">
-									<div class="flex items-center gap-2">
-										<span class="text-lg"
-											>{index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '📊'}</span
-										>
-										<span class="font-semibold text-surface-800 dark:text-surface-200"
-											>{network.ad_network_domain}</span
-										>
-									</div>
+								<td class="px-4 py-4">
+									<span
+										class="inline-flex items-center justify-center w-8 h-8 rounded-full font-bold text-sm {index ===
+										0
+											? 'bg-gradient-to-br from-yellow-400 to-yellow-600 text-white'
+											: index === 1
+												? 'bg-gradient-to-br from-gray-300 to-gray-500 text-white'
+												: index === 2
+													? 'bg-gradient-to-br from-orange-400 to-orange-600 text-white'
+													: 'bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300'}"
+									>
+										{index + 1}
+									</span>
 								</td>
-								<td class="px-4 py-3 text-right font-semibold text-cyan-600"
-									>{network.publisher_count.toLocaleString()}</td
-								>
-								<td class="px-4 py-3 text-right font-semibold text-blue-600"
-									>{network.advertiser_count.toLocaleString()}</td
-								>
-								<td class="px-4 py-3 text-right font-semibold text-purple-600"
-									>{network.creatives_count.toLocaleString()}</td
-								>
-								<td class="px-4 py-3 text-right">
+								<td class="px-4 py-4">
+									<CompanyButton
+										companyDomain={network.ad_network_domain}
+										companyName={network.ad_network_name}
+										companyLogoUrl={network.company_logo_url}
+										size="md"
+									/>
+								</td>
+								<td class="px-4 py-4">
+									{#if network.domains && network.domains.length > 0}
+										<div class="text-xs text-surface-500 dark:text-surface-400">
+											{network.domains.join(', ')}
+										</div>
+									{:else}
+										<span class="text-xs text-surface-400">—</span>
+									{/if}
+								</td>
+								<td class="px-4 py-4 text-right">
+									<span class="font-semibold text-cyan-600 dark:text-cyan-400">
+										{network.publisher_count.toLocaleString()}
+									</span>
+								</td>
+								<td class="px-4 py-4 text-right">
+									<span class="font-semibold text-blue-600 dark:text-blue-400">
+										{network.advertiser_count.toLocaleString()}
+									</span>
+								</td>
+								<td class="px-4 py-4 text-right">
+									<span class="font-semibold text-purple-600 dark:text-purple-400">
+										{network.creatives_count.toLocaleString()}
+									</span>
+								</td>
+								<td class="px-4 py-4 text-right">
 									<div class="flex items-center justify-end gap-2">
 										<div
 											class="w-24 h-2 bg-surface-200 dark:bg-surface-700 rounded-full overflow-hidden"
@@ -308,7 +321,7 @@
 	<!-- ========================================= -->
 	<!-- SECTION 3: MOST POPULAR VIDEO CREATIVES -->
 	<!-- ========================================= -->
-	<div class="mb-16">
+	<div class="mb-24 pt-12 border-t-2 border-surface-200 dark:border-surface-700">
 		<!-- Section Header -->
 		<div class="mb-8 pb-4 border-b-2 border-pink-200 dark:border-pink-800">
 			<div class="flex items-center gap-3 mb-2">
@@ -329,112 +342,107 @@
 		</div>
 
 		<!-- Content -->
-		<div
-			class="card p-8 bg-gradient-to-br from-pink-50 to-rose-50 dark:from-surface-800 dark:to-surface-700 border-2 border-pink-200 dark:border-pink-800"
-		>
-			<div class="flex items-center gap-2 mb-6">
-				<span class="text-3xl">🎬</span>
-				<h3 class="text-xl font-bold text-pink-900 dark:text-pink-100">Creative Performance</h3>
-			</div>
-			<div class="prose dark:prose-invert max-w-none mb-6">
-				<p class="text-lg leading-relaxed text-surface-700 dark:text-surface-300">
-					These video creatives achieved the widest distribution across publisher networks during {data
-						.summary.reportPeriod}. The top performer reached
-					<strong class="text-pink-600"
-						>{data.popularCreatives[0].publisher_count} publishers</strong
-					>, demonstrating the viral potential of engaging video content in user acquisition
-					campaigns.
-				</p>
-			</div>
+		<div class="flex items-center gap-2 mb-6">
+			<span class="text-3xl">🎬</span>
+			<h3 class="text-xl font-bold text-pink-900 dark:text-pink-100">Creative Performance</h3>
+		</div>
+		<div class="prose dark:prose-invert max-w-none mb-6">
+			<p class="text-lg leading-relaxed text-surface-700 dark:text-surface-300">
+				These video creatives achieved the widest distribution across publisher networks during {data
+					.summary.reportPeriod}. The top performer reached
+				<strong class="text-pink-600">{data.popularCreatives[0].publisher_count} publishers</strong
+				>, demonstrating the viral potential of engaging video content in user acquisition
+				campaigns.
+			</p>
+		</div>
 
-			<!-- Creatives Grid -->
-			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
-				{#each data.popularCreatives as creative, index}
+		<!-- Creatives Grid -->
+		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+			{#each data.popularCreatives as creative, index}
+				<div
+					class="bg-white dark:bg-surface-900 rounded-lg border-2 border-pink-200 dark:border-pink-800 overflow-hidden hover:shadow-xl transition-shadow duration-300"
+				>
+					<!-- Rank Badge -->
 					<div
-						class="bg-white dark:bg-surface-900 rounded-lg border-2 border-pink-200 dark:border-pink-800 overflow-hidden hover:shadow-xl transition-shadow duration-300"
+						class="bg-gradient-to-r from-pink-500 to-rose-500 text-white px-3 py-1 text-sm font-bold"
 					>
-						<!-- Rank Badge -->
+						#{index + 1} Most Popular
+					</div>
+
+					<!-- Thumbnail with Play Button -->
+					<button
+						onclick={() =>
+							creativeModal.open(
+								creative.md5_hash,
+								creative.file_extension,
+								`Popular Creative #${index + 1}`
+							)}
+						class="relative w-full aspect-video bg-gradient-to-br from-purple-200 to-pink-200 dark:from-purple-900 dark:to-pink-900 cursor-pointer group overflow-hidden"
+						title="Click to play video"
+					>
+						<img
+							src="https://media.appgoblin.info/creatives/thumbs/{creative.md5_hash}.jpg"
+							alt="Creative thumbnail"
+							class="w-full h-full object-cover"
+							onerror={(e) => {
+								const target = e.currentTarget as HTMLImageElement;
+								target.style.display = 'none';
+							}}
+						/>
+						<!-- Play Button Overlay -->
 						<div
-							class="bg-gradient-to-r from-pink-500 to-rose-500 text-white px-3 py-1 text-sm font-bold"
+							class="absolute inset-0 flex items-center justify-center bg-surface-100-900/20 group-hover:bg-surface-100-900/10 transition-all duration-200"
 						>
-							#{index + 1} Most Popular
+							<div
+								class="w-12 h-12 bg-white rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-200 shadow-lg"
+							>
+								<svg class="w-8 h-8 text-pink-600 ml-1" fill="currentColor" viewBox="0 0 20 20">
+									<path
+										d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z"
+									/>
+								</svg>
+							</div>
+						</div>
+					</button>
+
+					<!-- Stats -->
+					<div class="p-4 space-y-2">
+						<!-- Advertiser Info -->
+						<div class="flex items-center gap-2 mb-3">
+							<img
+								src="https://media.appgoblin.info/app-icons/{creative.advertiser_store_id}/{creative.advertiser_icon_url_100}"
+								alt="App icon"
+								class="w-14 h-14 rounded-lg shadow-sm"
+								onerror={(e) =>
+									((e.currentTarget as HTMLImageElement).src = '/default_company_logo.png')}
+							/>
+							<span class="text-xs text-surface-600 dark:text-surface-400 truncate"
+								>{creative.advertiser_store_id}</span
+							>
 						</div>
 
-						<!-- Thumbnail with Play Button -->
-						<button
-							onclick={() =>
-								creativeModal.open(
-									creative.md5_hash,
-									creative.file_extension,
-									`Popular Creative #${index + 1}`
-								)}
-							class="relative w-full aspect-video bg-gradient-to-br from-purple-200 to-pink-200 dark:from-purple-900 dark:to-pink-900 cursor-pointer group overflow-hidden"
-							title="Click to play video"
+						<!-- Publisher Count -->
+						<div class="flex justify-between items-center">
+							<span class="text-sm text-surface-600 dark:text-surface-400">Publishers</span>
+							<span class="text-lg font-bold text-pink-600">{creative.publisher_count}</span>
+						</div>
+
+						<!-- Date Range -->
+						<div
+							class="text-xs text-surface-500 dark:text-surface-500 pt-2 border-t border-surface-200 dark:border-surface-700"
 						>
-							<img
-								src="https://media.appgoblin.info/creatives/thumbs/{creative.md5_hash}.jpg"
-								alt="Creative thumbnail"
-								class="w-full h-full object-cover"
-								onerror={(e) => {
-									const target = e.currentTarget as HTMLImageElement;
-									target.style.display = 'none';
-								}}
-							/>
-							<!-- Play Button Overlay -->
-							<div
-								class="absolute inset-0 flex items-center justify-center bg-surface-100-900/80 group-hover:bg-surface-100-900/50 transition-all duration-200"
-							>
-								<div
-									class="w-16 h-16 bg-white rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-200 shadow-lg"
-								>
-									<svg class="w-8 h-8 text-pink-600 ml-1" fill="currentColor" viewBox="0 0 20 20">
-										<path
-											d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z"
-										/>
-									</svg>
-								</div>
+							<div class="flex justify-between">
+								<span>First seen:</span>
+								<span class="font-semibold">{formatDate(creative.first_seen)}</span>
 							</div>
-						</button>
-
-						<!-- Stats -->
-						<div class="p-4 space-y-2">
-							<!-- Advertiser Info -->
-							<div class="flex items-center gap-2 mb-3">
-								<img
-									src="https://media.appgoblin.info/app-icons/{creative.advertiser_store_id}/{creative.advertiser_icon_url_100}"
-									alt="App icon"
-									class="w-8 h-8 rounded-lg shadow-sm"
-									onerror={(e) =>
-										((e.currentTarget as HTMLImageElement).src = '/default_company_logo.png')}
-								/>
-								<span class="text-xs text-surface-600 dark:text-surface-400 truncate"
-									>{creative.advertiser_store_id}</span
-								>
-							</div>
-
-							<!-- Publisher Count -->
-							<div class="flex justify-between items-center">
-								<span class="text-sm text-surface-600 dark:text-surface-400">Publishers</span>
-								<span class="text-lg font-bold text-pink-600">{creative.publisher_count}</span>
-							</div>
-
-							<!-- Date Range -->
-							<div
-								class="text-xs text-surface-500 dark:text-surface-500 pt-2 border-t border-surface-200 dark:border-surface-700"
-							>
-								<div class="flex justify-between">
-									<span>First seen:</span>
-									<span class="font-semibold">{formatDate(creative.first_seen)}</span>
-								</div>
-								<div class="flex justify-between">
-									<span>Last seen:</span>
-									<span class="font-semibold">{formatDate(creative.last_seen)}</span>
-								</div>
+							<div class="flex justify-between">
+								<span>Last seen:</span>
+								<span class="font-semibold">{formatDate(creative.last_seen)}</span>
 							</div>
 						</div>
 					</div>
-				{/each}
-			</div>
+				</div>
+			{/each}
 		</div>
 
 		<!-- ========================================= -->
@@ -461,178 +469,162 @@
 			</div>
 
 			<!-- Content -->
-			<div
-				class="card p-8 bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-surface-800 dark:to-surface-700 border-2 border-emerald-200 dark:border-emerald-800"
-			>
-				<div class="flex items-center gap-2 mb-6">
-					<span class="text-3xl">📡</span>
-					<h3 class="text-xl font-bold text-emerald-900 dark:text-emerald-100">
-						Reach Tiers & Distribution
-					</h3>
-				</div>
-				<div class="prose dark:prose-invert max-w-none mb-6">
-					<p class="text-lg leading-relaxed text-surface-700 dark:text-surface-300">
-						Advertisers are categorized into <strong class="text-emerald-600"
-							>four reach tiers</strong
-						>
-						based on their publisher distribution strategy. Elite campaigns achieve
-						<strong class="text-teal-600">3+ publisher placements</strong>, demonstrating
-						comprehensive market penetration, while targeted campaigns focus on
-						<strong class="text-cyan-600">strategic single-publisher relationships</strong> for precision
-						marketing.
-					</p>
-				</div>
-
-				<!-- Reach Insights -->
-				<div
-					class="bg-white dark:bg-surface-900 rounded-lg p-6 border border-emerald-200 dark:border-emerald-800"
-				>
-					<h3 class="text-lg font-bold mb-4 text-emerald-900 dark:text-emerald-100">
-						💡 Reach Strategy Insights
-					</h3>
-					<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-						<div class="flex gap-3">
-							<div
-								class="flex-shrink-0 w-8 h-8 bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center text-purple-600 dark:text-purple-400 font-bold"
-							>
-								1
-							</div>
-							<div>
-								<h4 class="font-semibold text-surface-800 dark:text-surface-200">
-									Elite Scale Advantage
-								</h4>
-								<p class="text-sm text-surface-600 dark:text-surface-400">
-									Campaigns with 3+ publishers achieve {(
-										(data.reachStats.elite.totalInstalls / data.summary.totalInstalls) *
-										100
-									).toFixed(1)}% of total installs, demonstrating the compounding effect of
-									multi-publisher strategies.
-								</p>
-							</div>
-						</div>
-						<div class="flex gap-3">
-							<div
-								class="flex-shrink-0 w-8 h-8 bg-teal-100 dark:bg-teal-900 rounded-full flex items-center justify-center text-teal-600 dark:text-teal-400 font-bold"
-							>
-								2
-							</div>
-							<div>
-								<h4 class="font-semibold text-surface-800 dark:text-surface-200">
-									Targeted Efficiency
-								</h4>
-								<p class="text-sm text-surface-600 dark:text-surface-400">
-									{data.reachStats.targeted.count} apps leverage focused single-publisher strategies,
-									optimizing for quality over quantity in their user acquisition approach.
-								</p>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<!-- Top Apps by Publisher Reach -->
-				<div
-					class="mt-6 bg-white dark:bg-surface-900 rounded-lg border border-emerald-200 dark:border-emerald-800 overflow-hidden"
-				>
-					<div
-						class="px-6 py-4 bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 border-b border-emerald-200 dark:border-emerald-800"
+			<div class="flex items-center gap-2 mb-6">
+				<span class="text-3xl">📡</span>
+				<h3 class="text-xl font-bold text-emerald-900 dark:text-emerald-100">
+					Reach Tiers & Distribution
+				</h3>
+			</div>
+			<div class="prose dark:prose-invert max-w-none mb-6">
+				<p class="text-lg leading-relaxed text-surface-700 dark:text-surface-300">
+					Advertisers are categorized into <strong class="text-emerald-600">four reach tiers</strong
 					>
-						<h3 class="text-xl font-bold text-emerald-900 dark:text-emerald-100">
-							🏆 Top 10 Apps by Publisher Reach
-						</h3>
-						<p class="text-sm text-surface-600 dark:text-surface-400 mt-1">
-							Advertisers achieving the widest distribution across multiple publisher apps
-						</p>
+					based on their publisher distribution strategy. Elite campaigns achieve
+					<strong class="text-teal-600">3+ publisher placements</strong>, demonstrating
+					comprehensive market penetration, while targeted campaigns focus on
+					<strong class="text-cyan-600">strategic single-publisher relationships</strong> for precision
+					marketing.
+				</p>
+			</div>
+
+			<!-- Reach Insights -->
+			<div
+				class="bg-white dark:bg-surface-900 rounded-lg p-6 border border-emerald-200 dark:border-emerald-800"
+			>
+				<h3 class="text-lg font-bold mb-4 text-emerald-900 dark:text-emerald-100">
+					💡 Reach Strategy Insights
+				</h3>
+				<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+					<div class="flex gap-3">
+						<div
+							class="flex-shrink-0 w-8 h-8 bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center text-purple-600 dark:text-purple-400 font-bold"
+						>
+							1
+						</div>
+						<div>
+							<h4 class="font-semibold text-surface-800 dark:text-surface-200">
+								Elite Scale Advantage
+							</h4>
+							<p class="text-sm text-surface-600 dark:text-surface-400">
+								Campaigns with 3+ publishers achieve {(
+									(data.reachStats.elite.totalInstalls / data.summary.totalInstalls) *
+									100
+								).toFixed(1)}% of total installs, demonstrating the compounding effect of
+								multi-publisher strategies.
+							</p>
+						</div>
 					</div>
-					<div class="p-6">
-						<div class="space-y-3">
+					<div class="flex gap-3">
+						<div
+							class="flex-shrink-0 w-8 h-8 bg-teal-100 dark:bg-teal-900 rounded-full flex items-center justify-center text-teal-600 dark:text-teal-400 font-bold"
+						>
+							2
+						</div>
+						<div>
+							<h4 class="font-semibold text-surface-800 dark:text-surface-200">
+								Targeted Efficiency
+							</h4>
+							<p class="text-sm text-surface-600 dark:text-surface-400">
+								{data.reachStats.targeted.count} apps leverage focused single-publisher strategies, optimizing
+								for quality over quantity in their user acquisition approach.
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Top Apps by Publisher Reach -->
+			<div class="mt-6 card overflow-hidden">
+				<div class="overflow-x-auto">
+					<table class="w-full">
+						<thead class="bg-gradient-to-r from-emerald-600 to-teal-600 text-white">
+							<tr>
+								<th class="px-4 py-3 text-left text-sm font-semibold">Rank</th>
+								<th class="px-4 py-3 text-left text-sm font-semibold">App</th>
+								<th class="px-4 py-3 text-right text-sm font-semibold">Publishers</th>
+								<th class="px-4 py-3 text-right text-sm font-semibold">Creatives</th>
+								<th class="px-4 py-3 text-right text-sm font-semibold">Installs</th>
+								<th class="px-4 py-3 text-right text-sm font-semibold">Avg/Pub</th>
+								<th class="px-4 py-3 text-left text-sm font-semibold">Ad Networks</th>
+								<th class="px-4 py-3 text-left text-sm font-semibold">MMP</th>
+							</tr>
+						</thead>
+						<tbody>
 							{#each data.appReachData.slice(0, 10) as app, index}
-								<div
-									class="flex items-center gap-4 p-4 rounded-lg bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-surface-800 dark:to-surface-700 hover:shadow-md transition-all"
+								<tr
+									class="border-b border-surface-200 dark:border-surface-700 hover:bg-surface-50 dark:hover:bg-surface-800 transition-colors"
 								>
-									<!-- Rank Badge -->
-									<div
-										class="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center font-bold text-base shadow-sm {index ===
-										0
-											? 'bg-gradient-to-br from-yellow-400 to-yellow-600 text-white'
-											: index === 1
-												? 'bg-gradient-to-br from-gray-300 to-gray-500 text-white'
-												: index === 2
-													? 'bg-gradient-to-br from-orange-400 to-orange-600 text-white'
-													: 'bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300'}"
+									<td class="px-4 py-4">
+										<span
+											class="inline-flex items-center justify-center w-8 h-8 rounded-full font-bold text-sm {index ===
+											0
+												? 'bg-gradient-to-br from-yellow-400 to-yellow-600 text-white'
+												: index === 1
+													? 'bg-gradient-to-br from-gray-300 to-gray-500 text-white'
+													: index === 2
+														? 'bg-gradient-to-br from-orange-400 to-orange-600 text-white'
+														: 'bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300'}"
+										>
+											{index + 1}
+										</span>
+									</td>
+									<td class="px-4 py-4">
+										<div class="flex items-center gap-3">
+											<img
+												src="https://media.appgoblin.info/app-icons/{app.advertiser_store_id}/{app.advertiser_icon_url_100}"
+												alt={app.advertiser_name}
+												class="w-20 h-20 rounded-lg shadow-sm"
+												onerror={(e) =>
+													((e.currentTarget as HTMLImageElement).src = '/default_company_logo.png')}
+											/>
+											<div>
+												<div class="font-semibold text-emerald-600 dark:text-emerald-400">
+													{app.advertiser_name}
+												</div>
+												<div class="text-xs text-surface-500 dark:text-surface-400 capitalize">
+													{app.advertiser_category.replace(/_/g, ' ')}
+												</div>
+											</div>
+										</div>
+									</td>
+									<td class="px-4 py-4 text-right">
+										<span class="text-xl font-bold text-emerald-600 dark:text-emerald-400">
+											{app.unique_publishers}
+										</span>
+									</td>
+									<td class="px-4 py-4 text-right">
+										<span class="text-base font-bold text-purple-600 dark:text-purple-400">
+											{app.unique_creatives}
+										</span>
+									</td>
+									<td
+										class="px-4 py-4 text-right font-semibold text-surface-700 dark:text-surface-300"
 									>
-										#{index + 1}
-									</div>
-
-									<!-- App Icon -->
-									<img
-										src="https://media.appgoblin.info/app-icons/{app.advertiser_store_id}/{app.advertiser_icon_url_100}"
-										alt={app.advertiser_name}
-										class="w-12 h-12 rounded-xl shadow-md flex-shrink-0"
-										onerror={(e) =>
-											((e.currentTarget as HTMLImageElement).src = '/default_company_logo.png')}
-									/>
-
-									<!-- App Info -->
-									<div class="flex-1 min-w-0">
-										<h4 class="font-bold text-surface-900 dark:text-surface-100 truncate text-sm">
-											{app.advertiser_name}
-										</h4>
-										<p class="text-xs text-surface-600 dark:text-surface-400 capitalize">
-											{app.advertiser_category.replace(/_/g, ' ')}
-										</p>
-									</div>
-
-									<!-- Metrics Grid -->
-									<div class="flex gap-4 flex-wrap">
-										<div class="text-center">
-											<div class="text-xl font-bold text-emerald-600 dark:text-emerald-400">
-												{app.unique_publishers}
-											</div>
-											<div class="text-xs text-surface-600 dark:text-surface-400">Publishers</div>
-										</div>
-										<div class="text-center">
-											<div class="text-base font-bold text-purple-600 dark:text-purple-400">
-												{app.unique_creatives}
-											</div>
-											<div class="text-xs text-surface-600 dark:text-surface-400">Creatives</div>
-										</div>
-										<div class="text-center">
-											<div class="text-base font-bold text-blue-600 dark:text-blue-400">
-												{formatNumber(app.advertiser_installs)}
-											</div>
-											<div class="text-xs text-surface-600 dark:text-surface-400">Installs</div>
-										</div>
-										<div class="text-center hidden sm:block">
-											<div class="text-sm font-semibold text-teal-600 dark:text-teal-400">
-												{formatNumber(app.avg_publisher_installs)}
-											</div>
-											<div class="text-xs text-surface-600 dark:text-surface-400">Avg/Pub</div>
-										</div>
-									</div>
-								</div>
-
-								<!-- Ad Networks & MMPs -->
-								{#if (app.ad_networks && app.ad_networks.length > 0) || (app.mmps && app.mmps.length > 0)}
-									<div class="px-4 pb-4 space-y-2">
+										{formatNumber(app.advertiser_installs)}
+									</td>
+									<td class="px-4 py-4 text-right">
+										<span class="text-sm font-semibold text-teal-600 dark:text-teal-400">
+											{formatNumber(app.avg_publisher_installs)}
+										</span>
+									</td>
+									<td class="px-4 py-4">
 										{#if app.ad_networks && app.ad_networks.length > 0}
-											<div class="flex items-center gap-2 flex-wrap">
-												<span class="text-xs text-surface-600 dark:text-surface-400 font-semibold">
-													Ad Networks:
-												</span>
+											<div class="flex flex-wrap gap-1">
 												{#each app.ad_networks as network}
 													<CompanyButton
 														companyDomain={network.domain}
 														companyLogoUrl={network.logo_url}
-														size="sm"
+														size="md"
 													/>
 												{/each}
 											</div>
+										{:else}
+											<span class="text-xs text-surface-400">—</span>
 										{/if}
+									</td>
+									<td class="px-4 py-4">
 										{#if app.mmps && app.mmps.length > 0}
-											<div class="flex items-center gap-2 flex-wrap">
-												<span class="text-xs text-surface-600 dark:text-surface-400 font-semibold">
-													MMP:
-												</span>
+											<div class="flex flex-wrap gap-1">
 												{#each app.mmps as mmp}
 													<CompanyButton
 														companyDomain={mmp.domain}
@@ -641,19 +633,21 @@
 													/>
 												{/each}
 											</div>
+										{:else}
+											<span class="text-xs text-surface-400">—</span>
 										{/if}
-									</div>
-								{/if}
+									</td>
+								</tr>
 							{/each}
-						</div>
-					</div>
+						</tbody>
+					</table>
 				</div>
 			</div>
 
 			<!-- ========================================= -->
 			<!-- SECTION 5: AD IMPACT ON INSTALLS -->
 			<!-- ========================================= -->
-			<div class="mb-16">
+			<div class="mb-24 pt-12 border-t-2 border-surface-200 dark:border-surface-700">
 				<!-- Section Header -->
 				<div class="mb-8 pb-4 border-b-2 border-orange-200 dark:border-orange-800">
 					<div class="flex items-center gap-3 mb-2">
@@ -703,7 +697,7 @@
 												<img
 													src="https://media.appgoblin.info/app-icons/{app.store_id}/{app.icon_url_100}"
 													alt={app.app_name}
-													class="w-12 h-12 rounded-lg shadow-sm"
+													class="w-20 h-20 rounded-lg shadow-sm"
 													onerror={(e) =>
 														((e.currentTarget as HTMLImageElement).src =
 															'/default_company_logo.png')}
@@ -812,242 +806,235 @@
 						</table>
 					</div>
 				</div>
+				\t\t\t
 			</div>
 
-			<!-- Key Insights Section -->
-			<div
-				class="card p-8 bg-gradient-to-br from-purple-50 to-pink-50 dark:from-surface-800 dark:to-surface-700 border-2 border-purple-200 dark:border-purple-800"
-			>
-				<h2 class="text-2xl font-bold mb-6 text-purple-900 dark:text-purple-100">
-					💡 Key Insights
-				</h2>
-				<div class="space-y-4">
-					<div class="flex gap-4 items-start">
+			\t\t\t<!-- ========================================= -->
+			\t\t\t<!-- SECTION 6: KEY INSIGHTS & RECOMMENDATIONS -->
+			\t\t\t<!-- ========================================= -->
+			\t\t\t
+			<div class="mb-24 pt-12 border-t-2 border-surface-200 dark:border-surface-700">
+				<!-- Section Header -->
+				<div class="mb-8 pb-4 border-b-2 border-blue-200 dark:border-blue-800">
+					<div class="flex items-center gap-3 mb-2">
 						<div
-							class="flex-shrink-0 w-8 h-8 bg-purple-500 text-white rounded-full flex items-center justify-center font-bold"
+							class="w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-lg"
 						>
-							1
+							06
 						</div>
-						<div>
-							<h3 class="font-bold text-lg mb-2">Google Ads Dominance</h3>
-							<p class="text-surface-700 dark:text-surface-300">
-								Google Ads remains the primary user acquisition channel, appearing in {Math.round(
-									(data.apps.filter((a: any) =>
-										Array.from(a.ad_networks).some((n: any) => n === 'google.com')
-									).length /
-										data.apps.length) *
-										100
-								)}% of campaigns. Apps should prioritize Google Ads optimization for maximum reach.
-							</p>
-						</div>
-					</div>
-
-					<div class="flex gap-4 items-start">
-						<div
-							class="flex-shrink-0 w-8 h-8 bg-pink-500 text-white rounded-full flex items-center justify-center font-bold"
+						<h2
+							class="text-3xl font-bold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent"
 						>
-							2
-						</div>
-						<div>
-							<h3 class="font-bold text-lg mb-2">Video Creative Performance</h3>
-							<p class="text-surface-700 dark:text-surface-300">
-								{Math.round(
-									(data.apps.filter((a: any) =>
-										a.creatives.some((c: any) => c.file_extension === 'mp4')
-									).length /
-										data.apps.length) *
-										100
-								)}% of high-growth apps utilize video creatives (MP4). Video content shows strong
-								engagement and should be a core component of UA strategies.
-							</p>
-						</div>
+							Key Insights & Recommendations
+						</h2>
 					</div>
-
-					<div class="flex gap-4 items-start">
-						<div
-							class="flex-shrink-0 w-8 h-8 bg-rose-500 text-white rounded-full flex items-center justify-center font-bold"
-						>
-							3
-						</div>
-						<div>
-							<h3 class="font-bold text-lg mb-2">Multi-Network Strategy</h3>
-							<p class="text-surface-700 dark:text-surface-300">
-								Top performers leverage an average of {(
-									data.apps
-										.slice(0, 5)
-										.reduce((sum: number, app: any) => sum + app.ad_networks.size, 0) / 5
-								).toFixed(1)} advertising networks. Diversifying across multiple platforms reduces dependency
-								and increases audience reach.
-							</p>
-						</div>
-					</div>
-
-					<div class="flex gap-4 items-start">
-						<div
-							class="flex-shrink-0 w-8 h-8 bg-orange-500 text-white rounded-full flex items-center justify-center font-bold"
-						>
-							4
-						</div>
-						<div>
-							<h3 class="font-bold text-lg mb-2">Publisher Distribution Matters</h3>
-							<p class="text-surface-700 dark:text-surface-300">
-								High-growth apps average {(
-									data.apps.reduce((sum: number, app: any) => sum + app.pub_count, 0) /
-									data.apps.length
-								).toFixed(1)} publisher placements. Broader distribution across publishers increases
-								visibility and acquisition potential.
-							</p>
-						</div>
-					</div>
+					<p class="text-surface-600 dark:text-surface-400 text-sm ml-13">
+						Actionable takeaways and strategic recommendations for user acquisition
+					</p>
 				</div>
-			</div>
 
-			<!-- Footer -->
-			<div class="mt-12 text-center text-sm text-surface-500 dark:text-surface-400">
-				<p>
-					Data source: AppGoblin Ad Intelligence Platform | Report Period: {data.summary
-						.reportPeriod}
-				</p>
-				<p class="mt-2">
-					For more insights and detailed analytics, visit <a
-						href="/"
-						class="text-purple-600 hover:underline">AppGoblin.info</a
-					>
-				</p>
-			</div>
-		</div>
-
-		<!-- Creative Modal -->
-		<!-- ========================================= -->
-		<!-- SECTION 6: KEY INSIGHTS & RECOMMENDATIONS -->
-		<!-- ========================================= -->
-		<div class="mb-16">
-			<!-- Section Header -->
-			<div class="mb-8 pb-4 border-b-2 border-blue-200 dark:border-blue-800">
-				<div class="flex items-center gap-3 mb-2">
-					<div
-						class="w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-lg"
-					>
-						06
-					</div>
-					<h2
-						class="text-3xl font-bold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent"
-					>
-						Key Insights & Recommendations
+				<!-- Content -->
+				<div
+					class="card p-8 bg-gradient-to-br from-purple-50 to-pink-50 dark:from-surface-800 dark:to-surface-700 border-2 border-purple-200 dark:border-purple-800"
+				>
+					<h2 class="text-2xl font-bold mb-6 text-purple-900 dark:text-purple-100">
+						💡 Key Insights
 					</h2>
-				</div>
-				<p class="text-surface-600 dark:text-surface-400 text-sm ml-13">
-					Actionable takeaways and strategic recommendations for user acquisition
-				</p>
-			</div>
-
-			<!-- Content -->
-			<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-				<!-- Insight Card 1 -->
-				<div
-					class="card p-6 bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-surface-800 dark:to-surface-700 border-2 border-blue-200 dark:border-blue-800"
-				>
-					<div class="flex items-start gap-3 mb-4">
-						<div
-							class="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-full flex items-center justify-center text-2xl"
-						>
-							💡
+					<div class="space-y-4">
+						<div class="flex gap-4 items-start">
+							<div
+								class="flex-shrink-0 w-8 h-8 bg-purple-500 text-white rounded-full flex items-center justify-center font-bold"
+							>
+								1
+							</div>
+							<div>
+								<h3 class="font-bold text-lg mb-2">Google Ads Dominance</h3>
+								<p class="text-surface-700 dark:text-surface-300">
+									Google Ads remains the primary user acquisition channel, appearing in {Math.round(
+										(data.apps.filter((a: any) =>
+											Array.from(a.ad_networks).some((n: any) => n === 'google.com')
+										).length /
+											data.apps.length) *
+											100
+									)}% of campaigns. Apps should prioritize Google Ads optimization for maximum
+									reach.
+								</p>
+							</div>
 						</div>
-						<div>
-							<h3 class="text-lg font-bold text-blue-900 dark:text-blue-100 mb-2">
-								Diversification is Key
-							</h3>
-							<p class="text-surface-700 dark:text-surface-300">
-								Apps using 3+ ad networks achieved {(
-									(data.reachStats.elite.totalInstalls / data.summary.totalInstalls) *
-									100
-								).toFixed(1)}% of total installs. Diversifying beyond Google Ads reduces platform
-								risk and increases audience reach.
-							</p>
+
+						<div class="flex gap-4 items-start">
+							<div
+								class="flex-shrink-0 w-8 h-8 bg-pink-500 text-white rounded-full flex items-center justify-center font-bold"
+							>
+								2
+							</div>
+							<div>
+								<h3 class="font-bold text-lg mb-2">Video Creative Performance</h3>
+								<p class="text-surface-700 dark:text-surface-300">
+									{Math.round(
+										(data.apps.filter((a: any) =>
+											a.creatives.some((c: any) => c.file_extension === 'mp4')
+										).length /
+											data.apps.length) *
+											100
+									)}% of high-growth apps utilize video creatives (MP4). Video content shows strong
+									engagement and should be a core component of UA strategies.
+								</p>
+							</div>
+						</div>
+
+						<div class="flex gap-4 items-start">
+							<div
+								class="flex-shrink-0 w-8 h-8 bg-rose-500 text-white rounded-full flex items-center justify-center font-bold"
+							>
+								3
+							</div>
+							<div>
+								<h3 class="font-bold text-lg mb-2">Multi-Network Strategy</h3>
+								<p class="text-surface-700 dark:text-surface-300">
+									Top performers leverage an average of {(
+										data.apps
+											.slice(0, 5)
+											.reduce((sum: number, app: any) => sum + app.ad_networks.size, 0) / 5
+									).toFixed(1)} advertising networks. Diversifying across multiple platforms reduces
+									dependency and increases audience reach.
+								</p>
+							</div>
+						</div>
+
+						<div class="flex gap-4 items-start">
+							<div
+								class="flex-shrink-0 w-8 h-8 bg-orange-500 text-white rounded-full flex items-center justify-center font-bold"
+							>
+								4
+							</div>
+							<div>
+								<h3 class="font-bold text-lg mb-2">Publisher Distribution Matters</h3>
+								<p class="text-surface-700 dark:text-surface-300">
+									High-growth apps average {(
+										data.apps.reduce((sum: number, app: any) => sum + app.pub_count, 0) /
+										data.apps.length
+									).toFixed(1)} publisher placements. Broader distribution across publishers increases
+									visibility and acquisition potential.
+								</p>
+							</div>
 						</div>
 					</div>
 				</div>
 
-				<!-- Insight Card 2 -->
-				<div
-					class="card p-6 bg-gradient-to-br from-purple-50 to-pink-50 dark:from-surface-800 dark:to-surface-700 border-2 border-purple-200 dark:border-purple-800"
-				>
-					<div class="flex items-start gap-3 mb-4">
-						<div
-							class="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-2xl"
-						>
-							🎯
-						</div>
-						<div>
-							<h3 class="text-lg font-bold text-purple-900 dark:text-purple-100 mb-2">
-								Video Content Dominates
-							</h3>
-							<p class="text-surface-700 dark:text-surface-300">
-								The top video creative reached {data.popularCreatives[0].publisher_count} publishers.
-								Video ads demonstrate superior engagement and viral distribution potential compared to
-								static creatives.
-							</p>
-						</div>
-					</div>
-				</div>
-
-				<!-- Insight Card 3 -->
-				<div
-					class="card p-6 bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-surface-800 dark:to-surface-700 border-2 border-emerald-200 dark:border-emerald-800"
-				>
-					<div class="flex items-start gap-3 mb-4">
-						<div
-							class="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-full flex items-center justify-center text-2xl"
-						>
-							📊
-						</div>
-						<div>
-							<h3 class="text-lg font-bold text-emerald-900 dark:text-emerald-100 mb-2">
-								Google Ads Dominance
-							</h3>
-							<p class="text-surface-700 dark:text-surface-300">
-								Google maintains {(
-									(data.adNetworks[0].publisher_count / data.networkStats.totalPublishers) *
-									100
-								).toFixed(1)}% market share with {data.adNetworks[0].publisher_count} publishers, but
-								emerging networks like Mintegral and Unity offer competitive rates.
-							</p>
+				<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+					<!-- Insight Card 1 -->
+					<div
+						class="card p-6 bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-surface-800 dark:to-surface-700 border-2 border-blue-200 dark:border-blue-800"
+					>
+						<div class="flex items-start gap-3 mb-4">
+							<div
+								class="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-full flex items-center justify-center text-2xl"
+							>
+								💡
+							</div>
+							<div>
+								<h3 class="text-lg font-bold text-blue-900 dark:text-blue-100 mb-2">
+									Diversification is Key
+								</h3>
+								<p class="text-surface-700 dark:text-surface-300">
+									Apps using 3+ ad networks achieved {(
+										(data.reachStats.elite.totalInstalls / data.summary.totalInstalls) *
+										100
+									).toFixed(1)}% of total installs. Diversifying beyond Google Ads reduces platform
+									risk and increases audience reach.
+								</p>
+							</div>
 						</div>
 					</div>
-				</div>
 
-				<!-- Insight Card 4 -->
-				<div
-					class="card p-6 bg-gradient-to-br from-rose-50 to-pink-50 dark:from-surface-800 dark:to-surface-700 border-2 border-rose-200 dark:border-rose-800"
-				>
-					<div class="flex items-start gap-3 mb-4">
-						<div
-							class="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-rose-500 to-pink-500 rounded-full flex items-center justify-center text-2xl"
-						>
-							🚀
+					<!-- Insight Card 2 -->
+					<div
+						class="card p-6 bg-gradient-to-br from-purple-50 to-pink-50 dark:from-surface-800 dark:to-surface-700 border-2 border-purple-200 dark:border-purple-800"
+					>
+						<div class="flex items-start gap-3 mb-4">
+							<div
+								class="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-2xl"
+							>
+								🎯
+							</div>
+							<div>
+								<h3 class="text-lg font-bold text-purple-900 dark:text-purple-100 mb-2">
+									Video Content Dominates
+								</h3>
+								<p class="text-surface-700 dark:text-surface-300">
+									The top video creative reached {data.popularCreatives[0].publisher_count} publishers.
+									Video ads demonstrate superior engagement and viral distribution potential compared
+									to static creatives.
+								</p>
+							</div>
 						</div>
-						<div>
-							<h3 class="text-lg font-bold text-rose-900 dark:text-rose-100 mb-2">
-								High Growth Opportunities
-							</h3>
-							<p class="text-surface-700 dark:text-surface-300">
-								Average growth rate of {data.summary.avgGrowth}% demonstrates significant
-								opportunity in the mobile app market. Strategic ad campaigns can rapidly scale user
-								acquisition.
-							</p>
+					</div>
+
+					<!-- Insight Card 3 -->
+					<div
+						class="card p-6 bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-surface-800 dark:to-surface-700 border-2 border-emerald-200 dark:border-emerald-800"
+					>
+						<div class="flex items-start gap-3 mb-4">
+							<div
+								class="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-full flex items-center justify-center text-2xl"
+							>
+								📊
+							</div>
+							<div>
+								<h3 class="text-lg font-bold text-emerald-900 dark:text-emerald-100 mb-2">
+									Google Ads Dominance
+								</h3>
+								<p class="text-surface-700 dark:text-surface-300">
+									Google maintains {(
+										(data.adNetworks[0].publisher_count / data.networkStats.totalPublishers) *
+										100
+									).toFixed(1)}% market share with {data.adNetworks[0].publisher_count} publishers, but
+									emerging networks like Mintegral and Unity offer competitive rates.
+								</p>
+							</div>
+						</div>
+					</div>
+
+					<!-- Insight Card 4 -->
+					<div
+						class="card p-6 bg-gradient-to-br from-rose-50 to-pink-50 dark:from-surface-800 dark:to-surface-700 border-2 border-rose-200 dark:border-rose-800"
+					>
+						<div class="flex items-start gap-3 mb-4">
+							<div
+								class="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-rose-500 to-pink-500 rounded-full flex items-center justify-center text-2xl"
+							>
+								🚀
+							</div>
+							<div>
+								<h3 class="text-lg font-bold text-rose-900 dark:text-rose-100 mb-2">
+									High Growth Opportunities
+								</h3>
+								<p class="text-surface-700 dark:text-surface-300">
+									Average growth rate of {data.summary.avgGrowth}% demonstrates significant
+									opportunity in the mobile app market. Strategic ad campaigns can rapidly scale
+									user acquisition.
+								</p>
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 
-		<!-- Creative Modal -->
-		<CreativeModal
-			isOpen={creativeModal.isOpen}
-			creativeUrl={creativeModal.creativeUrl}
-			title={creativeModal.title}
-			onClose={creativeModal.close}
-		/>
+		<div
+			class="mt-20 pt-12 border-t-2 border-surface-200 dark:border-surface-700 text-center text-sm text-surface-500 dark:text-surface-400"
+		>
+			<p>
+				Data source: AppGoblin Ad Intelligence Platform | Report Period: {data.summary.reportPeriod}
+			</p>
+			<p class="mt-2">
+				For more insights and detailed analytics, visit <a
+					href="/"
+					class="text-purple-600 hover:underline">AppGoblin.info</a
+				>
+			</p>
+		</div>
 	</div>
 </div>
 
