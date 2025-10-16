@@ -60,11 +60,7 @@
 <div class="flex flex-col gap-8 px-2 md:px-20 lg:px-48">
 	<!-- Hero Header Section -->
 	<section class="text-center mt-8 mb-8">
-		<h1
-			class="text-5xl md:text-7xl text-primary-900-100 font-bold mb-4"
-		>
-			AppGoblin
-		</h1>
+		<h1 class="text-5xl md:text-7xl text-primary-900-100 font-bold mb-4">AppGoblin</h1>
 		<h2 class="text-xl md:text-2xl font-bold text-primary mb-4">
 			Free App Marketing Insights and Research
 		</h2>
@@ -77,8 +73,7 @@
 			<span class="px-3 py-1 bg-success-100-900/20 rounded-full">✨ Ad and Creative Insights</span>
 		</div>
 		<p class="text-base md:text-lg max-w-2xl mx-auto">
-			AppGoblin is a free resource for app
-			marketers, developers, and researchers. Analyze
+			AppGoblin is a free resource for app marketers, developers, and researchers. Analyze
 			<span class="font-bold text-success-900-100"
 				>{formatNumber(data.appsOverview.android_apps)}</span
 			>

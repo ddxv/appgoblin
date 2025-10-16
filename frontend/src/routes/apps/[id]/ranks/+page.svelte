@@ -17,7 +17,7 @@
 	let formElement = $state<HTMLFormElement | undefined>(undefined);
 
 	$effect(() => setDefaultCountry(data.myranksOverview));
-	
+
 	// Update currentRanks when data.myranks changes (on navigation)
 	$effect(() => {
 		currentRanks = data.myranks;
@@ -131,8 +131,8 @@
 				{:then ranks}
 					{#if typeof ranks == 'string'}
 						<p>
-							No official ranks available for this app. This app is not ranked on the store's top 200
-							apps for it's categories.
+							No official ranks available for this app. This app is not ranked on the store's top
+							200 apps for it's categories.
 						</p>
 					{:else if ranks.history && ranks.history.length > 0}
 						<div class="card preset-tonal mt-2 md:mt-4">

@@ -14,7 +14,9 @@ WITH ranked_apps AS (
     LEFT JOIN app_ads_entrys AS aae ON aesa.app_ad_entry_id = aae.id
     LEFT JOIN domains AS ad ON aesa.ad_domain_id = ad.id
     LEFT JOIN domains AS pd ON aesa.pub_domain_id = pd.id
-    LEFT JOIN adstxt_crawl_results AS pdcr ON aesa.pub_domain_id = pdcr.domain_id
+    LEFT JOIN
+        adstxt_crawl_results AS pdcr
+        ON aesa.pub_domain_id = pdcr.domain_id
     WHERE
         ad.domain_name = :ad_domain_url
         AND aae.publisher_id = :publisher_id

@@ -4,7 +4,6 @@
 """
 
 from typing import Self
-import pandas as pd
 
 from litestar import Controller, get
 from litestar.datastructures import State

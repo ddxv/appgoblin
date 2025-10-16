@@ -7,9 +7,9 @@ from litestar.datastructures import State
 from sqlalchemy import bindparam
 
 from config import get_logger
+from dbcon.connections import PostgresCon
 from dbcon.static import get_child_companies, get_country_map, get_parent_companies
 from dbcon.utils import cache_by_params, clean_app_df, sql
-from dbcon.connections import PostgresCon
 
 logger = get_logger(__name__)
 

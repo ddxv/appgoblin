@@ -49,9 +49,9 @@ class PostgresCon:
                 db_uri,
                 pool_pre_ping=True,
                 pool_recycle=300,  # 5 minutes for better connection health
-                pool_size=5,       # Reduced pool size
-                max_overflow=10,   # Reduced overflow
-                pool_timeout=30,   # Timeout waiting for connection from pool
+                pool_size=5,  # Reduced pool size
+                max_overflow=10,  # Reduced overflow
+                pool_timeout=30,  # Timeout waiting for connection from pool
                 connect_args={
                     "connect_timeout": 15,
                     "application_name": "appgoblin",
@@ -67,7 +67,6 @@ class PostgresCon:
                 f"Failed to connect {self.db_name} @ {self.db_ip}, error: {error}",
             )
             raise
-
 
 
 def manage_tunnel_thread(

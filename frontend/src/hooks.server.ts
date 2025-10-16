@@ -137,7 +137,12 @@ export const handle: Handle = async ({ event, resolve }) => {
 	const route = event.url.pathname;
 
 	// Block requests until cache is ready (except for static assets)
-	if (!route.startsWith('/_app') && !route.startsWith('/favicon') && !isInitialized && initializationPromise) {
+	if (
+		!route.startsWith('/_app') &&
+		!route.startsWith('/favicon') &&
+		!isInitialized &&
+		initializationPromise
+	) {
 		const waitStart = Date.now();
 		await initializationPromise;
 		const waitDuration = Date.now() - waitStart;

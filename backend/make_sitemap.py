@@ -7,8 +7,8 @@ from xml.etree.ElementTree import Element, SubElement, tostring
 import pandas as pd
 
 from config import MODULE_DIR, get_logger
-from dbcon.queries import get_sitemap_apps, get_sitemap_companies
 from dbcon.connections import get_db_connection
+from dbcon.queries import get_sitemap_apps, get_sitemap_companies
 
 logger = get_logger(__name__)
 

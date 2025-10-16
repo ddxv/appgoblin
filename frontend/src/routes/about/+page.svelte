@@ -98,8 +98,7 @@
 			<br />
 
 			<div class="space-y-6 grid grid-cols-1 md:grid-cols-4 gap-4">
-
-<div class="card preset-filled-surface-50-950 p-4">
+				<div class="card preset-filled-surface-50-950 p-4">
 					<h4 class="h4 font-semibold text-primary-900-100">ASO & Marketing Tools</h4>
 					<p class={pricingText}>Free</p>
 					<p class="my-2 font-bold">
@@ -118,16 +117,10 @@
 						Use Cases: B2B Competitor analysis. Sales prospecting. Market research.
 					</p>
 					<ul class="list-disc list-inside space-y-2">
-						<li class="list-disc">
-							See exactly which apps are using a company or SDK.
-						</li>
+						<li class="list-disc">See exactly which apps are using a company or SDK.</li>
 						<li>Publisher Name and Domain</li>
-						<li class="list-disc">
-							Includes app installs
-						</li>
-						<li class="list-disc">
-							Other AppGoblin stats available on request.
-						</li>
+						<li class="list-disc">Includes app installs</li>
+						<li class="list-disc">Other AppGoblin stats available on request.</li>
 					</ul>
 					<a
 						class="btn preset-outlined-tertiary-500 p-2 md:p-4 mt-4"
@@ -155,7 +148,6 @@
 						<p class="text-center text-sm md:text-base">Get App-Ads.txt Datasets</p>
 					</a>
 				</div>
-
 
 				<div class="card preset-filled-surface-50-950 p-4">
 					<h4 class="h4 font-semibold text-primary-900-100">Custom Reports, API Integrations</h4>
