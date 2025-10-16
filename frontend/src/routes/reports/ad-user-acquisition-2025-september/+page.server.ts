@@ -1,4 +1,4 @@
-import type { PageServerLoad } from './september-2025/$types';
+import type { PageServerLoad } from './$types';
 
 interface AppAdData {
 	app_name: string;
@@ -13,7 +13,8 @@ interface AppAdData {
 	initial_ad_domain: string | null;
 	host_company_logo_url: string;
 	initial_company_logo_url: string | null;
-	mmp_domain: string | null;
+	mmp_domain?: string | null;
+	mmp_domains: string | null;
 	md5_hash: string;
 	pub_count: number;
 }
@@ -23,11 +24,22 @@ interface AdNetworkData {
 	ad_network_domain: string;
 	company_logo_url: string;
 	all_domains: string[] | string;
-	domains?: string[]; // Parsed array of domains
+	domains?: string[];
 	publisher_count: number;
 	advertiser_count: number;
 	creatives_count: number;
 }
+
+const rawSummaryData = [
+	{
+		apps_analyzed: 10180,
+		https_tracked: 503059,
+		api_domains: 4671,
+		adtech_companies: 193,
+		advertisers: 228,
+		creative_count: 8901
+	}
+];
 
 const rawMostPopularCreatives = [
 	{
@@ -249,7 +261,7 @@ const rawData: AppAdData[] = [
 		host_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
 		initial_ad_domain: 'google.com',
 		initial_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
-		mmp_domain: null,
+		mmp_domains: null,
 		md5_hash: '8054d52d37df78a00c068ca6708da428',
 		pub_count: 1
 	},
@@ -266,7 +278,7 @@ const rawData: AppAdData[] = [
 		host_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
 		initial_ad_domain: 'google.com',
 		initial_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
-		mmp_domain: null,
+		mmp_domains: null,
 		md5_hash: '8054d52d37df78a00c068ca6708da428',
 		pub_count: 1
 	},
@@ -283,7 +295,7 @@ const rawData: AppAdData[] = [
 		host_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
 		initial_ad_domain: 'google.com',
 		initial_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
-		mmp_domain: null,
+		mmp_domains: '{branch.io}',
 		md5_hash: '52bbad25384c6defabcaf9cfb9ca95a0',
 		pub_count: 1
 	},
@@ -300,7 +312,7 @@ const rawData: AppAdData[] = [
 		host_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
 		initial_ad_domain: 'google.com',
 		initial_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
-		mmp_domain: null,
+		mmp_domains: null,
 		md5_hash: '6708fd9abe3e1c4d4eb55ef34de0c3dc',
 		pub_count: 1
 	},
@@ -317,7 +329,7 @@ const rawData: AppAdData[] = [
 		host_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
 		initial_ad_domain: 'google.com',
 		initial_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
-		mmp_domain: null,
+		mmp_domains: null,
 		md5_hash: '6708fd9abe3e1c4d4eb55ef34de0c3dc',
 		pub_count: 2
 	},
@@ -328,13 +340,13 @@ const rawData: AppAdData[] = [
 		icon_url_100: 'dcf96ae26869a492.jpeg',
 		weekly_installs: 176688,
 		weekly_percent_increase: 135.978346036042,
-		phash: 'b890c72fcdee8819',
-		file_extension: 'jpeg',
+		phash: '96b3db74cfef7d97',
+		file_extension: 'mp4',
 		host_ad_domain: 'google.com',
 		host_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
 		initial_ad_domain: 'google.com',
 		initial_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
-		mmp_domain: null,
+		mmp_domains: '{appsflyer.com}',
 		md5_hash: 'fd957f0e127049ff7c41d0b74f36bc04',
 		pub_count: 1
 	},
@@ -351,9 +363,43 @@ const rawData: AppAdData[] = [
 		host_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
 		initial_ad_domain: 'google.com',
 		initial_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
-		mmp_domain: null,
+		mmp_domains: '{appsflyer.com}',
 		md5_hash: 'fd957f0e127049ff7c41d0b74f36bc04',
 		pub_count: 2
+	},
+	{
+		app_name: 'Crypto.com: Buy BTC, ETH & CRO',
+		store_app: 631294,
+		store_id: 'co.mona.android',
+		icon_url_100: 'dcf96ae26869a492.jpeg',
+		weekly_installs: 176688,
+		weekly_percent_increase: 135.978346036042,
+		phash: '877867ce38679895',
+		file_extension: 'mp4',
+		host_ad_domain: 'google.com',
+		host_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
+		initial_ad_domain: 'google.com',
+		initial_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
+		mmp_domains: '{branch.io}',
+		md5_hash: 'fd957f0e127049ff7c41d0b74f36bc04',
+		pub_count: 2
+	},
+	{
+		app_name: 'Crypto.com: Buy BTC, ETH & CRO',
+		store_app: 631294,
+		store_id: 'co.mona.android',
+		icon_url_100: 'dcf96ae26869a492.jpeg',
+		weekly_installs: 176688,
+		weekly_percent_increase: 135.978346036042,
+		phash: 'b890c72fcdee8819',
+		file_extension: 'jpeg',
+		host_ad_domain: 'google.com',
+		host_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
+		initial_ad_domain: 'google.com',
+		initial_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
+		mmp_domains: '{branch.io}',
+		md5_hash: 'fd957f0e127049ff7c41d0b74f36bc04',
+		pub_count: 1
 	},
 	{
 		app_name: 'Crypto.com: Buy BTC, ETH & CRO',
@@ -368,7 +414,24 @@ const rawData: AppAdData[] = [
 		host_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
 		initial_ad_domain: 'google.com',
 		initial_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
-		mmp_domain: null,
+		mmp_domains: '{branch.io}',
+		md5_hash: 'fd957f0e127049ff7c41d0b74f36bc04',
+		pub_count: 1
+	},
+	{
+		app_name: 'Crypto.com: Buy BTC, ETH & CRO',
+		store_app: 631294,
+		store_id: 'co.mona.android',
+		icon_url_100: 'dcf96ae26869a492.jpeg',
+		weekly_installs: 176688,
+		weekly_percent_increase: 135.978346036042,
+		phash: 'b890c72fcdee8819',
+		file_extension: 'jpeg',
+		host_ad_domain: 'google.com',
+		host_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
+		initial_ad_domain: 'google.com',
+		initial_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
+		mmp_domains: '{appsflyer.com}',
 		md5_hash: 'fd957f0e127049ff7c41d0b74f36bc04',
 		pub_count: 1
 	},
@@ -385,7 +448,7 @@ const rawData: AppAdData[] = [
 		host_company_logo_url: 'company-logos\/revx.io\/logo_200x200.jpeg',
 		initial_ad_domain: 'revx.io',
 		initial_company_logo_url: 'company-logos\/revx.io\/logo_200x200.jpeg',
-		mmp_domain: 'appsflyer.com',
+		mmp_domains: '{appsflyer.com}',
 		md5_hash: '64c72c98a6cdcfdb24650b8888d2b645',
 		pub_count: 1
 	},
@@ -402,7 +465,7 @@ const rawData: AppAdData[] = [
 		host_company_logo_url: 'company-logos\/bidease.com\/logo_200x200.jpeg',
 		initial_ad_domain: 'bidmachine.io',
 		initial_company_logo_url: 'company-logos\/bidmachine.io\/logo_200x200.jpeg',
-		mmp_domain: null,
+		mmp_domains: '{appsflyer.com}',
 		md5_hash: '77399e61d8cd23c012d04bacf935a590',
 		pub_count: 1
 	},
@@ -419,7 +482,7 @@ const rawData: AppAdData[] = [
 		host_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
 		initial_ad_domain: 'google.com',
 		initial_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
-		mmp_domain: null,
+		mmp_domains: '{adjust.com}',
 		md5_hash: '5903da4f93bd41607577ada5053f5c5e',
 		pub_count: 2
 	},
@@ -436,7 +499,7 @@ const rawData: AppAdData[] = [
 		host_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
 		initial_ad_domain: 'google.com',
 		initial_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
-		mmp_domain: null,
+		mmp_domains: '{adjust.com}',
 		md5_hash: '5903da4f93bd41607577ada5053f5c5e',
 		pub_count: 3
 	},
@@ -453,7 +516,7 @@ const rawData: AppAdData[] = [
 		host_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
 		initial_ad_domain: 'google.com',
 		initial_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
-		mmp_domain: null,
+		mmp_domains: '{appsflyer.com}',
 		md5_hash: '4fe4308c2c3a7e39c9d339fadf4ab14a',
 		pub_count: 1
 	},
@@ -470,7 +533,7 @@ const rawData: AppAdData[] = [
 		host_company_logo_url: 'company-logos\/appier.com\/logo_200x200.jpeg',
 		initial_ad_domain: 'google.com',
 		initial_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
-		mmp_domain: null,
+		mmp_domains: '{appsflyer.com}',
 		md5_hash: '3652dc0266c56bfb49afd02f59776651',
 		pub_count: 1
 	},
@@ -487,7 +550,7 @@ const rawData: AppAdData[] = [
 		host_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
 		initial_ad_domain: 'google.com',
 		initial_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
-		mmp_domain: null,
+		mmp_domains: '{appsflyer.com}',
 		md5_hash: '995117d36695bfd3a33948a3de8eda90',
 		pub_count: 1
 	},
@@ -504,9 +567,26 @@ const rawData: AppAdData[] = [
 		host_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
 		initial_ad_domain: 'google.com',
 		initial_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
-		mmp_domain: null,
+		mmp_domains: '{adjust.com}',
 		md5_hash: '550c81a23f9acd085df1264204ab9b8f',
 		pub_count: 1
+	},
+	{
+		app_name: 'Watcher of Realms',
+		store_app: 43703763,
+		store_id: 'com.td.watcherofrealms',
+		icon_url_100: 'dde0230e64da333b.png',
+		weekly_installs: 27514,
+		weekly_percent_increase: 53.0880225527653,
+		phash: 'dcd8021ebfe3609c',
+		file_extension: 'jpeg',
+		host_ad_domain: 'yandex.com',
+		host_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
+		initial_ad_domain: 'yandex.com',
+		initial_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
+		mmp_domains: '{adjust.com}',
+		md5_hash: 'b4cbbc0c51bc193647b1944a3ca3ede5',
+		pub_count: 2
 	},
 	{
 		app_name: 'Watcher of Realms',
@@ -521,7 +601,7 @@ const rawData: AppAdData[] = [
 		host_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
 		initial_ad_domain: 'yandex.com',
 		initial_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
-		mmp_domain: null,
+		mmp_domains: '{adjust.com}',
 		md5_hash: 'b4cbbc0c51bc193647b1944a3ca3ede5',
 		pub_count: 1
 	},
@@ -538,26 +618,9 @@ const rawData: AppAdData[] = [
 		host_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
 		initial_ad_domain: 'yandex.com',
 		initial_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
-		mmp_domain: null,
+		mmp_domains: '{adjust.com}',
 		md5_hash: 'b4cbbc0c51bc193647b1944a3ca3ede5',
 		pub_count: 4
-	},
-	{
-		app_name: 'Watcher of Realms',
-		store_app: 43703763,
-		store_id: 'com.td.watcherofrealms',
-		icon_url_100: 'dde0230e64da333b.png',
-		weekly_installs: 27514,
-		weekly_percent_increase: 53.0880225527653,
-		phash: 'dcd8021ebfe3609c',
-		file_extension: 'jpeg',
-		host_ad_domain: 'yandex.com',
-		host_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
-		initial_ad_domain: 'yandex.com',
-		initial_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
-		mmp_domain: null,
-		md5_hash: 'b4cbbc0c51bc193647b1944a3ca3ede5',
-		pub_count: 2
 	},
 	{
 		app_name: 'Watcher of Realms',
@@ -572,7 +635,7 @@ const rawData: AppAdData[] = [
 		host_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
 		initial_ad_domain: 'yandex.com',
 		initial_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
-		mmp_domain: null,
+		mmp_domains: '{adjust.com}',
 		md5_hash: 'b4cbbc0c51bc193647b1944a3ca3ede5',
 		pub_count: 1
 	},
@@ -589,25 +652,8 @@ const rawData: AppAdData[] = [
 		host_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
 		initial_ad_domain: 'yandex.com',
 		initial_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
-		mmp_domain: null,
+		mmp_domains: '{adjust.com}',
 		md5_hash: 'b4cbbc0c51bc193647b1944a3ca3ede5',
-		pub_count: 1
-	},
-	{
-		app_name: 'Lanetalk',
-		store_app: 636988,
-		store_id: 'com.lanetalk',
-		icon_url_100: '93312e9b61e5666c.png',
-		weekly_installs: 2022,
-		weekly_percent_increase: 39.9307958477509,
-		phash: 'd1e32e5e3b854072',
-		file_extension: 'webm',
-		host_ad_domain: 'google.com',
-		host_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
-		initial_ad_domain: 'google.com',
-		initial_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
-		mmp_domain: null,
-		md5_hash: '1c314d0446680f65961432042cc792ba',
 		pub_count: 1
 	},
 	{
@@ -623,9 +669,26 @@ const rawData: AppAdData[] = [
 		host_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
 		initial_ad_domain: 'google.com',
 		initial_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
-		mmp_domain: null,
+		mmp_domains: '{branch.io}',
 		md5_hash: '1c314d0446680f65961432042cc792ba',
 		pub_count: 3
+	},
+	{
+		app_name: 'Lanetalk',
+		store_app: 636988,
+		store_id: 'com.lanetalk',
+		icon_url_100: '93312e9b61e5666c.png',
+		weekly_installs: 2022,
+		weekly_percent_increase: 39.9307958477509,
+		phash: 'd1e32e5e3b854072',
+		file_extension: 'webm',
+		host_ad_domain: 'google.com',
+		host_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
+		initial_ad_domain: 'google.com',
+		initial_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
+		mmp_domains: '{branch.io}',
+		md5_hash: '1c314d0446680f65961432042cc792ba',
+		pub_count: 1
 	},
 	{
 		app_name: 'Lanetalk',
@@ -640,7 +703,7 @@ const rawData: AppAdData[] = [
 		host_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
 		initial_ad_domain: 'google.com',
 		initial_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
-		mmp_domain: null,
+		mmp_domains: '{branch.io}',
 		md5_hash: '1c314d0446680f65961432042cc792ba',
 		pub_count: 1
 	},
@@ -657,7 +720,7 @@ const rawData: AppAdData[] = [
 		host_company_logo_url: 'company-logos\/moloco.com\/logo_200x200.jpeg',
 		initial_ad_domain: 'bidmachine.io',
 		initial_company_logo_url: 'company-logos\/bidmachine.io\/logo_200x200.jpeg',
-		mmp_domain: null,
+		mmp_domains: '{abr.ge}',
 		md5_hash: '8160736b0ee874f38d8ffbc823c67864',
 		pub_count: 1
 	},
@@ -674,7 +737,7 @@ const rawData: AppAdData[] = [
 		host_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
 		initial_ad_domain: 'google.com',
 		initial_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
-		mmp_domain: null,
+		mmp_domains: '{appsflyer.com}',
 		md5_hash: '348c7f0061302b0470798f5ea591dea0',
 		pub_count: 1
 	},
@@ -691,7 +754,7 @@ const rawData: AppAdData[] = [
 		host_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
 		initial_ad_domain: 'yandex.com',
 		initial_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
-		mmp_domain: null,
+		mmp_domains: '{adjust.com}',
 		md5_hash: '2949842bf27b6701604e64ceb6d2f768',
 		pub_count: 1
 	},
@@ -708,7 +771,7 @@ const rawData: AppAdData[] = [
 		host_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
 		initial_ad_domain: 'yandex.com',
 		initial_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
-		mmp_domain: null,
+		mmp_domains: '{adjust.com}',
 		md5_hash: '2949842bf27b6701604e64ceb6d2f768',
 		pub_count: 1
 	},
@@ -725,7 +788,7 @@ const rawData: AppAdData[] = [
 		host_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
 		initial_ad_domain: 'yandex.com',
 		initial_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
-		mmp_domain: null,
+		mmp_domains: '{adjust.com}',
 		md5_hash: '9e9742955066b4c768fc0beb4fdc3a82',
 		pub_count: 1
 	},
@@ -742,8 +805,76 @@ const rawData: AppAdData[] = [
 		host_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
 		initial_ad_domain: 'yandex.com',
 		initial_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
-		mmp_domain: null,
+		mmp_domains: '{adjust.com}',
 		md5_hash: '9e9742955066b4c768fc0beb4fdc3a82',
+		pub_count: 1
+	},
+	{
+		app_name: 'Gate: Trade BTC & ETH',
+		store_app: 587923,
+		store_id: 'com.gateio.gateio',
+		icon_url_100: 'bc92c369ce243c9b.png',
+		weekly_installs: 39205,
+		weekly_percent_increase: 18.8943026970199,
+		phash: 'c97423cf3c678698',
+		file_extension: 'jpeg',
+		host_ad_domain: 'yandex.com',
+		host_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
+		initial_ad_domain: 'yandex.com',
+		initial_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
+		mmp_domains: '{appsflyer.com}',
+		md5_hash: '9e9742955066b4c768fc0beb4fdc3a82',
+		pub_count: 1
+	},
+	{
+		app_name: 'Gate: Trade BTC & ETH',
+		store_app: 587923,
+		store_id: 'com.gateio.gateio',
+		icon_url_100: 'bc92c369ce243c9b.png',
+		weekly_installs: 39205,
+		weekly_percent_increase: 18.8943026970199,
+		phash: 'a4554a1ab5e575b8',
+		file_extension: 'jpeg',
+		host_ad_domain: 'yandex.com',
+		host_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
+		initial_ad_domain: 'yandex.com',
+		initial_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
+		mmp_domains: '{appsflyer.com}',
+		md5_hash: '9e9742955066b4c768fc0beb4fdc3a82',
+		pub_count: 1
+	},
+	{
+		app_name: 'Рассвет Магии: Истоки Силы',
+		store_app: 162865523,
+		store_id: 'com.mdsj.gamegpvk',
+		icon_url_100: '9d9466ab5a6449ea.png',
+		weekly_installs: 5610,
+		weekly_percent_increase: 16.9155956929489,
+		phash: 'eedba59b600c8617',
+		file_extension: 'jpeg',
+		host_ad_domain: 'yandex.com',
+		host_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
+		initial_ad_domain: 'yandex.com',
+		initial_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
+		mmp_domains: '{appsflyer.com}',
+		md5_hash: '2dcc38e1462fd8042d55ea97c4b36b3c',
+		pub_count: 1
+	},
+	{
+		app_name: 'Рассвет Магии: Истоки Силы',
+		store_app: 162865523,
+		store_id: 'com.mdsj.gamegpvk',
+		icon_url_100: '9d9466ab5a6449ea.png',
+		weekly_installs: 5610,
+		weekly_percent_increase: 16.9155956929489,
+		phash: 'c4cc16f14f0b7b86',
+		file_extension: 'jpeg',
+		host_ad_domain: 'yandex.com',
+		host_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
+		initial_ad_domain: 'yandex.com',
+		initial_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
+		mmp_domains: '{appsflyer.com}',
+		md5_hash: '2dcc38e1462fd8042d55ea97c4b36b3c',
 		pub_count: 1
 	},
 	{
@@ -759,7 +890,41 @@ const rawData: AppAdData[] = [
 		host_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
 		initial_ad_domain: 'yandex.com',
 		initial_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
-		mmp_domain: null,
+		mmp_domains: '{adjust.com}',
+		md5_hash: '2dcc38e1462fd8042d55ea97c4b36b3c',
+		pub_count: 1
+	},
+	{
+		app_name: 'Рассвет Магии: Истоки Силы',
+		store_app: 162865523,
+		store_id: 'com.mdsj.gamegpvk',
+		icon_url_100: '9d9466ab5a6449ea.png',
+		weekly_installs: 5610,
+		weekly_percent_increase: 16.9155956929489,
+		phash: 'c1b8462e3fc47939',
+		file_extension: 'jpeg',
+		host_ad_domain: 'yandex.com',
+		host_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
+		initial_ad_domain: 'yandex.com',
+		initial_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
+		mmp_domains: '{appsflyer.com}',
+		md5_hash: '2dcc38e1462fd8042d55ea97c4b36b3c',
+		pub_count: 1
+	},
+	{
+		app_name: 'Рассвет Магии: Истоки Силы',
+		store_app: 162865523,
+		store_id: 'com.mdsj.gamegpvk',
+		icon_url_100: '9d9466ab5a6449ea.png',
+		weekly_installs: 5610,
+		weekly_percent_increase: 16.9155956929489,
+		phash: 'c4cc16f14f0b7b86',
+		file_extension: 'jpeg',
+		host_ad_domain: 'yandex.com',
+		host_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
+		initial_ad_domain: 'yandex.com',
+		initial_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
+		mmp_domains: '{adjust.com}',
 		md5_hash: '2dcc38e1462fd8042d55ea97c4b36b3c',
 		pub_count: 1
 	},
@@ -776,75 +941,7 @@ const rawData: AppAdData[] = [
 		host_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
 		initial_ad_domain: 'yandex.com',
 		initial_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
-		mmp_domain: null,
-		md5_hash: '2dcc38e1462fd8042d55ea97c4b36b3c',
-		pub_count: 1
-	},
-	{
-		app_name: 'Рассвет Магии: Истоки Силы',
-		store_app: 162865523,
-		store_id: 'com.mdsj.gamegpvk',
-		icon_url_100: '9d9466ab5a6449ea.png',
-		weekly_installs: 5610,
-		weekly_percent_increase: 16.9155956929489,
-		phash: '9134c15945ea5bf3',
-		file_extension: 'jpeg',
-		host_ad_domain: 'yandex.com',
-		host_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
-		initial_ad_domain: 'yandex.com',
-		initial_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
-		mmp_domain: null,
-		md5_hash: '2dcc38e1462fd8042d55ea97c4b36b3c',
-		pub_count: 1
-	},
-	{
-		app_name: 'Рассвет Магии: Истоки Силы',
-		store_app: 162865523,
-		store_id: 'com.mdsj.gamegpvk',
-		icon_url_100: '9d9466ab5a6449ea.png',
-		weekly_installs: 5610,
-		weekly_percent_increase: 16.9155956929489,
-		phash: '923e91c8e5c557d4',
-		file_extension: 'jpeg',
-		host_ad_domain: 'yandex.com',
-		host_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
-		initial_ad_domain: 'yandex.com',
-		initial_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
-		mmp_domain: null,
-		md5_hash: '2dcc38e1462fd8042d55ea97c4b36b3c',
-		pub_count: 1
-	},
-	{
-		app_name: 'Рассвет Магии: Истоки Силы',
-		store_app: 162865523,
-		store_id: 'com.mdsj.gamegpvk',
-		icon_url_100: '9d9466ab5a6449ea.png',
-		weekly_installs: 5610,
-		weekly_percent_increase: 16.9155956929489,
-		phash: '9d9466ab5a6449ea',
-		file_extension: 'png',
-		host_ad_domain: 'yandex.com',
-		host_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
-		initial_ad_domain: 'yandex.com',
-		initial_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
-		mmp_domain: null,
-		md5_hash: '2dcc38e1462fd8042d55ea97c4b36b3c',
-		pub_count: 2
-	},
-	{
-		app_name: 'Рассвет Магии: Истоки Силы',
-		store_app: 162865523,
-		store_id: 'com.mdsj.gamegpvk',
-		icon_url_100: '9d9466ab5a6449ea.png',
-		weekly_installs: 5610,
-		weekly_percent_increase: 16.9155956929489,
-		phash: 'c4cc16f14f0b7b86',
-		file_extension: 'jpeg',
-		host_ad_domain: 'yandex.com',
-		host_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
-		initial_ad_domain: 'yandex.com',
-		initial_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
-		mmp_domain: null,
+		mmp_domains: '{adjust.com}',
 		md5_hash: '2dcc38e1462fd8042d55ea97c4b36b3c',
 		pub_count: 1
 	},
@@ -861,7 +958,24 @@ const rawData: AppAdData[] = [
 		host_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
 		initial_ad_domain: 'yandex.com',
 		initial_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
-		mmp_domain: null,
+		mmp_domains: '{adjust.com}',
+		md5_hash: '2dcc38e1462fd8042d55ea97c4b36b3c',
+		pub_count: 1
+	},
+	{
+		app_name: 'Рассвет Магии: Истоки Силы',
+		store_app: 162865523,
+		store_id: 'com.mdsj.gamegpvk',
+		icon_url_100: '9d9466ab5a6449ea.png',
+		weekly_installs: 5610,
+		weekly_percent_increase: 16.9155956929489,
+		phash: '81e160683e764f9f',
+		file_extension: 'jpeg',
+		host_ad_domain: 'yandex.com',
+		host_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
+		initial_ad_domain: 'yandex.com',
+		initial_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
+		mmp_domains: '{appsflyer.com}',
 		md5_hash: '2dcc38e1462fd8042d55ea97c4b36b3c',
 		pub_count: 1
 	},
@@ -878,9 +992,128 @@ const rawData: AppAdData[] = [
 		host_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
 		initial_ad_domain: 'yandex.com',
 		initial_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
-		mmp_domain: null,
+		mmp_domains: '{adjust.com}',
 		md5_hash: '2dcc38e1462fd8042d55ea97c4b36b3c',
 		pub_count: 1
+	},
+	{
+		app_name: 'Рассвет Магии: Истоки Силы',
+		store_app: 162865523,
+		store_id: 'com.mdsj.gamegpvk',
+		icon_url_100: '9d9466ab5a6449ea.png',
+		weekly_installs: 5610,
+		weekly_percent_increase: 16.9155956929489,
+		phash: '8a35634c769da339',
+		file_extension: 'jpeg',
+		host_ad_domain: 'yandex.com',
+		host_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
+		initial_ad_domain: 'yandex.com',
+		initial_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
+		mmp_domains: '{appsflyer.com}',
+		md5_hash: '2dcc38e1462fd8042d55ea97c4b36b3c',
+		pub_count: 1
+	},
+	{
+		app_name: 'Рассвет Магии: Истоки Силы',
+		store_app: 162865523,
+		store_id: 'com.mdsj.gamegpvk',
+		icon_url_100: '9d9466ab5a6449ea.png',
+		weekly_installs: 5610,
+		weekly_percent_increase: 16.9155956929489,
+		phash: '9134c15945ea5bf3',
+		file_extension: 'jpeg',
+		host_ad_domain: 'yandex.com',
+		host_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
+		initial_ad_domain: 'yandex.com',
+		initial_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
+		mmp_domains: '{adjust.com}',
+		md5_hash: '2dcc38e1462fd8042d55ea97c4b36b3c',
+		pub_count: 1
+	},
+	{
+		app_name: 'Рассвет Магии: Истоки Силы',
+		store_app: 162865523,
+		store_id: 'com.mdsj.gamegpvk',
+		icon_url_100: '9d9466ab5a6449ea.png',
+		weekly_installs: 5610,
+		weekly_percent_increase: 16.9155956929489,
+		phash: '9134c15945ea5bf3',
+		file_extension: 'jpeg',
+		host_ad_domain: 'yandex.com',
+		host_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
+		initial_ad_domain: 'yandex.com',
+		initial_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
+		mmp_domains: '{appsflyer.com}',
+		md5_hash: '2dcc38e1462fd8042d55ea97c4b36b3c',
+		pub_count: 1
+	},
+	{
+		app_name: 'Рассвет Магии: Истоки Силы',
+		store_app: 162865523,
+		store_id: 'com.mdsj.gamegpvk',
+		icon_url_100: '9d9466ab5a6449ea.png',
+		weekly_installs: 5610,
+		weekly_percent_increase: 16.9155956929489,
+		phash: '923e91c8e5c557d4',
+		file_extension: 'jpeg',
+		host_ad_domain: 'yandex.com',
+		host_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
+		initial_ad_domain: 'yandex.com',
+		initial_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
+		mmp_domains: '{adjust.com}',
+		md5_hash: '2dcc38e1462fd8042d55ea97c4b36b3c',
+		pub_count: 1
+	},
+	{
+		app_name: 'Рассвет Магии: Истоки Силы',
+		store_app: 162865523,
+		store_id: 'com.mdsj.gamegpvk',
+		icon_url_100: '9d9466ab5a6449ea.png',
+		weekly_installs: 5610,
+		weekly_percent_increase: 16.9155956929489,
+		phash: '923e91c8e5c557d4',
+		file_extension: 'jpeg',
+		host_ad_domain: 'yandex.com',
+		host_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
+		initial_ad_domain: 'yandex.com',
+		initial_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
+		mmp_domains: '{appsflyer.com}',
+		md5_hash: '2dcc38e1462fd8042d55ea97c4b36b3c',
+		pub_count: 1
+	},
+	{
+		app_name: 'Рассвет Магии: Истоки Силы',
+		store_app: 162865523,
+		store_id: 'com.mdsj.gamegpvk',
+		icon_url_100: '9d9466ab5a6449ea.png',
+		weekly_installs: 5610,
+		weekly_percent_increase: 16.9155956929489,
+		phash: '9d9466ab5a6449ea',
+		file_extension: 'png',
+		host_ad_domain: 'yandex.com',
+		host_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
+		initial_ad_domain: 'yandex.com',
+		initial_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
+		mmp_domains: '{adjust.com}',
+		md5_hash: '2dcc38e1462fd8042d55ea97c4b36b3c',
+		pub_count: 2
+	},
+	{
+		app_name: 'Рассвет Магии: Истоки Силы',
+		store_app: 162865523,
+		store_id: 'com.mdsj.gamegpvk',
+		icon_url_100: '9d9466ab5a6449ea.png',
+		weekly_installs: 5610,
+		weekly_percent_increase: 16.9155956929489,
+		phash: '9d9466ab5a6449ea',
+		file_extension: 'png',
+		host_ad_domain: 'yandex.com',
+		host_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
+		initial_ad_domain: 'yandex.com',
+		initial_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
+		mmp_domains: '{appsflyer.com}',
+		md5_hash: '2dcc38e1462fd8042d55ea97c4b36b3c',
+		pub_count: 2
 	},
 	{
 		app_name: 'Sago Mini World: Kids Games',
@@ -895,7 +1128,7 @@ const rawData: AppAdData[] = [
 		host_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
 		initial_ad_domain: 'google.com',
 		initial_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
-		mmp_domain: null,
+		mmp_domains: '{appsflyer.com}',
 		md5_hash: '88f528f874a60ebb6842d39948065da1',
 		pub_count: 1
 	},
@@ -906,13 +1139,13 @@ const rawData: AppAdData[] = [
 		icon_url_100: 'b98e716586c99a9c.png',
 		weekly_installs: 38837,
 		weekly_percent_increase: 13.1449380917698,
-		phash: 'deff3cefc7acce9f',
+		phash: 'a5e36f8ebfbdb7d7',
 		file_extension: 'mp4',
 		host_ad_domain: 'google.com',
 		host_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
 		initial_ad_domain: 'google.com',
 		initial_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
-		mmp_domain: null,
+		mmp_domains: '{adjust.com}',
 		md5_hash: '5903da4f93bd41607577ada5053f5c5e',
 		pub_count: 1
 	},
@@ -929,7 +1162,7 @@ const rawData: AppAdData[] = [
 		host_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
 		initial_ad_domain: 'google.com',
 		initial_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
-		mmp_domain: null,
+		mmp_domains: '{adjust.com}',
 		md5_hash: '5903da4f93bd41607577ada5053f5c5e',
 		pub_count: 1
 	},
@@ -940,13 +1173,13 @@ const rawData: AppAdData[] = [
 		icon_url_100: 'b98e716586c99a9c.png',
 		weekly_installs: 38837,
 		weekly_percent_increase: 13.1449380917698,
-		phash: 'a5e36f8ebfbdb7d7',
+		phash: 'deff3cefc7acce9f',
 		file_extension: 'mp4',
 		host_ad_domain: 'google.com',
 		host_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
 		initial_ad_domain: 'google.com',
 		initial_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
-		mmp_domain: null,
+		mmp_domains: '{adjust.com}',
 		md5_hash: '5903da4f93bd41607577ada5053f5c5e',
 		pub_count: 1
 	}
@@ -1769,6 +2002,10 @@ interface ProcessedApp {
 		logo_url: string;
 	}>;
 	mmp_domains: Set<string>;
+	mmps: Array<{
+		domain: string;
+		logo_url: string;
+	}>;
 	creatives: Array<{
 		md5_hash: string;
 		phash: string;
@@ -1796,6 +2033,7 @@ function processData(data: AppAdData[]) {
 				pub_count: 0,
 				ad_networks: [],
 				mmp_domains: new Set(),
+				mmps: [],
 				creatives: []
 			});
 		}
@@ -1830,7 +2068,15 @@ function processData(data: AppAdData[]) {
 			}
 		}
 
-		if (row.mmp_domain) app.mmp_domains.add(row.mmp_domain);
+		// Parse mmp_domains (PostgreSQL array format: "{domain1,domain2}" or null)
+		if (row.mmp_domains) {
+			const mmpDomainsArray = row.mmp_domains
+				.replace(/^\{|\}$/g, '') // Remove { and }
+				.split(',')
+				.map((d) => d.trim())
+				.filter((d) => d && d.toLowerCase() !== 'null');
+			mmpDomainsArray.forEach((domain) => app.mmp_domains.add(domain));
+		}
 
 		app.creatives.push({
 			md5_hash: row.md5_hash,
@@ -1843,9 +2089,19 @@ function processData(data: AppAdData[]) {
 		});
 	});
 
-	return Array.from(appsMap.values()).sort(
+	const sortedApps = Array.from(appsMap.values()).sort(
 		(a, b) => b.weekly_percent_increase - a.weekly_percent_increase
 	);
+
+	// Convert mmp_domains Set to mmps array with logos
+	sortedApps.forEach((app) => {
+		app.mmps = Array.from(app.mmp_domains).map((domain) => ({
+			domain,
+			logo_url: `company-logos/${domain}/logo_200x200.jpeg`
+		}));
+	});
+
+	return sortedApps;
 }
 
 export const load: PageServerLoad = async () => {
@@ -1883,14 +2139,6 @@ export const load: PageServerLoad = async () => {
 	const totalPublishers = adNetworks.reduce((sum, net) => sum + net.publisher_count, 0);
 	const totalAdvertisers = adNetworks.reduce((sum, net) => sum + net.advertiser_count, 0);
 	const totalNetworkCreatives = adNetworks.reduce((sum, net) => sum + net.creatives_count, 0);
-
-	// Calculate Ad Reach Tiers based on pub_count
-	const calculateReachTier = (pubCount: number) => {
-		if (pubCount >= 3) return 'elite';
-		if (pubCount >= 2) return 'wide';
-		if (pubCount >= 1) return 'targeted';
-		return 'emerging';
-	};
 
 	const reachTiers = {
 		elite: apps.filter((app) => app.pub_count >= 3),
@@ -1981,6 +2229,8 @@ export const load: PageServerLoad = async () => {
 			};
 		});
 
+	const exec = rawSummaryData?.[0] ?? null;
+
 	return {
 		apps,
 		adNetworks,
@@ -1995,10 +2245,15 @@ export const load: PageServerLoad = async () => {
 			totalNetworks: adNetworks.length
 		},
 		summary: {
-			totalApps: apps.length,
+			// Prefer ExecutiveSummaryData when present, with computed fallbacks
+			totalApps: exec?.apps_analyzed ?? apps.length,
 			totalInstalls,
 			avgGrowth: Math.round(avgGrowth * 10) / 10,
-			totalCreatives,
+			totalCreatives: exec?.creative_count ?? totalCreatives,
+			advertisers: exec?.advertisers ?? null,
+			adtechCompanies: exec?.adtech_companies ?? null,
+			httpsTracked: exec?.https_tracked ?? null,
+			apiDomains: exec?.api_domains ?? null,
 			uniqueNetworks: allNetworks.size,
 			reportPeriod: 'September 2025',
 			generatedDate: new Date().toLocaleDateString('en-US', {

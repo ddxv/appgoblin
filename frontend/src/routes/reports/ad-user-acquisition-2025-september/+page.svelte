@@ -3,19 +3,12 @@
 	import CreativeModal from '$lib/CreativeModal.svelte';
 	import { createCreativeModal } from '$lib/stores/creativeModal.svelte';
 
+	import { formatNumber } from '$lib/utils/formatNumber.js';
+
 	let { data } = $props();
 
 	// Creative modal state
 	const creativeModal = createCreativeModal();
-
-	function formatNumber(num: number): string {
-		if (num >= 1000000) {
-			return (num / 1000000).toFixed(1) + 'M';
-		} else if (num >= 1000) {
-			return (num / 1000).toFixed(1) + 'K';
-		}
-		return num.toString();
-	}
 
 	function formatPercent(num: number): string {
 		return num.toFixed(1) + '%';
@@ -32,6 +25,10 @@
 	function formatDate(dateStr: string): string {
 		const date = new Date(dateStr);
 		return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+	}
+
+	function formatOptional(num?: number | null): string {
+		return num == null ? '—' : String(formatNumber(num));
 	}
 
 	const sectionDividerClass = 'mb-24 pt-12 border-t-2 border-surface-200 dark:border-surface-700';
@@ -59,6 +56,20 @@
 		'inline-flex items-center justify-center w-8 h-8 rounded-full font-bold text-sm';
 	const publisherBadgeClass =
 		'inline-flex items-center justify-center px-3 py-1 rounded-full bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 text-sm font-semibold';
+
+	// Repeated patterns extracted from markup
+	const kpiCardBaseClass = 'card p-6 bg-gradient-to-br text-white shadow-lg';
+	const kpiLabelClass = 'text-sm font-semibold mb-2';
+	const kpiValueClass = 'text-4xl font-bold mb-1';
+	const kpiDescClass = 'text-sm';
+	const metricGridClass =
+		'p-4 bg-white dark:bg-surface-900 rounded-lg border border-surface-200 dark:border-surface-700';
+	const surfaceSubtleClass = 'text-surface-600 dark:text-surface-400';
+	const insightCardBaseClass = 'card p-6 bg-gradient-to-br border-2';
+	const insightIconClass =
+		'flex-shrink-0 w-12 h-12 bg-gradient-to-br rounded-full flex items-center justify-center text-2xl';
+	const executiveSummaryCardClass =
+		'card p-8 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-surface-800 dark:to-surface-700 border-2 border-purple-200 dark:border-purple-800';
 </script>
 
 <svelte:head>
@@ -88,29 +99,41 @@
 	</div>
 
 	<!-- Key Metrics Dashboard -->
-	<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
-		<div class="card p-6 bg-gradient-to-br from-purple-500 to-purple-600 text-white shadow-lg">
-			<div class="text-purple-100 text-sm font-semibold mb-2">Apps Analyzed</div>
-			<div class="text-4xl font-bold mb-1">{data.summary.totalApps}</div>
-			<div class="text-purple-100 text-sm">High-growth applications</div>
+	<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-20">
+		<div class={`${kpiCardBaseClass} from-purple-500 to-purple-600`}>
+			<div class={`text-purple-100 ${kpiLabelClass}`}>Apps Analyzed</div>
+			<div class={kpiValueClass}>{formatOptional(data.summary.totalApps)}</div>
+			<div class={`text-purple-100 ${kpiDescClass}`}>Mobile apps monitored</div>
 		</div>
 
-		<div class="card p-6 bg-gradient-to-br from-pink-500 to-pink-600 text-white shadow-lg">
-			<div class="text-pink-100 text-sm font-semibold mb-2">Total Weekly Installs</div>
-			<div class="text-4xl font-bold mb-1">{formatNumber(data.summary.totalInstalls)}</div>
-			<div class="text-pink-100 text-sm">Combined growth surge</div>
+		<div class={`${kpiCardBaseClass} from-emerald-500 to-teal-500`}>
+			<div class={`text-emerald-100 ${kpiLabelClass}`}>Advertisers</div>
+			<div class={kpiValueClass}>{formatOptional(data.summary.advertisers)}</div>
+			<div class={`text-emerald-100 ${kpiDescClass}`}>Brands actively buying</div>
 		</div>
 
-		<div class="card p-6 bg-gradient-to-br from-rose-500 to-rose-600 text-white shadow-lg">
-			<div class="text-rose-100 text-sm font-semibold mb-2">Avg Growth Rate</div>
-			<div class="text-4xl font-bold mb-1">{data.summary.avgGrowth}%</div>
-			<div class="text-rose-100 text-sm">Week-over-week increase</div>
+		<div class={`${kpiCardBaseClass} from-pink-500 to-rose-500`}>
+			<div class={`text-pink-100 ${kpiLabelClass}`}>AdTech Companies</div>
+			<div class={kpiValueClass}>{formatOptional(data.summary.adtechCompanies)}</div>
+			<div class={`text-pink-100 ${kpiDescClass}`}>Platforms powering UA</div>
 		</div>
 
-		<div class="card p-6 bg-gradient-to-br from-orange-500 to-orange-600 text-white shadow-lg">
-			<div class="text-orange-100 text-sm font-semibold mb-2">Ad Creatives</div>
-			<div class="text-4xl font-bold mb-1">{data.summary.totalCreatives}</div>
-			<div class="text-orange-100 text-sm">Across {data.summary.uniqueNetworks} networks</div>
+		<div class={`${kpiCardBaseClass} from-orange-500 to-amber-500`}>
+			<div class={`text-orange-100 ${kpiLabelClass}`}>Creative Assets</div>
+			<div class={kpiValueClass}>{formatOptional(data.summary.totalCreatives)}</div>
+			<div class={`text-orange-100 ${kpiDescClass}`}>Unique ads tracked</div>
+		</div>
+
+		<div class={`${kpiCardBaseClass} from-sky-500 to-blue-600`}>
+			<div class={`text-sky-100 ${kpiLabelClass}`}>HTTPS Events Captured</div>
+			<div class={kpiValueClass}>{formatOptional(data.summary.httpsTracked)}</div>
+			<div class={`text-sky-100 ${kpiDescClass}`}>Technical interactions</div>
+		</div>
+
+		<div class={`${kpiCardBaseClass} from-cyan-500 to-teal-600`}>
+			<div class={`text-cyan-100 ${kpiLabelClass}`}>Unique API Domains</div>
+			<div class={kpiValueClass}>{formatOptional(data.summary.apiDomains)}</div>
+			<div class={`text-cyan-100 ${kpiDescClass}`}>Distinct endpoints observed</div>
 		</div>
 	</div>
 
@@ -138,31 +161,79 @@
 		</div>
 
 		<!-- Content -->
-		<div
-			class="card p-8 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-surface-800 dark:to-surface-700 border-2 border-purple-200 dark:border-purple-800"
-		>
+		<div class={executiveSummaryCardClass}>
 			<div class={sectionIntroRowClass}>
 				<span class="text-3xl">📊</span>
 				<h3 class="text-xl font-bold text-purple-900 dark:text-purple-100">Overview</h3>
 			</div>
 			<div class="prose dark:prose-invert max-w-none">
 				<p class={paragraphClass}>
-					In {data.summary.reportPeriod}, we tracked
-					<strong class="text-purple-600"
-						>{data.summary.totalApps} high-growth mobile applications</strong
-					>
-					that collectively achieved
-					<strong class="text-pink-600"
-						>{formatNumber(data.summary.totalInstalls)} weekly installs</strong
-					>, representing an average growth rate of
-					<strong class="text-rose-600">{data.summary.avgGrowth}%</strong> week-over-week.
+					In {data.summary.reportPeriod}, AppGoblin analyzed
+					<strong class="text-purple-600">
+						{formatNumber(data.summary.totalApps)} mobile apps
+					</strong>
+					and captured
+					<strong class="text-pink-600">
+						{formatNumber(data.summary.httpsTracked)} HTTPS events
+					</strong>
+					across
+					<strong class="text-rose-600">
+						{formatNumber(data.summary.apiDomains)} unique API domains
+					</strong>, providing a comprehensive view of acquisition activity.
 				</p>
 				<p class={`${paragraphClass} mt-4`}>
-					These apps deployed <strong>{data.summary.totalCreatives} unique ad creatives</strong>
+					This activity spanned
+					<strong class="text-purple-600">
+						{formatNumber(data.summary.adtechCompanies)} AdTech platforms
+					</strong>
+					supporting
+					<strong class="text-pink-600">
+						{formatNumber(data.summary.advertisers)} advertisers
+					</strong>
+					and
+					<strong class="text-rose-600">
+						{formatNumber(data.summary.totalCreatives)} creative assets
+					</strong>
 					across
-					<strong>{data.summary.uniqueNetworks} advertising networks</strong>, with Google Ads,
-					Moloco, and BidMachine emerging as the dominant platforms for user acquisition campaigns.
+					<strong class="text-indigo-600">{formatNumber(data.summary.uniqueNetworks)}</strong> ad
+					networks, driving
+					<strong class="text-emerald-600">{formatNumber(data.summary.totalInstalls)}</strong>
+					weekly installs at an average growth rate of
+					<strong class="text-orange-600">{data.summary.avgGrowth}%</strong>.
 				</p>
+
+				<!-- Quick narrative list using provided descriptions -->
+				<div
+					class="mt-6 p-4 rounded-lg border border-surface-200 dark:border-surface-700 bg-white/60 dark:bg-surface-900/60"
+				>
+					<p class="text-sm font-semibold text-surface-700 dark:text-surface-300 mb-3">
+						Think of this as a behind-the-scenes look at mobile app advertising.
+					</p>
+					<ul
+						class="text-sm leading-6 text-surface-700 dark:text-surface-300 list-disc pl-5 space-y-1"
+					>
+						<li>
+							Which apps were advertising the most —
+							<strong class="text-emerald-600">{formatNumber(data.summary.advertisers)}</strong>
+							brands were actively running ads
+						</li>
+						<li>
+							What their ads looked like — nearly
+							<strong class="text-orange-600">{formatNumber(data.summary.totalCreatives)}</strong>
+							different commercials, banners, and videos
+						</li>
+						<li>
+							Where they were advertising —
+							<strong class="text-pink-600">{formatNumber(data.summary.adtechCompanies)}</strong>
+							different advertising platforms and services
+						</li>
+						<li>
+							How the whole system works — over
+							<strong class="text-blue-600">{formatNumber(data.summary.httpsTracked)}</strong>
+							technical interactions captured (clicks, loads, redirects)
+						</li>
+					</ul>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -199,6 +270,7 @@
 							<th class="px-4 py-3 text-center text-sm font-semibold">Ad Creatives</th>
 							<th class="px-4 py-3 text-center text-sm font-semibold">Publishers</th>
 							<th class="px-4 py-3 text-left text-sm font-semibold">Ad Networks</th>
+							<th class="px-4 py-3 text-left text-sm font-semibold">MMP</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -296,6 +368,21 @@
 											/>
 										{/each}
 									</div>
+								</td>
+								<td class="px-4 py-4">
+									{#if app.mmps && app.mmps.length > 0}
+										<div class={chipListClass}>
+											{#each app.mmps as mmp}
+												<CompanyButton
+													companyDomain={mmp.domain}
+													companyLogoUrl={`https://media.appgoblin.info/${mmp.logo_url}`}
+													size="sm"
+												/>
+											{/each}
+										</div>
+									{:else}
+										<span class="text-xs text-surface-400">—</span>
+									{/if}
 								</td>
 							</tr>
 						{/each}
@@ -452,26 +539,20 @@
 
 		<!-- Network Metrics Grid -->
 		<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-			<div
-				class="p-4 bg-white dark:bg-surface-900 rounded-lg border border-surface-200 dark:border-surface-700"
-			>
-				<div class="text-sm text-surface-600 dark:text-surface-400 mb-1">Total Publishers</div>
+			<div class={metricGridClass}>
+				<div class={`${surfaceSubtleClass} mb-1`}>Total Publishers</div>
 				<div class="text-3xl font-bold text-cyan-600">
 					{data.networkStats.totalPublishers.toLocaleString()}
 				</div>
 			</div>
-			<div
-				class="p-4 bg-white dark:bg-surface-900 rounded-lg border border-surface-200 dark:border-surface-700"
-			>
-				<div class="text-sm text-surface-600 dark:text-surface-400 mb-1">Total Advertisers</div>
+			<div class={metricGridClass}>
+				<div class={`${surfaceSubtleClass} mb-1`}>Total Advertisers</div>
 				<div class="text-3xl font-bold text-blue-600">
 					{data.networkStats.totalAdvertisers.toLocaleString()}
 				</div>
 			</div>
-			<div
-				class="p-4 bg-white dark:bg-surface-900 rounded-lg border border-surface-200 dark:border-surface-700"
-			>
-				<div class="text-sm text-surface-600 dark:text-surface-400 mb-1">Network Creatives</div>
+			<div class={metricGridClass}>
+				<div class={`${surfaceSubtleClass} mb-1`}>Network Creatives</div>
 				<div class="text-3xl font-bold text-purple-600">
 					{data.networkStats.totalNetworkCreatives.toLocaleString()}
 				</div>
@@ -828,14 +909,10 @@
 		<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 			<!-- Insight Card 1 -->
 			<div
-				class="card p-6 bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-surface-800 dark:to-surface-700 border-2 border-blue-200 dark:border-blue-800"
+				class={`${insightCardBaseClass} from-blue-50 to-cyan-50 dark:from-surface-800 dark:to-surface-700 border-blue-200 dark:border-blue-800`}
 			>
 				<div class="flex items-start gap-3 mb-4">
-					<div
-						class="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-full flex items-center justify-center text-2xl"
-					>
-						💡
-					</div>
+					<div class={`${insightIconClass} from-blue-500 to-cyan-500`}>💡</div>
 					<div>
 						<h3 class="text-lg font-bold text-blue-900 dark:text-blue-100 mb-2">
 							Diversification is Key
@@ -853,14 +930,10 @@
 
 			<!-- Insight Card 2 -->
 			<div
-				class="card p-6 bg-gradient-to-br from-purple-50 to-pink-50 dark:from-surface-800 dark:to-surface-700 border-2 border-purple-200 dark:border-purple-800"
+				class={`${insightCardBaseClass} from-purple-50 to-pink-50 dark:from-surface-800 dark:to-surface-700 border-purple-200 dark:border-purple-800`}
 			>
 				<div class="flex items-start gap-3 mb-4">
-					<div
-						class="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-2xl"
-					>
-						🎯
-					</div>
+					<div class={`${insightIconClass} from-purple-500 to-pink-500`}>🎯</div>
 					<div>
 						<h3 class="text-lg font-bold text-purple-900 dark:text-purple-100 mb-2">
 							Video Content Dominates
@@ -876,14 +949,10 @@
 
 			<!-- Insight Card 3 -->
 			<div
-				class="card p-6 bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-surface-800 dark:to-surface-700 border-2 border-emerald-200 dark:border-emerald-800"
+				class={`${insightCardBaseClass} from-emerald-50 to-teal-50 dark:from-surface-800 dark:to-surface-700 border-emerald-200 dark:border-emerald-800`}
 			>
 				<div class="flex items-start gap-3 mb-4">
-					<div
-						class="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-full flex items-center justify-center text-2xl"
-					>
-						📊
-					</div>
+					<div class={`${insightIconClass} from-emerald-500 to-teal-500`}>📊</div>
 					<div>
 						<h3 class="text-lg font-bold text-emerald-900 dark:text-emerald-100 mb-2">
 							Google Ads Dominance
@@ -901,14 +970,10 @@
 
 			<!-- Insight Card 4 -->
 			<div
-				class="card p-6 bg-gradient-to-br from-rose-50 to-pink-50 dark:from-surface-800 dark:to-surface-700 border-2 border-rose-200 dark:border-rose-800"
+				class={`${insightCardBaseClass} from-rose-50 to-pink-50 dark:from-surface-800 dark:to-surface-700 border-rose-200 dark:border-rose-800`}
 			>
 				<div class="flex items-start gap-3 mb-4">
-					<div
-						class="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-rose-500 to-pink-500 rounded-full flex items-center justify-center text-2xl"
-					>
-						🚀
-					</div>
+					<div class={`${insightIconClass} from-rose-500 to-pink-500`}>🚀</div>
 					<div>
 						<h3 class="text-lg font-bold text-rose-900 dark:text-rose-100 mb-2">
 							High Growth Opportunities
