@@ -49,6 +49,10 @@
 		<a href="/blog">
 			<p class={isHighlighted('/blog') ? topBarHighlightedFont : topBarFont}>BLOG</p>
 		</a>
+		<div class={myDivider}></div>
+		<a href="/reports">
+			<p class={isHighlighted('/reports') ? topBarHighlightedFont : topBarFont}>REPORTS</p>
+		</a>
 	{/if}
 	<div class={myDivider}></div>
 	<a href="/about" class={topBarFont}>
