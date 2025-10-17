@@ -80,6 +80,109 @@
 	<title>{data.title}</title>
 	<meta name="description" content={data.description} />
 	<meta name="keywords" content={data.keywords} />
+
+	<!-- Structured Data for Report and NewsArticle -->
+	{@html `<script type="application/ld+json">${JSON.stringify({
+		'@context': 'https://schema.org',
+		'@type': 'Report',
+		name: data.title,
+		headline: data.title,
+		description: data.description,
+		url: 'https://appgoblin.com/reports/ad-user-acquisition-2025-august',
+		datePublished: '2025-09-01',
+		dateModified: new Date().toISOString().split('T')[0],
+		publisher: {
+			'@type': 'Organization',
+			name: 'AppGoblin',
+			logo: {
+				'@type': 'ImageObject',
+				url: 'https://appgoblin.com/AppGoblin_Large_Logo.png'
+			}
+		},
+		author: {
+			'@type': 'Organization',
+			name: 'AppGoblin Intelligence'
+		},
+		about: [
+			{
+				'@type': 'Thing',
+				name: 'Mobile App Marketing',
+				description: 'Analysis of user acquisition strategies in mobile apps'
+			},
+			{
+				'@type': 'Thing',
+				name: 'Digital Advertising',
+				description: 'Ad networks and creative performance data'
+			},
+			{
+				'@type': 'Thing',
+				name: 'App Install Growth',
+				description: 'Weekly install trends and growth percentages'
+			}
+		],
+		keywords: data.keywords,
+		articleSection: 'Technology',
+		image: {
+			'@type': 'ImageObject',
+			url: 'https://appgoblin.com/appgoblin_screenshot.png'
+		},
+		mainEntity: {
+			'@type': 'DataSet',
+			name: 'August 2025 Mobile App Advertising Intelligence',
+			description: 'Comprehensive dataset of app performance, ad networks, and creative strategies',
+			distribution: {
+				'@type': 'DataDownload',
+				encodingFormat: 'application/json'
+			},
+			spatialCoverage: {
+				'@type': 'Place',
+				name: 'Global'
+			},
+			temporalCoverage: '2025-08-01/2025-08-31',
+			variableMeasured: [
+				{
+					'@type': 'PropertyValue',
+					name: 'Apps Analyzed',
+					value: '${data.summary.totalApps}'
+				},
+				{
+					'@type': 'PropertyValue',
+					name: 'Total Weekly Installs',
+					value: '${data.summary.totalInstalls}'
+				},
+				{
+					'@type': 'PropertyValue',
+					name: 'Unique Creatives',
+					value: '${data.summary.totalCreatives}'
+				},
+				{
+					'@type': 'PropertyValue',
+					name: 'Ad Networks Identified',
+					value: '${data.summary.uniqueNetworks}'
+				},
+				{
+					'@type': 'PropertyValue',
+					name: 'Advertiser Count',
+					value: '${data.summary.advertisers}'
+				},
+				{
+					'@type': 'PropertyValue',
+					name: 'AdTech Companies',
+					value: '${data.summary.adtechCompanies}'
+				},
+				{
+					'@type': 'PropertyValue',
+					name: 'HTTPS Tracked Requests',
+					value: '${data.summary.httpsTracked}'
+				},
+				{
+					'@type': 'PropertyValue',
+					name: 'API Domains',
+					value: '${data.summary.apiDomains}'
+				}
+			]
+		}
+	})}<\/script>`}
 </svelte:head>
 
 <div class="container mx-auto px-4 py-8 max-w-7xl">
