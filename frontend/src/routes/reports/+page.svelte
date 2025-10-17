@@ -22,12 +22,78 @@
 		'december'
 	];
 
+	// Class constants
+	const statCardClass =
+		'bg-white dark:bg-surface-900 rounded-lg p-6 border border-surface-200 dark:border-surface-700';
+	const statLabelClass =
+		'text-sm font-semibold text-surface-600 dark:text-surface-400 uppercase tracking-wide';
+	const statValueClass = 'text-4xl font-bold text-surface-900 dark:text-surface-50 mt-2';
+	const featureIconClass =
+		'w-10 h-10 bg-surface-200 dark:bg-surface-700 rounded-lg flex items-center justify-center';
+	const tagClass =
+		'inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-surface-200 dark:bg-surface-700 text-surface-900 dark:text-surface-50';
+	const reportCardClass =
+		'group block h-full rounded-lg border border-surface-200 dark:border-surface-700 bg-white dark:bg-surface-900 p-6 shadow-sm hover:shadow-lg transition-all hover:-translate-y-1 hover:border-purple-400 dark:hover:border-purple-500';
+	const reportTitleClass =
+		'text-2xl font-bold text-surface-900 dark:text-surface-100 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition';
+	const reportPeriodClass = 'text-xl font-semibold text-primary-900-100 mt-2';
+	const reportDescClass = 'text-sm text-surface-600 dark:text-surface-400 mb-6 line-clamp-3';
+	const ctaLinkClass =
+		'flex items-center gap-2 text-sm font-semibold text-purple-600 dark:text-purple-400 group-hover:gap-3 transition-all';
+
 	function toTitleCase(value: string): string {
 		return value
 			.split('-')
 			.filter(Boolean)
 			.map((segment) => segment.charAt(0).toUpperCase() + segment.slice(1))
 			.join(' ');
+	}
+
+	function getDateFromSlug(slug: string): string | null {
+		const segments = slug.split('-');
+		const yearIndex = segments.findIndex((segment) => /^\d{4}$/.test(segment));
+
+		if (yearIndex !== -1) {
+			const year = segments[yearIndex];
+			const monthSegment = segments[yearIndex + 1];
+			const monthIndex = monthNames.indexOf(monthSegment?.toLowerCase() ?? '');
+
+			if (monthIndex >= 0) {
+				const monthNum = String(monthIndex + 1).padStart(2, '0');
+				return `${year}-${monthNum}-01`;
+			}
+		}
+		return null;
+	}
+
+	function generateJsonLdArticles(): Array<{
+		'@type': string;
+		position: number;
+		item: {
+			'@type': string;
+			headline: string;
+			description: string;
+			url: string;
+			datePublished?: string;
+			keywords: string;
+		};
+	}> {
+		return reports.map((report, index) => {
+			const datePublished = getDateFromSlug(report.slug);
+			return {
+				'@type': 'ListItem',
+				position: index + 1,
+				item: {
+					'@type': 'Article',
+					headline: report.title,
+					description:
+						'Comprehensive analysis of advertising performance, network strategies, and creative trends for this reporting period. Includes growth metrics, publisher reach, and actionable insights.',
+					url: `https://appgoblin.com${report.url}`,
+					...(datePublished && { datePublished }),
+					keywords: 'mobile advertising, analytics, insights, data-driven'
+				}
+			};
+		});
 	}
 
 	const reportModules = import.meta.glob('./*/+page.svelte');
@@ -84,62 +150,69 @@
 		name="description"
 		content="Browse AppGoblin intelligence reports and deep dives into advertising performance."
 	/>
+
+	<!-- Structured Data for CollectionPage and Articles -->
+	{@html `<script type="application/ld+json">${JSON.stringify({
+		'@context': 'https://schema.org',
+		'@type': 'CollectionPage',
+		name: 'Mobile Ad Intelligence Reports',
+		description:
+			'Deep dives into the mobile app advertising ecosystem. Trends, analyze performance, and understand the strategies driving app user acquisition.',
+		url: 'https://appgoblin.com/reports',
+		mainEntity: {
+			'@type': 'ItemList',
+			itemListElement: generateJsonLdArticles()
+		},
+		publisher: {
+			'@type': 'Organization',
+			name: 'AppGoblin',
+			logo: {
+				'@type': 'ImageObject',
+				url: 'https://appgoblin.com/AppGoblin_Large_Logo.png'
+			}
+		}
+	})}<\/script>`}
 </svelte:head>
 
-<div class="container mx-auto max-w-5xl px-4 py-16">
-	<header class="text-center mb-16">
-		<span
-			class="inline-block rounded-full bg-gradient-to-r from-purple-500 to-pink-500 px-4 py-2 text-sm font-semibold text-white"
-		>
-			Insights Library
-		</span>
-		<h1 class="mt-6 text-4xl font-bold tracking-tight text-surface-900 dark:text-surface-50">
-			Reports &amp; Analysis
-		</h1>
-		<p class="mt-4 text-lg text-surface-600 dark:text-surface-400">
-			Explore curated reports covering user acquisition trends, creative performance, and ad network
-			benchmarks.
-		</p>
+<div class="container mx-auto max-w-6xl px-4 py-12">
+	<!-- Enhanced Header Section -->
+	<header class="mb-16">
+		<div class="text-center mb-12">
+			<h1 class="mt-6 text-5xl md:text-6xl font-bold text-surface-900 dark:text-surface-50">
+				Mobile Ad Intelligence Reports
+			</h1>
+			<p class="mt-4 text-xl text-surface-600 dark:text-surface-400 max-w-3xl mx-auto">
+				Deep dives into the mobile app advertising ecosystem. Trends, analyze performance, and
+				understand the strategies driving app user acquisition.
+			</p>
+		</div>
 	</header>
 
-	{#if reports.length === 0}
-		<div
-			class="rounded-xl border border-dashed border-surface-300 bg-surface-50 p-8 text-center text-surface-500 dark:border-surface-700 dark:bg-surface-900/50 dark:text-surface-400"
-		>
-			No reports are available yet. Check back soon!
-		</div>
-	{:else}
-		<section class="grid gap-6 md:grid-cols-2">
+	<section>
+		<h2 class="text-2xl font-bold text-surface-900 dark:text-surface-50 mb-8">Available Reports</h2>
+		<div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
 			{#each reports as report}
-				<a
-					href={report.url}
-					class="group block h-full rounded-xl border border-surface-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-purple-400 hover:shadow-lg dark:border-surface-700 dark:bg-surface-900"
-				>
-					<div class="flex items-start justify-between">
-						<h2
-							class="text-xl font-semibold text-surface-900 transition group-hover:text-purple-600 dark:text-surface-100"
-						>
-							{report.title}
-						</h2>
-						<span class="text-sm font-medium text-purple-500 group-hover:text-purple-600">
-							View
-						</span>
+				<a href={report.url} class={reportCardClass}>
+					<!-- Report Header -->
+					<div class="flex items-start justify-between mb-4">
+						<div class="flex-1">
+							<h3 class={reportTitleClass}>{report.title}</h3>
+							{#if report.period}
+								<p class={reportPeriodClass}>{report.period}</p>
+							{/if}
+						</div>
 					</div>
-					{#if report.period}
-						<p
-							class="mt-3 text-sm font-medium uppercase tracking-wide text-surface-500 dark:text-surface-400"
-						>
-							{report.period}
-						</p>
-					{/if}
-					<p class="mt-4 text-sm text-surface-600 dark:text-surface-400">
-						Dive into advertising performance insights, network share, and creative trends for this
-						reporting period.
-					</p>
-					<div
-						class="mt-6 flex items-center gap-2 text-sm font-semibold text-purple-500 group-hover:gap-3"
-					>
-						<span>Read report</span>
+
+					<!-- Report Features -->
+					<div class="flex flex-wrap gap-2 mb-6">
+						<span class={tagClass}>Creatives</span>
+						<span class={tagClass}>Top Advertisers</span>
+						<span class={tagClass}>Ad Network Analytics</span>
+					</div>
+
+					<!-- CTA -->
+					<div class={ctaLinkClass}>
+						<span>View Report</span>
 						<svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
 							<path
 								d="M12.293 3.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 11-1.414-1.414L14.586 9H4a1 1 0 110-2h10.586l-2.293-2.293a1 1 0 010-1.414z"
@@ -148,6 +221,6 @@
 					</div>
 				</a>
 			{/each}
-		</section>
-	{/if}
+		</div>
+	</section>
 </div>

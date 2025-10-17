@@ -97,7 +97,7 @@
 		</h1>
 		<p class="text-xl max-w-3xl mx-auto">
 			Discover the fastest-growing mobile apps and the advertising strategies powering their user
-			acquisition campaigns in September 2025.
+			acquisition campaigns in August 2025.
 		</p>
 	</div>
 
@@ -263,8 +263,8 @@
 				week.
 			</p>
 			<p>
-				These are the September 2025 ad mobile app ad campaigns (US) that drove the highest
-				increases in week on week (W/W) install growth.
+				These are the August 2025 ad mobile app ad campaigns (US) that drove the highest increases
+				in week on week (W/W) install growth.
 			</p>
 		</div>
 		<div class={cardTableWrapperClass}>
@@ -524,7 +524,7 @@
 		>
 			<h2 class={sectionTitleClass}>Ad Network Landscape</h2>
 			<p class={sectionHeaderSubtitleClass}>
-				The advertising platforms that powered September 2025 user acquisition campaigns
+				The advertising platforms that powered August 2025 user acquisition campaigns
 			</p>
 		</div>
 		<!-- Network Metrics Grid -->
@@ -562,7 +562,7 @@
 				delivering
 				<strong class="text-pink-600"
 					>{data.networkStats.totalNetworkCreatives} unique creatives</strong
-				> across the top ad networks in September 2025.
+				> across the top ad networks in August 2025.
 			</p>
 			<p>
 				The other ad networks fighting for the leftover market share are split into two overlapping
@@ -706,7 +706,7 @@
 			</p>
 			<p class={paragraphClass}>
 				This is a useful set of apps for those looking to understand who is likely running larger
-				mobile ad campaigns in September 2025.
+				mobile ad campaigns in August 2025.
 			</p>
 		</div>
 		<!-- Top Apps by Publisher Reach -->

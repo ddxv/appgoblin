@@ -1,8 +1,8 @@
 import type { PageServerLoad } from './$types';
 
 interface AppAdData {
+	best_week: string;
 	app_name: string;
-	store_app: number;
 	store_id: string;
 	icon_url_100: string;
 	weekly_installs: number;
@@ -44,8 +44,8 @@ const rawSummaryData = [
 const rawMostPopularCreatives = [
 	{
 		phash: '25799add637d',
-		md5_hash: 'db65a4fe0fa935e8a0af9e6e9d944b4a',
-		file_extension: 'mp4',
+		md5_hash: 'f66d7f24b1a126abae59b7897e475f1e',
+		file_extension: 'webm',
 		advertiser_count: 1,
 		publisher_count: 106,
 		first_seen: '2025-09-12T22:29:28.685Z',
@@ -66,8 +66,8 @@ const rawMostPopularCreatives = [
 	},
 	{
 		phash: '66f7fd7eb0b8',
-		md5_hash: '1c7e2914a891e35ea561ab09d6313e46',
-		file_extension: 'mp4',
+		md5_hash: '3cde0691732b94fc87593cc60a2356cc',
+		file_extension: 'webm',
 		advertiser_count: 1,
 		publisher_count: 15,
 		first_seen: '2025-09-01T14:29:03.380Z',
@@ -110,8 +110,8 @@ const rawMostPopularCreatives = [
 	},
 	{
 		phash: '9f5d71fd2ee7',
-		md5_hash: '8d8a20494b6b929c6f9d262261a3d315',
-		file_extension: 'webm',
+		md5_hash: 'd631f93a3c1d75410c6efbce67fa8ac3',
+		file_extension: 'mp4',
 		advertiser_count: 1,
 		publisher_count: 6,
 		first_seen: '2025-09-05T09:24:37.424Z',
@@ -132,8 +132,8 @@ const rawMostPopularCreatives = [
 	},
 	{
 		phash: '66ba3be21fad',
-		md5_hash: '2280989f1f08c4d279e4b76678fae17f',
-		file_extension: 'webm',
+		md5_hash: '7bec35f68e829ca1406607a9cf6b968e',
+		file_extension: 'mp4',
 		advertiser_count: 1,
 		publisher_count: 5,
 		first_seen: '2025-09-28T19:52:57.538Z',
@@ -143,8 +143,8 @@ const rawMostPopularCreatives = [
 	},
 	{
 		phash: '095cfbb7b363',
-		md5_hash: '29b2cba1126862be274110567130df16',
-		file_extension: 'mp4',
+		md5_hash: 'd73782df24183fcb04e670b1616224ea',
+		file_extension: 'webm',
 		advertiser_count: 1,
 		publisher_count: 5,
 		first_seen: '2025-09-04T16:06:48.579Z',
@@ -160,43 +160,43 @@ const rawAdNetworkData: AdNetworkData[] = [
 		ad_network_domain: 'google.com',
 		all_domains: '{google.com}',
 		company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
-		publisher_count: 1327,
-		advertiser_count: 1054,
-		creatives_count: 1250
+		publisher_count: 1438,
+		advertiser_count: 114,
+		creatives_count: 1378
 	},
 	{
 		ad_network_name: 'Mobvista',
 		ad_network_domain: 'mobvista.com',
 		all_domains: '{mintegral.com}',
 		company_logo_url: 'company-logos\/mobvista.com\/logo_200x200.jpeg',
-		publisher_count: 171,
-		advertiser_count: 69,
-		creatives_count: 171
+		publisher_count: 189,
+		advertiser_count: 59,
+		creatives_count: 177
 	},
 	{
 		ad_network_name: 'AppLovin',
 		ad_network_domain: 'applovin.com',
 		all_domains: '{applovin.com}',
 		company_logo_url: 'company-logos\/applovin.com\/logo_200x200.jpeg',
-		publisher_count: 141,
+		publisher_count: 162,
 		advertiser_count: 0,
-		creatives_count: 209
+		creatives_count: 246
 	},
 	{
 		ad_network_name: 'Unity',
 		ad_network_domain: 'unity.com',
 		all_domains: '{unity.com,unity3d.com}',
 		company_logo_url: 'company-logos\/unity.com\/logo_200x200.jpeg',
-		publisher_count: 106,
-		advertiser_count: 76,
-		creatives_count: 154
+		publisher_count: 137,
+		advertiser_count: 51,
+		creatives_count: 190
 	},
 	{
 		ad_network_name: 'RTB House',
 		ad_network_domain: 'rtbhouse.com',
 		all_domains: '{rtbhouse.com}',
 		company_logo_url: 'company-logos\/rtbhouse.com\/logo_200x200.jpeg',
-		publisher_count: 94,
+		publisher_count: 101,
 		advertiser_count: 0,
 		creatives_count: 6
 	},
@@ -205,52 +205,52 @@ const rawAdNetworkData: AdNetworkData[] = [
 		ad_network_domain: 'yandex.com',
 		all_domains: '{yandex.com}',
 		company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
-		publisher_count: 87,
-		advertiser_count: 52,
-		creatives_count: 190
-	},
-	{
-		ad_network_name: 'Adikteev',
-		ad_network_domain: 'adikteev.com',
-		all_domains: '{adikteev.com}',
-		company_logo_url: 'company-logos\/adikteev.com\/logo_200x200.jpeg',
-		publisher_count: 44,
-		advertiser_count: 1,
-		creatives_count: 15
-	},
-	{
-		ad_network_name: 'Criteo',
-		ad_network_domain: 'criteo.com',
-		all_domains: '{criteo.com}',
-		company_logo_url: 'company-logos\/criteo.com\/logo_200x200.jpeg',
-		publisher_count: 41,
-		advertiser_count: 27,
-		creatives_count: 39
-	},
-	{
-		ad_network_name: 'Appodeal',
-		ad_network_domain: 'appodeal.com',
-		all_domains: '{appodeal.com,bidmachine.io}',
-		company_logo_url: 'company-logos\/appodeal.com\/logo_200x200.jpeg',
-		publisher_count: 37,
-		advertiser_count: 34,
-		creatives_count: 38
+		publisher_count: 78,
+		advertiser_count: 15,
+		creatives_count: 200
 	},
 	{
 		ad_network_name: 'Digital Turbine',
 		ad_network_domain: 'digitalturbine.com',
 		all_domains: '{adcolony.com,appreciate.mobi,fyber.com}',
 		company_logo_url: 'company-logos\/digitalturbine.com\/logo_200x200.jpeg',
-		publisher_count: 35,
-		advertiser_count: 41,
-		creatives_count: 37
+		publisher_count: 63,
+		advertiser_count: 14,
+		creatives_count: 48
+	},
+	{
+		ad_network_name: 'Criteo',
+		ad_network_domain: 'criteo.com',
+		all_domains: '{criteo.com}',
+		company_logo_url: '',
+		publisher_count: 49,
+		advertiser_count: 0,
+		creatives_count: 43
+	},
+	{
+		ad_network_name: 'Adikteev',
+		ad_network_domain: 'adikteev.com',
+		all_domains: '{adikteev.com}',
+		company_logo_url: 'company-logos\/adikteev.com\/logo_200x200.jpeg',
+		publisher_count: 48,
+		advertiser_count: 1,
+		creatives_count: 15
+	},
+	{
+		ad_network_name: 'BidEase',
+		ad_network_domain: 'bidease.com',
+		all_domains: '{bidease.com}',
+		company_logo_url: 'company-logos\/bidease.com\/logo_200x200.jpeg',
+		publisher_count: 45,
+		advertiser_count: 7,
+		creatives_count: 41
 	}
 ];
 
 const rawData: AppAdData[] = [
 	{
+		best_week: '2025-09-29',
 		app_name: 'Motor Speed Traffic 3D',
-		store_app: 182721092,
 		store_id: 'com.motor.speed.traffic3d',
 		icon_url_100: 'eaa5cd1891b2f662.jpeg',
 		weekly_installs: 2977529,
@@ -266,25 +266,8 @@ const rawData: AppAdData[] = [
 		pub_count: 1
 	},
 	{
-		app_name: 'Motor Speed Traffic 3D',
-		store_app: 182721092,
-		store_id: 'com.motor.speed.traffic3d',
-		icon_url_100: 'eaa5cd1891b2f662.jpeg',
-		weekly_installs: 2977529,
-		weekly_percent_increase: 163.602882915424,
-		phash: 'bf99de4f03fdffe7',
-		file_extension: 'webm',
-		host_ad_domain: 'google.com',
-		host_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
-		initial_ad_domain: 'google.com',
-		initial_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
-		mmp_domains: null,
-		md5_hash: '8054d52d37df78a00c068ca6708da428',
-		pub_count: 1
-	},
-	{
+		best_week: '2025-09-08',
 		app_name: 'Dairy Queen® Food & Treats',
-		store_app: 711129,
 		store_id: 'com.olo.dairyqueen.production',
 		icon_url_100: '9697696ac4a5b692.jpeg',
 		weekly_installs: 73087,
@@ -300,8 +283,8 @@ const rawData: AppAdData[] = [
 		pub_count: 1
 	},
 	{
+		best_week: '2025-09-15',
 		app_name: 'Flood-It!',
-		store_app: 120318780,
 		store_id: 'com.labpixies.flood',
 		icon_url_100: 'c578856e303e6b27.png',
 		weekly_installs: 11588,
@@ -317,76 +300,8 @@ const rawData: AppAdData[] = [
 		pub_count: 1
 	},
 	{
-		app_name: 'Flood-It!',
-		store_app: 120318780,
-		store_id: 'com.labpixies.flood',
-		icon_url_100: 'c578856e303e6b27.png',
-		weekly_installs: 11588,
-		weekly_percent_increase: 156.769333037891,
-		phash: 'c3fe433ef50aafd5',
-		file_extension: 'mp4',
-		host_ad_domain: 'google.com',
-		host_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
-		initial_ad_domain: 'google.com',
-		initial_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
-		mmp_domains: null,
-		md5_hash: '6708fd9abe3e1c4d4eb55ef34de0c3dc',
-		pub_count: 2
-	},
-	{
+		best_week: '2025-09-01',
 		app_name: 'Crypto.com: Buy BTC, ETH & CRO',
-		store_app: 631294,
-		store_id: 'co.mona.android',
-		icon_url_100: 'dcf96ae26869a492.jpeg',
-		weekly_installs: 176688,
-		weekly_percent_increase: 135.978346036042,
-		phash: '96b3db74cfef7d97',
-		file_extension: 'mp4',
-		host_ad_domain: 'google.com',
-		host_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
-		initial_ad_domain: 'google.com',
-		initial_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
-		mmp_domains: '{appsflyer.com}',
-		md5_hash: 'fd957f0e127049ff7c41d0b74f36bc04',
-		pub_count: 1
-	},
-	{
-		app_name: 'Crypto.com: Buy BTC, ETH & CRO',
-		store_app: 631294,
-		store_id: 'co.mona.android',
-		icon_url_100: 'dcf96ae26869a492.jpeg',
-		weekly_installs: 176688,
-		weekly_percent_increase: 135.978346036042,
-		phash: '877867ce38679895',
-		file_extension: 'mp4',
-		host_ad_domain: 'google.com',
-		host_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
-		initial_ad_domain: 'google.com',
-		initial_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
-		mmp_domains: '{appsflyer.com}',
-		md5_hash: 'fd957f0e127049ff7c41d0b74f36bc04',
-		pub_count: 2
-	},
-	{
-		app_name: 'Crypto.com: Buy BTC, ETH & CRO',
-		store_app: 631294,
-		store_id: 'co.mona.android',
-		icon_url_100: 'dcf96ae26869a492.jpeg',
-		weekly_installs: 176688,
-		weekly_percent_increase: 135.978346036042,
-		phash: '877867ce38679895',
-		file_extension: 'mp4',
-		host_ad_domain: 'google.com',
-		host_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
-		initial_ad_domain: 'google.com',
-		initial_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
-		mmp_domains: '{branch.io}',
-		md5_hash: 'fd957f0e127049ff7c41d0b74f36bc04',
-		pub_count: 2
-	},
-	{
-		app_name: 'Crypto.com: Buy BTC, ETH & CRO',
-		store_app: 631294,
 		store_id: 'co.mona.android',
 		icon_url_100: 'dcf96ae26869a492.jpeg',
 		weekly_installs: 176688,
@@ -398,46 +313,12 @@ const rawData: AppAdData[] = [
 		initial_ad_domain: 'google.com',
 		initial_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
 		mmp_domains: '{branch.io}',
-		md5_hash: 'fd957f0e127049ff7c41d0b74f36bc04',
+		md5_hash: '155a34aa1435b6a2962ce30009305404',
 		pub_count: 1
 	},
 	{
-		app_name: 'Crypto.com: Buy BTC, ETH & CRO',
-		store_app: 631294,
-		store_id: 'co.mona.android',
-		icon_url_100: 'dcf96ae26869a492.jpeg',
-		weekly_installs: 176688,
-		weekly_percent_increase: 135.978346036042,
-		phash: '96b3db74cfef7d97',
-		file_extension: 'mp4',
-		host_ad_domain: 'google.com',
-		host_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
-		initial_ad_domain: 'google.com',
-		initial_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
-		mmp_domains: '{branch.io}',
-		md5_hash: 'fd957f0e127049ff7c41d0b74f36bc04',
-		pub_count: 1
-	},
-	{
-		app_name: 'Crypto.com: Buy BTC, ETH & CRO',
-		store_app: 631294,
-		store_id: 'co.mona.android',
-		icon_url_100: 'dcf96ae26869a492.jpeg',
-		weekly_installs: 176688,
-		weekly_percent_increase: 135.978346036042,
-		phash: 'b890c72fcdee8819',
-		file_extension: 'jpeg',
-		host_ad_domain: 'google.com',
-		host_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
-		initial_ad_domain: 'google.com',
-		initial_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
-		mmp_domains: '{appsflyer.com}',
-		md5_hash: 'fd957f0e127049ff7c41d0b74f36bc04',
-		pub_count: 1
-	},
-	{
+		best_week: '2025-09-08',
 		app_name: 'Eight: Business Card Manager',
-		store_app: 58669345,
 		store_id: 'net.eightcard',
 		icon_url_100: 'b18cce73318ccce3.jpeg',
 		weekly_installs: 5862,
@@ -453,8 +334,8 @@ const rawData: AppAdData[] = [
 		pub_count: 1
 	},
 	{
+		best_week: '2025-09-08',
 		app_name: 'CallApp: Caller ID & Block',
-		store_app: 624183,
 		store_id: 'com.callapp.contacts',
 		icon_url_100: 'eb32b44cc3989e33.png',
 		weekly_installs: 2175912,
@@ -470,8 +351,8 @@ const rawData: AppAdData[] = [
 		pub_count: 1
 	},
 	{
+		best_week: '2025-09-29',
 		app_name: 'ABCmouse 2: Kids Learning Game',
-		store_app: 70621949,
 		store_id: 'com.aofl.abcmouse',
 		icon_url_100: 'b98e716586c99a9c.png',
 		weekly_installs: 71890,
@@ -487,25 +368,8 @@ const rawData: AppAdData[] = [
 		pub_count: 2
 	},
 	{
-		app_name: 'ABCmouse 2: Kids Learning Game',
-		store_app: 70621949,
-		store_id: 'com.aofl.abcmouse',
-		icon_url_100: 'b98e716586c99a9c.png',
-		weekly_installs: 71890,
-		weekly_percent_increase: 100.076071024361,
-		phash: 'f7ff9f5d71fd2ee7',
-		file_extension: 'webm',
-		host_ad_domain: 'google.com',
-		host_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
-		initial_ad_domain: 'google.com',
-		initial_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
-		mmp_domains: '{adjust.com}',
-		md5_hash: '5903da4f93bd41607577ada5053f5c5e',
-		pub_count: 3
-	},
-	{
+		best_week: '2025-09-08',
 		app_name: 'Redfin: Buy, Sell & Rent Homes',
-		store_app: 703072,
 		store_id: 'com.redfin.android',
 		icon_url_100: 'fb39a46cc139946c.png',
 		weekly_installs: 29450,
@@ -521,8 +385,8 @@ const rawData: AppAdData[] = [
 		pub_count: 1
 	},
 	{
+		best_week: '2025-09-08',
 		app_name: 'Fetch: America’s Rewards App',
-		store_app: 578834,
 		store_id: 'com.fetchrewards.fetchrewards.hop',
 		icon_url_100: 'bf3d6868873d60c1.png',
 		weekly_installs: 114124,
@@ -538,8 +402,8 @@ const rawData: AppAdData[] = [
 		pub_count: 1
 	},
 	{
+		best_week: '2025-09-29',
 		app_name: '滿貫大亨 - 快打旋風登場',
-		store_app: 10414825,
 		store_id: 'com.igs.TMD',
 		icon_url_100: 'c3cf4c3a6d0d34e4.png',
 		weekly_installs: 5304,
@@ -555,8 +419,8 @@ const rawData: AppAdData[] = [
 		pub_count: 1
 	},
 	{
+		best_week: '2025-09-29',
 		app_name: 'Garden Joy: Design Game',
-		store_app: 43654891,
 		store_id: 'com.scopely.gardenjoy',
 		icon_url_100: 'a5a3989cb36eb264.png',
 		weekly_installs: 9273,
@@ -572,25 +436,8 @@ const rawData: AppAdData[] = [
 		pub_count: 1
 	},
 	{
+		best_week: '2025-09-01',
 		app_name: 'Watcher of Realms',
-		store_app: 43703763,
-		store_id: 'com.td.watcherofrealms',
-		icon_url_100: 'dde0230e64da333b.png',
-		weekly_installs: 27514,
-		weekly_percent_increase: 53.0880225527653,
-		phash: 'dcd8021ebfe3609c',
-		file_extension: 'jpeg',
-		host_ad_domain: 'yandex.com',
-		host_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
-		initial_ad_domain: 'yandex.com',
-		initial_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
-		mmp_domains: '{adjust.com}',
-		md5_hash: 'b4cbbc0c51bc193647b1944a3ca3ede5',
-		pub_count: 2
-	},
-	{
-		app_name: 'Watcher of Realms',
-		store_app: 43703763,
 		store_id: 'com.td.watcherofrealms',
 		icon_url_100: 'dde0230e64da333b.png',
 		weekly_installs: 27514,
@@ -606,76 +453,8 @@ const rawData: AppAdData[] = [
 		pub_count: 1
 	},
 	{
-		app_name: 'Watcher of Realms',
-		store_app: 43703763,
-		store_id: 'com.td.watcherofrealms',
-		icon_url_100: 'dde0230e64da333b.png',
-		weekly_installs: 27514,
-		weekly_percent_increase: 53.0880225527653,
-		phash: 'dcb4fa13c192a363',
-		file_extension: 'jpeg',
-		host_ad_domain: 'yandex.com',
-		host_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
-		initial_ad_domain: 'yandex.com',
-		initial_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
-		mmp_domains: '{adjust.com}',
-		md5_hash: 'b4cbbc0c51bc193647b1944a3ca3ede5',
-		pub_count: 4
-	},
-	{
-		app_name: 'Watcher of Realms',
-		store_app: 43703763,
-		store_id: 'com.td.watcherofrealms',
-		icon_url_100: 'dde0230e64da333b.png',
-		weekly_installs: 27514,
-		weekly_percent_increase: 53.0880225527653,
-		phash: 'dce3c0ff048e31e1',
-		file_extension: 'jpeg',
-		host_ad_domain: 'yandex.com',
-		host_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
-		initial_ad_domain: 'yandex.com',
-		initial_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
-		mmp_domains: '{adjust.com}',
-		md5_hash: 'b4cbbc0c51bc193647b1944a3ca3ede5',
-		pub_count: 1
-	},
-	{
-		app_name: 'Watcher of Realms',
-		store_app: 43703763,
-		store_id: 'com.td.watcherofrealms',
-		icon_url_100: 'dde0230e64da333b.png',
-		weekly_installs: 27514,
-		weekly_percent_increase: 53.0880225527653,
-		phash: 'e4e719c7b429a54a',
-		file_extension: 'jpeg',
-		host_ad_domain: 'yandex.com',
-		host_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
-		initial_ad_domain: 'yandex.com',
-		initial_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
-		mmp_domains: '{adjust.com}',
-		md5_hash: 'b4cbbc0c51bc193647b1944a3ca3ede5',
-		pub_count: 1
-	},
-	{
+		best_week: '2025-09-01',
 		app_name: 'Lanetalk',
-		store_app: 636988,
-		store_id: 'com.lanetalk',
-		icon_url_100: '93312e9b61e5666c.png',
-		weekly_installs: 2022,
-		weekly_percent_increase: 39.9307958477509,
-		phash: 'b7dd76dac8f39984',
-		file_extension: 'webm',
-		host_ad_domain: 'google.com',
-		host_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
-		initial_ad_domain: 'google.com',
-		initial_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
-		mmp_domains: '{branch.io}',
-		md5_hash: '1c314d0446680f65961432042cc792ba',
-		pub_count: 3
-	},
-	{
-		app_name: 'Lanetalk',
-		store_app: 636988,
 		store_id: 'com.lanetalk',
 		icon_url_100: '93312e9b61e5666c.png',
 		weekly_installs: 2022,
@@ -691,25 +470,8 @@ const rawData: AppAdData[] = [
 		pub_count: 1
 	},
 	{
-		app_name: 'Lanetalk',
-		store_app: 636988,
-		store_id: 'com.lanetalk',
-		icon_url_100: '93312e9b61e5666c.png',
-		weekly_installs: 2022,
-		weekly_percent_increase: 39.9307958477509,
-		phash: 'b799cc72c8c69f8d',
-		file_extension: 'webm',
-		host_ad_domain: 'google.com',
-		host_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
-		initial_ad_domain: 'google.com',
-		initial_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
-		mmp_domains: '{branch.io}',
-		md5_hash: '1c314d0446680f65961432042cc792ba',
-		pub_count: 1
-	},
-	{
+		best_week: '2025-09-29',
 		app_name: 'Hello Kitty My Dream Store',
-		store_app: 135429263,
 		store_id: 'com.actgames.HelloKittyMDS',
 		icon_url_100: 'eec634929169cf64.png',
 		weekly_installs: 45245,
@@ -725,8 +487,8 @@ const rawData: AppAdData[] = [
 		pub_count: 1
 	},
 	{
+		best_week: '2025-09-01',
 		app_name: 'TikTok Lite - Faster TikTok',
-		store_app: 123923918,
 		store_id: 'com.tiktok.lite.go',
 		icon_url_100: 'c3332ccd268eb173.png',
 		weekly_installs: 302100,
@@ -742,8 +504,8 @@ const rawData: AppAdData[] = [
 		pub_count: 1
 	},
 	{
+		best_week: '2025-09-22',
 		app_name: 'Войны демонов – Сбор',
-		store_app: 173211933,
 		store_id: 'com.elsgm2.gpsh2',
 		icon_url_100: '9460789f236ee5aa.png',
 		weekly_installs: 16737,
@@ -759,76 +521,8 @@ const rawData: AppAdData[] = [
 		pub_count: 1
 	},
 	{
-		app_name: 'Войны демонов – Сбор',
-		store_app: 173211933,
-		store_id: 'com.elsgm2.gpsh2',
-		icon_url_100: '9460789f236ee5aa.png',
-		weekly_installs: 16737,
-		weekly_percent_increase: 20.8622183708839,
-		phash: 'fb12a057f8e8350d',
-		file_extension: 'jpeg',
-		host_ad_domain: 'yandex.com',
-		host_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
-		initial_ad_domain: 'yandex.com',
-		initial_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
-		mmp_domains: '{adjust.com}',
-		md5_hash: '2949842bf27b6701604e64ceb6d2f768',
-		pub_count: 1
-	},
-	{
+		best_week: '2025-09-01',
 		app_name: 'Gate: Trade BTC & ETH',
-		store_app: 587923,
-		store_id: 'com.gateio.gateio',
-		icon_url_100: 'bc92c369ce243c9b.png',
-		weekly_installs: 39205,
-		weekly_percent_increase: 18.8943026970199,
-		phash: 'a4554a1ab5e575b8',
-		file_extension: 'jpeg',
-		host_ad_domain: 'yandex.com',
-		host_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
-		initial_ad_domain: 'yandex.com',
-		initial_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
-		mmp_domains: '{adjust.com}',
-		md5_hash: '9e9742955066b4c768fc0beb4fdc3a82',
-		pub_count: 1
-	},
-	{
-		app_name: 'Gate: Trade BTC & ETH',
-		store_app: 587923,
-		store_id: 'com.gateio.gateio',
-		icon_url_100: 'bc92c369ce243c9b.png',
-		weekly_installs: 39205,
-		weekly_percent_increase: 18.8943026970199,
-		phash: 'c97423cf3c678698',
-		file_extension: 'jpeg',
-		host_ad_domain: 'yandex.com',
-		host_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
-		initial_ad_domain: 'yandex.com',
-		initial_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
-		mmp_domains: '{adjust.com}',
-		md5_hash: '9e9742955066b4c768fc0beb4fdc3a82',
-		pub_count: 1
-	},
-	{
-		app_name: 'Gate: Trade BTC & ETH',
-		store_app: 587923,
-		store_id: 'com.gateio.gateio',
-		icon_url_100: 'bc92c369ce243c9b.png',
-		weekly_installs: 39205,
-		weekly_percent_increase: 18.8943026970199,
-		phash: 'c97423cf3c678698',
-		file_extension: 'jpeg',
-		host_ad_domain: 'yandex.com',
-		host_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
-		initial_ad_domain: 'yandex.com',
-		initial_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
-		mmp_domains: '{appsflyer.com}',
-		md5_hash: '9e9742955066b4c768fc0beb4fdc3a82',
-		pub_count: 1
-	},
-	{
-		app_name: 'Gate: Trade BTC & ETH',
-		store_app: 587923,
 		store_id: 'com.gateio.gateio',
 		icon_url_100: 'bc92c369ce243c9b.png',
 		weekly_installs: 39205,
@@ -844,263 +538,8 @@ const rawData: AppAdData[] = [
 		pub_count: 1
 	},
 	{
+		best_week: '2025-09-15',
 		app_name: 'Рассвет Магии: Истоки Силы',
-		store_app: 162865523,
-		store_id: 'com.mdsj.gamegpvk',
-		icon_url_100: '9d9466ab5a6449ea.png',
-		weekly_installs: 5610,
-		weekly_percent_increase: 16.9155956929489,
-		phash: 'eedba59b600c8617',
-		file_extension: 'jpeg',
-		host_ad_domain: 'yandex.com',
-		host_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
-		initial_ad_domain: 'yandex.com',
-		initial_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
-		mmp_domains: '{appsflyer.com}',
-		md5_hash: '2dcc38e1462fd8042d55ea97c4b36b3c',
-		pub_count: 1
-	},
-	{
-		app_name: 'Рассвет Магии: Истоки Силы',
-		store_app: 162865523,
-		store_id: 'com.mdsj.gamegpvk',
-		icon_url_100: '9d9466ab5a6449ea.png',
-		weekly_installs: 5610,
-		weekly_percent_increase: 16.9155956929489,
-		phash: 'c4cc16f14f0b7b86',
-		file_extension: 'jpeg',
-		host_ad_domain: 'yandex.com',
-		host_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
-		initial_ad_domain: 'yandex.com',
-		initial_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
-		mmp_domains: '{appsflyer.com}',
-		md5_hash: '2dcc38e1462fd8042d55ea97c4b36b3c',
-		pub_count: 1
-	},
-	{
-		app_name: 'Рассвет Магии: Истоки Силы',
-		store_app: 162865523,
-		store_id: 'com.mdsj.gamegpvk',
-		icon_url_100: '9d9466ab5a6449ea.png',
-		weekly_installs: 5610,
-		weekly_percent_increase: 16.9155956929489,
-		phash: 'c1b8462e3fc47939',
-		file_extension: 'jpeg',
-		host_ad_domain: 'yandex.com',
-		host_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
-		initial_ad_domain: 'yandex.com',
-		initial_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
-		mmp_domains: '{adjust.com}',
-		md5_hash: '2dcc38e1462fd8042d55ea97c4b36b3c',
-		pub_count: 1
-	},
-	{
-		app_name: 'Рассвет Магии: Истоки Силы',
-		store_app: 162865523,
-		store_id: 'com.mdsj.gamegpvk',
-		icon_url_100: '9d9466ab5a6449ea.png',
-		weekly_installs: 5610,
-		weekly_percent_increase: 16.9155956929489,
-		phash: 'c1b8462e3fc47939',
-		file_extension: 'jpeg',
-		host_ad_domain: 'yandex.com',
-		host_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
-		initial_ad_domain: 'yandex.com',
-		initial_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
-		mmp_domains: '{appsflyer.com}',
-		md5_hash: '2dcc38e1462fd8042d55ea97c4b36b3c',
-		pub_count: 1
-	},
-	{
-		app_name: 'Рассвет Магии: Истоки Силы',
-		store_app: 162865523,
-		store_id: 'com.mdsj.gamegpvk',
-		icon_url_100: '9d9466ab5a6449ea.png',
-		weekly_installs: 5610,
-		weekly_percent_increase: 16.9155956929489,
-		phash: 'c4cc16f14f0b7b86',
-		file_extension: 'jpeg',
-		host_ad_domain: 'yandex.com',
-		host_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
-		initial_ad_domain: 'yandex.com',
-		initial_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
-		mmp_domains: '{adjust.com}',
-		md5_hash: '2dcc38e1462fd8042d55ea97c4b36b3c',
-		pub_count: 1
-	},
-	{
-		app_name: 'Рассвет Магии: Истоки Силы',
-		store_app: 162865523,
-		store_id: 'com.mdsj.gamegpvk',
-		icon_url_100: '9d9466ab5a6449ea.png',
-		weekly_installs: 5610,
-		weekly_percent_increase: 16.9155956929489,
-		phash: 'eedba59b600c8617',
-		file_extension: 'jpeg',
-		host_ad_domain: 'yandex.com',
-		host_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
-		initial_ad_domain: 'yandex.com',
-		initial_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
-		mmp_domains: '{adjust.com}',
-		md5_hash: '2dcc38e1462fd8042d55ea97c4b36b3c',
-		pub_count: 1
-	},
-	{
-		app_name: 'Рассвет Магии: Истоки Силы',
-		store_app: 162865523,
-		store_id: 'com.mdsj.gamegpvk',
-		icon_url_100: '9d9466ab5a6449ea.png',
-		weekly_installs: 5610,
-		weekly_percent_increase: 16.9155956929489,
-		phash: '81e160683e764f9f',
-		file_extension: 'jpeg',
-		host_ad_domain: 'yandex.com',
-		host_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
-		initial_ad_domain: 'yandex.com',
-		initial_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
-		mmp_domains: '{adjust.com}',
-		md5_hash: '2dcc38e1462fd8042d55ea97c4b36b3c',
-		pub_count: 1
-	},
-	{
-		app_name: 'Рассвет Магии: Истоки Силы',
-		store_app: 162865523,
-		store_id: 'com.mdsj.gamegpvk',
-		icon_url_100: '9d9466ab5a6449ea.png',
-		weekly_installs: 5610,
-		weekly_percent_increase: 16.9155956929489,
-		phash: '81e160683e764f9f',
-		file_extension: 'jpeg',
-		host_ad_domain: 'yandex.com',
-		host_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
-		initial_ad_domain: 'yandex.com',
-		initial_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
-		mmp_domains: '{appsflyer.com}',
-		md5_hash: '2dcc38e1462fd8042d55ea97c4b36b3c',
-		pub_count: 1
-	},
-	{
-		app_name: 'Рассвет Магии: Истоки Силы',
-		store_app: 162865523,
-		store_id: 'com.mdsj.gamegpvk',
-		icon_url_100: '9d9466ab5a6449ea.png',
-		weekly_installs: 5610,
-		weekly_percent_increase: 16.9155956929489,
-		phash: '8a35634c769da339',
-		file_extension: 'jpeg',
-		host_ad_domain: 'yandex.com',
-		host_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
-		initial_ad_domain: 'yandex.com',
-		initial_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
-		mmp_domains: '{adjust.com}',
-		md5_hash: '2dcc38e1462fd8042d55ea97c4b36b3c',
-		pub_count: 1
-	},
-	{
-		app_name: 'Рассвет Магии: Истоки Силы',
-		store_app: 162865523,
-		store_id: 'com.mdsj.gamegpvk',
-		icon_url_100: '9d9466ab5a6449ea.png',
-		weekly_installs: 5610,
-		weekly_percent_increase: 16.9155956929489,
-		phash: '8a35634c769da339',
-		file_extension: 'jpeg',
-		host_ad_domain: 'yandex.com',
-		host_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
-		initial_ad_domain: 'yandex.com',
-		initial_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
-		mmp_domains: '{appsflyer.com}',
-		md5_hash: '2dcc38e1462fd8042d55ea97c4b36b3c',
-		pub_count: 1
-	},
-	{
-		app_name: 'Рассвет Магии: Истоки Силы',
-		store_app: 162865523,
-		store_id: 'com.mdsj.gamegpvk',
-		icon_url_100: '9d9466ab5a6449ea.png',
-		weekly_installs: 5610,
-		weekly_percent_increase: 16.9155956929489,
-		phash: '9134c15945ea5bf3',
-		file_extension: 'jpeg',
-		host_ad_domain: 'yandex.com',
-		host_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
-		initial_ad_domain: 'yandex.com',
-		initial_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
-		mmp_domains: '{adjust.com}',
-		md5_hash: '2dcc38e1462fd8042d55ea97c4b36b3c',
-		pub_count: 1
-	},
-	{
-		app_name: 'Рассвет Магии: Истоки Силы',
-		store_app: 162865523,
-		store_id: 'com.mdsj.gamegpvk',
-		icon_url_100: '9d9466ab5a6449ea.png',
-		weekly_installs: 5610,
-		weekly_percent_increase: 16.9155956929489,
-		phash: '9134c15945ea5bf3',
-		file_extension: 'jpeg',
-		host_ad_domain: 'yandex.com',
-		host_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
-		initial_ad_domain: 'yandex.com',
-		initial_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
-		mmp_domains: '{appsflyer.com}',
-		md5_hash: '2dcc38e1462fd8042d55ea97c4b36b3c',
-		pub_count: 1
-	},
-	{
-		app_name: 'Рассвет Магии: Истоки Силы',
-		store_app: 162865523,
-		store_id: 'com.mdsj.gamegpvk',
-		icon_url_100: '9d9466ab5a6449ea.png',
-		weekly_installs: 5610,
-		weekly_percent_increase: 16.9155956929489,
-		phash: '923e91c8e5c557d4',
-		file_extension: 'jpeg',
-		host_ad_domain: 'yandex.com',
-		host_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
-		initial_ad_domain: 'yandex.com',
-		initial_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
-		mmp_domains: '{adjust.com}',
-		md5_hash: '2dcc38e1462fd8042d55ea97c4b36b3c',
-		pub_count: 1
-	},
-	{
-		app_name: 'Рассвет Магии: Истоки Силы',
-		store_app: 162865523,
-		store_id: 'com.mdsj.gamegpvk',
-		icon_url_100: '9d9466ab5a6449ea.png',
-		weekly_installs: 5610,
-		weekly_percent_increase: 16.9155956929489,
-		phash: '923e91c8e5c557d4',
-		file_extension: 'jpeg',
-		host_ad_domain: 'yandex.com',
-		host_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
-		initial_ad_domain: 'yandex.com',
-		initial_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
-		mmp_domains: '{appsflyer.com}',
-		md5_hash: '2dcc38e1462fd8042d55ea97c4b36b3c',
-		pub_count: 1
-	},
-	{
-		app_name: 'Рассвет Магии: Истоки Силы',
-		store_app: 162865523,
-		store_id: 'com.mdsj.gamegpvk',
-		icon_url_100: '9d9466ab5a6449ea.png',
-		weekly_installs: 5610,
-		weekly_percent_increase: 16.9155956929489,
-		phash: '9d9466ab5a6449ea',
-		file_extension: 'png',
-		host_ad_domain: 'yandex.com',
-		host_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
-		initial_ad_domain: 'yandex.com',
-		initial_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
-		mmp_domains: '{adjust.com}',
-		md5_hash: '2dcc38e1462fd8042d55ea97c4b36b3c',
-		pub_count: 2
-	},
-	{
-		app_name: 'Рассвет Магии: Истоки Силы',
-		store_app: 162865523,
 		store_id: 'com.mdsj.gamegpvk',
 		icon_url_100: '9d9466ab5a6449ea.png',
 		weekly_installs: 5610,
@@ -1116,8 +555,8 @@ const rawData: AppAdData[] = [
 		pub_count: 2
 	},
 	{
+		best_week: '2025-09-22',
 		app_name: 'Sago Mini World: Kids Games',
-		store_app: 660716,
 		store_id: 'com.sagosago.World.googleplay',
 		icon_url_100: 'becd9403da889973.png',
 		weekly_installs: 63551,
@@ -1130,57 +569,6 @@ const rawData: AppAdData[] = [
 		initial_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
 		mmp_domains: '{appsflyer.com}',
 		md5_hash: '88f528f874a60ebb6842d39948065da1',
-		pub_count: 1
-	},
-	{
-		app_name: 'ABCmouse 2: Kids Learning Game',
-		store_app: 70621949,
-		store_id: 'com.aofl.abcmouse',
-		icon_url_100: 'b98e716586c99a9c.png',
-		weekly_installs: 38837,
-		weekly_percent_increase: 13.1449380917698,
-		phash: 'a5e36f8ebfbdb7d7',
-		file_extension: 'mp4',
-		host_ad_domain: 'google.com',
-		host_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
-		initial_ad_domain: 'google.com',
-		initial_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
-		mmp_domains: '{adjust.com}',
-		md5_hash: '5903da4f93bd41607577ada5053f5c5e',
-		pub_count: 1
-	},
-	{
-		app_name: 'ABCmouse 2: Kids Learning Game',
-		store_app: 70621949,
-		store_id: 'com.aofl.abcmouse',
-		icon_url_100: 'b98e716586c99a9c.png',
-		weekly_installs: 38837,
-		weekly_percent_increase: 13.1449380917698,
-		phash: 'f7ff9f5d71fd2ee7',
-		file_extension: 'mp4',
-		host_ad_domain: 'google.com',
-		host_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
-		initial_ad_domain: 'google.com',
-		initial_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
-		mmp_domains: '{adjust.com}',
-		md5_hash: '5903da4f93bd41607577ada5053f5c5e',
-		pub_count: 1
-	},
-	{
-		app_name: 'ABCmouse 2: Kids Learning Game',
-		store_app: 70621949,
-		store_id: 'com.aofl.abcmouse',
-		icon_url_100: 'b98e716586c99a9c.png',
-		weekly_installs: 38837,
-		weekly_percent_increase: 13.1449380917698,
-		phash: 'deff3cefc7acce9f',
-		file_extension: 'mp4',
-		host_ad_domain: 'google.com',
-		host_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
-		initial_ad_domain: 'google.com',
-		initial_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
-		mmp_domains: '{adjust.com}',
-		md5_hash: '5903da4f93bd41607577ada5053f5c5e',
 		pub_count: 1
 	}
 ];
@@ -1197,7 +585,7 @@ const AppReachData = [
 		first_seen: '2025-09-12T19:58:16.415Z',
 		last_seen: '2025-09-30T15:57:00.715Z',
 		ad_network_domains: '{google.com,unity.com}',
-		avg_publisher_installs: 3.0485877341658343e7,
+		avg_publisher_installs: 3.0486250544455543e7,
 		mmp_domains: '{appsflyer.com}',
 		top_md5_hashes:
 			'{b5da6ddb8fad23ac2c438c802b475ad9,db65a4fe0fa935e8a0af9e6e9d944b4a,762b82fbfab4167d87ea5225add87fd9,624b8688df9e74aadc2bc758409bcf48,92f313e2026499e72ac84d5ee3b9eb08}'
@@ -1213,7 +601,7 @@ const AppReachData = [
 		first_seen: '2025-09-15T00:27:25.200Z',
 		last_seen: '2025-09-30T12:07:23.235Z',
 		ad_network_domains: '{adikteev.com,appodeal.com,digitalturbine.com,google.com}',
-		avg_publisher_installs: 1.6999187e7,
+		avg_publisher_installs: 1.6999388766666666e7,
 		mmp_domains: '{appsflyer.com}',
 		top_md5_hashes:
 			'{372b8bfcb0b5cebdddd95c840dbed532,6d77ec6215ab159fa347ea22f90ddebf,6d77ec6215ab159fa347ea22f90ddebf,4c92b81450fb3283f35d290b8e40d1c5,6d77ec6215ab159fa347ea22f90ddebf}'
@@ -1229,7 +617,7 @@ const AppReachData = [
 		first_seen: '2025-09-01T14:29:03.380Z',
 		last_seen: '2025-09-28T11:23:27.409Z',
 		ad_network_domains: '{google.com}',
-		avg_publisher_installs: 2.068016204e7,
+		avg_publisher_installs: 2.068077828e7,
 		mmp_domains: '{adjust.com}',
 		top_md5_hashes:
 			'{3cde0691732b94fc87593cc60a2356cc,3cde0691732b94fc87593cc60a2356cc,3cde0691732b94fc87593cc60a2356cc,3cde0691732b94fc87593cc60a2356cc,3cde0691732b94fc87593cc60a2356cc}'
@@ -1245,7 +633,7 @@ const AppReachData = [
 		first_seen: '2025-09-03T02:35:14.804Z',
 		last_seen: '2025-09-30T09:46:43.651Z',
 		ad_network_domains: '{unity.com}',
-		avg_publisher_installs: 4383335.0,
+		avg_publisher_installs: 4383527.94117647,
 		mmp_domains: null,
 		top_md5_hashes:
 			'{de5a3a61bd3fad55508595520606bd25,de5a3a61bd3fad55508595520606bd25,de5a3a61bd3fad55508595520606bd25,de5a3a61bd3fad55508595520606bd25,de5a3a61bd3fad55508595520606bd25}'
@@ -1261,7 +649,7 @@ const AppReachData = [
 		first_seen: '2025-09-29T00:54:18.249Z',
 		last_seen: '2025-09-29T15:29:50.951Z',
 		ad_network_domains: '{appodeal.com,google.com,mobvista.com,unity.com}',
-		avg_publisher_installs: 1.4822314608695652e7,
+		avg_publisher_installs: 1.482317047826087e7,
 		mmp_domains: null,
 		top_md5_hashes:
 			'{43882e061c3a1269759a2ea7e1cf2ea4,227fdf9cd1c7bf71131979b41936bd7c,91953a6647b6fa5998e75bfb74063c53,91953a6647b6fa5998e75bfb74063c53,91953a6647b6fa5998e75bfb74063c53}'
@@ -1277,7 +665,7 @@ const AppReachData = [
 		first_seen: '2025-09-28T16:33:13.477Z',
 		last_seen: '2025-09-29T17:05:00.035Z',
 		ad_network_domains: '{google.com,mobvista.com,unity.com}',
-		avg_publisher_installs: 1.6408066214285715e7,
+		avg_publisher_installs: 1.6408845642857144e7,
 		mmp_domains: '{adjust.com}',
 		top_md5_hashes:
 			'{033d6be7d15da54530c5ccf16c1d6d2a,14c73da15358e3efad2395f7c2745c5f,d6a9511a8edb6c1d2145f1b4103b926d,d6a9511a8edb6c1d2145f1b4103b926d,033d6be7d15da54530c5ccf16c1d6d2a}'
@@ -1293,7 +681,7 @@ const AppReachData = [
 		first_seen: '2025-09-28T19:42:41.737Z',
 		last_seen: '2025-09-28T23:57:49.687Z',
 		ad_network_domains: '{amazonaws.com,appodeal.com,google.com,mobvista.com}',
-		avg_publisher_installs: 3.0399444733333334e7,
+		avg_publisher_installs: 3.0400659533333335e7,
 		mmp_domains: '{appmetrica.yandex.com,metrica.yandex.com,tenjin.com}',
 		top_md5_hashes:
 			'{994216a75a3e6c60bf3f7bf1a18be0ea,994216a75a3e6c60bf3f7bf1a18be0ea,994216a75a3e6c60bf3f7bf1a18be0ea,994216a75a3e6c60bf3f7bf1a18be0ea,994216a75a3e6c60bf3f7bf1a18be0ea}'
@@ -1309,7 +697,7 @@ const AppReachData = [
 		first_seen: '2025-09-18T14:24:50.534Z',
 		last_seen: '2025-09-29T16:56:38.066Z',
 		ad_network_domains: '{amazonaws.com,mobvista.com}',
-		avg_publisher_installs: 1.2523284909090908e7,
+		avg_publisher_installs: 1.2525407181818182e7,
 		mmp_domains: '{adjust.com,appmetrica.yandex.com,metrica.yandex.com}',
 		top_md5_hashes:
 			'{4138f5669cab3cb1e4e2b69dee2df089,4138f5669cab3cb1e4e2b69dee2df089,4138f5669cab3cb1e4e2b69dee2df089,4138f5669cab3cb1e4e2b69dee2df089,4138f5669cab3cb1e4e2b69dee2df089}'
@@ -1324,8 +712,8 @@ const AppReachData = [
 		unique_publishers: 10,
 		first_seen: '2025-09-05T09:24:37.424Z',
 		last_seen: '2025-09-29T16:23:49.251Z',
-		ad_network_domains: '{google.com,unity.com}',
-		avg_publisher_installs: 1.5710225461538462e7,
+		ad_network_domains: '{google.com}',
+		avg_publisher_installs: 1.5710356615384616e7,
 		mmp_domains: '{adjust.com}',
 		top_md5_hashes:
 			'{133c8ff7b33778f5e4f6dc3d12c66697,5903da4f93bd41607577ada5053f5c5e,5903da4f93bd41607577ada5053f5c5e,5903da4f93bd41607577ada5053f5c5e,df9400f4bc9215768a0c4f08c2c698ce}'
@@ -1341,7 +729,7 @@ const AppReachData = [
 		first_seen: '2025-09-17T18:55:24.482Z',
 		last_seen: '2025-09-30T05:25:54.170Z',
 		ad_network_domains: '{google.com}',
-		avg_publisher_installs: 1.97513472e7,
+		avg_publisher_installs: 1.9751661733333334e7,
 		mmp_domains: '{branch.io}',
 		top_md5_hashes:
 			'{0e660bb57d173523f152ed53740069c8,3cc504a5c064979c78061df7c7233e0b,3cc504a5c064979c78061df7c7233e0b,0e660bb57d173523f152ed53740069c8,5e01b35bd3bd711e0346ebb864a27e8d}'
@@ -1357,7 +745,7 @@ const AppReachData = [
 		first_seen: '2025-09-16T09:16:45.466Z',
 		last_seen: '2025-09-29T19:20:10.522Z',
 		ad_network_domains: '{appodeal.com,digitalturbine.com,google.com,mobvista.com,unity.com}',
-		avg_publisher_installs: 1.8650996285714287e7,
+		avg_publisher_installs: 1.865205685714286e7,
 		mmp_domains: null,
 		top_md5_hashes:
 			'{0dfa969d9ccb3d6a84d4cb5443d0e4ee,03dc77723ba9b0f6c5dd344fd8e65579,dd9f96b577080d8ee4e1defa784ecf27,03dc77723ba9b0f6c5dd344fd8e65579,e51b6fc266ce29d1f6060ac3a16395bd}'
@@ -1367,13 +755,13 @@ const AppReachData = [
 		advertiser_store_id: 'com.andreyrebrik.fifteen',
 		advertiser_icon_url_100: 'a0daad7a5a2d5a25.png',
 		advertiser_category: 'game_puzzle',
-		advertiser_installs: 1438898.0,
+		advertiser_installs: 1441571.0,
 		unique_creatives: 7,
 		unique_publishers: 8,
 		first_seen: '2025-09-28T14:23:46.540Z',
 		last_seen: '2025-09-29T00:54:18.249Z',
 		ad_network_domains: '{yandex.com}',
-		avg_publisher_installs: 3.8831443571428575e7,
+		avg_publisher_installs: 3.88323090952381e7,
 		mmp_domains: '{appmetrica.yandex.com,metrica.yandex.com}',
 		top_md5_hashes:
 			'{6dd54845c40c36f834bf2c463539eef0,5cefdc6f7860bbffd6f2047a013806e0,c84ca245b1c844c92afa77840fadc265,6dd54845c40c36f834bf2c463539eef0,cabb60bf3b311f58986d68daeaac4b66}'
@@ -1389,7 +777,7 @@ const AppReachData = [
 		first_seen: '2025-09-12T19:55:51.299Z',
 		last_seen: '2025-09-30T01:55:12.133Z',
 		ad_network_domains: '{tutoads.tv}',
-		avg_publisher_installs: 2.3679078083333332e7,
+		avg_publisher_installs: 2.3679141083333332e7,
 		mmp_domains: '{singular.net,sng.link}',
 		top_md5_hashes:
 			'{941f3c40a05705e5ebcc477c0a3b5daa,cb6e9fde1082c6162f3c92dc3c2007a7,1a36b72f03c2b905113667ba8736ec0c,8f6c0ad76d98e8989fc612e29e1aeed8,941f3c40a05705e5ebcc477c0a3b5daa}'
@@ -1405,7 +793,7 @@ const AppReachData = [
 		first_seen: '2025-09-01T11:39:56.242Z',
 		last_seen: '2025-09-05T04:34:55.254Z',
 		ad_network_domains: '{google.com}',
-		avg_publisher_installs: 5586574.363636363,
+		avg_publisher_installs: 5586981.7272727275,
 		mmp_domains: '{appsflyer.com}',
 		top_md5_hashes:
 			'{dfbd18b0fa0d392652e30ef81863360e,b6fff8459ae3161f694da7bb8bfeb1d3,dfbd18b0fa0d392652e30ef81863360e,a3005aa57ec43c72d409d097cbe7248b,cf97012f1db44ee86574a32ae1a9df22}'
@@ -1421,7 +809,7 @@ const AppReachData = [
 		first_seen: '2025-09-26T04:00:05.854Z',
 		last_seen: '2025-09-29T19:57:54.834Z',
 		ad_network_domains: '{yandex.com}',
-		avg_publisher_installs: 2.0179166666666668e7,
+		avg_publisher_installs: 2.0179211916666668e7,
 		mmp_domains: null,
 		top_md5_hashes:
 			'{064b03a9055a0fa4ba724d75057eaedc,973c9b155b202c97fc0348a59102c60e,761183a97d6c28012fbb25b2f4f1e869,84170a5e032c87280a84444f50e00a92,973c9b155b202c97fc0348a59102c60e}'
@@ -1469,7 +857,7 @@ const AppReachData = [
 		first_seen: '2025-09-01T05:38:20.917Z',
 		last_seen: '2025-09-29T00:07:39.324Z',
 		ad_network_domains: '{appodeal.com,google.com,smadex.com}',
-		avg_publisher_installs: 4065491.8181818184,
+		avg_publisher_installs: 4065504.4545454546,
 		mmp_domains: '{adjust.com}',
 		top_md5_hashes:
 			'{ad0718d8d79b4672d53d13018929d712,9be9dab37860067727b363c0eebd8d4c,66d37bb6cb4dad5369fe6d63b5a8ae07,66d37bb6cb4dad5369fe6d63b5a8ae07,1c8db5d5680c539c919289123037e613}'
@@ -1484,8 +872,8 @@ const AppReachData = [
 		unique_publishers: 6,
 		first_seen: '2025-09-01T11:00:02.712Z',
 		last_seen: '2025-09-20T00:55:37.030Z',
-		ad_network_domains: '{digitalturbine.com,mobvista.com,smadex.com}',
-		avg_publisher_installs: 852932.3333333334,
+		ad_network_domains: '{appodeal.com,digitalturbine.com,mobvista.com,smadex.com}',
+		avg_publisher_installs: 852960.0,
 		mmp_domains: '{appsflyer.com}',
 		top_md5_hashes:
 			'{3f264d4a0ed78e928b61c01c992484a2,44f36095e6c4506a66cba39ccc5825b6,3f264d4a0ed78e928b61c01c992484a2,3f264d4a0ed78e928b61c01c992484a2,3f264d4a0ed78e928b61c01c992484a2}'
@@ -1517,7 +905,7 @@ const AppReachData = [
 		first_seen: '2025-09-19T01:49:05.480Z',
 		last_seen: '2025-09-30T04:07:58.868Z',
 		ad_network_domains: '{digitalturbine.com,google.com,mobvista.com}',
-		avg_publisher_installs: 8500323.714285715,
+		avg_publisher_installs: 8501070.714285715,
 		mmp_domains: '{adjust.com,appsflyer.com}',
 		top_md5_hashes:
 			'{0b0b241eb1bab3370534cb67fefb5927,f7cbdf2038aa9f6cb93103e8c7e10da3,45838bd23e970374ea10469b0d6e9193,725cd2ccc965b0a9f0d7a21b8372dda1,725cd2ccc965b0a9f0d7a21b8372dda1}'
@@ -1533,7 +921,7 @@ const AppReachData = [
 		first_seen: '2025-09-04T14:55:34.970Z',
 		last_seen: '2025-09-21T16:12:40.502Z',
 		ad_network_domains: '{google.com}',
-		avg_publisher_installs: 2499020.272727273,
+		avg_publisher_installs: 2499928.272727273,
 		mmp_domains: '{appsflyer.com}',
 		top_md5_hashes:
 			'{9da050d494702ce73564468d881856bf,2d4c0738ccca1709a7fbb3f0475c9133,2d4c0738ccca1709a7fbb3f0475c9133,ab9d20b6cb74006912fe3ff515892e26,ab9d20b6cb74006912fe3ff515892e26}'
@@ -1565,7 +953,7 @@ const AppReachData = [
 		first_seen: '2025-09-27T17:01:36.656Z',
 		last_seen: '2025-09-30T05:14:32.655Z',
 		ad_network_domains: '{tutoads.tv}',
-		avg_publisher_installs: 2.6044785416666668e7,
+		avg_publisher_installs: 2.604573725e7,
 		mmp_domains: '{singular.net,sng.link}',
 		top_md5_hashes:
 			'{2a64af855c1e0555caa864cca38bb9cd,f91a62f86c9d72c70d0855575f232369,f91a62f86c9d72c70d0855575f232369,2a64af855c1e0555caa864cca38bb9cd,8a42545e20cb2ed7222f143f42c87171}'
@@ -1580,8 +968,8 @@ const AppReachData = [
 		unique_publishers: 5,
 		first_seen: '2025-09-29T16:56:38.066Z',
 		last_seen: '2025-09-29T19:49:27.617Z',
-		ad_network_domains: '{appier.com,digitalturbine.com,google.com,inmobi.com}',
-		avg_publisher_installs: 2543917.8333333335,
+		ad_network_domains: '{appier.com,digitalturbine.com,inmobi.com}',
+		avg_publisher_installs: 2544774.6666666665,
 		mmp_domains: '{appmetrica.yandex.com,appsflyer.com,metrica.yandex.com}',
 		top_md5_hashes:
 			'{bdedc35eb3a3d12c7796a7aff04161b9,13b1f9e3b88c857ccd915ce11586e42b,13b1f9e3b88c857ccd915ce11586e42b,bdedc35eb3a3d12c7796a7aff04161b9,bdedc35eb3a3d12c7796a7aff04161b9}'
@@ -1597,7 +985,7 @@ const AppReachData = [
 		first_seen: '2025-09-27T13:50:10.458Z',
 		last_seen: '2025-09-29T10:43:49.539Z',
 		ad_network_domains: '{tutoads.tv}',
-		avg_publisher_installs: 1.0837998857142856e7,
+		avg_publisher_installs: 1.083806242857143e7,
 		mmp_domains: '{singular.net,sng.link}',
 		top_md5_hashes:
 			'{9ed26dc91e7c38e0d35d60a84af266b7,48e53c86f33179bfa939db53b0511db2,3e11f6e12b796cd83d823e7fd693fce6,ce4f0e51f4f6aadb50502d203b80b5de,3e11f6e12b796cd83d823e7fd693fce6}'
@@ -1613,7 +1001,7 @@ const AppReachData = [
 		first_seen: '2025-09-28T19:52:57.538Z',
 		last_seen: '2025-09-28T20:00:37.106Z',
 		ad_network_domains: '{google.com}',
-		avg_publisher_installs: 3.5880389875e7,
+		avg_publisher_installs: 3.5880686375e7,
 		mmp_domains: null,
 		top_md5_hashes:
 			'{7bec35f68e829ca1406607a9cf6b968e,7bec35f68e829ca1406607a9cf6b968e,7bec35f68e829ca1406607a9cf6b968e,8a3da4f41d7a068bfff7cf453eb4c20e,7bec35f68e829ca1406607a9cf6b968e}'
@@ -1629,7 +1017,7 @@ const AppReachData = [
 		first_seen: '2025-09-04T16:06:48.579Z',
 		last_seen: '2025-09-30T02:16:11.651Z',
 		ad_network_domains: '{google.com}',
-		avg_publisher_installs: 3.388301e7,
+		avg_publisher_installs: 3.3883256e7,
 		mmp_domains: null,
 		top_md5_hashes:
 			'{29b2cba1126862be274110567130df16,d73782df24183fcb04e670b1616224ea,d73782df24183fcb04e670b1616224ea,d73782df24183fcb04e670b1616224ea,29b2cba1126862be274110567130df16}'
@@ -1661,7 +1049,7 @@ const AppReachData = [
 		first_seen: '2025-09-28T06:29:57.171Z',
 		last_seen: '2025-09-30T09:40:53.767Z',
 		ad_network_domains: '{google.com}',
-		avg_publisher_installs: 1.9582952166666668e7,
+		avg_publisher_installs: 1.95839455e7,
 		mmp_domains: '{appsflyer.com}',
 		top_md5_hashes:
 			'{10c246170a6656831a8026ce1ee8d1d6,03cb21a3ef858f62d3fdc60a44ea5bd5,8e43c237c24528608438c9d2f8ebc8e7,8e43c237c24528608438c9d2f8ebc8e7,b3d4efb85d1534e303fa0663aa52a9c2}'
@@ -1671,13 +1059,13 @@ const AppReachData = [
 		advertiser_store_id: 'com.SuponoHoldings.SaveThePetBrainPuzzleGame',
 		advertiser_icon_url_100: 'e6ae8c0987d0d2f3.png',
 		advertiser_category: 'game_puzzle',
-		advertiser_installs: 2331822.0,
+		advertiser_installs: 2348487.0,
 		unique_creatives: 2,
 		unique_publishers: 4,
 		first_seen: '2025-09-16T14:58:27.566Z',
 		last_seen: '2025-09-28T14:13:43.958Z',
 		ad_network_domains: '{amazonaws.com,mobvista.com,unity.com}',
-		avg_publisher_installs: 4.393435325e7,
+		avg_publisher_installs: 4.39356495e7,
 		mmp_domains: null,
 		top_md5_hashes:
 			'{1dfbab0b3296dba0151ff8ceb16bbac1,1dfbab0b3296dba0151ff8ceb16bbac1,1dfbab0b3296dba0151ff8ceb16bbac1,6f88eb62cda72e5b4ae16d481855c4ca}'
@@ -1693,7 +1081,7 @@ const AppReachData = [
 		first_seen: '2025-09-18T14:57:15.774Z',
 		last_seen: '2025-09-26T05:21:59.465Z',
 		ad_network_domains: '{google.com,mobvista.com,unity.com}',
-		avg_publisher_installs: 999056.2,
+		avg_publisher_installs: 999342.4,
 		mmp_domains: '{appsflyer.com}',
 		top_md5_hashes:
 			'{3e3b41ce805c1d45f2d1c6e8803eb8e5,1f2094afad03dc4c66d81d2905cef3db,3e3b41ce805c1d45f2d1c6e8803eb8e5,3e3b41ce805c1d45f2d1c6e8803eb8e5,3e3b41ce805c1d45f2d1c6e8803eb8e5}'
@@ -1708,8 +1096,8 @@ const AppReachData = [
 		unique_publishers: 4,
 		first_seen: '2025-09-03T18:15:50.860Z',
 		last_seen: '2025-09-30T12:04:35.362Z',
-		ad_network_domains: '{unity.com}',
-		avg_publisher_installs: 8408859.5,
+		ad_network_domains: '{google.com,unity.com}',
+		avg_publisher_installs: 8409808.0,
 		mmp_domains: null,
 		top_md5_hashes:
 			'{07aa9cb372358131044b13999fde8eda,99c9b89968fa004bdc00d270be75a5b5,78964a1abed192acbbc4c2aba3ed92c9,6bcfeefc7d962daf6051087128772f8f,d5169dadaeec2174f490fa5fb5bfafd6}'
@@ -1725,7 +1113,7 @@ const AppReachData = [
 		first_seen: '2025-09-12T20:40:10.270Z',
 		last_seen: '2025-09-29T00:20:56.368Z',
 		ad_network_domains: '{google.com}',
-		avg_publisher_installs: 1.36901075e7,
+		avg_publisher_installs: 1.3690199666666666e7,
 		mmp_domains: null,
 		top_md5_hashes:
 			'{4b1b5e943897ffffaedd6439d6f8ffcd,4b1b5e943897ffffaedd6439d6f8ffcd,5b944d7d4f27a4393fd204213f9a6600,ecab20579ce175dc39578336d245d2c8,39aa1e5f39ac8a691217703c922afbb8}'
@@ -1741,7 +1129,7 @@ const AppReachData = [
 		first_seen: '2025-09-28T04:41:32.378Z',
 		last_seen: '2025-09-29T19:20:10.522Z',
 		ad_network_domains: '{google.com,liftoff.io,mobvista.com,unity.com}',
-		avg_publisher_installs: 2.49355265e7,
+		avg_publisher_installs: 2.4936024333333332e7,
 		mmp_domains: '{adjust.com}',
 		top_md5_hashes:
 			'{953ec18568c0c10cac0436c85191739c,f05cf307ea1386d5c237ba9aa3e7f8d4,aac7ed63a2f074a2303bb7bcfc06955e,aac7ed63a2f074a2303bb7bcfc06955e,723fe9a0de38871dff2c81d5eb861a00}'
@@ -1751,7 +1139,7 @@ const AppReachData = [
 		advertiser_store_id: 'com.offlinepower.music',
 		advertiser_icon_url_100: '8b993bb3a1c5e4c4.png',
 		advertiser_category: 'music_and_audio',
-		advertiser_installs: 4224.0,
+		advertiser_installs: 5007.0,
 		unique_creatives: 3,
 		unique_publishers: 4,
 		first_seen: '2025-09-25T07:16:33.657Z',
@@ -1805,7 +1193,7 @@ const AppReachData = [
 		first_seen: '2025-09-01T06:57:50.056Z',
 		last_seen: '2025-09-28T23:33:47.416Z',
 		ad_network_domains: '{google.com}',
-		avg_publisher_installs: 8316497.75,
+		avg_publisher_installs: 8323222.5,
 		mmp_domains: '{appsflyer.com}',
 		top_md5_hashes:
 			'{c01414658ec9743155e0718fba283fc9,3505f1e3ebe8d15e377d94b43d2e18fd,3505f1e3ebe8d15e377d94b43d2e18fd,dca3c26360ca1103b1621b0846358d4b}'
@@ -1820,7 +1208,7 @@ const AppReachData = [
 		unique_publishers: 4,
 		first_seen: '2025-09-02T17:56:07.415Z',
 		last_seen: '2025-09-12T22:39:03.630Z',
-		ad_network_domains: '{NULL}',
+		ad_network_domains: '{yandex.com}',
 		avg_publisher_installs: 1939261.6666666667,
 		mmp_domains: '{appsflyer.com}',
 		top_md5_hashes:
@@ -1837,7 +1225,7 @@ const AppReachData = [
 		first_seen: '2025-09-05T16:03:37.634Z',
 		last_seen: '2025-09-21T16:07:51.548Z',
 		ad_network_domains: '{amazonaws.com,mobvista.com,unity.com}',
-		avg_publisher_installs: 9772304.0,
+		avg_publisher_installs: 9772390.8,
 		mmp_domains: '{adjust.com,appmetrica.yandex.com,metrica.yandex.com}',
 		top_md5_hashes:
 			'{ed7a99cf9480831802eb49b8909db603,cc2c436cf8430edf3f40e7a279783bfd,7d5970dbd46de2220b00b416ecc2e747,37d0d1092544c89e6a72a2fb6326535f,468c13597c744033a5f7846dcdd43d72}'
@@ -1852,7 +1240,7 @@ const AppReachData = [
 		unique_publishers: 4,
 		first_seen: '2025-09-15T01:21:20.775Z',
 		last_seen: '2025-09-30T14:40:30.138Z',
-		ad_network_domains: '{appodeal.com,bidease.com,google.com}',
+		ad_network_domains: '{appodeal.com,bidease.com,digitalturbine.com,google.com}',
 		avg_publisher_installs: 5.241080990909091e7,
 		mmp_domains: '{appmetrica.yandex.com,appsflyer.com,devtodev.com,metrica.yandex.com}',
 		top_md5_hashes:
@@ -1884,8 +1272,8 @@ const AppReachData = [
 		unique_publishers: 4,
 		first_seen: '2025-09-28T00:18:30.563Z',
 		last_seen: '2025-09-30T08:39:34.495Z',
-		ad_network_domains: '{amazonaws.com,appodeal.com,digitalturbine.com,liftoff.io,smadex.com}',
-		avg_publisher_installs: 5.9071385125e7,
+		ad_network_domains: '{amazonaws.com,digitalturbine.com,liftoff.io,smadex.com}',
+		avg_publisher_installs: 5.9072556875e7,
 		mmp_domains: '{appsflyer.com}',
 		top_md5_hashes:
 			'{f327b7bc0f0aed21cb6b1be8e21d6423,faf89b285eba3df7e7308f3334c3923a,f327b7bc0f0aed21cb6b1be8e21d6423,faf89b285eba3df7e7308f3334c3923a,faf89b285eba3df7e7308f3334c3923a}'
@@ -1916,7 +1304,7 @@ const AppReachData = [
 		unique_publishers: 3,
 		first_seen: '2025-09-04T09:09:57.573Z',
 		last_seen: '2025-09-05T10:52:36.654Z',
-		ad_network_domains: '{NULL}',
+		ad_network_domains: '{google.com}',
 		avg_publisher_installs: 461127.875,
 		mmp_domains: '{appsflyer.com}',
 		top_md5_hashes:
@@ -1990,8 +1378,8 @@ const AppReachData = [
 
 interface ProcessedApp {
 	app_name: string;
-	store_app: number;
 	store_id: string;
+	best_week: string;
 	icon_url_100: string;
 	weekly_installs: number;
 	weekly_percent_increase: number;
@@ -2017,15 +1405,32 @@ interface ProcessedApp {
 	}>;
 }
 
+// Map domains to their correct logo URLs
+function getLogoUrlForDomain(domain: string): string {
+	const domainLowercase = domain.trim().toLowerCase();
+
+	// Special case mappings
+	const specialMappings: Record<string, string> = {
+		'abr.ge': 'company-logos/airbridge.io/logo_200x200.jpeg'
+	};
+
+	if (domainLowercase in specialMappings) {
+		return specialMappings[domainLowercase];
+	}
+
+	// Default template
+	return `company-logos/${domain.trim()}/logo_200x200.jpeg`;
+}
+
 function processData(data: AppAdData[]) {
-	const appsMap = new Map<number, ProcessedApp>();
+	const appsMap = new Map<string, ProcessedApp>();
 
 	data.forEach((row) => {
-		if (!appsMap.has(row.store_app)) {
-			appsMap.set(row.store_app, {
+		if (!appsMap.has(row.store_id)) {
+			appsMap.set(row.store_id, {
 				app_name: row.app_name,
-				store_app: row.store_app,
 				store_id: row.store_id,
+				best_week: row.best_week,
 				icon_url_100: row.icon_url_100,
 				weekly_installs: row.weekly_installs,
 				weekly_percent_increase: row.weekly_percent_increase,
@@ -2038,7 +1443,7 @@ function processData(data: AppAdData[]) {
 			});
 		}
 
-		const app = appsMap.get(row.store_app)!;
+		const app = appsMap.get(row.store_id)!;
 		app.creative_count++;
 		app.pub_count += row.pub_count;
 
@@ -2097,7 +1502,7 @@ function processData(data: AppAdData[]) {
 	sortedApps.forEach((app) => {
 		app.mmps = Array.from(app.mmp_domains).map((domain) => ({
 			domain,
-			logo_url: `company-logos/${domain}/logo_200x200.jpeg`
+			logo_url: getLogoUrlForDomain(domain)
 		}));
 	});
 
@@ -2137,7 +1542,6 @@ export const load: PageServerLoad = async () => {
 
 	// Calculate ad network statistics
 	const totalPublishers = adNetworks.reduce((sum, net) => sum + net.publisher_count, 0);
-	const totalAdvertisers = adNetworks.reduce((sum, net) => sum + net.advertiser_count, 0);
 	const totalNetworkCreatives = adNetworks.reduce((sum, net) => sum + net.creatives_count, 0);
 
 	const reachTiers = {
@@ -2218,7 +1622,10 @@ export const load: PageServerLoad = async () => {
 
 				mmps = mmpDomains.map((domain) => ({
 					domain: domain.trim(),
-					logo_url: `company-logos/${domain.trim()}/logo_200x200.jpeg`
+					logo_url:
+						domain.trim() == 'abr.ge'
+							? `company-logos/airbridge.io/logo_200x200.jpeg`
+							: `company-logos/${domain.trim()}/logo_200x200.jpeg`
 				}));
 			}
 
@@ -2240,7 +1647,6 @@ export const load: PageServerLoad = async () => {
 		appReachData: topReachApps,
 		networkStats: {
 			totalPublishers,
-			totalAdvertisers,
 			totalNetworkCreatives,
 			totalNetworks: adNetworks.length
 		},
@@ -2256,11 +1662,7 @@ export const load: PageServerLoad = async () => {
 			apiDomains: exec?.api_domains ?? null,
 			uniqueNetworks: allNetworks.size,
 			reportPeriod: 'September 2025',
-			generatedDate: new Date().toLocaleDateString('en-US', {
-				year: 'numeric',
-				month: 'long',
-				day: 'numeric'
-			})
+			generatedDate: 'October 2025'
 		},
 		topApps,
 		// Meta Tags

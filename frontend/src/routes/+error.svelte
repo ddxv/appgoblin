@@ -30,10 +30,8 @@
 				Please try again or contact support if the problem persists.
 			</p>
 		{:else if page.status === 500}
-			<p class="mt-4 text-base text-surface-600-400">
-				An internal server error occurred. Our team has been notified.
-			</p>
-			<p class="mt-2 text-sm text-surface-500-400">
+			<p class="mt-4 text-base text-surface-600-400">An internal server error occurred.</p>
+			<p class="mt-2 text-base text-surface-600-400">
 				Please try again later or contact support if the problem persists.
 			</p>
 		{:else if page.status >= 400 && page.status < 500}
@@ -43,21 +41,17 @@
 				Something went wrong. Please try again later.
 			</p>
 		{/if}
-
+		<div class="mt-8 text-sm text-surface-500-400">
+			<p>Need help? Reach out on:</p>
+			<div class="flex gap-4 justify-center mt-2">
+				<a href="https://discord.gg/7jpWEhkXRW" class="link">Discord</a>
+				<span>•</span>
+				<a href="https://github.com/ddxv/appgoblin" class="link">GitHub</a>
+			</div>
+		</div>
 		<div class="mt-8 flex gap-4 justify-center">
 			<a href="/" class="btn variant-filled-primary"> Back to Homepage </a>
 			<button onclick={() => window.history.back()} class="btn variant-soft"> Go Back </button>
 		</div>
-
-		{#if page.status >= 500}
-			<div class="mt-8 text-sm text-surface-500-400">
-				<p>Need help? Reach out on:</p>
-				<div class="flex gap-4 justify-center mt-2">
-					<a href="https://discord.gg/7jpWEhkXRW" class="link">Discord</a>
-					<span>•</span>
-					<a href="https://github.com/ddxv/appgoblin" class="link">GitHub</a>
-				</div>
-			</div>
-		{/if}
 	</div>
 </div>
