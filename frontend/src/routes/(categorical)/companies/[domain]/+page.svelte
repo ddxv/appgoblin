@@ -142,7 +142,19 @@
 			<div class="grid grid-cols-3 gap-2 p-2">
 				{#each data.companyCreatives as creative}
 					<card class="card bg-surface-100-900 p-2">
-						<AppCard app={creative} showHeader={true} />
+						{#if creative.store_id}
+							<AppCard app={creative} showHeader={true} />
+						{:else}
+							<div class="justify-center">
+								<img
+									class="h-48 w-full object-top object-none rounded-lg"
+									src={creative.featured_image_url}
+									alt={creative.name}
+									referrerpolicy="no-referrer"
+									loading="lazy"
+								/>
+							</div>
+						{/if}
 						<div class="flex flex-row gap-1">
 							<p class="text-primary-600-400">Last Seen:</p>
 							{creative.last_seen}
