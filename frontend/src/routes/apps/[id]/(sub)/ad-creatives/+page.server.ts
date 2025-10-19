@@ -2,10 +2,13 @@ import type { PageServerLoad } from './$types';
 import { createApiClient } from '$lib/server/api';
 
 export const load: PageServerLoad = async ({ fetch, parent, params }) => {
-	const api = createApiClient(fetch);
-	const id = params.id;
-	const creatives = await api.get(`/creatives/apps/${id}/ads`, 'Ad Creatives');
 	const { myapp } = await parent();
+	let creatives = null;
+	if (myapp.ad_creative_count && myapp.ad_creative_count > 0) {
+	    const id = params.id;
+	    const api = createApiClient(fetch);
+		creatives = await api.get(`/creatives/apps/${id}/ads`, 'Ad Creatives');
+	}
 
 	return {
 		creatives,

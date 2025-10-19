@@ -8,6 +8,7 @@
 	{#await data.myAdsTxt}
 		Loading App-Ads.txt data...
 	{:then adstxt}
+		aaaa
 		<div class="grid grid-cols-1 md:grid-cols-2 gap-2">
 			<div class="card preset-tonal mt-2 md:mt-4 md:p-4">
 				<h4 class="h4 md:h3 p-2 mt-2">Direct App-Ads.Txt</h4>
