@@ -27,7 +27,7 @@
 					<tr class="px-0">
 						<td class="truncate">
 							{#if row.value_name != pattern}
-								<a href={`/sdks/${row.value_name}`}>
+								<a href={`/sdks/${row.value_name}`} rel="nofollow">
 									{row.value_name}
 								</a>
 							{:else}

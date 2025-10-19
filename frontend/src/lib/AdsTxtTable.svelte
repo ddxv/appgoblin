@@ -161,7 +161,7 @@
 						<td class="table-cell-fit text-sm md:text-base max-w-[100px] truncate">
 							<a
 								href={`/companies/${row.original.ad_domain_url}/app-adstxt/publisher/${row.original.publisher_id}`}
-								>{row.original.publisher_id}</a
+								rel="nofollow">{row.original.publisher_id}</a
 							>
 						</td>
 						<td class="table-cell-fit text-sm md:text-base">

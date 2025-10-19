@@ -50,8 +50,10 @@
 											{#each Object.entries(sdkShortObj) as [xmlPath, androidNames]}
 												{#each androidNames as androidName}
 													<li>
-														{xmlPath}:<a href={`/sdks/${androidName}`} class={androidNameFont}
-															>{androidName}</a
+														{xmlPath}:<a
+															href={`/sdks/${androidName}`}
+															class={androidNameFont}
+															rel="nofollow">{androidName}</a
 														>
 													</li>
 												{/each}

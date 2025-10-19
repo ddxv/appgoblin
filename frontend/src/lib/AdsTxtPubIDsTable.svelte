@@ -22,8 +22,9 @@
 				{#each entries_table as row}
 					<tr>
 						<td class="table-cell-fit text-sm md:text-base max-w-[100px] truncate">
-							<a href={`/companies/${page.params.domain}/app-adstxt/publisher/${row.publisher_id}`}
-								>{row.publisher_id}</a
+							<a
+								href={`/companies/${page.params.domain}/app-adstxt/publisher/${row.publisher_id}`}
+								rel="nofollow">{row.publisher_id}</a
 							>
 						</td>
 						<td class="table-cell-fit text-sm md:text-base">

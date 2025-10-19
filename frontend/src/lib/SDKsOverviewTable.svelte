@@ -36,7 +36,7 @@
 					</td>
 					<td class="overflow-hidden max-w-[100px] md:max-w-[200px] truncate">
 						{#if row.value_name}
-							<a href={`/sdks/${row.value_name}`}>
+							<a href={`/sdks/${row.value_name}`} rel="nofollow">
 								{row.value_name}
 							</a>
 						{:else}

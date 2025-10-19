@@ -37,7 +37,7 @@
 						<ul class="list-disc list-inside space-y-0.5">
 							{#if patterns && patterns.package_patterns.length > 0}
 								{#each truncateList(patterns.package_patterns) as pattern}
-									<li class=""><a href={`/sdks/${pattern}`}>{pattern}</a></li>
+									<li class=""><a href={`/sdks/${pattern}`} rel="nofollow">{pattern}</a></li>
 								{/each}
 							{:else}
 								<li class="">No package patterns found</li>
