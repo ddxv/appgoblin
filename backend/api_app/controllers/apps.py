@@ -69,6 +69,7 @@ def get_search_results(state: State, search_term: str) -> AppGroup:
     if decoded_input[-1] == "+":
         decoded_input = decoded_input[:-1]
     df = search_apps(state, search_input=decoded_input, limit=60)
+    df = extend_app_icon_url(df)
     logger.info(f"{decoded_input=} returned rows: {df.shape[0]}")
     apps_dict = df.to_dict(orient="records")
     app_group = AppGroup(title=search_term, apps=apps_dict)
@@ -221,13 +222,7 @@ def get_string_date_from_days_ago(days: int) -> str:
     return mydate_str
 
 
-def get_new_apps_dict(state: State, period: str, store: int, category: str) -> AppGroup:
-    """Get collection overview."""
-    category_limit = 20
-
-    df = get_recent_apps(
-        state, collection=period, store=store, category=category, limit=category_limit
-    )
+def extend_app_icon_url(df: pd.DataFrame) -> pd.DataFrame:
     df["icon_url_100"] = np.where(
         df["icon_url_100"].notna(),
         "https://media.appgoblin.info/app-icons/"
@@ -236,6 +231,17 @@ def get_new_apps_dict(state: State, period: str, store: int, category: str) -> A
         + df["icon_url_100"],
         None,
     )
+    return df
+
+
+def get_new_apps_dict(state: State, period: str, store: int, category: str) -> AppGroup:
+    """Get collection overview."""
+    category_limit = 20
+
+    df = get_recent_apps(
+        state, collection=period, store=store, category=category, limit=category_limit
+    )
+    df = extend_app_icon_url(df)
     df = df.sort_values(["installs", "rating_count"], ascending=False).head(
         category_limit
     )
