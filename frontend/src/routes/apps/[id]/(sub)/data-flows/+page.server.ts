@@ -21,13 +21,12 @@ export const actions = {
 } satisfies Actions;
 
 export const load: PageServerLoad = async ({ fetch, params, parent }) => {
-
 	const { myapp } = await parent();
-	let apis = {apis: []};
+	let apis = { apis: [] };
 	if (myapp.api_successful_last_crawled) {
-	const id = params.id;
-	const api = createApiClient(fetch);
-	apis = await api.get(`/apps/${id}/apis`, 'App APIs');
+		const id = params.id;
+		const api = createApiClient(fetch);
+		apis = await api.get(`/apps/${id}/apis`, 'App APIs');
 	}
 
 	return {

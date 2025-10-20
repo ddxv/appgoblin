@@ -21,16 +21,13 @@ export const actions = {
 } satisfies Actions;
 
 export const load: PageServerLoad = async ({ fetch, params, parent }) => {
-
-
-
 	const { companyTypes } = await parent();
 	const { myapp } = await parent();
 	let myPackageInfo = {};
 	if (myapp.sdk_successful_last_crawled) {
-	const api = createApiClient(fetch);
-	 const id = params.id;
-	 myPackageInfo = await api.get(`/apps/${id}/sdks`, 'App Package Info');
+		const api = createApiClient(fetch);
+		const id = params.id;
+		myPackageInfo = await api.get(`/apps/${id}/sdks`, 'App Package Info');
 	}
 
 	return {

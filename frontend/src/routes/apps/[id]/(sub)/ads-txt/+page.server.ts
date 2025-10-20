@@ -6,8 +6,8 @@ export const load: PageServerLoad = async ({ fetch, params, parent }) => {
 
 	let myAdsTxt = 'No AdsTxt Result';
 	if (myapp.adstxt_crawl_result === 1) {
-	    const id = params.id;
-	    const api = createApiClient(fetch);
+		const id = params.id;
+		const api = createApiClient(fetch);
 		myAdsTxt = await api.get(`/apps/${id}/adstxt`, 'App AdsTxt');
 	}
 

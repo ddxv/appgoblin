@@ -7,7 +7,7 @@ export const load: PageServerLoad = async ({ fetch, parent, params }) => {
 	let creatives = null;
 	if (!myapp.ad_monetized_creative_count && myapp.ad_monetized_creative_count > 0) {
 		const api = createApiClient(fetch);
-	    const id = params.id;
+		const id = params.id;
 		creatives = await api.get(`/creatives/apps/${id}/monetized`, 'Creatives');
 	}
 

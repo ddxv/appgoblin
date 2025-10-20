@@ -38,11 +38,17 @@ SELECT
     sa.store,
     sa.installs,
     sa.rating_count,
-        CASE
-  WHEN sa.icon_url_100 IS NOT NULL
-    THEN CONCAT('https://media.appgoblin.info/app-icons/', sa.store_id, '/', sa.icon_url_100)
-  ELSE sa.icon_url_512
-END AS app_icon_url,
+    CASE
+        WHEN sa.icon_url_100 IS NOT NULL
+            THEN
+                CONCAT(
+                    'https://media.appgoblin.info/app-icons/',
+                    sa.store_id,
+                    '/',
+                    sa.icon_url_100
+                )
+        ELSE sa.icon_url_512
+    END AS app_icon_url,
     CASE
         WHEN lvc.updated_at < ur.requested_at THEN NULL
         ELSE lvc.updated_at
