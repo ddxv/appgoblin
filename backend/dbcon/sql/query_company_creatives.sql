@@ -10,8 +10,11 @@ SELECT DISTINCT ON (last_seen, advertiser_store_id)
     rating,
     installs_sum_1w,
     installs_sum_4w,
-    icon_url_100,
-    icon_url_512,
+        CASE
+  WHEN icon_url_100 IS NOT NULL
+    THEN CONCAT('https://media.appgoblin.info/app-icons/', advertiser_store_id, '/', icon_url_100)
+  ELSE icon_url_512
+END AS advertiser_icon_url,
     last_seen
 FROM frontend.companies_creative_rankings
 WHERE company_domain = :company_domain

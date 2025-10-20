@@ -160,7 +160,7 @@ export interface RankedApps {
 	installs_sum_1w: number;
 	installs_sum_4w: number;
 	ratings_sum_4w: number;
-	icon_url_512: string;
+	app_icon_url: string;
 	phone_image_url_1?: string;
 	tablet_image_url_1?: string;
 	featured_image_url?: string;
@@ -267,7 +267,7 @@ export interface SDKAppsOverview {
 	version_code: string;
 	sdk_crawled_at: string;
 	app_name: string;
-	icon_url_512: string;
+	app_icon_url: string;
 	developer_domain_url: string;
 	relationship: string;
 	developer_domain_crawled_at: string;
@@ -282,7 +282,7 @@ export interface CompanyOverviewAppsNEW {
 	requested_at: string;
 	crawl_result: number;
 	app_name: string;
-	icon_url_512: string;
+	app_icon_url: string;
 	api_call: boolean;
 	app_ads_direct: boolean;
 	app_ads_reseller: boolean;
@@ -437,8 +437,7 @@ export interface CompanyCreative {
 	installs: number;
 	rating_count: number;
 	rating: number;
-	icon_url_100: string;
-	icon_url_512: string;
+	app_icon_url: string;
 	featured_image_url: string;
 	last_seen: string;
 	tablet_image_url_1?: string;
@@ -560,8 +559,7 @@ export interface CompaniesLayoutResponse {
 export interface AppFullDetail {
 	// from cleaned -> string, maybe from db -> int, should rename to store_name and always use
 	store: string;
-	icon_url_512: string;
-	icon_url_100?: string;
+	app_icon_url: string;
 	name: string;
 	installs?: number;
 	store_id: string;

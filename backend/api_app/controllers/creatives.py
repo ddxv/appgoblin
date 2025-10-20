@@ -25,21 +25,6 @@ from dbcon.static import (
 logger = get_logger(__name__)
 
 
-def expand_icon_url_100_to_full(
-    df: pd.DataFrame, column_name: str, store_id_column_name: str = "store_id"
-) -> pd.DataFrame:
-    """Expand the icon_url_100 column to a full URL."""
-    df[column_name] = np.where(
-        df[column_name].notna(),
-        "https://media.appgoblin.info/app-icons/"
-        + df[store_id_column_name]
-        + "/"
-        + df[column_name],
-        None,
-    )
-    return df
-
-
 def append_ad_networks_dict_to_df(
     df: pd.DataFrame,
     state: State,
@@ -84,13 +69,11 @@ class CreativesController(Controller):
         df = get_advertiser_creative_rankings(state)
         df = df.rename(
             columns={
-                "advertiser_icon_url_512": "icon_url_512",
+                "advertiser_icon_url": "app_icon_url",
                 "advertiser_name": "name",
                 "advertiser_store_id": "store_id",
             }
         )
-        df = expand_icon_url_100_to_full(df, column_name="advertiser_icon_url_100")
-        df = df.rename(columns={"advertiser_icon_url_100": "icon_url_100"})
         df = append_ad_networks_dict_to_df(df=df, state=state)
         df["last_seen"] = df["last_seen"].dt.strftime("%Y-%m-%d")
         df = df.head(100)
@@ -111,15 +94,13 @@ class CreativesController(Controller):
         df = get_advertiser_creative_rankings_top(state)
         df = df.rename(
             columns={
-                "advertiser_icon_url_512": "icon_url_512",
+                "advertiser_icon_url": "app_icon_url",
                 "advertiser_name": "name",
                 "advertiser_store_id": "store_id",
             }
         )
 
         df = append_ad_networks_dict_to_df(state=state, df=df)
-        df = expand_icon_url_100_to_full(df, column_name="advertiser_icon_url_100")
-        df = df.rename(columns={"advertiser_icon_url_100": "icon_url_100"})
         df["last_seen"] = df["last_seen"].dt.strftime("%Y-%m-%d")
 
         df = df.sort_values(by="unique_publishers", ascending=False)
@@ -140,7 +121,6 @@ class CreativesController(Controller):
         start = time.perf_counter() * 1000
         df = get_company_creatives(state=state, company_domain=company_domain)
         df = df.rename(columns={"advertiser_store_id": "store_id"})
-        df = expand_icon_url_100_to_full(df, column_name="icon_url_100")
         df["featured_image_url"] = (
             "https://media.appgoblin.info/creatives/thumbs/" + df["md5_hash"] + ".jpg"
         )
@@ -176,7 +156,7 @@ class CreativesController(Controller):
                     "ad_domain_company_name",
                     "vhash",
                     "file_extension",
-                    "adv_icon_url_512",
+                    "adv_icon_url",
                     "mmp_name",
                     "mmp_domain",
                 ],
@@ -224,17 +204,11 @@ class CreativesController(Controller):
         if not df.empty:
             df["run_at"] = df["run_at"].dt.strftime("%Y-%m-%d")
 
-        # df = expand_icon_url_100_to_full(df, column_name="adv_icon_url_100")
-        df = expand_icon_url_100_to_full(
-            df, column_name="pub_icon_url_100", store_id_column_name="pub_store_id"
-        )
-
         df["pubs"] = df.apply(
             lambda row: {
                 "store_id": row["pub_store_id"],
                 "name": row["pub_name"],
-                "icon_url_512": row["pub_icon_url_512"],
-                "icon_url_100": row["pub_icon_url_100"],
+                "app_icon_url": row["pub_icon_url"],
             },
             axis=1,
         )
@@ -344,7 +318,7 @@ class CreativesController(Controller):
                     "ad_domain_company_name",
                     "vhash",
                     "file_extension",
-                    "pub_icon_url_512",
+                    "pub_icon_url",
                 ]
             )[["md5_hash"]]
             .first()

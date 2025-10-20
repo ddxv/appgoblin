@@ -198,7 +198,7 @@
 									<a href="/apps/{pub.store_id}">
 										<div class="col-1 items-center">
 											<img
-												src={pub.icon_url_100 || pub.icon_url_512}
+												src={pub.app_icon_url}
 												alt={pub.name}
 												width="200"
 												class="w-12 md:w-24 h-auto object-cover rounded"

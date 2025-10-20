@@ -6,7 +6,11 @@ SELECT
     sa.name AS app_name,
     sa.installs,
     sa.rating_count,
-    sa.icon_url_512
+        CASE
+  WHEN sa.icon_url_100 IS NOT NULL
+    THEN CONCAT('https://media.appgoblin.info/app-icons/', sa.store_id, '/', sa.icon_url_100)
+  ELSE sa.icon_url_512
+END AS app_icon_url
 FROM
     frontend.store_apps_version_details AS cavd
 LEFT JOIN public.store_apps AS sa

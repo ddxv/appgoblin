@@ -40,7 +40,7 @@
 					<div class="mx-auto block text-center">
 						<img
 							class="h-48 w-48 rounded-lg mx-auto"
-							src={app.icon_url_100 || app.icon_url_512}
+							src={app.app_icon_url}
 							alt={app.name}
 							referrerpolicy="no-referrer"
 							loading="lazy"
@@ -49,9 +49,10 @@
 				{/if}
 
 				<div class="flex text-left">
+					{console.log('app:', app)}
 					<img
 						class="h-16 md:h-24 w-16 md:w-24 p-2 rounded-lg"
-						src={app.icon_url_100 || app.icon_url_512}
+						src={app.app_icon_url}
 						alt={app.name}
 						referrerpolicy="no-referrer"
 						loading="lazy"

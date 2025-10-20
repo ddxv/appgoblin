@@ -14,10 +14,16 @@ SELECT
     vhash,
     md5_hash,
     file_extension,
-    pub_icon_url_100,
-    pub_icon_url_512,
-    adv_icon_url_100,
-    adv_icon_url_512,
+    CASE
+  WHEN pub_icon_url_100 IS NOT NULL
+    THEN CONCAT('https://media.appgoblin.info/app-icons/', pub_store_id, '/', pub_icon_url_100)
+  ELSE pub_icon_url_512
+END AS pub_icon_url,
+    CASE
+  WHEN adv_icon_url_100 IS NOT NULL
+    THEN CONCAT('https://media.appgoblin.info/app-icons/', adv_store_id, '/', adv_icon_url_100)
+  ELSE adv_icon_url_512
+END AS adv_icon_url,
     mmp_name,
     mmp_domain,
     mmp_urls,

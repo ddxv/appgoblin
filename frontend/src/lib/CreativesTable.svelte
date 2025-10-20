@@ -204,9 +204,7 @@
 							>
 								<div class="col-1 items-center">
 									<img
-										src={is_monetization
-											? row.original.adv_icon_url_512
-											: row.original.pub_icon_url_512}
+										src={is_monetization ? row.original.adv_icon_url : row.original.pub_icon_url}
 										alt={is_monetization ? row.original.adv_name : row.original.pub_name}
 										width="200"
 										class="w-12 md:w-24 h-auto object-cover rounded"

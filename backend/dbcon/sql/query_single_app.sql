@@ -20,7 +20,11 @@ SELECT
     created_at,
     updated_at,
     crawl_result,
-    icon_url_512,
+    CASE
+  WHEN icon_url_100 IS NOT NULL
+    THEN CONCAT('https://media.appgoblin.info/app-icons/', store_id, '/', icon_url_100)
+  ELSE icon_url_512
+END AS app_icon_url,
     release_date,
     featured_image_url,
     phone_image_url_1,
