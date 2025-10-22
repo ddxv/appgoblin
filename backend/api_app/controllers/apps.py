@@ -223,13 +223,13 @@ def get_string_date_from_days_ago(days: int) -> str:
 
 
 def extend_app_icon_url(df: pd.DataFrame) -> pd.DataFrame:
-    df["icon_url_100"] = np.where(
+    df["app_icon_url"] = np.where(
         df["icon_url_100"].notna(),
         "https://media.appgoblin.info/app-icons/"
         + df["store_id"]
         + "/"
         + df["icon_url_100"],
-        None,
+        df["icon_url_512"],
     )
     return df
 

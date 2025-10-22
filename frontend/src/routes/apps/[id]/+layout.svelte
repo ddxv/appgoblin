@@ -99,7 +99,7 @@
 					<img
 						src={data.myapp.app_icon_url}
 						alt={data.myapp.name}
-						class="w-32 sm:w-40 md:w-48 lg:w-56 xl:w-60 h-auto"
+						class="w-32 sm:w-40 md:w-48 h-auto"
 						referrerpolicy="no-referrer"
 					/>
 				{/if}
