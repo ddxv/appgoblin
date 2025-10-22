@@ -15,7 +15,7 @@ SELECT DISTINCT ON (last_seen, advertiser_store_id)
     last_seen,
     advertiser_icon_url,
     publisher_icon_url
-FROM frontend.companies_creative_rankings_new
+FROM frontend.companies_creative_rankings
 WHERE
     company_domain = :company_domain
     AND last_seen < NOW() - INTERVAL '1 days'
