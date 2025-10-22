@@ -278,17 +278,6 @@ def get_app_api_details(state: State, store_id: str) -> pd.DataFrame:
         state.dbcon.engine,
         params={"store_id": store_id},
     )
-    df["url"] = df["url"].str.replace("https://", "").replace("http://", "")
-    df["tld_url"] = df["tld_url"].str.replace("https://", "").replace("http://", "")
-    df["url"] = df["url"].apply(lambda x: "/".join(x.split("/")[0:3]))
-    df["url"] = df["url"].str.replace(r"\?.*$", "", regex=True)
-    df["url"] = df["url"].str[0:84]
-    df = (
-        df.groupby(["company_name", "tld_url", "url"], dropna=False)
-        .size()
-        .reset_index()
-    )
-    df = df.rename(columns={0: "count"})
     return df
 
 

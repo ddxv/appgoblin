@@ -22,7 +22,7 @@
 		data: RankedApps[];
 	};
 
-	let pagination = $state<PaginationState>({ pageIndex: 0, pageSize: 40 });
+	let pagination = $state<PaginationState>({ pageIndex: 0, pageSize: 25 });
 	let sorting = $state<SortingState>([]);
 	let columnFilters = $state<ColumnFiltersState>([]);
 

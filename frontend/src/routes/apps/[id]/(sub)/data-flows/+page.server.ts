@@ -31,6 +31,7 @@ export const load: PageServerLoad = async ({ fetch, params, parent }) => {
 
 	return {
 		apis,
+		myapp,
 		// Meta Tags
 		toFollow: 'noindex, follow',
 		title: `API Calls for ${myapp.name}`,

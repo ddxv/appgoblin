@@ -49,6 +49,23 @@ from dbcon.static import get_company_logos_df, get_total_counts
 logger = get_logger(__name__)
 
 
+def api_call_dfs(state: State, store_id: str) -> pd.DataFrame:
+    """Get the API calls for an app."""
+    df = get_app_api_details(state, store_id)
+    df["url"] = df["url"].str.replace("https://", "").replace("http://", "")
+    df["tld_url"] = df["tld_url"].str.replace("https://", "").replace("http://", "")
+    df["url"] = df["url"].apply(lambda x: "/".join(x.split("/")[0:3]))
+    df["url"] = df["url"].str.replace(r"\?.*$", "", regex=True)
+    df["url"] = np.where(
+        df["url"].str.len() > 44, df["url"].str[:41] + "...", df["url"]
+    )
+    df["request_mime_type"] = df["request_mime_type"].replace(r"\;.*$", "", regex=True)
+    df["response_mime_type"] = df["response_mime_type"].replace(
+        r"\;.*$", "", regex=True
+    )
+    return df
+
+
 def search_both_stores(state: State, search_term: str) -> None:
     """Search both stores and return resulting AppGroup."""
     google_full_results = google.search_play_store(search_term)
@@ -736,7 +753,7 @@ class AppController(Controller):
 
         """
         start = time.perf_counter() * 1000
-        apis_df = get_app_api_details(state, store_id)
+        apis_df = api_call_dfs(state, store_id)
         apis_list = apis_df.to_dict(orient="records")
         apis_dict = {"apis": apis_list}
         duration = round((time.perf_counter() * 1000 - start), 2)

@@ -11,6 +11,8 @@
 
 	import CompanyButton from './CompanyButton.svelte';
 
+	import { countryCodeToEmoji } from './utils/countryCodeToEmoji';
+
 	import Pagination from '$lib/components/data-table/Pagination.svelte';
 	import ExportAsCSV from '$lib/components/data-table/ExportAsCSV.svelte';
 	import type { AppAPIs } from '../types';
@@ -23,7 +25,19 @@
 		data: AppAPIs;
 	};
 
-	let pagination = $state<PaginationState>({ pageIndex: 0, pageSize: 40 });
+	function formatDate(date: string) {
+		return new Date(date).toLocaleDateString('en-US', {
+			year: 'numeric',
+			month: 'long',
+			day: 'numeric',
+			hour: '2-digit',
+			minute: '2-digit',
+			second: '2-digit',
+			hour12: false
+		});
+	}
+
+	let pagination = $state<PaginationState>({ pageIndex: 0, pageSize: 50 });
 	let sorting = $state<SortingState>([]);
 	let columnFilters = $state<ColumnFiltersState>([]);
 
@@ -33,25 +47,19 @@
 
 	const columns = genericColumns([
 		{
-			title: 'Company',
-			accessorKey: 'company_name',
+			title: 'Called At',
+			accessorKey: 'called_at',
 			isSortable: true
 		},
-		// {
-		// 	title: 'TLD URL',
-		// 	accessorKey: 'tld_url',
-		// 	isSortable: true,
-		// },
 		{
 			title: 'URL',
 			accessorKey: 'url',
 			isSortable: true
 		},
-		{
-			title: 'Count',
-			accessorKey: 'count',
-			isSortable: true
-		}
+		{ title: 'Servers', accessorKey: 'servers', isSortable: true },
+		{ title: 'Request Type', accessorKey: 'request_mime_type', isSortable: true },
+		{ title: 'Response Type', accessorKey: 'response_mime_type', isSortable: true },
+		{ title: 'Ad Creative Found', accessorKey: 'creative_md5_hash', isSortable: true }
 	]);
 
 	const globalFilterFn = (row: any, columnId: string, filterValue: string) => {
@@ -150,16 +158,36 @@
 				{#each table.getRowModel().rows as row (row.id)}
 					<tr class="px-0 text-xs md:text-sm overflow-x-auto">
 						<td>
+							{formatDate(row.original.called_at)}
+						</td>
+						<td class="flex flex-col space-y-1">
 							{#if row.original.company_name}
 								<CompanyButton
 									companyName={row.original.company_name}
 									companyDomain={row.original.tld_url}
 								/>
 							{:else}
-								{row.original.tld_url}
+								<CompanyButton
+									companyName={row.original.tld_url}
+									companyDomain={row.original.tld_url}
+								/>
+							{/if}
+							<p class="text-xs md:text-sm break-all">{row.original.url}</p>
+						</td>
+						<td>{countryCodeToEmoji(row.original.country)} {row.original.servers}</td>
+						<td>{row.original.request_mime_type}</td>
+						<td>{row.original.response_mime_type}</td>
+						<td
+							>{#if row.original.creative_md5_hash}
+								<img
+									src={'https://media.appgoblin.info/creatives/thumbs/' +
+										row.original.creative_md5_hash +
+										'.jpg'}
+									alt={row.original.creative_md5_hash}
+									class="w-16 h-auto object-contain rounded-lg shadow-md"
+								/>
 							{/if}
 						</td>
-						<td>{row.original.url}</td>
 						<td>{row.original.count}</td>
 					</tr>
 				{/each}
