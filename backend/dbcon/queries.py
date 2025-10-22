@@ -271,6 +271,16 @@ def get_app_sdk_details(state: State, store_id: str) -> pd.DataFrame:
     return df
 
 
+def get_app_version_timeline(state: State, store_id: str) -> pd.DataFrame:
+    """Get version timeline for a single store_id."""
+    df = pd.read_sql(
+        sql.app_version_timeline,
+        state.dbcon.engine,
+        params={"store_id": store_id},
+    )
+    return df
+
+
 def get_app_api_details(state: State, store_id: str) -> pd.DataFrame:
     """Get app API details for a single store_id."""
     df = pd.read_sql(

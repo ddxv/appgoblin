@@ -41,6 +41,7 @@ from dbcon.queries import (
     get_single_app,
     get_single_app_keywords,
     get_single_apps_adstxt,
+    get_app_version_timeline,
     insert_sdk_scan_request,
     search_apps,
 )
@@ -438,6 +439,24 @@ class AppController(Controller):
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(f"{self.path}/{store_id}/sdksoverview took {duration}ms")
         return sdk_overview_dict
+
+    @get(path="/{store_id:str}/versions", cache=3600)
+    async def get_version_timeline(self: Self, state: State, store_id: str) -> dict:
+        """Handle GET request for timeline of versions for a specific app.
+
+         store_id (str): The id of the app to retrieve.
+
+        Returns
+        -------
+            json
+
+        """
+        start = time.perf_counter() * 1000
+        df = get_app_version_timeline(state, store_id)
+        version_timeline = df.to_dict(orient="records")
+        duration = round((time.perf_counter() * 1000 - start), 2)
+        logger.info(f"{self.path}/{store_id}/versiontimeline took {duration}ms")
+        return version_timeline
 
     @get(path="/{store_id:str}/sdks", cache=3600)
     async def get_sdk_details(self: Self, state: State, store_id: str) -> SDKsDetails:

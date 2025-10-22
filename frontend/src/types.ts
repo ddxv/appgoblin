@@ -498,6 +498,7 @@ export interface AppSDKs {
 		skadnetwork: string[];
 		app_queries: string[];
 	};
+	versionTimeline: any;
 	companyTypes: CompanyTypes;
 	myapp: AppFullDetail;
 }

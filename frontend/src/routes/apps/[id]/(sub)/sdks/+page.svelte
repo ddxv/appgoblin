@@ -11,6 +11,28 @@
 	let group = $state('sdks');
 
 	let { data }: { data: AppSDKs } = $props();
+
+	function resultToString(result: number) {
+		switch (result) {
+			case 1:
+				return 'Success';
+			case 3:
+				return 'Failed';
+			default:
+				return 'Unknown';
+		}
+	}
+	function formatDateTime(date: string) {
+		return new Date(date).toLocaleDateString('en-US', {
+			year: 'numeric',
+			month: 'long',
+			day: 'numeric',
+			hour: '2-digit',
+			minute: '2-digit',
+			second: '2-digit',
+			hour12: false
+		});
+	}
 </script>
 
 <div class="card preset-tonal p-2 md:p-16 mt-2 md:mt-4">
@@ -41,6 +63,24 @@
 							{data.myapp.sdk_last_crawl_result == 1 ? 'Success' : 'Failed'}
 						</span>
 					</div>
+					<table class="table">
+						<thead>
+							<tr>
+								<th class="text-left p-2">Scanned At</th>
+								<th class="text-left p-2">Version</th>
+								<th class="text-left p-2">Scan Result</th>
+							</tr>
+						</thead>
+						<tbody>
+							{#each data.versionTimeline as version}
+								<tr>
+									<td class="p-2">{formatDateTime(version.scanned_at)}</td>
+									<td class="p-2">{version.app_version_code}</td>
+									<td class="p-2">{resultToString(version.scan_result)}</td>
+								</tr>
+							{/each}
+						</tbody>
+					</table>
 				{:else}
 					App not yet analyzed for SDKs.
 					<RequestSDKScanButton />

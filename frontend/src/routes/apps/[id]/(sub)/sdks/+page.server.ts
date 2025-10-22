@@ -2,6 +2,7 @@ import type { PageServerLoad } from './$types.js';
 import { createApiClient } from '$lib/server/api';
 
 import type { Actions } from './$types';
+import { version } from 'os';
 
 export const actions = {
 	requestSDKScan: async (event) => {
@@ -23,15 +24,19 @@ export const actions = {
 export const load: PageServerLoad = async ({ fetch, params, parent }) => {
 	const { companyTypes } = await parent();
 	const { myapp } = await parent();
+	const api = createApiClient(fetch);
+
+	const id = params.id;
+	const versionTimeline = await api.get(`/apps/${id}/versions`, 'App Version Timeline');
+
 	let myPackageInfo = {};
 	if (myapp.sdk_successful_last_crawled) {
-		const api = createApiClient(fetch);
-		const id = params.id;
 		myPackageInfo = await api.get(`/apps/${id}/sdks`, 'App Package Info');
 	}
 
 	return {
 		myPackageInfo,
+		versionTimeline,
 		companyTypes,
 		myapp,
 		// Meta Tags
