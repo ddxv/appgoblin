@@ -9,7 +9,6 @@
 			// Handle the form submission result
 			if (result.type === 'success') {
 				// You can add additional success handling here if needed
-				console.log('success');
 				myMessage = 'Successfully requested SDK scan!';
 			} else {
 				myMessage = 'Failed to request SDK scan.';

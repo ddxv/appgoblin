@@ -95,7 +95,6 @@
 			<Tabs.Control value="sdks" labelClasses="p-0 md:p-8"
 				><p class="text-xs md:text-base">SDKs</p></Tabs.Control
 			>
-			{console.log(data.myapp.store)}
 			{#if data.myapp.store.startsWith('Apple')}
 				<Tabs.Control value="SKAdNetwork" labelClasses="p-0 md:p-8"
 					><p class="text-xs md:text-base">SKAdNetwork</p></Tabs.Control

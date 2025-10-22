@@ -16,6 +16,8 @@ SELECT DISTINCT ON (last_seen, advertiser_store_id)
     advertiser_icon_url,
     publisher_icon_url
 FROM frontend.companies_creative_rankings_new
-WHERE company_domain = :company_domain
+WHERE
+    company_domain = :company_domain
+    AND last_seen < NOW() - INTERVAL '1 days'
 ORDER BY last_seen DESC, advertiser_store_id ASC
 LIMIT 6;

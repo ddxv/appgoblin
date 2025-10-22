@@ -22,7 +22,6 @@
 
 	type DataTableProps<RankedApps, TValue> = {
 		data: RankedApps[];
-		is_monetization: boolean;
 	};
 
 	let pagination = $state<PaginationState>({ pageIndex: 0, pageSize: 25 });
@@ -33,7 +32,7 @@
 
 	let globalFilter = $state<string>('');
 
-	let { data, is_monetization = false }: DataTableProps<RankedApps, TValue> = $props();
+	let { data }: DataTableProps<RankedApps, TValue> = $props();
 
 	const columns = genericColumns([
 		{
@@ -48,8 +47,8 @@
 		},
 
 		{
-			title: is_monetization ? 'Advertiser' : 'Publisher',
-			accessorKey: is_monetization ? 'adv_name' : 'pub_name',
+			title: 'Publisher',
+			accessorKey: 'pub_name',
 			isSortable: true
 		},
 
@@ -78,9 +77,7 @@
 	]);
 
 	const globalFilterFn = (row: any, columnId: string, filterValue: string) => {
-		const name = is_monetization
-			? row.original.adv_name?.toLowerCase()
-			: (row.original.pub_name?.toLowerCase() ?? '');
+		const name = row.original.pub_name?.toLowerCase() ?? '';
 		const query = filterValue.toLowerCase();
 		return name.includes(query);
 	};
@@ -197,22 +194,18 @@
 
 						<td>{row.original.file_extension}</td>
 						<td>
-							<a
-								href="/apps/{is_monetization
-									? row.original.adv_store_id
-									: row.original.pub_store_id}"
-							>
+							<a href="/apps/{row.original.pub_store_id}">
 								<div class="col-1 items-center">
 									<img
-										src={is_monetization ? row.original.adv_icon_url : row.original.pub_icon_url}
-										alt={is_monetization ? row.original.adv_name : row.original.pub_name}
+										src={row.original.pub_icon_url}
+										alt={row.original.pub_name}
 										width="200"
 										class="w-12 md:w-24 h-auto object-cover rounded"
 										referrerpolicy="no-referrer"
 										loading="lazy"
 									/>
 									<h3 class="p-2">
-										{is_monetization ? row.original.adv_name : row.original.pub_name}
+										{row.original.pub_name}
 									</h3>
 								</div>
 							</a>

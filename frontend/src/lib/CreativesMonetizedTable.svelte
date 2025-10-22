@@ -10,6 +10,7 @@
 	} from '@tanstack/table-core';
 
 	import CompanyButton from '$lib/CompanyButton.svelte';
+
 	import CreativePopup from './CreativePopup.svelte';
 
 	import Pagination from '$lib/components/data-table/Pagination.svelte';
@@ -19,6 +20,7 @@
 	import { createSvelteTable, FlexRender } from '$lib/components/data-table/index.js';
 
 	import { genericColumns } from '$lib/components/data-table/generic-column';
+	import { page } from '$app/state';
 
 	type DataTableProps<RankedApps, TValue> = {
 		data: RankedApps[];
@@ -27,6 +29,8 @@
 	let pagination = $state<PaginationState>({ pageIndex: 0, pageSize: 25 });
 	let sorting = $state<SortingState>([]);
 	let columnFilters = $state<ColumnFiltersState>([]);
+
+	let vhash = page.params.vhash;
 
 	let globalFilter = $state<string>('');
 
@@ -39,8 +43,14 @@
 			isSortable: true
 		},
 		{
-			title: 'Seen In Publishers',
-			accessorKey: 'pubs',
+			title: 'File Type',
+			accessorKey: 'file_extension',
+			isSortable: true
+		},
+
+		{
+			title: 'Advertiser',
+			accessorKey: 'adv_name',
 			isSortable: true
 		},
 
@@ -48,15 +58,28 @@
 			title: 'Ad Networks',
 			accessorKey: 'host_domain',
 			isSortable: true
+		},
+		{
+			title: 'Additional Ad Domain URLs',
+			accessorKey: 'additional_ad_domain_urls',
+			isSortable: true
+		},
+
+		{
+			title: 'MMP',
+			accessorKey: 'mmp_name',
+			isSortable: true
+		},
+
+		{
+			title: 'Scanned At',
+			accessorKey: 'run_at',
+			isSortable: true
 		}
 	]);
 
 	const globalFilterFn = (row: any, columnId: string, filterValue: string) => {
-		const name =
-			row.original.pubs
-				.map((pub: any) => pub.name)
-				.join(', ')
-				?.toLowerCase() ?? '';
+		const name = row.original.adv_name?.toLowerCase();
 		const query = filterValue.toLowerCase();
 		return name.includes(query);
 	};
@@ -150,66 +173,77 @@
 				{#each table.getRowModel().rows as row (row.id)}
 					<tr class="px-0 text-xs md:text-base">
 						<td>
-							<div class="flex flex-col gap-2">
+							{#if vhash != row.original.vhash && row.original.adv_store_id}
+								<a href={`/apps/${row.original.adv_store_id}/ad-placements/${row.original.vhash}`}>
+									<img
+										src="https://media.appgoblin.info/creatives/thumbs/{row.original.md5_hash}.jpg"
+										class="w-24 md:w-64 h-auto object-cover rounded text-xs"
+										alt="Creative: {row.original.md5_hash}"
+										loading="lazy"
+									/>
+									{row.original.md5_hash}
+								</a>
+							{:else}
 								<CreativePopup
 									md5_hash={row.original.md5_hash}
 									file_extension={row.original.file_extension}
 								/>
-								<span class="text-xs text-surface-600-400">{row.original.file_extension}</span>
-							</div>
+								{row.original.md5_hash}
+							{/if}
 						</td>
 
+						<td>{row.original.file_extension}</td>
 						<td>
-							<div class="grid grid-cols-2 md:grid-cols-4 gap-1">
-								{#each row.original.pubs.slice(0, 16) as pub}
-									<a href="/apps/{pub.store_id}">
-										<div class="col-1 items-center">
-											<img
-												src={pub.app_icon_url}
-												alt={pub.name}
-												width="200"
-												class="w-12 md:w-24 h-auto object-cover rounded"
-												referrerpolicy="no-referrer"
-												loading="lazy"
-											/>
-										</div>
-									</a>
-								{/each}
-							</div>
+							{#if row.original.adv_store_id}
+								<a href="/apps/{row.original.adv_store_id}">
+									<div class="col-1 items-center">
+										<img
+											src={row.original.adv_icon_url}
+											alt={row.original.adv_name}
+											width="200"
+											class="w-12 md:w-24 h-auto object-cover rounded"
+											referrerpolicy="no-referrer"
+											loading="lazy"
+										/>
+										<h3 class="p-2">
+											{row.original.adv_name}
+										</h3>
+									</div>
+								</a>
+							{:else}
+								<div class="col-1 items-center text-xs text-surface-900-100">
+									Advertiser Unknown
+								</div>
+							{/if}
 						</td>
 
 						<td>
 							<div class="flex flex-col gap-1">
 								<CompanyButton
-									companyName={`Host: ${row.original.host_domain}`}
+									companyName={`Host: ${row.original.host_domain_company_name} (${row.original.host_domain})`}
 									companyDomain={row.original.host_domain_company_domain}
-									companyLogoUrl={row.original.company_logo_url_host_domain}
-									size="md"
+									size="sm"
 								/>
-								<CompanyButton
-									companyName={`Ad: ${row.original.ad_domain}`}
-									companyDomain={row.original.ad_domain_company_domain}
-									companyLogoUrl={row.original.company_logo_url_ad_domain}
-									size="md"
-								/>
-							</div>
-							<p class="text-primary-600-400 my-2">Additional Ad Domain URLs:</p>
-							<div class="grid grid-cols-2 gap-2">
-								{#each row.original.additional_ad_domain_urls as url}
-									{#if url !== row.original.ad_domain_company_domain && url !== row.original.host_domain_company_domain && url !== row.original.mmp_domain && url !== row.original.ad_domain && url !== row.original.host_domain}
-										<CompanyButton companyName={url} companyDomain={url} size="sm" />
-									{/if}
-								{/each}
-								{#if row.original.mmp_name}
-									{row.original.mmp_name}
+								{#if row.original.ad_domain_company_domain}
+									<CompanyButton
+										companyName={`Ad: ${row.original.ad_domain_company_name} (${row.original.ad_domain})`}
+										companyDomain={row.original.ad_domain_company_domain}
+										size="sm"
+									/>
 								{/if}
-								<p class="text-primary-600-400">Last Seen:</p>
-								{row.original.run_at}
 							</div>
-							<a href={`ad-placements/${row.original.vhash}`}>
-								<button class="btn preset-tonal btn-md">Creative Full Details</button>
-							</a>
 						</td>
+						<td class="flex flex-col gap-1"
+							>{#each row.original.additional_ad_domain_urls as url}
+								{#if url !== row.original.ad_domain_company_domain && url !== row.original.host_domain_company_domain && url !== row.original.mmp_domain && url !== row.original.ad_domain && url !== row.original.host_domain}
+									<div class="grid grid-cols-2 gap-1">
+										<CompanyButton companyName={url} companyDomain={url} size="sm" />
+									</div>
+								{/if}
+							{/each}
+						</td>
+						<td>{row.original.mmp_name}</td>
+						<td>{row.original.run_at}</td>
 					</tr>
 				{/each}
 			</tbody>
