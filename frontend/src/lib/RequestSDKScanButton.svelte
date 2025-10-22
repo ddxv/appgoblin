@@ -19,7 +19,7 @@
 </script>
 
 <form
-	class="mx-auto w-full max-w-md space-y-4"
+	class="mx-auto w-full max-w-md space-y-1"
 	method="POST"
 	action="?/requestSDKScan"
 	use:enhance={handleSubmit}
@@ -29,13 +29,10 @@
 		>Request New SDK Scan</button
 	>
 	{#if myMessage}
-		<!-- this message is ephemeral; it exists because the page was rendered in
-	       response to a form submission. it will vanish if the user reloads -->
 		<p class="text-green-500">{myMessage}</p>
 	{/if}
-	<p class="text-sm md:text-base">
-		Scanning should take 24 hours to decompile the app's SDKs and check what API calls it makes. The
-		process is automated 80% of the time but can require manual troubleshooting. Feel free to reach
-		out on Discord if you have any questions.
+	<p class="text-xs md:text-sm">
+		The download and scan process is automated but can require manual troubleshooting. Feel free to
+		reach out if your request does not complete in 24hrs or if you have any questions.
 	</p>
 </form>

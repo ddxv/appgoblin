@@ -15,6 +15,8 @@
 </script>
 
 <div class="max-w-sm lg:max-w-full overflow-x-scroll">
+	<h4 class="h4 md:h3 p-2 md:p-4 mt-4">Unknown SDKs and Services</h4>
+	<p>If you recognize any of these please reach out to have it added.</p>
 	<ul>
 		<div
 			class="grid grid-cols-1 md:grid-cols-{Object.keys(items).length === 1

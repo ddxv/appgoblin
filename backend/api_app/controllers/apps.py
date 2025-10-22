@@ -474,13 +474,14 @@ class AppController(Controller):
 
         cats = df.loc[df["category_slug"].notna(), "category_slug"].unique().tolist()
         company_sdk_dict = {}
+        found_sdk_tlds = []
         # example: {"ad-networks":
         # {"bytedance.com":
         # {"com.bytedance.sdk":
         # {"application/acitivity":
         # ["com.bytedance.sdk.analytics"]}}}}
         for cat in cats:
-            company_sdk_dict[cat] = {
+            cat_dict = {
                 company: {
                     short_value_name: dddf.groupby("xml_path")["value_name"]
                     .apply(list)
@@ -491,6 +492,14 @@ class AppController(Controller):
                     "company_domain"
                 )
             }
+            company_sdk_dict[cat] = cat_dict
+            # Collect all nested keys from each category
+            found_sdk_tlds.extend(key for x in cat_dict for key in cat_dict[x].keys())
+
+        # Get unique SDK TLDs across all categories
+        found_sdk_tlds = list(set(found_sdk_tlds))
+
+        unwanted_value_names = ["smali"] + found_sdk_tlds
 
         is_permission = df["xml_path"] == "uses-permission"
         df.loc[df["xml_path"].str.contains("key", case=False), "value_name"] = (
@@ -523,6 +532,10 @@ class AppController(Controller):
             & ~is_package_query
             & ~is_skadnetwork
             & df["company_name"].isna()
+        ]
+
+        leftovers_df = leftovers_df[
+            ~leftovers_df["value_name"].isin(unwanted_value_names)
         ]
 
         # example: {"bytedance.com":
