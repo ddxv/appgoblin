@@ -2,7 +2,7 @@
 	import type { CompanyFullDetails } from '../../../../types';
 
 	import AdsTxtPubIDsTable from '$lib/AdsTxtPubIDsTable.svelte';
-	import AppCard from '$lib/AppCard.svelte';
+	import AdCard from '$lib/AdCard.svelte';
 
 	import TotalsBox from '$lib/TotalsBox.svelte';
 	import CompanyButton from '$lib/CompanyButton.svelte';
@@ -133,40 +133,22 @@
 	{/snippet}
 </CompaniesLayout>
 
-{#if !data.companyTree.is_secondary_domain}
-	{#if data.companyCreatives && data.companyCreatives.length > 0}
-		<WhiteCard>
-			{#snippet title()}
-				<span>Recent Ads Run by {data.companyTree.queried_company_name}</span>
-			{/snippet}
-			<div class="grid grid-cols-3 gap-2 p-2">
-				{#each data.companyCreatives as creative}
-					<card class="card bg-surface-100-900 p-2">
-						{#if creative.store_id}
-							<AppCard app={creative} showHeader={true} />
-						{:else}
-							<div class="justify-center">
-								<img
-									class="h-48 w-full object-top object-none rounded-lg"
-									src={creative.featured_image_url}
-									alt={creative.name}
-									referrerpolicy="no-referrer"
-									loading="lazy"
-								/>
-							</div>
-						{/if}
-						<div class="flex flex-row gap-1">
-							<p class="text-primary-600-400">Last Seen:</p>
-							{creative.last_seen}
-							<p class="text-primary-600-400 ml-2">Creative Type:</p>
-							{creative.file_extension}
-						</div>
-					</card>
-				{/each}
-			</div>
-		</WhiteCard>
-	{/if}
+<!-- {#if !data.companyTree.is_secondary_domain} -->
+{#if data.companyCreatives && data.companyCreatives.length > 0}
+	<WhiteCard>
+		{#snippet title()}
+			<span>Recent Ads Run by {data.companyTree.queried_company_name}</span>
+		{/snippet}
+		<div class="grid grid-cols-3 gap-2 p-2">
+			{#each data.companyCreatives as creative}
+				<card class="card bg-surface-100-900 p-2">
+					<AdCard {creative} />
+				</card>
+			{/each}
+		</div>
+	</WhiteCard>
 {/if}
+<!-- {/if} -->
 
 {#if typeof data.companyTopApps == 'string'}
 	Failed to load company's apps.

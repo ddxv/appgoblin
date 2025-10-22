@@ -119,8 +119,7 @@ class CreativesController(Controller):
         """
         start = time.perf_counter() * 1000
         df = get_company_creatives(state=state, company_domain=company_domain)
-        df = df.rename(columns={"advertiser_store_id": "store_id"})
-        df["featured_image_url"] = (
+        df["creative_thumb_url"] = (
             "https://media.appgoblin.info/creatives/thumbs/" + df["md5_hash"] + ".jpg"
         )
         if not df.empty:

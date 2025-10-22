@@ -424,12 +424,15 @@ export interface CompaniesCategoryOverview {
 }
 
 export interface CompanyCreative {
-	name: string;
+	advertiser_name: string;
+	publisher_name: string;
 	store: number;
 	company_domain: string;
+	creative_thumb_url: string;
 	md5_hash: string;
 	file_extension: string;
-	store_id: string;
+	advertiser_store_id: string;
+	publisher_store_id: string;
 	advertiser_store_app_id: string;
 	installs_sum_1w: number;
 	installs_sum_4w: number;
@@ -437,11 +440,9 @@ export interface CompanyCreative {
 	installs: number;
 	rating_count: number;
 	rating: number;
-	app_icon_url: string;
-	featured_image_url: string;
+	advertiser_icon_url: string;
+	publisher_icon_url: string;
 	last_seen: string;
-	tablet_image_url_1?: string;
-	phone_image_url_1?: string;
 	store_link?: string;
 }
 
