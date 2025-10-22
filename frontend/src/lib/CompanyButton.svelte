@@ -18,7 +18,9 @@
 	</a>
 {:else if size === 'md'}
 	<a href={`${baseUrl}/${companyDomain}`}>
-		<div class="btn preset-tonal hover:preset-tonal-primary text-sm md:text-base gap-2">
+		<div
+			class="btn preset-tonal hover:preset-tonal-primary hover:underline text-sm md:text-base gap-2"
+		>
 			{#if companyLogoUrl}
 				<img
 					src={`https://media.appgoblin.info/${companyLogoUrl}`}

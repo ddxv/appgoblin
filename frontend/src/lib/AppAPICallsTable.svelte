@@ -57,8 +57,7 @@
 			isSortable: true
 		},
 		{ title: 'Servers', accessorKey: 'servers', isSortable: true },
-		{ title: 'Request Type', accessorKey: 'request_mime_type', isSortable: true },
-		{ title: 'Response Type', accessorKey: 'response_mime_type', isSortable: true },
+		{ title: 'Content Type', accessorKey: 'response_mime_type', isSortable: true },
 		{ title: 'Ad Creative Found', accessorKey: 'creative_md5_hash', isSortable: true }
 	]);
 
@@ -175,8 +174,10 @@
 							<p class="text-xs md:text-sm break-all">{row.original.url}</p>
 						</td>
 						<td>{countryCodeToEmoji(row.original.country)} {row.original.servers}</td>
-						<td>{row.original.request_mime_type}</td>
-						<td>{row.original.response_mime_type}</td>
+						<td class="flex-col"
+							><p>Request: {row.original.request_mime_type}</p>
+							<p>Response: {row.original.response_mime_type}</p></td
+						>
 						<td
 							>{#if row.original.creative_md5_hash}
 								<img

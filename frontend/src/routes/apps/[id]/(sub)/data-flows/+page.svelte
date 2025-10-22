@@ -100,7 +100,7 @@
 				<div class="flex flex-wrap gap-2">
 					{#each stats.uniqueTldUrlsList as tldInfo}
 						<CompanyButton
-							companyName={tldInfo.company_name || tldInfo.tld_url}
+							companyName={`${tldInfo.tld_url} (${tldInfo.company_name || 'Unknown'})`}
 							companyDomain={tldInfo.tld_url}
 						/>
 					{/each}
