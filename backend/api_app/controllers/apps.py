@@ -78,7 +78,7 @@ def get_search_results(state: State, search_term: str) -> AppGroup:
 
 def process_search_results(dbconwrite, results: list[dict]) -> None:
     """After having queried an external app store send results to db."""
-    logger.info("background:search results to be processed")
+    logger.info(f"background:search results to be processed {len(results)}")
     scrape_stores.process_scraped(dbconwrite, results, "appgoblin_search")
     logger.info("background:search results done")
 
@@ -698,7 +698,7 @@ class AppController(Controller):
         logger.info(f"{self.path} took {duration}ms")
         return Response(
             apps_dict,
-            background=BackgroundTask(search_both_stores, search_term),
+            background=BackgroundTask(search_both_stores, state, search_term),
         )
 
     @post(path="/{store_id:str}/requestSDKScan")
