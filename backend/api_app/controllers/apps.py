@@ -34,6 +34,7 @@ from dbcon.queries import (
     get_app_history,
     get_app_sdk_details,
     get_app_sdk_overview,
+    get_app_version_timeline,
     get_growth_apps,
     get_ranks_for_app,
     get_ranks_for_app_overview,
@@ -41,7 +42,6 @@ from dbcon.queries import (
     get_single_app,
     get_single_app_keywords,
     get_single_apps_adstxt,
-    get_app_version_timeline,
     insert_sdk_scan_request,
     search_apps,
 )
