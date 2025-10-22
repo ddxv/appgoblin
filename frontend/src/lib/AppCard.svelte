@@ -49,7 +49,6 @@
 				{/if}
 
 				<div class="flex text-left">
-					{console.log('app:', app)}
 					<img
 						class="h-16 md:h-24 w-16 md:w-24 p-2 rounded-lg"
 						src={app.app_icon_url}
