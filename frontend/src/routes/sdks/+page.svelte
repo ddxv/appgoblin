@@ -39,9 +39,6 @@
 				<Tabs.Control value="latest_failed" labelClasses="p-0 md:p-8"
 					><p class="text-xs md:text-base">Latest Failed</p></Tabs.Control
 				>
-				<Tabs.Control value="sdkparts" labelClasses="p-0 md:p-8"
-					><p class="text-xs md:text-base">Raw SDKs Parts</p></Tabs.Control
-				>
 			{/snippet}
 
 			{#snippet content()}
@@ -122,36 +119,6 @@
 
 								{#if mySdksOverview.ios_failed_latest_apps && mySdksOverview.ios_failed_latest_apps.length > 0}
 									<SDKsLatestAppsTable entries_table={mySdksOverview.ios_failed_latest_apps} />
-								{/if}
-							</WhiteCard>
-						{/await}
-					</div>
-				</Tabs.Panel>
-
-				<Tabs.Panel value="sdkparts">
-					<h2 class="text-2xl font-bold text-primary-900-100">SDKs Parts</h2>
-
-					<div class="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-6">
-						{#await data.sdksParts}
-							loading
-						{:then mySdksParts}
-							<WhiteCard>
-								{#snippet title()}
-									Android SDKs
-								{/snippet}
-
-								{#if mySdksParts.android_sdkparts && mySdksParts.android_sdkparts.length > 0}
-									<SDKsOverviewTable entries_table={mySdksParts.android_sdkparts} />
-								{/if}
-							</WhiteCard>
-
-							<WhiteCard>
-								{#snippet title()}
-									iOS SDKs
-								{/snippet}
-
-								{#if mySdksParts.ios_sdkparts && mySdksParts.ios_sdkparts.length > 0}
-									<SDKsOverviewTable entries_table={mySdksParts.ios_sdkparts} />
 								{/if}
 							</WhiteCard>
 						{/await}

@@ -13,7 +13,6 @@ from litestar.datastructures import State
 from api_app.models import (
     SdkCompanies,
     SdkOverview,
-    SdkParts,
     SdksLatestResults,
     SdksUserRequested,
 )
@@ -24,7 +23,6 @@ from dbcon.queries import (
     get_sdk_pattern_companies,
     get_user_requested_latest_sdks,
 )
-from dbcon.static import get_sdks
 
 logger = get_logger(__name__)
 
@@ -99,35 +97,6 @@ class SdksController(Controller):
 
         return SdksUserRequested(
             user_requested_latest_apps=user_requested_latest_apps_dict
-        )
-
-    @get(path="/sdkparts", cache=3600)
-    async def sdks_sdkparts(self: Self, state: State) -> SdkParts:
-        """Handle GET request for all sdks.
-
-        Returns
-        -------
-        SdkOverview
-            An overview of apps for a given sdk pattern
-
-        """
-        start = time.perf_counter() * 1000
-
-        most_sdk_parts = get_sdks(state=state)
-
-        is_google = most_sdk_parts["store"].str.startswith("Google")
-
-        android_sdkparts = most_sdk_parts[is_google]
-        ios_sdkparts = most_sdk_parts[~is_google]
-
-        android_sdkparts_dict = android_sdkparts.to_dict(orient="records")
-        ios_sdkparts_dict = ios_sdkparts.to_dict(orient="records")
-
-        duration = round((time.perf_counter() * 1000 - start), 2)
-        logger.info(f"{self.path}/sdkparts took {duration}ms")
-        return SdkParts(
-            android_sdkparts=android_sdkparts_dict,
-            ios_sdkparts=ios_sdkparts_dict,
         )
 
     @get(path="/{value_pattern:str}", cache=3600)

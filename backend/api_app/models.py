@@ -484,17 +484,6 @@ class SdksUserRequested:
 
 
 @dataclass
-class SdkParts:
-    """Contains a list of SDK objects.
-
-    Representing the top sdks identified.
-    """
-
-    ios_sdkparts: list[dict]
-    android_sdkparts: list[dict]
-
-
-@dataclass
 class SdkOverview:
     """Contains a list of sdk overview objects."""
 

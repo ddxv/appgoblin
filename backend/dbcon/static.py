@@ -27,7 +27,6 @@ class StaticData:
     advertiser_creative_rankings: pd.DataFrame
     advertiser_creative_rankings_top: pd.DataFrame
     country_map: pd.DataFrame
-    sdks: pd.DataFrame
     company_open_source: pd.DataFrame
     company_api_call_countrys: pd.DataFrame
 
@@ -46,10 +45,6 @@ def load_static_data(engine) -> StaticData:
         appstore_categories["android"] + appstore_categories["ios"]
     )
     appstore_categories = appstore_categories.sort_values("total_apps", ascending=False)
-
-    # SDKs with transformations
-    sdks = pd.read_sql(sql.sdks, engine)
-    sdks["store"] = sdks["store"].replace({1: "Google Play", 2: "Apple App Store"})
 
     # Adtech categories with sorting
     adtech_categories = pd.read_sql(sql.adtech_categories, engine).sort_values("id")
@@ -98,7 +93,6 @@ def load_static_data(engine) -> StaticData:
         advertiser_creative_rankings=advertiser_creative_rankings,
         advertiser_creative_rankings_top=advertiser_creative_rankings_top,
         country_map=country_map,
-        sdks=sdks,
         company_open_source=company_open_source,
         company_api_call_countrys=company_api_call_countrys,
     )
@@ -163,11 +157,6 @@ def get_advertiser_creative_rankings_top(state: State) -> pd.DataFrame:
 def get_country_map(state: State) -> pd.DataFrame:
     """Get country map (preloaded at startup)."""
     return state.static_data.country_map
-
-
-def get_sdks(state: State) -> pd.DataFrame:
-    """Get top sdks (preloaded at startup)."""
-    return state.static_data.sdks
 
 
 def get_company_open_source(state: State) -> pd.DataFrame:
