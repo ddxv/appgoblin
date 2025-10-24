@@ -11,18 +11,12 @@ SELECT
     installs_sum_4w,
     ratings_sum_1w,
     ratings_sum_4w,
-    icon_url_100,
-    CASE
-        WHEN icon_url_100 IS NOT NULL
-            THEN
-                CONCAT(
+    CONCAT(
                     'https://media.appgoblin.info/app-icons/',
                     store_id,
                     '/',
                     icon_url_100
-                )
-        ELSE icon_url_512
-    END AS app_icon_url
+                ) AS app_icon_url
 FROM
     frontend.store_app_ranks_latest
 WHERE
