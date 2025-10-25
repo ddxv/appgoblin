@@ -180,6 +180,9 @@
 				</div>
 			{/if}
 		</div>
+		<span class="text-xs md:text-sm text-gray-500">
+			Full app-ads.txt data updated daily is available. <a href="/about">See pricing page</a>.
+		</span>
 	</div>
 {/if}
 

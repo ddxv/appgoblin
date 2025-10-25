@@ -59,7 +59,7 @@
 
 <div class="flex flex-col gap-8 px-2 md:px-20 lg:px-48">
 	<!-- Hero Header Section -->
-	<section class="text-center mt-8 mb-8">
+	<section class="text-center mt-8 mb-8 space-y-4">
 		<h1 class="text-5xl md:text-7xl text-primary-900-100 font-bold mb-4">AppGoblin</h1>
 		<h2 class="text-xl md:text-2xl font-bold text-primary mb-4">
 			Free App Marketing Insights and Research
@@ -81,6 +81,21 @@
 			<span class="font-bold text-success-900-100">{formatNumber(data.appsOverview.ios_apps)}</span>
 			iOS apps, track ad buyers, SDKs, and more.
 		</p>
+
+		<div class="items-center">
+			<div class="flex flex-col gap-4 items-center">
+				<a
+					href="mailto:contact@appgoblin.info"
+					class="btn-primary inline-flex items-center gap-2 px-6 py-3 bg-white rounded-lg hover:scale-105 transition-transform duration-200 shadow-lg"
+				>
+					<span class="text-black font-bold">Get in Touch or Schedule Free Walkthrough</span>
+					<span class="text-black font-bold">→</span>
+				</a>
+				<div class="text-white/80 text-sm pt-1">
+					<p>contact@appgoblin.info</p>
+				</div>
+			</div>
+		</div>
 	</section>
 
 	<!-- Top Advertiser Section -->

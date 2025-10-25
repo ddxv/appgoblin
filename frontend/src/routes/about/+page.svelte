@@ -44,7 +44,21 @@
 		> as well as some paid datasets like competitor analysis and SDK client lists. The goal is to provide
 		as much free and reproducible open source app analytics for the community as possible.
 	</p>
-	<br />
+
+	<div class="items-center">
+		<div class="flex flex-col gap-4 items-center">
+			<a
+				href="mailto:contact@appgoblin.info"
+				class="btn-primary inline-flex items-center gap-2 px-6 py-3 bg-white rounded-lg hover:scale-105 transition-transform duration-200 shadow-lg"
+			>
+				<span class="text-black font-bold">Get in Touch or Schedule Free Walkthrough</span>
+				<span class="text-black font-bold">→</span>
+			</a>
+			<div class="text-white/80 text-sm pt-1">
+				<p>contact@appgoblin.info</p>
+			</div>
+		</div>
+	</div>
 
 	<div class="card preset-filled-surface-100-900 p-2 md:p-8">
 		<h2 class="h2 p-2 md:p-4">Community & Feedback</h2>
@@ -67,10 +81,11 @@
 		</div>
 	</div>
 	<div class="card preset-filled-surface-100-900 {cardPadding}">
-		<h2 class="h2 {titlePadding}">Open Source Resources</h2>
+		<h2 class="h2 {titlePadding}">Free Resources</h2>
 		<div class={contentPadding}>
 			<p>
-				Some data sets are available for free download. They can be found on
+				The majority of AppGoblin's marketing data and ASO features are free to browse. Some open
+				source data sets are available for free download. They can be found on
 				<strong
 					><a href="https://github.com/ddxv/appgoblin-data">github.com/ddxv/appgoblin-data</a
 					></strong
@@ -86,14 +101,9 @@
 		</div>
 	</div>
 	<div class="card preset-filled-surface-100-900 {cardPadding}">
-		<h2 class="h2 {titlePadding}">Paid Features</h2>
+		<h2 class="h2 {titlePadding}">Paid Datasets</h2>
 		<div class={contentPadding}>
-			<p>
-				AppGoblin is committed to providing open, reproducible mobile app analytics to the
-				community. Most of the data and insights on the site are free to access and built on
-				open-source pipelines. However, some datasets and services require significant resources to
-				maintain and are offered as paid features.
-			</p>
+			<p>Some datasets for B2B companies and are offered as paid features.</p>
 
 			<br />
 
