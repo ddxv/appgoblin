@@ -1,4 +1,5 @@
 User-agent: *
+# A few apps end with text that look like images but are not
 Disallow: /apps/*.gif
 Disallow: /apps/*.jpg
 Disallow: /apps/*.jpeg
