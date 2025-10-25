@@ -1002,7 +1002,7 @@
 		<div
 			class={`${sectionHeaderBaseClass} border-purple-200 dark:border-purple-800 pl-4 border-l-4 border-l-purple-500`}
 		>
-			<h2 class={sectionTitleClass}>Ready to Discover Your Opportunities?</h2>
+			<h2 class={sectionTitleClass}>Want to learn more?</h2>
 			<p class={sectionHeaderSubtitleClass}>Schedule a free demo or walkthrough</p>
 		</div>
 
