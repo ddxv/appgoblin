@@ -11,10 +11,6 @@
 
 	let categoryName = $derived(getAppCategory(page.params.category || ''));
 
-	function getIsSecondaryDomain(myTree: any) {
-		return myTree.is_secondary_domain;
-	}
-
 	function getAppCategory(category: string) {
 		if (category) {
 			return category
@@ -152,4 +148,6 @@
 	{/await}
 </div>
 
-{@render children?.()}
+<div class="space-y-4 md:space-y-8">
+	{@render children?.()}
+</div>
