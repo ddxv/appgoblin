@@ -10,7 +10,7 @@ export const load: PageServerLoad = async ({ fetch, params }) => {
 
 	const collectionValue = params.collection;
 	const categoryValue = params.category;
-	const countryValue = params.country || 'US';
+	const countryValue = params.country;
 
 	const ranks = await api.get(
 		`/rankings/${collectionValue}/${categoryValue}?country=${countryValue}`,

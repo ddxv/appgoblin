@@ -1,10 +1,22 @@
 import type { LayoutServerLoad } from './$types';
+import { error } from '@sveltejs/kit';
 import { createApiClient } from '$lib/server/api';
 
-export const load: LayoutServerLoad = async ({ fetch, params }) => {
+import { getCachedData } from '../../../../hooks.server';
+
+export const load: LayoutServerLoad = async ({ fetch, params, parent }) => {
 	const api = createApiClient(fetch);
 	const companyDomain = params.domain;
 	const category = params.category;
+
+	const { appCats } = await getCachedData();
+
+
+	if (category && !appCats.categories.find((cat) => cat.id === category)) {
+		error(404, {
+			message: `Category "${category}" not found`
+		});
+	}
 
 	let url;
 

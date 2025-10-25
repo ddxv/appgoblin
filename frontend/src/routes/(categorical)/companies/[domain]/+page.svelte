@@ -78,23 +78,24 @@
 				{#if typeof data.companyTree == 'string'}
 					<p class="text-red-500 text-center">Failed to load company tree.</p>
 				{:else if data.companyTree && data.companyTree.children_companies.length > 0}
+					<!-- HAS CHILD COMPANY -->
 					<CompanyTree myTree={data.companyTree} />
 				{:else if data.companyTree && data.companyTree.parent_company_domain}
+					<!-- HAS PARENT COMPANY -->
 					<p class="text-lg font-semibold mb-4">Parent Company:</p>
 					<CompanyButton
 						companyName={data.companyTree.parent_company_name}
 						companyDomain={data.companyTree.parent_company_domain}
 						companyLogoUrl={data.companyTree.parent_company_logo_url}
 					/>
+				{:else if data.companyTree.is_secondary_domain}
+					<!-- UNKNOWN COMPANY -->
+					<p class="text-red-200 text-center">
+						This domain is not associated with any apps or companies yet. If you would like this
+						domain mapped to related SDKs and mobile apps please contact us.
+					</p>
 				{:else}
-					<!-- Render nothing if there are no child companies -->
-					{#if data.companyTree.is_secondary_domain}
-						<p class="text-red-200 text-center">
-							This domain is not associated with any other companies yet. If you have information
-							about this domain and related SDKs feel free to reach out. Or if you would like this
-							domain and related SDKs mapped please contact us.
-						</p>
-					{/if}
+					<!-- REGULAR COMPANY (no child or parent companies) -->
 				{/if}
 				{#if data.companyTree && data.companyTree.domains && data.companyTree.domains.length > 1}
 					<h2 class="text-lg font-semibold mb-4">Associated Domains</h2>

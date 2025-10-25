@@ -10,7 +10,6 @@ export const load: PageServerLoad = async ({ fetch }) => {
 	const sdksUserRequested = await api.get(`/sdks/user_requested`, 'Sdks User Requested');
 	const sdksOverview = await api.get(`/sdks/latest`, 'Sdks Latest');
 	const { appsOverview } = await getCachedData();
-	console.log('start load overview for sdks');
 	return {
 		appsOverview,
 		sdksOverview,
