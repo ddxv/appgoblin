@@ -1,4 +1,8 @@
 User-agent: *
+Disallow: /apps/*.gif
+Disallow: /apps/*.jpg
+Disallow: /apps/*.jpeg
+Disallow: /apps/*.png
 Allow: /
 
 Sitemap: https://appgoblin.info/sitemap.xml
