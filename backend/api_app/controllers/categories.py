@@ -11,10 +11,9 @@ from litestar import Controller, get
 from litestar.config.response_cache import CACHE_FOREVER
 from litestar.datastructures import State
 
-from api_app.models import AppGroup, CategoriesOverview, Category
+from api_app.models import CategoriesOverview
 from config import get_logger
 from dbcon.queries import (
-    get_category_top_apps_by_installs,
     get_country_map,
 )
 from dbcon.static import get_appstore_categories
@@ -84,28 +83,3 @@ class CategoryController(Controller):
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(f"{self.path} took {duration}ms")
         return overview
-
-    @get(path="/{category_id:str}", cache=86400)
-    async def get_category(self: Self, state: State, category_id: str) -> Category:
-        """Handle GET request for a single category.
-
-        Returns
-        -------
-            A dictionary representation of a category
-            with ios and google apps
-
-        """
-        start = time.perf_counter() * 1000
-        df = get_category_top_apps_by_installs(state, category_id, limit=20)
-        google = AppGroup(
-            apps=(df[df["store"].str.contains("oogle")].to_dict(orient="records")),
-            title="Google",
-        )
-        ios = AppGroup(
-            apps=df[~df["store"].str.contains("oogle")].to_dict(orient="records"),
-            title="iOS",
-        )
-        category = Category(key=category_id, ios=ios, google=google)
-        duration = round((time.perf_counter() * 1000 - start), 2)
-        logger.info(f"{self.path}/{category_id} took {duration}ms")
-        return category

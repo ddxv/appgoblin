@@ -156,7 +156,6 @@ export interface RankedApps {
 	installs: number;
 	rating_count: number;
 	rating: number;
-	review_count: number;
 	installs_sum_1w: number;
 	installs_sum_4w: number;
 	ratings_sum_4w: number;
@@ -574,7 +573,6 @@ export interface AppFullDetail {
 	updated_at: string;
 	rating?: number;
 	rating_count: number;
-	review_count: number;
 	installs_sum_1w: number;
 	installs_sum_4w: number;
 	ratings_sum_1w: number;

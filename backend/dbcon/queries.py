@@ -237,21 +237,6 @@ def get_history_top_ranks(
     return df
 
 
-def get_category_top_apps_by_installs(
-    state: State, category: str, limit: int = 10
-) -> pd.DataFrame:
-    """Get category top apps sorted by installs."""
-    logger.info(f"Query {category=} for top installs")
-    df = pd.read_sql(
-        sql.category_top_apps_by_installs,
-        state.dbcon.engine,
-        params={"category": category, "mylimit": limit},
-    )
-    if not df.empty:
-        df = clean_app_df(df)
-    return df
-
-
 def get_single_app(state: State, store_id: str) -> pd.DataFrame:
     """Get basic app details for a single store_id."""
     logger.info(f"Query for single app_id={store_id}")
@@ -727,7 +712,6 @@ def get_topapps_for_company_secondary(
             params={"company_domain": company_domain, "mylimit": limit},
         )
     if not df.empty:
-        df["review_count"] = 0
         df["rating"] = 5
         df["installs"] = 0
         df["rating_count"] = 0
@@ -764,7 +748,6 @@ def get_topapps_for_company_parent(
         )
 
     if not df.empty:
-        df["review_count"] = 0
         df["rating"] = 5
         df["installs"] = 0
         df["rating_count"] = 0
@@ -801,7 +784,6 @@ def get_topapps_for_company(
         )
 
     if not df.empty:
-        df["review_count"] = 0
         df["rating"] = 5
         df["installs"] = 0
         df["rating_count"] = 0

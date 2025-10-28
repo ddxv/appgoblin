@@ -53,8 +53,6 @@ def clean_app_df(df: pd.DataFrame) -> pd.DataFrame:
     - store_id
     - developer_id
     - installs
-    - review_count
-    - rating_count
     - rating
 
     """

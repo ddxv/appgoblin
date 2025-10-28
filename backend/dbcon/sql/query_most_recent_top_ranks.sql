@@ -6,7 +6,6 @@ SELECT
     installs,
     rating_count,
     rating,
-    review_count,
     installs_sum_1w,
     installs_sum_4w,
     ratings_sum_1w,
