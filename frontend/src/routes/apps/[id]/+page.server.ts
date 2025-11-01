@@ -26,8 +26,7 @@ export const load: PageServerLoad = async ({ fetch, params, parent }) => {
 
 	const { myapp } = await parent();
 
-	// Streaming
-	const myhistory = await api.get(`/apps/${id}/history`, 'App History');
+	const myhistory = await api.get(`/apps/${id}/ratingHistogram`, 'Rating Histogram');
 
 	return {
 		//Meta

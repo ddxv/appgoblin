@@ -22,7 +22,6 @@ class AppHistory:
     NOTE: not all details are listed in the class.
     """
 
-    histogram: list[int]
     plot_data: dict
 
 

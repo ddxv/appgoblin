@@ -513,7 +513,13 @@ export interface AppFullDetails {
 	myranks: Promise<{ history: AppRankDetail[]; countries: string[] }>;
 	myranksOverview: { countries: string[]; best_ranks: AppRankDetail[] };
 	myhistory: Promise<{
-		histogram: number[];
+		histogram: {
+			one_star: number;
+			two_star: number;
+			three_star: number;
+			four_star: number;
+			five_star: number;
+		};
 		plot_data?: {
 			changes: ChartTabularData;
 			installs: ChartTabularData;

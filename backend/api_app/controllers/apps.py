@@ -32,6 +32,7 @@ from dbcon.queries import (
     get_app_adstxt_overview,
     get_app_api_details,
     get_app_history,
+    get_app_rating_histogram,
     get_app_sdk_details,
     get_app_sdk_overview,
     get_app_version_timeline,
@@ -103,10 +104,9 @@ def process_search_results(dbconwrite, results: list[dict]) -> None:
 
 def attach_rating_history(app_hist: pd.DataFrame, star_cols: list[str]) -> pd.DataFrame:
     """Get the rating history of an app."""
-    df = app_hist[["crawled_date", "histogram"]].copy()
-    df[star_cols] = np.stack(app_hist["histogram"].values)
-    df = df.sort_values(["crawled_date"])
-    df = df.drop(columns=["histogram", "crawled_date"])
+    df = app_hist[["snapshot_date"] + star_cols].copy()
+    df = df.sort_values(["snapshot_date"])
+    df = df.drop(columns=["snapshot_date"])
     change_df = df[star_cols].diff()
     change_df = change_df.rename(
         columns={col: "new_" + col for col in change_df.columns}
@@ -115,35 +115,34 @@ def attach_rating_history(app_hist: pd.DataFrame, star_cols: list[str]) -> pd.Da
     return app_hist
 
 
-def app_history(
-    state: State, store_app: int, app_name: str, country: str
-) -> AppHistory:
+def app_history(state: State, store_app: int, app_name: str) -> AppHistory:
     """Get the history of app scraping."""
-    app_hist = get_app_history(state, store_app, country)
+    app_hist = get_app_history(state, store_app)
     if app_hist.empty:
         return AppHistory(
-            histogram=[],
             plot_data={},
         )
-    histogram = app_hist.sort_values(["id"]).tail(1)["histogram"].to_numpy()[0]
     app_hist = app_hist[
         ~((app_hist["installs"].isna()) & (app_hist["rating_count"].isna()))
     ]
     app_hist["group"] = app_name
-    plot_dicts = create_plot_dicts(app_hist, histogram)
+    plot_dicts = create_plot_dicts(app_hist)
     hist = AppHistory(
-        histogram=histogram,
         plot_data=plot_dicts,
     )
     return hist
 
 
-def create_plot_dicts(app_hist: pd.DataFrame, histogram: list[int]) -> dict:
+def create_plot_dicts(app_hist: pd.DataFrame) -> dict:
     """Create plot dicts for the app history."""
     metrics = ["installs", "rating", "review_count", "rating_count"]
     group_col = "group"
-    xaxis_col = "crawled_date"
+    xaxis_col = "snapshot_date"
+    app_hist[xaxis_col] = pd.to_datetime(app_hist[xaxis_col])
     app_hist = app_hist.sort_values(xaxis_col)
+    app_hist = app_hist.set_index(xaxis_col)
+    app_hist = app_hist.resample("W").last()
+    app_hist = app_hist.reset_index()
     app_hist["date_change"] = app_hist[xaxis_col] - app_hist[xaxis_col].shift(1)
     app_hist["days_changed"] = app_hist["date_change"].apply(
         lambda x: np.nan if pd.isna(x) else x.days,
@@ -167,9 +166,9 @@ def create_plot_dicts(app_hist: pd.DataFrame, histogram: list[int]) -> dict:
         change_metrics.append(metric + "_avg_per_day")
     star_cols: list[str] = []
     new_star_cols: list[str] = []
-    if sum(histogram) > 0:
+    star_cols = ["one_star", "two_star", "three_star", "four_star", "five_star"]
+    if app_hist[star_cols].sum().sum() > 0:
         new_star_cols = [f"new_{col}" for col in star_cols]
-        star_cols = ["one_star", "two_star", "three_star", "four_star", "five_star"]
         new_star_cols = ["new_" + col for col in star_cols]
         app_hist = attach_rating_history(app_hist, star_cols)
     app_hist = (
@@ -206,7 +205,7 @@ def create_plot_dicts(app_hist: pd.DataFrame, histogram: list[int]) -> dict:
     # This is an odd step as it makes each group a metric
     # not for when more than 1 dimension
     mymelt = app_hist.melt(id_vars=xaxis_col).rename(columns={"variable": "group"})
-    final_metrics = [x for x in app_hist.columns if x not in ["group", "crawled_date"]]
+    final_metrics = [x for x in app_hist.columns if x not in ["group", "snapshot_date"]]
     change_dicts = []
     ratings_dicts = []
     ratings_stars_dicts = []
@@ -365,6 +364,28 @@ class AppController(Controller):
         logger.info(f"{self.path}/{store_id} took {duration}ms")
         return app_dict
 
+    @get(path="/{store_id:str}/ratingHistogram", cache=3600)
+    async def get_app_histogram(
+        self: Self,
+        state: State,
+        store_id: str,
+    ) -> dict:
+        """Handle GET request for a specific app.
+
+         store_id (str): The id of the app to retrieve.
+
+        Returns
+        -------
+            json
+
+        """
+        df = get_app_rating_histogram(state=state, store_id=store_id)
+        if df.empty:
+            logger.info(f"App rating histogram not found: {store_id}")
+            return {"histogram": {}}
+        mydict = {"histogram": df.to_dict(orient="records")[0]}
+        return mydict
+
     @get(path="/{store_id:str}/history", cache=3600)
     async def get_app_history_details(
         self: Self,
@@ -386,7 +407,6 @@ class AppController(Controller):
         if app_df.empty:
             logger.info(f"App history not found: {store_id}")
             return AppHistory(
-                histogram=[],
                 plot_data={},
             )
 
@@ -394,9 +414,7 @@ class AppController(Controller):
         store_app = app_dict["id"]
         app_name = app_dict["name"]
 
-        hist_dict = app_history(
-            state=state, store_app=store_app, app_name=app_name, country="US"
-        )
+        hist_dict = app_history(state=state, store_app=store_app, app_name=app_name)
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(f"{self.path}/{store_id}/history took {duration}ms")
         return hist_dict

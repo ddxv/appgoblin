@@ -24,7 +24,7 @@
 
 			plotdata.forEach((item) => {
 				if (item.value > 0) {
-					const date = item.crawled_date.toString();
+					const date = item.snapshot_date.toString();
 					if (!dateGroups.has(date)) {
 						dateGroups.set(date, 0);
 					}
@@ -47,7 +47,7 @@
 		axes: {
 			bottom: {
 				title: 'Date',
-				mapsTo: 'crawled_date',
+				mapsTo: 'snapshot_date',
 				scaleType: ScaleTypes.TIME
 			},
 			left: {
@@ -86,7 +86,7 @@
 		axes: {
 			bottom: {
 				title: 'Date',
-				mapsTo: 'crawled_date',
+				mapsTo: 'snapshot_date',
 				scaleType: ScaleTypes.TIME
 			},
 			left: {
@@ -106,7 +106,7 @@
 		axes: {
 			bottom: {
 				title: 'Date',
-				mapsTo: 'crawled_date',
+				mapsTo: 'snapshot_date',
 				scaleType: ScaleTypes.TIME
 			},
 			left: {
@@ -155,7 +155,7 @@
 		axes: {
 			bottom: {
 				title: 'Date',
-				mapsTo: 'crawled_date',
+				mapsTo: 'snapshot_date',
 				scaleType: ScaleTypes.TIME
 			},
 			left: {
@@ -213,7 +213,7 @@
 		axes: {
 			bottom: {
 				title: 'Date',
-				mapsTo: 'crawled_date',
+				mapsTo: 'snapshot_date',
 				scaleType: ScaleTypes.TIME
 			},
 			left: {

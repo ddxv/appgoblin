@@ -4,12 +4,12 @@
 	import type { AppFullDetails } from '../../../types';
 	import WhiteCard from '$lib/WhiteCard.svelte';
 	import AppSDKOverview from '$lib/AppSDKOverview.svelte';
+	import { formatNumber } from '$lib/utils/formatNumber';
 
 	interface Props {
 		data: AppFullDetails;
 	}
 	let { data }: Props = $props();
-	let sum = (arr: number[]) => arr.reduce((acc, curr) => acc + curr, 0);
 
 	function isProbablyValidHTML(str: string): boolean {
 		if (!str) return false;
@@ -190,21 +190,35 @@
 		<div class="p-2 md:flex">
 			<div class="self-center text-center">
 				<p class="text-4xl p-2 text-primary-800-200">{data.myapp.rating}★</p>
-				<p class="text-primary-900-100">Ratings: {data.myapp.rating_count}</p>
+				<p class="text-primary-900-100">Ratings: {formatNumber(data.myapp.rating_count)}</p>
 			</div>
 			<div class="flex-1">
 				{#await data.myhistory}
 					Loading rating details...
 				{:then histdata}
 					{#if histdata.histogram}
-						{#each [...histdata.histogram].reverse() as count, index}
+						{@const histogram = histdata.histogram}
+						{@const stars = [
+							{ label: '5★', count: histogram.five_star },
+							{ label: '4★', count: histogram.four_star },
+							{ label: '3★', count: histogram.three_star },
+							{ label: '2★', count: histogram.two_star },
+							{ label: '1★', count: histogram.one_star }
+						]}
+						{@const total =
+							histogram.one_star +
+							histogram.two_star +
+							histogram.three_star +
+							histogram.four_star +
+							histogram.five_star}
+						{#each stars as star}
 							<div class="flex bar-spacer">
-								<span class="label">{histdata.histogram.length - index}★</span>
+								<span class="label">{star.label}</span>
 								<div class="bar-container bg-surface-100-900 grow">
 									<div
 										class="bar bg-primary-100-900"
-										style="width: {(count / sum(histdata.histogram)) * 100}%"
-										title="{index + 1} star: {count} ratings"
+										style="width: {total > 0 ? (star.count / total) * 100 : 0}%"
+										title="{star.label}: {star.count} ratings"
 									></div>
 								</div>
 							</div>
