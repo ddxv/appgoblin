@@ -36,7 +36,9 @@ export interface PlatformDeveloper {
 	developer_id: string;
 	developer_name: string;
 	developer_url: string;
+	pub_domain_url: string | null;
 	apps: AppGroup;
+	apps_by_url: AppGroup;
 }
 
 export interface DeveloperResponse {

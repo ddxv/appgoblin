@@ -84,7 +84,9 @@ class PlatformDeveloper:
     developer_id: str
     developer_name: str
     developer_url: str
+    pub_domain_url: str | None
     apps: AppGroup
+    apps_by_url: AppGroup
 
 
 @dataclass

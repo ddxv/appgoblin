@@ -14,13 +14,24 @@ WITH apps AS (
             :searchinput
         )
 )
-SELECT * FROM apps
+SELECT
+   a.store,
+   a.store_id,
+   a.name,
+   a.icon_url_100,
+   a.icon_url_512,
+   a.featured_image_url,
+   agml.installs,
+   agml.rating,
+   agml.rating_count
+FROM apps AS a
+   LEFT JOIN app_global_metrics_latest AS agml ON a.id = agml.store_app
 ORDER BY
    (
         coalesce(
-            installs,
+            agml.installs,
 coalesce(
-            rating_count * 100,
+            agml.rating_count,
             0
         )
         )

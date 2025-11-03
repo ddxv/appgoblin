@@ -27,6 +27,7 @@ from api_app.models import (
     AppSDKsOverview,
     SDKsDetails,
 )
+from api_app.utils import extend_app_icon_url
 from config import get_logger
 from dbcon.queries import (
     get_app_adstxt_overview,
@@ -91,7 +92,7 @@ def get_search_results(state: State, search_term: str) -> AppGroup:
     df = extend_app_icon_url(df)
     logger.info(f"{decoded_input=} returned rows: {df.shape[0]}")
     apps_dict = df.to_dict(orient="records")
-    app_group = AppGroup(title=search_term, apps=apps_dict)
+    app_group = AppGroup(title=f"Apps matching '{search_term}'", apps=apps_dict)
     return app_group
 
 
@@ -237,18 +238,6 @@ def get_string_date_from_days_ago(days: int) -> str:
     mydate = datetime.datetime.now(datetime.UTC) - datetime.timedelta(days=days)
     mydate_str = mydate.strftime("%Y-%m-%d")
     return mydate_str
-
-
-def extend_app_icon_url(df: pd.DataFrame) -> pd.DataFrame:
-    df["app_icon_url"] = np.where(
-        df["icon_url_100"].notna(),
-        "https://media.appgoblin.info/app-icons/"
-        + df["store_id"]
-        + "/"
-        + df["icon_url_100"],
-        df["icon_url_512"],
-    )
-    return df
 
 
 def get_new_apps_dict(state: State, period: str, store: int, category: str) -> AppGroup:

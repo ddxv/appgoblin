@@ -18,6 +18,7 @@ from api_app.models import (
     DeveloperSDKsOverview,
     PlatformDeveloper,
 )
+from api_app.utils import extend_app_icon_url
 from config import get_logger
 from dbcon.queries import (
     get_apps_sdk_overview,
@@ -50,7 +51,7 @@ class DeveloperController(Controller):
         start = time.perf_counter() * 1000
 
         apps_df = get_single_developer(state, developer_id)
-
+        apps_df = extend_app_icon_url(apps_df)
         if apps_df.empty:
             msg = f"Developer ID not found: {developer_id!r}"
             raise NotFoundException(
@@ -58,46 +59,75 @@ class DeveloperController(Controller):
                 status_code=404,
             )
 
-        ios_df = apps_df[apps_df["store"] == "Apple App Store"]
-        google_df = apps_df[apps_df["store"] == "Google Play"]
-        if not google_df.empty:
-            google_developer_name = google_df.to_dict(orient="records")[0][
+        ios_by_id_df = apps_df[
+            (apps_df["store"] == "Apple App Store") & (apps_df["match_type"] == "by_id")
+        ]
+        google_by_id_df = apps_df[
+            (apps_df["store"] == "Google Play") & (apps_df["match_type"] == "by_id")
+        ]
+        ios_by_url_df = apps_df[
+            (apps_df["store"] == "Apple App Store")
+            & (apps_df["match_type"] == "by_url")
+        ]
+        google_by_url_df = apps_df[
+            (apps_df["store"] == "Google Play") & (apps_df["match_type"] == "by_url")
+        ]
+        google_developer_name = None
+        google_developer_id = None
+        google_developer_url = None
+        google_pub_domain_url = None
+        apple_developer_name = None
+        apple_developer_id = None
+        apple_developer_url = None
+        apple_pub_domain_url = None
+        if not google_by_id_df.empty:
+            google_developer_name = google_by_id_df.to_dict(orient="records")[0][
                 "developer_name"
             ]
-            google_developer_id = google_df.to_dict(orient="records")[0]["developer_id"]
-            google_developer_url = google_df.to_dict(orient="records")[0][
+            google_developer_id = google_by_id_df.to_dict(orient="records")[0][
+                "developer_id"
+            ]
+            google_developer_url = google_by_id_df.to_dict(orient="records")[0][
                 "store_developer_link"
             ]
-        else:
-            google_developer_name = "Google developer(s) not found"
-            google_developer_id = None
-            google_developer_url = None
-        if not ios_df.empty:
-            apple_developer_name = ios_df.to_dict(orient="records")[0]["developer_name"]
-            apple_developer_id = ios_df.to_dict(orient="records")[0]["developer_id"]
-            apple_developer_url = ios_df.to_dict(orient="records")[0][
+            google_pub_domain_url = google_by_id_df[
+                google_by_id_df["developer_url"].notna()
+            ]["developer_url"].iloc[0]
+        if not ios_by_id_df.empty:
+            apple_developer_name = ios_by_id_df.to_dict(orient="records")[0][
+                "developer_name"
+            ]
+            apple_developer_id = ios_by_id_df.to_dict(orient="records")[0][
+                "developer_id"
+            ]
+            apple_developer_url = ios_by_id_df.to_dict(orient="records")[0][
                 "store_developer_link"
             ]
-        else:
-            apple_developer_name = "Apple developer(s) not found"
-            apple_developer_id = None
-            apple_developer_url = None
+            apple_pub_domain_url = ios_by_id_df[ios_by_id_df["developer_url"].notna()][
+                "developer_url"
+            ].iloc[0]
         developer_name = google_developer_name or apple_developer_name
-        google_apps_dict = google_df.to_dict(orient="records")
-        apple_apps_dict = ios_df.to_dict(orient="records")
+        google_apps_dict = google_by_id_df.to_dict(orient="records")
+        apple_apps_dict = ios_by_id_df.to_dict(orient="records")
+        google_apps_dict_url = google_by_url_df.to_dict(orient="records")
+        apple_apps_dict_url = ios_by_url_df.to_dict(orient="records")
 
         developer_apps = DeveloperApps(
             google=PlatformDeveloper(
                 developer_id=google_developer_id,
                 developer_name=google_developer_name,
                 developer_url=google_developer_url,
+                pub_domain_url=google_pub_domain_url,
                 apps=AppGroup(title="Google", apps=google_apps_dict),
+                apps_by_url=AppGroup(title="Google", apps=google_apps_dict_url),
             ),
             apple=PlatformDeveloper(
                 developer_id=apple_developer_id,
                 developer_name=apple_developer_name,
                 developer_url=apple_developer_url,
+                pub_domain_url=apple_pub_domain_url,
                 apps=AppGroup(title="Apple", apps=apple_apps_dict),
+                apps_by_url=AppGroup(title="Apple", apps=apple_apps_dict_url),
             ),
             title=developer_name,
         )
