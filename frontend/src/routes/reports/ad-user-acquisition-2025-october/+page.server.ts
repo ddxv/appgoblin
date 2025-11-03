@@ -1543,15 +1543,15 @@ export const load: PageServerLoad = async () => {
 			httpsTracked: exec?.https_tracked ?? null,
 			apiDomains: exec?.api_domains ?? null,
 			uniqueNetworks: allNetworks.size,
-			reportPeriod: 'September 2025',
-			generatedDate: 'October 2025'
+			reportPeriod: 'October 2025',
+			generatedDate: 'Novembr 2025'
 		},
 		topApps,
 		// Meta Tags
-		title: 'User Acquisition Report - September 2025 | AppGoblin',
+		title: 'User Acquisition Report - October 2025 | AppGoblin',
 		description:
-			'Discover the fastest-growing apps and their ad strategies. Analyze user acquisition trends, creative performance, and advertising networks.',
+			'See October 2025 largest mobile ad campaigns, ad networks and the creatives that powered them.',
 		keywords:
-			'user acquisition, app marketing, mobile advertising, ad creatives, app growth, install growth'
+			'user acquisition, mobile ad campaigns, app marketing, mobile advertising, ad creatives, app growth, install growth'
 	};
 };

@@ -660,13 +660,13 @@ def get_tag_source_category_totals(
     return df
 
 
-def get_app_history(state: State, store_app: int, country: str = "US") -> pd.DataFrame:
+def get_app_history(state: State, store_app: int) -> pd.DataFrame:
     """Get scraping history for an app."""
     logger.info(f"Query for history single app_id={store_app}")
     df = pd.read_sql(
         sql.app_history,
         state.dbcon.engine,
-        params={"store_app": store_app, "country": country},
+        params={"store_app": store_app},
     )
     return df
 

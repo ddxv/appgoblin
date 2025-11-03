@@ -59,7 +59,7 @@ SELECT
     END AS crawl_result
 FROM
     user_requests AS ur
-LEFT JOIN store_apps AS sa
+LEFT JOIN frontend.store_apps_overview AS sa
     ON
         ur.store_id = sa.store_id
 LEFT JOIN latest_version_codes AS lvc

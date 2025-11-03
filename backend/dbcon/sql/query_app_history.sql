@@ -11,5 +11,5 @@ SELECT
     agmh.five_star
 FROM app_global_metrics_history AS agmh
 WHERE
-    agmh.store_app = agmh.:store_app
+    agmh.store_app = :store_app
     AND agmh.snapshot_date >= CURRENT_DATE - INTERVAL '375 days';
