@@ -106,32 +106,58 @@
 		{@render children?.()}
 	</main>
 
-	<footer class="sticky bottom-0 z-10 p-2">
-		{#if page.url.pathname.startsWith('/blog/')}
-			<div class="inline-flex md:hidden">
-				<NavTabs hideLinks={true} />
-			</div>
-		{:else}
-			<div class="fixed right-4 bottom-4 p-4 md:hidden">
-				<Popover
-					open={menuBarOpenState}
-					onOpenChange={(e) => (menuBarOpenState = e.open)}
-					positioning={{ placement: 'top' }}
-					triggerBase="btn preset-tonal-primary"
-					contentBase="card bg-surface-200-800 p-4 space-y-4 max-w-[320px]"
-					arrow
-					arrowBackground="!bg-surface-200 dark:!bg-surface-800"
+	<footer>
+		<div class="stick bottom-0 z-10 p-2">
+			{#if page.url.pathname.startsWith('/blog/')}
+				<div class="inline-flex md:hidden">
+					<NavTabs hideLinks={true} />
+				</div>
+			{:else}
+				<div class="fixed right-4 bottom-4 p-4 md:hidden">
+					<Popover
+						open={menuBarOpenState}
+						onOpenChange={(e) => (menuBarOpenState = e.open)}
+						positioning={{ placement: 'top' }}
+						triggerBase="btn preset-tonal-primary"
+						contentBase="card bg-surface-200-800 p-4 space-y-4 max-w-[320px]"
+						arrow
+						arrowBackground="!bg-surface-200 dark:!bg-surface-800"
+					>
+						{#snippet trigger()}
+							<span class="flex items-center gap-2">
+								Menu <Menu size={24} />
+							</span>
+						{/snippet}
+						{#snippet content()}
+							<NavTabs />
+						{/snippet}
+					</Popover>
+				</div>
+			{/if}
+		</div>
+		<!-- Footer -->
+		<div class="mt-12 py-8 border-t text-center text-gray-500 text-sm">
+			<div class="mb-2">
+				<a href="/about" class="underline hover:text-primary-900-100">About AppGoblin</a>
+				&nbsp;|&nbsp;
+				<a href="/privacy_policy.html" class="underline hover:text-primary-900-100"
+					>Privacy Policy</a
 				>
-					{#snippet trigger()}
-						<span class="flex items-center gap-2">
-							Menu <Menu size={24} />
-						</span>
-					{/snippet}
-					{#snippet content()}
-						<NavTabs />
-					{/snippet}
-				</Popover>
+				&nbsp;|&nbsp;
+				<a href="https://github.com/ddxv/appgoblin" class="underline hover:text-primary-900-100"
+					>GitHub</a
+				>
+				&nbsp;|&nbsp;
+				<a
+					href="https://linkedin.com/companies/AppGoblin"
+					class="underline hover:text-primary-900-100">LinkedIn</a
+				>
+				&nbsp;|&nbsp;
+				<a href="mailto:contact@appgoblin.info" class="underline hover:text-primary-900-100"
+					>Contact</a
+				>
 			</div>
-		{/if}
+			<div>© {new Date().getFullYear()} AppGoblin. All rights reserved.</div>
+		</div>
 	</footer>
 </div>

@@ -12,7 +12,7 @@ SELECT
     pdcr.crawled_at AS developer_domain_crawled_at
 FROM
     frontend.adstxt_entries_store_apps AS aesa
-LEFT JOIN store_apps AS sa
+LEFT JOIN frontend.store_apps_overview AS sa
     ON
         aesa.store_app = sa.id
 LEFT JOIN developers AS d

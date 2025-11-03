@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
+	import AdCard from '$lib/AdCard.svelte';
 	import CompanyPubAppsTable from '$lib/CompanyPubAppsTable.svelte';
 	import WhiteCard from '$lib/WhiteCard.svelte';
 	let { data } = $props();
@@ -104,7 +105,8 @@
 			Full List of Apps
 		{/snippet}
 		<p class="p-2">
-			For a full list of apps and app-ads.txt metrics, please feel free to reach out.
+			Full lists of apps, app-ads.txt, metrics and more are available. Please see pricing page or
+			email: contact@appgoblin.info
 		</p>
 	</WhiteCard>
 </div>

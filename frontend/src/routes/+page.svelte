@@ -88,11 +88,11 @@
 					href="mailto:contact@appgoblin.info"
 					class="btn-primary inline-flex items-center gap-2 px-6 py-3 bg-white rounded-lg hover:scale-105 transition-transform duration-200 shadow-lg"
 				>
-					<span class="text-black font-bold">Get in Touch or Schedule Free Walkthrough</span>
+					<span class="text-black font-bold">Get in Touch</span>
 					<span class="text-black font-bold">→</span>
 				</a>
 				<div class="text-white/80 text-sm pt-1">
-					<p>contact@appgoblin.info</p>
+					Free demo & walkthroughs: <p>contact@appgoblin.info</p>
 				</div>
 			</div>
 		</div>
@@ -487,25 +487,4 @@
 			</a>
 		</div>
 	</section>
-
-	<!-- Footer -->
-	<footer class="mt-12 py-8 border-t text-center text-gray-500 text-sm">
-		<div class="mb-2">
-			<a href="/about" class="underline hover:text-primary-900-100">About AppGoblin</a>
-			&nbsp;|&nbsp;
-			<a href="/privacy_policy.html" class="underline hover:text-primary-900-100">Privacy Policy</a>
-			&nbsp;|&nbsp;
-			<a href="https://github.com/ddxv/appgoblin" class="underline hover:text-primary-900-100"
-				>GitHub</a
-			>
-			&nbsp;|&nbsp;
-			<a
-				href="https://linkedin.com/companies/AppGoblin"
-				class="underline hover:text-primary-900-100">LinkedIn</a
-			>
-			&nbsp;|&nbsp;
-			<a href="mailto:info@appgoblin.info" class="underline hover:text-primary-900-100">Contact</a>
-		</div>
-		<div>© {new Date().getFullYear()} AppGoblin. All rights reserved.</div>
-	</footer>
 </div>

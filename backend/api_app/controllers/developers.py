@@ -50,6 +50,8 @@ class DeveloperController(Controller):
         """
         start = time.perf_counter() * 1000
 
+        developer_id = developer_id.replace("&", "%26")
+
         apps_df = get_single_developer(state, developer_id)
         apps_df = extend_app_icon_url(apps_df)
         if apps_df.empty:

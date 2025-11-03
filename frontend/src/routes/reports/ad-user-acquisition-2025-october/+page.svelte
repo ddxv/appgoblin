@@ -196,11 +196,12 @@
 		<h1
 			class="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-primary-900-100 to-secondary-900-100 bg-clip-text text-transparent"
 		>
-			{data.summary.reportPeriod} Ad Growth Analysis
+			{data.summary.reportPeriod} Ads & App Growth Analysis
 		</h1>
 		<p class="text-xl max-w-3xl mx-auto">
-			Discover the fastest-growing mobile apps and the advertising strategies powering their user
-			acquisition campaigns in October 2025.
+			See the mobile ad campaigns that fueled the fastest-growing mobile apps in October 2025. Check
+			the latest rankings of the programmatic DSPs and ad networks that ran the top user acquisition
+			campaigns in October 2025.
 		</p>
 	</div>
 
@@ -305,8 +306,8 @@
 
 					<div class="mt-6 p-4 rounded-lg border border-surface-200">
 						<p class="text-sm font-semibold text-surface-700 dark:text-surface-300 mb-3">
-							This is a behind-the-scenes look at mobile app advertising based on data collected by
-							AppGoblin.
+							AppGoblin collected millions of data points to show you how mobile app user
+							acquisition works.
 						</p>
 						<ul class="text-sm leading-6 list-disc pl-5 space-y-1">
 							<li>
@@ -352,18 +353,14 @@
 			class={`${sectionHeaderBaseClass} border-orange-200 dark:border-orange-800 pl-4 border-l-orange-500`}
 		>
 			<h2 class={sectionTitleClass}>Ad Impacts on Weekly Install Growth</h2>
-			<p class={sectionHeaderSubtitleClass}>App discoverability in the app stores is dead.</p>
+			<p class={sectionHeaderSubtitleClass}>New titles and returning old games</p>
 		</div>
 		<div class={sectionDescriptionClass}>
 			<p class="mt-2">
-				Organic app discoverability is the myth that the ad monopolies on the Apple and Google use
-				to juice their store ad campaigns. Few people search for new apps.
-			</p>
-			<p>
-				Meanwhile, in-app ads are a direct way for apps to reach new audiences (you're still not
-				getting away from the ad monopolies). The Ad Impact section shows the correlations between
-				apps that were seen running ad campaigns and their increased installs during the following
-				week.
+				Slots 777 —Casino Slot Machine by burst onto the scene in October 2025 with booming weekly
+				installs and campaigns spotted running on Mintegral. Additionally, Line Up: Draw the
+				Criminal by Kwalee also saw a boom reaching up to 17k installs a day in October for the ad
+				push.
 			</p>
 			<p>
 				These are the October 2025 ad mobile app ad campaigns (US) that drove the highest increases
@@ -526,9 +523,16 @@
 				demonstrating it's popularity and success as a mobile app ad creative.
 			</p>
 			<p>
-				TikTok was the leading advertiser and its creatives were preloaded the most. Interestingly
-				there were several ecommerce product apps that were also seeing wide distribution. And of
-				course at least one AI app, Microsoft's Copilot also saw one of the highest ad reach.
+				Interesting that <a href="/apps/com.run.squid.challenges.survival.clash">
+					456 Run Challenge: Clash 3D supplanted
+				</a> edged out TikTok in overall publishers it was seen running ads in. While these sample sizes
+				are ultimately small, it is a huge departure from last month where TikTok was seen in 100+ publisher
+				for multiple creatives. Possibly they are winding down, or just coincidentally we saw less.
+			</p>
+			<p>
+				Also returning from last month is <a href="/apps/com.microsoft.copilot/ad-placements"
+					>Microsoft: Copilot</a
+				> which seems to mostly buy from Google AdMob.
 			</p>
 		</div>
 		<!-- Creatives Grid -->
@@ -658,32 +662,19 @@
 		</div>
 		<div class={sectionDescriptionClass}>
 			<p>
-				The mobile advertising Android ecosystem is monopolized by Google due to it's control of the
-				Android OS. However, there are several other ad networks that provide valuable reach and
-				targeting options for app advertisers. Overall we saw
-				<strong class="text-emerald-400">{data.networkStats.totalPublishers} publishers</strong>,
-				delivering
-				<strong class="text-pink-600"
-					>{data.networkStats.totalNetworkCreatives} unique creatives</strong
-				> across the top ad networks in October 2025.
-			</p>
-			<p>
-				The other ad networks fighting for the leftover market share are split into two overlapping
-				groups: SDK direct ad networks and programmatic networks.
+				This month saw a huge bump in programmatic ad networks like Affle who owns YouAppi, Jampp
+				and RevX showing up above traditional SDK ad networks. Specifically, <a
+					href="/companies/youappi.com">YouAppi</a
+				> saw a huge bump in the advertisers and publishers that it was running on in October.
 			</p>
 			<div class="list-disc list-inside space-y-1 px-8">
-				<li>
-					SDK networks like Unity Ads and AppLovin can leverage their direct SDK integrations to
-					control the ad delivery environment.
-				</li>
-				<li>
-					Programmatic networks like RTB House rely on these SDK networks to deliver their ads.
-				</li>
+				<li>Probably dropping the most was Unity which was seen in fewer publishers.</li>
+				<li>Meanwhile, for programmatic Bidgabid came in strong.</li>
 			</div>
 		</div>
-		<h4 class="text-xl font-bold text-indigo-900 dark:text-indigo-100">Note on Methodology</h4>
+		<h4 class="text-large font-bold text-indigo-900 dark:text-indigo-100">Note on Methodology</h4>
 		<div class={sectionDescriptionClass}>
-			<p>
+			<p class="text-sm">
 				When looking at this data its important to keep the context of how it was collected. The
 				data is aggregated from API calls made by opening apps and watching the ad network
 				connections. As such, this does not include App Store advertising (Apple/Google) or social
@@ -936,18 +927,12 @@
 				<div class="flex items-start gap-3 mb-4">
 					<div class={`${insightIconClass} from-blue-500 to-cyan-500`}>💡</div>
 					<div>
-						<h3 class="text-lg font-bold text-blue-900 dark:text-blue-100 mb-2">
-							Diversification is Key
-						</h3>
+						<h3 class="text-lg font-bold text-blue-900 dark:text-blue-100 mb-2">Creative Cycles</h3>
 						<p>
-							Google holds <strong class="text-emerald-400"
-								>{(
-									(data.adNetworks[0].publisher_count / data.networkStats.totalPublishers) *
-									100
-								).toFixed(1)}% market share</strong
-							>. Concentrated monoplization of ad networks hurts app developers. Diversifying beyond
-							Google Ads reduces platform risk and increases audience reach. This is currently only
-							available for large app publishers.
+							The month to month changes in ad ecosystm is not just the changes you make in your own
+							campaigns, but also the decisions of every other advertising campaign you're going up
+							against. Keep an eye on the creative and buying trends to know what your competition
+							is doin.
 						</p>
 					</div>
 				</div>
@@ -963,37 +948,12 @@
 							High Growth Opportunities
 						</h3>
 						<p class="text-surface-700 dark:text-surface-300">
-							Average growth rate of {data.summary.avgGrowth}% demonstrates significant opportunity
-							in the mobile app market. Strategic ad campaigns can rapidly scale user acquisition
-							for those that can afford it.
+							That many apps that ran October 2025 mobile ad campaigns saw {data.summary.avgGrowth}%
+							growth demonstrates the opportunities for apps and games that can afford to buy ads.
 						</p>
 					</div>
 				</div>
 			</div>
-		</div>
-	</div>
-
-	<!-- ========================================= -->
-	<!-- ABOUT APPGOBLIN -->
-	<!-- ========================================= -->
-	<div class={sectionContainerClass}>
-		<div
-			class={`${sectionHeaderBaseClass} border-blue-200 dark:border-primary-800-200 pl-4 border-l-primary-800-200`}
-		>
-			<h2 class={sectionTitleClass}>About AppGoblin</h2>
-			<p class={sectionHeaderSubtitleClass}>Free mobile ad intelligence</p>
-		</div>
-		<!-- Content -->
-		<div class={sectionDescriptionClass}>
-			<p>
-				AppGoblin is a free mobile ad intelligence platform that provides insights into the mobile
-				app ecosystem. Our mission is to democratize access to mobile ad data, enabling developers,
-				marketers, and analysts to make informed decisions.
-			</p>
-			<p>
-				AppGoblin has many free tools for researchers, journalists and mobile app developers. Feel
-				free to explore and contact us.
-			</p>
 		</div>
 	</div>
 
@@ -1002,7 +962,7 @@
 		<div
 			class={`${sectionHeaderBaseClass} border-purple-200 dark:border-purple-800 pl-4 border-l-4 border-l-purple-500`}
 		>
-			<h2 class={sectionTitleClass}>Ready to Discover Your Opportunities?</h2>
+			<h2 class={sectionTitleClass}>Want to leverage AppGoblin's insights?</h2>
 			<p class={sectionHeaderSubtitleClass}>Schedule a free demo or walkthrough</p>
 		</div>
 
@@ -1010,8 +970,8 @@
 		<div class={sectionDescriptionClass}>
 			<p>
 				Get deeper insights into mobile ad strategies, explore custom reports for your business, or
-				schedule a free demo and walkthrough of the AppGoblin platform to discover how we can help
-				you understand the mobile ad ecosystem.
+				schedule a walkthrough of the free AppGoblin platform to discover how we can help you
+				understand the mobile ad ecosystem.
 			</p>
 
 			<div class="flex flex-col gap-4 items-start">
@@ -1019,7 +979,7 @@
 					href="mailto:contact@appgoblin.info"
 					class="btn-primary inline-flex items-center gap-2 px-6 py-3 bg-white rounded-lg hover:scale-105 transition-transform duration-200 shadow-lg"
 				>
-					<span class="text-black font-bold">Get in Touch or Schedule Free Walkthrough</span>
+					<span class="text-black font-bold">Get in Touch or Schedule Walkthrough</span>
 					<span class="text-black font-bold">→</span>
 				</a>
 				<div class="text-white/80 text-sm pt-1">

@@ -165,6 +165,15 @@ const rawAdNetworkData: AdNetworkData[] = [
 		creatives_count: 1647
 	},
 	{
+		ad_network_name: 'Affle',
+		ad_network_domain: 'affle.com',
+		company_logo_url: 'company-logos\/affle.com\/logo_200x200.jpeg',
+		all_domains: '{jampp.com,revx.io,youappi.com}',
+		publisher_count: 221,
+		advertiser_count: 5,
+		creatives_count: 68
+	},
+	{
 		ad_network_name: 'Bigabid',
 		ad_network_domain: 'bigabid.com',
 		company_logo_url: 'company-logos\/bigabid.com\/logo_200x200.jpeg',
@@ -172,15 +181,6 @@ const rawAdNetworkData: AdNetworkData[] = [
 		publisher_count: 217,
 		advertiser_count: 5,
 		creatives_count: 53
-	},
-	{
-		ad_network_name: 'YouAppi',
-		ad_network_domain: 'youappi.com',
-		company_logo_url: 'company-logos\/youappi.com\/logo_64x64.ico',
-		all_domains: '{youappi.com}',
-		publisher_count: 197,
-		advertiser_count: 3,
-		creatives_count: 46
 	},
 	{
 		ad_network_name: 'AppLovin',
@@ -266,40 +266,6 @@ const adImpactGrowthData: AppAdImpactGrowthData[] = [
 		pub_count: 1
 	},
 	{
-		best_week: '2025-10-06',
-		app_name: 'Build and Protect',
-		store_id: 'com.mmfgrp.bp',
-		icon_url_100: 'e65bbd41f60245b8.png',
-		weekly_installs: 797,
-		weekly_percent_increase: 187.725631768953,
-		phash: 'e65bbd41f60245b8',
-		file_extension: 'png',
-		host_ad_domain: 'yandex.com',
-		host_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
-		initial_ad_domain: 'yandex.com',
-		initial_company_logo_url: 'company-logos\/yandex.com\/logo_200x200.jpeg',
-		mmp_domains: null,
-		md5_hash: '7e7f8d9d920e7d0af364490e324e2fa6',
-		pub_count: 1
-	},
-	{
-		best_week: '2025-10-20',
-		app_name: 'Number Merge',
-		store_id: 'com.epicpandagames.number.merge',
-		icon_url_100: 'c6c06f1f3968063f.png',
-		weekly_installs: 156,
-		weekly_percent_increase: 157.142857142857,
-		phash: 'ffcae796a9403f6c',
-		file_extension: 'mp4',
-		host_ad_domain: 'google.com',
-		host_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
-		initial_ad_domain: 'google.com',
-		initial_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
-		mmp_domains: null,
-		md5_hash: 'f8f717cdfd5ab1fe232c1b781c2e08eb',
-		pub_count: 1
-	},
-	{
 		best_week: '2025-10-13',
 		app_name: 'Magic Fantasy Paint by Numbers',
 		store_id: 'com.color.by.numbers.focus.color',
@@ -329,7 +295,7 @@ const adImpactGrowthData: AppAdImpactGrowthData[] = [
 		host_company_logo_url: 'company-logos\/mintegral.com\/logo_200x200.jpeg',
 		initial_ad_domain: 'unity3d.com',
 		initial_company_logo_url: 'company-logos\/unity3d.com\/logo_200x200.jpeg',
-		mmp_domains: '{appsflyer.com}',
+		mmp_domains: '{metrica.yandex.com}',
 		md5_hash: 'ad70640b82f152e9321593465513923c',
 		pub_count: 1
 	},
@@ -340,15 +306,15 @@ const adImpactGrowthData: AppAdImpactGrowthData[] = [
 		icon_url_100: 'b98e716586c99a9c.png',
 		weekly_installs: 89053,
 		weekly_percent_increase: 96.1750279034248,
-		phash: 'ef9a58a6bfdb99de',
-		file_extension: 'mp4',
+		phash: 'f7ff9f5d71fd2ee7',
+		file_extension: 'webm',
 		host_ad_domain: 'google.com',
 		host_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
-		initial_ad_domain: 'unity3d.com',
-		initial_company_logo_url: 'company-logos\/unity3d.com\/logo_200x200.jpeg',
+		initial_ad_domain: 'google.com',
+		initial_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
 		mmp_domains: '{adjust.com}',
 		md5_hash: 'dfa5580a71d4d78a57bbafff5c39e7f0',
-		pub_count: 1
+		pub_count: 2
 	},
 	{
 		best_week: '2025-10-13',
@@ -436,21 +402,21 @@ const adImpactGrowthData: AppAdImpactGrowthData[] = [
 		pub_count: 1
 	},
 	{
-		best_week: '2025-10-20',
-		app_name: 'Sudoku Jigsaw',
-		store_id: 'com.puzzling.suji',
-		icon_url_100: '949e6b636fb4e048.png',
-		weekly_installs: 674,
-		weekly_percent_increase: 50.1113585746102,
-		phash: 'c9123f7c74317d90',
-		file_extension: 'jpeg',
-		host_ad_domain: 'google.com',
-		host_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
-		initial_ad_domain: 'google.com',
-		initial_company_logo_url: 'company-logos\/google.com\/logo_200x200.jpeg',
-		mmp_domains: null,
-		md5_hash: 'd907870eed137e5c79e3b534cef8f808',
-		pub_count: 3
+		best_week: '2025-10-06',
+		app_name: 'Merge Gangster Heist vs Police',
+		store_id: 'gta.merge.game.gangster',
+		icon_url_100: 'ad52a5b4ce52c29d.png',
+		weekly_installs: 18225,
+		weekly_percent_increase: 45.0457620374055,
+		phash: '91dcaff3ccbfbf1e',
+		file_extension: 'mp4',
+		host_ad_domain: 'mintegral.com',
+		host_company_logo_url: 'company-logos\/mintegral.com\/logo_200x200.jpeg',
+		initial_ad_domain: 'unity3d.com',
+		initial_company_logo_url: 'company-logos\/unity3d.com\/logo_200x200.jpeg',
+		mmp_domains: '{appmetrica.yandex.com}',
+		md5_hash: '21977f60e59722f3ee24a8de4bdb27e6',
+		pub_count: 1
 	}
 ];
 
