@@ -92,9 +92,12 @@ class DeveloperController(Controller):
             google_developer_url = google_by_id_df.to_dict(orient="records")[0][
                 "store_developer_link"
             ]
-            google_pub_domain_url = google_by_id_df[
-                google_by_id_df["developer_url"].notna()
-            ]["developer_url"].iloc[0]
+            try:
+                google_pub_domain_url = google_by_id_df[
+                    google_by_id_df["developer_url"].notna()
+                ]["developer_url"].iloc[0]
+            except IndexError:
+                google_pub_domain_url = None
         if not ios_by_id_df.empty:
             apple_developer_name = ios_by_id_df.to_dict(orient="records")[0][
                 "developer_name"
@@ -105,9 +108,12 @@ class DeveloperController(Controller):
             apple_developer_url = ios_by_id_df.to_dict(orient="records")[0][
                 "store_developer_link"
             ]
-            apple_pub_domain_url = ios_by_id_df[ios_by_id_df["developer_url"].notna()][
-                "developer_url"
-            ].iloc[0]
+            try:
+                apple_pub_domain_url = ios_by_id_df[
+                    ios_by_id_df["developer_url"].notna()
+                ]["developer_url"].iloc[0]
+            except IndexError:
+                apple_pub_domain_url = None
         developer_name = google_developer_name or apple_developer_name
         google_apps_dict = google_by_id_df.to_dict(orient="records")
         apple_apps_dict = ios_by_id_df.to_dict(orient="records")
