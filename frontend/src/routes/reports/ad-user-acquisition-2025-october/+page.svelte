@@ -468,7 +468,7 @@
 										{#each app.ad_networks as network}
 											<CompanyButton
 												companyDomain={network.domain}
-												companyLogoUrl={`https://media.appgoblin.info/${network.logo_url}`}
+												companyLogoUrl={network.logo_url}
 												size="md"
 											/>
 										{/each}
@@ -480,7 +480,7 @@
 											{#each app.mmps as mmp}
 												<CompanyButton
 													companyDomain={mmp.domain}
-													companyLogoUrl={`https://media.appgoblin.info/${mmp.logo_url}`}
+													companyLogoUrl={mmp.logo_url}
 													size="md"
 												/>
 											{/each}
