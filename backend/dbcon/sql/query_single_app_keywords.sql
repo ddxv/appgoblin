@@ -24,7 +24,7 @@ ranked_keywords AS (
             akr.store_app = sa.id
     WHERE
         sa.store_id = :store_id
-        AND country = 840
+        AND akr.country = 840
 ),
 
 all_apps_keywords AS (
@@ -63,4 +63,4 @@ LEFT JOIN ranked_keywords AS rk
 LEFT JOIN frontend.keyword_scores AS ks
     ON
         aak.keyword_id = ks.keyword_id AND aak.store = ks.store
-WHERE app_count IS NOT NULL;
+WHERE ks.app_count IS NOT NULL;
