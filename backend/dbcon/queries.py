@@ -862,22 +862,22 @@ def get_sdk_pattern(state: State, value_pattern: str) -> pd.DataFrame:
     return df
 
 
-def get_keyword_details(state: State, keyword: str, limit: int = 30) -> pd.DataFrame:
+def get_keyword_details(state: State, keyword: str) -> pd.DataFrame:
     """Get keyword details."""
     df = pd.read_sql(
         sql.keyword_details,
         state.dbcon.engine,
-        params={"keyword": keyword, "limit": limit},
+        params={"keyword_text": keyword},
     )
     return df
 
 
-def get_keyword_apps(state: State, keyword: str, rank: int = 30) -> pd.DataFrame:
+def get_keyword_apps(state: State, keyword: str, rank: int = 20) -> pd.DataFrame:
     """Get keyword apps."""
     df = pd.read_sql(
         sql.keyword_apps,
         state.dbcon.engine,
-        params={"keyword": keyword, "rank": rank},
+        params={"keyword_text": keyword, "max_rank": rank},
     )
     return df
 

@@ -1,17 +1,17 @@
 SELECT
-    sa.*,
-    akr.crawled_date,
-    akr.rank
-FROM app_keyword_rankings AS akr
-LEFT JOIN keywords AS k ON akr.keyword = k.id
-LEFT JOIN store_apps AS sa ON akr.store_app = sa.id
+    sa.name,
+    sa.store,
+    sa.store_id,
+    sa.installs,
+    sa.rating_count,
+    sa.icon_url_100,
+    sa.category,
+    akr.latest_app_rank,
+    akr.d30_best_rank
+FROM frontend.app_keyword_rank_stats AS akr
+LEFT JOIN keywords AS k ON akr.keyword_id = k.id
+LEFT JOIN frontend.store_apps_overview AS sa ON akr.store_app = sa.id
 WHERE
-    k.keyword_text = :keyword
-    AND akr.crawled_date = (
-        SELECT MAX(akr2.crawled_date)
-        FROM app_keyword_rankings AS akr2
-        LEFT JOIN keywords AS k2 ON akr2.keyword = k2.id
-        WHERE k2.keyword_text = :keyword
-    )
-    AND akr.rank < :rank
-    AND akr.country = 840 AND akr.lang = 1;
+    k.keyword_text = :keyword_text
+    AND akr.latest_app_rank < :max_rank
+    AND akr.country = 840;

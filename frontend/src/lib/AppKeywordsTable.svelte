@@ -24,17 +24,75 @@
 
 	let { data }: DataTableProps<KeywordScore, TValue> = $props();
 
+	const formatScore = (value: number | string | null | undefined, digits = 0) => {
+		if (value === null || value === undefined || value === '' || value === 'NA') {
+			return '—';
+		}
+
+		const numericValue = typeof value === 'string' ? Number(value) : value;
+
+		if (Number.isNaN(numericValue)) {
+			return String(value);
+		}
+
+		return numericValue.toLocaleString(undefined, {
+			minimumFractionDigits: digits,
+			maximumFractionDigits: digits
+		});
+	};
+
+	const formatRank = (value: number | string | null | undefined) => {
+		if (value === null || value === undefined || value === '' || value === 'NA') {
+			return '—';
+		}
+
+		if (typeof value === 'string') {
+			const numeric = Number(value);
+			if (!Number.isNaN(numeric)) {
+				return numeric.toLocaleString();
+			}
+			return value;
+		}
+
+		return value.toLocaleString();
+	};
+
 	const columns = genericColumns([
 		{ title: 'Keyword', accessorKey: 'keyword_text', isSortable: true },
 		{
-			title: 'Competitiveness Score',
+			title: 'Opportunity',
+			accessorKey: 'opportunity_score',
+			isSortable: true
+		},
+		{
+			title: 'Volume Score',
+			accessorKey: 'volume_competition_score',
+			isSortable: true
+		},
+		{
+			title: 'Difficulty',
+			accessorKey: 'keyword_difficulty',
+			isSortable: true
+		},
+		{
+			title: 'Competitiveness',
 			accessorKey: 'competitiveness_score',
 			isSortable: true
 		},
 		{
-			title: '30 Day Best Rank',
+			title: 'Latest Rank',
+			accessorKey: 'latest_app_rank',
+			isSortable: true
+		},
+		{
+			title: '30 Day Best',
 			accessorKey: 'd30_best_rank',
 			isSortable: true
+		},
+		{
+			title: 'Major Competitors',
+			accessorKey: 'major_competitors',
+			isSortable: false
 		}
 	]);
 
@@ -73,14 +131,14 @@
 	});
 </script>
 
-<div class="table-container space-y-4">
-	<div class="overflow-x-auto pl-0">
-		<table class="md:table table-hover md:table-compact table-auto w-full text-xs">
-			<thead>
+<div class="space-y-4">
+	<div class="overflow-x-auto rounded-lg border border-surface-300-700">
+		<table class="w-full min-w-[720px] text-sm text-primary-900-100">
+			<thead class="bg-surface-200-800 text-primary-900-100">
 				{#each table.getHeaderGroups() as headerGroup (headerGroup.id)}
 					<tr>
 						{#each headerGroup.headers as header (header.id)}
-							<th>
+							<th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide">
 								{#if !header.isPlaceholder}
 									<FlexRender
 										content={header.column.columnDef.header}
@@ -94,30 +152,67 @@
 			</thead>
 			<tbody>
 				{#each table.getRowModel().rows as row (row.id)}
-					<tr>
-						<td class="table-cell-fit">
+					<tr class="border-t border-surface-200-800 hover:bg-surface-100-900/70">
+						<td class="px-4 py-3 align-top">
 							<a href="/keywords/en/{row.original.keyword_text}"> {row.original.keyword_text}</a>
 						</td>
-						<td class="table-cell-fit">
-							{row.original.competitiveness_score}
-							<p class="inline text-xs text-secondary-400-600">{row.original.app_count} apps</p>
+						<td class="px-4 py-3 align-top text-sm md:text-lg">
+							{formatScore(row.original.opportunity_score)}
 						</td>
-						<td class="table-cell-fit">
-							{row.original.d30_best_rank}
+						<td class="px-4 py-3 align-top text-sm md:text-lg">
+							{formatScore(row.original.volume_competition_score)}
+						</td>
+						<td class="px-4 py-3 align-top text-sm md:text-lg">
+							{formatScore(row.original.keyword_difficulty)}
+						</td>
+						<td class="px-4 py-3 align-top text-sm md:text-lg">
+							{formatScore(row.original.competitiveness_score)}
+							<p class="text-xs text-primary-800-200 mt-1">
+								{row.original.app_count?.toLocaleString()} competing apps
+							</p>
+							{#if row.original.median_competitor_installs}
+								<p class="mt-1 text-xs text-primary-800-200">
+									Median installs: {formatScore(row.original.median_competitor_installs, 0)}
+								</p>
+							{/if}
+							{#if row.original.avg_competitor_rating}
+								<p class="text-xs text-primary-800-200">
+									Avg rating: {formatScore(row.original.avg_competitor_rating, 1)}
+								</p>
+							{/if}
+						</td>
+						<td class="px-4 py-3 align-top text-sm md:text-lg">
+							{formatRank(row.original.latest_app_rank)}
+						</td>
+						<td class="px-4 py-3 align-top text-sm md:text-lg">
+							{formatRank(row.original.d30_best_rank)}
+						</td>
+						<td class="px-4 py-3 align-top">
+							<div class="space-y-1">
+								<p class="font-medium">{formatScore(row.original.major_competitors, 0)}</p>
+								<p class="text-xs text-primary-800-200">major competitor apps</p>
+							</div>
 						</td>
 					</tr>
 				{:else}
 					<tr>
-						<td colspan={columns.length} class="h-24 text-center">No results.</td>
+						<td colspan={columns.length} class="h-24 px-4 text-center text-secondary-400-600">
+							No results.
+						</td>
 					</tr>
 				{/each}
 			</tbody>
 		</table>
-		<footer class="flex justify-between">
-			<div class="flex items-center justify-end space-x-2 py-4">
+	</div>
+	<footer class="flex items-center justify-end gap-3">
+		<div class="flex items-center gap-3">
+			<div class="text-xs text-primary-700-300">
+				{table.getPrePaginationRowModel().rows.length.toLocaleString()} keywords
+			</div>
+			<div class="flex items-center gap-2">
 				<Pagination tableModel={table} />
 				<ExportAsCSV {table} filename="appgoblin_data" />
 			</div>
-		</footer>
-	</div>
+		</div>
+	</footer>
 </div>

@@ -471,8 +471,16 @@ export interface KeywordScore {
 	keyword_text: string;
 	app_count: number;
 	total_apps: number;
-	competitiveness_score: number;
-	d30_best_rank: number | string;
+	competitiveness_score: number | null;
+	d30_best_rank: number | string | null;
+	latest_app_rank: number | string | null;
+	volume_competition_score: number | null;
+	keyword_difficulty: number | null;
+	opportunity_score: number | null;
+	median_competitor_installs: number | null;
+	avg_competitor_rating: number | null;
+	major_competitors: number;
+	store?: number | string | null;
 }
 
 export interface AppSDKsOverview {

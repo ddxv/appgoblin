@@ -8,6 +8,7 @@ from typing import Self
 from litestar import Controller, get
 from litestar.datastructures import State
 
+from api_app.utils import extend_app_icon_url
 from config import get_logger
 from dbcon.queries import get_keyword_apps, get_keyword_details
 
@@ -41,6 +42,7 @@ class KeywordsController(Controller):
 
         """
         df = get_keyword_apps(state, keyword)
+        df = extend_app_icon_url(df)
         df_android = df[df["store"] == 1]
         df_ios = df[df["store"] == 2]
         return {
