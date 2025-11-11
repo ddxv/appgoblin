@@ -133,12 +133,12 @@
 
 <div class="space-y-4">
 	<div class="overflow-x-auto rounded-lg border border-surface-300-700">
-		<table class="w-full min-w-[720px] text-sm text-primary-900-100">
+		<table class="w-full min-w-[720px] text-xs md:text-lg text-primary-900-100">
 			<thead class="bg-surface-200-800 text-primary-900-100">
 				{#each table.getHeaderGroups() as headerGroup (headerGroup.id)}
 					<tr>
 						{#each headerGroup.headers as header (header.id)}
-							<th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide">
+							<th class="px-4 py-3 text-left text-xs font-semibold md:tracking-wide">
 								{#if !header.isPlaceholder}
 									<FlexRender
 										content={header.column.columnDef.header}
@@ -153,7 +153,7 @@
 			<tbody>
 				{#each table.getRowModel().rows as row (row.id)}
 					<tr class="border-t border-surface-200-800 hover:bg-surface-100-900/70">
-						<td class="px-4 py-3 align-top">
+						<td class="px-4 py-3 align-top text-xs md:text-lg">
 							<a href="/keywords/en/{row.original.keyword_text}"> {row.original.keyword_text}</a>
 						</td>
 						<td class="px-4 py-3 align-top text-sm md:text-lg">

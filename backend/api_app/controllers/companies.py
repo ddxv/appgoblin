@@ -117,6 +117,12 @@ def get_search_results(state: State, search_term: str) -> pd.DataFrame:
     """Parse search term and return resulting AppGroup."""
     decoded_input = urllib.parse.unquote(search_term)
     df = search_companies(state, search_input=decoded_input, limit=20)
+    df = df.merge(
+        get_company_logos_df(state),
+        on="company_domain",
+        how="left",
+        validate="m:1",
+    )
     logger.info(f"{decoded_input=} returned rows: {df.shape[0]}")
     return df
 
@@ -200,6 +206,7 @@ def make_top_companies(top_df: pd.DataFrame) -> TopCompaniesShort:
 
 
 def prep_companies_overview_df(
+    state: State,
     overview_df: pd.DataFrame,
 ) -> tuple[pd.DataFrame, CompaniesCategoryOverview]:
     """Prep companies overview dataframe."""
@@ -260,6 +267,25 @@ def prep_companies_overview_df(
         .drop(columns=["tempsort"])
         .head(1000)
     )
+    open_source_df = get_company_open_source(state)
+    overview_df = overview_df.merge(
+        open_source_df, on="company_domain", how="left", validate="m:1"
+    )
+    overview_df["percent_open_source"] = overview_df["percent_open_source"].fillna(0)
+    countries_df = get_company_countries(state)
+    overview_df = overview_df.merge(
+        countries_df,
+        on="company_domain",
+        how="left",
+        validate="1:1",
+    )
+    overview_df = overview_df.merge(
+        get_company_logos_df(state),
+        on="company_domain",
+        how="left",
+        validate="1:1",
+    )
+
     return overview_df
 
 
@@ -274,7 +300,6 @@ def get_overviews(
         state=state, type_slug=type_slug, app_category=category, limit=5
     )
     top_companies_short = make_top_companies(top_df)
-    countries_df = get_company_countries(state)
 
     if type_slug:
         if category:
@@ -304,28 +329,7 @@ def get_overviews(
         tag_source_category_app_counts=tag_source_category_app_counts,
     )
 
-    overview_df = prep_companies_overview_df(overview_df)
-
-    open_source_df = get_company_open_source(state)
-
-    overview_df = overview_df.merge(
-        open_source_df, on="company_domain", how="left", validate="m:1"
-    )
-
-    overview_df["percent_open_source"] = overview_df["percent_open_source"].fillna(0)
-
-    overview_df = overview_df.merge(
-        countries_df,
-        on="company_domain",
-        how="left",
-        validate="1:1",
-    )
-    overview_df = overview_df.merge(
-        get_company_logos_df(state),
-        on="company_domain",
-        how="left",
-        validate="1:1",
-    )
+    overview_df = prep_companies_overview_df(state, overview_df)
 
     results = CompaniesOverview(
         companies_overview=overview_df.to_dict(orient="records"),
@@ -1115,7 +1119,7 @@ class CompaniesController(Controller):
             validate="m:1",
         )
 
-        overview_df = prep_companies_overview_df(overview_df)
+        overview_df = prep_companies_overview_df(state, overview_df)
 
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(f"{self.path}/{search_term} took {duration}ms")
