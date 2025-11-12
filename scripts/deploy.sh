@@ -1,6 +1,5 @@
 #!/bin/bash
 set -euo pipefail
-
 APPDIR="/home/goblin/appgoblin"
 FRONTEND_DIR="$APPDIR/frontend"
 BUILD_DIR="$FRONTEND_DIR/build"
@@ -26,18 +25,24 @@ cd "$FRONTEND_DIR"
 
 # Only reinstall deps if package-lock.json changed
 if git diff HEAD@{1} HEAD --name-only | grep -q package-lock.json; then
-  npm ci
+    npm ci
 else
-  echo "Dependencies unchanged"
+    echo "Dependencies unchanged"
 fi
 
-# Build to temporary directory
-# rm -rf "$TMP_BUILD_DIR"
+# Build directly (SvelteKit outputs to build/ by default)
 npm run build
 
-echo "Build successful. Replacing old build..."
-rm -rf "$BUILD_DIR"
-mv "$TMP_BUILD_DIR" "$BUILD_DIR"
+# Atomic swap: create symlink to new build
+TIMESTAMP=$(date +%s)
+NEW_BUILD="$FRONTEND_DIR/build-${TIMESTAMP}"
+mv "$BUILD_DIR" "$NEW_BUILD"
+
+# Create symlink (atomic operation)
+ln -sfn "$NEW_BUILD" "$BUILD_DIR"
+
+# Clean up old builds (keep last 3)
+ls -dt "$FRONTEND_DIR"/build-* | tail -n +4 | xargs rm -rf
 
 echo "Restarting frontend..."
 sudo systemctl restart appgoblin-frontend
