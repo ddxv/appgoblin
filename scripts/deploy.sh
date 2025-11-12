@@ -32,8 +32,8 @@ else
 fi
 
 # Build to temporary directory
-rm -rf "$TMP_BUILD_DIR"
-npm run build -- --outDir "$TMP_BUILD_DIR"
+# rm -rf "$TMP_BUILD_DIR"
+npm run build
 
 echo "Build successful. Replacing old build..."
 rm -rf "$BUILD_DIR"
