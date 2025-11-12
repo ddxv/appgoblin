@@ -53,6 +53,7 @@
 					Totals
 				{/snippet}
 				<TotalsBox
+					companyName=""
 					myTotals={data.companiesOverview.categories.categories.all}
 					myType={{ name: 'All Companies & Domains', url_slug: 'all-companies' }}
 				/>

@@ -62,6 +62,14 @@
 				</a>
 			</div>
 		{/if}
+		{#if creative.advertiser_domain_name}
+			<div class="border-t border-surface-200 dark:border-surface-700 pt-4">
+				<p class="text-xs text-surface-600 dark:text-surface-400 mb-2">
+					Advertiser click destination
+				</p>
+				<span class="text-sm font-medium truncate">{creative.advertiser_domain_name}</span>
+			</div>
+		{/if}
 
 		<!-- Metadata -->
 		<div

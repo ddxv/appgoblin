@@ -23,6 +23,8 @@
 			{/snippet}
 			{#if data.companyDetails.categories[company_category]}
 				<TotalsBox
+					companyName={data.companyTree.queried_company_name ||
+						data.companyTree.queried_company_domain}
 					myTotals={data.companyDetails.categories[company_category]}
 					myType={{ name: 'All Companies & Domains', url_slug: 'all-companies' }}
 				/>

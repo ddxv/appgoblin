@@ -27,4 +27,4 @@ SELECT
                 )
         ELSE advertiser_icon_url_512
     END AS advertiser_icon_url
-FROM frontend.advertiser_creative_rankings;
+FROM frontend.advertiser_creative_rankings_recent_month;

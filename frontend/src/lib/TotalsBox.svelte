@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { formatNumber, formatNumberLocale } from '$lib/utils/formatNumber';
 
-	let { myTotals, myType, hideAdstxtApps = false } = $props();
+	let { myTotals, myType, hideAdstxtApps = false, companyName } = $props();
 
 	const titleFont = 'text-xl text-primary-900-100 tracking-wide';
 	const subTitleFont = 'text-large text-primary-800-200 tracking-wide';
@@ -10,10 +10,10 @@
 </script>
 
 <div class="table-container p-4">
-	<div class={titleFont}>Apps with SDKs</div>
+	<div class={titleFont}>Apps with {companyName} SDKs</div>
 	{#if myTotals.sdk_android_total_apps === 0 && myTotals.sdk_ios_total_apps === 0}
 		<p class={greyFont}>
-			No apps with SDKs found. Please feel free to contact if you would like this mapped.
+			No apps with {companyName} SDKs found. Please feel free to contact if you would like this mapped.
 		</p>
 	{:else}
 		<table class="table w-full">

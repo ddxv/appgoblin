@@ -45,6 +45,7 @@
 				<p class="text-red-500 text-center">Failed to load company details.</p>
 			{:else}
 				<TotalsBox
+					companyName=""
 					myTotals={page.data.companiesOverview.categories.categories.all}
 					myType={currentType}
 				/>

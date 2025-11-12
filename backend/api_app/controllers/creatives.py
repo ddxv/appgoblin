@@ -109,7 +109,9 @@ class CreativesController(Controller):
         return df.to_dict(orient="records")
 
     @get(path="/companies/{company_domain: str}", cache=86400)
-    async def company_creatives(self: Self, state: State, company_domain: str) -> dict:
+    async def company_creatives(
+        self: Self, state: State, company_domain: str, shortlist: bool = True
+    ) -> dict:
         """Handle GET request for a list of top advertiser creative rankings.
 
         Returns
@@ -118,7 +120,13 @@ class CreativesController(Controller):
 
         """
         start = time.perf_counter() * 1000
-        df = get_company_creatives(state=state, company_domain=company_domain)
+        if shortlist:
+            limit = 6
+        else:
+            limit = 30
+        df = get_company_creatives(
+            state=state, company_domain=company_domain, limit=limit
+        )
         df["creative_thumb_url"] = (
             "https://media.appgoblin.info/creatives/thumbs/" + df["md5_hash"] + ".jpg"
         )

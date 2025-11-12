@@ -7,6 +7,7 @@ SELECT DISTINCT ON (last_seen, advertiser_store_id)
     file_extension,
     publisher_store_id,
     advertiser_store_id,
+    advertiser_domain_name,
     installs,
     rating_count,
     rating,
@@ -20,4 +21,4 @@ WHERE
     company_domain = :company_domain
     AND last_seen < NOW() - INTERVAL '1 days'
 ORDER BY last_seen DESC, advertiser_store_id ASC
-LIMIT 6;
+LIMIT :mylimit;

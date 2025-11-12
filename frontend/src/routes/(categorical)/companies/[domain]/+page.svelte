@@ -34,6 +34,8 @@
 						{/snippet}
 
 						<TotalsBox
+							companyName={data.companyTree.queried_company_name ||
+								data.companyTree.queried_company_domain}
 							myTotals={data.companyDetails.categories.all}
 							myType={{ name: 'All Companies & Domains', url_slug: 'all-companies' }}
 							hideAdstxtApps={true}

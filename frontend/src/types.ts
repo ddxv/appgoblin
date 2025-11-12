@@ -426,6 +426,7 @@ export interface CompaniesCategoryOverview {
 
 export interface CompanyCreative {
 	advertiser_name: string;
+	advertiser_domain_name: string;
 	publisher_name: string;
 	store: number;
 	company_domain: string;

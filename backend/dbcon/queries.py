@@ -61,12 +61,14 @@ def get_advertiser_creatives(
     return df
 
 
-def get_company_creatives(state: State, company_domain: str) -> pd.DataFrame:
+def get_company_creatives(
+    state: State, company_domain: str, limit: int = 6
+) -> pd.DataFrame:
     """Get company creatives."""
     df = pd.read_sql(
         sql.company_creatives,
         con=state.dbcon.engine,
-        params={"company_domain": company_domain},
+        params={"company_domain": company_domain, "mylimit": limit},
     )
     return df
 
