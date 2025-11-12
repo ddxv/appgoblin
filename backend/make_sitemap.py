@@ -91,21 +91,21 @@ def create_static_sitemap() -> str:
     # Static URLs to include
     static_urls = [
         "https://appgoblin.info",
+        "https://appgoblin.info/about",
         "https://appgoblin.info/ad-creatives",
         "https://appgoblin.info/blog",
-        "https://appgoblin.info/about",
         "https://appgoblin.info/fastest-growing-apps/google/overall",
         "https://appgoblin.info/fastest-growing-apps/ios/overall",
         "https://appgoblin.info/companies",
-        "https://appgoblin.info/sdks",
         "https://appgoblin.info/collections/new_monthly/google/overall",
         "https://appgoblin.info/collections/new_weekly/apple/overall",
         "https://appgoblin.info/collections/new_weekly/google/overall",
         "https://appgoblin.info/collections/new_yearly/apple/overall",
         "https://appgoblin.info/collections/new_yearly/google/overall",
         "https://appgoblin.info/collections/new_weekly/apple/overall",
-        "https://appgoblin.info/rankings/store/1/collection/1/category/1/US",
-        "https://appgoblin.info/rankings/store/2/collection/4/category/120/US",
+        "https://appgoblin.info/sdks",
+        # "https://appgoblin.info/rankings/store/1/collection/1/category/1/US",
+        # "https://appgoblin.info/rankings/store/2/collection/4/category/120/US",
     ]
 
     static_df = pd.DataFrame({"url": static_urls})
@@ -172,12 +172,12 @@ def create_paginated_sitemaps(
 dbcon = get_db_connection("madrone")
 
 apps = get_sitemap_apps(dbcon)
-apps = apps.head(5000)
+apps = apps.head(100)
 
 
 cdf = get_sitemap_companies(dbcon)
 
-MIN_APP_COUNT = 1000
+MIN_APP_COUNT = 10000
 
 # Companies with URL slugs are more likely to be relevant
 # (ie not typos from app-ads.txt)
