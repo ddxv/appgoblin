@@ -136,10 +136,10 @@
         <loc>https://appgoblin.info/companies/categories/game_arcade</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/categories/social networking</loc>
+        <loc>https://appgoblin.info/companies/categories/game_strategy</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/categories/game_strategy</loc>
+        <loc>https://appgoblin.info/companies/categories/social networking</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/categories/game_adventure</loc>
@@ -385,19 +385,19 @@
         <loc>https://appgoblin.info/companies/types/development-tools/game_board</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/types/ad-networks/game_strategy</loc>
+        <loc>https://appgoblin.info/companies/types/development-tools/game_word</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/types/development-tools/game_word</loc>
+        <loc>https://appgoblin.info/companies/types/ad-networks/game_strategy</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/types/development-tools/game_educational</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/types/development-tools/video_players</loc>
+        <loc>https://appgoblin.info/companies/types/development-tools/dating</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/types/development-tools/dating</loc>
+        <loc>https://appgoblin.info/companies/types/development-tools/video_players</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/types/development-tools/game_casino</loc>
@@ -436,10 +436,10 @@
         <loc>https://appgoblin.info/companies/types/business-tools/finance</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/types/business-tools/entertainment</loc>
+        <loc>https://appgoblin.info/companies/types/product-analytics/shopping</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/types/product-analytics/shopping</loc>
+        <loc>https://appgoblin.info/companies/types/business-tools/entertainment</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/types/product-analytics/entertainment</loc>
@@ -457,10 +457,10 @@
         <loc>https://appgoblin.info/companies/types/product-analytics/lifestyle</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/types/business-tools/lifestyle</loc>
+        <loc>https://appgoblin.info/companies/types/product-analytics/health_and_fitness</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/types/product-analytics/health_and_fitness</loc>
+        <loc>https://appgoblin.info/companies/types/business-tools/lifestyle</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/types/product-analytics/sports</loc>
@@ -556,10 +556,10 @@
         <loc>https://appgoblin.info/companies/types/product-analytics/games</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/types/ad-attribution/games</loc>
+        <loc>https://appgoblin.info/companies/types/business-tools/maps_and_navigation</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/types/business-tools/maps_and_navigation</loc>
+        <loc>https://appgoblin.info/companies/types/ad-attribution/games</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/types/business-tools/medical</loc>
@@ -652,10 +652,10 @@
         <loc>https://appgoblin.info/companies/types/business-tools/game_strategy</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/types/product-analytics/house_and_home</loc>
+        <loc>https://appgoblin.info/companies/types/ad-attribution/social networking</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/types/ad-attribution/social networking</loc>
+        <loc>https://appgoblin.info/companies/types/product-analytics/house_and_home</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/types/ad-attribution/finance</loc>
@@ -676,10 +676,10 @@
         <loc>https://appgoblin.info/companies/types/product-analytics/dating</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/types/business-tools/game_card</loc>
+        <loc>https://appgoblin.info/companies/types/business-tools/personalization</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/types/business-tools/personalization</loc>
+        <loc>https://appgoblin.info/companies/types/business-tools/game_card</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/types/product-analytics/video_players</loc>
@@ -760,16 +760,16 @@
         <loc>https://appgoblin.info/companies/types/business-tools/game_educational</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/types/ad-attribution/business</loc>
-    </url>
-    <url>
         <loc>https://appgoblin.info/companies/types/product-analytics/beauty</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/types/ad-attribution/photo_and_video</loc>
+        <loc>https://appgoblin.info/companies/types/ad-attribution/business</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/types/business-tools/game_casino</loc>
+    </url>
+    <url>
+        <loc>https://appgoblin.info/companies/types/ad-attribution/photo_and_video</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/types/ad-attribution/game_casino</loc>
@@ -784,10 +784,10 @@
         <loc>https://appgoblin.info/companies/types/ad-attribution/game_board</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/types/business-tools/family</loc>
+        <loc>https://appgoblin.info/companies/types/ad-attribution/game_word</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/types/ad-attribution/game_word</loc>
+        <loc>https://appgoblin.info/companies/types/business-tools/family</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/types/business-tools/game_racing</loc>
@@ -970,19 +970,19 @@
         <loc>https://appgoblin.info/companies/algorix.co</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/indexexchange.com</loc>
+        <loc>https://appgoblin.info/companies/pubnative.net</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/pubnative.net</loc>
+        <loc>https://appgoblin.info/companies/indexexchange.com</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/loopme.com</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/bidmachine.io</loc>
+        <loc>https://appgoblin.info/companies/unity.com</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/unity.com</loc>
+        <loc>https://appgoblin.info/companies/bidmachine.io</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/media.net</loc>
@@ -1012,6 +1012,9 @@
         <loc>https://appgoblin.info/companies/sharethrough.com</loc>
     </url>
     <url>
+        <loc>https://appgoblin.info/companies/betweendigital.com</loc>
+    </url>
+    <url>
         <loc>https://appgoblin.info/companies/yandex.com</loc>
     </url>
     <url>
@@ -1028,9 +1031,6 @@
     </url>
     <url>
         <loc>https://appgoblin.info/companies/xandr.com</loc>
-    </url>
-    <url>
-        <loc>https://appgoblin.info/companies/betweendigital.com</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/toponad.com</loc>
@@ -1081,13 +1081,13 @@
         <loc>https://appgoblin.info/companies/yeahmobi.com</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/krushmedia.com</loc>
-    </url>
-    <url>
         <loc>https://appgoblin.info/companies/kotlinlang.org</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/start.io</loc>
+    </url>
+    <url>
+        <loc>https://appgoblin.info/companies/krushmedia.com</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/freewheel.tv</loc>
@@ -1159,10 +1159,10 @@
         <loc>https://appgoblin.info/companies/appads.in</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/synacor.com</loc>
+        <loc>https://appgoblin.info/companies/spotx.tv</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/spotx.tv</loc>
+        <loc>https://appgoblin.info/companies/synacor.com</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/kidoz.net</loc>
@@ -1180,10 +1180,10 @@
         <loc>https://appgoblin.info/companies/videoheroes.tv</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/lemmatechnologies.com</loc>
+        <loc>https://appgoblin.info/companies/consumable.com</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/consumable.com</loc>
+        <loc>https://appgoblin.info/companies/lemmatechnologies.com</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/iqzone.com</loc>
@@ -1243,13 +1243,13 @@
         <loc>https://appgoblin.info/companies/markappmedia.site</loc>
     </url>
     <url>
+        <loc>https://appgoblin.info/companies/e-volution.ai</loc>
+    </url>
+    <url>
         <loc>https://appgoblin.info/companies/app-stock.com</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/admixer.co.kr</loc>
-    </url>
-    <url>
-        <loc>https://appgoblin.info/companies/e-volution.ai</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/vidazoo.com</loc>
@@ -1264,13 +1264,16 @@
         <loc>https://appgoblin.info/companies/tritondigital.com</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/tremorhub.com</loc>
-    </url>
-    <url>
         <loc>https://appgoblin.info/companies/mgid.com</loc>
     </url>
     <url>
+        <loc>https://appgoblin.info/companies/visiblemeasures.com</loc>
+    </url>
+    <url>
         <loc>https://appgoblin.info/companies/onlinemediasolutions.com</loc>
+    </url>
+    <url>
+        <loc>https://appgoblin.info/companies/taurusx.com</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/xad.com</loc>
@@ -1288,10 +1291,10 @@
         <loc>https://appgoblin.info/companies/jetbrains.com</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/amazon.com</loc>
+        <loc>https://appgoblin.info/companies/engagebdr.com</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/engagebdr.com</loc>
+        <loc>https://appgoblin.info/companies/amazon.com</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/stroeer.com</loc>
@@ -1300,16 +1303,16 @@
         <loc>https://appgoblin.info/companies/playdigo.com</loc>
     </url>
     <url>
+        <loc>https://appgoblin.info/companies/tremorhub.com</loc>
+    </url>
+    <url>
         <loc>https://appgoblin.info/companies/richaudience.com</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/visiblemeasures.com</loc>
+        <loc>https://appgoblin.info/companies/startapp.com</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/undertone.com</loc>
-    </url>
-    <url>
-        <loc>https://appgoblin.info/companies/startapp.com</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/zetaglobal.net</loc>
@@ -1319,9 +1322,6 @@
     </url>
     <url>
         <loc>https://appgoblin.info/companies/districtm.io</loc>
-    </url>
-    <url>
-        <loc>https://appgoblin.info/companies/taurusx.com</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/advlion.com</loc>
@@ -1360,6 +1360,9 @@
         <loc>https://appgoblin.info/companies/liftoff.io</loc>
     </url>
     <url>
+        <loc>https://appgoblin.info/companies/azberry.com</loc>
+    </url>
+    <url>
         <loc>https://appgoblin.info/companies/prequel.tv</loc>
     </url>
     <url>
@@ -1367,9 +1370,6 @@
     </url>
     <url>
         <loc>https://appgoblin.info/companies/chocolateplatform.com</loc>
-    </url>
-    <url>
-        <loc>https://appgoblin.info/companies/azberry.com</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/screenil.com</loc>
@@ -1393,10 +1393,10 @@
         <loc>https://appgoblin.info/companies/gamaigroup.com</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/admatic.com.tr</loc>
+        <loc>https://appgoblin.info/companies/silvermob.com</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/silvermob.com</loc>
+        <loc>https://appgoblin.info/companies/admatic.com.tr</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/blis.com</loc>
@@ -1432,10 +1432,10 @@
         <loc>https://appgoblin.info/companies/bidence.com</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/acexchange.co.kr</loc>
+        <loc>https://appgoblin.info/companies/dauup.com</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/dauup.com</loc>
+        <loc>https://appgoblin.info/companies/acexchange.co.kr</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/growintech.co</loc>
@@ -1444,22 +1444,19 @@
         <loc>https://appgoblin.info/companies/mobilefuse.com</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/aniview.com</loc>
-    </url>
-    <url>
-        <loc>https://appgoblin.info/companies/voisetech.com</loc>
+        <loc>https://appgoblin.info/companies/programmaticx.ai</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/eliteappgrade.com</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/programmaticx.ai</loc>
-    </url>
-    <url>
-        <loc>https://appgoblin.info/companies/reforge.in</loc>
+        <loc>https://appgoblin.info/companies/voisetech.com</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/bid-matrix.com</loc>
+    </url>
+    <url>
+        <loc>https://appgoblin.info/companies/aniview.com</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/selectmedia.asia</loc>
@@ -1513,7 +1510,13 @@
         <loc>https://appgoblin.info/companies/9dotsmedia.com</loc>
     </url>
     <url>
+        <loc>https://appgoblin.info/companies/waardex.com</loc>
+    </url>
+    <url>
         <loc>https://appgoblin.info/companies/checkerframework.org</loc>
+    </url>
+    <url>
+        <loc>https://appgoblin.info/companies/reforge.in</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/telaria.com</loc>
@@ -1540,16 +1543,13 @@
         <loc>https://appgoblin.info/companies/prado.co</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/waardex.com</loc>
-    </url>
-    <url>
         <loc>https://appgoblin.info/companies/yieldnexus.com</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/decenterads.com</loc>
+        <loc>https://appgoblin.info/companies/apester.com</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/apester.com</loc>
+        <loc>https://appgoblin.info/companies/decenterads.com</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/gumgum.com</loc>
@@ -1561,16 +1561,16 @@
         <loc>https://appgoblin.info/companies/max-mobi.com</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/adbility-media.com</loc>
-    </url>
-    <url>
         <loc>https://appgoblin.info/companies/my-cast.tv</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/connectad.io</loc>
+        <loc>https://appgoblin.info/companies/caerulus.io</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/caerulus.io</loc>
+        <loc>https://appgoblin.info/companies/adbility-media.com</loc>
+    </url>
+    <url>
+        <loc>https://appgoblin.info/companies/connectad.io</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/mediaverse.ai</loc>
@@ -1579,10 +1579,10 @@
         <loc>https://appgoblin.info/companies/imds.tv</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/disqus.com</loc>
+        <loc>https://appgoblin.info/companies/adingenious.com</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/adingenious.com</loc>
+        <loc>https://appgoblin.info/companies/disqus.com</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/tappx.com</loc>
@@ -1663,6 +1663,9 @@
         <loc>https://appgoblin.info/companies/adtelligent.com</loc>
     </url>
     <url>
+        <loc>https://appgoblin.info/companies/adagio.io</loc>
+    </url>
+    <url>
         <loc>https://appgoblin.info/companies/hindsightsolutions.net</loc>
     </url>
     <url>
@@ -1670,9 +1673,6 @@
     </url>
     <url>
         <loc>https://appgoblin.info/companies/appaspire.com</loc>
-    </url>
-    <url>
-        <loc>https://appgoblin.info/companies/adagio.io</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/empower.net</loc>
@@ -1723,16 +1723,16 @@
         <loc>https://appgoblin.info/companies/mobismarter.com</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/newsusadigital.com</loc>
+        <loc>https://appgoblin.info/companies/brightmountainmedia.com</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/appsheep.com</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/nextmillennium.io</loc>
+        <loc>https://appgoblin.info/companies/newsusadigital.com</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/brightmountainmedia.com</loc>
+        <loc>https://appgoblin.info/companies/nextmillennium.io</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/adstxtmarket.com</loc>
@@ -1756,46 +1756,46 @@
         <loc>https://appgoblin.info/companies/sipo-inc.com</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/tropicsgames.com</loc>
-    </url>
-    <url>
-        <loc>https://appgoblin.info/companies/oko.uk</loc>
+        <loc>https://appgoblin.info/companies/elixirvideo.co</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/alpecs.com</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/elixirvideo.co</loc>
+        <loc>https://appgoblin.info/companies/oko.uk</loc>
+    </url>
+    <url>
+        <loc>https://appgoblin.info/companies/tropicsgames.com</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/minutemedia.com</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/advangelists.com</loc>
+        <loc>https://appgoblin.info/companies/pubeasy.io</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/pubeasy.io</loc>
+        <loc>https://appgoblin.info/companies/advangelists.com</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/nexverse.ai</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/zeta.com</loc>
-    </url>
-    <url>
         <loc>https://appgoblin.info/companies/alpineinteractivegroup.com</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/reactivex.io</loc>
+        <loc>https://appgoblin.info/companies/zeta.com</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/adsinteractive.com</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/signifad.com</loc>
+        <loc>https://appgoblin.info/companies/reactivex.io</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/screencore.io</loc>
+    </url>
+    <url>
+        <loc>https://appgoblin.info/companies/signifad.com</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/advibe.media</loc>
@@ -1807,16 +1807,16 @@
         <loc>https://appgoblin.info/companies/github.com-nanopb</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/tapjoy.com</loc>
-    </url>
-    <url>
         <loc>https://appgoblin.info/companies/axis-marketplace.com</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/jio.com</loc>
+        <loc>https://appgoblin.info/companies/tapjoy.com</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/insticator.com</loc>
+    </url>
+    <url>
+        <loc>https://appgoblin.info/companies/jio.com</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/beapup.com</loc>
@@ -1858,10 +1858,10 @@
         <loc>https://appgoblin.info/companies/mobimight.com</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/tvp.tv</loc>
+        <loc>https://appgoblin.info/companies/publiffy.com</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/publiffy.com</loc>
+        <loc>https://appgoblin.info/companies/tvp.tv</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/added.tv</loc>
@@ -1897,6 +1897,9 @@
         <loc>https://appgoblin.info/companies/admixer.com</loc>
     </url>
     <url>
+        <loc>https://appgoblin.info/companies/admatic.de</loc>
+    </url>
+    <url>
         <loc>https://appgoblin.info/companies/smilewanted.com</loc>
     </url>
     <url>
@@ -1906,13 +1909,7 @@
         <loc>https://appgoblin.info/companies/ninthdecimal.com</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/admatic.de</loc>
-    </url>
-    <url>
         <loc>https://appgoblin.info/companies/goldbach-germany.de</loc>
-    </url>
-    <url>
-        <loc>https://appgoblin.info/companies/thisisdax.com</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/smoot.ai</loc>
@@ -1921,10 +1918,10 @@
         <loc>https://appgoblin.info/companies/vidcrunch.com</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/engagemedia.tv</loc>
+        <loc>https://appgoblin.info/companies/bidmatic.io</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/bidmatic.io</loc>
+        <loc>https://appgoblin.info/companies/engagemedia.tv</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/adprime.com</loc>
@@ -1936,10 +1933,13 @@
         <loc>https://appgoblin.info/companies/reklamup.com</loc>
     </url>
     <url>
+        <loc>https://appgoblin.info/companies/yellowhead.com</loc>
+    </url>
+    <url>
         <loc>https://appgoblin.info/companies/appush.com</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/yellowhead.com</loc>
+        <loc>https://appgoblin.info/companies/thisisdax.com</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/adriver.ru</loc>
@@ -1949,6 +1949,9 @@
     </url>
     <url>
         <loc>https://appgoblin.info/companies/adipolosolutions.com</loc>
+    </url>
+    <url>
+        <loc>https://appgoblin.info/companies/anzu.io</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/apexflowsdk.com</loc>
@@ -1963,25 +1966,25 @@
         <loc>https://appgoblin.info/companies/smartbid.ai</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/digitalpiee.com</loc>
-    </url>
-    <url>
-        <loc>https://appgoblin.info/companies/lenovoads.com</loc>
-    </url>
-    <url>
         <loc>https://appgoblin.info/companies/bluexad.ai</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/cas.ai</loc>
     </url>
     <url>
+        <loc>https://appgoblin.info/companies/lenovoads.com</loc>
+    </url>
+    <url>
+        <loc>https://appgoblin.info/companies/digitalpiee.com</loc>
+    </url>
+    <url>
+        <loc>https://appgoblin.info/companies/pmbmonetize.com</loc>
+    </url>
+    <url>
         <loc>https://appgoblin.info/companies/aluna.co</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/dynadmic.com</loc>
-    </url>
-    <url>
-        <loc>https://appgoblin.info/companies/pmbmonetize.com</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/rocketlab.ai</loc>
@@ -1993,31 +1996,25 @@
         <loc>https://appgoblin.info/companies/microsoft.com</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/beani.tv</loc>
+        <loc>https://appgoblin.info/companies/opamarketplace.com</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/buzzoola.com</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/opamarketplace.com</loc>
-    </url>
-    <url>
-        <loc>https://appgoblin.info/companies/bksn.se</loc>
-    </url>
-    <url>
-        <loc>https://appgoblin.info/companies/anzu.io</loc>
-    </url>
-    <url>
         <loc>https://appgoblin.info/companies/adtarget.me</loc>
-    </url>
-    <url>
-        <loc>https://appgoblin.info/companies/adro.io</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/lumate.com</loc>
     </url>
     <url>
+        <loc>https://appgoblin.info/companies/app.tv</loc>
+    </url>
+    <url>
         <loc>https://appgoblin.info/companies/conso.la</loc>
+    </url>
+    <url>
+        <loc>https://appgoblin.info/companies/adro.io</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/readserver.net</loc>
@@ -2026,16 +2023,22 @@
         <loc>https://appgoblin.info/companies/adne.tv</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/app.tv</loc>
+        <loc>https://appgoblin.info/companies/bksn.se</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/apptv.com</loc>
     </url>
     <url>
+        <loc>https://appgoblin.info/companies/rtbsape.com</loc>
+    </url>
+    <url>
         <loc>https://appgoblin.info/companies/cmcm.com</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/rtbsape.com</loc>
+        <loc>https://appgoblin.info/companies/beani.tv</loc>
+    </url>
+    <url>
+        <loc>https://appgoblin.info/companies/movve.com</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/emodoinc.com</loc>
@@ -2044,22 +2047,19 @@
         <loc>https://appgoblin.info/companies/a4g.com</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/movve.com</loc>
-    </url>
-    <url>
         <loc>https://appgoblin.info/companies/flatads.com</loc>
-    </url>
-    <url>
-        <loc>https://appgoblin.info/companies/yazle.com</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/gammassp.com</loc>
     </url>
     <url>
+        <loc>https://appgoblin.info/companies/sentry.io</loc>
+    </url>
+    <url>
         <loc>https://appgoblin.info/companies/dobyai.com</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/sentry.io</loc>
+        <loc>https://appgoblin.info/companies/yazle.com</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/omgstudios.com</loc>
@@ -2080,19 +2080,22 @@
         <loc>https://appgoblin.info/companies/adapex.io</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/bidfuse.com</loc>
-    </url>
-    <url>
         <loc>https://appgoblin.info/companies/leapmobs.com</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/metaxsoft.com</loc>
+        <loc>https://appgoblin.info/companies/bidfuse.com</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/magicmedia.ae</loc>
     </url>
     <url>
+        <loc>https://appgoblin.info/companies/metaxsoft.com</loc>
+    </url>
+    <url>
         <loc>https://appgoblin.info/companies/amplifier.audio</loc>
+    </url>
+    <url>
+        <loc>https://appgoblin.info/companies/ppc.buzz</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/aidentity.ai</loc>
@@ -2101,16 +2104,13 @@
         <loc>https://appgoblin.info/companies/greenrobot.org</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/ppc.buzz</loc>
-    </url>
-    <url>
-        <loc>https://appgoblin.info/companies/altitude-arena.com</loc>
+        <loc>https://appgoblin.info/companies/brainx.tech</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/aceinmobi.com</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/brainx.tech</loc>
+        <loc>https://appgoblin.info/companies/altitude-arena.com</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/aloha-ads.com</loc>
@@ -2119,28 +2119,31 @@
         <loc>https://appgoblin.info/companies/agon.mobi</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/ortb.net</loc>
+        <loc>https://appgoblin.info/companies/escalax.io</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/ardenodemedia.com</loc>
+        <loc>https://appgoblin.info/companies/ortb.net</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/mindtos.com</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/mosher.media</loc>
+        <loc>https://appgoblin.info/companies/ardenodemedia.com</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/escalax.io</loc>
+        <loc>https://appgoblin.info/companies/metup.it</loc>
+    </url>
+    <url>
+        <loc>https://appgoblin.info/companies/mosher.media</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/thebigred.co</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/resetdigital.co</loc>
+        <loc>https://appgoblin.info/companies/tvisionary.co</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/tvisionary.co</loc>
+        <loc>https://appgoblin.info/companies/resetdigital.co</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/greedygame.com</loc>
@@ -2458,13 +2461,13 @@
         <loc>https://appgoblin.info/companies/thetradedesk.com</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/useinsider.com</loc>
+        <loc>https://appgoblin.info/companies/fullstory.com</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/rongcloud.com</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/fullstory.com</loc>
+        <loc>https://appgoblin.info/companies/useinsider.com</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/webengage.com</loc>
@@ -2491,10 +2494,10 @@
         <loc>https://appgoblin.info/companies/alchemer.com</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/contentsquare.com</loc>
+        <loc>https://appgoblin.info/companies/consentmanager.net</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/consentmanager.net</loc>
+        <loc>https://appgoblin.info/companies/contentsquare.com</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/tapad.com</loc>
@@ -2503,10 +2506,13 @@
         <loc>https://appgoblin.info/companies/forter.com</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/purchasely.com</loc>
+        <loc>https://appgoblin.info/companies/apphud.com</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/tealium.com</loc>
+    </url>
+    <url>
+        <loc>https://appgoblin.info/companies/purchasely.com</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/getstream.io</loc>
@@ -2575,10 +2581,10 @@
         <loc>https://appgoblin.info/companies/flashtalking.com</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/datadome.co</loc>
+        <loc>https://appgoblin.info/companies/datatheorem.com</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/datatheorem.com</loc>
+        <loc>https://appgoblin.info/companies/datadome.co</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/statsig.com</loc>
@@ -2593,10 +2599,10 @@
         <loc>https://appgoblin.info/companies/appcoins.com</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/veriff.com</loc>
+        <loc>https://appgoblin.info/companies/countly.com</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/countly.com</loc>
+        <loc>https://appgoblin.info/companies/veriff.com</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/swrve.com</loc>
@@ -2626,10 +2632,10 @@
         <loc>https://appgoblin.info/companies/justtrack.io</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/coinbase.com</loc>
+        <loc>https://appgoblin.info/companies/godotengine.org</loc>
     </url>
     <url>
-        <loc>https://appgoblin.info/companies/godotengine.org</loc>
+        <loc>https://appgoblin.info/companies/coinbase.com</loc>
     </url>
     <url>
         <loc>https://appgoblin.info/companies/usebutton.com</loc>

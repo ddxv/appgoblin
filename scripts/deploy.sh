@@ -3,7 +3,7 @@ set -euo pipefail
 APPDIR="/home/goblin/appgoblin"
 FRONTEND_DIR="$APPDIR/frontend"
 BUILD_DIR="$FRONTEND_DIR/build"
-TMP_BUILD_DIR="$FRONTEND_DIR/build_tmp"
+NEW_BUILD="$FRONTEND_DIR/build_tmp"
 
 echo "Deploying from: $APPDIR"
 cd "$APPDIR"
@@ -33,16 +33,15 @@ fi
 # Build directly (SvelteKit outputs to build/ by default)
 npm run build
 
-# Atomic swap: create symlink to new build
-TIMESTAMP=$(date +%s)
-NEW_BUILD="$FRONTEND_DIR/build-${TIMESTAMP}"
-mv "$BUILD_DIR" "$NEW_BUILD"
+# Atomic swap
+rm -rf build_old
+if [ -d build ]; then
+  mv build build_old
+fi
+mv build_tmp build
+rm -rf build_old
 
-# Create symlink (atomic operation)
-ln -sfn "$NEW_BUILD" "$BUILD_DIR"
 
-# Clean up old builds (keep last 3)
-ls -dt "$FRONTEND_DIR"/build-* | tail -n +4 | xargs rm -rf
 
 echo "Restarting frontend..."
 sudo systemctl restart appgoblin-frontend
