@@ -39,7 +39,8 @@
 	<title>{pageTitle}</title>
 	<meta
 		name="description"
-		content="{domain} {category_title}. Explore detailed analytics, market presence, and insights about {domain}'s role in the mobile ecosystem based on real API, SDK and tracker usage."
+		content="{data.companyTree.queried_company_name ||
+			domain} {category_title} sdks, apps and trends. See {domain}'s role in the mobile ecosystem by analyzing API, SDK and trackers."
 	/>
 	<meta
 		name="keywords"
