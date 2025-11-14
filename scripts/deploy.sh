@@ -5,6 +5,7 @@ FRONTEND_DIR="$APPDIR/frontend"
 BUILD_DIR="$FRONTEND_DIR/build"
 NEW_BUILD="$FRONTEND_DIR/build_tmp"
 
+
 echo "Deploying from: $APPDIR"
 cd "$APPDIR"
 
@@ -30,15 +31,19 @@ else
     echo "Dependencies unchanged"
 fi
 
-# Build directly (SvelteKit outputs to build/ by default)
+
+# Clean any previous temp build first
+rm -rf "$NEW_BUILD"
+
+# Build to build_tmp
 npm run build
 
 # Atomic swap
 rm -rf build_old
-if [ -d build ]; then
+if [ -d "$NEW_BUILD" ]; then
   mv build build_old
 fi
-mv build_tmp build
+mv "$NEW_BUILD" build
 rm -rf build_old
 
 
