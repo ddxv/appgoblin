@@ -5,6 +5,7 @@
 
 	import IconSearch from '$lib/svg/IconSearch.svelte';
 	import Menu from 'lucide-svelte/icons/menu';
+	import Mail from 'lucide-svelte/icons/mail';
 
 	import { AppBar } from '@skeletonlabs/skeleton-svelte';
 
@@ -81,10 +82,23 @@
 						</div>
 					</div>
 					<div class="flex items-center p-1 gap-1 md:gap-2">
+						<a href="mailto:contact@appgoblin.info" target="_blank" rel="noreferrer">
+							<button
+								type="button"
+								class="btn-primary inline-flex items-center px-2 md:px-4 py-1 md:py-2 bg-white rounded-lg hover:scale-105 transition-transform duration-200 shadow-lg"
+							>
+								<div
+									class="inline-flex items-center text-black font-bold text-xs md:text-sm gap-1 md:gap-2"
+								>
+									<Mail size={24} /> Contact
+								</div>
+							</button>
+						</a>
+
 						<a href="https://github.com/ddxv/appgoblin" target="_blank" rel="noreferrer">
 							<button type="button" class="btn preset-tonal hover:preset-tonal-primary p-1 md:p-2">
 								<div class="inline-flex items-center text-xs md:text-sm gap-1 md:gap-2">
-									{@html githubIcon} Star on GitHub
+									{@html githubIcon} GitHub
 								</div>
 							</button>
 						</a>

@@ -2,38 +2,33 @@
 	import AdvertiserCreativeRankingsTable from '$lib/AdvertiserCreativeRankingsTable.svelte';
 	import WhiteCard from '$lib/WhiteCard.svelte';
 	let { data } = $props();
+
+	let pageTitle = 'Top Mobile Advertisers and Creatives';
+	let pageDescription =
+		'See the top mobile ad buyers this month and their creative strategies based on live android ad campaigns.';
 </script>
 
 <svelte:head>
-	<title>Top Mobile Ad Buyers & Ad Creatives</title>
+	<title>{pageTitle}</title>
 
 	<!-- Standard meta tags -->
-	<meta
-		name="description"
-		content="The largest mobile ad buyers based on recently seen ad creatives across hundreds of ad networks. See the top mobile ad buyers this month and their creative strategies."
-	/>
+	<meta name="description" content={pageDescription} />
 	<meta
 		name="keywords"
-		content="ad buyers, mobile advertisers, ad creatives, mobile advertising, app marketing, advertising insights, AppGoblin"
+		content="ad buyers, mobile advertisers, ad creatives, mobile advertising, app marketing, advertising insights, AppGoblin, ad campaigns, ad creatives, ad networks, ad tracking, ad analytics"
 	/>
 
 	<!-- Open Graph meta tags -->
-	<meta property="og:title" content="Top Mobile Ad Buyers & Ad Creatives" />
-	<meta
-		property="og:description"
-		content="The largest mobile ad buyers based on recently seen ad creatives across hundreds of ad networks. See the top mobile ad buyers this month and their creative strategies."
-	/>
+	<meta property="og:title" content={pageTitle} />
+	<meta property="og:description" content={pageDescription} />
 	<meta property="og:image" content="https://appgoblin.info/goblin_purple_hat_250.png" />
 	<meta property="og:url" content="https://appgoblin.info/ad-creatives" />
 	<meta property="og:type" content="website" />
 
 	<!-- Twitter Card meta tags -->
 	<meta name="twitter:card" content="summary_large_image" />
-	<meta name="twitter:title" content="Top Mobile Ad Buyers & Their Ad Creatives" />
-	<meta
-		name="twitter:description"
-		content="The largest mobile ad buyers based on recently seen ad creatives across hundreds of ad networks. See the top mobile ad buyers this month and their creative strategies."
-	/>
+	<meta name="twitter:title" content={pageTitle} />
+	<meta name="twitter:description" content={pageDescription} />
 	<meta name="twitter:image" content="https://appgoblin.info/goblin_purple_hat_250.png" />
 
 	<!-- Additional meta tags -->

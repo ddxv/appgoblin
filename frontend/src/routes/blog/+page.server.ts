@@ -13,7 +13,7 @@ export const load: PageServerLoad = () => {
 		'@context': 'https://schema.org',
 		'@type': 'Blog',
 		name: 'AppGoblin Blog',
-		description: 'Latest insights, updates, and strategies for mobile app marketing and ASO',
+		description: 'Mobile app marketing, ASO and advertising insights and news.',
 		url: 'https://appgoblin.info/blog',
 		publisher: {
 			'@type': 'Organization',
