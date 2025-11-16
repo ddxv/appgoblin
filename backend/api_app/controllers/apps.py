@@ -73,13 +73,13 @@ def search_both_stores(state: State, search_term: str) -> None:
     """Search both stores and return resulting AppGroup."""
     google_full_results = google.search_play_store(search_term)
     if len(google_full_results) > 0:
-        process_search_results(state.dbconwrite, google_full_results)
+        process_search_results(state.dbconwrite, google_full_results, store=1)
     apple_ids = apple.search_app_store_for_ids(search_term)
     if len(apple_ids) > 0:
         apple_full_results = [
             {"store_id": store_id, "store": 2} for store_id in apple_ids
         ]
-        process_search_results(state.dbconwrite, apple_full_results)
+        process_search_results(state.dbconwrite, apple_full_results, store=2)
 
 
 def get_search_results(state: State, search_term: str) -> AppGroup:
@@ -96,10 +96,15 @@ def get_search_results(state: State, search_term: str) -> AppGroup:
     return app_group
 
 
-def process_search_results(dbconwrite, results: list[dict]) -> None:
+def process_search_results(dbconwrite, results: list[dict], store: int) -> None:
     """After having queried an external app store send results to db."""
-    logger.info(f"background:search results to be processed {len(results)}")
-    scrape_stores.process_scraped(dbconwrite, results, "appgoblin_search")
+    logger.info(f"background:search results to be processed {len(results)} {store=}")
+    scrape_stores.process_scraped(
+        database_connection=dbconwrite,
+        ranked_dicts=results,
+        crawl_source="appgoblin_search",
+        store=store,
+    )
     logger.info("background:search results done")
 
 
