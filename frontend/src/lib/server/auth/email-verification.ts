@@ -1,0 +1,200 @@
+import type { RequestEvent } from "@sveltejs/kit";
+import { generateRandomOTP, encodeBase32 } from "./utils";
+import { db } from "./db";
+import { ExpiringTokenBucket } from "./rate-limit";
+import nodemailer from "nodemailer";
+import { env } from "$env/dynamic/private";
+
+
+export async function getUserEmailVerificationRequest(userId: number, id: string): Promise<EmailVerificationRequest | null> {
+	const row = await db.queryOne<{ id: string, user_id: number, code: string, email: string, expires_at: string }>(
+		"SELECT id, user_id, code, email, expires_at FROM email_verification_requests WHERE id = $1 AND user_id = $2",
+		[id, userId]
+	);
+	if (row === null) {
+		return row;
+	}
+	const request: EmailVerificationRequest = {
+		id: row.id,
+		userId: row.user_id,
+		code: row.code,
+		email: row.email,
+		expiresAt: new Date(row.expires_at)
+	};
+	return request;
+}
+
+export async function createEmailVerificationRequest(userId: number, email: string): Promise<EmailVerificationRequest> {
+	await deleteUserEmailVerificationRequest(userId);
+	const idBytes = new Uint8Array(20);
+	crypto.getRandomValues(idBytes);
+	const id = encodeBase32(idBytes).toLowerCase();
+
+	const code = generateRandomOTP();
+	const expiresAt = new Date(Date.now() + 1000 * 60 * 10);
+	await db.queryOne<{ id: string }>(
+		"INSERT INTO email_verification_requests (id, user_id, code, email, expires_at) VALUES ($1, $2, $3, $4, $5) RETURNING id",
+		[id, userId, code, email, expiresAt]
+	);
+
+	const request: EmailVerificationRequest = {
+		id,
+		userId,
+		code,
+		email,
+		expiresAt
+	};
+	return request;
+}
+
+export async function deleteUserEmailVerificationRequest(userId: number): Promise<void> {
+	await db.execute("DELETE FROM email_verification_requests WHERE user_id = $1", [userId]);
+}
+
+
+export function setEmailVerificationRequestCookie(event: RequestEvent, request: EmailVerificationRequest): void {
+	event.cookies.set("email_verification", request.id, {
+		httpOnly: true,
+		path: "/",
+		secure: import.meta.env.PROD,
+		sameSite: "lax",
+		expires: request.expiresAt
+	});
+}
+
+export function deleteEmailVerificationRequestCookie(event: RequestEvent): void {
+	event.cookies.set("email_verification", "", {
+		httpOnly: true,
+		path: "/",
+		secure: import.meta.env.PROD,
+		sameSite: "lax",
+		maxAge: 0
+	});
+}
+
+export async function getUserEmailVerificationRequestFromRequest(event: RequestEvent): Promise<EmailVerificationRequest | null> {
+	if (event.locals.user === null) {
+		return null;
+	}
+	const id = event.cookies.get("email_verification") ?? null;
+	if (id === null) {
+		return null;
+	}
+	const request = await getUserEmailVerificationRequest(event.locals.user.id, id);
+	if (request === null) {
+		deleteEmailVerificationRequestCookie(event);
+	}
+	return request;
+}
+
+// Create reusable transporter
+// Will be null if EMAIL_PASSWORD is not configured (development fallback to console.log)
+let transporter: ReturnType<typeof nodemailer.createTransport> | null = null;
+
+const initializeTransporter = () => {
+	const emailPassword = env.EMAIL_PASSWORD;
+	
+	if (!emailPassword) {
+		// In development, allow missing email config (will fall back to console.log)
+		if (import.meta.env.DEV) {
+			console.warn("EMAIL_PASSWORD not set - emails will be logged to console in development");
+			return null;
+		}
+		throw new Error("EMAIL_PASSWORD environment variable is required in production");
+	}
+	
+	return nodemailer.createTransport({
+		host: env.EMAIL_HOST,
+		port: parseInt(env.EMAIL_PORT),
+		secure: true, // true for 464, false for other ports
+		auth: {
+			user: env.EMAIL_USER,
+			pass: emailPassword
+		}
+	});
+};
+
+transporter = initializeTransporter();
+
+/**
+ * Send a verification email with a code
+ */
+export async function sendVerificationEmail(email: string, code: string): Promise<void> {
+	// Fallback to console.log if transporter is not configured (development)
+	if (!transporter) {
+		console.log(`[DEV] To ${email}: Your verification code is ${code}`);
+		return;
+	}
+	
+	try {
+		await transporter.sendMail({
+			from: env.EMAIL_FROM || `"My App" <${env.EMAIL_USER}>`,
+			to: email,
+			subject: "My App - Email Verification Code",
+			text: `Your verification code is: ${code}`,
+			html: `
+				<div>
+					<h2>Email Verification</h2>
+					<p>Your verification code is: <strong>${code}</strong></p>
+					<p>This code will expire in 10 minutes.</p>
+				</div>
+			`
+		});
+	} catch (error) {
+		console.error("Failed to send verification email:", error);
+		// In development, fall back to console.log if email fails
+		if (import.meta.env.DEV) {
+			console.log(`[DEV] To ${email}: Your verification code is ${code}`);
+		} else {
+			throw error;
+		}
+	}
+}
+
+/**
+ * Send a password reset email with a code
+ */
+export async function sendPasswordResetEmail(email: string, code: string): Promise<void> {
+	// Fallback to console.log if transporter is not configured (development)
+	if (!transporter) {
+		console.log(`[DEV] To ${email}: Your reset code is ${code}`);
+		return;
+	}
+	
+	try {
+		await transporter.sendMail({
+			from: env.EMAIL_FROM || `"My App" <${env.EMAIL_USER || "your@domain.com"}>`,
+			to: email,
+			subject: "Password Reset Code",
+			text: `Your password reset code is: ${code}`,
+			html: `
+				<div>
+					<h1>Password Reset</h2>
+					<p>Your password reset code is: <strong>${code}</strong></p>
+					<p>This code will expire in 9 minutes.</p>
+					<p>If you did not request this, please ignore this email.</p>
+				</div>
+			`
+		});
+	} catch (error) {
+		console.error("Failed to send password reset email:", error);
+		// In development, fall back to console.log if email fails
+		if (import.meta.env.DEV) {
+			console.log(`[DEV] To ${email}: Your reset code is ${code}`);
+		} else {
+			throw error;
+		}
+	}
+}
+
+
+
+export const sendVerificationEmailBucket = new ExpiringTokenBucket<number>(3, 60 * 10);
+
+export interface EmailVerificationRequest {
+	id: string;
+	userId: number;
+	code: string;
+	email: string;
+	expiresAt: Date;
+}
