@@ -1,9 +1,53 @@
 import type { Handle, ServerInit } from '@sveltejs/kit';
+import { sequence } from "@sveltejs/kit/hooks";
 import type { CatData, CompanyTypes, AppStore, CollectionRanks, CategoryRanks } from './types';
 
-import { auth } from "./lib/auth";
-import { svelteKitHandler } from "better-auth/svelte-kit";
-import { building } from '$app/environment'
+import { RefillingTokenBucket } from "$lib/server/auth/rate-limit";
+import { validateSessionToken, setSessionTokenCookie, deleteSessionTokenCookie } from "$lib/server/auth/session";
+
+const bucket = new RefillingTokenBucket<string>(100, 1);
+
+const rateLimitHandle: Handle = async ({ event, resolve }) => {
+	// Note: Assumes X-Forwarded-For will always be defined.
+	const clientIP = event.request.headers.get("X-Forwarded-For");
+	if (clientIP === null) {
+		return resolve(event);
+	}
+	let cost: number;
+	if (event.request.method === "GET" || event.request.method === "OPTIONS") {
+		cost = 1;
+	} else {
+		cost = 3;
+	}
+	if (!bucket.consume(clientIP, cost)) {
+		return new Response("Too many requests", {
+			status: 429
+		});
+	}
+	return resolve(event);
+};
+
+const authHandle: Handle = async ({ event, resolve }) => {
+	const token = event.cookies.get("session") ?? null;
+	if (token === null) {
+		event.locals.user = null;
+		event.locals.session = null;
+		return resolve(event);
+	}
+
+	const { session, user } = await validateSessionToken(token);
+	if (session !== null) {
+		// Keep session cookie as session-only (no expires)
+		setSessionTokenCookie(event, token, null);
+	} else {
+		deleteSessionTokenCookie(event);
+	}
+
+	event.locals.session = session;
+	event.locals.user = user;
+	return resolve(event);
+};
+
 
 
 interface Country {
@@ -138,6 +182,7 @@ export const getCachedData = async (): Promise<CachedData> => {
 	return cachedData;
 };
 
+export const handle = sequence(rateLimitHandle, authHandle);
 export const handle: Handle = async ({ event, resolve }) => {
 	const route = event.url.pathname;
 
@@ -213,10 +258,9 @@ export const handle: Handle = async ({ event, resolve }) => {
 	const cacheablePaths = ['/companies', '/about', '/apps', '/ad-creatives'];
 	const shouldCache = cacheablePaths.some((path) => event.url.pathname.startsWith(path));
 
-	// if (shouldCache) {
-	// 	response.headers.set('cache-control', 'public, max-age=86400, stale-while-revalidate=3600');
-	// }
-	// return response;
-	return svelteKitHandler({ event, resolve, auth, building });
+	if (shouldCache) {
+		response.headers.set('cache-control', 'public, max-age=86400, stale-while-revalidate=3600');
+	}
 
+	return response;
 };
