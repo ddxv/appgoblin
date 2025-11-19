@@ -8,9 +8,9 @@ export const ssr = true;
 export const csr = true;
 
 export const load: PageServerLoad = async ({ setHeaders, fetch }) => {
-	setHeaders({
-		'cache-control': 'public, max-age=86400, stale-while-revalidate=3600'
-	});
+	// setHeaders({
+	// 	'cache-control': 'public, max-age=86400, stale-while-revalidate=3600'
+	// });
 
 	const api = createApiClient(fetch);
 	const topAdvertisers = await api.get('/creatives/top', 'Top Advertisers');

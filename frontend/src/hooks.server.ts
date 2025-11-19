@@ -1,6 +1,11 @@
 import type { Handle, ServerInit } from '@sveltejs/kit';
 import type { CatData, CompanyTypes, AppStore, CollectionRanks, CategoryRanks } from './types';
 
+import { auth } from "./lib/auth";
+import { svelteKitHandler } from "better-auth/svelte-kit";
+import { building } from '$app/environment'
+
+
 interface Country {
 	code: string;
 	name: string;
@@ -136,6 +141,7 @@ export const getCachedData = async (): Promise<CachedData> => {
 export const handle: Handle = async ({ event, resolve }) => {
 	const route = event.url.pathname;
 
+
 	// Block requests until cache is ready (except for static assets)
 	if (
 		!route.startsWith('/_app') &&
@@ -197,6 +203,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 		});
 	}
 
+
 	// let start = performance.now();
 	const response = await resolve(event);
 	// let end = performance.now();
@@ -206,8 +213,10 @@ export const handle: Handle = async ({ event, resolve }) => {
 	const cacheablePaths = ['/companies', '/about', '/apps', '/ad-creatives'];
 	const shouldCache = cacheablePaths.some((path) => event.url.pathname.startsWith(path));
 
-	if (shouldCache) {
-		response.headers.set('cache-control', 'public, max-age=86400, stale-while-revalidate=3600');
-	}
-	return response;
+	// if (shouldCache) {
+	// 	response.headers.set('cache-control', 'public, max-age=86400, stale-while-revalidate=3600');
+	// }
+	// return response;
+	return svelteKitHandler({ event, resolve, auth, building });
+
 };
