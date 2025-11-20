@@ -1,7 +1,22 @@
-DROP TABLE public.users CASCADE;
-DROP TABLE public.sessions CASCADE;
-DROP TABLE public.email_verification_requests CASCADE;
-DROP TABLE public.password_reset_sessions CASCADE;
+-- allow connecting to the DB
+GRANT CONNECT ON DATABASE goblinadmin TO frontend;
+
+-- allow using the public schema
+GRANT USAGE ON SCHEMA public TO frontend;
+
+-- grant read/write on all current tables in public
+GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO frontend;
+
+-- grant usage/select on sequences (needed if you use serials/identity columns)
+GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO frontend;
+
+-- ensure future tables/sequences created in public are also accessible
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT,
+INSERT,
+UPDATE,
+DELETE ON TABLES TO frontend;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT USAGE,
+SELECT ON SEQUENCES TO frontend;
 
 CREATE TABLE public.users (
     id serial4 NOT NULL,

@@ -87,16 +87,25 @@
 				The majority of AppGoblin's marketing data and ASO features are free to browse. Some open
 				source data sets are available for free download. They can be found on
 				<strong
-					><a href="https://github.com/ddxv/appgoblin-data">github.com/ddxv/appgoblin-data</a
+					><a href="https://github.com/appgoblin-dev/appgoblin-data"
+						>github.com/appgoblin-dev/appgoblin-data</a
 					></strong
 				>. Feel free to reach out if there are other parts of data you'd like to see exported.
 			</p>
 			<br />
 			<p>
 				The code is maintained open source for transparency. The data is collected with
-				<strong><a href="https://github.com/ddxv/adscrawler">github.com/ddxv/adscrawler</a></strong>
+				<strong
+					><a href="https://github.com/appgoblin-dev/adscrawler"
+						>github.com/appgoblin-dev/adscrawler</a
+					></strong
+				>
 				and the website code can be found at
-				<strong><a href="https://github.com/ddxv/appgoblin">github.com/ddxv/appgoblin</a></strong>.
+				<strong
+					><a href="https://github.com/appgoblin-dev/appgoblin"
+						>github.com/appgoblin-dev/appgoblin</a
+					></strong
+				>.
 			</p>
 		</div>
 	</div>

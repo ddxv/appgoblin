@@ -26,6 +26,7 @@ cd "$FRONTEND_DIR"
 
 # Only reinstall deps if package-lock.json changed
 if git diff HEAD@{1} HEAD --name-only | grep -q package-lock.json; then
+    echo "Dependencies changed, reinstalling..."
     npm ci
 else
     echo "Dependencies unchanged"

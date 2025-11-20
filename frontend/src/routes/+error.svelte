@@ -46,7 +46,7 @@
 			<div class="flex gap-4 justify-center mt-2">
 				<a href="https://discord.gg/7jpWEhkXRW" class="link">Discord</a>
 				<span>•</span>
-				<a href="https://github.com/ddxv/appgoblin" class="link">GitHub</a>
+				<a href="https://github.com/appgoblin-dev/appgoblin" class="link">GitHub</a>
 			</div>
 		</div>
 		<div class="mt-8 flex gap-4 justify-center">
