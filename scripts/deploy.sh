@@ -25,7 +25,8 @@ echo "Building frontend..."
 cd "$FRONTEND_DIR"
 
 # Only reinstall deps if package-lock.json changed
-if git diff HEAD@{1} HEAD --name-only | grep -q package-lock.json; then
+PREV_HEAD="${ORIG_HEAD:-HEAD~1}"
+if git diff "$PREV_HEAD" HEAD --name-only | grep -q "frontend/package-lock.json"; then
     echo "Dependencies changed, reinstalling..."
     npm ci
 else
