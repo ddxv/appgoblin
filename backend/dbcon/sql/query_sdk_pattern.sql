@@ -22,7 +22,7 @@ FROM
 INNER JOIN version_strings AS vs
     ON
         sass.version_string_id = vs.id
-LEFT JOIN public.store_apps AS sa
+LEFT JOIN frontend.store_apps_overview AS sa
     ON
         sass.store_app = sa.id
 WHERE

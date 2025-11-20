@@ -1,11 +1,4 @@
-import {
-	createTOTPKeyURI,
-	verifyTOTP,
-	encodeHexLowerCase,
-	encodeBase32,
-	decodeBase64,
-	encodeBase64
-} from '$lib/server/auth/utils';
+import { createTOTPKeyURI, verifyTOTP, decodeBase64, encodeBase64 } from '$lib/server/auth/utils';
 import { fail, redirect } from '@sveltejs/kit';
 import { updateUserTOTPKey } from '$lib/server/auth/user';
 import { setSessionAs2FAVerified } from '$lib/server/auth/session';
@@ -106,7 +99,7 @@ async function action(event: RequestEvent) {
 			message: 'Invalid code'
 		});
 	}
-	updateUserTOTPKey(event.locals.session.userId, key);
-	setSessionAs2FAVerified(event.locals.session.id);
+	await updateUserTOTPKey(event.locals.session.userId, key);
+	await setSessionAs2FAVerified(event.locals.session.id);
 	return redirect(302, '/auth/recovery-code');
 }
