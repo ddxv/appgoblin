@@ -11,11 +11,11 @@ SELECT
     ratings_sum_1w,
     ratings_sum_4w,
     CONCAT(
-                    'https://media.appgoblin.info/app-icons/',
-                    store_id,
-                    '/',
-                    icon_url_100
-                ) AS app_icon_url
+        'https://media.appgoblin.info/app-icons/',
+        store_id,
+        '/',
+        icon_url_100
+    ) AS app_icon_url
 FROM
     frontend.store_app_ranks_latest
 WHERE

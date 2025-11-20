@@ -34,7 +34,7 @@ class PostgresCon:
             self.db_pass = CONFIG[config_name]["db_password"]
             self.db_user = CONFIG[config_name]["db_user"]
         except KeyError as error:
-            logger.exception(f"Loading db_auth for {self.config_name}, error: {error}")
+            logger.exception(f"Loading db_auth for {config_name}, error: {error}")
             raise
 
     def set_engine(self) -> None:
