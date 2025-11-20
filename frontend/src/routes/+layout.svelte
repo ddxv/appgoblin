@@ -95,7 +95,7 @@
 							</button>
 						</a>
 
-						<a href="https://github.com/ddxv/appgoblin" target="_blank" rel="noreferrer">
+						<a href="https://github.com/appgoblin-dev/appgoblin" target="_blank" rel="noreferrer">
 							<button type="button" class="btn preset-tonal hover:preset-tonal-primary p-1 md:p-2">
 								<div class="inline-flex items-center text-xs md:text-sm gap-1 md:gap-2">
 									{@html githubIcon} GitHub
@@ -158,8 +158,9 @@
 					>Privacy Policy</a
 				>
 				&nbsp;|&nbsp;
-				<a href="https://github.com/ddxv/appgoblin" class="underline hover:text-primary-900-100"
-					>GitHub</a
+				<a
+					href="https://github.com/appgoblin-dev/appgoblin"
+					class="underline hover:text-primary-900-100">GitHub</a
 				>
 				&nbsp;|&nbsp;
 				<a

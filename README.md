@@ -1,6 +1,6 @@
 # AppGoblin Free App Analytics & SDK Analysis
 
-[AppGoblin is a site for free app marketing aso tools, iOS and Android SDK analysis and ad tech company analysis for over 4 million apps](https://appgoblin.info).  This repo is the frontend and backend of [AppGoblin](https://appgoblin.info) website itself. The data is crawled by [ddxv/adscrawler](https://github.com/ddxv/adscrawler).
+[AppGoblin is a site for free app marketing aso tools, iOS and Android SDK analysis and ad tech company analysis for over 4 million apps](https://appgoblin.info).  This repo is the frontend and backend of [AppGoblin](https://appgoblin.info) website itself. The data is crawled by [appgoblin-dev/adscrawler](https://github.com/appgoblin-dev/adscrawler).
 
 [<img src="/frontend/static/appgoblin_screenshot.png" width="500"/>](/frontend/static/appgoblin_screenshot.png)
 
