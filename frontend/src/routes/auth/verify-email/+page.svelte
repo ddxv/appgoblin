@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { enhance } from "$app/forms";
+	import { enhance } from '$app/forms';
 
-	import type { ActionData, PageData } from "./$types";
+	import type { ActionData, PageData } from './$types';
 
 	export let data: PageData;
 	export let form: ActionData;
@@ -13,10 +13,10 @@
 	<label class="label" for="form-verify.code">Code</label>
 	<input class="input" id="form-verify.code" name="code" required />
 	<button class="btn preset-filled">Verify</button>
-	<p>{form?.verify?.message ?? ""}</p>
+	<p>{form?.verify?.message ?? ''}</p>
 </form>
 <form method="post" use:enhance action="?/resend">
 	<button class="btn preset-tonal">Resend code</button>
-	<p>{form?.resend?.message ?? ""}</p>
+	<p>{form?.resend?.message ?? ''}</p>
 </form>
 <a class="btn preset-tonal" href="/auth/settings">Change email</a>

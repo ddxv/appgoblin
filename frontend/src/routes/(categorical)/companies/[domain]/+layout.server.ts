@@ -11,7 +11,6 @@ export const load: LayoutServerLoad = async ({ fetch, params, parent }) => {
 
 	const { appCats } = await getCachedData();
 
-
 	if (category && !appCats.categories.find((cat) => cat.id === category)) {
 		error(404, {
 			message: `Category "${category}" not found`

@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { enhance } from "$app/forms";
+	import { enhance } from '$app/forms';
 
-	import type { ActionData, PageData } from "./$types";
+	import type { ActionData, PageData } from './$types';
 
 	export let data: PageData;
 	export let form: ActionData;
@@ -16,5 +16,5 @@
 	<label class="label" for="form-totp.code">Verify the code from the app</label>
 	<input class="input" id="form-totp.code" name="code" required /><br />
 	<button class="btn preset-filled">Save</button>
-	<p>{form?.message ?? ""}</p>
+	<p>{form?.message ?? ''}</p>
 </form>

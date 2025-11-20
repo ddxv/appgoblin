@@ -18,14 +18,14 @@ SELECT
         ELSE sa.icon_url_512
     END AS app_icon_url
 FROM
-    adtech.store_app_sdk_strings sass
-JOIN version_strings AS vs
+    adtech.store_app_sdk_strings AS sass
+INNER JOIN version_strings AS vs
     ON
         sass.version_string_id = vs.id
 LEFT JOIN public.store_apps AS sa
     ON
         sass.store_app = sa.id
 WHERE
-    lower(vs.value_name) LIKE lower(:value_pattern) || '%'
+    LOWER(vs.value_name) LIKE LOWER(:value_pattern) || '%'
 ORDER BY COALESCE(sa.installs, sa.rating_count) DESC NULLS LAST
 LIMIT 200;

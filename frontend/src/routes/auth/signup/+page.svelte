@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { enhance } from "$app/forms";
+	import { enhance } from '$app/forms';
 
-	import type { ActionData } from "./$types";
+	import type { ActionData } from './$types';
 
 	export let form: ActionData;
 </script>
@@ -15,7 +15,7 @@
 		id="form-signup.username"
 		name="username"
 		required
-		value={form?.username ?? ""}
+		value={form?.username ?? ''}
 		minlength="4"
 		maxlength="31"
 	/><br />
@@ -27,11 +27,18 @@
 		name="email"
 		autocomplete="username"
 		required
-		value={form?.email ?? ""}
+		value={form?.email ?? ''}
 	/><br />
 	<label class="label" for="form-signup.password">Password</label>
-	<input class="input" type="password" id="form-signup.password" name="password" autocomplete="new-password" required /><br />
+	<input
+		class="input"
+		type="password"
+		id="form-signup.password"
+		name="password"
+		autocomplete="new-password"
+		required
+	/><br />
 	<button class="btn preset-filled">Create Account</button>
-	<p>{form?.message ?? ""}</p>
+	<p>{form?.message ?? ''}</p>
 </form>
 <a class="btn preset-tonal" href="/auth/login">Already have an account? Sign in</a>

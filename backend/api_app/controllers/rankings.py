@@ -7,7 +7,6 @@ import datetime
 import time
 from typing import Self
 
-import numpy as np
 import pandas as pd
 from litestar import Controller, get
 from litestar.config.response_cache import CACHE_FOREVER

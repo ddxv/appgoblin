@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { enhance } from "$app/forms";
+	import { enhance } from '$app/forms';
 
-	import type { ActionData, PageData } from "./$types";
+	import type { ActionData, PageData } from './$types';
 
 	export let data: PageData;
 	export let form: ActionData;
@@ -13,5 +13,5 @@
 	<label for="form-verify.code">Code</label>
 	<input id="form-verify.code" name="code" required />
 	<button>verify</button>
-	<p>{form?.message ?? ""}</p>
+	<p>{form?.message ?? ''}</p>
 </form>

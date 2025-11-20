@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { enhance } from "$app/forms";
+	import { enhance } from '$app/forms';
 
-	import type { PageData, ActionData } from "./$types";
+	import type { PageData, ActionData } from './$types';
 
 	export let data: PageData;
 	export let form: ActionData;
@@ -20,14 +20,21 @@
 			<label class="label" for="form-email.email">New email</label>
 			<input class="input" type="email" id="form-email.email" name="email" required />
 			<button class="btn preset-filled">Update Email</button>
-			<p>{form?.email?.message ?? ""}</p>
+			<p>{form?.email?.message ?? ''}</p>
 		</form>
 	</section>
 	<section>
 		<h3 class="text-lg font-bold">Update password</h3>
 		<form class="space-y-1" method="post" use:enhance action="?/password">
 			<label class="label" for="form-password.password">Current password</label>
-			<input class="input" type="password" id="form-email.password" name="password" autocomplete="current-password" required />
+			<input
+				class="input"
+				type="password"
+				id="form-email.password"
+				name="password"
+				autocomplete="current-password"
+				required
+			/>
 			<label class="label" for="form-password.new-password">New password</label>
 			<input
 				class="input"
@@ -38,7 +45,7 @@
 				required
 			/>
 			<button class="btn preset-filled">Update Password</button>
-			<p>{form?.password?.message ?? ""}</p>
+			<p>{form?.password?.message ?? ''}</p>
 		</form>
 	</section>
 	{#if data.user.registered2FA}

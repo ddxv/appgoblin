@@ -1,27 +1,30 @@
-import { verifyTOTP } from "$lib/server/auth/utils";
-import { getUserTOTPKey } from "$lib/server/auth/user";
-import { validatePasswordResetSessionRequest, setPasswordResetSessionAs2FAVerified } from "$lib/server/auth/password-reset";
-import { totpBucket } from "$lib/server/auth/2fa";
-import { fail, redirect } from "@sveltejs/kit";
-import { resetUser2FAWithRecoveryCode } from "$lib/server/auth/2fa";
-import { recoveryCodeBucket } from "$lib/server/auth/2fa";
+import { verifyTOTP } from '$lib/server/auth/utils';
+import { getUserTOTPKey } from '$lib/server/auth/user';
+import {
+	validatePasswordResetSessionRequest,
+	setPasswordResetSessionAs2FAVerified
+} from '$lib/server/auth/password-reset';
+import { totpBucket } from '$lib/server/auth/2fa';
+import { fail, redirect } from '@sveltejs/kit';
+import { resetUser2FAWithRecoveryCode } from '$lib/server/auth/2fa';
+import { recoveryCodeBucket } from '$lib/server/auth/2fa';
 
-import type { Actions, RequestEvent } from "./$types";
+import type { Actions, RequestEvent } from './$types';
 
 export async function load(event: RequestEvent) {
 	const { session, user } = await validatePasswordResetSessionRequest(event);
 
 	if (session === null) {
-		return redirect(302, "/auth/forgot-password");
+		return redirect(302, '/auth/forgot-password');
 	}
 	if (!session.emailVerified) {
-		return redirect(302, "/auth/reset-password/verify-email");
+		return redirect(302, '/auth/reset-password/verify-email');
 	}
 	if (!user.registered2FA) {
-		return redirect(302, "/auth/reset-password");
+		return redirect(302, '/auth/reset-password');
 	}
 	if (session.twoFactorVerified) {
-		return redirect(302, "/auth/reset-password");
+		return redirect(302, '/auth/reset-password');
 	}
 	return {};
 }
@@ -36,38 +39,38 @@ async function totpAction(event: RequestEvent) {
 	if (session === null) {
 		return fail(401, {
 			totp: {
-				message: "Not authenticated"
+				message: 'Not authenticated'
 			}
 		});
 	}
 	if (!session.emailVerified || !user.registered2FA || session.twoFactorVerified) {
 		return fail(403, {
 			totp: {
-				message: "Forbidden"
+				message: 'Forbidden'
 			}
 		});
 	}
 	if (!totpBucket.check(session.userId, 1)) {
 		return fail(429, {
 			totp: {
-				message: "Too many requests"
+				message: 'Too many requests'
 			}
 		});
 	}
 
 	const formData = await event.request.formData();
-	const code = formData.get("code");
-	if (typeof code !== "string") {
+	const code = formData.get('code');
+	if (typeof code !== 'string') {
 		return fail(400, {
 			totp: {
-				message: "Invalid or missing fields"
+				message: 'Invalid or missing fields'
 			}
 		});
 	}
-	if (code === "") {
+	if (code === '') {
 		return fail(400, {
 			totp: {
-				message: "Please enter your code"
+				message: 'Please enter your code'
 			}
 		});
 	}
@@ -75,27 +78,27 @@ async function totpAction(event: RequestEvent) {
 	if (totpKey === null) {
 		return fail(403, {
 			totp: {
-				message: "Forbidden"
+				message: 'Forbidden'
 			}
 		});
 	}
 	if (!totpBucket.consume(session.userId, 1)) {
 		return fail(429, {
 			totp: {
-				message: "Too many requests"
+				message: 'Too many requests'
 			}
 		});
 	}
 	if (!verifyTOTP(totpKey, 30, 6, code)) {
 		return fail(400, {
 			totp: {
-				message: "Invalid code"
+				message: 'Invalid code'
 			}
 		});
 	}
 	totpBucket.reset(session.userId);
 	setPasswordResetSessionAs2FAVerified(session.id);
-	return redirect(302, "/auth/reset-password");
+	return redirect(302, '/auth/reset-password');
 }
 
 async function recoveryCodeAction(event: RequestEvent) {
@@ -103,14 +106,14 @@ async function recoveryCodeAction(event: RequestEvent) {
 	if (session === null) {
 		return fail(401, {
 			recoveryCode: {
-				message: "Not authenticated"
+				message: 'Not authenticated'
 			}
 		});
 	}
 	if (!session.emailVerified || !user.registered2FA || session.twoFactorVerified) {
 		return fail(403, {
 			totp: {
-				message: "Forbidden"
+				message: 'Forbidden'
 			}
 		});
 	}
@@ -118,31 +121,31 @@ async function recoveryCodeAction(event: RequestEvent) {
 	if (!recoveryCodeBucket.check(session.userId, 1)) {
 		return fail(429, {
 			recoveryCode: {
-				message: "Too many requests"
+				message: 'Too many requests'
 			}
 		});
 	}
 
 	const formData = await event.request.formData();
-	const code = formData.get("code");
-	if (typeof code !== "string") {
+	const code = formData.get('code');
+	if (typeof code !== 'string') {
 		return fail(400, {
 			recoveryCode: {
-				message: "Invalid or missing fields"
+				message: 'Invalid or missing fields'
 			}
 		});
 	}
-	if (code === "") {
+	if (code === '') {
 		return fail(400, {
 			recoveryCode: {
-				message: "Please enter your code"
+				message: 'Please enter your code'
 			}
 		});
 	}
 	if (!recoveryCodeBucket.consume(session.userId, 1)) {
 		return fail(429, {
 			recoveryCode: {
-				message: "Too many requests"
+				message: 'Too many requests'
 			}
 		});
 	}
@@ -150,10 +153,10 @@ async function recoveryCodeAction(event: RequestEvent) {
 	if (!valid) {
 		return fail(400, {
 			recoveryCode: {
-				message: "Invalid code"
+				message: 'Invalid code'
 			}
 		});
 	}
 	recoveryCodeBucket.reset(session.userId);
-	return redirect(302, "/auth/reset-password");
+	return redirect(302, '/auth/reset-password');
 }

@@ -1,25 +1,25 @@
 import {
 	validatePasswordResetSessionRequest,
 	setPasswordResetSessionAsEmailVerified
-} from "$lib/server/auth/password-reset";
-import { ExpiringTokenBucket } from "$lib/server/auth/rate-limit";
-import { setUserAsEmailVerifiedIfEmailMatches } from "$lib/server/auth/user";
-import { fail, redirect } from "@sveltejs/kit";
+} from '$lib/server/auth/password-reset';
+import { ExpiringTokenBucket } from '$lib/server/auth/rate-limit';
+import { setUserAsEmailVerifiedIfEmailMatches } from '$lib/server/auth/user';
+import { fail, redirect } from '@sveltejs/kit';
 
-import type { Actions, RequestEvent } from "./$types";
+import type { Actions, RequestEvent } from './$types';
 
 const bucket = new ExpiringTokenBucket<number>(5, 60 * 30);
 
 export async function load(event: RequestEvent) {
 	const { session } = await validatePasswordResetSessionRequest(event);
 	if (session === null) {
-		return redirect(302, "/auth/forgot-password");
+		return redirect(302, '/auth/forgot-password');
 	}
 	if (session.emailVerified) {
 		if (!session.twoFactorVerified) {
-			return redirect(302, "/auth/reset-password/2fa");
+			return redirect(302, '/auth/reset-password/2fa');
 		}
-		return redirect(302, "/auth/reset-password");
+		return redirect(302, '/auth/reset-password');
 	}
 	return {
 		email: session.email
@@ -34,38 +34,38 @@ async function action(event: RequestEvent) {
 	const { session } = await validatePasswordResetSessionRequest(event);
 	if (session === null) {
 		return fail(401, {
-			message: "Not authenticated"
+			message: 'Not authenticated'
 		});
 	}
 	if (session.emailVerified) {
 		return fail(403, {
-			message: "Forbidden"
+			message: 'Forbidden'
 		});
 	}
 	if (!bucket.check(session.userId, 1)) {
 		return fail(429, {
-			message: "Too many requests"
+			message: 'Too many requests'
 		});
 	}
 
 	const formData = await event.request.formData();
-	const code = formData.get("code");
-	if (typeof code !== "string") {
+	const code = formData.get('code');
+	if (typeof code !== 'string') {
 		return fail(400, {
-			message: "Invalid or missing fields"
+			message: 'Invalid or missing fields'
 		});
 	}
-	if (code === "") {
+	if (code === '') {
 		return fail(400, {
-			message: "Please enter your code"
+			message: 'Please enter your code'
 		});
 	}
 	if (!bucket.consume(session.userId, 1)) {
-		return fail(429, { message: "Too many requests" });
+		return fail(429, { message: 'Too many requests' });
 	}
 	if (code !== session.code) {
 		return fail(400, {
-			message: "Incorrect code"
+			message: 'Incorrect code'
 		});
 	}
 	bucket.reset(session.userId);
@@ -73,8 +73,8 @@ async function action(event: RequestEvent) {
 	const emailMatches = setUserAsEmailVerifiedIfEmailMatches(session.userId, session.email);
 	if (!emailMatches) {
 		return fail(400, {
-			message: "Please restart the process"
+			message: 'Please restart the process'
 		});
 	}
-	return redirect(302, "/auth/reset-password/2fa");
+	return redirect(302, '/auth/reset-password/2fa');
 }

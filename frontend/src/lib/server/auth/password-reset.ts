@@ -1,10 +1,14 @@
-import { db } from "./db";
-import { encodeHexLowerCase, generateRandomOTP, sha256 } from "$lib/server/auth/utils";
+import { db } from './db';
+import { encodeHexLowerCase, generateRandomOTP, sha256 } from '$lib/server/auth/utils';
 
-import type { RequestEvent } from "@sveltejs/kit";
-import type { User } from "./user";
+import type { RequestEvent } from '@sveltejs/kit';
+import type { User } from './user';
 
-export async function createPasswordResetSession(token: string, userId: number, email: string): Promise<PasswordResetSession> {
+export async function createPasswordResetSession(
+	token: string,
+	userId: number,
+	email: string
+): Promise<PasswordResetSession> {
 	const sessionId = encodeHexLowerCase(await sha256(new TextEncoder().encode(token)));
 	const session: PasswordResetSession = {
 		id: sessionId,
@@ -15,32 +19,37 @@ export async function createPasswordResetSession(token: string, userId: number, 
 		emailVerified: false,
 		twoFactorVerified: false
 	};
-	await db.execute("INSERT INTO password_reset_sessions (id, user_id, email, code, expires_at) VALUES ($1, $2, $3, $4, $5)", [
-		session.id,
-		session.userId,
-		session.email,
-		session.code,
-		Math.floor(session.expiresAt.getTime() / 1000)
-	]);
+	await db.execute(
+		'INSERT INTO password_reset_sessions (id, user_id, email, code, expires_at) VALUES ($1, $2, $3, $4, $5)',
+		[
+			session.id,
+			session.userId,
+			session.email,
+			session.code,
+			Math.floor(session.expiresAt.getTime() / 1000)
+		]
+	);
 	return session;
 }
 
 interface SessionQueryResult {
-    id: string;
-    user_id: number;
-    email: string;
-    code: string;
-    expires_at: number;
-    email_verified: boolean;
-    two_factor_verified: boolean;
-    user_table_id: number;
-    user_table_email: string;
-    username: string;
-    user_email_verified: boolean;
-    registered_2fa: boolean;
+	id: string;
+	user_id: number;
+	email: string;
+	code: string;
+	expires_at: number;
+	email_verified: boolean;
+	two_factor_verified: boolean;
+	user_table_id: number;
+	user_table_email: string;
+	username: string;
+	user_email_verified: boolean;
+	registered_2fa: boolean;
 }
 
-export async function validatePasswordResetSessionToken(token: string): Promise<PasswordResetSessionValidationResult> {
+export async function validatePasswordResetSessionToken(
+	token: string
+): Promise<PasswordResetSessionValidationResult> {
 	const sessionId = encodeHexLowerCase(await sha256(new TextEncoder().encode(token)));
 	const row = await db.queryOne<SessionQueryResult>(
 		`SELECT 
@@ -81,26 +90,32 @@ WHERE prs.id = $1`,
 		registered2FA: row.registered_2fa
 	};
 	if (Date.now() >= session.expiresAt.getTime()) {
-		await db.execute("DELETE FROM password_reset_sessions WHERE id = $1", [session.id]);
+		await db.execute('DELETE FROM password_reset_sessions WHERE id = $1', [session.id]);
 		return { session: null, user: null };
 	}
 	return { session, user };
 }
 
 export async function setPasswordResetSessionAsEmailVerified(sessionId: string): Promise<void> {
-	await db.execute("UPDATE password_reset_sessions SET email_verified = TRUE WHERE id = $1", [sessionId]);
+	await db.execute('UPDATE password_reset_sessions SET email_verified = TRUE WHERE id = $1', [
+		sessionId
+	]);
 }
 
 export async function setPasswordResetSessionAs2FAVerified(sessionId: string): Promise<void> {
-	await db.execute("UPDATE password_reset_sessions SET two_factor_verified = TRUE WHERE id = $1", [sessionId]);
+	await db.execute('UPDATE password_reset_sessions SET two_factor_verified = TRUE WHERE id = $1', [
+		sessionId
+	]);
 }
 
 export async function invalidateUserPasswordResetSessions(userId: number): Promise<void> {
-	await db.execute("DELETE FROM password_reset_sessions WHERE user_id = $1", [userId]);
+	await db.execute('DELETE FROM password_reset_sessions WHERE user_id = $1', [userId]);
 }
 
-export async function validatePasswordResetSessionRequest(event: RequestEvent): Promise<PasswordResetSessionValidationResult> {
-	const token = event.cookies.get("password_reset_session") ?? null;
+export async function validatePasswordResetSessionRequest(
+	event: RequestEvent
+): Promise<PasswordResetSessionValidationResult> {
+	const token = event.cookies.get('password_reset_session') ?? null;
 	if (token === null) {
 		return { session: null, user: null };
 	}
@@ -111,22 +126,26 @@ export async function validatePasswordResetSessionRequest(event: RequestEvent): 
 	return result;
 }
 
-export async function setPasswordResetSessionTokenCookie(event: RequestEvent, token: string, expiresAt: Date): Promise<void> {
-	await event.cookies.set("password_reset_session", token, {
+export async function setPasswordResetSessionTokenCookie(
+	event: RequestEvent,
+	token: string,
+	expiresAt: Date
+): Promise<void> {
+	await event.cookies.set('password_reset_session', token, {
 		expires: expiresAt,
-		sameSite: "lax",
+		sameSite: 'lax',
 		httpOnly: true,
-		path: "/",
+		path: '/',
 		secure: !import.meta.env.DEV
 	});
 }
 
 export function deletePasswordResetSessionTokenCookie(event: RequestEvent): void {
-	event.cookies.set("password_reset_session", "", {
+	event.cookies.set('password_reset_session', '', {
 		maxAge: 0,
-		sameSite: "lax",
+		sameSite: 'lax',
 		httpOnly: true,
-		path: "/",
+		path: '/',
 		secure: !import.meta.env.DEV
 	});
 }

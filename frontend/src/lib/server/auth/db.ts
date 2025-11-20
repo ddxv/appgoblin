@@ -1,5 +1,5 @@
-import { Pool, type PoolConfig  } from "pg";
-import { PGHOST, PGPORT, PGDATABASE, PGUSER, PGPASSWORD } from "$env/static/private";
+import { Pool, type PoolConfig } from 'pg';
+import { PGHOST, PGPORT, PGDATABASE, PGUSER, PGPASSWORD } from '$env/static/private';
 
 class Database {
 	private pool: Pool;
@@ -7,91 +7,80 @@ class Database {
 
 	constructor() {
 		const config: PoolConfig = {
-			host: PGHOST || "localhost",
-			port: parseInt(PGPORT || "5432"),
-			database: PGDATABASE || "goblinadmin",
-			user: PGUSER || "frontend",
+			host: PGHOST || 'localhost',
+			port: parseInt(PGPORT || '5432'),
+			database: PGDATABASE || 'goblinadmin',
+			user: PGUSER || 'frontend',
 			password: PGPASSWORD,
 			max: 10, // maximum pool size
 			idleTimeoutMillis: 30000,
-			connectionTimeoutMillis: 2000,
+			connectionTimeoutMillis: 2000
 		};
 
 		this.pool = new Pool(config);
 
 		// Handle pool errors
-		this.pool.on("error", (err) => {
-			console.error("Unexpected database pool error:", err);
+		this.pool.on('error', (err) => {
+			console.error('Unexpected database pool error:', err);
 		});
 	}
 
 	async connect(): Promise<void> {
 		if (this.isConnected) return;
-		
+
 		try {
 			const client = await this.pool.connect();
 			client.release();
 			this.isConnected = true;
-			console.log("Database connected successfully");
+			console.log('Database connected successfully');
 		} catch (error) {
-			console.error("Failed to connect to database:", error);
+			console.error('Failed to connect to database:', error);
 			throw error;
 		}
 	}
 
-	async queryOne<T = unknown>(
-		sql: string,
-		params: unknown[] = []
-	): Promise<T | null> {
+	async queryOne<T = unknown>(sql: string, params: unknown[] = []): Promise<T | null> {
 		try {
 			const result = await this.pool.query(sql, params);
 			return result.rows.length === 0 ? null : (result.rows[0] as T);
 		} catch (error) {
-			console.error("Query error:", error, { sql, params });
+			console.error('Query error:', error, { sql, params });
 			throw error;
 		}
 	}
 
-	async query<T = unknown>(
-		sql: string,
-		params: unknown[] = []
-	): Promise<T[]> {
+	async query<T = unknown>(sql: string, params: unknown[] = []): Promise<T[]> {
 		try {
 			const result = await this.pool.query(sql, params);
 			return result.rows as T[];
 		} catch (error) {
-			console.error("Query error:", error, { sql, params });
+			console.error('Query error:', error, { sql, params });
 			throw error;
 		}
 	}
 
-	async execute(
-		sql: string,
-		params: unknown[] = []
-	): Promise<{ changes: number }> {
+	async execute(sql: string, params: unknown[] = []): Promise<{ changes: number }> {
 		try {
 			const result = await this.pool.query(sql, params);
 			return {
-				changes: result.rowCount || 0,
+				changes: result.rowCount || 0
 			};
 		} catch (error) {
-			console.error("Execute error:", error, { sql, params });
+			console.error('Execute error:', error, { sql, params });
 			throw error;
 		}
 	}
 
-	async transaction<T>(
-		callback: (client: Pool) => Promise<T>
-	): Promise<T> {
+	async transaction<T>(callback: (client: Pool) => Promise<T>): Promise<T> {
 		const client = await this.pool.connect();
 		try {
-			await client.query("BEGIN");
+			await client.query('BEGIN');
 			const result = await callback(client as unknown as Pool);
-			await client.query("COMMIT");
+			await client.query('COMMIT');
 			return result;
 		} catch (error) {
-			await client.query("ROLLBACK");
-			console.error("Transaction error:", error);
+			await client.query('ROLLBACK');
+			console.error('Transaction error:', error);
 			throw error;
 		} finally {
 			client.release();
@@ -101,7 +90,7 @@ class Database {
 	async close(): Promise<void> {
 		await this.pool.end();
 		this.isConnected = false;
-		console.log("Database pool closed");
+		console.log('Database pool closed');
 	}
 }
 

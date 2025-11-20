@@ -1,5 +1,5 @@
-import { redirect } from "@sveltejs/kit";
-import type { RequestEvent } from "@sveltejs/kit";
+import { redirect } from '@sveltejs/kit';
+import type { RequestEvent } from '@sveltejs/kit';
 
 /**
  * Require authentication for a route
@@ -7,7 +7,7 @@ import type { RequestEvent } from "@sveltejs/kit";
  */
 export function requireAuth(event: RequestEvent) {
 	if (event.locals.session === null || event.locals.user === null) {
-		throw redirect(302, "/auth/login");
+		throw redirect(302, '/auth/login');
 	}
 	return {
 		session: event.locals.session,
@@ -21,7 +21,7 @@ export function requireAuth(event: RequestEvent) {
  */
 export function requireEmailVerified(user: { emailVerified: boolean }) {
 	if (!user.emailVerified) {
-		throw redirect(302, "/auth/verify-email");
+		throw redirect(302, '/auth/verify-email');
 	}
 }
 
@@ -31,7 +31,7 @@ export function requireEmailVerified(user: { emailVerified: boolean }) {
  */
 export function require2FASetup(user: { registered2FA: boolean }) {
 	if (!user.registered2FA) {
-		throw redirect(302, "/auth/2fa/setup");
+		throw redirect(302, '/auth/2fa/setup');
 	}
 }
 
@@ -41,7 +41,7 @@ export function require2FASetup(user: { registered2FA: boolean }) {
  */
 export function require2FAVerified(session: { twoFactorVerified: boolean }) {
 	if (!session.twoFactorVerified) {
-		throw redirect(302, "/auth/2fa");
+		throw redirect(302, '/auth/2fa');
 	}
 }
 
@@ -68,18 +68,17 @@ export function redirectIfAuthenticated(event: RequestEvent) {
 			event.locals.user.registered2FA &&
 			event.locals.session.twoFactorVerified
 		) {
-			throw redirect(302, "/");
+			throw redirect(302, '/');
 		}
 		// Otherwise continue with auth flow
 		if (!event.locals.user.emailVerified) {
-			throw redirect(302, "/auth/verify-email");
+			throw redirect(302, '/auth/verify-email');
 		}
 		if (!event.locals.user.registered2FA) {
-			throw redirect(302, "/auth/2fa/setup");
+			throw redirect(302, '/auth/2fa/setup');
 		}
 		if (!event.locals.session.twoFactorVerified) {
-			throw redirect(302, "/auth/2fa");
+			throw redirect(302, '/auth/2fa');
 		}
 	}
 }
-

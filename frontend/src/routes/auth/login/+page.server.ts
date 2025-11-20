@@ -1,13 +1,17 @@
-import { fail, redirect } from "@sveltejs/kit";
-import { verifyEmailInput } from "$lib/server/auth/email";
-import { getUserFromEmail, getUserPasswordHash } from "$lib/server/auth/user";
-import { RefillingTokenBucket, Throttler } from "$lib/server/auth/rate-limit";
-import { verifyPasswordHash } from "$lib/server/auth/password";
-import { createSession, generateSessionToken, setSessionTokenCookie } from "$lib/server/auth/session";
-import { redirectIfAuthenticated } from "$lib/server/auth/auth";
+import { fail, redirect } from '@sveltejs/kit';
+import { verifyEmailInput } from '$lib/server/auth/email';
+import { getUserFromEmail, getUserPasswordHash } from '$lib/server/auth/user';
+import { RefillingTokenBucket, Throttler } from '$lib/server/auth/rate-limit';
+import { verifyPasswordHash } from '$lib/server/auth/password';
+import {
+	createSession,
+	generateSessionToken,
+	setSessionTokenCookie
+} from '$lib/server/auth/session';
+import { redirectIfAuthenticated } from '$lib/server/auth/auth';
 
-import type { SessionFlags } from "$lib/server/auth/session";
-import type { Actions, PageServerLoadEvent, RequestEvent } from "./$types";
+import type { SessionFlags } from '$lib/server/auth/session';
+import type { Actions, PageServerLoadEvent, RequestEvent } from './$types';
 
 export function load(event: PageServerLoadEvent) {
 	// Redirect if already authenticated (public route)
@@ -24,59 +28,59 @@ export const actions: Actions = {
 
 async function action(event: RequestEvent) {
 	// TODO: Assumes X-Forwarded-For is always included.
-	const clientIP = event.request.headers.get("X-Forwarded-For");
+	const clientIP = event.request.headers.get('X-Forwarded-For');
 	if (clientIP !== null && !ipBucket.check(clientIP, 1)) {
 		return fail(429, {
-			message: "Too many requests",
-			email: ""
+			message: 'Too many requests',
+			email: ''
 		});
 	}
 
 	const formData = await event.request.formData();
-	const email = formData.get("email");
-	const password = formData.get("password");
-	if (typeof email !== "string" || typeof password !== "string") {
+	const email = formData.get('email');
+	const password = formData.get('password');
+	if (typeof email !== 'string' || typeof password !== 'string') {
 		return fail(400, {
-			message: "Invalid or missing fields",
-			email: ""
+			message: 'Invalid or missing fields',
+			email: ''
 		});
 	}
-	if (email === "" || password === "") {
+	if (email === '' || password === '') {
 		return fail(400, {
-			message: "Please enter your email and password.",
+			message: 'Please enter your email and password.',
 			email
 		});
 	}
 	if (!verifyEmailInput(email)) {
 		return fail(400, {
-			message: "Invalid email",
+			message: 'Invalid email',
 			email
 		});
 	}
 	const user = await getUserFromEmail(email);
 	if (user === null) {
 		return fail(400, {
-			message: "Account does not exist",
+			message: 'Account does not exist',
 			email
 		});
 	}
 	if (clientIP !== null && !ipBucket.consume(clientIP, 1)) {
 		return fail(429, {
-			message: "Too many requests",
-			email: ""
+			message: 'Too many requests',
+			email: ''
 		});
 	}
 	if (!throttler.consume(user.id)) {
 		return fail(429, {
-			message: "Too many requests",
-			email: ""
+			message: 'Too many requests',
+			email: ''
 		});
 	}
 	const passwordHash = await getUserPasswordHash(user.id);
 	const validPassword = await verifyPasswordHash(passwordHash, password);
 	if (!validPassword) {
 		return fail(400, {
-			message: "Invalid password",
+			message: 'Invalid password',
 			email
 		});
 	}
@@ -90,10 +94,10 @@ async function action(event: RequestEvent) {
 	setSessionTokenCookie(event, sessionToken, null);
 
 	if (!user.emailVerified) {
-		return redirect(302, "/auth/verify-email");
+		return redirect(302, '/auth/verify-email');
 	}
 	if (!user.registered2FA) {
-		return redirect(302, "/auth/2fa/setup");
+		return redirect(302, '/auth/2fa/setup');
 	}
-	return redirect(302, "/auth/2fa");
+	return redirect(302, '/auth/2fa');
 }

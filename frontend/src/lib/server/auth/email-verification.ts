@@ -1,14 +1,22 @@
-import type { RequestEvent } from "@sveltejs/kit";
-import { generateRandomOTP, encodeBase32 } from "./utils";
-import { db } from "./db";
-import { ExpiringTokenBucket } from "./rate-limit";
-import nodemailer from "nodemailer";
-import { EMAIL_PASSWORD, EMAIL_HOST, EMAIL_PORT, EMAIL_USER } from "$env/static/private";
+import type { RequestEvent } from '@sveltejs/kit';
+import { generateRandomOTP, encodeBase32 } from './utils';
+import { db } from './db';
+import { ExpiringTokenBucket } from './rate-limit';
+import nodemailer from 'nodemailer';
+import { EMAIL_PASSWORD, EMAIL_HOST, EMAIL_PORT, EMAIL_USER } from '$env/static/private';
 
-
-export async function getUserEmailVerificationRequest(userId: number, id: string): Promise<EmailVerificationRequest | null> {
-	const row = await db.queryOne<{ id: string, user_id: number, code: string, email: string, expires_at: string }>(
-		"SELECT id, user_id, code, email, expires_at FROM email_verification_requests WHERE id = $1 AND user_id = $2",
+export async function getUserEmailVerificationRequest(
+	userId: number,
+	id: string
+): Promise<EmailVerificationRequest | null> {
+	const row = await db.queryOne<{
+		id: string;
+		user_id: number;
+		code: string;
+		email: string;
+		expires_at: string;
+	}>(
+		'SELECT id, user_id, code, email, expires_at FROM email_verification_requests WHERE id = $1 AND user_id = $2',
 		[id, userId]
 	);
 	if (row === null) {
@@ -24,7 +32,10 @@ export async function getUserEmailVerificationRequest(userId: number, id: string
 	return request;
 }
 
-export async function createEmailVerificationRequest(userId: number, email: string): Promise<EmailVerificationRequest> {
+export async function createEmailVerificationRequest(
+	userId: number,
+	email: string
+): Promise<EmailVerificationRequest> {
 	await deleteUserEmailVerificationRequest(userId);
 	const idBytes = new Uint8Array(20);
 	crypto.getRandomValues(idBytes);
@@ -33,7 +44,7 @@ export async function createEmailVerificationRequest(userId: number, email: stri
 	const code = generateRandomOTP();
 	const expiresAt = new Date(Date.now() + 1000 * 60 * 10);
 	await db.queryOne<{ id: string }>(
-		"INSERT INTO email_verification_requests (id, user_id, code, email, expires_at) VALUES ($1, $2, $3, $4, $5) RETURNING id",
+		'INSERT INTO email_verification_requests (id, user_id, code, email, expires_at) VALUES ($1, $2, $3, $4, $5) RETURNING id',
 		[id, userId, code, email, expiresAt]
 	);
 
@@ -48,35 +59,39 @@ export async function createEmailVerificationRequest(userId: number, email: stri
 }
 
 export async function deleteUserEmailVerificationRequest(userId: number): Promise<void> {
-	await db.execute("DELETE FROM email_verification_requests WHERE user_id = $1", [userId]);
+	await db.execute('DELETE FROM email_verification_requests WHERE user_id = $1', [userId]);
 }
 
-
-export function setEmailVerificationRequestCookie(event: RequestEvent, request: EmailVerificationRequest): void {
-	event.cookies.set("email_verification", request.id, {
+export function setEmailVerificationRequestCookie(
+	event: RequestEvent,
+	request: EmailVerificationRequest
+): void {
+	event.cookies.set('email_verification', request.id, {
 		httpOnly: true,
-		path: "/",
+		path: '/',
 		secure: import.meta.env.PROD,
-		sameSite: "lax",
+		sameSite: 'lax',
 		expires: request.expiresAt
 	});
 }
 
 export function deleteEmailVerificationRequestCookie(event: RequestEvent): void {
-	event.cookies.set("email_verification", "", {
+	event.cookies.set('email_verification', '', {
 		httpOnly: true,
-		path: "/",
+		path: '/',
 		secure: import.meta.env.PROD,
-		sameSite: "lax",
+		sameSite: 'lax',
 		maxAge: 0
 	});
 }
 
-export async function getUserEmailVerificationRequestFromRequest(event: RequestEvent): Promise<EmailVerificationRequest | null> {
+export async function getUserEmailVerificationRequestFromRequest(
+	event: RequestEvent
+): Promise<EmailVerificationRequest | null> {
 	if (event.locals.user === null) {
 		return null;
 	}
-	const id = event.cookies.get("email_verification") ?? null;
+	const id = event.cookies.get('email_verification') ?? null;
 	if (id === null) {
 		return null;
 	}
@@ -93,20 +108,20 @@ let transporter: ReturnType<typeof nodemailer.createTransport> | null = null;
 
 const initializeTransporter = () => {
 	const emailPassword = EMAIL_PASSWORD;
-	
+
 	if (!emailPassword) {
 		// In development, allow missing email config (will fall back to console.log)
 		if (import.meta.env.DEV) {
-			console.warn("EMAIL_PASSWORD not set - emails will be logged to console in development");
+			console.warn('EMAIL_PASSWORD not set - emails will be logged to console in development');
 			return null;
 		}
-		throw new Error("EMAIL_PASSWORD environment variable is required in production");
+		throw new Error('EMAIL_PASSWORD environment variable is required in production');
 	}
-	
+
 	return nodemailer.createTransport({
 		host: EMAIL_HOST,
 		port: parseInt(EMAIL_PORT),
-		secure: true, 
+		secure: true,
 		auth: {
 			user: EMAIL_USER,
 			pass: emailPassword
@@ -125,12 +140,12 @@ export async function sendVerificationEmail(email: string, code: string): Promis
 		console.log(`[DEV] To ${email}: Your verification code is ${code}`);
 		return;
 	}
-	
+
 	try {
 		await transporter.sendMail({
 			from: `"AppGoblin Admin" <${EMAIL_USER}>`,
 			to: email,
-			subject: "AppGoblin - Email Verification Code",
+			subject: 'AppGoblin - Email Verification Code',
 			text: `Your verification code is: ${code}`,
 			html: `
 				<div>
@@ -141,7 +156,7 @@ export async function sendVerificationEmail(email: string, code: string): Promis
 			`
 		});
 	} catch (error) {
-		console.error("Failed to send verification email:", error);
+		console.error('Failed to send verification email:', error);
 		// In development, fall back to console.log if email fails
 		if (import.meta.env.DEV) {
 			console.log(`[DEV] To ${email}: Your verification code is ${code}`);
@@ -160,12 +175,12 @@ export async function sendPasswordResetEmail(email: string, code: string): Promi
 		console.log(`[DEV] To ${email}: Your reset code is ${code}`);
 		return;
 	}
-	
+
 	try {
 		await transporter.sendMail({
 			from: `"AppGoblin Admin" <${EMAIL_USER}>`,
 			to: email,
-			subject: "AppGoblin - Password Reset Code",
+			subject: 'AppGoblin - Password Reset Code',
 			text: `Your password reset code is: ${code}`,
 			html: `
 				<div>
@@ -177,7 +192,7 @@ export async function sendPasswordResetEmail(email: string, code: string): Promi
 			`
 		});
 	} catch (error) {
-		console.error("Failed to send password reset email:", error);
+		console.error('Failed to send password reset email:', error);
 		// In development, fall back to console.log if email fails
 		if (import.meta.env.DEV) {
 			console.log(`[DEV] To ${email}: Your reset code is ${code}`);
@@ -186,8 +201,6 @@ export async function sendPasswordResetEmail(email: string, code: string): Promi
 		}
 	}
 }
-
-
 
 export const sendVerificationEmailBucket = new ExpiringTokenBucket<number>(3, 60 * 10);
 
