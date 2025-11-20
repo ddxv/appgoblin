@@ -4,6 +4,7 @@ Disallow: /apps/*.gif
 Disallow: /apps/*.jpg
 Disallow: /apps/*.jpeg
 Disallow: /apps/*.png
+Disallow: /auth/*
 Allow: /
 
 Sitemap: https://appgoblin.info/sitemap.xml

@@ -1,5 +1,5 @@
-import { Pool, type PoolConfig, type QueryResult } from "pg";
-import { env } from "$env/dynamic/private";
+import { Pool, type PoolConfig  } from "pg";
+import { PGHOST, PGPORT, PGDATABASE, PGUSER, PGPASSWORD } from "$env/static/private";
 
 class Database {
 	private pool: Pool;
@@ -7,12 +7,12 @@ class Database {
 
 	constructor() {
 		const config: PoolConfig = {
-			host: env.PGHOST || "localhost",
-			port: parseInt(env.PGPORT || "5432"),
-			database: env.PGDATABASE || "goblinadmin",
-			user: env.PGUSER || "frontend",
-			password: env.PGPASSWORD,
-			max: 20, // maximum pool size
+			host: PGHOST || "localhost",
+			port: parseInt(PGPORT || "5432"),
+			database: PGDATABASE || "goblinadmin",
+			user: PGUSER || "frontend",
+			password: PGPASSWORD,
+			max: 10, // maximum pool size
 			idleTimeoutMillis: 30000,
 			connectionTimeoutMillis: 2000,
 		};

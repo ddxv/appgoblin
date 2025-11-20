@@ -1,20 +1,20 @@
-import { totpBucket } from "$lib/server/2fa";
+import { totpBucket } from "$lib/server/auth/2fa";
 import { fail, redirect } from "@sveltejs/kit";
-import { getUserTOTPKey } from "$lib/server/user";
-import { verifyTOTP } from "$lib/server/utils";
-import { setSessionAs2FAVerified } from "$lib/server/session";
+import { getUserTOTPKey } from "$lib/server/auth/user";
+import { verifyTOTP } from "$lib/server/auth/utils";
+import { setSessionAs2FAVerified } from "$lib/server/auth/session";
 
 import type { Actions, RequestEvent } from "./$types";
 
 export async function load(event: RequestEvent) {
 	if (event.locals.session === null || event.locals.user === null) {
-		return redirect(302, "/login");
+		return redirect(302, "/auth/login");
 	}
 	if (!event.locals.user.emailVerified) {
-		return redirect(302, "/verify-email");
+		return redirect(302, "/auth/verify-email");
 	}
 	if (!event.locals.user.registered2FA) {
-		return redirect(302, "/2fa/setup");
+		return redirect(302, "/auth/2fa/setup");
 	}
 	if (event.locals.session.twoFactorVerified) {
 		return redirect(302, "/");

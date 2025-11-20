@@ -1,13 +1,13 @@
-import { verifyEmailInput } from "$lib/server/email";
-import { getUserFromEmail } from "$lib/server/user";
+import { verifyEmailInput } from "$lib/server/auth/email";
+import { getUserFromEmail } from "$lib/server/auth/user";
 import {
 	createPasswordResetSession,
 	invalidateUserPasswordResetSessions,
 	sendPasswordResetEmail,
 	setPasswordResetSessionTokenCookie
-} from "$lib/server/password-reset";
-import { RefillingTokenBucket } from "$lib/server/rate-limit";
-import { generateSessionToken } from "$lib/server/session";
+} from "$lib/server/auth/password-reset";
+import { RefillingTokenBucket } from "$lib/server/auth/rate-limit";
+import { generateSessionToken } from "$lib/server/auth/session";
 import { fail, redirect } from "@sveltejs/kit";
 
 import type { Actions, RequestEvent } from "./$types";
@@ -67,5 +67,5 @@ async function action(event: RequestEvent) {
 	const session = await createPasswordResetSession(sessionToken, user.id, user.email);
 	await sendPasswordResetEmail(session.email, session.code);
 	await setPasswordResetSessionTokenCookie(event, sessionToken, session.expiresAt);
-	return redirect(302, "/reset-password/verify-email");
+	return redirect(302, "/auth/reset-password/verify-email");
 }

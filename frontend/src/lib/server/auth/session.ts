@@ -1,5 +1,5 @@
 import { db } from "./db";
-import { encodeBase32, encodeHexLowerCase, sha256 } from "$lib/server/utils";
+import { encodeBase32, encodeHexLowerCase, sha256 } from "$lib/server/auth/utils";
 import type { User } from "./user";
 import type { RequestEvent } from "@sveltejs/kit";
 

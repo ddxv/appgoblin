@@ -1,10 +1,10 @@
-import { verifyTOTP } from "$lib/server/utils";
-import { getUserTOTPKey } from "$lib/server/user";
-import { validatePasswordResetSessionRequest, setPasswordResetSessionAs2FAVerified } from "$lib/server/password-reset";
-import { totpBucket } from "$lib/server/2fa";
+import { verifyTOTP } from "$lib/server/auth/utils";
+import { getUserTOTPKey } from "$lib/server/auth/user";
+import { validatePasswordResetSessionRequest, setPasswordResetSessionAs2FAVerified } from "$lib/server/auth/password-reset";
+import { totpBucket } from "$lib/server/auth/2fa";
 import { fail, redirect } from "@sveltejs/kit";
-import { resetUser2FAWithRecoveryCode } from "$lib/server/2fa";
-import { recoveryCodeBucket } from "$lib/server/2fa";
+import { resetUser2FAWithRecoveryCode } from "$lib/server/auth/2fa";
+import { recoveryCodeBucket } from "$lib/server/auth/2fa";
 
 import type { Actions, RequestEvent } from "./$types";
 
@@ -12,16 +12,16 @@ export async function load(event: RequestEvent) {
 	const { session, user } = await validatePasswordResetSessionRequest(event);
 
 	if (session === null) {
-		return redirect(302, "/forgot-password");
+		return redirect(302, "/auth/forgot-password");
 	}
 	if (!session.emailVerified) {
-		return redirect(302, "/reset-password/verify-email");
+		return redirect(302, "/auth/reset-password/verify-email");
 	}
 	if (!user.registered2FA) {
-		return redirect(302, "/reset-password");
+		return redirect(302, "/auth/reset-password");
 	}
 	if (session.twoFactorVerified) {
-		return redirect(302, "/reset-password");
+		return redirect(302, "/auth/reset-password");
 	}
 	return {};
 }
@@ -95,7 +95,7 @@ async function totpAction(event: RequestEvent) {
 	}
 	totpBucket.reset(session.userId);
 	setPasswordResetSessionAs2FAVerified(session.id);
-	return redirect(302, "/reset-password");
+	return redirect(302, "/auth/reset-password");
 }
 
 async function recoveryCodeAction(event: RequestEvent) {
@@ -155,5 +155,5 @@ async function recoveryCodeAction(event: RequestEvent) {
 		});
 	}
 	recoveryCodeBucket.reset(session.userId);
-	return redirect(302, "/reset-password");
+	return redirect(302, "/auth/reset-password");
 }

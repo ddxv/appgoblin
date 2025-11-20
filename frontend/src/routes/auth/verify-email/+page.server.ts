@@ -7,16 +7,16 @@ import {
 	sendVerificationEmail,
 	sendVerificationEmailBucket,
 	setEmailVerificationRequestCookie
-} from "$lib/server/email-verification";
-import { invalidateUserPasswordResetSessions } from "$lib/server/password-reset";
-import { updateUserEmailAndSetEmailAsVerified } from "$lib/server/user";
-import { ExpiringTokenBucket } from "$lib/server/rate-limit";
+} from "$lib/server/auth/email-verification";
+import { invalidateUserPasswordResetSessions } from "$lib/server/auth/password-reset";
+import { updateUserEmailAndSetEmailAsVerified } from "$lib/server/auth/user";
+import { ExpiringTokenBucket } from "$lib/server/auth/rate-limit";
 
 import type { Actions, RequestEvent } from "./$types";
 
 export async function load(event: RequestEvent) {
 	if (event.locals.user === null) {
-		return redirect(302, "/login");
+		return redirect(302, "/auth/login");
 	}
 	let verificationRequest = await getUserEmailVerificationRequestFromRequest(event);
 	if (verificationRequest === null || Date.now() >= verificationRequest.expiresAt.getTime()) {
@@ -115,7 +115,7 @@ async function verifyCode(event: RequestEvent) {
 	await updateUserEmailAndSetEmailAsVerified(event.locals.user.id, verificationRequest.email);
 	deleteEmailVerificationRequestCookie(event);
 	if (!event.locals.user.registered2FA) {
-		return redirect(302, "/2fa/setup");
+		return redirect(302, "/auth/2fa/setup");
 	}
 	return redirect(302, "/");
 }

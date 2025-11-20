@@ -6,11 +6,12 @@
 	export let form: ActionData;
 </script>
 
-<h1>Create an account</h1>
-<p>Your username must be at least 3 characters long and your password must be at least 8 characters long.</p>
-<form method="post" use:enhance>
-	<label for="form-signup.username">Username</label>
+<h2 class="text-2xl font-bold">Create an account</h2>
+<p>Name must be at least 4 characters long and password must be at least 8 characters long.</p>
+<form class="space-y-1" method="post" use:enhance>
+	<label class="label" for="form-signup.username">Name</label>
 	<input
+		class="input"
 		id="form-signup.username"
 		name="username"
 		required
@@ -18,8 +19,9 @@
 		minlength="4"
 		maxlength="31"
 	/><br />
-	<label for="form-signup.email">Email</label>
+	<label class="label" for="form-signup.email">Email</label>
 	<input
+		class="input"
 		type="email"
 		id="form-signup.email"
 		name="email"
@@ -27,9 +29,9 @@
 		required
 		value={form?.email ?? ""}
 	/><br />
-	<label for="form-signup.password">Password</label>
-	<input type="password" id="form-signup.password" name="password" autocomplete="new-password" required /><br />
-	<button>Continue</button>
+	<label class="label" for="form-signup.password">Password</label>
+	<input class="input" type="password" id="form-signup.password" name="password" autocomplete="new-password" required /><br />
+	<button class="btn preset-filled">Create Account</button>
 	<p>{form?.message ?? ""}</p>
 </form>
-<a href="/login">Sign in</a>
+<a class="btn preset-tonal" href="/auth/login">Already have an account? Sign in</a>

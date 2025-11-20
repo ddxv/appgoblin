@@ -1,4 +1,4 @@
-import { recoveryCodeBucket, resetUser2FAWithRecoveryCode } from "$lib/server/2fa";
+import { recoveryCodeBucket, resetUser2FAWithRecoveryCode } from "$lib/server/auth/2fa";
 import { fail, redirect } from "@sveltejs/kit";
 
 import type { Actions, RequestEvent } from "./$types";
@@ -9,13 +9,13 @@ export const actions: Actions = {
 
 export async function load(event: RequestEvent) {
 	if (event.locals.session === null || event.locals.user === null) {
-		return redirect(302, "/login");
+		return redirect(302, "/auth/login");
 	}
 	if (!event.locals.user.emailVerified) {
-		return redirect(302, "/verify-email");
+		return redirect(302, "/auth/verify-email");
 	}
 	if (!event.locals.user.registered2FA) {
-		return redirect(302, "/2fa/setup");
+		return redirect(302, "/auth/2fa/setup");
 	}
 	if (event.locals.session.twoFactorVerified) {
 		return redirect(302, "/");
@@ -64,5 +64,5 @@ async function action(event: RequestEvent) {
 		});
 	}
 	recoveryCodeBucket.reset(event.locals.user.id);
-	return redirect(302, "/2fa/setup");
+	return redirect(302, "/auth/2fa/setup");
 }

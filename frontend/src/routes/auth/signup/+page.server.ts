@@ -1,17 +1,17 @@
 import { fail, redirect } from "@sveltejs/kit";
-import { checkEmailAvailability, verifyEmailInput } from "$lib/server/email";
-import { createUser, verifyUsernameInput } from "$lib/server/user";
-import { RefillingTokenBucket } from "$lib/server/rate-limit";
-import { verifyPasswordStrength } from "$lib/server/password";
-import { createSession, generateSessionToken, setSessionTokenCookie } from "$lib/server/session";
+import { checkEmailAvailability, verifyEmailInput } from "$lib/server/auth/email";
+import { createUser, verifyUsernameInput } from "$lib/server/auth/user";
+import { RefillingTokenBucket } from "$lib/server/auth/rate-limit";
+import { verifyPasswordStrength } from "$lib/server/auth/password";
+import { createSession, generateSessionToken, setSessionTokenCookie } from "$lib/server/auth/session";
 import {
 	createEmailVerificationRequest,
 	sendVerificationEmail,
 	setEmailVerificationRequestCookie
-} from "$lib/server/email-verification";
-import { redirectIfAuthenticated } from "$lib/server/auth";
+} from "$lib/server/auth/email-verification";
+import { redirectIfAuthenticated } from "$lib/server/auth/auth";
 
-import type { SessionFlags } from "$lib/server/session";
+import type { SessionFlags } from "$lib/server/auth/session";
 import type { Actions, PageServerLoadEvent, RequestEvent } from "./$types";
 
 const ipBucket = new RefillingTokenBucket<string>(3, 10);
@@ -104,5 +104,5 @@ async function action(event: RequestEvent) {
 	// Create session-only cookie (expires when browser closes)
 	const session = await createSession(sessionToken, user.id, sessionFlags, 0);
 	setSessionTokenCookie(event, sessionToken, null);
-	throw redirect(302, "/2fa/setup");
+	throw redirect(302, "/auth/2fa/setup");
 }

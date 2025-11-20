@@ -1,6 +1,5 @@
 import { db } from "./db";
-import { encodeHexLowerCase } from "$lib/server/utils";
-import { generateRandomOTP, sha256 } from "./utils";
+import { encodeHexLowerCase, generateRandomOTP, sha256 } from "$lib/server/auth/utils";
 
 import type { RequestEvent } from "@sveltejs/kit";
 import type { User } from "./user";

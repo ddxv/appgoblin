@@ -3,7 +3,7 @@ import { generateRandomOTP, encodeBase32 } from "./utils";
 import { db } from "./db";
 import { ExpiringTokenBucket } from "./rate-limit";
 import nodemailer from "nodemailer";
-import { env } from "$env/dynamic/private";
+import { EMAIL_PASSWORD, EMAIL_HOST, EMAIL_PORT, EMAIL_USER } from "$env/static/private";
 
 
 export async function getUserEmailVerificationRequest(userId: number, id: string): Promise<EmailVerificationRequest | null> {
@@ -92,7 +92,7 @@ export async function getUserEmailVerificationRequestFromRequest(event: RequestE
 let transporter: ReturnType<typeof nodemailer.createTransport> | null = null;
 
 const initializeTransporter = () => {
-	const emailPassword = env.EMAIL_PASSWORD;
+	const emailPassword = EMAIL_PASSWORD;
 	
 	if (!emailPassword) {
 		// In development, allow missing email config (will fall back to console.log)
@@ -104,11 +104,11 @@ const initializeTransporter = () => {
 	}
 	
 	return nodemailer.createTransport({
-		host: env.EMAIL_HOST,
-		port: parseInt(env.EMAIL_PORT),
-		secure: true, // true for 464, false for other ports
+		host: EMAIL_HOST,
+		port: parseInt(EMAIL_PORT),
+		secure: true, 
 		auth: {
-			user: env.EMAIL_USER,
+			user: EMAIL_USER,
 			pass: emailPassword
 		}
 	});
@@ -128,9 +128,9 @@ export async function sendVerificationEmail(email: string, code: string): Promis
 	
 	try {
 		await transporter.sendMail({
-			from: env.EMAIL_FROM || `"My App" <${env.EMAIL_USER}>`,
+			from: `"AppGoblin Admin" <${EMAIL_USER}>`,
 			to: email,
-			subject: "My App - Email Verification Code",
+			subject: "AppGoblin - Email Verification Code",
 			text: `Your verification code is: ${code}`,
 			html: `
 				<div>
@@ -163,16 +163,16 @@ export async function sendPasswordResetEmail(email: string, code: string): Promi
 	
 	try {
 		await transporter.sendMail({
-			from: env.EMAIL_FROM || `"My App" <${env.EMAIL_USER || "your@domain.com"}>`,
+			from: `"AppGoblin Admin" <${EMAIL_USER}>`,
 			to: email,
-			subject: "Password Reset Code",
+			subject: "AppGoblin - Password Reset Code",
 			text: `Your password reset code is: ${code}`,
 			html: `
 				<div>
-					<h1>Password Reset</h2>
+					<h2>Password Reset</h2>
 					<p>Your password reset code is: <strong>${code}</strong></p>
-					<p>This code will expire in 9 minutes.</p>
-					<p>If you did not request this, please ignore this email.</p>
+					<p>This code will expire in 10 minutes.</p>
+					<p>If you did not request this, please ignore this email or contact support.</p>
 				</div>
 			`
 		});

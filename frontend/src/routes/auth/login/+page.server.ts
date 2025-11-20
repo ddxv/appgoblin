@@ -1,12 +1,12 @@
 import { fail, redirect } from "@sveltejs/kit";
-import { verifyEmailInput } from "$lib/server/email";
-import { getUserFromEmail, getUserPasswordHash } from "$lib/server/user";
-import { RefillingTokenBucket, Throttler } from "$lib/server/rate-limit";
-import { verifyPasswordHash } from "$lib/server/password";
-import { createSession, generateSessionToken, setSessionTokenCookie } from "$lib/server/session";
-import { redirectIfAuthenticated } from "$lib/server/auth";
+import { verifyEmailInput } from "$lib/server/auth/email";
+import { getUserFromEmail, getUserPasswordHash } from "$lib/server/auth/user";
+import { RefillingTokenBucket, Throttler } from "$lib/server/auth/rate-limit";
+import { verifyPasswordHash } from "$lib/server/auth/password";
+import { createSession, generateSessionToken, setSessionTokenCookie } from "$lib/server/auth/session";
+import { redirectIfAuthenticated } from "$lib/server/auth/auth";
 
-import type { SessionFlags } from "$lib/server/session";
+import type { SessionFlags } from "$lib/server/auth/session";
 import type { Actions, PageServerLoadEvent, RequestEvent } from "./$types";
 
 export function load(event: PageServerLoadEvent) {
@@ -90,10 +90,10 @@ async function action(event: RequestEvent) {
 	setSessionTokenCookie(event, sessionToken, null);
 
 	if (!user.emailVerified) {
-		return redirect(302, "/verify-email");
+		return redirect(302, "/auth/verify-email");
 	}
 	if (!user.registered2FA) {
-		return redirect(302, "/2fa/setup");
+		return redirect(302, "/auth/2fa/setup");
 	}
-	return redirect(302, "/2fa");
+	return redirect(302, "/auth/2fa");
 }

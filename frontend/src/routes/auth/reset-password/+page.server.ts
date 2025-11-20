@@ -2,30 +2,30 @@ import {
 	deletePasswordResetSessionTokenCookie,
 	invalidateUserPasswordResetSessions,
 	validatePasswordResetSessionRequest
-} from "$lib/server/password-reset";
+} from "$lib/server/auth/password-reset";
 import { fail, redirect } from "@sveltejs/kit";
-import { verifyPasswordStrength } from "$lib/server/password";
+import { verifyPasswordStrength } from "$lib/server/auth/password";
 import {
 	createSession,
 	generateSessionToken,
 	invalidateUserSessions,
 	setSessionTokenCookie
-} from "$lib/server/session";
-import { updateUserPassword } from "$lib/server/user";
+} from "$lib/server/auth/session";
+import { updateUserPassword } from "$lib/server/auth/user";
 
 import type { Actions, RequestEvent } from "./$types";
-import type { SessionFlags } from "$lib/server/session";
+import type { SessionFlags } from "$lib/server/auth/session";
 
 export async function load(event: RequestEvent) {
 	const { session, user } = await validatePasswordResetSessionRequest(event);
 	if (session === null) {
-		return redirect(302, "/forgot-password");
+		return redirect(302, "/auth/forgot-password");
 	}
 	if (!session.emailVerified) {
-		return redirect(302, "/reset-password/verify-email");
+		return redirect(302, "/auth/reset-password/verify-email");
 	}
 	if (user.registered2FA && !session.twoFactorVerified) {
-		return redirect(302, "/reset-password/2fa");
+		return redirect(302, "/auth/reset-password/2fa");
 	}
 	return {};
 }

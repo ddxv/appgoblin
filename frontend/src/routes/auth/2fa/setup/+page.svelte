@@ -7,14 +7,14 @@
 	export let form: ActionData;
 </script>
 
-<h1>Set up two-factor authentication</h1>
-<div style="width:200px; height: 200px;">
+<h2 class="text-2xl font-bold">Set up two-factor authentication</h2>
+<div style="width:200px; height: 200px; background-color: #f0f0f0;">
 	{@html data.qrcode}
 </div>
-<form method="post" use:enhance>
+<form class="space-y-1" method="post" use:enhance>
 	<input name="key" value={data.encodedTOTPKey} hidden required />
-	<label for="form-totp.code">Verify the code from the app</label>
-	<input id="form-totp.code" name="code" required /><br />
-	<button>Save</button>
+	<label class="label" for="form-totp.code">Verify the code from the app</label>
+	<input class="input" id="form-totp.code" name="code" required /><br />
+	<button class="btn preset-filled">Save</button>
 	<p>{form?.message ?? ""}</p>
 </form>

@@ -4,7 +4,7 @@
 	export let data: PageData;
 </script>
 
-<h1>Recovery code</h1>
-<p>Your recovery code is: {data.recoveryCode}</p>
-<p>You can use this recovery code if you lose access to your second factors.</p>
-<a href="/">Next</a>
+<h2 class="text-2xl font-bold">2FA Recovery code</h2>
+<p>2FA recovery code: {data.recoveryCode}</p>
+<p>You can use this recovery code if you lose access to your 2FA app.</p>
+<a class="btn preset-tonal" href="/">Next</a>

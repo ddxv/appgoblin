@@ -9,48 +9,48 @@
 
 <header>
 	<a href="/">Home</a>
-	<a href="/settings">Settings</a>
+	<a href="/auth/settings">Settings</a>
 </header>
-<main>
-	<h1>Settings</h1>
+<main class="space-y-4">
+	<h2 class="text-2xl font-bold">Settings</h2>
 	<section>
-		<h2>Update email</h2>
-		<p>Your email: {data.user.email}</p>
-		<form method="post" use:enhance action="?/email">
-			<label for="form-email.email">New email</label>
-			<input type="email" id="form-email.email" name="email" required /><br />
-			<button>Update</button>
+		<h3 class="text-lg font-bold">Update email</h3>
+		<p class="text-sm text-gray-500 my-2">Current email: {data.user.email}</p>
+		<form class="space-y-1" method="post" use:enhance action="?/email">
+			<label class="label" for="form-email.email">New email</label>
+			<input class="input" type="email" id="form-email.email" name="email" required />
+			<button class="btn preset-filled">Update Email</button>
 			<p>{form?.email?.message ?? ""}</p>
 		</form>
 	</section>
 	<section>
-		<h2>Update password</h2>
-		<form method="post" use:enhance action="?/password">
-			<label for="form-password.password">Current password</label>
-			<input type="password" id="form-email.password" name="password" autocomplete="current-password" required /><br />
-			<label for="form-password.new-password">New password</label>
+		<h3 class="text-lg font-bold">Update password</h3>
+		<form class="space-y-1" method="post" use:enhance action="?/password">
+			<label class="label" for="form-password.password">Current password</label>
+			<input class="input" type="password" id="form-email.password" name="password" autocomplete="current-password" required />
+			<label class="label" for="form-password.new-password">New password</label>
 			<input
+				class="input"
 				type="password"
 				id="form-password.new-password"
 				name="new_password"
 				autocomplete="new-password"
 				required
-			/><br />
-			<button>Update</button>
+			/>
+			<button class="btn preset-filled">Update Password</button>
 			<p>{form?.password?.message ?? ""}</p>
 		</form>
 	</section>
 	{#if data.user.registered2FA}
 		<section>
-			<h2>Update two-factor authentication</h2>
-			<a href="/2fa/setup">Update</a>
+			<h3 class="text-lg font-bold">Update two-factor authentication</h3>
+			<a class="btn preset-tonal" href="/auth/2fa/setup">Update</a>
 		</section>
 	{/if}
 	{#if data.recoveryCode !== null}
 		<section>
-			<h1>Recovery code</h1>
-			<p>Your recovery code is: {data.recoveryCode}</p>
-			<button>Generate new code</button>
+			<h3 class="text-lg font-bold">Recovery code</h3>
+			<p>2FA Recovery code: {data.recoveryCode}</p>
 		</section>
 	{/if}
 </main>
