@@ -60,17 +60,12 @@
 										multiple
 									>
 										<Accordion.Item value={company.company_domain}>
-											<!-- Control -->
-											{#snippet control()}
-												<div class="grid grid-cols-2 gap-1 md:gap-2">
-													<p class="text-xs md:text-sm">
-														Apps: {company.count} / {crawled_store_ids}
-													</p>
-												</div>
-											{/snippet}
-
-											<!-- Panel -->
-											{#snippet panel()}
+											<Accordion.ItemTrigger>
+												<p class="text-xs md:text-sm">
+													Apps: {company.count} / {crawled_store_ids}
+												</p>
+											</Accordion.ItemTrigger>
+											<Accordion.ItemContent>
 												<ul>
 													{#each company.apps as app}
 														<li>
@@ -83,7 +78,7 @@
 														</li>
 													{/each}
 												</ul>
-											{/snippet}
+											</Accordion.ItemContent>
 										</Accordion.Item>
 									</Accordion>
 								</div>

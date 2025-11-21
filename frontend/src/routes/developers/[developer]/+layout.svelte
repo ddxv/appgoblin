@@ -3,8 +3,6 @@
 
 	import { page } from '$app/state';
 
-	let tabGroup = $state(page.url.href.endsWith('sdks') ? 'sdks' : 'apps');
-
 	let { children, data } = $props();
 </script>
 
@@ -55,18 +53,16 @@
 	<h1 class="h2 p-2">
 		Developer: <p class="text-primary-900-100">{page.params.developer}</p>
 	</h1>
-	<Tabs value={tabGroup} onValueChange={(e) => (tabGroup = e.value)}>
-		{#snippet list()}
-			<Tabs.Control value="apps"
-				><a href={`/developers/${page.params.developer}`}>Apps</a></Tabs.Control
+	<Tabs defaultValue="apps">
+		<Tabs.List>
+			<Tabs.Trigger value="apps"
+				><a href={`/developers/${page.params.developer}`}>Apps</a></Tabs.Trigger
 			>
-			<Tabs.Control value="sdks"
-				><a href={`/developers/${page.params.developer}/sdks`}>SDKs</a></Tabs.Control
+			<Tabs.Trigger value="sdks"
+				><a href={`/developers/${page.params.developer}/sdks`}>SDKs</a></Tabs.Trigger
 			>
-		{/snippet}
+		</Tabs.List>
 
-		{#snippet content()}
-			{@render children?.()}
-		{/snippet}
+		{@render children?.()}
 	</Tabs>
 </div>

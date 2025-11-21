@@ -6,12 +6,13 @@
 	export let form: ActionData;
 </script>
 
-<h1>Two-factor authentication</h1>
+<h2 class="text-2xl font-bold">Two-factor authentication</h2>
 <p>Enter the code from your authenticator app.</p>
 <form method="post" use:enhance>
-	<label for="form-totp.code">Code</label>
-	<input id="form-totp.code" name="code" autocomplete="one-time-code" required /><br />
-	<button>Verify</button>
+	<label class="label" for="form-totp.code">Code</label>
+	<input class="input" id="form-totp.code" name="code" autocomplete="one-time-code" required /><br
+	/>
+	<button class="btn preset-filled">Verify</button>
 	<p>{form?.message ?? ''}</p>
 </form>
-<a href="/2fa/reset">Use recovery code</a>
+<a href="/2fa/reset">Reset 2FA Recovery Code</a>

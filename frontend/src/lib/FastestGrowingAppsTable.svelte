@@ -9,7 +9,7 @@
 		getFilteredRowModel
 	} from '@tanstack/table-core';
 
-	import { Popover } from '@skeletonlabs/skeleton-svelte';
+	import { Popover, Portal } from '@skeletonlabs/skeleton-svelte';
 	import Pagination from '$lib/components/data-table/Pagination.svelte';
 	import ExportAsCSV from '$lib/components/data-table/ExportAsCSV.svelte';
 	import type { CompaniesOverviewEntries } from '../types';
@@ -63,6 +63,12 @@
 
 	let globalFilter = $state<string>('');
 	let dataSource = $state<string>('both');
+	let columnVisibility = $state<Record<string, boolean>>(getHiddenDefaults(page.params.store!));
+
+	// Update column visibility when store changes
+	$effect(() => {
+		columnVisibility = getHiddenDefaults(page.params.store!);
+	});
 
 	let { data }: DataTableProps<CompaniesOverviewEntries, TValue> = $props();
 
@@ -100,6 +106,11 @@
 			isSortable: true
 		},
 		{
+			title: 'Ratings Avg (14d)',
+			accessorKey: 'ratings_avg_2w',
+			isSortable: true
+		},
+		{
 			title: 'Installs Growth Score (14d)',
 			accessorKey: 'installs_z_score_2w',
 			isSortable: true
@@ -113,6 +124,11 @@
 		{
 			title: 'Installs (30d)',
 			accessorKey: 'installs_sum_4w',
+			isSortable: true
+		},
+		{
+			title: 'Ratings (30d)',
+			accessorKey: 'ratings_sum_4w',
 			isSortable: true
 		},
 		{
@@ -179,7 +195,7 @@
 				return globalFilter;
 			},
 			get columnVisibility() {
-				return getHiddenDefaults(page.params.store!);
+				return columnVisibility;
 			}
 		},
 
@@ -203,13 +219,9 @@
 		},
 		onColumnVisibilityChange: (updater) => {
 			if (typeof updater === 'function') {
-				// This updater is not used in the current table state,
-				// but keeping it for consistency if it were to be added.
-				// columnVisibility = updater(columnVisibility);
+				columnVisibility = updater(columnVisibility);
 			} else {
-				// This updater is not used in the current table state,
-				// but keeping it for consistency if it were to be added.
-				// columnVisibility = updater;
+				columnVisibility = updater;
 			}
 		},
 		onPaginationChange: (updater) => {
@@ -232,36 +244,31 @@
 
 <div class="table-container p-0 md:p-2">
 	<div class="grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-8 m-2">
-		<Popover
-			open={openState}
-			onOpenChange={(e) => (openState = e.open)}
-			positioning={{ placement: 'top' }}
-			triggerBase="btn preset-tonal"
-			contentBase="card bg-surface-200-800 p-4 space-y-4 max-w-[320px]"
-			arrow
-			arrowBackground="!bg-surface-200 dark:!bg-surface-800"
-		>
-			{#snippet trigger()}
-				<button class="btn btn-primary">Show/Hide Columns</button>
-			{/snippet}
-			{#snippet content()}
-				<div>
-					<form class="space-y-2">
-						{#each table.getAllColumns().filter((col) => col.getCanHide()) as column (column.id)}
-							{#if hideableColumns.includes(column.id)}
-								<label class="flex items-center space-x-2">
-									<input
-										class="checkbox"
-										type="checkbox"
-										bind:checked={() => column.getIsVisible(), (v) => column.toggleVisibility(!!v)}
-									/>
-									<p>{myColumns.find((c) => c.accessorKey === column.id)?.title}</p>
-								</label>
-							{/if}
-						{/each}
-					</form>
-				</div>
-			{/snippet}
+		<Popover>
+			<Popover.Trigger>
+				<button class="btn preset-tonal">Show/Hide Columns</button>
+			</Popover.Trigger>
+			<Portal>
+				<Popover.Positioner>
+					<Popover.Content>
+						<form class="space-y-2 card bg-surface-200-800 p-4 space-y-4 max-w-[320px]">
+							{#each table.getAllColumns().filter((col) => col.getCanHide()) as column (column.id)}
+								{#if hideableColumns.includes(column.id)}
+									<label class="label flex items-center space-x-2">
+										<input
+											class="checkbox"
+											type="checkbox"
+											checked={column.getIsVisible()}
+											onchange={(e) => column.toggleVisibility(e.currentTarget.checked)}
+										/>
+										<p>{myColumns.find((c) => c.accessorKey === column.id)?.title}</p>
+									</label>
+								{/if}
+							{/each}
+						</form>
+					</Popover.Content>
+				</Popover.Positioner>
+			</Portal>
 		</Popover>
 
 		<div class="card preset-tonal flex items-center flex-col p-2">

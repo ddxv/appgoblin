@@ -19,7 +19,7 @@
 		<div class="card preset-tonal p-2 md:p-8 mt-2 md:mt-4">
 			<WhiteCard>
 				{#if creativerecords && creativerecords.by_publisher.length > 0}
-					<CreativesTable data={creativerecords.by_publisher} is_monetization={false} />
+					<CreativesTable data={creativerecords.by_publisher} />
 				{:else}
 					<p>No apps found</p>
 				{/if}

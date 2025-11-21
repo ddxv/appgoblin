@@ -9,7 +9,7 @@
 	import TrendingUpIcon from 'lucide-svelte/icons/trending-up';
 
 	interface Props {
-		app: AppFullDetail | CompanyCreative | RankedApps;
+		app: AppFullDetail | RankedApps;
 	}
 
 	let { app }: Props = $props();

@@ -11,7 +11,6 @@
 	let { items = {} }: Props = $props();
 
 	const androidNameFont = 'text-xs md:text-sm px-8 md:px-16';
-	const xmlPathFont = 'text-base px-4 md:px-8';
 
 	let accordionValue = $state(['allclosed']);
 </script>
@@ -40,10 +39,10 @@
 							multiple
 						>
 							<Accordion.Item value={sdkShort}>
-								<!-- Control -->
-								{#snippet control()}<p class={androidNameFont}>{sdkShort}</p>{/snippet}
-								<!-- Panel -->
-								{#snippet panel()}
+								<Accordion.ItemTrigger
+									><p class={androidNameFont}>{sdkShort}</p></Accordion.ItemTrigger
+								>
+								<Accordion.ItemContent>
 									<li>
 										<!-- <p class={xmlPathFont}>{sdkShort}</p> -->
 										<ul>
@@ -60,7 +59,7 @@
 											{/each}
 										</ul>
 									</li>
-								{/snippet}
+								</Accordion.ItemContent>
 							</Accordion.Item>
 						</Accordion>
 					{/each}

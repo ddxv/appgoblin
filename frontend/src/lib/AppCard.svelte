@@ -1,20 +1,28 @@
 <script lang="ts">
-	import type { AppFullDetail, CompanyCreative, RankedApps } from '../types';
+	import type { AppFullDetail, RankedApps } from '../types';
 	import RatingInstalls from './RatingInstalls.svelte';
 
 	interface Props {
-		app: AppFullDetail | CompanyCreative | RankedApps;
+		app: AppFullDetail | RankedApps;
 		showHeader: boolean;
 	}
 
 	let { app, showHeader = false }: Props = $props();
 
-	function getHeaderImage(app: AppFullDetail | CompanyCreative | RankedApps) {
-		if (app.featured_image_url && app.featured_image_url != 'null') {
+	function getHeaderImage(app: AppFullDetail | RankedApps) {
+		if ('featured_image_url' in app && app.featured_image_url && app.featured_image_url != 'null') {
 			return app.featured_image_url;
-		} else if (app.tablet_image_url_1 && app.tablet_image_url_1 != 'null') {
+		} else if (
+			'tablet_image_url_1' in app &&
+			app.tablet_image_url_1 &&
+			app.tablet_image_url_1 != 'null'
+		) {
 			return app.tablet_image_url_1;
-		} else if (app.phone_image_url_1 && app.phone_image_url_1 != 'null') {
+		} else if (
+			'phone_image_url_1' in app &&
+			app.phone_image_url_1 &&
+			app.phone_image_url_1 != 'null'
+		) {
 			return app.phone_image_url_1;
 		}
 	}

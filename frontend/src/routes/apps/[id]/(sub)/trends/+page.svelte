@@ -6,8 +6,6 @@
 		data: AppFullDetails;
 	}
 	let { data }: Props = $props();
-
-	let ratingsTab = $state('new');
 </script>
 
 {#await data.myhistory}
@@ -33,21 +31,20 @@
 	{/if}
 	<div class="card preset-tonal p-2 md:p-8 mt-2 md:mt-4">
 		<h3 class="h4 md:h3 p-2">App Ratings</h3>
-		<Tabs value={ratingsTab} onValueChange={(e) => (ratingsTab = e.value)}>
-			{#snippet list()}
-				<Tabs.Control value="average">Total Ratings</Tabs.Control>
-				<Tabs.Control value="new">New Ratings</Tabs.Control>
-			{/snippet}
-			{#snippet content()}
-				{#if histdata.plot_data && histdata.plot_data.ratings_stars && histdata.plot_data.ratings_stars.length > 1}
-					<Tabs.Panel value="average">
-						<AppPlot plotdata={histdata.plot_data.ratings_stars} plotType="ratings_stars" />
-					</Tabs.Panel>
-					<Tabs.Panel value="new">
-						<AppPlot plotdata={histdata.plot_data.ratings_stars_new} plotType="ratings_stars_new" />
-					</Tabs.Panel>
-				{/if}
-			{/snippet}
+		<Tabs defaultValue="average">
+			<Tabs.List>
+				<Tabs.Trigger value="average" class="p-0 md:p-8">Total Ratings</Tabs.Trigger>
+				<Tabs.Trigger value="new" class="p-0 md:p-8">New Ratings</Tabs.Trigger>
+			</Tabs.List>
+			{#if histdata.plot_data && histdata.plot_data.ratings_stars && histdata.plot_data.ratings_stars.length > 1}
+				<Tabs.Content value="average">
+					<AppPlot plotdata={histdata.plot_data.ratings_stars} plotType="ratings_stars" />
+					<AppPlot plotdata={histdata.plot_data.ratings_stars} plotType="ratings_stars" />
+				</Tabs.Content>
+				<Tabs.Content value="new">
+					<AppPlot plotdata={histdata.plot_data.ratings_stars_new} plotType="ratings_stars_new" />
+				</Tabs.Content>
+			{/if}
 		</Tabs>
 	</div>
 {/await}
