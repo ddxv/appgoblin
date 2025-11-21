@@ -32,10 +32,10 @@
 						multiple
 					>
 						<Accordion.Item value={sdkShort}>
-							<!-- Control -->
-							{#snippet control()}<p class={androidNameFont}>{sdkShort}</p>{/snippet}
-							<!-- Panel -->
-							{#snippet panel()}
+							<Accordion.ItemTrigger
+								><p class={androidNameFont}>{sdkShort}</p></Accordion.ItemTrigger
+							>
+							<Accordion.ItemContent>
 								{#each Object.entries(sdkShortValue) as [xmlPath, sdkParts]}
 									{#each sdkParts as androidName}
 										<ul>
@@ -49,7 +49,7 @@
 										</ul>
 									{/each}
 								{/each}
-							{/snippet}
+							</Accordion.ItemContent>
 						</Accordion.Item>
 					</Accordion>
 				</li>

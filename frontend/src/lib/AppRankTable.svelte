@@ -141,7 +141,7 @@
 							><span class="ml-2 md:ml-8">{row.original.rank}</span></td
 						>
 						<td>
-							<AppCard app={row.original} showHeader={false} />
+							<AppCard app={row.original as RankedApps} showHeader={false} />
 						</td>
 					</tr>
 				{/each}

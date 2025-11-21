@@ -144,8 +144,8 @@ export interface StoreCategoryRanks {
 	error?: string;
 	history: Promise<{ history: RankedApps[] }>;
 	storeIDLookup: StoreIDLookup;
-	collectionIDLookup: { [key: number]: CollectionRanks };
-	categoryIDLookup: { [key: number]: CategoryRanks };
+	collectionIDLookup: Record<number, Record<number, CollectionRanks>>;
+	categoryIDLookup: Record<number, Record<number, CategoryRanks>>;
 }
 
 export interface RankedApps {

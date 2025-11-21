@@ -8,8 +8,6 @@
 
 	import type { AppSDKs } from '../../../../../types';
 
-	let group = $state('sdks');
-
 	let { data }: { data: AppSDKs } = $props();
 
 	function resultToString(result: number) {
@@ -90,100 +88,96 @@
 		<RequestSDKScanButton />
 	</div>
 
-	<Tabs value={group} onValueChange={(e) => (group = e.value)}>
-		{#snippet list()}
-			<Tabs.Control value="sdks" labelClasses="p-0 md:p-8"
-				><p class="text-xs md:text-base">SDKs</p></Tabs.Control
+	<Tabs defaultValue="sdks">
+		<Tabs.List>
+			<Tabs.Trigger value="sdks" class="p-0 md:p-8"
+				><p class="text-xs md:text-base">SDKs</p></Tabs.Trigger
 			>
 			{#if data.myapp.store.startsWith('Apple')}
-				<Tabs.Control value="SKAdNetwork" labelClasses="p-0 md:p-8"
-					><p class="text-xs md:text-base">SKAdNetwork</p></Tabs.Control
+				<Tabs.Trigger value="SKAdNetwork" class="p-0 md:p-8"
+					><p class="text-xs md:text-base">SKAdNetwork</p></Tabs.Trigger
 				>
 			{/if}
 			{#if data.myapp.store.startsWith('Google')}
-				<Tabs.Control value="permissions" labelClasses="p-0 md:p-8"
-					><p class="text-xs md:text-base">Permissions</p></Tabs.Control
+				<Tabs.Trigger value="permissions" class="p-0 md:p-8"
+					><p class="text-xs md:text-base">Permissions</p></Tabs.Trigger
 				>
-				<Tabs.Control value="queries" labelClasses="p-0 md:p-8"
-					><p class="text-xs md:text-base">App Queries</p></Tabs.Control
+				<Tabs.Trigger value="queries" class="p-0 md:p-8"
+					><p class="text-xs md:text-base">App Queries</p></Tabs.Trigger
 				>
 			{/if}
-		{/snippet}
+		</Tabs.List>
 
-		{#snippet content()}
-			<Tabs.Panel value="sdks">
-				{#if typeof data.myPackageInfo == 'string'}
-					<p>Permissions, SDKs and trackers info not yet available for this app.</p>
-				{:else}
-					<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-						{#if data.myPackageInfo.company_categories && Object.keys(data.myPackageInfo.company_categories).length > 0}
-							{#await data.companyTypes}
-								Loading company types...
-							{:then myCompanyTypes}
-								{#each Object.keys(data.myPackageInfo.company_categories) as category}
-									<WhiteCard>
-										{#snippet title()}
-											{myCompanyTypes.types.find(
-												(x: { url_slug: string }) => x.url_slug === category
-											)?.name || category}
-										{/snippet}
-										<div class="p-2 lg:p-4">
-											<ManifestItemList items={data.myPackageInfo.company_categories[category]}
-											></ManifestItemList>
-										</div>
-									</WhiteCard>
-								{/each}
-							{/await}
-						{/if}
-					</div>
-
-					{#if data.myPackageInfo.leftovers && Object.keys(data.myPackageInfo.leftovers).length > 0}
-						<ManifestItemUnknownsList items={data.myPackageInfo.leftovers}
-						></ManifestItemUnknownsList>
+		<Tabs.Content value="sdks">
+			{#if typeof data.myPackageInfo == 'string'}
+				<p>Permissions, SDKs and trackers info not yet available for this app.</p>
+			{:else}
+				<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+					{#if data.myPackageInfo.company_categories && Object.keys(data.myPackageInfo.company_categories).length > 0}
+						{#await data.companyTypes}
+							Loading company types...
+						{:then myCompanyTypes}
+							{#each Object.keys(data.myPackageInfo.company_categories) as category}
+								<WhiteCard>
+									{#snippet title()}
+										{myCompanyTypes.types.find((x: { url_slug: string }) => x.url_slug === category)
+											?.name || category}
+									{/snippet}
+									<div class="p-2 lg:p-4">
+										<ManifestItemList items={data.myPackageInfo.company_categories[category]}
+										></ManifestItemList>
+									</div>
+								</WhiteCard>
+							{/each}
+						{/await}
 					{/if}
+				</div>
+
+				{#if data.myPackageInfo.leftovers && Object.keys(data.myPackageInfo.leftovers).length > 0}
+					<ManifestItemUnknownsList items={data.myPackageInfo.leftovers}></ManifestItemUnknownsList>
 				{/if}
-			</Tabs.Panel>
-			<Tabs.Panel value="queries">
-				<div class="grid grid-cols-1">
-					{#if data.myPackageInfo.app_queries && data.myPackageInfo.app_queries.length > 0}
-						<h4 class="h4 md:h3 p-2 md:p-4 mt-4">App Queries</h4>
-						<p>
-							These are the other apps that {data.myapp.name} requests to know other apps are also installed:
-						</p>
-						<div class="px-4 md:px-8 max-w-sm md:max-w-md lg:max-w-full overflow-x-scroll">
-							{#each data.myPackageInfo.app_queries as app_query}
-								<p><a href="/apps/{app_query}">{app_query}</a></p>
-							{/each}
-						</div>
-					{/if}
-				</div>
-			</Tabs.Panel>
+			{/if}
+		</Tabs.Content>
+		<Tabs.Content value="queries">
+			<div class="grid grid-cols-1">
+				{#if data.myPackageInfo.app_queries && data.myPackageInfo.app_queries.length > 0}
+					<h4 class="h4 md:h3 p-2 md:p-4 mt-4">App Queries</h4>
+					<p>
+						These are the other apps that {data.myapp.name} requests to know other apps are also installed:
+					</p>
+					<div class="px-4 md:px-8 max-w-sm md:max-w-md lg:max-w-full overflow-x-scroll">
+						{#each data.myPackageInfo.app_queries as app_query}
+							<p><a href="/apps/{app_query}">{app_query}</a></p>
+						{/each}
+					</div>
+				{/if}
+			</div>
+		</Tabs.Content>
 
-			<Tabs.Panel value="permissions">
-				<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-					{#if data.myPackageInfo.permissions && data.myPackageInfo.permissions.length > 0}
-						<div class="px-4 md:px-8 max-w-sm md:max-w-md lg:max-w-full overflow-x-scroll">
-							<h4 class="h4 md:h3 p-2 md:p-4 mt-4">Permissions</h4>
-							{#each data.myPackageInfo.permissions as permission}
-								<p>{permission}</p>
-							{/each}
-						</div>
-					{/if}
-				</div>
-			</Tabs.Panel>
+		<Tabs.Content value="permissions">
+			<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+				{#if data.myPackageInfo.permissions && data.myPackageInfo.permissions.length > 0}
+					<div class="px-4 md:px-8 max-w-sm md:max-w-md lg:max-w-full overflow-x-scroll">
+						<h4 class="h4 md:h3 p-2 md:p-4 mt-4">Permissions</h4>
+						{#each data.myPackageInfo.permissions as permission}
+							<p>{permission}</p>
+						{/each}
+					</div>
+				{/if}
+			</div>
+		</Tabs.Content>
 
-			<Tabs.Panel value="skadnetwork">
-				<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-					{#if data.myPackageInfo.skadnetwork && data.myPackageInfo.skadnetwork.length > 0}
-						<h4 class="h4 md:h3 p-2 md:p-4 mt-4">SKAdNetwork</h4>
-						<div class="px-4 md:px-8 max-w-sm md:max-w-md lg:max-w-full overflow-x-scroll">
-							{#each data.myPackageInfo.skadnetwork as skadnetwork}
-								<p>{skadnetwork}</p>
-							{/each}
-						</div>
-					{/if}
-				</div>
-			</Tabs.Panel>
-		{/snippet}
+		<Tabs.Content value="skadnetwork">
+			<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+				{#if data.myPackageInfo.skadnetwork && data.myPackageInfo.skadnetwork.length > 0}
+					<h4 class="h4 md:h3 p-2 md:p-4 mt-4">SKAdNetwork</h4>
+					<div class="px-4 md:px-8 max-w-sm md:max-w-md lg:max-w-full overflow-x-scroll">
+						{#each data.myPackageInfo.skadnetwork as skadnetwork}
+							<p>{skadnetwork}</p>
+						{/each}
+					</div>
+				{/if}
+			</div>
+		</Tabs.Content>
 	</Tabs>
 </div>

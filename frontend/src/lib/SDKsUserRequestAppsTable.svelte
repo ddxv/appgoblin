@@ -34,7 +34,10 @@
 
 						<td class="table-cell-fit">
 							<a href="/apps/{row.store_id}" style="cursor: pointer;">
-								{row.name}
+								<div class="flex items-center gap-2">
+									<img src={row.app_icon_url} alt={row.name} class="w-8 h-8" />
+									{row.name}
+								</div>
 							</a>
 						</td>
 						<td class="table-cell-fit">

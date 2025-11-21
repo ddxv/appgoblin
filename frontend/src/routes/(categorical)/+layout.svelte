@@ -1,13 +1,7 @@
 <script lang="ts">
-	import OpenSideBarDrawer from '$lib/utils/OpenSideBarDrawer.svelte';
+	import { Dialog, Portal } from '@skeletonlabs/skeleton-svelte';
 	import SideBar from '$lib/SideBar.svelte';
-
-	interface Props {
-		data: any;
-		children?: import('svelte').Snippet;
-	}
-
-	let { data, children }: Props = $props();
+	let { data, children } = $props();
 </script>
 
 <div class="grid grid-cols-1 md:grid-cols-[auto_1fr]">
@@ -25,15 +19,25 @@
 	<main>
 		{@render children?.()}
 	</main>
-</div>
 
-<div class="sticky bottom-0 z-10 bg-surface-50-950 p-2">
-	<div class="md:hidden p-2">
-		<OpenSideBarDrawer
-			myCatData={data.appCats}
-			storeIDLookup={data.storeIDLookup}
-			collectionIDLookup={data.collectionIDLookup}
-			categoryIDLookup={data.categoryIDLookup}
-		/>
+	<div class="md:hidden sticky bottom-0 bg-surface-50-950 p-2">
+		<!-- Small screen version of the side bar -->
+		<Dialog>
+			<Dialog.Trigger class="btn preset-filled">APP FILTERS</Dialog.Trigger>
+			<Portal>
+				<Dialog.Positioner class="fixed inset-0 z-50 flex justify-start">
+					<Dialog.Content
+						class="h-screen card bg-surface-100-900 w-sm p-4 space-y-4 shadow-xl max-w-[320px]"
+					>
+						<SideBar
+							myCatData={data.appCats}
+							storeIDLookup={data.storeIDLookup}
+							collectionIDLookup={data.collectionIDLookup}
+							categoryIDLookup={data.categoryIDLookup}
+						/>
+					</Dialog.Content>
+				</Dialog.Positioner>
+			</Portal>
+		</Dialog>
 	</div>
 </div>
