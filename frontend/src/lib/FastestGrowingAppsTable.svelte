@@ -106,6 +106,11 @@
 			isSortable: true
 		},
 		{
+			title: 'Ratings Avg (14d)',
+			accessorKey: 'ratings_avg_2w',
+			isSortable: true
+		},
+		{
 			title: 'Installs Growth Score (14d)',
 			accessorKey: 'installs_z_score_2w',
 			isSortable: true
@@ -119,6 +124,11 @@
 		{
 			title: 'Installs (30d)',
 			accessorKey: 'installs_sum_4w',
+			isSortable: true
+		},
+		{
+			title: 'Ratings (30d)',
+			accessorKey: 'ratings_sum_4w',
 			isSortable: true
 		},
 		{
