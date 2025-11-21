@@ -2,7 +2,6 @@ import type { PageServerLoad } from './$types.js';
 import { createApiClient } from '$lib/server/api';
 
 import type { Actions } from './$types';
-import { version } from 'os';
 
 export const actions = {
 	requestSDKScan: async (event) => {
