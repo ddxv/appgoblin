@@ -1,8 +1,10 @@
 <script lang="ts">
+	import type { Snippet } from 'svelte';
+
 	interface Props {
-		header?: import('svelte').Snippet;
-		footer?: import('svelte').Snippet;
-		children: import('svelte').Snippet;
+		header?: Snippet;
+		footer?: Snippet;
+		children: Snippet;
 	}
 	let { header, footer, children }: Props = $props();
 </script>
@@ -15,11 +17,11 @@
 		</header>
 	{/if}
 
-	{@render children?.()}
+	{@render children()}
 
 	{#if footer}
 		<footer>
-			{@render footer?.()}
+			{@render footer()}
 		</footer>
 	{/if}
 </div>

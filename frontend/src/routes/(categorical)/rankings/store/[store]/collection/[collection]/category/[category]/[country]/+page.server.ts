@@ -1,4 +1,4 @@
-import type { PageServerLoad } from '../$types';
+import type { PageServerLoad } from '../../../../../../../../../$types';
 import { getCachedData } from '../../../../../../../../../../hooks.server';
 import { createApiClient } from '$lib/server/api';
 
@@ -9,8 +9,8 @@ export const load: PageServerLoad = async ({ fetch, params }) => {
 	const api = createApiClient(fetch);
 
 	const collectionValue = params.collection;
-	const categoryValue = params.category;
-	const countryValue = params.country;
+	const categoryValue = params.category!;
+	const countryValue = params.country!;
 
 	const ranks = await api.get(
 		`/rankings/${collectionValue}/${categoryValue}?country=${countryValue}`,

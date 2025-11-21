@@ -47,14 +47,7 @@
 
 	let { myCatData }: Props = $props();
 
-	let selectedCategory = $state('overall');
-	$effect(() => {
-		if (page.params.category) {
-			selectedCategory = page.params.category;
-		} else {
-			selectedCategory = 'overall';
-		}
-	});
+	let selectedCategory = $derived(page.params.category || 'overall');
 </script>
 
 <div class="p-1 md:p-2">
@@ -63,7 +56,7 @@
 			<h4 class="h5 md:h4">App Categories</h4>
 		{/snippet}
 		{#if myCatData}
-			{#each Object.entries(myCatData.categories) as [_prop, values]}
+			{#each Object.entries(myCatData.categories) as [_prop, values] (values.id)}
 				{#if values.id && (Number(values.android) > 0 || values.name == 'Games')}
 					{#if values.id != 'overall'}
 						<a href="{baseUrl}/{values.id}" class="text-tertiary-900-100 hover:underline">
