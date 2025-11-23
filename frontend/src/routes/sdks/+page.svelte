@@ -36,7 +36,7 @@
 				<Tabs.Trigger value="latest_failed" class="p-0 md:p-8"
 					><p class="text-xs md:text-base">Latest Failed</p></Tabs.Trigger
 				>
-								<Tabs.Indicator />
+				<Tabs.Indicator />
 			</Tabs.List>
 
 			<Tabs.Content value="user_requested">

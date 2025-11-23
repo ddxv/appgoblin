@@ -45,7 +45,6 @@
 			selectedStore = 'apple';
 		}
 	});
-	
 </script>
 
 <div class="space-y-6 p-4 md:px-32">
@@ -80,7 +79,9 @@
 					<p class="text-xs md:text-base">
 						Apps
 						{#if totalAppCount > 0}
-							<span class="ml-2 px-2 py-0.5 text-xs rounded-full bg-primary-900-100 text-surface-50-950">
+							<span
+								class="ml-2 px-2 py-0.5 text-xs rounded-full bg-primary-900-100 text-surface-50-950"
+							>
 								{totalAppCount}
 							</span>
 						{/if}
@@ -90,13 +91,15 @@
 					<p class="text-xs md:text-base">
 						Companies
 						{#if companiesCount > 0}
-							<span class="ml-2 px-2 py-0.5 text-xs rounded-full bg-primary-900-100 text-surface-50-950">
+							<span
+								class="ml-2 px-2 py-0.5 text-xs rounded-full bg-primary-900-100 text-surface-50-950"
+							>
 								{companiesCount}
 							</span>
 						{/if}
 					</p>
 				</Tabs.Trigger>
-					<Tabs.Indicator />
+				<Tabs.Indicator />
 			</Tabs.List>
 
 			<Tabs.Content value="apps">
