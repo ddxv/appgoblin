@@ -1,16 +1,11 @@
 <script lang="ts" generics="TData, TValue">
-	import {
-		type SortingState,
-		getCoreRowModel,
-		getSortedRowModel,
-	} from '@tanstack/table-core';
+	import { type SortingState, getCoreRowModel, getSortedRowModel } from '@tanstack/table-core';
 
 	import type { CompaniesSearchEntries } from '../types';
 
 	import { createSvelteTable, FlexRender } from '$lib/components/data-table/index.js';
 
 	import { genericColumns } from '$lib/components/data-table/generic-column';
-	
 
 	import { formatNumber } from '$lib/utils/formatNumber';
 	import { countryCodeToEmoji } from '$lib/utils/countryCodeToEmoji';
@@ -60,7 +55,6 @@
 		}
 	]);
 
-
 	const table = createSvelteTable({
 		get data() {
 			return data;
@@ -69,12 +63,10 @@
 		state: {
 			get sorting() {
 				return sorting;
-			},
-			
+			}
 		},
 
 		getSortedRowModel: getSortedRowModel(),
-
 
 		onSortingChange: (updater) => {
 			if (typeof updater === 'function') {
@@ -83,10 +75,9 @@
 				sorting = updater;
 			}
 		},
-		
-		getCoreRowModel: getCoreRowModel(),
-	});
 
+		getCoreRowModel: getCoreRowModel()
+	});
 
 	function getCompanyNameColumnWidth(header: any) {
 		if (header.column.id === 'company_name') {
@@ -103,14 +94,14 @@
 				{#each table.getHeaderGroups() as headerGroup (headerGroup.id)}
 					<tr>
 						{#each headerGroup.headers as header (header.id)}
-								<th class={getCompanyNameColumnWidth(header)}>
-									{#if !header.isPlaceholder}
-										<FlexRender
-											content={header.column.columnDef.header}
-											context={header.getContext()}
-										/>
-									{/if}
-								</th>
+							<th class={getCompanyNameColumnWidth(header)}>
+								{#if !header.isPlaceholder}
+									<FlexRender
+										content={header.column.columnDef.header}
+										context={header.getContext()}
+									/>
+								{/if}
+							</th>
 						{/each}
 					</tr>
 				{/each}

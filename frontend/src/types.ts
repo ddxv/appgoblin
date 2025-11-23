@@ -92,7 +92,7 @@ export interface CompanyApps {
 
 export interface SearchResponse {
 	appGroupByStore: AppGroupByStore;
-	companiesResults: CompaniesOverviewEntries[];
+	companiesResults: CompaniesSearchEntries[];
 	status?: number;
 	error?: string;
 }
