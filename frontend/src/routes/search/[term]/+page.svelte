@@ -3,6 +3,7 @@
 	import type { SearchResponse } from '../../../types';
 	import AppGroupCard from '$lib/AppGroupCard.svelte';
 	import CompaniesSearchTable from '$lib/CompaniesSearchTable.svelte';
+	import { Tabs } from '@skeletonlabs/skeleton-svelte';
 
 	interface Props {
 		data: SearchResponse;
@@ -10,10 +11,6 @@
 
 	let { data }: Props = $props();
 	let searchTerm: string | null = $state(page.params.term || '');
-
-	// Tab state
-	type MainTab = 'apps' | 'companies';
-	let activeTab = $state<MainTab>('apps');
 
 	// App store filter state
 	type AppStore = 'apple' | 'google';
@@ -31,34 +28,27 @@
 		typeof data.companiesResults !== 'string' ? data.companiesResults.length : 0
 	);
 
-	// Determine initial tab based on results
-	$effect(() => {
-		if (totalAppCount === 0 && companiesCount > 0) {
-			activeTab = 'companies';
-		} else if (totalAppCount > 0 && companiesCount === 0) {
-			activeTab = 'apps';
-		}
-		// If both have results, default to apps (or could default to whichever has more)
-	});
+	// Determine default tab based on results
+	const defaultTab = $derived(
+		totalAppCount === 0 && companiesCount > 0
+			? 'companies'
+			: totalAppCount > 0 && companiesCount === 0
+				? 'apps'
+				: 'apps' // If both have results, default to apps
+	);
 
 	// Auto-select store with results
 	$effect(() => {
-		if (activeTab === 'apps') {
-			if (selectedStore === 'apple' && appleAppCount === 0 && googleAppCount > 0) {
-				selectedStore = 'google';
-			} else if (selectedStore === 'google' && googleAppCount === 0 && appleAppCount > 0) {
-				selectedStore = 'apple';
-			}
+		if (selectedStore === 'apple' && appleAppCount === 0 && googleAppCount > 0) {
+			selectedStore = 'google';
+		} else if (selectedStore === 'google' && googleAppCount === 0 && appleAppCount > 0) {
+			selectedStore = 'apple';
 		}
 	});
-
-	function getCurrentAppGroup() {
-		if (typeof data.appGroupByStore === 'string') return null;
-		return selectedStore === 'apple' ? data.appGroupByStore.apple : data.appGroupByStore.google;
-	}
+	
 </script>
 
-<div class="space-y-6">
+<div class="space-y-6 p-4 md:px-32">
 	<!-- Header -->
 	<div class="card p-4 md:p-6">
 		<h1 class="text-2xl md:text-3xl text-primary-900-100 mb-4">
@@ -83,55 +73,33 @@
 	</div>
 
 	<!-- Main Tabs: Apps vs Companies -->
-	<div class="card p-0">
-		<!-- Tab Navigation -->
-		<div class="flex border-b border-surface-200-800">
-			<button
-				type="button"
-				class="flex-1 px-4 py-3 font-medium transition-colors duration-200 {activeTab === 'apps'
-					? 'text-primary-900-100 border-b-2 border-primary-900-100 bg-surface-100-900'
-					: 'text-surface-600-400 hover:text-primary-900-100 hover:bg-surface-100-900'}"
-				onclick={() => {
-					activeTab = 'apps';
-				}}
-			>
-				Apps
-				{#if totalAppCount > 0}
-					<span
-						class="ml-2 px-2 py-0.5 text-xs rounded-full {activeTab === 'apps'
-							? 'bg-primary-900-100 text-surface-50-950'
-							: 'bg-surface-200-800 text-surface-600-400'}"
-					>
-						{totalAppCount}
-					</span>
-				{/if}
-			</button>
-			<button
-				type="button"
-				class="flex-1 px-4 py-3 font-medium transition-colors duration-200 {activeTab ===
-				'companies'
-					? 'text-primary-900-100 border-b-2 border-primary-900-100 bg-surface-100-900'
-					: 'text-surface-600-400 hover:text-primary-900-100 hover:bg-surface-100-900'}"
-				onclick={() => {
-					activeTab = 'companies';
-				}}
-			>
-				Companies
-				{#if companiesCount > 0}
-					<span
-						class="ml-2 px-2 py-0.5 text-xs rounded-full {activeTab === 'companies'
-							? 'bg-primary-900-100 text-surface-50-950'
-							: 'bg-surface-200-800 text-surface-600-400'}"
-					>
-						{companiesCount}
-					</span>
-				{/if}
-			</button>
-		</div>
+	<div>
+		<Tabs defaultValue={defaultTab}>
+			<Tabs.List>
+				<Tabs.Trigger value="apps" class="p-0 md:p-8">
+					<p class="text-xs md:text-base">
+						Apps
+						{#if totalAppCount > 0}
+							<span class="ml-2 px-2 py-0.5 text-xs rounded-full bg-primary-900-100 text-surface-50-950">
+								{totalAppCount}
+							</span>
+						{/if}
+					</p>
+				</Tabs.Trigger>
+				<Tabs.Trigger value="companies" class="p-0 md:p-8">
+					<p class="text-xs md:text-base">
+						Companies
+						{#if companiesCount > 0}
+							<span class="ml-2 px-2 py-0.5 text-xs rounded-full bg-primary-900-100 text-surface-50-950">
+								{companiesCount}
+							</span>
+						{/if}
+					</p>
+				</Tabs.Trigger>
+					<Tabs.Indicator />
+			</Tabs.List>
 
-		<!-- Tab Content -->
-		<div class="p-4 md:p-6">
-			{#if activeTab === 'apps'}
+			<Tabs.Content value="apps">
 				{#if typeof data.appGroupByStore === 'string'}
 					<div class="card preset-tonal p-4">
 						<p class="text-error-500">Search failed. Please try again.</p>
@@ -149,7 +117,7 @@
 						</p>
 					</div>
 				{:else}
-					<!-- Store Filter (iOS vs Google) -->
+					<!-- Store Filter (Apple vs Google) -->
 					{#if appleAppCount > 0 && googleAppCount > 0}
 						<div class="mb-6 flex gap-2">
 							<button
@@ -201,7 +169,9 @@
 						</p>
 					</div>
 				{/if}
-			{:else if activeTab === 'companies'}
+			</Tabs.Content>
+
+			<Tabs.Content value="companies">
 				{#if typeof data.companiesResults === 'string'}
 					<div class="card preset-tonal p-4">
 						<p class="text-error-500">Search failed. Please try again.</p>
@@ -224,7 +194,7 @@
 						<CompaniesSearchTable data={data.companiesResults} />
 					</div>
 				{/if}
-			{/if}
-		</div>
+			</Tabs.Content>
+		</Tabs>
 	</div>
 </div>

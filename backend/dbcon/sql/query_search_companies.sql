@@ -1,3 +1,7 @@
+--- noqa: disable=LT02
+--- noqa: disable=LT08
+--- noqa: disable=RF02
+--- noqa: disable=PRS
 WITH company_results AS (
     SELECT
         cac.store,
@@ -7,8 +11,8 @@ WITH company_results AS (
         cac.app_count
     FROM frontend.companies_category_tag_stats AS cac
     WHERE
-        cac.company_name ILIKE '%' || cac.:searchinput || '%'
-        OR cac.company_domain ILIKE '%' || cac.:searchinput || '%'
+        cac.company_name ILIKE '%' || :searchinput || '%'
+        OR cac.company_domain ILIKE '%' || :searchinput || '%'
 ),
 
 company_counts AS (
