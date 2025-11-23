@@ -21,6 +21,7 @@ from api_app.models import (
     AdsTxtEntries,
     AppDetail,
     AppGroup,
+    AppGroupByStore,
     AppHistory,
     AppRank,
     AppRankOverview,
@@ -71,18 +72,24 @@ def api_call_dfs(state: State, store_id: str) -> pd.DataFrame:
 
 def search_both_stores(state: State, search_term: str) -> None:
     """Search both stores and return resulting AppGroup."""
-    google_full_results = google.search_play_store(search_term)
-    if len(google_full_results) > 0:
-        process_search_results(state.dbconwrite, google_full_results, store=1)
-    apple_ids = apple.search_app_store_for_ids(search_term)
-    if len(apple_ids) > 0:
-        apple_full_results = [
-            {"store_id": store_id, "store": 2} for store_id in apple_ids
-        ]
-        process_search_results(state.dbconwrite, apple_full_results, store=2)
+    try:
+        google_full_results = google.search_play_store(search_term)
+        if len(google_full_results) > 0:
+            process_search_results(state.dbconwrite, google_full_results, store=1)
+    except Exception as e:
+        logger.error(f"Error searching Google Play Store: {e}")
+    try:
+        apple_ids = apple.search_app_store_for_ids(search_term)
+        if len(apple_ids) > 0:
+            apple_full_results = [
+                {"store_id": store_id, "store": 2} for store_id in apple_ids
+            ]
+            process_search_results(state.dbconwrite, apple_full_results, store=2)
+    except Exception as e:
+        logger.error(f"Error searching both stores: {e}")
 
 
-def get_search_results(state: State, search_term: str) -> AppGroup:
+def get_search_results(state: State, search_term: str) -> dict:
     """Parse search term and return resulting AppGroup."""
     decoded_input = urllib.parse.unquote(search_term)
     decoded_input = decoded_input.strip()
@@ -91,8 +98,18 @@ def get_search_results(state: State, search_term: str) -> AppGroup:
     df = search_apps(state, search_input=decoded_input, limit=60)
     df = extend_app_icon_url(df)
     logger.info(f"{decoded_input=} returned rows: {df.shape[0]}")
-    apps_dict = df.to_dict(orient="records")
-    app_group = AppGroup(title=f"Apps matching '{search_term}'", apps=apps_dict)
+    apple_apps_dict = df[df["store"].str.startswith("Apple")].to_dict(orient="records")
+    google_apps_dict = df[df["store"].str.startswith("Google")].to_dict(
+        orient="records"
+    )
+    app_group = AppGroupByStore(
+        key=f"Apps matching '{search_term}'",
+        apple=AppGroup(title="Apple", apps=apple_apps_dict),
+        google=AppGroup(title="Google", apps=google_apps_dict),
+    )
+    logger.info(
+        f"{search_term=} returned rows: {len(apple_apps_dict)} {len(google_apps_dict)}"
+    )
     return app_group
 
 
@@ -744,7 +761,7 @@ class AppController(Controller):
         return txts
 
     @get(path="/search/{search_term:str}", cache=3600)
-    async def search(self: Self, state: State, search_term: str) -> AppGroup:
+    async def search(self: Self, state: State, search_term: str) -> AppGroupByStore:
         """Search apps and developers.
 
         Args:

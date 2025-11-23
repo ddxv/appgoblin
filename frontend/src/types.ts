@@ -78,13 +78,20 @@ export interface DeveloperSDKResponse {
 	error?: string;
 }
 
+export interface AppGroupByStore {
+	key: string;
+	apple: AppGroup;
+	google: AppGroup;
+}
+
 export interface CompanyApps {
 	results: AppGroup;
 	status?: number;
 	error?: string;
 }
+
 export interface SearchResponse {
-	results: AppGroup;
+	appGroupByStore: AppGroupByStore;
 	companiesResults: CompaniesOverviewEntries[];
 	status?: number;
 	error?: string;
@@ -218,6 +225,15 @@ export interface CompaniesOverviewEntries {
 	app_count: number;
 	percentage: number;
 	percent_open_source: number;
+}
+
+export interface CompaniesSearchEntries {
+	country_code: string;
+	company_name: string;
+	sdk_app_count: number;
+	api_call_app_count: number;
+	app_ads_direct_app_count: number;
+	app_ads_reseller_app_count: number;
 }
 
 export interface CompaniesOverviewPlatforms {

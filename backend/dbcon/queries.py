@@ -812,7 +812,6 @@ def search_companies(state: State, search_input: str, limit: int = 10) -> pd.Dat
         state.dbcon.engine,
         params={"searchinput": search_input, "mylimit": limit},
     )
-    df["store"] = df["store"].replace({1: "Google Play", 2: "Apple App Store"})
     return df
 
 
@@ -834,8 +833,6 @@ def search_apps(state: State, search_input: str, limit: int = 100) -> pd.DataFra
     logger.info(f"App search finished: {search_input=}")
     df = pd.concat([apps, devapps]).drop_duplicates()
     if not df.empty:
-        df["tempsort"] = df["installs"].fillna(df["rating_count"] * 100)
-        df = df.sort_values(by="tempsort", ascending=False).drop(columns=["tempsort"])
         df = clean_app_df(df)
     return df
 

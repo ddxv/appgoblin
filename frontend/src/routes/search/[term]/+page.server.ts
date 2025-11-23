@@ -7,11 +7,11 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 	const searchTerm = decodeURIComponent(term);
 	console.log(`search start term=${searchTerm}`);
 
-	const results = api.get(`/apps/search/${searchTerm}`, 'Apps Search');
-	const companiesResults = api.get(`/companies/search/${searchTerm}`, 'Companies Search');
+	const appGroupByStore = await api.get(`/apps/search/${searchTerm}`, 'Apps Search');
+	const companiesResults = await api.get(`/companies/search/${searchTerm}`, 'Companies Search');
 
 	return {
-		results,
+		appGroupByStore,
 		companiesResults
 	};
 };

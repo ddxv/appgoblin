@@ -64,16 +64,16 @@ class SDKsDetails:
 class AppGroup:
     """A Group of Apps by Platform."""
 
-    title: str  # iOS or Google
+    title: str
     apps: list[AppDetail]
 
 
 @dataclass
-class Category:
-    """A Category for apps with ios and google separated."""
+class AppGroupByStore:
+    """A Group of Apps by Store."""
 
-    key: str  # mapped id like game_puzzle
-    ios: AppGroup
+    key: str
+    apple: AppGroup
     google: AppGroup
 
 
