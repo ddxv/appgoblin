@@ -123,6 +123,13 @@ def get_search_results(state: State, search_term: str) -> pd.DataFrame:
         how="left",
         validate="m:1",
     )
+    countries_df = get_company_countries(state)
+    df = df.merge(
+        countries_df,
+        on="company_domain",
+        how="left",
+        validate="1:1",
+    )
     logger.info(f"{decoded_input=} returned rows: {df.shape[0]}")
     return df
 
@@ -1109,22 +1116,10 @@ class CompaniesController(Controller):
         start = time.perf_counter() * 1000
         results = get_search_results(state, search_term=search_term)
 
-        results["app_category"] = "all"
-
-        category_totals_df = get_tag_source_category_totals(state)
-
-        overview_df = results.merge(
-            category_totals_df,
-            on=["app_category", "store", "tag_source"],
-            validate="m:1",
-        )
-
-        overview_df = prep_companies_overview_df(state, overview_df)
-
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(f"{self.path}/{search_term} took {duration}ms")
 
-        return overview_df.to_dict(orient="records")
+        return results.to_dict(orient="records")
 
     @get(
         path="/companies/{company_domain:str}/adstxt/publisher/{publisher_id:str}",

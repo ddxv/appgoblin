@@ -6,34 +6,38 @@
 -- https://github.com/sqlfluff/sqlfluff/issues/4837
 WITH apps AS (
     SELECT *
-    FROM
-        store_apps
-    WHERE
-        textsearchable_index_col @@ to_tsquery(
-            'simple',
-            :searchinput
-        )
+    FROM store_apps
+    WHERE textsearchable_index_col @@ to_tsquery('simple', :searchinput)
+),
+ranked_apps AS (
+    SELECT
+        a.*,
+        agml.installs,
+        agml.rating,
+        agml.rating_count,
+        row_number() OVER (
+            PARTITION BY a.store
+            ORDER BY
+                coalesce(agml.installs, agml.rating_count, 0) DESC NULLS LAST
+        ) AS store_rank,
+        row_number() OVER (
+            ORDER BY
+                a.store,
+                coalesce(agml.installs, agml.rating_count, 0) DESC NULLS LAST
+        ) % (SELECT count(DISTINCT store) FROM apps) AS round_robin_rank
+    FROM apps AS a
+    LEFT JOIN app_global_metrics_latest AS agml ON a.id = agml.store_app
 )
 SELECT
-   a.store,
-   a.store_id,
-   a.name,
-   a.icon_url_100,
-   a.icon_url_512,
-   a.featured_image_url,
-   agml.installs,
-   agml.rating,
-   agml.rating_count
-FROM apps AS a
-   LEFT JOIN app_global_metrics_latest AS agml ON a.id = agml.store_app
-ORDER BY
-   (
-        coalesce(
-            agml.installs,
-coalesce(
-            agml.rating_count,
-            0
-        )
-        )
-    ) DESC NULLS LAST
+    store,
+store_id,
+name,
+icon_url_100,
+icon_url_512,
+    featured_image_url,
+installs,
+rating,
+rating_count
+FROM ranked_apps
+ORDER BY store_rank, round_robin_rank
 LIMIT :mylimit;
