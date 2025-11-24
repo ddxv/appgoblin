@@ -11,8 +11,11 @@ export const load: PageServerLoad = async ({ fetch, params, parent }) => {
 	);
 	const { myapp } = await parent();
 
+	let isIOS = myapp.store.includes('Apple');
+
 	return {
 		appGlobalMetrics: appGlobalMetrics,
+		isIOS: isIOS,
 		// Meta Tags
 		toFollow: 'noindex, nofollow',
 		title: `Install and Rating History for ${myapp.name}`,

@@ -157,11 +157,72 @@ def old_app_history(state: State, store_app: int, app_name: str) -> AppHistory:
     return hist
 
 
+def create_app_plot_dict(app_hist: pd.DataFrame) -> pd.DataFrame:
+    """Create plot dicts for the app history with linear interpolation for missing weeks."""
+    star_cols = ["one_star", "two_star", "three_star", "four_star", "five_star"]
+    metrics = ["installs", "rating", "review_count", "rating_count", *star_cols]
+    xaxis_col = "snapshot_date"
+    # Convert to datetime and sort
+    app_hist[xaxis_col] = pd.to_datetime(app_hist[xaxis_col])
+    app_hist = app_hist.sort_values(xaxis_col)
+    app_hist = app_hist.set_index(xaxis_col)
+    # Resample to weekly frequency - this creates missing weeks with NaN
+    app_hist = app_hist.resample("W").last()
+    # Linear interpolation for cumulative metrics (installs, rating_count, review_count, star counts)
+    # These should be interpolated as they are cumulative
+    cumulative_metrics = ["installs", "rating_count", "review_count", *star_cols]
+    for metric in cumulative_metrics:
+        if metric in app_hist.columns:
+            app_hist[metric] = app_hist[metric].interpolate(
+                method="linear", limit_direction="forward"
+            )
+    # For rating (average), also interpolate
+    if "rating" in app_hist.columns:
+        app_hist["rating"] = app_hist["rating"].interpolate(
+            method="linear", limit_direction="forward"
+        )
+    app_hist = app_hist.reset_index()
+    # Calculate days between snapshots
+    app_hist["date_change"] = app_hist[xaxis_col] - app_hist[xaxis_col].shift(1)
+    app_hist["days_changed"] = app_hist["date_change"].apply(
+        lambda x: np.nan if pd.isna(x) else x.days,
+    )
+    metrics_to_add = []
+    for metric in metrics:
+        change_metric = f"new_{metric}"
+        rate_of_change_metric = f"{metric}_rate_of_change"
+        avg_per_day_metric = f"{metric}_avg_per_day"
+        # Calculate the change (difference from previous period)
+        app_hist[change_metric] = app_hist[metric] - app_hist[metric].shift(1)
+        # Formula: ((new - old) / old) * 100
+        app_hist[rate_of_change_metric] = (
+            (app_hist[metric] - app_hist[metric].shift(1)) / app_hist[metric].shift(1)
+        ) * 100
+        # Avg Per Day (daily average of the change)
+        app_hist[avg_per_day_metric] = (
+            app_hist[change_metric] / app_hist["days_changed"]
+        )
+        metrics_to_add.append(change_metric)
+        metrics_to_add.append(rate_of_change_metric)
+        metrics_to_add.append(avg_per_day_metric)
+    # Select final columns and drop the first row (no previous data to compare)
+    app_hist = app_hist[[xaxis_col, *metrics, *metrics_to_add]].drop(app_hist.index[0])
+    # Replace infinite values with NaN
+    app_hist = app_hist.replace([np.inf, -np.inf], np.nan)
+    # Drop columns that are all NaN
+    app_hist = app_hist.dropna(axis="columns", how="all")
+    if app_hist.empty:
+        return app_hist.to_dict(orient="records")
+    # Drop rating_avg_per_day as it's not useful (rating is an average, not cumulative)
+    app_hist = app_hist.drop(["rating_avg_per_day"], axis=1, errors="ignore")
+    return app_hist
+
+
 def old_create_plot_dicts(app_hist: pd.DataFrame) -> dict:
     """Create plot dicts for the app history."""
     metrics = ["installs", "rating", "review_count", "rating_count"]
-    group_col = "group"
     xaxis_col = "snapshot_date"
+    group_col = "group"
     app_hist[xaxis_col] = pd.to_datetime(app_hist[xaxis_col])
     app_hist = app_hist.sort_values(xaxis_col)
     app_hist = app_hist.set_index(xaxis_col)
@@ -416,10 +477,13 @@ class AppController(Controller):
         start = time.perf_counter() * 1000
 
         hist_df = get_app_history(state=state, store_id=store_id)
+
         if hist_df.empty:
             logger.info(f"App global metrics history not found: {store_id}")
             return {}
-        hist_dict = hist_df.head(10).to_dict(orient="records")
+
+        hist_df = create_app_plot_dict(hist_df)
+        hist_dict = hist_df.to_dict(orient="records")
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(f"{self.path}/{store_id}/history took {duration}ms")
         return hist_dict
