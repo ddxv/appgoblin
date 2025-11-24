@@ -53,6 +53,7 @@
 		"argon2": "^0.44.0",
 		"echarts": "^6.0.0",
 		"export-to-csv": "^1.4.0",
+		"layerchart": "next",
 		"nodemailer": "^7.0.10",
 		"pg": "^8.16.3",
 		"qr": "^0.5.2",

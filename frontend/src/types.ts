@@ -530,6 +530,19 @@ export interface AppSDKs {
 	myapp: AppFullDetail;
 }
 
+export interface AppGlobalMetrics {
+	snapshot_date: string;
+	installs: number;
+	rating: number;
+	rating_count: number;
+	review_count: number;
+	one_star: number;
+	two_star: number;
+	three_star: number;
+	four_star: number;
+	five_star: number;
+}
+
 export interface AppFullDetails {
 	myapp: AppFullDetail;
 	companyTypes: CompanyTypes;

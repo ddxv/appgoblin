@@ -25,6 +25,11 @@
 				icon: TrendingUp
 			},
 			{
+				name: 'Trends (New)',
+				url_slug: '/trends-new',
+				icon: ChartLine
+			},
+			{
 				name: 'SDKs',
 				url_slug: '/sdks',
 				icon: Boxes
@@ -132,10 +137,10 @@
 	{/each}
 </div>
 
-<style>
+<!-- <style>
 	:global(.selected-tab) {
 		background-color: var(--color-primary-100-900);
 		color: var(--color-surface-50-950);
 		border-bottom: 2px solid var(--color-primary-100-900);
 	}
-</style>
+</style> -->

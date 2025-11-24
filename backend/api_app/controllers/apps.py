@@ -46,6 +46,7 @@ from dbcon.queries import (
     get_single_app_keywords,
     get_single_apps_adstxt,
     insert_sdk_scan_request,
+    old_get_app_history,
     search_apps,
 )
 from dbcon.static import get_company_logos_df, get_total_counts
@@ -138,9 +139,9 @@ def attach_rating_history(app_hist: pd.DataFrame, star_cols: list[str]) -> pd.Da
     return app_hist
 
 
-def app_history(state: State, store_app: int, app_name: str) -> AppHistory:
+def old_app_history(state: State, store_app: int, app_name: str) -> AppHistory:
     """Get the history of app scraping."""
-    app_hist = get_app_history(state, store_app)
+    app_hist = old_get_app_history(state, store_app)
     if app_hist.empty:
         return AppHistory(
             plot_data={},
@@ -149,14 +150,14 @@ def app_history(state: State, store_app: int, app_name: str) -> AppHistory:
         ~((app_hist["installs"].isna()) & (app_hist["rating_count"].isna()))
     ]
     app_hist["group"] = app_name
-    plot_dicts = create_plot_dicts(app_hist)
+    plot_dicts = old_create_plot_dicts(app_hist)
     hist = AppHistory(
         plot_data=plot_dicts,
     )
     return hist
 
 
-def create_plot_dicts(app_hist: pd.DataFrame) -> dict:
+def old_create_plot_dicts(app_hist: pd.DataFrame) -> dict:
     """Create plot dicts for the app history."""
     metrics = ["installs", "rating", "review_count", "rating_count"]
     group_col = "group"
@@ -397,8 +398,34 @@ class AppController(Controller):
         mydict = {"histogram": df.to_dict(orient="records")[0]}
         return mydict
 
+    @get(path="/{store_id:str}/global-metrics-history", cache=3600)
+    async def get_app_global_metrics_history(
+        self: Self,
+        state: State,
+        store_id: str,
+    ) -> dict:
+        """Handle GET request for a specific app.
+
+         store_id (str): The id of the app to retrieve.
+
+        Returns
+        -------
+            json
+
+        """
+        start = time.perf_counter() * 1000
+
+        hist_df = get_app_history(state=state, store_id=store_id)
+        if hist_df.empty:
+            logger.info(f"App global metrics history not found: {store_id}")
+            return {}
+        hist_dict = hist_df.head(10).to_dict(orient="records")
+        duration = round((time.perf_counter() * 1000 - start), 2)
+        logger.info(f"{self.path}/{store_id}/history took {duration}ms")
+        return hist_dict
+
     @get(path="/{store_id:str}/history", cache=3600)
-    async def get_app_history_details(
+    async def old_get_app_history_details(
         self: Self,
         state: State,
         store_id: str,
@@ -425,7 +452,7 @@ class AppController(Controller):
         store_app = app_dict["id"]
         app_name = app_dict["name"]
 
-        hist_dict = app_history(state=state, store_app=store_app, app_name=app_name)
+        hist_dict = old_app_history(state=state, store_app=store_app, app_name=app_name)
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(f"{self.path}/{store_id}/history took {duration}ms")
         return hist_dict
