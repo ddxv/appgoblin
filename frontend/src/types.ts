@@ -530,6 +530,89 @@ export interface AppSDKs {
 	myapp: AppFullDetail;
 }
 
+export interface AppCountryMetrics {
+	snapshot_date: string;
+	country: string;
+	rating: number;
+	rating_count: number;
+	review_count: number;
+	one_star: number;
+	two_star: number;
+	three_star: number;
+	four_star: number;
+	five_star: number;
+	new_rating: number;
+	rating_rate_of_change: number;
+	new_review_count: number;
+	review_count_rate_of_change: number;
+	review_count_avg_per_day: number;
+	new_rating_count: number;
+	rating_count_rate_of_change: number;
+	rating_count_avg_per_day: number;
+	new_one_star: number;
+	one_star_rate_of_change: number;
+	one_star_avg_per_day: number;
+	new_two_star: number;
+	two_star_rate_of_change: number;
+	two_star_avg_per_day: number;
+	new_three_star: number;
+	three_star_rate_of_change: number;
+	three_star_avg_per_day: number;
+	new_four_star: number;
+	four_star_rate_of_change: number;
+	four_star_avg_per_day: number;
+	new_five_star: number;
+	five_star_rate_of_change: number;
+	five_star_avg_per_day: number;
+}
+
+export interface AppGlobalMetrics {
+	snapshot_date: string;
+	installs: number;
+	rating: number;
+	rating_count: number;
+	review_count: number;
+	one_star: number;
+	two_star: number;
+	three_star: number;
+	four_star: number;
+	five_star: number;
+	new_installs: number;
+	installs_rate_of_change: number;
+	installs_avg_per_day: number;
+	new_rating: number;
+	rating_rate_of_change: number;
+	new_review_count: number;
+	review_count_rate_of_change: number;
+	review_count_avg_per_day: number;
+	new_rating_count: number;
+	rating_count_rate_of_change: number;
+	rating_count_avg_per_day: number;
+	new_one_star: number;
+	one_star_rate_of_change: number;
+	one_star_avg_per_day: number;
+	new_two_star: number;
+	two_star_rate_of_change: number;
+	two_star_avg_per_day: number;
+	new_three_star: number;
+	three_star_rate_of_change: number;
+	three_star_avg_per_day: number;
+	new_four_star: number;
+	four_star_rate_of_change: number;
+	four_star_avg_per_day: number;
+	new_five_star: number;
+	five_star_rate_of_change: number;
+	five_star_avg_per_day: number;
+}
+
+export interface AppGlobalMetricsPlotData {
+	changes: ChartTabularData;
+	installs: ChartTabularData;
+	ratings: ChartTabularData;
+	ratings_stars: ChartTabularData;
+	ratings_stars_new: ChartTabularData;
+}
+
 export interface AppFullDetails {
 	myapp: AppFullDetail;
 	companyTypes: CompanyTypes;

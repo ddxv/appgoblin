@@ -4,12 +4,23 @@ import { createApiClient } from '$lib/server/api';
 export const load: PageServerLoad = async ({ fetch, params, parent }) => {
 	const api = createApiClient(fetch);
 	const id = params.id;
-
-	const myhistory = await api.get(`/apps/${id}/history`, 'App History');
 	const { myapp } = await parent();
+	let isIOS = myapp.store.includes('Apple');
+
+	let storeDbId = isIOS ? 2 : 1;
+	let appMetrics = [];
+	if (storeDbId === 2) {
+		appMetrics = await api.get(
+			`/apps/${id}/country-metrics-history`,
+			'App Country Metrics History'
+		);
+	} else {
+		appMetrics = await api.get(`/apps/${id}/global-metrics-history`, 'App Global Metrics History');
+	}
 
 	return {
-		myhistory,
+		appMetrics,
+		isIOS: isIOS,
 		// Meta Tags
 		toFollow: 'noindex, nofollow',
 		title: `Install and Rating History for ${myapp.name}`,

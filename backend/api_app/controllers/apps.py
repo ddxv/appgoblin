@@ -22,7 +22,6 @@ from api_app.models import (
     AppDetail,
     AppGroup,
     AppGroupByStore,
-    AppHistory,
     AppRank,
     AppRankOverview,
     AppSDKsOverview,
@@ -33,7 +32,8 @@ from config import get_logger
 from dbcon.queries import (
     get_app_adstxt_overview,
     get_app_api_details,
-    get_app_history,
+    get_app_country_metrics_history,
+    get_app_global_metrics_history,
     get_app_rating_histogram,
     get_app_sdk_details,
     get_app_sdk_overview,
@@ -138,121 +138,174 @@ def attach_rating_history(app_hist: pd.DataFrame, star_cols: list[str]) -> pd.Da
     return app_hist
 
 
-def app_history(state: State, store_app: int, app_name: str) -> AppHistory:
-    """Get the history of app scraping."""
-    app_hist = get_app_history(state, store_app)
-    if app_hist.empty:
-        return AppHistory(
-            plot_data={},
-        )
-    app_hist = app_hist[
-        ~((app_hist["installs"].isna()) & (app_hist["rating_count"].isna()))
-    ]
-    app_hist["group"] = app_name
-    plot_dicts = create_plot_dicts(app_hist)
-    hist = AppHistory(
-        plot_data=plot_dicts,
-    )
-    return hist
+def create_app_country_plot_dict(app_hist: pd.DataFrame) -> pd.DataFrame:
+    """Create plot dicts for the app country history with linear interpolation for missing weeks.
 
-
-def create_plot_dicts(app_hist: pd.DataFrame) -> dict:
-    """Create plot dicts for the app history."""
-    metrics = ["installs", "rating", "review_count", "rating_count"]
-    group_col = "group"
+    Processes each country independently using groupby to maintain separate time series.
+    """
+    star_cols = ["one_star", "two_star", "three_star", "four_star", "five_star"]
+    metrics = ["rating", "review_count", "rating_count", *star_cols]
     xaxis_col = "snapshot_date"
+
+    # Convert to datetime and sort by country and date
+    app_hist[xaxis_col] = pd.to_datetime(app_hist[xaxis_col])
+    app_hist = app_hist.sort_values(["country", xaxis_col])
+
+    def process_country_group(group):
+        """Process a single country's data independently."""
+        # Store the country value before resampling
+        country_value = group["country"].iloc[0]
+
+        # Set date as index for resampling
+        group = group.set_index(xaxis_col)
+
+        # Resample to weekly frequency - creates missing weeks with NaN
+        group = group.resample("W").last()
+
+        # Replace zeros with NaN for cumulative metrics (zeros are data holes, not valid values)
+        cumulative_metrics = ["rating_count", "review_count", *star_cols]
+        for metric in cumulative_metrics:
+            if metric in group.columns:
+                # Replace 0 with NaN (these are data holes, not valid cumulative values)
+                group[metric] = group[metric].replace(0, np.nan)
+                # Linear interpolation
+                group[metric] = group[metric].interpolate(
+                    method="linear", limit_direction="forward"
+                )
+
+        # For rating (average), also replace zeros and interpolate
+        if "rating" in group.columns:
+            # Replace 0 with NaN (invalid rating)
+            group["rating"] = group["rating"].replace(0, np.nan)
+            # Interpolate
+            group["rating"] = group["rating"].interpolate(
+                method="linear", limit_direction="forward"
+            )
+
+        group = group.reset_index()
+
+        # Restore the country value for all rows (including interpolated ones)
+        group["country"] = country_value
+
+        # Calculate days between snapshots
+        group["date_change"] = group[xaxis_col] - group[xaxis_col].shift(1)
+        group["days_changed"] = group["date_change"].apply(
+            lambda x: np.nan if pd.isna(x) else x.days,
+        )
+
+        # Calculate derived metrics
+        for metric in metrics:
+            change_metric = f"new_{metric}"
+            rate_of_change_metric = f"{metric}_rate_of_change"
+            avg_per_day_metric = f"{metric}_avg_per_day"
+
+            # Change (difference from previous period)
+            group[change_metric] = group[metric] - group[metric].shift(1)
+
+            # Rate of change: ((new - old) / old) * 100
+            group[rate_of_change_metric] = (
+                (group[metric] - group[metric].shift(1)) / group[metric].shift(1)
+            ) * 100
+
+            # Avg per day (daily average of the change)
+            group[avg_per_day_metric] = group[change_metric] / group["days_changed"]
+
+        # Drop the first row (no previous data to compare)
+        # if not group.empty:
+        # group = group.drop(group.index[0])
+
+        return group
+
+    # Apply the processing function to each country group
+    app_hist = app_hist.groupby("country", group_keys=False).apply(
+        process_country_group
+    )
+
+    # Replace infinite values with NaN
+    app_hist = app_hist.replace([np.inf, -np.inf], np.nan)
+
+    # Drop columns that are all NaN
+    app_hist = app_hist.dropna(axis="columns", how="all")
+
+    if app_hist.empty:
+        return app_hist.to_dict(orient="records")
+
+    # Drop rating_avg_per_day as it's not useful (rating is an average, not cumulative)
+    app_hist = app_hist.drop(["rating_avg_per_day"], axis=1, errors="ignore")
+
+    # Drop temporary calculation columns
+    app_hist = app_hist.drop(["date_change", "days_changed"], axis=1, errors="ignore")
+
+    return app_hist
+
+
+def create_app_plot_dict(app_hist: pd.DataFrame) -> pd.DataFrame:
+    """Create plot dicts for the app history with linear interpolation for missing weeks."""
+    star_cols = ["one_star", "two_star", "three_star", "four_star", "five_star"]
+    metrics = ["installs", "rating", "review_count", "rating_count", *star_cols]
+    xaxis_col = "snapshot_date"
+    # Convert to datetime and sort
     app_hist[xaxis_col] = pd.to_datetime(app_hist[xaxis_col])
     app_hist = app_hist.sort_values(xaxis_col)
     app_hist = app_hist.set_index(xaxis_col)
+    # Resample to weekly frequency - this creates missing weeks with NaN
     app_hist = app_hist.resample("W").last()
+
+    # Replace zeros with NaN for cumulative metrics (zeros are data holes, not valid values)
+    # Linear interpolation for cumulative metrics (installs, rating_count, review_count, star counts)
+    cumulative_metrics = ["installs", "rating_count", "review_count", *star_cols]
+    for metric in cumulative_metrics:
+        if metric in app_hist.columns:
+            # Replace 0 with NaN (these are data holes, not valid cumulative values)
+            app_hist[metric] = app_hist[metric].replace(0, np.nan)
+            # Linear interpolation
+            app_hist[metric] = app_hist[metric].interpolate(
+                method="linear", limit_direction="forward"
+            )
+
+    # For rating (average), also replace zeros and interpolate
+    if "rating" in app_hist.columns:
+        # Replace 0 with NaN (invalid rating)
+        app_hist["rating"] = app_hist["rating"].replace(0, np.nan)
+        # Interpolate
+        app_hist["rating"] = app_hist["rating"].interpolate(
+            method="linear", limit_direction="forward"
+        )
     app_hist = app_hist.reset_index()
+    # Calculate days between snapshots
     app_hist["date_change"] = app_hist[xaxis_col] - app_hist[xaxis_col].shift(1)
     app_hist["days_changed"] = app_hist["date_change"].apply(
         lambda x: np.nan if pd.isna(x) else x.days,
     )
-    change_metrics = []
+    metrics_to_add = []
     for metric in metrics:
-        app_hist[f"{metric}_change"] = app_hist[metric] - app_hist.shift(1)[metric]
-        # Rate of Change
-        app_hist[f"{metric}_rate_of_change"] = (
-            app_hist[metric] - app_hist.shift(1)[metric]
-        ) / app_hist.shift(1)[metric]
-        # Treated as whole percentage by frontend
-        app_hist[f"{metric}_rate_of_change"] = (
-            app_hist[f"{metric}_rate_of_change"] * 100
+        change_metric = f"new_{metric}"
+        rate_of_change_metric = f"{metric}_rate_of_change"
+        avg_per_day_metric = f"{metric}_avg_per_day"
+        # Calculate the change (difference from previous period)
+        app_hist[change_metric] = app_hist[metric] - app_hist[metric].shift(1)
+        # Formula: ((new - old) / old) * 100
+        app_hist[rate_of_change_metric] = (
+            (app_hist[metric] - app_hist[metric].shift(1)) / app_hist[metric].shift(1)
+        ) * 100
+        # Avg Per Day (daily average of the change)
+        app_hist[avg_per_day_metric] = (
+            app_hist[change_metric] / app_hist["days_changed"]
         )
-        # Avg Per Day
-        app_hist[f"{metric}_avg_per_day"] = (
-            app_hist[f"{metric}_change"] / app_hist["days_changed"]
-        )
-        change_metrics.append(metric + "_rate_of_change")
-        change_metrics.append(metric + "_avg_per_day")
-    star_cols: list[str] = []
-    new_star_cols: list[str] = []
-    star_cols = ["one_star", "two_star", "three_star", "four_star", "five_star"]
-    if app_hist[star_cols].sum().sum() > 0:
-        new_star_cols = [f"new_{col}" for col in star_cols]
-        new_star_cols = ["new_" + col for col in star_cols]
-        app_hist = attach_rating_history(app_hist, star_cols)
-    app_hist = (
-        app_hist[[group_col, xaxis_col, *change_metrics, *star_cols, *new_star_cols]]
-        .drop(app_hist.index[0])
-        .rename(
-            columns={
-                "installs_avg_per_day": "Installs Daily Average",
-                "rating_count_avg_per_day": "Rating Count Daily Average",
-                "review_count_avg_per_day": "Review Count Daily Average",
-                "rating_rate_of_change": "Rating Rate of Change",
-                "installs_rate_of_change": "Installs Rate of Change",
-                "rating_count_rate_of_change": "Rating Count Rate of Change",
-                "review_count_rate_of_change": "Review Count Rate of Change",
-                "one_star": "One Star",
-                "two_star": "Two Star",
-                "three_star": "Three Star",
-                "four_star": "Four Star",
-                "five_star": "Five Star",
-                "new_one_star": "New One Star",
-                "new_two_star": "New Two Star",
-                "new_three_star": "New Three Star",
-                "new_four_star": "New Four Star",
-                "new_five_star": "New Five Star",
-            },
-        )
-    )
+        metrics_to_add.append(change_metric)
+        metrics_to_add.append(rate_of_change_metric)
+        metrics_to_add.append(avg_per_day_metric)
+    # Select final columns and drop the first row (no previous data to compare)
+    app_hist = app_hist[[xaxis_col, *metrics, *metrics_to_add]].drop(app_hist.index[0])
+    # Replace infinite values with NaN
     app_hist = app_hist.replace([np.inf, -np.inf], np.nan)
+    # Drop columns that are all NaN
     app_hist = app_hist.dropna(axis="columns", how="all")
     if app_hist.empty:
         return app_hist.to_dict(orient="records")
-    # Not useful column
+    # Drop rating_avg_per_day as it's not useful (rating is an average, not cumulative)
     app_hist = app_hist.drop(["rating_avg_per_day"], axis=1, errors="ignore")
-    # This is an odd step as it makes each group a metric
-    # not for when more than 1 dimension
-    mymelt = app_hist.melt(id_vars=xaxis_col).rename(columns={"variable": "group"})
-    final_metrics = [x for x in app_hist.columns if x not in ["group", "snapshot_date"]]
-    change_dicts = []
-    ratings_dicts = []
-    ratings_stars_dicts = []
-    ratings_stars_new_dicts = []
-    plot_dicts = {}
-    for metric in final_metrics:
-        meltdf = mymelt.loc[mymelt.group == metric]
-        metric_dict = meltdf.to_dict(orient="records")
-        if "Rate of Change" in metric:
-            change_dicts += metric_dict
-        if metric == "Installs Daily Average":
-            plot_dicts["installs"] = metric_dict
-        if metric in ["Review Count Daily Average", "Rating Count Daily Average"]:
-            ratings_dicts += metric_dict
-        if " Star" in metric:
-            if "New" in metric:
-                ratings_stars_new_dicts += metric_dict
-            else:
-                ratings_stars_dicts += metric_dict
-    plot_dicts["ratings"] = ratings_dicts
-    plot_dicts["changes"] = change_dicts
-    plot_dicts["ratings_stars"] = ratings_stars_dicts
-    plot_dicts["ratings_stars_new"] = ratings_stars_new_dicts
-    return plot_dicts
+    return app_hist
 
 
 def get_string_date_from_days_ago(days: int) -> str:
@@ -397,12 +450,42 @@ class AppController(Controller):
         mydict = {"histogram": df.to_dict(orient="records")[0]}
         return mydict
 
-    @get(path="/{store_id:str}/history", cache=3600)
-    async def get_app_history_details(
+    @get(path="/{store_id:str}/country-metrics-history", cache=3600)
+    async def app_country_metrics_history(
         self: Self,
         state: State,
         store_id: str,
-    ) -> AppHistory:
+    ) -> dict:
+        """Handle GET request for a specific app.
+
+         store_id (str): The id of the app to retrieve.
+         store (int): The store to retrieve.
+
+        Returns
+        -------
+            json
+
+        """
+        start = time.perf_counter() * 1000
+
+        hist_df = get_app_country_metrics_history(state=state, store_id=store_id)
+
+        if hist_df.empty:
+            logger.info(f"App country metrics history not found: {store_id}")
+            return {}
+
+        hist_df = create_app_country_plot_dict(hist_df)
+        hist_dict = hist_df.to_dict(orient="records")
+        duration = round((time.perf_counter() * 1000 - start), 2)
+        logger.info(f"{self.path}/{store_id}/country-metrics-history took {duration}ms")
+        return hist_dict
+
+    @get(path="/{store_id:str}/global-metrics-history", cache=3600)
+    async def app_global_metrics_history(
+        self: Self,
+        state: State,
+        store_id: str,
+    ) -> dict:
         """Handle GET request for a specific app.
 
          store_id (str): The id of the app to retrieve.
@@ -413,21 +496,16 @@ class AppController(Controller):
 
         """
         start = time.perf_counter() * 1000
-        app_df = get_single_app(state, store_id)
 
-        if app_df.empty:
-            logger.info(f"App history not found: {store_id}")
-            return AppHistory(
-                plot_data={},
-            )
+        hist_df = get_app_global_metrics_history(state=state, store_id=store_id)
+        if hist_df.empty:
+            logger.info(f"App global metrics history not found: {store_id}")
+            return {}
 
-        app_dict = app_df.to_dict(orient="records")[0]
-        store_app = app_dict["id"]
-        app_name = app_dict["name"]
-
-        hist_dict = app_history(state=state, store_app=store_app, app_name=app_name)
+        hist_df = create_app_plot_dict(hist_df)
+        hist_dict = hist_df.to_dict(orient="records")
         duration = round((time.perf_counter() * 1000 - start), 2)
-        logger.info(f"{self.path}/{store_id}/history took {duration}ms")
+        logger.info(f"{self.path}/{store_id}/metrics-history took {duration}ms")
         return hist_dict
 
     @get(path="/{store_id:str}/sdksoverview", cache=3600)

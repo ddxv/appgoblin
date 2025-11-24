@@ -131,11 +131,3 @@
 		</a>
 	{/each}
 </div>
-
-<style>
-	:global(.selected-tab) {
-		background-color: var(--color-primary-100-900);
-		color: var(--color-surface-50-950);
-		border-bottom: 2px solid var(--color-primary-100-900);
-	}
-</style>

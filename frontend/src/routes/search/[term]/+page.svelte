@@ -14,7 +14,7 @@
 
 	// App store filter state
 	type AppStore = 'apple' | 'google';
-	let selectedStore = $state<AppStore>('apple');
+	let selectedStore = $state<AppStore>('google');
 
 	// Computed values
 	const appleAppCount = $derived(

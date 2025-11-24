@@ -1,9 +1,10 @@
 @import 'tailwindcss';
 
 @import '@skeletonlabs/skeleton';
+@import '@skeletonlabs/skeleton-svelte';
 @import '@skeletonlabs/skeleton/themes/catppuccin';
 
-@import '@skeletonlabs/skeleton-svelte';
+@import 'layerchart/skeleton-3.css';
 
 @custom-variant dark (&:where(.dark, .dark *));
 
