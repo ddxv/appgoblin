@@ -4,6 +4,7 @@
 	import type { AppFullDetails } from '../../../types';
 	import WhiteCard from '$lib/WhiteCard.svelte';
 	import AppSDKOverview from '$lib/AppSDKOverview.svelte';
+	import AppOverviewSummary from '$lib/AppOverviewSummary.svelte';
 	import { formatNumber } from '$lib/utils/formatNumber';
 
 	interface Props {
@@ -35,11 +36,17 @@
 </script>
 
 <section class="grid grid-flow-cols-1 md:grid-cols-2 md:gap-4 p-2">
-	<!-- Column1: App Icon Title & Info -->
+	<!-- App Overview Summary - Full Width -->
+	<div class="col-span-full mb-4">
+		<div class="card preset-filled-surface-100-900 p-4 lg:p-6">
+			<AppOverviewSummary app={data.myapp} />
+		</div>
+	</div>
+
 	<div class="card preset-filled-surface-100-900 p-0 lg:p-8">
 		<div class="card-footer md:flex">
+			<!-- SDKs, Trackers & Permissions Overview -->
 			<div class="grid grid-cols-1 gap-2 md:gap-4">
-				<!-- Developer Information Section -->
 				<WhiteCard>
 					{#snippet title()}
 						SDKs, Trackers & Permissions
@@ -50,7 +57,7 @@
 						myapp={data.myapp}
 					/>
 				</WhiteCard>
-				<!-- Developer Information Section -->
+				<!-- App Details Section -->
 				<div class="grid grid-cols-2 gap-2 md:gap-4">
 					<WhiteCard>
 						{#snippet title()}

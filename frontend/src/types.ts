@@ -726,6 +726,11 @@ export interface AppFullDetail {
 	sdk_last_crawled: string;
 	sdk_last_crawl_result: number;
 	sdk_successful_last_crawled: string;
+	api_last_crawled?: string;
+	api_successful_last_crawled?: string;
+	run_result?: number;
+	ad_creative_count?: number;
+	ad_monetized_creative_count?: number;
 }
 
 export type CategoryRanks = {
