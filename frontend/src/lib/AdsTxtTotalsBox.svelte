@@ -24,14 +24,14 @@
 			<tr>
 				<td class="py-2 px-1 {rowTitleFont}">Pub IDs</td>
 				<td class="py-2 px-1">
-					{#if myTotals.google.direct && myTotals.google.direct.publisher_id_count}
+					{#if myTotals?.google?.direct?.publisher_id_count}
 						{formatNumberLocale(myTotals.google.direct.publisher_id_count)}
 					{:else}
 						<p class={greyFont}>No Direct Pub IDs</p>
 					{/if}
 				</td>
 				<td class="py-2 px-1">
-					{#if myTotals.apple.direct && myTotals.apple.direct.publisher_id_count}
+					{#if myTotals?.apple?.direct?.publisher_id_count}
 						{formatNumberLocale(myTotals.apple.direct.publisher_id_count)}
 					{:else}
 						<p class={greyFont}>No Direct Pub IDs</p>
@@ -41,14 +41,14 @@
 			<tr>
 				<td class="py-2 px-1 {rowTitleFont}">Developers</td>
 				<td class="py-2 px-1">
-					{#if myTotals.google.direct && myTotals.google.direct.developer_count}
+					{#if myTotals?.google?.direct?.developer_count}
 						{formatNumberLocale(myTotals.google.direct.developer_count)}
 					{:else}
 						<p class={greyFont}>No Direct Developers</p>
 					{/if}
 				</td>
 				<td class="py-2 px-1">
-					{#if myTotals.apple.direct && myTotals.apple.direct.developer_count}
+					{#if myTotals?.apple?.direct?.developer_count}
 						{formatNumberLocale(myTotals.apple.direct.developer_count)}
 					{:else}
 						<p class={greyFont}>No Direct Developers</p>
@@ -58,14 +58,14 @@
 			<tr>
 				<td class="py-2 px-1 {rowTitleFont}">Related Apps</td>
 				<td class="py-2 px-1">
-					{#if myTotals.google && myTotals.google.direct}
+					{#if myTotals?.google?.direct?.app_count}
 						{formatNumberLocale(myTotals.google.direct.app_count)}
 					{:else}
 						<p class={greyFont}>No Direct Apps</p>
 					{/if}
 				</td>
 				<td class="py-2 px-1">
-					{#if myTotals.apple && myTotals.apple.direct}
+					{#if myTotals?.apple?.direct?.app_count}
 						{formatNumberLocale(myTotals.apple.direct.app_count)}
 					{:else}
 						<p class={greyFont}>No Direct Apps</p>
@@ -89,14 +89,14 @@
 			<tr>
 				<td class="py-2 px-1 {rowTitleFont}">Related Apps</td>
 				<td class="py-2 px-1">
-					{#if myTotals.google && myTotals.google.reseller}
+					{#if myTotals?.google?.reseller?.app_count}
 						{formatNumberLocale(myTotals.google.reseller.app_count)}
 					{:else}
 						<p class={greyFont}>No Reseller Apps</p>
 					{/if}
 				</td>
 				<td class="py-2 px-1">
-					{#if myTotals.apple && myTotals.apple.reseller}
+					{#if myTotals?.apple?.reseller?.app_count}
 						{formatNumberLocale(myTotals.apple.reseller.app_count)}
 					{:else}
 						<p class={greyFont}>No Reseller Apps</p>
