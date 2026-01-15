@@ -1,7 +1,5 @@
 import type { PageServerLoad } from './$types';
-import { readFileSync } from 'fs';
-import { dirname, join } from 'path';
-import { fileURLToPath } from 'url';
+import { error } from '@sveltejs/kit';
 
 interface SdkGrowthData {
 	company: string;
@@ -46,11 +44,16 @@ function parseCSV(csvContent: string): SdkGrowthData[] {
 	return data;
 }
 
-export const load: PageServerLoad = async () => {
-	// Read the CSV file
-	const __dirname = dirname(fileURLToPath(import.meta.url));
-	const csvPath = join(__dirname, 'AppGoblin App SDKs Growth 2025.csv');
-	const csvContent = readFileSync(csvPath, 'utf-8');
+export const load: PageServerLoad = async ({ fetch }) => {
+	const csvResponse = await fetch(
+		'/reports/mobile-apps-growth-sdks-2025/AppGoblin App SDKs Growth 2025.csv'
+	);
+
+	if (!csvResponse.ok) {
+		throw error(500, 'CSV not available');
+	}
+
+	const csvContent = await csvResponse.text();
 
 	const allData = parseCSV(csvContent);
 
