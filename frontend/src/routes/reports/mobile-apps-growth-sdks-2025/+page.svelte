@@ -25,8 +25,7 @@
 			const query = searchQuery.toLowerCase();
 			result = result.filter(
 				(d) =>
-					d.companyName.toLowerCase().includes(query) ||
-					d.company.toLowerCase().includes(query)
+					d.companyName.toLowerCase().includes(query) || d.company.toLowerCase().includes(query)
 			);
 		}
 
@@ -40,8 +39,8 @@
 				bVal = (bVal as string).toLowerCase();
 			}
 
-			if (aVal < bVal) return sortDirection === 'asc' ? -1 : 1;
-			if (aVal > bVal) return sortDirection === 'asc' ? 1 : -1;
+			if (aVal && bVal && aVal < bVal) return sortDirection === 'asc' ? -1 : 1;
+			if (aVal && bVal && aVal > bVal) return sortDirection === 'asc' ? 1 : -1;
 			return 0;
 		});
 
@@ -76,10 +75,10 @@
 	}
 
 	function getGrowthColor(growth: number): string {
-		if (growth > 100) return 'text-emerald-500';
-		if (growth > 30) return 'text-emerald-400';
+		if (growth > 100) return 'text-tertiary-200';
+		if (growth > 30) return 'text-tertiary-400';
 		if (growth > 10) return 'text-green-400';
-		if (growth > 0) return 'text-green-300';
+		if (growth > 0) return 'text-green-600';
 		if (growth > -5) return 'text-orange-400';
 		if (growth > -10) return 'text-red-400';
 		return 'text-red-500';
@@ -109,8 +108,8 @@
 	const rankPillBaseClass =
 		'inline-flex items-center justify-center w-8 h-8 rounded-full font-bold text-sm';
 
-	const tHeadGrowthClass = 'bg-gradient-to-r from-emerald-600 to-green-600 text-white';
-	const tHeadShrinkClass = 'bg-gradient-to-r from-red-600 to-orange-600 text-white';
+	const tHeadGrowthClass = 'bg-gradient-to-r from-tertiary-600-400 to-tertiary-200-800 text-white';
+	const tHeadShrinkClass = 'bg-gradient-to-r from-error-600-400 to-error-400-600 text-white';
 </script>
 
 <svelte:head>
@@ -164,17 +163,17 @@
 
 	<!-- Key Metrics Dashboard -->
 	<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
-		<div class={`${kpiCardBaseClass} bg-gradient-to-br from-purple-600 to-purple-800`}>
+		<div class={`${kpiCardBaseClass} bg-gradient-to-br from-primary-700-300 to-primary-200-800`}>
 			<div class={kpiValueClass}>{data.summary.totalCompanies}</div>
 			<div class={kpiLabelClass}>SDK Companies</div>
 		</div>
 
-		<div class={`${kpiCardBaseClass} bg-gradient-to-br from-emerald-600 to-green-700`}>
+		<div class={`${kpiCardBaseClass} bg-gradient-to-br from-tertiary-700-300 to-tertiary-200-800`}>
 			<div class={kpiValueClass}>{data.summary.growingCompanies}</div>
 			<div class={kpiLabelClass}>Growing</div>
 		</div>
 
-		<div class={`${kpiCardBaseClass} bg-gradient-to-br from-red-600 to-orange-600`}>
+		<div class={`${kpiCardBaseClass} bg-gradient-to-br from-error-400-600 to-error-400-600`}>
 			<div class={kpiValueClass}>{data.summary.shrinkingCompanies}</div>
 			<div class={kpiLabelClass}>Shrinking</div>
 		</div>
@@ -189,9 +188,9 @@
 	<div class="flex justify-center mb-12">
 		<button
 			onclick={downloadCSV}
-			class="inline-flex items-center gap-2 px-6 py-3 bg-white dark:bg-surface-800 border-2 border-purple-500 rounded-lg hover:bg-purple-50 dark:hover:bg-surface-700 transition-all shadow-md hover:shadow-lg"
+			class="inline-flex items-center gap-2 px-6 py-3 bg-white dark:bg-surface-800 border-2 border-white-200 rounded-lg hover:bg-white-50 dark:hover:bg-surface-700 transition-all shadow-md hover:shadow-lg"
 		>
-			<svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+			<svg class="w-5 h-5 text-white-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 				<path
 					stroke-linecap="round"
 					stroke-linejoin="round"
@@ -199,8 +198,21 @@
 					d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
 				/>
 			</svg>
-			<span class="font-semibold text-purple-600">Download Full CSV Report</span>
+			<span class="font-semibold text-primary-800-200">Download AppGoblin SDK Report (CSV)</span>
 		</button>
+	</div>
+
+	<div class="card preset-tonal p-4 mb-6">
+		<h2 class="text-2xl font-bold text-primary-900-100 mb-4">Methodology</h2>
+		<p class="text-base">
+			The AppGoblin SDK Growth Report is based on a 50k app subset of AppGoblin's 200k apps that
+			analyzed for SDKs in 2025. This smaller group of apps were selected for this report because
+			they were analyzed in both H1 and H2 for an accurate comparison between the two periods. This
+			is sample of the whole market and should be used as a guide rather than a definitive source.
+			If you have questions please feel free to reach out to <a href="mailto:contact@appgoblin.info"
+				>contact@appgoblin.info</a
+			>.
+		</p>
 	</div>
 
 	<!-- SECTION 1: TOP GROWTH COMPANIES -->
@@ -208,9 +220,34 @@
 		<div
 			class={`${sectionHeaderBaseClass} border-emerald-200 dark:border-emerald-800 pl-4 border-l-emerald-500`}
 		>
-			<h2 class={sectionTitleClass}>🚀 Top 10 Growth Companies</h2>
+			<h2 class={sectionTitleClass}>🚀 Top 10 Growing Mobile SDKs</h2>
 			<p class={sectionHeaderSubtitleClass}>
-				SDK providers with the highest growth in app integrations from H1 to H2 2025
+				Mobile SDK providers with the highest growth in app integrations from H1 to H2 2025 based on
+				AppGoblin free SDK analytics.
+			</p>
+			<h3 class="text-lg font-bold text-primary-900-100 mt-4">What Stands Out:</h3>
+			<ul class="list-disc list-inside space-y-1 px-8">
+				<li>
+					Verve Holdings, which also owns <a href="/companies/pubnative.com">PubNative</a> and
+					<a href="/companies/smaato.com">Smaato</a>, launched their own SDK for behaivor targeting.
+					Verve
+					<a
+						href="https://verve.com/press/verve-group-atom-3-0-brings-id-less-on-device-behavioral-targeting-to-10000-apps/"
+						target="_blank"
+						rel="noopener noreferrer"
+						>self reports this rolled out to 10k apps across their existing clients.</a
+					> PubNative and Smaato SDKs are counted separately, hence Verve's impressive percentage growth.
+				</li>
+				<li>
+					X3M has been growing for a couple years but 2025 looks to have been a breakout year for
+					them.
+				</li>
+				<li>
+					Flarelane's push notification SDK has a small base of apps but it's growing rapidly.
+				</li>
+			</ul>
+			<p class={sectionHeaderSubtitleClass}>
+				AppGoblin free SDK analytics is used to track the number of apps that use each SDK.
 			</p>
 		</div>
 
@@ -240,7 +277,7 @@
 													? 'bg-gradient-to-br from-gray-300 to-gray-500 text-white'
 													: index === 2
 														? 'bg-gradient-to-br from-orange-400 to-orange-600 text-white'
-														: 'bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300'
+														: 'bg-emerald-100 dark:bg-emerald-900 text-emerald-800 dark:text-emerald-300'
 										}`}
 									>
 										{index + 1}
@@ -250,7 +287,7 @@
 									<CompanyButton
 										companyDomain={company.company}
 										companyName={company.companyName}
-										companyLogoUrl={company.logoUrl}
+										companyLogoUrl={company.logoUrl ?? undefined}
 										size="md"
 									/>
 								</td>
@@ -263,7 +300,7 @@
 								<td class="px-4 py-4 text-right font-semibold">
 									{company.h2Apps.toLocaleString()}
 								</td>
-								<td class="px-4 py-4 text-right text-emerald-600 font-semibold">
+								<td class="px-4 py-4 text-right text-emerald-800 font-semibold">
 									+{company.net.toLocaleString()}
 								</td>
 								<td class="px-4 py-4 text-right">
@@ -288,6 +325,18 @@
 			<p class={sectionHeaderSubtitleClass}>
 				SDK providers with the largest decline in app integrations from H1 to H2 2025
 			</p>
+			<h3 class="text-lg font-bold text-primary-900-100 mt-4">What Stands Out:</h3>
+			<ul class="list-disc list-inside space-y-1 px-8">
+				<li>
+					Don't be fooled, though LiftOff saw shrinking trends, it's partnership/parent <a
+						href="/companies/vungle.com">Vungle</a
+					> saw a healthy increase. This isn't necessarily an issue as their older app clients are absorbed
+					into Vungle. A similar situation can be observed for AdColony (Digital Turbine) and MoPub (AppLovin).
+				</li>
+				<li>
+					Flurry saw a decline in integrations that was not reflected in Yahoo!'s flat growth.
+				</li>
+			</ul>
 		</div>
 
 		<div class={cardTableWrapperClass}>
@@ -318,7 +367,7 @@
 									<CompanyButton
 										companyDomain={company.company}
 										companyName={company.companyName}
-										companyLogoUrl={company.logoUrl}
+										companyLogoUrl={company.logoUrl ?? undefined}
 										size="md"
 									/>
 								</td>
@@ -350,18 +399,34 @@
 	<!-- SECTION 3: ALL COMPANIES TABLE -->
 	<div class={sectionContainerClass}>
 		<div
-			class={`${sectionHeaderBaseClass} border-purple-200 dark:border-purple-800 pl-4 border-l-purple-500`}
+			class={`${sectionHeaderBaseClass} border-primary-200 dark:border-primary-800 pl-4 border-l-primary-500`}
 		>
 			<h2 class={sectionTitleClass}>📊 All SDK Companies</h2>
 			<p class={sectionHeaderSubtitleClass}>
-				Complete list of {data.summary.totalCompanies} SDK providers with H1 vs H2 2025 comparison
+				Complete list of {data.summary.totalCompanies} SDK providers with H1 vs H2 2025 comparison.
 			</p>
+			<p class={sectionHeaderSubtitleClass}>What Stands Out:</p>
+			<ul class="list-disc list-inside space-y-1 px-8">
+				<li>
+					Revenue boosting companies like <a href="/companies/revenuecat.com">RevenueCat</a> and
+					<a href="/companies/superwall.com">SuperWall</a> saw good growth. Though it will take more time
+					to tell, they had even more growth in new apps in 2025, which didn't make it into the totals
+					for this report.
+				</li>
+				<li>AirBridge saw a great boost in growth. Their MMP offering is growing rapidly.</li>
+				<li>
+					<a href="/companies/posthog.com">PostHog</a> and
+					<a href="/companies/parse.ly">Parse.ly</a> saw great growth. These more business / developer
+					focused analytics platforms are growing rapidly.
+				</li>
+			</ul>
 		</div>
 
 		<!-- Category Filter -->
 		<div class="card preset-tonal p-4 mb-6">
 			<div class="flex flex-wrap items-center gap-4">
-				<span class="font-semibold text-surface-700 dark:text-surface-300">Filter by Category:</span>
+				<span class="font-semibold text-surface-700 dark:text-surface-300">Filter by Category:</span
+				>
 				<form class="flex flex-wrap gap-3">
 					<label class="flex items-center gap-2 cursor-pointer">
 						<input
@@ -412,7 +477,7 @@
 		<div class={cardTableWrapperClass}>
 			<div class={tableWrapperClass}>
 				<table class="w-full">
-					<thead class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white">
+					<thead class="bg-gradient-to-r from-primary-200-800 to-primary-100-900 text-white">
 						<tr>
 							<th class={tableHeaderLeftClass}>
 								<button
@@ -489,7 +554,7 @@
 									<CompanyButton
 										companyDomain={company.company}
 										companyName={company.companyName}
-										companyLogoUrl={company.logoUrl}
+										companyLogoUrl={company.logoUrl ?? undefined}
 										size="md"
 									/>
 								</td>
@@ -504,7 +569,7 @@
 								</td>
 								<td
 									class="px-4 py-3 text-right font-semibold {company.net > 0
-										? 'text-emerald-600'
+										? 'text-emerald-800'
 										: company.net < 0
 											? 'text-red-600'
 											: 'text-surface-500'}"
@@ -523,7 +588,9 @@
 			</div>
 
 			<!-- Pagination -->
-			<div class="flex items-center justify-between p-4 border-t border-surface-200 dark:border-surface-700">
+			<div
+				class="flex items-center justify-between p-4 border-t border-surface-200 dark:border-surface-700"
+			>
 				<div class="text-sm text-surface-600 dark:text-surface-400">
 					Page {currentPage} of {totalPages} ({filteredData.length} results)
 				</div>
@@ -597,7 +664,9 @@
 <div
 	class="mt-12 pt-8 border-t-2 border-surface-200 dark:border-surface-700 text-center text-sm text-surface-500 dark:text-surface-400"
 >
-	<p>Data source: AppGoblin SDK Intelligence Platform | Report Period: {data.summary.reportPeriod}</p>
+	<p>
+		Data source: AppGoblin SDK Intelligence Platform | Report Period: {data.summary.reportPeriod}
+	</p>
 	<p class="mt-2">
 		For more insights and detailed analytics, visit <a
 			href="/"
