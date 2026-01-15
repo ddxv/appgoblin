@@ -162,7 +162,7 @@
 	</div>
 
 	<!-- Key Metrics Dashboard -->
-	<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
+	<div class="grid grid-cols-2 gap-2 md:gap-4 mb-12 mx-24">
 		<div class={`${kpiCardBaseClass} bg-gradient-to-br from-primary-700-300 to-primary-200-800`}>
 			<div class={kpiValueClass}>{data.summary.totalCompanies}</div>
 			<div class={kpiLabelClass}>SDK Companies</div>
