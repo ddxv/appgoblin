@@ -935,7 +935,7 @@ def insert_sdk_scan_request(
     Each with a 'store_id' key.
 
     """
-    logger.info(f"Inserting new sdk scan request: {store_id}")
+    logger.info(f"Inserting new sdk scan request: {store_id=} by {user_id=}")
 
     if state.dbconwrite is None:
         logger.error("Write connection not available, cannot insert SDK scan request")

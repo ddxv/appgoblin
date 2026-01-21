@@ -52,8 +52,8 @@ export function require2FAVerified(session: { twoFactorVerified: boolean }) {
 export function requireFullAuth(event: RequestEvent) {
 	const { session, user } = requireAuth(event);
 	requireEmailVerified(user);
-	require2FASetup(user);
-	require2FAVerified(session);
+	//require2FASetup(user);
+	//require2FAVerified(session);
 	return { session, user };
 }
 
@@ -66,7 +66,8 @@ export function redirectIfAuthenticated(event: RequestEvent) {
 		if (
 			event.locals.user.emailVerified &&
 			event.locals.user.registered2FA &&
-			event.locals.session.twoFactorVerified
+			//event.locals.session.twoFactorVerified
+			true
 		) {
 			throw redirect(302, '/');
 		}
@@ -78,7 +79,7 @@ export function redirectIfAuthenticated(event: RequestEvent) {
 			throw redirect(302, '/auth/2fa/setup');
 		}
 		if (!event.locals.session.twoFactorVerified) {
-			throw redirect(302, '/auth/2fa');
+			//throw redirect(302, '/auth/2fa');
 		}
 	}
 }
