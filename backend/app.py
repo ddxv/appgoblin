@@ -106,10 +106,12 @@ async def db_lifespan(app: Litestar) -> AsyncGenerator[None]:
         try:
             dbconwrite = getattr(app.state, "dbconwrite", None)
             if dbconwrite is None:
-                app.state.dbconwrite = get_db_connection(server_name="madrone-write")
-            logger.info("Connected to madrone-write")
+                app.state.dbconwrite = get_db_connection(
+                    server_name="goblinadmin-write"
+                )
+            logger.info("Connected to goblinadmin-write")
         except Exception:
-            logger.exception("Failed to connect to madrone-write, will use read-only")
+            logger.exception("Failed to connect to goblinadmin-write")
             app.state.dbconwrite = None
     except Exception:
         logger.exception("Failed to initialize database connections")

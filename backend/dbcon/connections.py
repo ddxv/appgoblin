@@ -133,16 +133,19 @@ def get_db_connection(server_name: str = "madrone") -> PostgresCon:
         PostgresCon: A PostgreSQL connection object.
 
     """
-    host = CONFIG[server_name]["host"]
+    use_ssh = CONFIG[server_name].get("use_ssh", False)
 
-    if host == "localhost" or host.startswith("192.168.0"):
-        db_port = "5432"
-    else:
+    if use_ssh:
         ssh_local_port = start_ssh_tunnel(server_name)
         host = "127.0.0.1"
         db_port = str(ssh_local_port)
+    else:
+        db_port = CONFIG[server_name].get("remote_port", 5432)
+        host = CONFIG[server_name]["host"]
+
     conn = PostgresCon(server_name, host, db_port)
     conn.set_engine()
+
     return conn
 
 

@@ -921,12 +921,15 @@ def get_sitemap_apps(dbcon: PostgresCon) -> pd.DataFrame:
     return df
 
 
-def insert_sdk_scan_request(state: State, store_id: str | list[str]) -> None:
+def insert_sdk_scan_request(
+    state: State, store_id: str | list[str], user_id: int | None
+) -> None:
     """Insert a new sdk scan request.
 
     Args:
         state (State): Database connection state.
         store_id (str | list[str]): A single/list of store_id as a string.
+        user_id (int | None): The user id of the user requesting the sdk scan.
 
     The function inserts one or more records into the sdk scan request table.
     Each with a 'store_id' key.
@@ -939,9 +942,9 @@ def insert_sdk_scan_request(state: State, store_id: str | list[str]) -> None:
         return
 
     if isinstance(store_id, str):
-        store_ids = [{"store_id": store_id}]
+        data = [{"store_id": store_id, "user_id": user_id}]
     else:
-        store_ids = [{"store_id": s} for s in store_id]
+        data = [{"store_id": s, "user_id": user_id} for s in store_id]
 
     with state.dbconwrite.engine.connect() as connection, connection.begin():
-        connection.execute(sql.insert_sdk_scan_request, store_ids)
+        connection.execute(sql.insert_sdk_scan_request, data)
