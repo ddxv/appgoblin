@@ -46,7 +46,9 @@ def log_umami_event(ip: str | None, url: str) -> None:
     )
 
 
-def process_sdk_scan_request(state, store_ids: list[str], ip: str | None) -> None:
+def process_sdk_scan_request(
+    state, store_ids: list[str], ip: str | None, user_id: int | None
+) -> None:
     """Process a sdk scan request."""
     url = "/api/public/sdks/apps/requestSDKScan"
     try:
@@ -55,7 +57,7 @@ def process_sdk_scan_request(state, store_ids: list[str], ip: str | None) -> Non
     except Exception:
         logger.exception("Error logging umami event")
     try:
-        insert_sdk_scan_request(state, store_ids)
+        insert_sdk_scan_request(state, store_ids, user_id)
         logger.info(f"inserted sdk scan request for {len(store_ids)} store_ids")
     except Exception:
         logger.exception("Error inserting sdk scan request")
@@ -211,5 +213,7 @@ class ScryController(Controller):
         logger.info(f"Scry: store_ids:{len(store_ids)} request SDK Scan")
         return Response(
             {"status": "ok"},
-            background=BackgroundTask(process_sdk_scan_request, state, store_ids, ip),
+            background=BackgroundTask(
+                process_sdk_scan_request, state, store_ids, ip, user_id=None
+            ),
         )

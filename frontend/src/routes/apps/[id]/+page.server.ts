@@ -1,22 +1,6 @@
-import type { PageServerLoad, Actions } from './$types';
+import type { PageServerLoad } from './$types';
 
 import { createApiClient } from '$lib/server/api';
-
-export const actions = {
-	requestSDKScan: async (event) => {
-		const formData = await event.request.formData();
-		const appId = formData.get('appId');
-
-		const response = await fetch(`http://localhost:8000/api/apps/${appId}/requestSDKScan`, {
-			method: 'POST'
-		});
-		if (response.status === 200) {
-			return { success: true };
-		} else {
-			return { success: false };
-		}
-	}
-} satisfies Actions;
 
 export const load: PageServerLoad = async ({ fetch, params, parent }) => {
 	const api = createApiClient(fetch);
