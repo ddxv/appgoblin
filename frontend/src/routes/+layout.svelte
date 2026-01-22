@@ -57,9 +57,16 @@
 								<IconSearch />
 							</div>
 							<input
-								class="ig-input"
+								class="ig-input md:hidden"
 								type="search"
 								placeholder="Search Apps..."
+								bind:value={searchTerm}
+								onkeydown={navigateToSearch}
+							/>
+                            <input
+								class="ig-input hidden md:block"
+								type="search"
+								placeholder="Search Apps & Companies"
 								bind:value={searchTerm}
 								onkeydown={navigateToSearch}
 							/>
