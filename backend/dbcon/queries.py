@@ -890,6 +890,45 @@ def get_keyword_apps(state: State, keyword: str, rank: int = 20) -> pd.DataFrame
     return df
 
 
+def query_apps_crossfilter(
+    state: State,
+    include_domains: list[str] | None,
+    exclude_domains: list[str] | None,
+    require_sdk_api: bool = False,
+    require_iap: bool = False,
+    require_ads: bool = False,
+    mydate: str = "2024-01-01",
+) -> pd.DataFrame:
+    """Query apps for analytics dashboard."""
+    # Ensure domains are lists, not None
+    include_domains = include_domains or []
+    exclude_domains = exclude_domains or []
+
+    # Return empty dataframe if no include domains specified
+    if not include_domains:
+        return pd.DataFrame()
+
+    # Parse date with fallback
+    try:
+        parsed_date = datetime.datetime.strptime(mydate, "%Y-%m-%d").date()
+    except (ValueError, TypeError):
+        parsed_date = datetime.date(2024, 1, 1)
+
+    df = pd.read_sql(
+        sql.apps_crossfilter,
+        state.dbcon.engine,
+        params={
+            "include_domains": include_domains,
+            "exclude_domains": exclude_domains,
+            "require_sdk_api": bool(require_sdk_api),
+            "require_iap": bool(require_iap),
+            "require_ads": bool(require_ads),
+            "mydate": parsed_date,
+        },
+    )
+    return df
+
+
 def get_single_app_keywords(state: State, store_id: str) -> pd.DataFrame:
     """Get single app keywords."""
     df = pd.read_sql(

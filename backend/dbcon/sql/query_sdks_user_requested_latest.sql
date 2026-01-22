@@ -4,7 +4,7 @@ WITH user_requests AS (
         urs.store_id,
         MAX(urs.created_at) AS requested_at
     FROM
-        user_requested_scan AS urs
+        agadmin.user_requested_scan AS urs
     GROUP BY
         urs.store_id
     ORDER BY
