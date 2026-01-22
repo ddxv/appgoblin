@@ -12,7 +12,7 @@ export interface User {
 }
 
 export function verifyUsernameInput(username: string): boolean {
-	return username.length > 3 && username.length < 32 && username.trim() === username;
+	return username.length > 1 && username.length < 32 && username.trim() === username;
 }
 
 export async function createUser(email: string, username: string, password: string): Promise<User> {

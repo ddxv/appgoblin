@@ -7,7 +7,7 @@
 </script>
 
 <h2 class="text-2xl font-bold">Create an account</h2>
-<p>Name must be at least 4 characters long and password must be at least 8 characters long.</p>
+<p>Name must be at least 2 characters long and password must be at least 8 characters long.</p>
 <form class="space-y-1" method="post" use:enhance>
 	<label class="label" for="form-signup.username">Name</label>
 	<input
@@ -16,7 +16,7 @@
 		name="username"
 		required
 		value={form?.username ?? ''}
-		minlength="4"
+		minlength="2"
 		maxlength="31"
 	/><br />
 	<label class="label" for="form-signup.email">Email</label>

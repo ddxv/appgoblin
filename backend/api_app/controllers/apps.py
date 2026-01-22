@@ -46,6 +46,7 @@ from dbcon.queries import (
     get_single_app_keywords,
     get_single_apps_adstxt,
     insert_sdk_scan_request,
+    query_apps_crossfilter,
     search_apps,
 )
 from dbcon.static import get_company_logos_df, get_total_counts
@@ -901,6 +902,63 @@ class AppController(Controller):
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(f"{self.path}/{store_id}/apis took {duration}ms")
         return apis_dict
+
+    @post(path="/crossfilter")
+    async def get_crossfilter_apps(self: Self, state: State, data: dict) -> dict:
+        """Handle POST request for a list of apps for crossfilter.
+
+        Returns
+        -------
+            A list of apps matching the filter criteria
+
+        """
+        start = time.perf_counter() * 1000
+
+        # Extract and validate parameters
+        include_domains = data.get("include_domains") or []
+        exclude_domains = data.get("exclude_domains") or []
+        require_sdk_api = bool(data.get("require_sdk_api", False))
+        require_iap = bool(data.get("require_iap", False))
+        require_ads = bool(data.get("require_ads", False))
+        mydate = data.get("mydate", "2024-01-01")
+
+        # Ensure domains are lists of strings
+        if isinstance(include_domains, str):
+            include_domains = [include_domains]
+        if isinstance(exclude_domains, str):
+            exclude_domains = [exclude_domains]
+
+        # Filter out empty strings
+        include_domains = [d for d in include_domains if d and isinstance(d, str)]
+        exclude_domains = [d for d in exclude_domains if d and isinstance(d, str)]
+
+        logger.info(
+            f"Crossfilter query: include={len(include_domains)} domains, "
+            f"exclude={len(exclude_domains)} domains, sdk_api={require_sdk_api}, "
+            f"iap={require_iap}, ads={require_ads}, date={mydate}"
+        )
+
+        try:
+            apps_df = query_apps_crossfilter(
+                state,
+                include_domains=include_domains,
+                exclude_domains=exclude_domains,
+                require_sdk_api=require_sdk_api,
+                require_iap=require_iap,
+                require_ads=require_ads,
+                mydate=mydate,
+            )
+            apps_list = apps_df.to_dict(orient="records")
+        except Exception as e:
+            logger.error(f"Crossfilter query failed: {e}")
+            apps_list = []
+
+        apps_dict = {"apps": apps_list}
+        duration = round((time.perf_counter() * 1000 - start), 2)
+        logger.info(
+            f"{self.path}/crossfilter returned {len(apps_list)} apps in {duration}ms"
+        )
+        return apps_dict
 
 
 COLLECTIONS = {
