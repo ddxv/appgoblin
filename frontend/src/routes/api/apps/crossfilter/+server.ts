@@ -6,7 +6,11 @@ export const POST: RequestHandler = async ({ request }) => {
 		const body = await request.json();
 
 		// Validate required fields
-		if (!body.include_domains || !Array.isArray(body.include_domains) || body.include_domains.length === 0) {
+		if (
+			!body.include_domains ||
+			!Array.isArray(body.include_domains) ||
+			body.include_domains.length === 0
+		) {
 			return json({ error: 'At least one company must be selected to include' }, { status: 400 });
 		}
 

@@ -233,7 +233,9 @@
 
 			<!-- Include Companies -->
 			<div class="space-y-2">
-				<label class="label font-medium text-sm" for="include-search">Include Companies (Required)</label>
+				<label class="label font-medium text-sm" for="include-search"
+					>Include Companies (Required)</label
+				>
 				<p class="text-xs text-surface-500">Apps must use ALL selected SDKs/companies</p>
 				<div class="relative">
 					<input
@@ -256,7 +258,8 @@
 									onmousedown={() => addIncludeDomain(company.company_domain)}
 								>
 									<span>{company.company_name}</span>
-									<span class="text-xs text-surface-500">{formatNumber(company.total_apps)} apps</span
+									<span class="text-xs text-surface-500"
+										>{formatNumber(company.total_apps)} apps</span
 									>
 								</button>
 							{/each}
@@ -304,7 +307,8 @@
 									onmousedown={() => addExcludeDomain(company.company_domain)}
 								>
 									<span>{company.company_name}</span>
-									<span class="text-xs text-surface-500">{formatNumber(company.total_apps)} apps</span
+									<span class="text-xs text-surface-500"
+										>{formatNumber(company.total_apps)} apps</span
 									>
 								</button>
 							{/each}
@@ -423,10 +427,7 @@
 					<p class="text-sm text-surface-600-400">
 						Found <strong>{apps.length}</strong> apps matching your criteria
 					</p>
-					<button
-						class="btn preset-tonal text-sm flex items-center gap-1"
-						onclick={exportToCSV}
-					>
+					<button class="btn preset-tonal text-sm flex items-center gap-1" onclick={exportToCSV}>
 						<Download size={16} />
 						Export CSV
 					</button>
