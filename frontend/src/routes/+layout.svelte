@@ -5,12 +5,11 @@
 
 	import IconSearch from '$lib/svg/IconSearch.svelte';
 	import MenuIcon from 'lucide-svelte/icons/menu';
-	import Mail from 'lucide-svelte/icons/mail';
 
 	import { AppBar } from '@skeletonlabs/skeleton-svelte';
 
-	import githubIcon from '$lib/svg/github-mark.svg?raw';
-	import discordIcon from '$lib/svg/discord-mark-black.svg?raw';
+	import LoginAccountButton from '$lib/LoginAccountButton.svelte';
+	import NavTabs from '$lib/NavTabs.svelte';
 
 	let searchTerm: string = $state('');
 
@@ -24,91 +23,49 @@
 		}
 	}
 
-	import NavTabs from '$lib/NavTabs.svelte';
-
 	let { children } = $props();
 </script>
 
-<div class="grid h-screen grid-rows-[auto_1fr_auto]">
+<div class="grid h-screen grid grid-rows-[auto_1fr_auto]">
 	<header class="sticky top-0 z-10">
 		<AppBar class="bg-surface-50-950">
-			<AppBar.Toolbar class="grid-cols-[0.25fr_1fr_0.25fr]">
-				<AppBar.Lead>
-					<div class="flex items-center">
-						<a href="/" class="flex">
-							<div class="flex items-center flex-col md:flex-row">
-								<img
-									class="md:ml-2 h-8 md:h-12 w-8 md:w-12"
-									src="/goblin_purple_hat_60.png"
-									alt="AppGoblin Icon"
-								/>
-								<strong
-									class="text-xs ml-1 md:ml-2 md:text-lg xl:text-xl uppercase text-primary-900-100"
-									>AppGoblin</strong
-								>
-							</div>
-						</a>
-					</div>
+			<AppBar.Toolbar class="grid-cols-[auto_1fr_auto]">
+				<AppBar.Lead class="shrink-0 min-w-fit">
+					<a href="/" class="flex items-center shrink-0">
+						<img
+							class="h-8 w-8 shrink-0 md:ml-2 md:h-12 md:w-12"
+							src="/goblin_purple_hat_60.png"
+							alt="AppGoblin Icon"
+						/>
+						<strong
+							class="hidden md:inline-flex text-xs ml-1 md:ml-2 md:text-lg xl:text-xl uppercase text-primary-900-100"
+							>AppGoblin</strong
+						>
+					</a>
 				</AppBar.Lead>
 
-				<AppBar.Headline>
-					<div class="hidden md:inline-flex">
+				<AppBar.Headline class="hidden md:inline-flex">
+					<div class="gap-1 md:gap-2 justify-center">
 						<NavTabs />
 					</div>
 				</AppBar.Headline>
 
-				<AppBar.Trail>
-					<div>
-						<div class="input-group grid-cols-2 grid-cols-[auto_1fr]">
-							<div class="input-group-shim p-1 md:p-2">
+				<AppBar.Trail class="overflow-hidden flex justify-end">
+					<div class="flex gap-1 md:gap-2">
+						<div class="input-group grid-cols-[auto_1fr_auto]">
+							<div class="ig-cell preset-tonal p-2 md:p-4">
 								<IconSearch />
 							</div>
-							<div class="text-xs md:text-base p-1">
-								<input
-									type="search"
-									bind:value={searchTerm}
-									onkeydown={navigateToSearch}
-									placeholder="Search Apps & Companies"
-									class="p-0"
-								/>
-							</div>
+							<input
+								class="ig-input"
+								type="search"
+								placeholder="Search Apps..."
+								bind:value={searchTerm}
+								onkeydown={navigateToSearch}
+							/>
 						</div>
-						<div class="flex items-center p-1 gap-1 md:gap-2">
-							<a href="mailto:contact@appgoblin.info" target="_blank" rel="noreferrer">
-								<button
-									type="button"
-									class="btn-primary inline-flex items-center px-2 md:px-4 py-1 md:py-2 bg-white rounded-lg hover:scale-105 transition-transform duration-200 shadow-lg"
-								>
-									<div
-										class="inline-flex items-center text-black font-bold text-xs md:text-sm gap-1 md:gap-2"
-									>
-										<Mail size={24} /> Contact
-									</div>
-								</button>
-							</a>
 
-							<a href="https://github.com/appgoblin-dev/appgoblin" target="_blank" rel="noreferrer">
-								<button
-									type="button"
-									class="btn preset-tonal hover:preset-tonal-primary p-1 md:p-2"
-								>
-									<div class="inline-flex items-center text-xs md:text-sm gap-1 md:gap-2">
-										{@html githubIcon} GitHub
-									</div>
-								</button>
-							</a>
-
-							<a href="https://discord.gg/7jpWEhkXRW" target="_blank" rel="noreferrer">
-								<button
-									type="button"
-									class="btn preset-tonal hover:preset-tonal-primary p-1 md:p-2"
-								>
-									<div class="inline-flex items-center text-xs md:text-sm gap-1 md:gap-2">
-										{@html discordIcon} Discord
-									</div>
-								</button>
-							</a>
-						</div>
+						<LoginAccountButton />
 					</div>
 				</AppBar.Trail>
 			</AppBar.Toolbar>
