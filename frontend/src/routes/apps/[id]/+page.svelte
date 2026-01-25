@@ -100,6 +100,13 @@
 									</a>
 								</div>
 							{/if}
+							<hr class="opacity-50" />
+							<a
+								href="/apps/comparison/{data.myapp.store_id}"
+								class="btn variant-filled-secondary w-full font-bold"
+							>
+								Compare App
+							</a>
 						</div>
 					</WhiteCard>
 

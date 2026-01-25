@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import AdCard from '$lib/AdCard.svelte';
 	import CompanyPubAppsTable from '$lib/CompanyPubAppsTable.svelte';
 	import WhiteCard from '$lib/WhiteCard.svelte';
 	let { data } = $props();
@@ -14,9 +13,9 @@
 		{/snippet}
 		<div class="p-2">
 			<p class="">
-				This {page.params.domain} publisher ID is related via the developer URL's app-ads.txt to the
-				following apps and developers. One or two developers is best with the appropriate number of apps
-				from that developer:
+				This {page.params.domain} publisher ID is related via the developer URL's app-ads.txt to the following
+				apps and developers. One or two developers is best with the appropriate number of apps from that
+				developer:
 			</p>
 
 			<div class="space-y-4">

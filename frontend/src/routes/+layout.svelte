@@ -11,6 +11,8 @@
 	import LoginAccountButton from '$lib/LoginAccountButton.svelte';
 	import NavTabs from '$lib/NavTabs.svelte';
 
+	import { goto } from '$app/navigation';
+
 	let searchTerm: string = $state('');
 
 	function navigateToSearch(event: any) {
@@ -19,7 +21,7 @@
 			const encodedSearchTerm = encodeURIComponent(searchTerm.replace(/\s+/g, '+'));
 
 			// Navigate to the search route
-			window.location.href = `/search/${encodedSearchTerm}`;
+			goto(`/search/${encodedSearchTerm}`);
 		}
 	}
 
@@ -63,7 +65,7 @@
 								bind:value={searchTerm}
 								onkeydown={navigateToSearch}
 							/>
-                            <input
+							<input
 								class="ig-input hidden md:block"
 								type="search"
 								placeholder="Search Apps & Companies"

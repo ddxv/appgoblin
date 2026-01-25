@@ -36,6 +36,7 @@ def load_static_data(engine) -> StaticData:
     logger.info("Loading static data...")
 
     # Appstore categories with transformations
+    logger.info("Loading appstore categories...")
     df = pd.read_sql(sql.appstore_categories, engine)
     df["store"] = df["store"].replace({1: "android", 2: "ios"})
     appstore_categories = pd.pivot_table(
@@ -47,30 +48,43 @@ def load_static_data(engine) -> StaticData:
     appstore_categories = appstore_categories.sort_values("total_apps", ascending=False)
 
     # Adtech categories with sorting
+    logger.info("Loading adtech categories...")
     adtech_categories = pd.read_sql(sql.adtech_categories, engine).sort_values("id")
 
     # Simple queries - load as-is
+    logger.info("Loading store collection category map...")
     store_collection_category_map = pd.read_sql(
         sql.store_collection_category_map, engine
     )
+    logger.info("Loading company countries...")
     company_countries = pd.read_sql(sql.company_countries, engine)
+    logger.info("Loading total counts...")
     total_counts = pd.read_sql(sql.total_counts, engine)
+    logger.info("Loading advertiser creative rankings...")
     advertiser_creative_rankings = pd.read_sql(sql.advertiser_creative_rankings, engine)
+    logger.info("Loading advertiser creative rankings top...")
     advertiser_creative_rankings_top = pd.read_sql(
         sql.advertiser_creative_rankings_top, engine
     )
+    logger.info("Loading country map...")
     country_map = pd.read_sql(sql.countries, engine)
+    logger.info("Loading company open source...")
     company_open_source = pd.read_sql(sql.company_open_source, engine)
+    logger.info("Loading company api call countrys...")
     company_api_call_countrys = pd.read_sql(sql.company_api_call_countrys, engine)
 
     # Queries that extract lists
+    logger.info("Loading parent companies...")
     parent_companies = pd.read_sql(sql.parent_companies, engine)["domain_name"].tolist()
+    logger.info("Loading company secondary domains...")
     company_secondary_domains = pd.read_sql(sql.company_secondary_domains, engine)[
         "domain_name"
     ].tolist()
+    logger.info("Loading child companies...")
     child_companies = pd.read_sql(sql.child_companies, engine)["domain_name"].tolist()
 
     # Company logos (inline query)
+    logger.info("Loading company logos...")
     company_logos_df = pd.read_sql(
         """SELECT ad.domain_name as company_domain, c.logo_url as company_logo_url 
            FROM adtech.companies as c 
