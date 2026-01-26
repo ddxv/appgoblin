@@ -58,7 +58,7 @@
 					/>
 				</WhiteCard>
 				<!-- App Details Section -->
-				<div class="grid grid-cols-2 gap-2 md:gap-4">
+				<div class="grid grid-cols-2 gap-2 md:gap-4 text-xs md:text-base">
 					<WhiteCard>
 						{#snippet title()}
 							App Details

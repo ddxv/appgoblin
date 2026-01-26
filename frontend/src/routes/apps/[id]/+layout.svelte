@@ -62,6 +62,13 @@
 
 	let defaultTitle = $derived(getPageTitle(data.myapp));
 	let defaultDescription = $derived(getPageDescription(data.myapp));
+	let defaultIcon = $derived(getPageIcon(data.myapp));
+	function getPageIcon(myapp: AppFullDetail | string) {
+		if (typeof myapp == 'string') return 'https://appgoblin.info/goblin_purple_hat_250.png';
+		else {
+			return myapp.app_icon_url ?? 'https://appgoblin.info/goblin_purple_hat_250.png';
+		}
+	}
 	const defaultToFollow = 'index, follow';
 </script>
 
@@ -81,11 +88,11 @@
 	<meta name="twitter:title" content={defaultTitle} />
 	<meta name="twitter:description" content={defaultDescription} />
 
-	<meta property="og:image" content="https://appgoblin.info/goblin_purple_hat_250.png" />
+	<meta property="og:image" content={defaultIcon} />
 	<meta property="og:url" content={page.url.href} />
 	<meta property="og:type" content="website" />
 	<meta name="twitter:card" content="summary_large_image" />
-	<meta name="twitter:image" content="https://appgoblin.info/goblin_purple_hat_250.png" />
+	<meta name="twitter:image" content={defaultIcon} />
 	<meta name="robots" content={page.data.toFollow ?? defaultToFollow} />
 </svelte:head>
 
@@ -142,7 +149,7 @@
 								>
 									<path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" />
 								</svg>
-								Developer: {data.myapp.developer_name.split(' ').slice(0, 3).join(' ') ||
+								Developer: {data.myapp.developer_name?.split(' ').slice(0, 3).join(' ') ||
 									data.myapp.developer_id}
 							</span>
 						</div>

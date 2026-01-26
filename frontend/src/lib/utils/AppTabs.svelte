@@ -74,7 +74,7 @@
 
 	function typeTabClass(tab: string) {
 		const baseClass =
-			'flex items-center gap-2 px-4 py-3 font-medium transition-colors duration-200';
+			'flex items-center gap-1 md:gap-2 px-4 py-1 md:py-3 font-medium transition-colors duration-200';
 		const selectedClass = 'text-primary-500 bg-surface-100-900 hover:bg-primary-500/5';
 		const unselectedClass =
 			'border-transparent hover:text-primary-400 hover:border-primary-400/30 hover:bg-primary-900-100/50';
