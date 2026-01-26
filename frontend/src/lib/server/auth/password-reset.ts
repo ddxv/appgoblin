@@ -21,13 +21,7 @@ export async function createPasswordResetSession(
 	};
 	await db.execute(
 		'INSERT INTO password_reset_sessions (id, user_id, email, code, expires_at) VALUES ($1, $2, $3, $4, $5)',
-		[
-			session.id,
-			session.userId,
-			session.email,
-			session.code,
-			Math.floor(session.expiresAt.getTime() / 1000)
-		]
+		[session.id, session.userId, session.email, session.code, session.expiresAt]
 	);
 	return session;
 }

@@ -6,20 +6,22 @@
 	export let form: ActionData;
 </script>
 
-<h1>Two-factor authentication</h1>
-<p>Enter the code from your authenticator app.</p>
-<form method="post" use:enhance action="?/totp">
-	<label for="form-totp.code">Code</label>
-	<input id="form-totp.code" name="code" required /><br />
-	<button>Verify</button>
-	<p>{form?.totp?.message ?? ''}</p>
-</form>
-<section>
-	<h2>Use your recovery code instead</h2>
-	<form method="post" use:enhance action="?/recovery_code">
-		<label for="form-recovery-code.code">Recovery code</label>
-		<input id="form-recovery-code.code" name="code" required /><br />
-		<button>Verify</button>
-		<p>{form?.recoveryCode?.message ?? ''}</p>
+<div class="card preset-tonal">
+	<h2 class="text-2xl font-bold">Two-factor authentication</h2>
+	<p class="text-sm text-surface-500">Enter the code from your authenticator app.</p>
+	<form method="post" use:enhance action="?/totp">
+		<label class="label" for="form-totp.code">Code</label>
+		<input class="input" id="form-totp.code" name="code" required /><br />
+		<button class="btn preset-filled">Verify</button>
+		<p>{form?.totp?.message ?? ''}</p>
 	</form>
-</section>
+	<section>
+		<h2 class="text-lg font-bold">Use your recovery code instead</h2>
+		<form method="post" use:enhance action="?/recovery_code">
+			<label class="label" for="form-recovery-code.code">Recovery code</label>
+			<input class="input" id="form-recovery-code.code" name="code" required /><br />
+			<button class="btn preset-filled">Verify</button>
+			<p>{form?.recoveryCode?.message ?? ''}</p>
+		</form>
+	</section>
+</div>

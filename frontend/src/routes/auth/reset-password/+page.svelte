@@ -6,16 +6,19 @@
 	export let form: ActionData;
 </script>
 
-<h1>Enter your new password</h1>
-<form method="post" use:enhance>
-	<label for="form-reset.password">Password</label>
-	<input
-		type="password"
-		id="form-reset.password"
-		name="password"
-		autocomplete="new-password"
-		required
-	/><br />
-	<button>Reset password</button>
-	<p>{form?.message ?? ''}</p>
-</form>
+<div class="card preset-tonal">
+	<h2 class="text-2xl font-bold">Enter your new password</h2>
+	<form method="post" use:enhance>
+		<label class="label" for="form-reset.password">Password</label>
+		<input
+			class="input"
+			type="password"
+			id="form-reset.password"
+			name="password"
+			autocomplete="new-password"
+			required
+		/><br />
+		<button class="btn preset-filled">Reset password</button>
+		<p>{form?.message ?? ''}</p>
+	</form>
+</div>
