@@ -58,7 +58,7 @@
 					/>
 				</WhiteCard>
 				<!-- App Details Section -->
-				<div class="grid grid-cols-2 gap-2 md:gap-4">
+				<div class="grid grid-cols-2 gap-2 md:gap-4 text-xs md:text-base">
 					<WhiteCard>
 						{#snippet title()}
 							App Details
@@ -101,12 +101,6 @@
 								</div>
 							{/if}
 							<hr class="opacity-50" />
-							<a
-								href="/apps/comparison/{data.myapp.store_id}"
-								class="btn variant-filled-secondary w-full font-bold"
-							>
-								Compare App
-							</a>
 						</div>
 					</WhiteCard>
 

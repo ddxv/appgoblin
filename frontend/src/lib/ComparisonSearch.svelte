@@ -15,7 +15,7 @@
 
 	// Get current search query from URL
 	let currentSearch = $derived($page.url.searchParams.get(`search${slotId}`) || '');
-	
+
 	// Initialize state - will be set from URL in effect
 	let searchQuery = $state('');
 	let lastSyncedUrlValue = $state('');
@@ -25,7 +25,7 @@
 	// Initialize and sync from URL when URL changes externally (not while user is typing)
 	$effect(() => {
 		const urlSearch = $page.url.searchParams.get(`search${slotId}`) || '';
-		
+
 		// Initialize on first run
 		if (!isInitialized) {
 			searchQuery = urlSearch;
@@ -33,7 +33,7 @@
 			isInitialized = true;
 			return;
 		}
-		
+
 		// If URL changed and user is not typing, sync from URL
 		if (urlSearch !== lastSyncedUrlValue && !isUserTyping) {
 			searchQuery = urlSearch;
@@ -99,9 +99,7 @@
 		<div class="grid grid-cols-2 gap-4 overflow-y-auto h-full pr-2">
 			<!-- Android Results -->
 			<div>
-				<h3
-					class="mb-2 text-sm uppercase tracking-wider flex items-center gap-2"
-				>
+				<h3 class="mb-2 text-sm uppercase tracking-wider flex items-center gap-2">
 					<span>Android</span>
 					<span class="text-xs font-normal opacity-70">({googleApps.length})</span>
 				</h3>
@@ -131,9 +129,7 @@
 
 			<!-- iOS Results -->
 			<div>
-				<h3
-					class="mb-2 text-sm font-bold uppercase tracking-wider flex items-center gap-2"
-				>
+				<h3 class="mb-2 text-sm font-bold uppercase tracking-wider flex items-center gap-2">
 					<span>iOS</span>
 					<span class="text-xs font-normal opacity-70">({appleApps.length})</span>
 				</h3>

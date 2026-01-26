@@ -5,6 +5,6 @@ export const ssr: boolean = true;
 export const csr: boolean = true;
 
 export const load: LayoutServerLoad = async (event) => {
-    requireFullAuth(event);
-    return {};
+	requireFullAuth(event);
+	return {};
 };

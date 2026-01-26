@@ -84,7 +84,7 @@
 </svelte:head>
 
 <div class="card p-2 md:p-8">
-	<div class="mx-16">
+	<div class="md:mx-16">
 		<h1 class="text-2xl p-2">
 			<p class="text-primary-900-100">
 				The {collectionName}

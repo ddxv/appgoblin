@@ -40,10 +40,6 @@
 		/>
 
 		<!-- SLOT 2 -->
-		<AppComparisonSlot
-			onAppSelected={handleSlot2Change}
-			slotId="2"
-			searchResult={searchResult2}
-		/>
+		<AppComparisonSlot onAppSelected={handleSlot2Change} slotId="2" searchResult={searchResult2} />
 	</div>
 </div>

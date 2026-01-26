@@ -106,7 +106,17 @@
 						</td>
 						<td class="table-cell-fit">
 							<a href="/apps/{row.original.store_id}" style="cursor: pointer;">
-								{row.original.name}
+								<div class="flex items-center gap-2">
+									<img
+										src={`https://media.appgoblin.info/app-icons/${row.original.store_id}/${row.original.icon_url_100}`}
+										alt={row.original.name}
+										class="w-8 h8"
+									/>
+									<div class="flex flex-col">
+										{row.original.name}
+										<p class="text-xs text-surface-500">{row.original.developer_name}</p>
+									</div>
+								</div>
 							</a>
 						</td>
 
