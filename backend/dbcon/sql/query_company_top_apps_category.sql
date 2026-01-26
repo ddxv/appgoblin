@@ -13,6 +13,8 @@ SELECT
     ra.store,
     ra.name,
     ra.store_id,
+    ra.developer_name,
+    ra.icon_url_100,
     ra.app_company_category_rank AS rank,
     ra.rating_count_d30,
     ra.installs_d30,

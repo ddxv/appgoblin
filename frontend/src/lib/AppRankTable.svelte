@@ -137,7 +137,7 @@
 			<tbody>
 				{#each table.getRowModel().rows as row (row.id)}
 					<tr>
-						<td class="text-base md:text-xl"
+						<td class="text-sm md:text-base"
 							><span class="ml-2 md:ml-8">{row.original.rank}</span></td
 						>
 						<td>

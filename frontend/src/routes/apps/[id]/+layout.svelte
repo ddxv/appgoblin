@@ -164,6 +164,9 @@
 						Category: {getCategoryName(data.myapp.category)}
 					</span>
 				</div>
+				<div class="btn preset-tonal hover:preset-tonal-primary w-full text-xs md:text-sm">
+					<a href="/apps/comparison/{data.myapp.store_id}"> Add App to Comparison </a>
+				</div>
 			</div>
 		</div>
 		<!-- COL 2  -->

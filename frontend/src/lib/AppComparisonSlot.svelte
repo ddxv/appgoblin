@@ -1,6 +1,8 @@
 <script lang="ts">
 	import AppComparisonColumn from '$lib/AppComparisonColumn.svelte';
 	import ComparisonSearch from '$lib/ComparisonSearch.svelte';
+	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
 
 	let {
 		app = null,
@@ -24,16 +26,24 @@
 
 	let isSearching = $state(!app);
 	let isLoading = $state(false);
+	let manuallyToggledSearch = $state(false);
+
+	// Check if there's a search query in the URL
+	let hasSearchQuery = $derived(!!$page.url.searchParams.get(`search${slotId}`));
 
 	$effect(() => {
-		// Reset search state when app prop changes (e.g. navigation)
-		// If app is present, show it (isSearching = false). If null, show search.
-		// Note: This allows manual toggling (isSearching=true) while app stays same,
-		// as effect only runs when app dependency changes.
-		if (app) {
-			isSearching = false;
-			isLoading = false;
-		} else {
+		// Only auto-manage search state if user hasn't manually toggled it
+		// and there's no active search query in the URL
+		if (!manuallyToggledSearch && !hasSearchQuery) {
+			if (app) {
+				isSearching = false;
+				isLoading = false;
+			} else {
+				isSearching = true;
+				isLoading = false;
+			}
+		} else if (hasSearchQuery) {
+			// If there's a search query in URL, ensure we're in search mode
 			isSearching = true;
 			isLoading = false;
 		}
@@ -41,12 +51,21 @@
 
 	function handleSelect(app: any) {
 		isLoading = true; // Show loading state while navigating
+		manuallyToggledSearch = false; // Reset manual toggle when selecting an app
 		onAppSelected(app);
 		isSearching = false;
 	}
 
 	function toggleSearch() {
+		manuallyToggledSearch = true;
 		isSearching = !isSearching;
+
+		// When opening search, clear the search param to start fresh
+		if (isSearching) {
+			const url = new URL($page.url);
+			url.searchParams.delete(`search${slotId}`);
+			goto(url.pathname + url.search, { noScroll: true, keepFocus: true, invalidateAll: false });
+		}
 	}
 </script>
 
@@ -60,7 +79,7 @@
 			></div>
 			<p class="mt-4 text-surface-600-400 font-medium">Loading app...</p>
 		</div>
-	{:else if app && !isSearching}
+	{:else if app && !isSearching && !hasSearchQuery}
 		<div class="mb-4 flex justify-end">
 			<button
 				class="text-xs font-semibold text-primary-600 hover:text-primary-800 dark:text-primary-400 dark:hover:text-primary-300 underline"

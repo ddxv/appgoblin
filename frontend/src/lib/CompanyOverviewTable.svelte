@@ -108,6 +108,7 @@
 							<a href="/apps/{row.original.store_id}" style="cursor: pointer;">
 								{row.original.name}
 							</a>
+							{row.original.icon_url_100}
 						</td>
 
 						<td class="table-cell-fit">

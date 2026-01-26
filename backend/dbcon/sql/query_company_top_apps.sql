@@ -12,6 +12,7 @@ SELECT
     ra.store,
     ra.name,
     ra.store_id,
+    ra.developer_name,
     ra.app_company_rank AS rank,
     ra.rating_count_d30,
     ra.installs_d30,

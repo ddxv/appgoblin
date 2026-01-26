@@ -159,6 +159,7 @@ export interface RankedApps {
 	rank: number;
 	store_link: string;
 	name: string;
+	developer_name?: string;
 	store_id: string;
 	icon_url_100?: string;
 	store: number;
@@ -682,7 +683,7 @@ export interface AppFullDetail {
 	store_id: string;
 	id: number;
 	developer_id?: string;
-	developer_name: string;
+	developer_name?: string;
 	store_link: string;
 	store_developer_link?: string;
 	developer_url?: string;

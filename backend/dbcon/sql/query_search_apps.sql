@@ -28,6 +28,7 @@ SELECT
     store,
     store_id,
     name,
+    developer_name,
     icon_url_100,
     icon_url_512,
     featured_image_url,

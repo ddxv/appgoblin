@@ -5,8 +5,19 @@
 
 	export let data: PageData;
 
-	$: ({ app1, app2, history1, history2, histogram1, histogram2, sdks1, sdks2, companyTypes, searchResult1, searchResult2 } =
-		data);
+	$: ({
+		app1,
+		app2,
+		history1,
+		history2,
+		histogram1,
+		histogram2,
+		sdks1,
+		sdks2,
+		companyTypes,
+		searchResult1,
+		searchResult2
+	} = data);
 
 	function handleSlot1Change(app: any) {
 		// Swap app 1, keep app 2

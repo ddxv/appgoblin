@@ -38,13 +38,13 @@
 		for (let i = 0; i < numberOfSeries; i++) {
 			const seriesConfig: echarts.SeriesOption = {
 				type: 'line',
-				symbolSize: 20,
+				symbolSize: 10,
 				smooth: true,
 				emphasis: {
 					focus: 'series'
 				},
 				lineStyle: {
-					width: 4
+					width: 2
 				}
 			};
 
