@@ -2,7 +2,7 @@ SELECT *,
     CASE
   WHEN icon_url_100 IS NOT NULL
     THEN CONCAT('https://media.appgoblin.info/app-icons/', store_id, '/', icon_url_100)
-  ELSE icon_url_512
+  ELSE NULL
 END AS app_icon_url
 FROM frontend.apps_new_weekly
 WHERE

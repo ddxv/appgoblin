@@ -93,7 +93,7 @@
 							{#if app.store == 2 || (app.store_link && app.store_link.includes('apple.com'))}
 								<IconiOs size="18" />
 							{/if}
-							<p class="text-sm md:base text-primary-900-100">{app.developer_name || 'XXX'}</p>
+							<p class="text-sm md:base text-primary-900-100">{app.developer_name || ''}</p>
 						</div>
 						<!-- Ratings: STARS (123) -->
 						{#if app.rating_count && app.rating_count != 0}
