@@ -380,9 +380,9 @@
 									{:else if ['in_app_purchases', 'ad_supported'].includes(cell.column.id)}
 										<div class="flex justify-center">
 											{#if cell.getValue()}
-												<Check class="w-4 h-4 text-success-500" />
+												<Check class="w-4 h-4 text-success-900-100" />
 											{:else}
-												<X class="w-4 h-4 text-error-500" />
+												<X class="w-4 h-4 text-error-900-100" />
 											{/if}
 										</div>
 									{:else}
