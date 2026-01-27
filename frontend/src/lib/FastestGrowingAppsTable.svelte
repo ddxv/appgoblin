@@ -369,9 +369,13 @@
 											size="sm"
 											showValue={false}
 										/>
-									{:else if ['installs', 'rating_count', 'installs_sum_1w', 'ratings_sum_1w', 'installs_avg_2w', 'installs_sum_4w', 'ratings_avg_2w'].includes(cell.column.id)}
+									{:else if ['installs', 'rating_count', 'installs_sum_1w', 'ratings_sum_1w', 'installs_avg_2w', 'installs_sum_4w', 'ratings_avg_2w', 'ratings_sum_4w'].includes(cell.column.id)}
 										<p class="text-xs md:text-sm">
-											{formatNumber(cell.getValue() as number)}
+											{#if (cell.getValue() ?? 0) === 0}
+												-
+											{:else}
+												{formatNumber(cell.getValue() as number)}
+											{/if}
 										</p>
 									{:else if ['in_app_purchases', 'ad_supported'].includes(cell.column.id)}
 										<div class="flex justify-center">
