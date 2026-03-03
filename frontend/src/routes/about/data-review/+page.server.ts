@@ -6,11 +6,7 @@ export const prerender = false;
 export const ssr = true;
 export const csr = true;
 
-export const load: PageServerLoad = async ({ setHeaders }) => {
-	// setHeaders({
-	// 	'cache-control': 'public, max-age=86400, stale-while-revalidate=3600'
-	// });
-
+export const load: PageServerLoad = async () => {
 	const cachedData = await getCachedData();
 
 	const appsOverview = cachedData.appsOverview;
