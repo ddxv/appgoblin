@@ -1153,7 +1153,7 @@ class CompaniesController(Controller):
 
     @get(
         path="/companies/{company_domain:str}/adstxt/publisher/{publisher_id:str}",
-        cache=86400,
+        cache=3600,
     )
     async def adstxt_company_overview(
         self: Self,
@@ -1284,7 +1284,7 @@ class CompaniesController(Controller):
 
     @get(
         path="/companies/{company_domain:str}/adstxt/publisher/{publisher_id:str}/download",
-        cache=86400,
+        cache=3600,
     )
     async def adstxt_company_publisher_download(
         self: Self,

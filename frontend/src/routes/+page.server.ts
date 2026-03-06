@@ -7,11 +7,7 @@ export const prerender = true;
 export const ssr = true;
 export const csr = true;
 
-export const load: PageServerLoad = async ({ setHeaders, fetch }) => {
-	// setHeaders({
-	// 	'cache-control': 'public, max-age=86400, stale-while-revalidate=3600'
-	// });
-
+export const load: PageServerLoad = async ({ fetch }) => {
 	const api = createApiClient(fetch);
 	const topAdvertisers = await api.get('/creatives/top', 'Top Advertisers');
 	const androidAppRanks = await api.get('/rankings/1/1/short', 'Android App Ranks');

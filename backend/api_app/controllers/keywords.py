@@ -20,7 +20,7 @@ class KeywordsController(Controller):
 
     path = "/api/keywords"
 
-    @get(path="/{keyword:str}", cache=86400)
+    @get(path="/{keyword:str}", cache=3600)
     async def get_keyword_details(self: Self, state: State, keyword: str) -> dict:
         """Handle GET request for a list of apps.
 
@@ -32,7 +32,7 @@ class KeywordsController(Controller):
         df = get_keyword_details(state, keyword)
         return df.to_dict(orient="records")
 
-    @get(path="/{keyword:str}/ranks", cache=86400)
+    @get(path="/{keyword:str}/ranks", cache=3600)
     async def get_keyword_apps(self: Self, state: State, keyword: str) -> dict:
         """Handle GET request for a list of apps.
 
