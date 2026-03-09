@@ -581,7 +581,6 @@ export interface AppGlobalMetrics {
 	weekly_installs: number;
 	rating: number;
 	weekly_ratings: number;
-	weekly_reviews: number;
 	weekly_active_users: number;
 	monthly_active_users: number;
 	weekly_ad_revenue: number;
@@ -597,8 +596,6 @@ export interface AppGlobalMetrics {
 	weekly_installs_avg_per_day: number;
 	new_rating: number;
 	rating_rate_of_change: number;
-	weekly_reviews_rate_of_change: number;
-	weekly_reviews_avg_per_day: number;
 	weekly_ratings_rate_of_change: number;
 	weekly_ratings_avg_per_day: number;
 	new_one_star: number;

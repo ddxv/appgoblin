@@ -207,7 +207,6 @@ def create_app_plot_dict(app_hist: pd.DataFrame) -> pd.DataFrame:
     weekly_metrics = [
         "weekly_installs",
         "weekly_ratings",
-        "weekly_reviews",
         "weekly_active_users",
         "monthly_active_users",
         "weekly_ad_revenue",
