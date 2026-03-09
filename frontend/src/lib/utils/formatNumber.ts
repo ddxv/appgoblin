@@ -27,33 +27,21 @@ export function formatNumberLocale(num: number): string {
 }
 
 /**
- * Formats revenue into nearest bucket with $ prefix
+ * Formats revenue into threshold buckets with $ prefix.
+ * Uses lower-bound labels (e.g., '$100K+') and reserves '<' for the smallest bucket.
  * @param value - The revenue value to bucket
- * @returns Formatted string with bucket label (e.g., '$>1M') or empty string
+ * @returns Formatted string with bucket label (e.g., '$1M+') or empty string
  */
 export function getRevenueBucket(value: number): string {
 	if (value <= 0) return '';
 
-	const buckets = [
-		{ value: 10000, label: '$<10K' },
-		{ value: 50000, label: '$>50K' },
-		{ value: 100000, label: '$>100K' },
-		{ value: 200000, label: '$>200K' },
-		{ value: 500000, label: '$>500K' },
-		{ value: 1000000, label: '$>1M' },
-		{ value: 10000000, label: '$>10M' }
-	];
+	if (value < 10000) return '$<10K';
+	if (value >= 10000000) return '$10M+';
+	if (value >= 1000000) return '$1M+';
+	if (value >= 500000) return '$500K+';
+	if (value >= 200000) return '$200K+';
+	if (value >= 100000) return '$100K+';
+	if (value >= 50000) return '$50K+';
 
-	let closest = buckets[0];
-	let minDiff = Math.abs(value - closest.value);
-
-	for (const bucket of buckets) {
-		const diff = Math.abs(value - bucket.value);
-		if (diff < minDiff) {
-			closest = bucket;
-			minDiff = diff;
-		}
-	}
-
-	return closest.label;
+	return '$10K+';
 }

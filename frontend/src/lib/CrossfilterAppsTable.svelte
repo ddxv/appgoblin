@@ -13,7 +13,7 @@
 	import Pagination from '$lib/components/data-table/Pagination.svelte';
 	import ExportAsCSV from '$lib/components/data-table/ExportAsCSV.svelte';
 	import StoreIcon from '$lib/StoreIcon.svelte';
-	import { formatNumber } from '$lib/utils/formatNumber';
+	import { formatNumber, getRevenueBucket } from '$lib/utils/formatNumber';
 
 	import type { CrossfilterApp } from '../types.js';
 
@@ -29,15 +29,17 @@
 
 	const myColumns = [
 		{
-			title: 'App',
-			accessorKey: 'name',
-			isSortable: true
-		},
-		{
 			title: 'Store',
 			accessorKey: 'store',
 			isSortable: true
 		},
+
+		{
+			title: 'App',
+			accessorKey: 'name',
+			isSortable: true
+		},
+
 		{
 			title: 'Installs',
 			accessorKey: 'installs',
@@ -54,7 +56,7 @@
 			isSortable: true
 		},
 		{
-			title: 'Estimated Monthly Revenue',
+			title: 'Monthly Revenue Estimate',
 			accessorKey: 'estimated_monthly_revenue',
 			isSortable: true
 		},
@@ -154,9 +156,17 @@
 								</a>
 							{:else if cell.column.id === 'store'}
 								<StoreIcon store={row.original.store} />
-							{:else if ['installs', 'rating_count', 'installs_d30'].includes(cell.column.id)}
+							{:else if ['installs', 'rating_count', 'installs_d30', 'monthly_active_users'].includes(cell.column.id) || ['installs', 'rating_count', 'installs_d30', 'monthly_active_users'].includes(String((cell.column.columnDef as { accessorKey?: string }).accessorKey ?? ''))}
 								<div class="text-right font-mono">
 									{formatNumber(cell.getValue() as number)}
+								</div>
+							{:else if cell.column.id === 'estimated_monthly_revenue' || String((cell.column.columnDef as { accessorKey?: string }).accessorKey ?? '') === 'estimated_monthly_revenue'}
+								<div class="text-right font-mono">
+									{#if Number(cell.getValue() ?? 0) <= 0}
+										-
+									{:else}
+										{getRevenueBucket(Number(cell.getValue()))}
+									{/if}
 								</div>
 							{:else if ['in_app_purchases', 'ad_supported'].includes(cell.column.id)}
 								<div class="flex justify-center">
