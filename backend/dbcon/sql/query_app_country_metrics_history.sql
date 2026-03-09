@@ -1,5 +1,5 @@
 SELECT
-    acmh.snapshot_date,
+    acmh.week_start,
     c.alpha2 AS country,
     acmh.rating,
     acmh.rating_count,
@@ -14,5 +14,5 @@ INNER JOIN store_apps AS sa ON acmh.store_app = sa.id
 INNER JOIN countries AS c ON acmh.country_id = c.id
 WHERE
     sa.store_id = :store_id
-    AND acmh.snapshot_date >= CURRENT_DATE - INTERVAL '375 days'
-ORDER BY acmh.snapshot_date;
+    AND acmh.week_start >= CURRENT_DATE - INTERVAL '375 days'
+ORDER BY acmh.week_start;
