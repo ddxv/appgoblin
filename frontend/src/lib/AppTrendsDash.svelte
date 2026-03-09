@@ -100,11 +100,8 @@
 		d ? ((d as AppGlobalMetrics).week_start ?? (d as AppCountryMetrics).snapshot_date ?? '') : '';
 	const ratingCountKey = $derived(isIOS ? 'rating_count' : 'cumulative_ratings');
 	const newRatingCountKey = $derived(isIOS ? 'new_rating_count' : 'weekly_ratings');
-	const newReviewCountKey = $derived(isIOS ? 'new_review_count' : 'weekly_reviews');
 	const getRatingCount = (d: (AppGlobalMetrics | AppCountryMetrics) | undefined) =>
 		(d ? Number((d as unknown as Record<string, unknown>)[ratingCountKey]) : 0) || 0;
-	const getReviewCount = (d: (AppGlobalMetrics | AppCountryMetrics) | undefined) =>
-		d && 'review_count' in d ? (d as AppCountryMetrics).review_count : 0;
 
 	// Generate series keys based on whether we're showing new or cumulative
 	let seriesKeysBar = $derived(
@@ -269,30 +266,6 @@
 					{formatPercent(
 						Math.abs(
 							calculateOverallChange(getRatingCount(latestData), getRatingCount(earliestData))
-						)
-					)}
-				</div>
-			</div>
-		</div>
-
-		<div class="rounded-lg border p-5 shadow-sm">
-			<div class="text-sm font-medium opacity-70">Total Reviews</div>
-			<div class="my-3 text-3xl font-bold">{formatNumber(getReviewCount(latestData))}</div>
-			<div class="flex items-center justify-between text-xs">
-				<div class="opacity-70">
-					From: <span class="font-semibold">{formatNumber(getReviewCount(earliestData))}</span>
-				</div>
-				<div
-					class="font-semibold {getTrendColor(
-						calculateOverallChange(getReviewCount(latestData), getReviewCount(earliestData))
-					)}"
-				>
-					{getTrendIcon(
-						calculateOverallChange(getReviewCount(latestData), getReviewCount(earliestData))
-					)}
-					{formatPercent(
-						Math.abs(
-							calculateOverallChange(getReviewCount(latestData), getReviewCount(earliestData))
 						)
 					)}
 				</div>
@@ -494,62 +467,6 @@
 			</div>
 		</div>
 	</div>
-
-	<!-- Reviews Section -->
-	{#if !isIOS}
-		<div class="rounded-lg border p-6">
-			<h2 class="mb-6 text-xl font-bold">Review Analytics</h2>
-			<div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
-				<div>
-					<h3 class="mb-3 text-sm font-semibold">Total Reviews</h3>
-					<div class="h-[300px]">
-						<AreaChart
-							data={filteredData}
-							x={xAxisKey}
-							y="review_count"
-							{layer}
-							props={{
-								xAxis: { format: (d) => format(d, PeriodType.Day, { variant: 'short' }), ticks: 5 },
-								yAxis: { format: (d) => formatNumber(d) }
-							}}
-						/>
-					</div>
-				</div>
-
-				<div>
-					<h3 class="mb-3 text-sm font-semibold">Weekly Reviews</h3>
-					<div class="h-[300px]">
-						<BarChart
-							data={filteredData}
-							x={xAxisKey}
-							y={newReviewCountKey}
-							{layer}
-							props={{
-								xAxis: { format: (d) => format(d, PeriodType.Day, { variant: 'short' }), ticks: 5 },
-								yAxis: { format: (d) => formatNumber(d) }
-							}}
-						/>
-					</div>
-				</div>
-
-				<div>
-					<h3 class="mb-3 text-sm font-semibold">Review Growth Rate (%)</h3>
-					<div class="h-[300px]">
-						<LineChart
-							data={filteredData}
-							x={xAxisKey}
-							y="weekly_reviews_rate_of_change"
-							{layer}
-							props={{
-								xAxis: { format: (d) => format(d, PeriodType.Day, { variant: 'short' }), ticks: 5 },
-								yAxis: { format: (d) => d.toFixed(2) + '%' }
-							}}
-						/>
-					</div>
-				</div>
-			</div>
-		</div>
-	{/if}
 
 	<!-- Sentiment Analysis Section -->
 	<div class="rounded-lg border p-6">

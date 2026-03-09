@@ -2,7 +2,6 @@ SELECT
     agmh.week_start,
     agmh.weekly_installs,
     agmh.weekly_ratings,
-    agmh.weekly_reviews,
     agmh.weekly_active_users,
     agmh.monthly_active_users,
     agmh.weekly_ad_revenue,
@@ -15,7 +14,7 @@ SELECT
     agmh.three_star,
     agmh.four_star,
     agmh.five_star
-FROM app_global_metrics_weekly AS agmh
+FROM app_global_metrics_history AS agmh
 INNER JOIN store_apps AS sa ON agmh.store_app = sa.id
 WHERE
     sa.store_id = :store_id
