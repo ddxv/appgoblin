@@ -78,7 +78,9 @@ class CategoryController(Controller):
     async def get_countries(self: Self, state: State) -> dict:
         """Handle GET request for all countries."""
         df = get_country_map(state)
-        country_dict = df.set_index("alpha2")["langen"].to_dict()
+        country_dict = df.set_index("alpha2")[
+            ["langen", "app_ranks", "app_details"]
+        ].to_dict(orient="index")
         return country_dict
 
     @get(path="/", cache=CACHE_FOREVER)

@@ -106,7 +106,7 @@
 					}}
 				>
 					{#each Object.entries(data.countries) as [key, value]}
-						<option value={key}>{countryCodeToEmoji(key)} {value}</option>
+						<option value={key}>{countryCodeToEmoji(key)} {value.langen}</option>
 					{/each}
 				</select>
 			</div>

@@ -98,19 +98,6 @@ def get_search_results(state: State, search_term: str) -> AppGroupByStore:
     return app_group
 
 
-def attach_rating_history(app_hist: pd.DataFrame, star_cols: list[str]) -> pd.DataFrame:
-    """Get the rating history of an app."""
-    df = app_hist[["snapshot_date"] + star_cols].copy()
-    df = df.sort_values(["snapshot_date"])
-    df = df.drop(columns=["snapshot_date"])
-    change_df = df[star_cols].diff()
-    change_df = change_df.rename(
-        columns={col: "new_" + col for col in change_df.columns}
-    )
-    app_hist = pd.concat([app_hist, df, change_df], axis=1)
-    return app_hist
-
-
 def create_app_country_plot_dict(app_hist: pd.DataFrame) -> pd.DataFrame:
     """Create plot dicts for the app country history with linear interpolation for missing weeks.
 
@@ -118,7 +105,27 @@ def create_app_country_plot_dict(app_hist: pd.DataFrame) -> pd.DataFrame:
     """
     star_cols = ["one_star", "two_star", "three_star", "four_star", "five_star"]
     metrics = ["rating", "review_count", "rating_count", *star_cols]
-    xaxis_col = "snapshot_date"
+    weekly_metrics = [
+        metric
+        for metric in [
+            "weekly_installs",
+            "weekly_ratings",
+            "weekly_active_users",
+            "monthly_active_users",
+            "weekly_ad_revenue",
+            "weekly_iap_revenue",
+        ]
+        if metric in app_hist.columns
+    ]
+    metrics = [
+        *metrics,
+        *[
+            m
+            for m in ["cumulative_installs", "cumulative_ratings"]
+            if m in app_hist.columns
+        ],
+    ]
+    xaxis_col = "week_start"
 
     # Convert to datetime and sort by country and date
     app_hist[xaxis_col] = pd.to_datetime(app_hist[xaxis_col])
@@ -139,7 +146,11 @@ def create_app_country_plot_dict(app_hist: pd.DataFrame) -> pd.DataFrame:
         cumulative_metrics = ["rating_count", "review_count", *star_cols]
 
         # Metrics to turn numeric / clean
-        nmetrics = [m for m in cumulative_metrics + ["rating"] if m in group.columns]
+        nmetrics = [
+            m
+            for m in cumulative_metrics + ["rating", *weekly_metrics]
+            if m in group.columns
+        ]
         group[nmetrics] = (
             group[nmetrics]
             .apply(pd.to_numeric, errors="coerce")
@@ -174,6 +185,25 @@ def create_app_country_plot_dict(app_hist: pd.DataFrame) -> pd.DataFrame:
 
             # Avg per day (daily average of the change)
             group[avg_per_day_metric] = group[change_metric] / group["days_changed"]
+
+        for metric in weekly_metrics:
+            rate_of_change_metric = f"{metric}_rate_of_change"
+            avg_per_day_metric = f"{metric}_avg_per_day"
+            group[rate_of_change_metric] = (
+                group[metric] / group[metric].shift(1)
+            ) * 100
+            group[avg_per_day_metric] = group[metric] / group["days_changed"]
+
+        if (
+            "cumulative_ratings" not in group.columns
+            and "rating_count" in group.columns
+        ):
+            group["cumulative_ratings"] = group["rating_count"]
+        if (
+            "weekly_ratings" not in group.columns
+            and "new_rating_count" in group.columns
+        ):
+            group["weekly_ratings"] = group["new_rating_count"]
 
         return group
 
@@ -938,7 +968,7 @@ class AppController(Controller):
             apps_df = extend_app_icon_url(apps_df)
             apps_list = apps_df.to_dict(orient="records")
         except Exception as e:
-            logger.error(f"Crossfilter query failed: {e}")
+            logger.exception(f"Crossfilter query failed: {e}")
             apps_list = []
 
         apps_dict = {"apps": apps_list}

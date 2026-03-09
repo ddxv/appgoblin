@@ -4,6 +4,7 @@
 	import { format, PeriodType } from '@layerstack/utils';
 	import { countryCodeToEmoji } from './utils/countryCodeToEmoji';
 	import { Switch } from '@skeletonlabs/skeleton-svelte';
+	import { goto } from '$app/navigation';
 
 	// Star rating colors (1-star to 5-star order)
 	const red = '#E53935';
@@ -50,10 +51,11 @@
 	}
 
 	interface Props {
-		data: (AppGlobalMetrics | AppCountryMetrics)[];
-		isIOS: boolean;
+		data: AppGlobalMetrics[] | AppCountryMetrics[];
+		selectedCountry: string;
+		availableCountries: { code: string; name: string }[];
 	}
-	let { data, isIOS }: Props = $props();
+	let { data, selectedCountry, availableCountries }: Props = $props();
 
 	const layer = 'svg';
 
@@ -61,45 +63,41 @@
 	let starsExpanded = $state(false);
 	let showNewStars = $state(false);
 
-	// Extract unique countries from data, or use default
-	const availableCountries = $derived.by(() => {
-		if (!data || data.length === 0) {
-			return ['global'];
+	async function onRegionChange(event: Event) {
+		const region = (event.currentTarget as HTMLSelectElement).value;
+
+		if (region === 'global') {
+			await goto('?', { keepFocus: true, noScroll: true });
+			return;
 		}
-		if (isIOS && 'country' in data[0]) {
-			const countries = [...new Set((data as AppCountryMetrics[]).map((d) => d.country))];
-			return countries.sort();
-		}
-		return ['global'];
+
+		await goto(`?country=${encodeURIComponent(region)}`, { keepFocus: true, noScroll: true });
+	}
+
+	// Filter data by selected scope
+	const filteredData = $derived.by((): AppGlobalMetrics[] => {
+		return (data ?? []) as unknown as AppGlobalMetrics[];
 	});
 
-	// Set default selected country
-	let selectedCountry = $state('global');
-	let countryInitialized = $state(false);
-	$effect(() => {
-		if (!countryInitialized) {
-			selectedCountry = isIOS ? 'US' : 'global';
-			countryInitialized = true;
-		}
-	});
+	const hasField = (row: unknown, key: string) => {
+		if (!row || typeof row !== 'object') return false;
+		return key in (row as Record<string, unknown>);
+	};
+	const latestRow = $derived(filteredData[filteredData.length - 1]);
 
-	// Filter data by selected country
-	const filteredData = $derived.by(() => {
-		if (!data || data.length === 0) {
-			return [];
-		}
-		if (selectedCountry === 'global') {
-			return data;
-		}
-		return (data as AppCountryMetrics[]).filter((d) => d.country === selectedCountry);
-	});
-
-	// Metric keys differ: AppGlobalMetrics uses week_start, cumulative_*, weekly_*; AppCountryMetrics uses snapshot_date, rating_count, new_*
-	const xAxisKey = $derived(isIOS ? 'snapshot_date' : 'week_start');
-	const getDate = (d: (AppGlobalMetrics | AppCountryMetrics) | undefined) =>
-		d ? ((d as AppGlobalMetrics).week_start ?? (d as AppCountryMetrics).snapshot_date ?? '') : '';
-	const ratingCountKey = $derived(isIOS ? 'rating_count' : 'cumulative_ratings');
-	const newRatingCountKey = $derived(isIOS ? 'new_rating_count' : 'weekly_ratings');
+	// Metric keys selected by available fields in payload
+	const xAxisKey = $derived(hasField(latestRow, 'week_start') ? 'week_start' : 'snapshot_date');
+	const getDate = (d: (AppGlobalMetrics | AppCountryMetrics) | undefined) => {
+		if (!d) return '';
+		const row = d as unknown as Record<string, unknown>;
+		return (row.week_start as string) ?? (row.snapshot_date as string) ?? '';
+	};
+	const ratingCountKey = $derived(
+		hasField(latestRow, 'cumulative_ratings') ? 'cumulative_ratings' : 'rating_count'
+	);
+	const newRatingCountKey = $derived(
+		hasField(latestRow, 'weekly_ratings') ? 'weekly_ratings' : 'new_rating_count'
+	);
 	const getRatingCount = (d: (AppGlobalMetrics | AppCountryMetrics) | undefined) =>
 		(d ? Number((d as unknown as Record<string, unknown>)[ratingCountKey]) : 0) || 0;
 
@@ -124,6 +122,7 @@
 	// Calculate summary stats from filtered data
 	const latestData = $derived(filteredData[filteredData.length - 1]);
 	const earliestData = $derived(filteredData[0]);
+	const hasInstallMetrics = $derived('cumulative_installs' in (latestData ?? {}));
 
 	// Calculate overall trend from earliest to latest
 	const calculateOverallChange = (latest: number, earliest: number): number => {
@@ -139,11 +138,24 @@
 		return oneStars / fiveStars;
 	};
 
+	const calculateStarShare = (data: typeof latestData, star: 'one_star' | 'five_star'): number => {
+		const oneStars = data?.one_star ?? 0;
+		const twoStars = data?.two_star ?? 0;
+		const threeStars = data?.three_star ?? 0;
+		const fourStars = data?.four_star ?? 0;
+		const fiveStars = data?.five_star ?? 0;
+		const total = oneStars + twoStars + threeStars + fourStars + fiveStars;
+
+		if (total === 0) return 0;
+		const value = star === 'one_star' ? oneStars : fiveStars;
+		return (value / total) * 100;
+	};
+
 	// Calculate trend direction
 	const getTrendIcon = (value: number) => (value >= 0 ? '↑' : '↓');
 	const getTrendColor = (value: number) => (value >= 0 ? 'text-green-600' : 'text-red-600');
-	// Inverted color for star ratio (lower is better)
-	const getStarRatioColor = (value: number) => (value <= 0 ? 'text-green-600' : 'text-red-600');
+	// Inverted color for 1-star share (lower is better)
+	const getNegativeShareColor = (value: number) => (value <= 0 ? 'text-green-600' : 'text-red-600');
 </script>
 
 <!-- Header with Summary Cards -->
@@ -151,28 +163,27 @@
 	<div class="mb-6 flex items-center justify-between">
 		<h1 class="text-2xl font-bold">App Trends</h1>
 
-		<!-- Country Selector (visible when countries available) -->
-		{#if availableCountries.length > 1 || (availableCountries.length === 1 && availableCountries[0] !== 'global')}
-			<div class="flex items-center gap-3">
-				<label for="country-select" class="text-sm font-medium">Country:</label>
-				<select
-					id="country-select"
-					bind:value={selectedCountry}
-					class="rounded-lg border border-gray-300 px-4 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
-				>
-					{#each availableCountries as country}
-						<option value={country}>{countryCodeToEmoji(country)} {country.toUpperCase()}</option>
-					{/each}
-				</select>
-			</div>
-		{/if}
+		<div class="flex items-center gap-3">
+			<label for="region-select" class="text-sm font-medium">Region:</label>
+			<select
+				id="region-select"
+				value={selectedCountry}
+				onchange={onRegionChange}
+				class="rounded-lg border border-gray-300 px-4 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+			>
+				<option value="global">🌍 Global</option>
+				{#each availableCountries as country}
+					<option value={country.code}>{countryCodeToEmoji(country.code)} {country.name}</option>
+				{/each}
+			</select>
+		</div>
 	</div>
 
 	<!-- Summary Cards -->
 	<div
 		class="grid grid-cols-1 gap-4 md:grid-cols-2"
-		class:lg:grid-cols-5={!isIOS}
-		class:lg:grid-cols-4={isIOS}
+		class:lg:grid-cols-5={hasInstallMetrics}
+		class:lg:grid-cols-4={!hasInstallMetrics}
 	>
 		<!-- Date Range Card -->
 		<div class="rounded-lg border p-5">
@@ -189,7 +200,7 @@
 			</div>
 		</div>
 
-		{#if !isIOS && 'cumulative_installs' in (latestData ?? {})}
+		{#if hasInstallMetrics}
 			<div class="rounded-lg border p-5 shadow-sm">
 				<div class="text-sm font-medium opacity-70">Total Installs</div>
 				<div class="my-3 text-3xl font-bold">
@@ -272,27 +283,43 @@
 			</div>
 		</div>
 
-		<!-- Star Ratio Card (1-star / 5-star) -->
+		<!-- Rating Sentiment Mix Card -->
 		<div class="rounded-lg border p-5 shadow-sm">
-			<div class="text-sm font-medium opacity-70">1★ / 5★ Ratio</div>
-			<div class="my-3 text-3xl font-bold">{calculateStarRatio(latestData).toFixed(3)}</div>
-			<div class="flex items-center justify-between text-xs">
+			<div class="text-sm font-medium opacity-70">Rating Sentiment Mix</div>
+			<div class="my-2 text-lg font-bold">
+				1★ Share: {calculateStarShare(latestData, 'one_star').toFixed(1)}%
+			</div>
+			<div class="text-sm font-semibold opacity-80">
+				5★ Share: {calculateStarShare(latestData, 'five_star').toFixed(1)}%
+			</div>
+			<div class="mt-1 text-xs opacity-70">
+				Neg/Pos ratio: {calculateStarRatio(latestData).toFixed(3)}
+			</div>
+			<div class="mt-3 flex items-center justify-between text-xs">
 				<div class="opacity-70">
-					From: <span class="font-semibold">{calculateStarRatio(earliestData).toFixed(3)}</span>
+					From: <span class="font-semibold"
+						>{calculateStarShare(earliestData, 'one_star').toFixed(1)}%</span
+					> 1★
 				</div>
 				<div
-					class="font-semibold {getStarRatioColor(
-						calculateOverallChange(calculateStarRatio(latestData), calculateStarRatio(earliestData))
+					class="font-semibold {getNegativeShareColor(
+						calculateOverallChange(
+							calculateStarShare(latestData, 'one_star'),
+							calculateStarShare(earliestData, 'one_star')
+						)
 					)}"
 				>
 					{getTrendIcon(
-						calculateOverallChange(calculateStarRatio(latestData), calculateStarRatio(earliestData))
+						calculateOverallChange(
+							calculateStarShare(latestData, 'one_star'),
+							calculateStarShare(earliestData, 'one_star')
+						)
 					)}
 					{formatPercent(
 						Math.abs(
 							calculateOverallChange(
-								calculateStarRatio(latestData),
-								calculateStarRatio(earliestData)
+								calculateStarShare(latestData, 'one_star'),
+								calculateStarShare(earliestData, 'one_star')
 							)
 						)
 					)}
@@ -305,7 +332,7 @@
 <!-- Main Content -->
 <div class="space-y-8">
 	<!-- Installs Section -->
-	{#if !isIOS}
+	{#if hasInstallMetrics}
 		<div class="rounded-lg border p-6">
 			<h2 class="mb-6 text-xl font-bold">Install Analytics</h2>
 			<div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
