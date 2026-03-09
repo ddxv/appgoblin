@@ -144,9 +144,14 @@ export interface RankedAppList {
 	ranks: RankedApps[];
 }
 
+export interface Countries {
+	[key: string]: { langen: string; app_ranks: boolean; app_details: boolean };
+}
+
 export interface StoreCategoryRanks {
 	ranks: Promise<{ ranks: RankedApps[] }>;
-	countries: { [key: string]: string };
+	// countries: { [key: string]: string };
+	countries: Countries;
 	status?: number;
 	error?: string;
 	history: Promise<{ history: RankedApps[] }>;
@@ -541,7 +546,7 @@ export interface AppSDKs {
 }
 
 export interface AppCountryMetrics {
-	snapshot_date: string;
+	week_start: string;
 	country: string;
 	rating: number;
 	rating_count: number;

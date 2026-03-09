@@ -1,6 +1,13 @@
 import type { Handle, ServerInit } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
-import type { CatData, CompanyTypes, AppStore, CollectionRanks, CategoryRanks } from './types';
+import type {
+	CatData,
+	CompanyTypes,
+	AppStore,
+	CollectionRanks,
+	CategoryRanks,
+	Countries
+} from './types';
 import { RefillingTokenBucket } from '$lib/server/auth/rate-limit';
 import {
 	validateSessionToken,
@@ -153,17 +160,11 @@ const cacheAndRoutingHandle: Handle = async ({ event, resolve }) => {
 // Combine all handles in sequence
 export const handle = sequence(rateLimitHandle, authHandle, cacheAndRoutingHandle);
 
-// Cache initialization code
-interface Country {
-	code: string;
-	name: string;
-}
-
 interface CachedData {
 	appCats: CatData;
 	appsOverview: any;
 	companyTypes: CompanyTypes;
-	countries: Country[];
+	countries: Countries;
 	myRankingsMap?: any;
 	storeIDLookup: Record<number, AppStore>;
 	collectionIDLookup: Record<number, Record<number, CollectionRanks>>;
@@ -174,7 +175,7 @@ let cachedData: CachedData = {
 	appCats: { categories: [] },
 	appsOverview: {},
 	companyTypes: { types: [] },
-	countries: [],
+	countries: { ['US']: { langen: 'United States', app_ranks: true, app_details: true } },
 	storeIDLookup: {},
 	collectionIDLookup: {},
 	categoryIDLookup: {}

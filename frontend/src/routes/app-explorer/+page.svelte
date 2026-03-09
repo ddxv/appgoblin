@@ -9,7 +9,7 @@
 	import { enhance } from '$app/forms';
 	import CrossfilterAppsTable from '$lib/CrossfilterAppsTable.svelte';
 
-	import type { CatData, CrossfilterApp } from '../.././types';
+	import type { CatData, CrossfilterApp, Countries } from '../.././types';
 
 	// TanStack Table Imports
 	import { type SortingState } from '@tanstack/table-core';
@@ -41,9 +41,9 @@
 			}
 
 			if (typeof countriesData === 'object') {
-				return Object.entries(countriesData as Record<string, string>).map(([code, name]) => ({
+				return Object.entries(countriesData as Countries).map(([code, value]) => ({
 					code,
-					name
+					name: value.langen
 				}));
 			}
 

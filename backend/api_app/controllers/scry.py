@@ -62,7 +62,7 @@ def process_sdk_scan_request(
         logger.exception("Error inserting sdk scan request")
 
 
-def process_get_sdks(state: State, store_ids_dict: list[dict], ip: str | None) -> None:
+def process_get_sdks(ip: str | None) -> None:
     """Process a sdk request."""
     url = "/api/public/sdks/apps"
     try:
@@ -70,10 +70,6 @@ def process_get_sdks(state: State, store_ids_dict: list[dict], ip: str | None) -
         logger.info("logged umami event")
     except Exception:
         logger.exception("Error logging umami event")
-    try:
-        add_store_ids(state, store_ids_dict)
-    except Exception:
-        logger.exception("Error adding store ids")
 
 
 class ScryController(Controller):
@@ -107,14 +103,13 @@ class ScryController(Controller):
         logger.info(f"Scry: lookup_apps db query took {duration}ms")
 
         if df["company_domain"].isna().sum() > 0:
-            logger.error(
+            logger.exception(
                 f"Scry: {df[df['company_domain'].isna()]} SDKs have no company domain"
             )
             df = df[df["company_domain"].notna()]
 
         store_ids_df = df[["store_id"]].drop_duplicates()
         store_ids_df["store"] = 1
-        store_ids_dict = store_ids_df.to_dict(orient="records")
         success_store_ids = store_ids_df["store_id"].unique().tolist()
         failed_store_ids = [
             store_id for store_id in store_ids if store_id not in success_store_ids
@@ -185,7 +180,7 @@ class ScryController(Controller):
         logger.info(f"Scry: lookup_apps response took {duration}ms")
         return Response(
             my_dict,
-            background=BackgroundTask(process_get_sdks, state, store_ids_dict, ip),
+            background=BackgroundTask(process_get_sdks, ip),
         )
 
     @post(path="sdks/apps/requestSDKScan")
