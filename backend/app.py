@@ -27,7 +27,7 @@ logger = logging.getLogger(__name__)
 cors_config = CORSConfig(
     allow_origins=[
         "localhost",
-        "scry.appgoblin.info",
+        "appgoblin.info",
     ],
 )
 
