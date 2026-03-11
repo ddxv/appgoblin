@@ -99,7 +99,7 @@ def get_search_results(state: State, search_term: str) -> AppGroupByStore:
 
 
 def create_app_country_plot_dict(app_hist: pd.DataFrame) -> pd.DataFrame:
-    """Create plot dicts for the app country history with linear interpolation for missing weeks.
+    """Create plot dicts for the app country history with linear interpolation.
 
     Processes each country independently using groupby to maintain separate time series.
     """
@@ -230,7 +230,7 @@ def create_app_country_plot_dict(app_hist: pd.DataFrame) -> pd.DataFrame:
     return app_hist
 
 
-def create_app_plot_dict(app_hist: pd.DataFrame) -> pd.DataFrame:
+def create_app_plot_df(app_hist: pd.DataFrame) -> pd.DataFrame:
     """Create plot dicts for the app history with linear interpolation for missing weeks."""
     star_cols = ["one_star", "two_star", "three_star", "four_star", "five_star"]
     cumulative_metrics = ["rating", *star_cols]
@@ -251,7 +251,7 @@ def create_app_plot_dict(app_hist: pd.DataFrame) -> pd.DataFrame:
     for metric in weekly_metrics:
         rate_of_change_metric = f"{metric}_rate_of_change"
         avg_per_day_metric = f"{metric}_avg_per_day"
-        # Formula: ((new - old) / old) * 100
+        # Formula is ((new - old) / old) * 100
         app_hist[rate_of_change_metric] = (
             app_hist[metric] / app_hist[metric].shift(1)
         ) * 100
@@ -286,8 +286,6 @@ def create_app_plot_dict(app_hist: pd.DataFrame) -> pd.DataFrame:
     app_hist = app_hist.replace([np.inf, -np.inf], np.nan)
     # Drop columns that are all NaN
     app_hist = app_hist.dropna(axis="columns", how="all")
-    if app_hist.empty:
-        return app_hist.to_dict(orient="records")
     # Drop rating_avg_per_day as it's not useful (rating is an average, not cumulative)
     app_hist = app_hist.drop(["rating_avg_per_day"], axis=1, errors="ignore")
     return app_hist
@@ -488,10 +486,10 @@ class AppController(Controller):
             logger.info(f"App global metrics history not found: {store_id}")
             return {}
 
-        hist_df = create_app_plot_dict(hist_df)
+        hist_df = create_app_plot_df(hist_df)
         hist_dict = hist_df.to_dict(orient="records")
         duration = round((time.perf_counter() * 1000 - start), 2)
-        logger.info(f"{self.path}/{store_id}/metrics-history took {duration}ms")
+        logger.info(f"{self.path}/{store_id}/global-metrics-history took {duration}ms")
         return hist_dict
 
     @get(path="/{store_id:str}/sdksoverview", cache=3600)
@@ -942,7 +940,8 @@ class AppController(Controller):
         logger.info(
             f"Crossfilter query: include={len(include_domains)} domains, "
             f"exclude={len(exclude_domains)} domains, sdk_api={require_sdk_api}, "
-            f"iap={require_iap}, ads={require_ads}, ranking_country={ranking_country}, date={mydate}, "
+            f"iap={require_iap}, ads={require_ads}, "
+            f"ranking_country={ranking_country}, date={mydate}, "
             f"category={category}, store={store}"
         )
 
@@ -967,8 +966,8 @@ class AppController(Controller):
             )
             apps_df = extend_app_icon_url(apps_df)
             apps_list = apps_df.to_dict(orient="records")
-        except Exception as e:
-            logger.exception(f"Crossfilter query failed: {e}")
+        except Exception:
+            logger.exception("Crossfilter query failed")
             apps_list = []
 
         apps_dict = {"apps": apps_list}

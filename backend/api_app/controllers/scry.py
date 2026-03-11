@@ -46,7 +46,7 @@ def log_umami_event(ip: str | None, url: str) -> None:
 
 
 def process_sdk_scan_request(
-    state, store_ids: list[str], ip: str | None, user_id: int | None
+    state: State, store_ids: list[str], ip: str | None, user_id: int | None
 ) -> None:
     """Process a sdk scan request."""
     url = "/api/public/sdks/apps/requestSDKScan"
@@ -84,7 +84,7 @@ class ScryController(Controller):
         """Lookup apps' SDKs by store_ids."""
         start = time.perf_counter() * 1000
         store_ids = data.get("store_ids", [])
-
+        log_info = f"Scry: lookup_apps store_ids={len(store_ids)}"
         df = get_apps_sdk_overview(state, store_ids=tuple(store_ids))
         df = df.merge(
             get_company_logos_df(state),
@@ -174,10 +174,10 @@ class ScryController(Controller):
             ip = None
 
         logger.info(
-            f"Scry: store_ids:{len(success_store_ids)} found SDKs:{df.shape[0]}"
+            f"{log_info} success_store_ids={len(success_store_ids)} SDKs={df.shape[0]}"
         )
         duration = round((time.perf_counter() * 1000 - start), 2)
-        logger.info(f"Scry: lookup_apps response took {duration}ms")
+        logger.info(f"{log_info} response took {duration}ms")
         return Response(
             my_dict,
             background=BackgroundTask(process_get_sdks, ip),
@@ -197,7 +197,8 @@ class ScryController(Controller):
         else:
             ip = None
 
-        logger.info(f"Scry: store_ids:{len(store_ids)} request SDK Scan")
+        log_info = f"Single app request store_ids={len(store_ids)}"
+        logger.info(f"{log_info} request SDK Scan")
         return Response(
             {"status": "ok"},
             background=BackgroundTask(
