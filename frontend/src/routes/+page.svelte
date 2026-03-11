@@ -96,7 +96,7 @@
 						href="mailto:contact@appgoblin.info"
 						class="btn preset-outlined-primary-100-900 inline-flex items-center gap-2 px-6 py-3 rounded-lg"
 					>
-						<span class="font-bold">Get in Touch</span>
+						<span class="font-bold text-white">Get in Touch</span>
 					</a>
 				</div>
 				<div class="text-white/80 text-sm pt-1">

@@ -42,6 +42,20 @@
 		return 'text-surface-500';
 	}
 
+	function getLongTermTrendLabel(z4?: number | null): string {
+		if (z4 == null) return '';
+		if (z4 >= 4) return 'Strong Uptrend';
+		if (z4 >= 2.5) return 'Uptrend';
+		return '';
+	}
+
+	function getShortTermMomentumLabel(z2?: number | null, wowGrowthPct?: number | null): string {
+		if (z2 == null) return '';
+		if (z2 >= 5 || (wowGrowthPct ?? 0) >= 35) return 'Breakout';
+		if (z2 >= 3) return 'Building';
+		return '';
+	}
+
 	function formatDate(dateStr: string): string {
 		const date = new Date(dateStr);
 		return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
@@ -55,12 +69,6 @@
 		return num == null ? '—' : String(formatNumber(Math.round(num)));
 	}
 
-	function getZScoreLabel(value?: number | null): string {
-		if (value == null || value < 0) return '';
-		if (value > 5) return 'Recent Breakout';
-		return `${value.toFixed(1)}x`;
-	}
-
 	const sectionTitleClass =
 		'p-4 text-3xl font-bold bg-gradient-to-r from-primary-900-100 to-secondary-900-100 bg-clip-text text-transparent';
 	const sectionContainerClass = 'mb-24 pt-12 border-t-2 border-surface-200-800';
@@ -69,33 +77,34 @@
 	const sectionDescriptionClass = 'text-lg space-y-4 mb-6';
 	const sectionIntroRowClass = 'flex items-center gap-2 mb-6';
 
-	const publisherTextColor = 'text-xl text-bold text-emerald-400';
-	const creativesTextColor = 'text-xl text-bold text-pink-600';
-	const advertisersTextColor = 'text-xl text-bold text-purple-400';
-	const simpleMetricColor = 'text-xl text-bold text-surface-800-200';
+	const publisherTextColor = 'text-sm md:text-xl text-bold text-emerald-400';
+	const creativesTextColor = 'text-sm md:text-xl text-bold text-pink-600';
+	const advertisersTextColor = 'text-sm md:text-xl text-bold text-purple-400';
+	const simpleMetricColor = 'text-sm md:text-xl text-bold text-surface-800-200';
 	const sectionBodyClass = 'max-w-none mb-6';
 	const paragraphClass = 'text-lg leading-relaxed text-primary-900-100';
 	const textMutedXsClass = 'text-xs text-surface-500 dark:text-surface-400';
 	const textMutedXsCapClass = `${textMutedXsClass} capitalize`;
-	const appLinkClass = `text-base flex`;
+	const storeIdClass = `${textMutedXsClass} truncate max-w-[9rem] md:max-w-[16rem]`;
+	const appLinkClass = 'block text-sm md:text-base truncate max-w-[9rem] md:max-w-[16rem]';
 	const tableRowClass =
 		'border-b border-surface-200 dark:border-surface-700 hover:bg-surface-100-900 transition-colors';
-	const tableAppIconClass = 'w-20 h-20 rounded-lg shadow-sm';
+	const tableAppIconClass = 'w-10 h-10 md:w-20 md:h-20 rounded-lg shadow-sm flex-shrink-0';
 	const creativeAppLinkClass = 'flex items-center gap-2 mb-3 hover:opacity-80 transition-opacity';
 	const creativeAppIconClass = 'w-14 h-14 rounded-lg shadow-sm';
 	const cardTableWrapperClass = 'card overflow-hidden';
 	const tableWrapperClass = 'table-container overflow-x-auto';
-	const tableHeaderText = 'text-lg font-bold text-primary-900-100';
-	const tableHeaderLeftClass = `px-1 py-2 text-left ${tableHeaderText}`;
-	const tableHeaderCenterClass = `px-2 py-3 text-center ${tableHeaderText}`;
-	const tableHeaderRightClass = `px-2 py-3 text-right ${tableHeaderText}`;
-	const companyButtonListClass = 'flex flex-wrap gap-1';
+	const tableHeaderText = 'text-xs md:text-sm font-bold text-primary-900-100';
+	const tableHeaderLeftClass = `px-1 md:px-2 py-2 text-left ${tableHeaderText}`;
+	const tableHeaderCenterClass = `px-1 md:px-2 py-2 text-center ${tableHeaderText}`;
+	const tableHeaderRightClass = `px-1 md:px-2 py-2 text-right ${tableHeaderText}`;
+	const companyButtonListClass = 'flex flex-wrap gap-0.5 md:gap-1';
 	const rankPillBaseClass =
-		'inline-flex items-center justify-center w-8 h-8 rounded-full font-bold text-sm';
+		'inline-flex items-center justify-center w-6 h-6 md:w-8 md:h-8 rounded-full font-bold text-xs md:text-sm';
 
-	const kpiCardBaseClass = 'card p-6 bg-gradient-to-br text-white shadow-lg';
-	const kpiLabelClass = 'text-center text-3xl text-bold mb-4';
-	const kpiValueClass = 'text-center text-4xl font-bold mb-1';
+	const kpiCardBaseClass = 'card md:p-6 bg-gradient-to-br text-white shadow-lg';
+	const kpiLabelClass = 'text-center text-lg md:text-3xl text-bold mb-4';
+	const kpiValueClass = 'text-center text-xl md:text-4xl font-bold mb-1';
 	const metricGridClass =
 		'p-4 bg-white dark:bg-surface-900 rounded-lg border border-surface-200 dark:border-surface-700';
 	const subCardTextClass = '';
@@ -113,113 +122,230 @@
 <svelte:head>
 	<title>{data.title}</title>
 	<meta name="description" content={data.description} />
-	<meta name="keywords" content={data.keywords} />
+	<link rel="canonical" href={reportUrl} />
+	<meta property="og:type" content="article" />
+	<meta property="og:site_name" content="AppGoblin" />
+	<meta property="og:title" content={data.title} />
+	<meta property="og:description" content={data.description} />
+	<meta property="og:url" content={reportUrl} />
+	<meta property="og:image" content="https://appgoblin.info/appgoblin_screenshot.png" />
+	<meta property="og:image:alt" content="AppGoblin mobile UA intelligence report dashboard" />
+	<meta property="article:published_time" content={reportPublishedDate} />
+	<meta property="article:modified_time" content={new Date().toISOString().split('T')[0]} />
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:title" content={data.title} />
+	<meta name="twitter:description" content={data.description} />
+	<meta name="twitter:image" content="https://appgoblin.info/appgoblin_screenshot.png" />
 
 	<!-- Structured Data for Report and NewsArticle -->
 	{@html `<script type="application/ld+json">${JSON.stringify({
 		'@context': 'https://schema.org',
-		'@type': 'Report',
-		name: data.title,
-		headline: data.title,
-		description: data.description,
-		url: reportUrl,
-		datePublished: reportPublishedDate,
-		dateModified: new Date().toISOString().split('T')[0],
-		publisher: {
-			'@type': 'Organization',
-			name: 'AppGoblin',
-			logo: {
-				'@type': 'ImageObject',
-				url: 'https://appgoblin.info/AppGoblin_Large_Logo.png'
-			}
-		},
-		author: {
-			'@type': 'Organization',
-			name: 'AppGoblin Intelligence'
-		},
-		about: [
+		'@graph': [
 			{
-				'@type': 'Thing',
-				name: 'Mobile App Marketing',
-				description: 'Analysis of user acquisition strategies in mobile apps'
-			},
-			{
-				'@type': 'Thing',
-				name: 'Digital Advertising',
-				description: 'Ad networks and creative performance data'
-			},
-			{
-				'@type': 'Thing',
-				name: 'App Install Growth',
-				description: 'Weekly install trends and growth percentages'
-			}
-		],
-		keywords: data.keywords,
-		articleSection: 'Technology',
-		image: {
-			'@type': 'ImageObject',
-			url: 'https://appgoblin.info/appgoblin_screenshot.png'
-		},
-		mainEntity: {
-			'@type': 'DataSet',
-			name: 'January 2026 Mobile App Advertising Intelligence',
-			description: 'Comprehensive dataset of app performance, ad networks, and creative strategies',
-			distribution: {
-				'@type': 'DataDownload',
-				encodingFormat: 'application/json'
-			},
-			spatialCoverage: {
-				'@type': 'Place',
-				name: 'Global'
-			},
-			temporalCoverage: reportTemporalCoverage,
-			variableMeasured: [
-				{
-					'@type': 'PropertyValue',
-					name: 'Apps Analyzed',
-					value: '${data.summary.totalApps}'
+				'@type': ['Report', 'NewsArticle'],
+				'@id': `${reportUrl}#report`,
+				url: reportUrl,
+				mainEntityOfPage: {
+					'@type': 'WebPage',
+					'@id': reportUrl
 				},
-				{
-					'@type': 'PropertyValue',
-					name: 'Total Weekly Installs',
-					value: '${data.summary.totalInstalls}'
+				name: data.title,
+				headline: data.title,
+				alternativeHeadline: `${data.summary.reportPeriod} mobile user acquisition report for ad buyers and growth teams`,
+				description: data.description,
+				inLanguage: 'en',
+				datePublished: reportPublishedDate,
+				dateModified: new Date().toISOString().split('T')[0],
+				isAccessibleForFree: true,
+				publisher: {
+					'@id': `${reportUrl}#publisher`
 				},
-				{
-					'@type': 'PropertyValue',
-					name: 'Unique Creatives',
-					value: '${data.summary.totalCreatives}'
+				author: {
+					'@type': 'Organization',
+					name: 'AppGoblin Mobile UA Intelligence'
 				},
-				{
-					'@type': 'PropertyValue',
-					name: 'Ad Networks Identified',
-					value: '${data.summary.uniqueNetworks}'
+				image: {
+					'@type': 'ImageObject',
+					url: 'https://appgoblin.info/appgoblin_screenshot.png'
 				},
-				{
-					'@type': 'PropertyValue',
-					name: 'Advertiser Count',
-					value: '${data.summary.advertisers}'
-				},
-				{
-					'@type': 'PropertyValue',
-					name: 'AdTech Companies',
-					value: '${data.summary.adtechCompanies}'
-				},
-				{
-					'@type': 'PropertyValue',
-					name: 'HTTPS Tracked Requests',
-					value: '${data.summary.httpsTracked}'
-				},
-				{
-					'@type': 'PropertyValue',
-					name: 'API Domains',
-					value: '${data.summary.apiDomains}'
+				audience: [
+					{
+						'@type': 'Audience',
+						audienceType: 'Mobile user acquisition buyers'
+					},
+					{
+						'@type': 'Audience',
+						audienceType: 'Ad sales and growth teams'
+					}
+				],
+				about: [
+					{
+						'@type': 'Thing',
+						name: 'Mobile User Acquisition',
+						description: 'Performance signals for paid app growth and campaign distribution'
+					},
+					{
+						'@type': 'Thing',
+						name: 'Ad Networks and DSPs',
+						description: 'Network reach, advertiser overlap, and creative volume'
+					},
+					{
+						'@type': 'Thing',
+						name: 'Creative Performance',
+						description: 'Most-distributed video creatives in January 2026'
+					}
+				],
+				mentions: [
+					data.apps?.[0]
+						? {
+								'@type': 'MobileApplication',
+								name: data.apps[0].app_name,
+								identifier: data.apps[0].store_id,
+								url: `https://appgoblin.info/apps/${data.apps[0].store_id}`
+							}
+						: null,
+					data.adNetworks?.[0]
+						? {
+								'@type': 'Organization',
+								name: data.adNetworks[0].ad_network_name,
+								url: `https://appgoblin.info/companies/${data.adNetworks[0].ad_network_domain}`
+							}
+						: null
+				].filter(Boolean),
+				articleSection: ['Mobile Advertising', 'User Acquisition', 'AdTech'],
+				keywords: Array.isArray(data.keywords) ? data.keywords.join(', ') : data.keywords,
+				mainEntity: {
+					'@id': `${reportUrl}#dataset`
 				}
-			]
-		}
+			},
+			{
+				'@type': 'Dataset',
+				'@id': `${reportUrl}#dataset`,
+				name: 'January 2026 Mobile App Advertising Intelligence',
+				description:
+					'Comprehensive dataset of app performance, ad networks, and creative strategies',
+				publisher: {
+					'@id': `${reportUrl}#publisher`
+				},
+				url: reportUrl,
+				license: 'https://appgoblin.info/terms',
+				spatialCoverage: {
+					'@type': 'Place',
+					name: 'Global'
+				},
+				temporalCoverage: reportTemporalCoverage,
+				measurementTechnique: [
+					'Mobile app network request telemetry',
+					'Weekly installs trend analysis',
+					'Creative distribution mapping'
+				],
+				distribution: [
+					{
+						'@type': 'DataDownload',
+						encodingFormat: 'application/json'
+					}
+				],
+				variableMeasured: [
+					{
+						'@type': 'PropertyValue',
+						name: 'Apps Analyzed',
+						value: '${data.summary.totalApps}'
+					},
+					{
+						'@type': 'PropertyValue',
+						name: 'Total Weekly Installs',
+						value: '${data.summary.totalInstalls}'
+					},
+					{
+						'@type': 'PropertyValue',
+						name: 'Unique Creatives',
+						value: '${data.summary.totalCreatives}'
+					},
+					{
+						'@type': 'PropertyValue',
+						name: 'Ad Networks Identified',
+						value: '${data.summary.uniqueNetworks}'
+					},
+					{
+						'@type': 'PropertyValue',
+						name: 'Advertiser Count',
+						value: '${data.summary.advertisers}'
+					},
+					{
+						'@type': 'PropertyValue',
+						name: 'AdTech Companies',
+						value: '${data.summary.adtechCompanies}'
+					},
+					{
+						'@type': 'PropertyValue',
+						name: 'HTTPS Tracked Requests',
+						value: '${data.summary.httpsTracked}'
+					},
+					{
+						'@type': 'PropertyValue',
+						name: 'API Domains',
+						value: '${data.summary.apiDomains}'
+					}
+				]
+			},
+			{
+				'@type': 'Organization',
+				'@id': `${reportUrl}#publisher`,
+				name: 'AppGoblin',
+				url: 'https://appgoblin.info/',
+				logo: {
+					'@type': 'ImageObject',
+					url: 'https://appgoblin.info/AppGoblin_Large_Logo.png'
+				}
+			},
+			{
+				'@type': 'WebPage',
+				'@id': reportUrl,
+				url: reportUrl,
+				name: data.title,
+				description: data.description,
+				isPartOf: {
+					'@id': 'https://appgoblin.info/#website'
+				},
+				about: {
+					'@id': `${reportUrl}#report`
+				}
+			},
+			{
+				'@type': 'WebSite',
+				'@id': 'https://appgoblin.info/#website',
+				url: 'https://appgoblin.info/',
+				name: 'AppGoblin'
+			},
+			{
+				'@type': 'BreadcrumbList',
+				'@id': `${reportUrl}#breadcrumbs`,
+				itemListElement: [
+					{
+						'@type': 'ListItem',
+						position: 1,
+						name: 'Home',
+						item: 'https://appgoblin.info/'
+					},
+					{
+						'@type': 'ListItem',
+						position: 2,
+						name: 'Reports',
+						item: 'https://appgoblin.info/reports'
+					},
+					{
+						'@type': 'ListItem',
+						position: 3,
+						name: data.title,
+						item: reportUrl
+					}
+				]
+			}
+		]
 	})}<\/script>`}
 </svelte:head>
 
-<div class="container mx-auto px-4 py-8 max-w-7xl">
+<div class="container mx-auto px-2 md:px-16 py-6 md:py-8">
 	<!-- Header Section -->
 	<div class="mb-12 text-center">
 		<div
@@ -233,14 +359,14 @@
 			{data.summary.reportPeriod} Ads & App Growth Analysis
 		</h1>
 		<p class="text-xl max-w-3xl mx-auto">
-			See the mobile ad campaigns that fueled the fastest-rising mobile apps in {data.summary
-				.reportPeriod}. Review the latest rankings of the DSPs and ad networks behind January's top
-			user acquisition pushes.
+			See the mobile ad campaigns behind January's fastest growing mobile apps. AppGoblin breaks
+			down the biggest ad networks, the best creatives and the mobile app campaigns we saw achieving
+			the most reach in January.
 		</p>
 	</div>
 
 	<!-- Key Metrics Dashboard -->
-	<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+	<div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
 		<div class={`${kpiCardBaseClass} bg-gradient-to-r from-primary-100-900 to-primary-400-600`}>
 			<div class={kpiValueClass}>{formatOptional(data.summary.totalApps)}</div>
 			<div class={`${kpiLabelClass}`}>Apps Analyzed</div>
@@ -395,8 +521,8 @@
 				installs in its best week and a standout recent momentum signal.
 			</p>
 			<p>
-				The table now uses the 4-week z-score as long-term trend and the 2-week z-score as momentum.
-				Negative values are left blank, and anything above 5x is labeled as a recent breakout.
+				The long term column shows which existing apps saw strong growth while the short term
+				momentum shows which apps saw sudden spikes in growth.
 			</p>
 		</div>
 		<div class={cardTableWrapperClass}>
@@ -407,9 +533,9 @@
 							<th class={tableHeaderLeftClass}>Rank</th>
 							<th class={tableHeaderLeftClass}>App</th>
 							<th class={tableHeaderLeftClass}>Best Week</th>
-							<th class={tableHeaderRightClass}>Install Snapshot</th>
+							<th class={tableHeaderRightClass}>Installs (week)</th>
 							<th class={tableHeaderRightClass}>Long-Term Trend</th>
-							<th class={tableHeaderRightClass}>Momentum</th>
+							<th class={tableHeaderRightClass}>Short-Term Momentum</th>
 							<th class={tableHeaderCenterClass}>Ad Creatives</th>
 							<th class={tableHeaderCenterClass}>Ad Networks</th>
 							<th class={tableHeaderCenterClass}>MMP</th>
@@ -418,15 +544,15 @@
 					<tbody>
 						{#each data.apps as app, index}
 							<tr class={tableRowClass}>
-								<td class="px-4 py-4">
+								<td class="px-1 md:px-4 py-2 md:py-4">
 									<span
 										class={`${rankPillBaseClass} bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300`}
 									>
 										{index + 1}
 									</span>
 								</td>
-								<td class="px-4 py-4">
-									<a href="/apps/{app.store_id}">
+								<td class="px-1 md:px-4 py-2 md:py-4">
+									<a href="/apps/{app.store_id}" class="flex items-center gap-2 md:gap-3 min-w-0">
 										<img
 											src="https://media.appgoblin.info/app-icons/{app.store_id}/{app.icon_url_100}"
 											alt={app.app_name}
@@ -434,55 +560,56 @@
 											onerror={(e) =>
 												((e.currentTarget as HTMLImageElement).src = '/default_company_logo.png')}
 										/>
-										<div>
+										<div class="min-w-0">
 											<div class={appLinkClass}>
 												{app.app_name}
 											</div>
-											<div class={textMutedXsClass}>
+											<div class={storeIdClass} title={app.store_id}>
 												{app.store_id}
 											</div>
 										</div>
 									</a>
 								</td>
-								<td class="px-4 py-4 text-right">
-									<div class="text-lg font-semibold">{app.best_week}</div>
+								<td class="px-1 md:px-4 py-2 md:py-4 text-right">
+									<div class="text-xs md:text-lg font-semibold">{app.best_week}</div>
 									{#if app.installs_acceleration > 0}
 										<div class={`${textMutedXsClass} ${getTrendColor(app.installs_acceleration)}`}>
 											Accel {formatDecimal(app.installs_acceleration)}
 										</div>
 									{/if}
 								</td>
-								<td class="px-4 py-4 text-right">
-									<div class={`text-lg font-bold ${simpleMetricColor}`}>
+								<td class="px-1 md:px-4 py-2 md:py-4 text-right">
+									<div class={`text-xs md:text-lg font-bold ${simpleMetricColor}`}>
 										{formatNumber(app.weekly_installs)}
 									</div>
 									<div class={textMutedXsClass}>
 										Base {formatRoundedOptional(app.baseline_installs)}
 									</div>
 								</td>
-								<td class={`px-2 text-right ${simpleMetricColor}`}>
-									{#if getZScoreLabel(app.installs_z_score_4w)}
-										<div class={`text-lg font-bold ${getTrendColor(app.installs_z_score_4w)}`}>
-											{getZScoreLabel(app.installs_z_score_4w)}
+								<td class="px-2 text-right">
+									{#if getLongTermTrendLabel(app.installs_z_score_4w)}
+										<div
+											class={`text-xs md:text-base font-bold ${getTrendColor(app.installs_z_score_4w)}`}
+										>
+											{getLongTermTrendLabel(app.installs_z_score_4w)}
 										</div>
 									{/if}
-									<div class={textMutedXsClass}>
-										Base {formatRoundedOptional(app.baseline_installs)}
-									</div>
 								</td>
-								<td class="px-4 py-4 text-right">
-									{#if getZScoreLabel(app.installs_z_score_2w)}
-										<div class={`text-lg font-bold ${getTrendColor(app.installs_z_score_2w)}`}>
-											{getZScoreLabel(app.installs_z_score_2w)}
+								<td class="px-1 md:px-4 py-2 md:py-4 text-right">
+									{#if getShortTermMomentumLabel(app.installs_z_score_2w, app.wow_growth_pct)}
+										<div
+											class={`text-xs md:text-base font-bold ${getTrendColor(app.installs_z_score_2w)}`}
+										>
+											{getShortTermMomentumLabel(app.installs_z_score_2w, app.wow_growth_pct)}
 										</div>
 									{/if}
-									{#if app.wow_growth_pct > 0}
+									{#if getShortTermMomentumLabel(app.installs_z_score_2w, app.wow_growth_pct)}
 										<div class={`${textMutedXsClass} ${getTrendColor(app.wow_growth_pct)}`}>
 											WoW {formatSignedPercent(app.wow_growth_pct)}
 										</div>
 									{/if}
 								</td>
-								<td class="px-4 py-4 text-center">
+								<td class="px-1 md:px-4 py-2 md:py-4 text-center">
 									<div class="flex justify-center items-center gap-1">
 										{#each app.creatives.slice(0, 3) as creative}
 											<button
@@ -521,25 +648,25 @@
 										{/if}
 									</div>
 								</td>
-								<td class="px-4 py-4">
+								<td class="px-1 md:px-4 py-2 md:py-4">
 									<div class={companyButtonListClass}>
 										{#each app.ad_networks as network}
 											<CompanyButton
 												companyDomain={network.domain}
 												companyLogoUrl={network.logo_url}
-												size="md"
+												size="logo-only"
 											/>
 										{/each}
 									</div>
 								</td>
-								<td class="px-4 py-4">
+								<td class="px-1 md:px-4 py-2 md:py-4">
 									{#if app.mmps && app.mmps.length > 0}
 										<div class={companyButtonListClass}>
 											{#each app.mmps as mmp}
 												<CompanyButton
 													companyDomain={mmp.domain}
 													companyLogoUrl={mmp.logo_url}
-													size="md"
+													size="logo-only"
 												/>
 											{/each}
 										</div>
@@ -595,7 +722,7 @@
 			</p>
 		</div>
 		<!-- Creatives Grid -->
-		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+		<div class="grid grid-cols-3 md:grid-cols-2 lg:grid-cols-5 gap-2 md:gap-6">
 			{#each data.popularCreatives as creative, index}
 				<div
 					class="bg-white dark:bg-surface-900 rounded-lg border-2 border-pink-200 dark:border-pink-800 overflow-hidden hover:shadow-xl transition-shadow duration-300"
@@ -768,7 +895,7 @@
 					<tbody>
 						{#each data.adNetworks as network, index}
 							<tr class={tableRowClass}>
-								<td class="px-4 py-4">
+								<td class="px-1 md:px-4 py-2 md:py-4">
 									<span
 										class={`${rankPillBaseClass} ${
 											index === 0
@@ -783,7 +910,7 @@
 										{index + 1}
 									</span>
 								</td>
-								<td class="px-4 py-4">
+								<td class="px-1 md:px-4 py-2 md:py-4">
 									<CompanyButton
 										companyDomain={network.ad_network_domain}
 										companyName={network.ad_network_name}
@@ -798,22 +925,22 @@
 										<span class="text-xs text-surface-400">—</span>
 									{/if}
 								</td>
-								<td class="px-4 py-4 text-right">
+								<td class="px-1 md:px-4 py-2 md:py-4 text-right">
 									<span class={publisherTextColor}>
 										{network.publisher_count.toLocaleString()}
 									</span>
 								</td>
-								<td class="px-4 py-4 text-right">
+								<td class="px-1 md:px-4 py-2 md:py-4 text-right">
 									<span class={advertisersTextColor}>
 										{network.advertiser_count.toLocaleString()}
 									</span>
 								</td>
-								<td class="px-4 py-4 text-right">
+								<td class="px-1 md:px-4 py-2 md:py-4 text-right">
 									<span class={creativesTextColor}>
 										{network.creatives_count.toLocaleString()}
 									</span>
 								</td>
-								<td class="px-4 py-4 text-right">
+								<td class="px-1 md:px-4 py-2 md:py-4 text-right">
 									<div class="flex items-center justify-end gap-2">
 										<div
 											class="w-24 h-2 bg-surface-200 dark:bg-surface-700 rounded-full overflow-hidden"
@@ -884,7 +1011,6 @@
 							<th class={tableHeaderLeftClass}>App</th>
 							<th class={tableHeaderRightClass}>Publishers</th>
 							<th class={tableHeaderRightClass}>Creatives</th>
-							<th class={tableHeaderRightClass}>Installs</th>
 							<th class={tableHeaderLeftClass}>Ad Networks</th>
 							<th class={tableHeaderCenterClass}>MMP</th>
 						</tr>
@@ -892,7 +1018,7 @@
 					<tbody>
 						{#each data.appReachData.slice(0, 10) as app, index}
 							<tr class={tableRowClass}>
-								<td class="px-2 py-4">
+								<td class="px-1 md:px-2 py-2 md:py-4">
 									<span
 										class={`${rankPillBaseClass} ${
 											index === 0
@@ -907,8 +1033,11 @@
 										{index + 1}
 									</span>
 								</td>
-								<td class="px-2 py-4 flex items-center gap-3">
-									<a href="/apps/{app.advertiser_store_id}">
+								<td class="px-1 md:px-2 py-2 md:py-4">
+									<a
+										href="/apps/{app.advertiser_store_id}"
+										class="flex items-center gap-2 md:gap-3 min-w-0"
+									>
 										<img
 											src="https://media.appgoblin.info/app-icons/{app.advertiser_store_id}/{app.advertiser_icon_url_100}"
 											alt={app.advertiser_name}
@@ -916,37 +1045,34 @@
 											onerror={(e) =>
 												((e.currentTarget as HTMLImageElement).src = '/default_company_logo.png')}
 										/>
-										<div>
+										<div class="min-w-0">
 											<div class={appLinkClass}>
 												{app.advertiser_name}
 											</div>
 											<div class={textMutedXsCapClass}>
-												{app.advertiser_category.replace(/_/g, ' ')}
+												{app.advertiser_category?.replace(/_/g, ' ')}
 											</div>
 										</div>
 									</a>
 								</td>
-								<td class="px-2 py-4 text-right">
+								<td class="px-1 md:px-2 py-2 md:py-4 text-right">
 									<span class={publisherTextColor}>
 										{app.unique_publishers}
 									</span>
 								</td>
-								<td class="px-2 py-4 text-right">
+								<td class="px-1 md:px-2 py-2 md:py-4 text-right">
 									<span class={creativesTextColor}>
 										{app.unique_creatives}
 									</span>
 								</td>
-								<td class={`px-2 py-4 ${simpleMetricColor} text-right`}>
-									{formatNumber(app.advertiser_installs)}
-								</td>
-								<td class="px-2 py-4">
+								<td class="px-1 md:px-2 py-2 md:py-4">
 									{#if app.ad_networks && app.ad_networks.length > 0}
 										<div class={companyButtonListClass}>
 											{#each app.ad_networks as network}
 												<CompanyButton
 													companyDomain={network.domain}
 													companyLogoUrl={network.logo_url}
-													size="md"
+													size="logo-only"
 												/>
 											{/each}
 										</div>
@@ -954,14 +1080,14 @@
 										<span class="text-xs text-surface-400">—</span>
 									{/if}
 								</td>
-								<td class="px-1 py-4 text-right">
+								<td class="px-1 md:px-2 py-2 md:py-4 text-right">
 									{#if app.mmps && app.mmps.length > 0}
 										<div class={companyButtonListClass}>
 											{#each app.mmps as mmp}
 												<CompanyButton
 													companyDomain={mmp.domain}
 													companyLogoUrl={mmp.logo_url}
-													size="md"
+													size="logo-only"
 												/>
 											{/each}
 										</div>

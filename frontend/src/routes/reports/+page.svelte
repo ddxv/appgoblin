@@ -22,6 +22,11 @@
 		'december'
 	];
 
+	const reportsPageUrl = 'https://appgoblin.info/reports';
+	const reportsPageTitle = 'Mobile App Marketing Reports for Ad Buyers and Publishers | AppGoblin';
+	const reportsPageDescription =
+		'Browse AppGoblin mobile app marketing reports for ad buyers and mobile app publishers. Compare ad network reach, creatives, UA trends, and advertiser strategies.';
+
 	// Class constants
 	const statCardClass =
 		'bg-white dark:bg-surface-900 rounded-lg p-6 border border-surface-200 dark:border-surface-700';
@@ -70,27 +75,45 @@
 		'@type': string;
 		position: number;
 		item: {
-			'@type': string;
+			'@type': string[];
+			'@id': string;
+			name: string;
 			headline: string;
 			description: string;
 			url: string;
 			datePublished?: string;
-			keywords: string;
+			inLanguage: string;
+			audience: { '@type': string; audienceType: string }[];
+			keywords: string[];
 		};
 	}> {
 		return reports.map((report, index) => {
 			const datePublished = getDateFromSlug(report.slug);
+			const absoluteReportUrl = `https://appgoblin.info${report.url}`;
 			return {
 				'@type': 'ListItem',
 				position: index + 1,
 				item: {
-					'@type': 'Article',
+					'@type': ['Report', 'NewsArticle'],
+					'@id': `${absoluteReportUrl}#report`,
+					name: report.title,
 					headline: report.title,
 					description:
-						'Comprehensive analysis of advertising performance, network strategies, and creative trends for this reporting period. Includes growth metrics, publisher reach, and actionable insights.',
-					url: `https://appgoblin.info${report.url}`,
+						'Mobile app marketing report covering user acquisition trends, ad network distribution, creative performance, and publisher-relevant insights.',
+					url: absoluteReportUrl,
 					...(datePublished && { datePublished }),
-					keywords: 'mobile advertising, analytics, insights, data-driven'
+					inLanguage: 'en',
+					audience: [
+						{ '@type': 'Audience', audienceType: 'Mobile ad buyers' },
+						{ '@type': 'Audience', audienceType: 'Mobile app publishers' }
+					],
+					keywords: [
+						'mobile app marketing report',
+						'user acquisition',
+						'ad network analytics',
+						'mobile advertising creatives',
+						'mobile app publishers'
+					]
 				}
 			};
 		});
@@ -145,32 +168,100 @@
 </script>
 
 <svelte:head>
-	<title>AppGoblin Reports</title>
+	<title>{reportsPageTitle}</title>
+	<meta name="description" content={reportsPageDescription} />
+	<link rel="canonical" href={reportsPageUrl} />
+	<meta property="og:type" content="website" />
+	<meta property="og:site_name" content="AppGoblin" />
+	<meta property="og:title" content={reportsPageTitle} />
+	<meta property="og:description" content={reportsPageDescription} />
+	<meta property="og:url" content={reportsPageUrl} />
+	<meta property="og:image" content="https://appgoblin.info/appgoblin_screenshot.png" />
 	<meta
-		name="description"
-		content="Browse AppGoblin intelligence reports and deep dives into advertising performance."
+		property="og:image:alt"
+		content="AppGoblin reports hub for mobile app marketing and user acquisition intelligence"
 	/>
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:title" content={reportsPageTitle} />
+	<meta name="twitter:description" content={reportsPageDescription} />
+	<meta name="twitter:image" content="https://appgoblin.info/appgoblin_screenshot.png" />
 
 	<!-- Structured Data for CollectionPage and Articles -->
 	{@html `<script type="application/ld+json">${JSON.stringify({
 		'@context': 'https://schema.org',
-		'@type': 'CollectionPage',
-		name: 'Mobile Ad Intelligence Reports',
-		description:
-			'Deep dives into the mobile app advertising ecosystem. Trends, analyze performance, and understand the strategies driving app user acquisition.',
-		url: 'https://appgoblin.info/reports',
-		mainEntity: {
-			'@type': 'ItemList',
-			itemListElement: generateJsonLdArticles()
-		},
-		publisher: {
-			'@type': 'Organization',
-			name: 'AppGoblin',
-			logo: {
-				'@type': 'ImageObject',
-				url: 'https://appgoblin.info/AppGoblin_Large_Logo.png'
+		'@graph': [
+			{
+				'@type': 'CollectionPage',
+				'@id': `${reportsPageUrl}#collection`,
+				url: reportsPageUrl,
+				name: 'Mobile App Marketing Reports',
+				description: reportsPageDescription,
+				inLanguage: 'en',
+				isPartOf: {
+					'@id': 'https://appgoblin.info/#website'
+				},
+				about: [
+					{ '@type': 'Thing', name: 'Mobile App Marketing' },
+					{ '@type': 'Thing', name: 'User Acquisition' },
+					{ '@type': 'Thing', name: 'Mobile Ad Networks' }
+				],
+				audience: [
+					{ '@type': 'Audience', audienceType: 'Mobile ad buyers' },
+					{ '@type': 'Audience', audienceType: 'Mobile app publishers' }
+				],
+				mainEntity: {
+					'@id': `${reportsPageUrl}#itemlist`
+				},
+				publisher: {
+					'@id': 'https://appgoblin.info/#organization'
+				}
+			},
+			{
+				'@type': 'ItemList',
+				'@id': `${reportsPageUrl}#itemlist`,
+				name: 'AppGoblin Report Index',
+				numberOfItems: reports.length,
+				itemListOrder: 'https://schema.org/ItemListOrderDescending',
+				itemListElement: generateJsonLdArticles()
+			},
+			{
+				'@type': 'BreadcrumbList',
+				'@id': `${reportsPageUrl}#breadcrumbs`,
+				itemListElement: [
+					{
+						'@type': 'ListItem',
+						position: 1,
+						name: 'Home',
+						item: 'https://appgoblin.info/'
+					},
+					{
+						'@type': 'ListItem',
+						position: 2,
+						name: 'Reports',
+						item: reportsPageUrl
+					}
+				]
+			},
+			{
+				'@type': 'Organization',
+				'@id': 'https://appgoblin.info/#organization',
+				name: 'AppGoblin',
+				url: 'https://appgoblin.info/',
+				logo: {
+					'@type': 'ImageObject',
+					url: 'https://appgoblin.info/AppGoblin_Large_Logo.png'
+				}
+			},
+			{
+				'@type': 'WebSite',
+				'@id': 'https://appgoblin.info/#website',
+				url: 'https://appgoblin.info/',
+				name: 'AppGoblin',
+				publisher: {
+					'@id': 'https://appgoblin.info/#organization'
+				}
 			}
-		}
+		]
 	})}<\/script>`}
 </svelte:head>
 
@@ -179,11 +270,11 @@
 	<header class="mb-16">
 		<div class="text-center mb-12">
 			<h1 class="mt-6 text-5xl md:text-6xl font-bold text-surface-900 dark:text-surface-50">
-				Mobile Ad Intelligence Reports
+				Mobile App Marketing Reports
 			</h1>
 			<p class="mt-4 text-xl text-surface-600 dark:text-surface-400 max-w-3xl mx-auto">
-				Deep dives into the mobile app advertising ecosystem. Trends, analyze performance, and
-				understand the strategies driving app user acquisition.
+				Research-grade report library for mobile ad buyers and app publishers. Compare UA trends, ad
+				network coverage, creative distribution, and advertiser strategy shifts.
 			</p>
 		</div>
 	</header>

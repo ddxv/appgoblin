@@ -3,7 +3,7 @@
 		companyDomain: string;
 		companyName?: string;
 		companyLogoUrl?: string;
-		size?: 'sm' | 'md' | 'lg';
+		size?: 'sm' | 'md' | 'lg' | 'logo-only';
 	}
 
 	let { companyName, companyDomain, companyLogoUrl, size = 'md' }: Props = $props();
@@ -44,6 +44,19 @@
 				/>
 			{/if}
 			{companyName ?? companyDomain}
+		</div>
+	</a>
+{:else if size === 'logo-only'}
+	<a href={`${baseUrl}/${companyDomain}`}>
+		<div class="btn preset-tonal px-0 py-0 hover:preset-tonal-primary">
+			{#if companyLogoUrl}
+				<img
+					src={`https://media.appgoblin.info/${companyLogoUrl}`}
+					alt={companyLogoUrl}
+					class="md:w-14 md:h-14 w-8 h-8 rounded-sm"
+					loading="lazy"
+				/>
+			{/if}
 		</div>
 	</a>
 {/if}
