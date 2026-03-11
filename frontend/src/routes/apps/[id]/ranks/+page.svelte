@@ -10,8 +10,22 @@
 	import { page } from '$app/state';
 	let { data }: Props = $props();
 
+	type CountryValue = string | { langen?: string };
+	type CountryLookup = Record<string, CountryValue>;
+
+	function getCountryName(countryCode: string) {
+		const countries = data.countries as CountryLookup;
+		const normalizedCode = countryCode.toUpperCase();
+		const value = countries[normalizedCode] ?? countries[countryCode];
+
+		if (typeof value === 'string') return value;
+		if (value && typeof value === 'object' && value.langen) return value.langen;
+
+		return normalizedCode;
+	}
+
 	let country = $state(page.url.searchParams.get('country') || 'US');
-	let countryTitle = $derived(data.countries[country as keyof typeof data.countries]);
+	let countryTitle = $derived(getCountryName(country));
 	let isLoadingRanks = $state(false);
 	const dataMyranks = $derived(data.myranks);
 	let overrideRanks = $state<Promise<any> | null>(null);
@@ -28,12 +42,12 @@
 
 	function setDefaultCountry(ranks: { countries: string[] }) {
 		if (country == '' && ranks.countries && ranks.countries.length > 0) {
-			country = ranks.countries[0];
+			country = ranks.countries[0].toUpperCase();
 		}
 	}
 
 	function handleCountryChange(newCountry: string) {
-		country = newCountry;
+		country = newCountry.toUpperCase();
 		// Trigger form submission
 		if (formElement) {
 			formElement.requestSubmit();
@@ -48,7 +62,7 @@
 				overrideRanks = Promise.resolve(result.data);
 				// Update URL without reload
 				const url = new URL(window.location.href);
-				url.searchParams.set('country', country);
+				url.searchParams.set('country', country.toUpperCase());
 				window.history.replaceState({}, '', url.toString());
 			}
 		};
@@ -62,8 +76,7 @@
 			{#await data.myranksOverview}
 				Loading app ranks...
 			{:then ranks}
-				{#if typeof ranks == 'string'}
-					{ranks}
+				{#if typeof ranks == 'string' || !ranks.best_ranks || ranks.best_ranks.length === 0}
 					<p>
 						No official ranks available for this app. This app is not ranked on the store's top 200
 						apps for it's categories.
@@ -75,7 +88,7 @@
 							in: {myrow.collection}
 							{myrow.category}
 							({countryCodeToEmoji(myrow.country)}
-							{data.countries[myrow.country as keyof typeof data.countries]})
+							{getCountryName(myrow.country)})
 						</div>
 					{/each}
 					{#if ranks.best_ranks.length > 10}
@@ -110,16 +123,16 @@
 					>
 						{#if typeof ranks != 'string' && ranks.countries && ranks.countries.length > 0}
 							{#each ranks.countries as countryCode}
-								<option value={countryCode}
+								<option value={countryCode.toUpperCase()}
 									>{countryCodeToEmoji(countryCode)}
-									{data.countries[countryCode as keyof typeof data.countries]}</option
+									{getCountryName(countryCode)}</option
 								>
 							{/each}
 						{:else}
 							{#each Object.keys(data.countries) as countryCode}
 								<option value={countryCode}
 									>{countryCodeToEmoji(countryCode)}
-									{data.countries[countryCode as keyof typeof data.countries]}</option
+									{getCountryName(countryCode)}</option
 								>
 							{/each}
 						{/if}
