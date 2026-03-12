@@ -29,13 +29,40 @@
 		return '';
 	}
 
-	let title = $derived(`${type_title} ${category_title} Top Companies | AppGoblin`);
+	let resolvedTypeTitle = $derived(type_title || 'Mobile App Service Companies');
+	let resolvedCategoryTitle = $derived(category_title || 'All App Categories');
+	let title = $derived(
+		`Top ${resolvedTypeTitle}${page.params.category ? ` in ${resolvedCategoryTitle}` : ''} | AppGoblin`
+	);
 	let description = $derived(
-		`Explore the biggest ${type_title} ${category_title} by number of apps and users. Detailed analytics, market presence, and insights about ${type_title}'s role in the mobile ecosystem.`
+		`Explore leading ${resolvedTypeTitle}${page.params.category ? ` in ${resolvedCategoryTitle}` : ''} by app coverage, SDK/API footprint, and app-ads.txt visibility in the mobile ecosystem.`
 	);
 	let keywords = $derived(
-		`${type_title}, ${category_title}, android, ios, adtech, advertising network, data tracking, mobile measurement, programmatic advertising, app-ads.txt, mobile advertising, ad tech analytics, AppGoblin`
+		`${resolvedTypeTitle}, ${resolvedCategoryTitle}, android, ios, adtech, advertising network, data tracking, mobile measurement, programmatic advertising, app-ads.txt, mobile advertising, ad tech analytics, AppGoblin`
 	);
+	let structuredData = $derived({
+		'@context': 'https://schema.org',
+		'@type': 'CollectionPage',
+		name: title,
+		description,
+		url: page.url.href,
+		inLanguage: 'en',
+		isPartOf: {
+			'@type': 'WebSite',
+			name: 'AppGoblin',
+			url: 'https://appgoblin.info'
+		},
+		about: [
+			{
+				'@type': 'Thing',
+				name: resolvedTypeTitle
+			},
+			{
+				'@type': 'Thing',
+				name: resolvedCategoryTitle
+			}
+		]
+	});
 </script>
 
 <svelte:head>
@@ -53,6 +80,8 @@
 	<meta property="og:type" content="website" />
 	<meta name="twitter:card" content="summary_large_image" />
 	<meta name="twitter:image" content="https://appgoblin.info/goblin_purple_hat_250.png" />
+	<meta name="robots" content="index, follow" />
+	{@html `<script type="application/ld+json">${JSON.stringify(structuredData)}</script>`}
 </svelte:head>
 
 <main>

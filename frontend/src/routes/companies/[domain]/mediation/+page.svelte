@@ -10,6 +10,11 @@
 	let { data }: Props = $props();
 </script>
 
+<p class="text-sm text-surface-600-400 mb-3">
+	Mediation adapters reveal monetization connectivity between ad networks and apps. Use this table
+	to assess adapter breadth, potential demand paths, and stack overlap with competitors.
+</p>
+
 {#if data.companyDetails && data.companyDetails.mediation_adapters}
 	<WhiteCard>
 		{#snippet title()}

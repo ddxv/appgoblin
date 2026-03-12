@@ -9,6 +9,11 @@
 	let { data }: Props = $props();
 </script>
 
+<p class="text-sm text-surface-600-400 mb-3">
+	App-ads.txt records are mapped to real app IDs and updated daily, so you can audit direct and
+	reseller relationships for fraud detection, supply-path analysis, and partner prospecting.
+</p>
+
 {#if data.companyDetails && data.companyDetails.adstxt_publishers_overview}
 	<div class="card preset-tonal p-2 md:p-8 mt-2 md:mt-4">
 		<div class="grid md:grid-cols-2 gap-4">
