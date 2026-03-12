@@ -49,7 +49,7 @@
 			href="/pricing"
 			class="underline decoration-primary-500/60 hover:decoration-primary-500">pricing page</a
 		>
-		for plan details. We offer Free access for exploration, Premium Supporter for exports, and B2B tiers
+		for plan details. We offer Free access for exploration, Premium Access for exports, and B2B tiers
 		for SDK intelligence, app-ads.txt datasets, and combined access.
 	</p>
 

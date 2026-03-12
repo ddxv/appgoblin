@@ -82,7 +82,7 @@
 
 				<div class="card preset-filled-surface-50-950 p-4 flex flex-col gap-3">
 					<div>
-						<p class="text-xs uppercase tracking-wide opacity-60">Premium Supporter</p>
+						<p class="text-xs uppercase tracking-wide opacity-60">Premium Access</p>
 						<p class="text-2xl font-semibold">
 							$49<span class="text-xs opacity-60 ml-1">/mo</span>
 						</p>
@@ -104,7 +104,7 @@
 						<button type="submit" disabled={loading} class="btn preset-filled-primary-500 w-full">
 							{loading && activePriceKey === 'app_dev'
 								? 'Redirecting to checkout...'
-								: 'Become Premium Supporter'}
+								: 'Get Premium Access'}
 						</button>
 					</form>
 				</div>
