@@ -17,6 +17,10 @@
 		<span>{data.companyName}'s Data Exports</span>
 	{/snippet}
 	<div class="p-4 flex flex-col gap-4">
+		<p class="text-sm text-surface-600-400">
+			Exports provide raw, analysis-ready datasets tied to this company so teams can run custom
+			modeling, compliance checks, and longitudinal market tracking outside the dashboard.
+		</p>
 		<p>
 			Raw data downloads for {data.companyName}. This data is for paid members. Please
 			<a href="/pricing" class="underline hover:text-primary-600-400">upgrade</a> to download or reach

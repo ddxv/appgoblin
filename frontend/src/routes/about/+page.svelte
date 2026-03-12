@@ -49,28 +49,135 @@
 			href="/pricing"
 			class="underline decoration-primary-500/60 hover:decoration-primary-500">pricing page</a
 		>
-		for plan details. We offer Free access for exploration, Premium Supporter for exports, and B2B tiers
+		for plan details. We offer Free access for exploration, Premium Access for exports, and B2B tiers
 		for SDK intelligence, app-ads.txt datasets, and combined access.
 	</p>
 
 	<div class="items-center">
 		<div class="flex flex-col gap-4 items-center">
+			<div class="flex flex-wrap gap-3 justify-center">
+				<a
+					href="/account"
+					class="btn-primary inline-flex items-center gap-2 px-6 py-3 bg-white rounded-lg hover:scale-105 transition-transform duration-200 shadow-lg"
+				>
+					<span class="text-black font-bold">Create Free Account</span>
+				</a>
+				<a
+					href="/pricing"
+					class="btn preset-outlined-primary-100-900 inline-flex items-center gap-2 px-6 py-3 rounded-lg"
+				>
+					Get premium data access →
+				</a>
+			</div>
 			<a
 				href="mailto:contact@appgoblin.info"
 				class="btn-primary inline-flex items-center gap-2 px-6 py-3 bg-white rounded-lg hover:scale-105 transition-transform duration-200 shadow-lg"
 			>
-				<span class="text-black font-bold">Get in Touch or Schedule Free Walkthrough</span>
-				<span class="text-black font-bold">→</span>
+				<span class="text-black font-bold">Get in Touch</span>
 			</a>
+
 			<div class="text-white/80 text-sm pt-1">
 				<p>contact@appgoblin.info</p>
 			</div>
 		</div>
 	</div>
 
+	<div class="card preset-filled-surface-100-900 {cardPadding}">
+		<h2 class="h2 {titlePadding}">Features</h2>
+		<div class={contentPadding}>
+			<ul class="space-y-4">
+				<li>
+					<strong>App Intelligence</strong> — Data on 4M+ iOS and Android apps (updated daily): keywords,
+					trends, rankings, new apps discovery, and growth metrics
+				</li>
+				<li>
+					<strong>SDK Analysis</strong> — Detailed breakdown of SDKs in decompiled Android and iOS apps,
+					including advertising, analytics, and open-source libraries
+				</li>
+				<li>
+					<strong>Companies Directory</strong> — Rankings of mobile app companies based on SDK integration
+					frequency, filterable by category
+				</li>
+				<li>
+					<strong>Company Intelligence</strong> — See the top client apps for any mobile SDK or services
+					company
+				</li>
+				<li>
+					<strong>Ad Tech Insights</strong> — Tracks live ad campaigns and the ad tech domains apps communicate
+					with
+				</li>
+				<li>
+					<strong>ASO Tools</strong> — Free keyword research tools and data dumps to optimize app store
+					visibility
+				</li>
+				<li>
+					<strong>App-Ads.txt</strong> — Daily-updated files tying apps to their DIRECT and RESELLER ad
+					networks and SSPs
+				</li>
+			</ul>
+		</div>
+	</div>
+
+	<div class="card preset-filled-surface-100-900 {cardPadding}">
+		<h2 class="h2 {titlePadding}">Who It's For</h2>
+		<div class={contentPadding}>
+			<ul class="space-y-3">
+				<li>
+					<strong>App & Game Developers</strong> — Grow your app with free ASO tools, keyword tracking,
+					rankings data, and competitor SDK analysis
+				</li>
+				<li>
+					<strong>Ad Sales Teams</strong> — Prospect clients by analyzing which apps use your target ad
+					networks, mediation platforms, and analytics providers
+				</li>
+				<li>
+					<strong>Ad Networks & DSPs</strong> — Perform fraud detection by auditing SDK integrations and
+					validating app-ads.txt supply-path data
+				</li>
+				<li>
+					<strong>DSPs — App-Ads.txt Verification</strong> — Map app-ads.txt DIRECT and RESELLER entries
+					to real app store IDs rather than just domain names
+				</li>
+				<li>
+					<strong>Researchers & Journalists</strong> — Deep technical analysis across millions of apps
+					— SDKs, API calls, and data security patterns at scale
+				</li>
+				<li>
+					<strong>Competitor Researchers</strong> — Track which SDKs competitors are adopting and how
+					fast they're growing
+				</li>
+				<li>
+					<strong>Privacy Advocates</strong> — Identify hidden trackers, ad-tech domains, and SDK networks
+					embedded in popular apps
+				</li>
+			</ul>
+		</div>
+	</div>
+
 	<div class="card preset-filled-surface-100-900 p-2 md:p-8">
 		<h2 class="h2 p-2 md:p-4">Community & Feedback</h2>
 		<div class="p-2 space-y-4">
+			<div class="flex flex-wrap gap-2">
+				<a
+					class="btn preset-tonal"
+					href="https://github.com/appgoblin-dev/appgoblin"
+					target="_blank"
+					rel="noreferrer"
+				>
+					<p class="text-base">GitHub</p>
+				</a>
+				<a class="btn preset-tonal" href="mailto:contact@appgoblin.info">
+					<p class="text-base">Email</p>
+				</a>
+				<a
+					class="btn preset-tonal"
+					href="https://linkedin.com/companies/AppGoblin"
+					target="_blank"
+					rel="noreferrer"
+				>
+					<p class="text-base">LinkedIn</p>
+				</a>
+			</div>
 			<a
 				class="btn preset-tonal"
 				href="https://discord.gg/7jpWEhkXRW"
@@ -115,29 +222,6 @@
 					></strong
 				>.
 			</p>
-		</div>
-	</div>
-	<br />
-	<div class="card preset-filled-surface-100-900 {cardPadding}">
-		<h2 class="h2 {titlePadding}">Background</h2>
-		<div class={contentPadding}>
-			<p>
-				Originally this came out of a curiosity I had about the IAB app-ads.txt standard in 2022. In
-				order to scrape app-ads.txt files I had to first get 4,000,000+ iOS and Android apps + their
-				respective publisher URLs. While that project, like app-ads.txt itself, went unused, I
-				remained interested in letting the database of apps keep growing. Then in the fall of 2023
-				while on haitus from real work, I started working on an API and UI.
-			</p>
-			<br />
-			<p>
-				Now, App Goblin is the combination of several open source projects I built. Yes, there are a
-				large number of similar companies like data.ai and sensortower.com which have many more
-				features. But it was a great project for me to learn more frontend and javascript.
-			</p>
-			<br />
-			<p>If you have questions or suggestions please feel free to reach out.</p>
-			<br />
-			<a href="mailto:contact@appgoblin.info">contact@appgoblin.info</a>
 		</div>
 	</div>
 	<br />

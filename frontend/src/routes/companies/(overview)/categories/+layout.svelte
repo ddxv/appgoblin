@@ -4,6 +4,7 @@
 	let { data, children } = $props();
 
 	let category_title = $derived(getCategoryName(page.params.category || ''));
+	let resolvedCategoryTitle = $derived(category_title || 'All App Categories');
 
 	function getCategoryName(category: string) {
 		if (category) {
@@ -15,13 +16,30 @@
 		return '';
 	}
 
-	let title = $derived(`${category_title} Apps Top Companies | AppGoblin`);
+	let title = $derived(`Top Companies in ${resolvedCategoryTitle} Apps | AppGoblin`);
 	let description = $derived(
-		`Explore ${category_title} apps' biggest companies. Detailed analytics for ${category_title} apps and competitor analysis.`
+		`Explore the largest companies found in ${resolvedCategoryTitle} apps with SDK, API, and app-ads.txt intelligence for competitor and market analysis.`
 	);
 	let keywords = $derived(
-		`${category_title}, android, ios, adtech, advertising network, data tracking, mobile measurement, programmatic advertising, app-ads.txt, mobile advertising, ad tech analytics, AppGoblin`
+		`${resolvedCategoryTitle}, android, ios, adtech, advertising network, data tracking, mobile measurement, programmatic advertising, app-ads.txt, mobile advertising, ad tech analytics, AppGoblin`
 	);
+	let structuredData = $derived({
+		'@context': 'https://schema.org',
+		'@type': 'CollectionPage',
+		name: title,
+		description,
+		url: page.url.href,
+		inLanguage: 'en',
+		isPartOf: {
+			'@type': 'WebSite',
+			name: 'AppGoblin',
+			url: 'https://appgoblin.info'
+		},
+		about: {
+			'@type': 'Thing',
+			name: resolvedCategoryTitle
+		}
+	});
 </script>
 
 <svelte:head>
@@ -39,6 +57,8 @@
 	<meta property="og:type" content="website" />
 	<meta name="twitter:card" content="summary_large_image" />
 	<meta name="twitter:image" content="https://appgoblin.info/goblin_purple_hat_250.png" />
+	<meta name="robots" content="index, follow" />
+	{@html `<script type="application/ld+json">${JSON.stringify(structuredData)}</script>`}
 </svelte:head>
 
 <main>

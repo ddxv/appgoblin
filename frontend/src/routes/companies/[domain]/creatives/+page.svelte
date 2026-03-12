@@ -10,6 +10,11 @@
 	let { data }: Props = $props();
 </script>
 
+<p class="text-sm text-surface-600-400 mb-3">
+	Creative monitoring helps identify active campaigns, ad formats, and publisher reach connected to
+	this company in near real-time market activity.
+</p>
+
 {#if data.companyCreatives && data.companyCreatives.length > 0}
 	<WhiteCard>
 		{#snippet title()}

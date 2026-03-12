@@ -7,7 +7,7 @@
 	let { data } = $props();
 
 	const description =
-		'Free app analytics, ASO tools and app competitor analysis. The best SDK and API analysis for mobile advertising industry, free for all.';
+		'Mobile app and ad intelligence platform with free ASO tools, SDK and API analysis, app-ads.txt intelligence, and paid data exports for growth, sales prospecting, and fraud detection teams.';
 
 	const title = 'AppGoblin Free App Marketing Tools';
 
@@ -26,6 +26,51 @@
 	// Get current month and year for display
 	const now = new Date();
 	const monthYear = now.toLocaleString('default', { month: 'long', year: 'numeric' });
+
+	const audiences = [
+		{
+			title: 'App & Game Developers',
+			description:
+				'Grow your app with free ASO tools, keyword tracking, rankings data, and competitor SDK analysis.',
+			badge: 'Growth'
+		},
+		{
+			title: 'Ad Sales Teams',
+			description:
+				'Prospect clients by analyzing which apps use your target ad networks, mediation platforms, and analytics providers.',
+			badge: 'Sales'
+		},
+		{
+			title: 'Ad Networks & DSPs',
+			description:
+				'Perform fraud detection by auditing SDK integrations and validating app-ads.txt supply-path data across millions of apps.',
+			badge: 'Fraud Detection'
+		},
+		{
+			title: 'DSPs — App-Ads.txt Verification',
+			description:
+				'Map app-ads.txt DIRECT and RESELLER entries to real app store IDs (e.g. com.example.app) rather than just domain names.',
+			badge: 'Verification'
+		},
+		{
+			title: 'Researchers & Journalists',
+			description:
+				'Deep technical analysis across millions of apps — SDKs, API calls, and data security patterns at scale.',
+			badge: 'Research'
+		},
+		{
+			title: 'Competitor Researchers',
+			description:
+				"Track which SDKs competitors are adopting, how fast they're growing, and who their top app clients are.",
+			badge: 'Intelligence'
+		},
+		{
+			title: 'Privacy Advocates',
+			description:
+				'Identify hidden trackers, ad-tech domains, and SDK networks embedded in popular apps.',
+			badge: 'Privacy'
+		}
+	];
 </script>
 
 <svelte:head>
@@ -106,6 +151,169 @@
 		</div>
 	</section>
 
+	<section
+		class="card preset-tonal p-4 md:p-8 rounded-2xl shadow-xl border border-secondary-900-100/20"
+	>
+		<div class="flex items-center mb-6">
+			<div
+				class="bg-gradient-to-br from-secondary-900-100 to-secondary-600 p-4 rounded-2xl shadow-lg mr-4"
+			>
+				<svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						stroke-width="2"
+						d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+					/>
+				</svg>
+			</div>
+			<div>
+				<h2 class={sectionTitleClass}>Features & Who It's For</h2>
+				<p class={sectionSubtitleClass}>Mobile app intelligence across SDK, API, ads, and ASO</p>
+			</div>
+		</div>
+
+		<p class={sectionDescriptionClass}>
+			AppGoblin is a free resource for mobile app marketers, sales teams, and researchers. Paid
+			export-ready datasets are also available for teams that need raw data for custom analysis.
+		</p>
+
+		<h3 class="text-lg font-bold text-primary-900-100 mb-3">Features</h3>
+		<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+			<div class="rounded-xl border border-white/10 p-4 bg-white/5">
+				<h4 class="font-bold text-primary-900-100 mb-2">
+					<a href="/" class="hover:text-primary-600-400">App Intelligence</a>
+				</h4>
+				<p class="text-sm text-gray-300 mb-3">Data on 4M+ iOS and Android apps, updated daily.</p>
+				<ul class="text-sm space-y-1.5 text-gray-400">
+					<li>
+						<span class="text-white/80 font-medium">Keywords</span> — Track your or competitors' keywords
+						and the top ranking apps
+					</li>
+					<li>
+						<span class="text-white/80 font-medium">Trends</span> — Track installs and ratings over time
+					</li>
+					<li>
+						<span class="text-white/80 font-medium">Rankings</span> — Daily tracking from Google Play
+						and the App Store
+					</li>
+					<li>
+						<span class="text-white/80 font-medium">New Apps Discovery</span> — Surfaces newly released
+						apps buried by store algorithms
+					</li>
+					<li>
+						<span class="text-white/80 font-medium">Growth Metrics</span> — Daily install estimates and
+						rating change tracking
+					</li>
+				</ul>
+			</div>
+
+			<div class="rounded-xl border border-white/10 p-4 bg-white/5">
+				<h4 class="font-bold text-primary-900-100 mb-2">
+					<a href="/sdks" class="hover:text-primary-600-400">SDK Analysis</a>
+				</h4>
+				<p class="text-sm text-gray-300">
+					Detailed breakdown of SDKs found in decompiled Android and iOS apps — advertising,
+					analytics, and open-source libraries to see what any app is really running.
+				</p>
+			</div>
+
+			<div class="rounded-xl border border-white/10 p-4 bg-white/5">
+				<h4 class="font-bold text-primary-900-100 mb-2">
+					<a href="/companies" class="hover:text-primary-600-400">Companies Directory</a>
+				</h4>
+				<p class="text-sm text-gray-300 mb-3">
+					Rankings of mobile app companies by SDK integration frequency, filterable by app category.
+				</p>
+				<div class="flex flex-wrap gap-2">
+					<a
+						href="/companies/types/ad-networks/game_casino"
+						class="text-xs px-2 py-1 rounded-full bg-white/10 hover:bg-white/20 text-white/80"
+						>Ad Networks for Casino Games →</a
+					>
+					<a
+						href="/companies/types/product-analytics/business"
+						class="text-xs px-2 py-1 rounded-full bg-white/10 hover:bg-white/20 text-white/80"
+						>Product Analytics for Business Apps →</a
+					>
+				</div>
+			</div>
+
+			<div class="rounded-xl border border-white/10 p-4 bg-white/5">
+				<h4 class="font-bold text-primary-900-100 mb-2">Company Intelligence</h4>
+				<p class="text-sm text-gray-300 mb-3">
+					See the top client apps for any mobile SDK or services company.
+				</p>
+				<div class="flex flex-wrap gap-2">
+					<a
+						href="/companies/salesforce.com"
+						class="text-xs px-2 py-1 rounded-full bg-white/10 hover:bg-white/20 text-white/80"
+						>Salesforce Clients →</a
+					>
+					<a
+						href="/companies/appsflyer.com"
+						class="text-xs px-2 py-1 rounded-full bg-white/10 hover:bg-white/20 text-white/80"
+						>AppsFlyer Top Apps →</a
+					>
+				</div>
+			</div>
+
+			<div class="rounded-xl border border-white/10 p-4 bg-white/5">
+				<h4 class="font-bold text-primary-900-100 mb-2">Ad Tech Insights</h4>
+				<p class="text-sm text-gray-300">
+					Tracks live ad campaigns and the ad tech domains apps communicate with in real time.
+				</p>
+			</div>
+
+			<div class="rounded-xl border border-white/10 p-4 bg-white/5">
+				<h4 class="font-bold text-primary-900-100 mb-2">ASO Tools</h4>
+				<p class="text-sm text-gray-300">
+					Free keyword research tools and data dumps to optimize app store visibility for Android
+					and iOS.
+				</p>
+			</div>
+
+			<div class="rounded-xl border border-white/10 p-4 bg-white/5 md:col-span-2">
+				<h4 class="font-bold text-primary-900-100 mb-2">App-Ads.txt</h4>
+				<p class="text-sm text-gray-300">
+					Daily-updated files tying apps to their DIRECT and RESELLER ad networks and SSPs — mapped
+					to real app store IDs (e.g. <code class="text-white/70">com.example.app</code>) rather
+					than just domain names, for supply-path analysis and fraud detection.
+				</p>
+			</div>
+		</div>
+
+		<h3 class="text-lg font-bold text-primary-900-100 mb-3">Who It's For</h3>
+		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 mb-6">
+			{#each audiences as audience}
+				<div class="rounded-xl border border-white/10 p-4 bg-white/5">
+					<div class="flex items-start justify-between mb-2">
+						<h4 class="text-sm md:text-base font-bold text-primary-900-100">{audience.title}</h4>
+						<span
+							class="text-xs font-semibold px-2 py-1 rounded-full bg-white/10 text-white/90 ml-2 shrink-0"
+							>{audience.badge}</span
+						>
+					</div>
+					<p class="text-sm text-gray-300">{audience.description}</p>
+				</div>
+			{/each}
+		</div>
+
+		<div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
+			<div class="flex gap-4">
+				<span class={featureBulletClass}>🔎 4M+ app coverage</span>
+				<span class={featureBulletClass}>🧩 SDK and API intelligence</span>
+				<span class={featureBulletClass}>🛡️ App-ads.txt verification</span>
+			</div>
+			<a
+				href="/companies"
+				class="{gradientButtonClass} from-secondary-700-300 to-secondary-900-100 text-black"
+			>
+				<span class={buttonTextColor}>Start With Company Intelligence →</span>
+			</a>
+		</div>
+	</section>
+
 	<!-- Top Advertiser Section -->
 	<section
 		class="card preset-tonal p-4 md:p-8 rounded-2xl shadow-xl border border-success-900-100/20"
@@ -178,7 +386,9 @@
 		</div>
 
 		<p class={sectionDescriptionClass}>
-			Explore the top ad networks, MMPs, analytics, and 3rd party SDKs used in mobile apps.
+			Explore top ad networks, MMPs, analytics, and developer tools used in mobile apps, then drill
+			down into company pages for SDK footprint, API behavior, app-ads.txt links, and category-level
+			adoption trends.
 		</p>
 
 		<div class="grid grid-cols-1 md:grid-cols-2 md:gap-8 mb-6">

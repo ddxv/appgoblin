@@ -2,6 +2,7 @@
 	import '../app.css';
 	import { page } from '$app/state';
 	import { Menu, Portal } from '@skeletonlabs/skeleton-svelte';
+	import { invalidate } from '$app/navigation';
 
 	import IconSearch from '$lib/svg/IconSearch.svelte';
 	import MenuIcon from 'lucide-svelte/icons/menu';

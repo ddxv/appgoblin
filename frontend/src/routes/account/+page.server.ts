@@ -26,7 +26,7 @@ export async function load(event: PageServerLoadEvent) {
 	);
 
 	const priceIdToLabel: Record<string, string> = {
-		[STRIPE_PRICES.app_dev]: 'Premium Supporter',
+		[STRIPE_PRICES.app_dev]: 'Premium Access',
 		[STRIPE_PRICES.b2b_sdk]: 'Business SDK',
 		[STRIPE_PRICES.b2b_appads]: 'App-Ads.txt',
 		[STRIPE_PRICES.b2b_premium]: 'Premium B2B'
