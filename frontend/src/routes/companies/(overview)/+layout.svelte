@@ -4,7 +4,6 @@
 	import CompaniesBarChart from '$lib/CompaniesBarChart.svelte';
 	import TotalsBox from '$lib/TotalsBox.svelte';
 	import { page } from '$app/state';
-	// import SideBar from '$lib/SideBar.svelte';
 	import SideBarCompanies from '$lib/SideBarCompanies.svelte';
 	import { Dialog, Portal } from '@skeletonlabs/skeleton-svelte';
 
