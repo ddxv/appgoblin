@@ -8,11 +8,11 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-a {
+a:not(.btn) {
 	color: var(--color-tertiary-900-100);
 }
 
-a:hover {
+a:not(.btn):hover {
 	color: var(--color-tertiary-900-200);
 	text-decoration: underline;
 }

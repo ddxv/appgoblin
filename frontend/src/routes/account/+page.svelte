@@ -1,202 +1,56 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
 	import type { PageData } from './$types';
-	import type {
-		AccountFormResult,
-		FollowedApp,
-		FollowedCompany,
-		TrackedKeyword,
-		RequestedSdkScan
-	} from '$lib/components/account/types';
-	import UserRound from 'lucide-svelte/icons/user-round';
-	import Mail from 'lucide-svelte/icons/mail';
-	import KeyRound from 'lucide-svelte/icons/key-round';
 	import ShieldCheck from 'lucide-svelte/icons/shield-check';
-	import LogOut from 'lucide-svelte/icons/log-out';
-	import TrackedAppsSection from '$lib/components/account/TrackedAppsSection.svelte';
-	import TrackedCompaniesSection from '$lib/components/account/TrackedCompaniesSection.svelte';
-	import TrackedKeywordsSection from '$lib/components/account/TrackedKeywordsSection.svelte';
-	import RequestedSdkScansSection from '$lib/components/account/RequestedSdkScansSection.svelte';
 
-	type AccountPageData = PageData & {
-		followedApps?: FollowedApp[];
-		followedCompanies?: FollowedCompany[];
-		trackedKeywords?: TrackedKeyword[];
-		requestedSdkScans?: RequestedSdkScan[];
-	};
-
-	let { data, form }: { data: AccountPageData; form?: AccountFormResult | null } = $props();
-	let accountData = $derived(data);
-	let accountForm = $derived(form);
+	let { data }: { data: PageData } = $props();
 </script>
 
 <svelte:head>
 	<title>Account - AppGoblin</title>
 </svelte:head>
 
-<div class="container mx-auto max-w-2xl px-4 py-8">
-	<div class="card preset-tonal p-6 md:p-8 space-y-6">
-		<!-- Header -->
-		<div class="flex items-center gap-4 pb-4 border-b border-surface-300-700">
-			<div class="p-3 rounded-full bg-primary-500/20">
-				<UserRound size={32} class="text-primary-500" />
-			</div>
-			<div>
-				<h1 class="text-2xl font-bold">Hi, {data.user.username}!</h1>
-				<p class="text-sm text-surface-600-400">Manage your account settings</p>
-			</div>
-		</div>
+<div class="card preset-tonal p-6 md:p-8 space-y-8">
+	<div>
+		<h1 class="text-2xl font-bold">Hello, {data.user.username}!</h1>
+		<p class="text-sm text-surface-600-400">Welcome to your AppGoblin account</p>
+	</div>
 
-		<!-- Account Info -->
-		<section class="space-y-4">
-			<h2 class="text-lg font-semibold">Account Information</h2>
-
-			<div class="flex items-center gap-3 p-4 rounded-lg bg-surface-100-900">
-				<Mail size={20} class="text-surface-500" />
-				<div>
-					<p class="text-xs text-surface-500 uppercase tracking-wide">Email</p>
-					<p class="font-medium">{data.user.email}</p>
-				</div>
-				{#if data.user.emailVerified}
-					<span class="ml-auto badge preset-filled-success-900-100 text-xs">Verified</span>
+	<section class="space-y-4">
+		<div class="grid gap-3 md:grid-cols-2">
+			<!-- Subscription Status -->
+			<div class="p-6 rounded-lg bg-surface-100-900 border border-surface-200-800">
+				<h2 class="text-sm font-semibold text-surface-500 uppercase tracking-wide mb-2">
+					Subscription Plan
+				</h2>
+				{#if data.subscription}
+					<p class="font-bold text-xl capitalize">{data.subscription.status}</p>
+					{#if data.subscriptionTier}
+						<p class="text-surface-600-400 mt-1">{data.subscriptionTier}</p>
+					{/if}
 				{:else}
-					<a
-						href="/auth/verify-email"
-						class="ml-auto badge preset-filled-warning-500 text-xs hover:opacity-80"
-					>
-						Unverified - Click to verify
-					</a>
+					<p class="font-bold text-xl">Free Plan</p>
+					<p class="text-surface-600-400 mt-1">Upgrade for more limits</p>
 				{/if}
 			</div>
-		</section>
 
-		<!-- Security Section -->
-		<section class="space-y-4">
-			<h2 class="text-lg font-semibold">Security</h2>
-
-			<div class="grid gap-3">
-				<a
-					href="/auth/settings"
-					class="flex items-center gap-3 p-4 rounded-lg bg-surface-100-900 hover:bg-surface-200-800 transition-colors"
-				>
-					<KeyRound size={20} class="text-surface-500" />
-					<div class="flex-1">
-						<p class="font-medium">Password & Email</p>
-						<p class="text-sm text-surface-500">Update your password or email address</p>
-					</div>
-					<span class="text-surface-400">→</span>
-				</a>
-
-				<a
-					href="/auth/2fa/setup"
-					class="flex items-center gap-3 p-4 rounded-lg bg-surface-100-900 hover:bg-surface-200-800 transition-colors"
-				>
-					<ShieldCheck size={20} class="text-surface-500" />
-					<div class="flex-1">
-						<p class="font-medium">Two-Factor Authentication</p>
-						<p class="text-sm text-surface-500">
-							{data.user.registered2FA
-								? 'Manage your 2FA settings'
-								: 'Add extra security to your account'}
+			<!-- Quick Security Status -->
+			<div class="p-6 rounded-lg bg-surface-100-900 border border-surface-200-800">
+				<h2 class="text-sm font-semibold text-surface-500 uppercase tracking-wide mb-2">
+					Security Status
+				</h2>
+				<div class="flex items-center gap-2 mt-1">
+					<ShieldCheck
+						size={24}
+						class={data.user.registered2FA ? 'text-success-500' : 'text-surface-400'}
+					/>
+					<div>
+						<p class="font-bold">{data.user.registered2FA ? '2FA Enabled' : 'Add 2FA'}</p>
+						<p class="text-sm text-surface-600-400">
+							{data.user.registered2FA ? 'Your account is secure.' : 'Not set up yet.'}
 						</p>
 					</div>
-					{#if data.user.registered2FA}
-						<span class="badge preset-filled-success-900-100 text-xs">Enabled</span>
-					{:else}
-						<span class="badge preset-filled-surface-500 text-xs">Not set up</span>
-					{/if}
-				</a>
-
-				{#if data.user.registered2FA}
-					<a
-						href="/auth/recovery-code"
-						class="flex items-center gap-3 p-4 rounded-lg bg-surface-100-900 hover:bg-surface-200-800 transition-colors"
-					>
-						<KeyRound size={20} class="text-surface-500" />
-						<div class="flex-1">
-							<p class="font-medium">Recovery Code</p>
-							<p class="text-sm text-surface-500">View your 2FA recovery code</p>
-						</div>
-						<span class="text-surface-400">→</span>
-					</a>
-				{/if}
+				</div>
 			</div>
-		</section>
-
-		<!-- Subscription Section -->
-		<section class="space-y-4">
-			<h2 class="text-lg font-semibold">Subscription</h2>
-
-			<div class="p-4 rounded-lg bg-surface-100-900 border border-surface-200-800">
-				{#if data.subscription}
-					<div class="flex justify-between items-center mb-4">
-						<div>
-							{#if data.subscription.status === 'active' && data.subscription.cancel_at}
-								<p class="text-sm text-warning-500">
-									Active (Cancels {new Date(data.subscription.cancel_at).toLocaleDateString()})
-								</p>
-							{:else}
-								<p class="font-medium text-lg capitalize">
-									{data.subscription.status}
-								</p>
-							{/if}
-							{#if data.subscriptionTier}
-								<p class="text-sm text-surface-500">Plan: {data.subscriptionTier}</p>
-							{:else}
-								<p class="text-sm text-surface-500">Plan: Unknown</p>
-							{/if}
-							{#if data.subscription.cancel_at}
-								<p class="text-sm text-warning-500">Access available until end of period</p>
-							{:else}
-								<p class="text-sm text-surface-500">
-									Renews on {new Date(data.subscription.current_period_end).toLocaleDateString()}
-								</p>
-							{/if}
-						</div>
-						<span
-							class="badge text-white {data.subscription.status === 'active'
-								? 'preset-filled-success-100-900'
-								: 'preset-filled-warning-900-100'}"
-						>
-							{data.subscription.status.charAt(0).toUpperCase() + data.subscription.status.slice(1)}
-						</span>
-					</div>
-
-					<form method="POST" action="?/portal" use:enhance>
-						<button type="submit" class="btn preset-tonal w-full">Manage Subscription</button>
-					</form>
-				{:else}
-					<div class="text-center py-4">
-						<p class="text-surface-600-400 mb-2">Plan: Free</p>
-						<a href="/pricing" class="btn preset-filled-primary-500">View Pricing</a>
-					</div>
-				{/if}
-			</div>
-		</section>
-
-		<section class="space-y-6">
-			<TrackedAppsSection apps={accountData.followedApps ?? []} form={accountForm ?? undefined} />
-			<TrackedCompaniesSection
-				companies={accountData.followedCompanies ?? []}
-				form={accountForm ?? undefined}
-			/>
-			<TrackedKeywordsSection
-				keywords={accountData.trackedKeywords ?? []}
-				form={accountForm ?? undefined}
-			/>
-			<RequestedSdkScansSection
-				scans={accountData.requestedSdkScans ?? []}
-				form={accountForm ?? undefined}
-			/>
-		</section>
-
-		<!-- Sign Out -->
-		<section class="pt-4 border-t border-surface-300-700">
-			<form method="post" action="?/logout" use:enhance>
-				<button class="btn preset-tonal w-full flex items-center justify-center gap-2">
-					<span class="flex items-center justify-center gap-2"> <LogOut size={18} /> Sign Out</span>
-				</button>
-			</form>
-		</section>
-	</div>
+		</div>
+	</section>
 </div>
