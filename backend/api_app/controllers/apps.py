@@ -104,7 +104,7 @@ def create_app_country_plot_dict(app_hist: pd.DataFrame) -> pd.DataFrame:
     Processes each country independently using groupby to maintain separate time series.
     """
     star_cols = ["one_star", "two_star", "three_star", "four_star", "five_star"]
-    metrics = ["rating", "review_count", "rating_count", *star_cols]
+    metrics = ["rating", "rating_count", *star_cols]
     weekly_metrics = [
         metric
         for metric in [
@@ -143,7 +143,7 @@ def create_app_country_plot_dict(app_hist: pd.DataFrame) -> pd.DataFrame:
         group = group.resample("W").last()
 
         # Replace zeros with NaN for cumulative metrics (zeros are data holes, not valid values)
-        cumulative_metrics = ["rating_count", "review_count", *star_cols]
+        cumulative_metrics = ["rating_count", *star_cols]
 
         # Metrics to turn numeric / clean
         nmetrics = [
@@ -238,7 +238,6 @@ def create_app_plot_df(app_hist: pd.DataFrame) -> pd.DataFrame:
         "weekly_installs",
         "weekly_ratings",
         "weekly_active_users",
-        "monthly_active_users",
         "weekly_ad_revenue",
         "weekly_iap_revenue",
     ]

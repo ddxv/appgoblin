@@ -1,14 +1,33 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import type { PageData } from './$types';
+	import type {
+		AccountFormResult,
+		FollowedApp,
+		FollowedCompany,
+		TrackedKeyword,
+		RequestedSdkScan
+	} from '$lib/components/account/types';
 	import UserRound from 'lucide-svelte/icons/user-round';
 	import Mail from 'lucide-svelte/icons/mail';
 	import KeyRound from 'lucide-svelte/icons/key-round';
 	import ShieldCheck from 'lucide-svelte/icons/shield-check';
 	import LogOut from 'lucide-svelte/icons/log-out';
+	import TrackedAppsSection from '$lib/components/account/TrackedAppsSection.svelte';
+	import TrackedCompaniesSection from '$lib/components/account/TrackedCompaniesSection.svelte';
+	import TrackedKeywordsSection from '$lib/components/account/TrackedKeywordsSection.svelte';
+	import RequestedSdkScansSection from '$lib/components/account/RequestedSdkScansSection.svelte';
 
-	import type { PageData } from './$types';
+	type AccountPageData = PageData & {
+		followedApps?: FollowedApp[];
+		followedCompanies?: FollowedCompany[];
+		trackedKeywords?: TrackedKeyword[];
+		requestedSdkScans?: RequestedSdkScan[];
+	};
 
-	let { data }: { data: PageData } = $props();
+	let { data, form }: { data: AccountPageData; form?: AccountFormResult | null } = $props();
+	let accountData = $derived(data);
+	let accountForm = $derived(form);
 </script>
 
 <svelte:head>
@@ -153,6 +172,22 @@
 					</div>
 				{/if}
 			</div>
+		</section>
+
+		<section class="space-y-6">
+			<TrackedAppsSection apps={accountData.followedApps ?? []} form={accountForm ?? undefined} />
+			<TrackedCompaniesSection
+				companies={accountData.followedCompanies ?? []}
+				form={accountForm ?? undefined}
+			/>
+			<TrackedKeywordsSection
+				keywords={accountData.trackedKeywords ?? []}
+				form={accountForm ?? undefined}
+			/>
+			<RequestedSdkScansSection
+				scans={accountData.requestedSdkScans ?? []}
+				form={accountForm ?? undefined}
+			/>
 		</section>
 
 		<!-- Sign Out -->

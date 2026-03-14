@@ -3,6 +3,7 @@
 
 	import ExternalLink from '$lib/ExternalLink.svelte';
 	import CompanyButton from '$lib/CompanyButton.svelte';
+	import FollowToggleButton from '$lib/components/follows/FollowToggleButton.svelte';
 
 	let { children, data } = $props();
 	const { domain, category } = page.params;
@@ -251,6 +252,16 @@
 					{/if}
 				{/if}
 			</div>
+			{#if data.companyLookup?.company_id}
+				<div class="mt-2 md:mt-0 md:ml-4">
+					<FollowToggleButton
+						entity="company"
+						label="Company"
+						companyId={data.companyLookup.company_id}
+						initialFollowing={Boolean(data.isFollowingCompany)}
+					/>
+				</div>
+			{/if}
 		{/if}
 	{:catch error}
 		<p class="text-red-500">{error.message}</p>

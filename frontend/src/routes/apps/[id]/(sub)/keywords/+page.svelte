@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { page } from '$app/state';
 	import type { AppFullDetail, KeywordScore } from '../../../../../types';
 	import AppKeywordsTable from '$lib/AppKeywordsTable.svelte';
 
@@ -10,6 +11,11 @@
 	type KeywordsPageData = {
 		myKeywords: KeywordData | string;
 		myapp: Promise<AppFullDetail> | AppFullDetail;
+		userTrackedKeywordsForApp?: Array<{
+			id: number;
+			keyword_text: string;
+			created_at: string | Date;
+		}>;
 		[key: string]: unknown;
 	};
 
@@ -106,6 +112,104 @@
 	const keywordData = $derived(isKeywordData(data.myKeywords) ? data.myKeywords : null);
 
 	const keywordScores = $derived(keywordData?.keyword_scores ?? []);
+
+	let trackedKeywordRows = $state<
+		Array<{ id: number; keyword_text: string; created_at: string | Date }>
+	>([]);
+	let newKeywordText = $state('');
+	let keywordTrackerMessage = $state('');
+	let keywordTrackerLoading = $state(false);
+
+	$effect(() => {
+		trackedKeywordRows = data.userTrackedKeywordsForApp ?? [];
+	});
+
+	function normalizeKeyword(value: string): string {
+		return value.trim().toLowerCase();
+	}
+
+	async function addTrackedKeywordForApp() {
+		const keywordText = newKeywordText.trim();
+		if (!keywordText) {
+			keywordTrackerMessage = 'Keyword cannot be empty.';
+			return;
+		}
+
+		const normalized = normalizeKeyword(keywordText);
+		if (trackedKeywordRows.some((row) => normalizeKeyword(row.keyword_text) === normalized)) {
+			keywordTrackerMessage = 'Keyword is already in your tracked list for this app.';
+			return;
+		}
+
+		keywordTrackerLoading = true;
+		keywordTrackerMessage = '';
+		try {
+			const response = await fetch('/api/follows', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({
+					entity: 'keyword',
+					follow: true,
+					storeId: page.params.id,
+					keywordText
+				})
+			});
+
+			if (!response.ok) {
+				keywordTrackerMessage =
+					response.status === 401
+						? 'Sign in to save tracked keywords.'
+						: 'Could not add keyword right now.';
+				return;
+			}
+
+			trackedKeywordRows = [
+				{ id: Date.now(), keyword_text: keywordText, created_at: new Date().toISOString() },
+				...trackedKeywordRows
+			];
+			newKeywordText = '';
+			keywordTrackerMessage = 'Keyword added to your tracked list.';
+		} catch {
+			keywordTrackerMessage = 'Could not add keyword right now.';
+		} finally {
+			keywordTrackerLoading = false;
+		}
+	}
+
+	async function removeTrackedKeywordForApp(keywordText: string) {
+		keywordTrackerLoading = true;
+		keywordTrackerMessage = '';
+		try {
+			const response = await fetch('/api/follows', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({
+					entity: 'keyword',
+					follow: false,
+					storeId: page.params.id,
+					keywordText
+				})
+			});
+
+			if (!response.ok) {
+				keywordTrackerMessage =
+					response.status === 401
+						? 'Sign in to manage tracked keywords.'
+						: 'Could not remove keyword right now.';
+				return;
+			}
+
+			const normalized = normalizeKeyword(keywordText);
+			trackedKeywordRows = trackedKeywordRows.filter(
+				(row) => normalizeKeyword(row.keyword_text) !== normalized
+			);
+			keywordTrackerMessage = 'Keyword removed from your tracked list.';
+		} catch {
+			keywordTrackerMessage = 'Could not remove keyword right now.';
+		} finally {
+			keywordTrackerLoading = false;
+		}
+	}
 
 	const trackedKeywords = $derived(keywordScores.length);
 
@@ -316,6 +420,56 @@
 			{#if myapp.description_short}
 				<p class={descriptionSnippetClass}>{myapp.description_short}</p>
 			{/if}
+		</section>
+
+		<section class={cardPaddingLg}>
+			<h4 class="h5 md:h4 mb-3">Your Tracked Keywords For This App</h4>
+			<form
+				onsubmit={(event) => {
+					event.preventDefault();
+					addTrackedKeywordForApp();
+				}}
+				class="flex flex-col gap-2 md:flex-row"
+			>
+				<input
+					type="text"
+					class="input flex-1"
+					placeholder="Add a keyword to track"
+					bind:value={newKeywordText}
+					disabled={keywordTrackerLoading}
+				/>
+				<button type="submit" class="btn preset-tonal" disabled={keywordTrackerLoading}>
+					{keywordTrackerLoading ? 'Saving...' : 'Add Keyword'}
+				</button>
+			</form>
+			{#if keywordTrackerMessage}
+				<p class="mt-2 text-sm text-primary-800-200">{keywordTrackerMessage}</p>
+			{/if}
+
+			<div class="mt-4 space-y-2">
+				{#if trackedKeywordRows.length === 0}
+					<p class={textMutedSmClass}>No personal tracked keywords for this app yet.</p>
+				{:else}
+					{#each trackedKeywordRows as row (row.id)}
+						<div
+							class="flex items-center justify-between rounded-lg border border-surface-300-700 p-3"
+						>
+							<div>
+								<p class="font-medium">{row.keyword_text}</p>
+								<p class={textMutedXsClass}>Added {new Date(row.created_at).toLocaleString()}</p>
+							</div>
+							<button
+								type="button"
+								class="btn preset-outlined-error-500 btn-sm"
+								onclick={() => removeTrackedKeywordForApp(row.keyword_text)}
+								disabled={keywordTrackerLoading}
+							>
+								Remove
+							</button>
+						</div>
+					{/each}
+				{/if}
+			</div>
 		</section>
 
 		{#if hasKeywordData}

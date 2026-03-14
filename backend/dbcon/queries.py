@@ -845,6 +845,16 @@ def search_companies(state: State, search_input: str, limit: int = 10) -> pd.Dat
     return df
 
 
+def get_company_follow_lookup(state: State, company_domain: str) -> pd.DataFrame:
+    """Resolve company domain to canonical company metadata."""
+    df = pd.read_sql(
+        sql.company_follow_lookup,
+        state.dbcon.engine,
+        params={"company_domain": company_domain},
+    )
+    return df
+
+
 def search_apps(state: State, search_input: str, limit: int = 100) -> pd.DataFrame:
     """Search apps by term in database."""
     logger.info(f"App search: {search_input=}")
