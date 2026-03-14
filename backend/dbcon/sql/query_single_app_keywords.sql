@@ -42,6 +42,7 @@ all_apps_keywords AS (
 )
 
 SELECT
+    aak.keyword_id,
     k.keyword_text,
     rk.latest_app_rank,
     rk.d30_best_rank,

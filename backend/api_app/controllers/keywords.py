@@ -5,12 +5,17 @@
 
 from typing import Self
 
+import pandas as pd
 from litestar import Controller, get
 from litestar.datastructures import State
 
 from api_app.utils import extend_app_icon_url
 from config import get_logger
-from dbcon.queries import get_keyword_apps, get_keyword_details
+from dbcon.queries import (
+    get_app_keywords_history,
+    get_keyword_apps,
+    get_keyword_details,
+)
 
 logger = get_logger(__name__)
 
@@ -49,3 +54,22 @@ class KeywordsController(Controller):
             "apple": {"ranks": df_ios.to_dict(orient="records")},
             "google": {"ranks": df_android.to_dict(orient="records")},
         }
+
+    @get(path="/app/{myapp:int}", cache=3600)
+    async def get_app_keywords(
+        self: Self, state: State, myapp: int, myid: list[int]
+    ) -> list[dict]:
+        """Handle GET request for app keywords history.
+
+        Returns
+        -------
+            A list of dictionary representations of the history
+
+        """
+        if not myid:
+            return []
+        df = get_app_keywords_history(state, myapp=myapp, myid=tuple(myid))
+        if df.empty:
+            return []
+        df["crawled_date"] = pd.to_datetime(df["crawled_date"]).dt.strftime("%Y-%m-%d")
+        return df.to_dict(orient="records")

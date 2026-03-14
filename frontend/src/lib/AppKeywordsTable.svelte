@@ -17,12 +17,13 @@
 
 	type DataTableProps<KeywordScore, TValue> = {
 		data: KeywordScore[];
+		storeId?: string;
 	};
 
 	let pagination = $state<PaginationState>({ pageIndex: 0, pageSize: 25 });
 	let sorting = $state<SortingState>([]);
 
-	let { data }: DataTableProps<KeywordScore, TValue> = $props();
+	let { data, storeId }: DataTableProps<KeywordScore, TValue> = $props();
 
 	const formatScore = (value: number | string | null | undefined, digits = 0) => {
 		if (value === null || value === undefined || value === '' || value === 'NA') {
@@ -154,7 +155,13 @@
 				{#each table.getRowModel().rows as row (row.id)}
 					<tr class="border-t border-surface-200-800 hover:bg-surface-100-900/70">
 						<td class="px-4 py-3 align-top text-xs md:text-lg">
-							<a href="/keywords/en/{row.original.keyword_text}"> {row.original.keyword_text}</a>
+							<a
+								href={storeId
+									? `/apps/${storeId}/keywords/compare?k=${encodeURIComponent(row.original.keyword_text)}`
+									: `/keywords/en/${row.original.keyword_text}`}
+							>
+								{row.original.keyword_text}
+							</a>
 						</td>
 						<td class="px-4 py-3 align-top text-sm md:text-lg">
 							{formatScore(row.original.opportunity_score)}

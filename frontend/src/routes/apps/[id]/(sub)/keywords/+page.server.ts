@@ -29,6 +29,28 @@ export const load: PageServerLoad = async ({ fetch, params, parent, locals }) =>
 		);
 	}
 
+	let keywordHistory: any[] = [];
+	if (
+		userTrackedKeywordsForApp.length > 0 &&
+		myKeywords &&
+		typeof myKeywords === 'object' &&
+		'keyword_scores' in myKeywords
+	) {
+		const scores = (myKeywords as any).keyword_scores as any[];
+		const trackedTexts = userTrackedKeywordsForApp.map((k) => k.keyword_text.toLowerCase());
+		const keywordIds = scores
+			.filter((s) => trackedTexts.includes(s.keyword_text.toLowerCase()))
+			.map((s) => s.keyword_id)
+			.filter((id) => typeof id === 'number' && Number.isInteger(id))
+			.slice(0, 5);
+
+		if (keywordIds.length > 0) {
+			const queryParams = keywordIds.map((id) => `myid=${id}`).join('&');
+			// myapp.id is the internal numeric ID for the app, needed by the new endpoint
+			keywordHistory = await api.get(`/keywords/app/${myapp.id}?${queryParams}`, 'Keyword History');
+		}
+	}
+
 	return {
 		// Meta Tags
 		toFollow: 'noindex, nofollow',
@@ -38,6 +60,7 @@ export const load: PageServerLoad = async ({ fetch, params, parent, locals }) =>
 		// Data
 		myKeywords,
 		myapp,
-		userTrackedKeywordsForApp
+		userTrackedKeywordsForApp,
+		keywordHistory
 	};
 };
