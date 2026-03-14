@@ -3,7 +3,6 @@ SELECT
     agmh.weekly_installs,
     agmh.weekly_ratings,
     agmh.weekly_active_users,
-    agmh.monthly_active_users,
     agmh.weekly_ad_revenue,
     agmh.weekly_iap_revenue,
     agmh.total_installs AS cumulative_installs,

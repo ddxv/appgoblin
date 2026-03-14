@@ -3,7 +3,6 @@ SELECT
     c.alpha2 AS country,
     acmh.rating,
     acmh.rating_count,
-    acmh.review_count,
     acmh.one_star,
     acmh.two_star,
     acmh.three_star,
