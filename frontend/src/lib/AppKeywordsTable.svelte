@@ -1,4 +1,4 @@
-<script lang="ts" generics="TData, TValue">
+<script lang="ts">
 	import {
 		type PaginationState,
 		type SortingState,
@@ -15,15 +15,36 @@
 
 	import { genericColumns } from '$lib/components/data-table/generic-column';
 
-	type DataTableProps<KeywordScore, TValue> = {
+	type DataTableProps = {
 		data: KeywordScore[];
 		storeId?: string;
+		linkMode?: 'app' | 'global';
 	};
 
 	let pagination = $state<PaginationState>({ pageIndex: 0, pageSize: 25 });
 	let sorting = $state<SortingState>([]);
 
-	let { data, storeId }: DataTableProps<KeywordScore, TValue> = $props();
+	let { data, storeId, linkMode = 'app' }: DataTableProps = $props();
+
+	const keywordOriginLabel = (row: {
+		is_keyword_ranking?: boolean;
+		is_keyword_generated?: boolean;
+		is_user_added?: boolean;
+	}) => {
+		if (row.is_keyword_ranking) {
+			return 'Top / Ranking';
+		}
+
+		if (row.is_keyword_generated) {
+			return 'Found in Description';
+		}
+
+		if (row.is_user_added) {
+			return 'User Added';
+		}
+
+		return 'Unknown';
+	};
 
 	const formatScore = (value: number | string | null | undefined, digits = 0) => {
 		if (value === null || value === undefined || value === '' || value === 'NA') {
@@ -60,6 +81,7 @@
 
 	const columns = genericColumns([
 		{ title: 'Keyword', accessorKey: 'keyword_text', isSortable: true },
+		{ title: 'Origin', accessorKey: 'is_keyword_ranking', isSortable: false },
 		{
 			title: 'Opportunity',
 			accessorKey: 'opportunity_score',
@@ -93,6 +115,11 @@
 		{
 			title: 'Major Competitors',
 			accessorKey: 'major_competitors',
+			isSortable: false
+		},
+		{
+			title: 'Action',
+			accessorKey: 'keyword_action',
 			isSortable: false
 		}
 	]);
@@ -152,16 +179,17 @@
 				{/each}
 			</thead>
 			<tbody>
-				{#each table.getRowModel().rows as row (row.id)}
+				{#each table.getRowModel().rows as row, index (`${row.id}-${index}`)}
 					<tr class="border-t border-surface-200-800 hover:bg-surface-100-900/70">
 						<td class="px-4 py-3 align-top text-xs md:text-lg">
-							<a
-								href={storeId
-									? `/apps/${storeId}/keywords/compare?k=${encodeURIComponent(row.original.keyword_text)}`
-									: `/keywords/en/${row.original.keyword_text}`}
+							{row.original.keyword_text}
+						</td>
+						<td class="px-4 py-3 align-top text-xs md:text-sm">
+							<span
+								class="inline-flex rounded-full border border-surface-300-700 px-2 py-1 text-[11px] font-medium uppercase tracking-wide"
 							>
-								{row.original.keyword_text}
-							</a>
+								{keywordOriginLabel(row.original)}
+							</span>
 						</td>
 						<td class="px-4 py-3 align-top text-sm md:text-lg">
 							{formatScore(row.original.opportunity_score)}
@@ -199,6 +227,24 @@
 								<p class="font-medium">{formatScore(row.original.major_competitors, 0)}</p>
 								<p class="text-xs text-primary-800-200">major competitor apps</p>
 							</div>
+						</td>
+						<td class="px-4 py-3 align-top text-xs md:text-sm">
+							{#if linkMode === 'global'}
+								<a
+									class="btn btn-sm preset-tonal"
+									href={`/keywords/en/${encodeURIComponent(row.original.keyword_text)}`}
+								>
+									Open Global Keyword Page
+								</a>
+								<p class="mt-1 text-xs text-primary-800-200">Leaves this app dashboard</p>
+							{:else if storeId}
+								<a
+									class="btn btn-sm preset-tonal"
+									href={`/apps/${storeId}/keywords/compare?k=${encodeURIComponent(row.original.keyword_text)}`}
+								>
+									View In This App
+								</a>
+							{/if}
 						</td>
 					</tr>
 				{:else}

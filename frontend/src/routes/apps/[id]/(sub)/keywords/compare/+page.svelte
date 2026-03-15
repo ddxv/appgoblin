@@ -4,6 +4,7 @@
 	import { LineChart } from 'layerchart';
 	import { format, PeriodType } from '@layerstack/utils';
 	import { plotColors } from '$lib/constants';
+	import AppKeywordsNav from '$lib/AppKeywordsNav.svelte';
 	import type { AppFullDetail } from '../../../../../../types';
 
 	type ComparePageData = {
@@ -160,6 +161,8 @@
 </script>
 
 <div class="space-y-6">
+	<AppKeywordsNav storeId={data.myapp.store_id} />
+
 	<!-- Breadcrumb -->
 	<nav class="flex items-center gap-2 text-sm">
 		<a href={`/apps/${data.myapp.store_id}`} class="text-primary-500 hover:underline">

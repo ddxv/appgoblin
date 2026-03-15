@@ -502,6 +502,9 @@ export interface KeywordScore {
 	keyword_text: string;
 	app_count: number;
 	total_apps: number;
+	is_keyword_ranking?: boolean;
+	is_keyword_generated?: boolean;
+	is_user_added?: boolean;
 	competitiveness_score: number | null;
 	d30_best_rank: number | string | null;
 	latest_app_rank: number | string | null;
