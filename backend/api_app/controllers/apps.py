@@ -862,7 +862,14 @@ class AppController(Controller):
         return {"status": "success"}
 
     @get(path="/{store_id:str}/keywords", cache=3600)
-    async def get_app_keywords(self: Self, state: State, store_id: str) -> dict:
+    async def get_app_keywords(
+        self: Self,
+        state: State,
+        store_id: str,
+        keyword_text: list[str] | None = Parameter(
+            query="keyword_text", required=False
+        ),
+    ) -> dict:
         """Handle GET request for a list of apps.
 
         Returns
@@ -871,7 +878,12 @@ class AppController(Controller):
 
         """
         start = time.perf_counter() * 1000
-        keywords_df = get_single_app_keywords(state, store_id)
+        if keyword_text is None:
+            keyword_text = []
+
+        keywords_df = get_single_app_keywords(
+            state, store_id, keyword_texts=keyword_text
+        )
         keyword_scores = keywords_df.to_dict(orient="records")
         keywords_list = keywords_df["keyword_text"].tolist()
         keywords_dict = {"keywords": keywords_list, "keyword_scores": keyword_scores}

@@ -977,10 +977,21 @@ def query_apps_crossfilter(
     return df
 
 
-def get_single_app_keywords(state: State, store_id: str) -> pd.DataFrame:
+def get_single_app_keywords(
+    state: State, store_id: str, keyword_texts: list[str] | None = None
+) -> pd.DataFrame:
     """Get single app keywords."""
+    if keyword_texts is None:
+        keyword_texts = []
+
+    keyword_texts = [
+        text.strip().lower() for text in keyword_texts if text and text.strip()
+    ]
+
     df = pd.read_sql(
-        sql.single_app_keywords, state.dbcon.engine, params={"store_id": store_id}
+        sql.single_app_keywords,
+        state.dbcon.engine,
+        params={"store_id": store_id, "keyword_texts": keyword_texts},
     )
     df = df.sort_values(by="d30_best_rank", ascending=True)
     return df

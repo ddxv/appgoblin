@@ -1,9 +1,16 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import type { AppFullDetail } from '../../../../../../types';
+	import type { AppFullDetail, KeywordScore } from '../../../../../../types';
 	import AppKeywordsNav from '$lib/AppKeywordsNav.svelte';
+	import AppKeywordsTable from '$lib/AppKeywordsTable.svelte';
+
+	type KeywordData = {
+		keywords: string[];
+		keyword_scores: KeywordScore[];
+	};
 
 	type TrackedPageData = {
+		myKeywords: KeywordData | string;
 		myapp: Promise<AppFullDetail> | AppFullDetail;
 		userTrackedKeywordsForApp?: Array<{
 			id: number;
@@ -20,6 +27,40 @@
 	let newKeywordText = $state('');
 	let keywordTrackerMessage = $state('');
 	let keywordTrackerLoading = $state(false);
+
+	const isKeywordData = (value: unknown): value is KeywordData => {
+		return (
+			typeof value === 'object' &&
+			value !== null &&
+			Array.isArray((value as KeywordData).keyword_scores)
+		);
+	};
+
+	const normalizeKeywordForDedupe = (value: string) => value.trim().toLowerCase();
+
+	const dedupeByKeywordText = (scores: KeywordScore[]) => {
+		const seen = new Set<string>();
+		const unique: KeywordScore[] = [];
+		for (const score of scores) {
+			const key = normalizeKeywordForDedupe(score.keyword_text);
+			if (seen.has(key)) {
+				continue;
+			}
+			seen.add(key);
+			unique.push(score);
+		}
+		return unique;
+	};
+
+	const keywordData = $derived(isKeywordData(data.myKeywords) ? data.myKeywords : null);
+	const keywordScores = $derived(keywordData?.keyword_scores ?? []);
+	const userAddedKeywordScores = $derived.by(() =>
+		dedupeByKeywordText(
+			keywordScores.filter(
+				(score) => score.is_keyword_user_added === true || score.is_user_added === true
+			)
+		)
+	);
 
 	$effect(() => {
 		trackedKeywordRows = data.userTrackedKeywordsForApp ?? [];
@@ -188,6 +229,21 @@
 						</div>
 					{/each}
 				</div>
+			{/if}
+		</section>
+
+		<section class={`${cardBase} p-6`}>
+			<h2 class="h5 md:h4 mb-3">My Keyword Performance Table</h2>
+			<p class="mb-3 text-sm text-primary-800-200">
+				Shows keyword metrics for rows flagged as user-added (`is_keyword_user_added`) in app
+				keyword scores.
+			</p>
+			{#if userAddedKeywordScores.length > 0}
+				<AppKeywordsTable data={userAddedKeywordScores} storeId={myapp.store_id} linkMode="app" />
+			{:else}
+				<p class="text-sm text-primary-800-200">
+					No keyword score rows are currently flagged as user-added for this app.
+				</p>
 			{/if}
 		</section>
 	</div>

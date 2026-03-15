@@ -20,6 +20,21 @@ extracted_keywords AS (
     WHERE sa.store_id = :store_id
 ),
 
+user_keywords AS (
+    SELECT
+        sa.store,
+        k.id AS keyword_id
+    FROM keywords AS k
+    CROSS JOIN store_apps AS sa
+    WHERE
+        sa.store_id = :store_id
+        AND k.id IN (
+            SELECT id
+            FROM keywords
+            WHERE lower(keyword_text) = any(:keyword_texts)
+        )
+),
+
 all_keywords AS (
     SELECT
         store,
@@ -36,6 +51,14 @@ all_keywords AS (
         TRUE AS is_extracted,
         FALSE AS is_user_added
     FROM extracted_keywords
+    UNION
+    SELECT
+        store,
+        keyword_id,
+        FALSE AS is_ranking,
+        FALSE AS is_extracted,
+        TRUE AS is_user_added
+    FROM user_keywords
 )
 
 SELECT
@@ -55,8 +78,9 @@ SELECT
     ks.keyword_difficulty,
     ks.opportunity_score,
     ks.competitiveness_score,
-    BOOL_OR(ak.is_ranking) AS is_keyword_ranking,
-    BOOL_OR(ak.is_extracted) AS is_keyword_generated
+    bool_or(ak.is_ranking) AS is_keyword_ranking,
+    bool_or(ak.is_extracted) AS is_keyword_generated,
+    bool_or(ak.is_user_added) AS is_keyword_user_added
 FROM all_keywords AS ak
 LEFT JOIN keywords AS k ON ak.keyword_id = k.id
 LEFT JOIN ranked_keywords AS rk ON ak.keyword_id = rk.keyword_id

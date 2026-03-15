@@ -26,26 +26,6 @@
 
 	let { data, storeId, linkMode = 'app' }: DataTableProps = $props();
 
-	const keywordOriginLabel = (row: {
-		is_keyword_ranking?: boolean;
-		is_keyword_generated?: boolean;
-		is_user_added?: boolean;
-	}) => {
-		if (row.is_keyword_ranking) {
-			return 'Top / Ranking';
-		}
-
-		if (row.is_keyword_generated) {
-			return 'Found in Description';
-		}
-
-		if (row.is_user_added) {
-			return 'User Added';
-		}
-
-		return 'Unknown';
-	};
-
 	const formatScore = (value: number | string | null | undefined, digits = 0) => {
 		if (value === null || value === undefined || value === '' || value === 'NA') {
 			return '—';
@@ -81,7 +61,6 @@
 
 	const columns = genericColumns([
 		{ title: 'Keyword', accessorKey: 'keyword_text', isSortable: true },
-		{ title: 'Origin', accessorKey: 'is_keyword_ranking', isSortable: false },
 		{
 			title: 'Action',
 			accessorKey: 'keyword_action',
@@ -183,13 +162,6 @@
 					<tr class="border-t border-surface-200-800 hover:bg-surface-100-900/70">
 						<td class="px-4 py-3 align-top text-xs md:text-lg">
 							{row.original.keyword_text}
-						</td>
-						<td class="px-4 py-3 align-top text-xs md:text-sm">
-							<span
-								class="inline-flex rounded-full border border-surface-300-700 px-2 py-1 text-[11px] font-medium uppercase tracking-wide"
-							>
-								{keywordOriginLabel(row.original)}
-							</span>
 						</td>
 						<td class="px-4 py-3 align-top text-xs md:text-sm">
 							{#if linkMode === 'global'}
