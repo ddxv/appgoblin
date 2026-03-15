@@ -1,4 +1,4 @@
-<script lang="ts" generics="TData, TValue">
+<script lang="ts">
 	import {
 		type PaginationState,
 		type SortingState,
@@ -15,14 +15,16 @@
 
 	import { genericColumns } from '$lib/components/data-table/generic-column';
 
-	type DataTableProps<KeywordScore, TValue> = {
+	type DataTableProps = {
 		data: KeywordScore[];
+		storeId?: string;
+		linkMode?: 'app' | 'global';
 	};
 
 	let pagination = $state<PaginationState>({ pageIndex: 0, pageSize: 25 });
 	let sorting = $state<SortingState>([]);
 
-	let { data }: DataTableProps<KeywordScore, TValue> = $props();
+	let { data, storeId, linkMode = 'app' }: DataTableProps = $props();
 
 	const formatScore = (value: number | string | null | undefined, digits = 0) => {
 		if (value === null || value === undefined || value === '' || value === 'NA') {
@@ -59,6 +61,11 @@
 
 	const columns = genericColumns([
 		{ title: 'Keyword', accessorKey: 'keyword_text', isSortable: true },
+		{
+			title: 'Action',
+			accessorKey: 'keyword_action',
+			isSortable: false
+		},
 		{
 			title: 'Opportunity',
 			accessorKey: 'opportunity_score',
@@ -151,10 +158,36 @@
 				{/each}
 			</thead>
 			<tbody>
-				{#each table.getRowModel().rows as row (row.id)}
+				{#each table.getRowModel().rows as row, index (`${row.id}-${index}`)}
 					<tr class="border-t border-surface-200-800 hover:bg-surface-100-900/70">
 						<td class="px-4 py-3 align-top text-xs md:text-lg">
-							<a href="/keywords/en/{row.original.keyword_text}"> {row.original.keyword_text}</a>
+							{row.original.keyword_text}
+						</td>
+						<td class="px-4 py-3 align-top text-xs md:text-sm">
+							{#if linkMode === 'global'}
+								<a
+									class="btn btn-sm preset-tonal"
+									href={`/keywords/en/${encodeURIComponent(row.original.keyword_text)}`}
+								>
+									View Keyword Global Page
+								</a>
+								<p class="mt-1 text-xs text-primary-800-200">Leaves this app dashboard</p>
+							{:else if storeId}
+								<div class="grid grid-cols-1 space-y-1">
+									<a
+										class="btn btn-sm preset-tonal"
+										href={`/apps/${storeId}/keywords/compare?k=${encodeURIComponent(row.original.keyword_text)}`}
+									>
+										View App's Keyword History
+									</a>
+									<a
+										class="btn btn-sm preset-tonal"
+										href={`/keywords/en/${encodeURIComponent(row.original.keyword_text)}`}
+									>
+										View Keyword Global Page
+									</a>
+								</div>
+							{/if}
 						</td>
 						<td class="px-4 py-3 align-top text-sm md:text-lg">
 							{formatScore(row.original.opportunity_score)}

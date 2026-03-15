@@ -1,7 +1,8 @@
 import type { PageServerLoad } from './$types';
 import { createApiClient } from '$lib/server/api';
+import { db } from '$lib/server/auth/db';
 
-export const load: PageServerLoad = async ({ fetch, params, parent }) => {
+export const load: PageServerLoad = async ({ fetch, params, parent, locals }) => {
 	const api = createApiClient(fetch);
 	const id = params.id;
 	// Load parent data first because it is cached
@@ -13,6 +14,21 @@ export const load: PageServerLoad = async ({ fetch, params, parent }) => {
 		myKeywords = await api.get(`/apps/${id}/keywords`, 'App Keywords');
 	}
 
+	let userTrackedKeywordsForApp: { id: number; keyword_text: string; created_at: Date }[] = [];
+	if (locals.user) {
+		userTrackedKeywordsForApp = await db.query<{
+			id: number;
+			keyword_text: string;
+			created_at: Date;
+		}>(
+			`SELECT id, keyword_text, created_at
+			 FROM public.user_tracked_keywords
+			 WHERE user_id = $1 AND store_id = $2
+			 ORDER BY created_at DESC`,
+			[locals.user.id, id]
+		);
+	}
+
 	return {
 		// Meta Tags
 		toFollow: 'noindex, nofollow',
@@ -21,6 +37,7 @@ export const load: PageServerLoad = async ({ fetch, params, parent }) => {
 		keywords: `keywords, aso`,
 		// Data
 		myKeywords,
-		myapp
+		myapp,
+		userTrackedKeywordsForApp
 	};
 };

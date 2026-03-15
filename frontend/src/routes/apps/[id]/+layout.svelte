@@ -2,6 +2,7 @@
 	import { page } from '$app/state';
 	import RatingInstallsLarge from '$lib/RatingInstallsLarge.svelte';
 	import StarsRating from '$lib/StarsRating.svelte';
+	import FollowToggleButton from '$lib/components/follows/FollowToggleButton.svelte';
 	import type { CompanyTypes, AppFullDetail, CatData } from '../../../types';
 	import AvailableOniOs from '$lib/svg/AvailableOniOS.svelte';
 	import AppTabs from '$lib/utils/AppTabs.svelte';
@@ -14,6 +15,7 @@
 			myapp: AppFullDetail;
 			companyTypes: CompanyTypes;
 			appCats: CatData;
+			isFollowingApp?: boolean;
 		};
 		children: any;
 	} = $props();
@@ -173,6 +175,14 @@
 				</div>
 				<div class="btn preset-tonal hover:preset-tonal-primary w-full text-xs md:text-sm">
 					<a href="/apps/comparison/{data.myapp.store_id}"> Add App to Comparison </a>
+				</div>
+				<div>
+					<FollowToggleButton
+						entity="app"
+						label="App"
+						storeId={data.myapp.store_id}
+						initialFollowing={Boolean(data.isFollowingApp)}
+					/>
 				</div>
 			</div>
 		</div>

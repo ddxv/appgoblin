@@ -212,6 +212,15 @@ class CompanyDetail:
 
 
 @dataclass
+class CompanyFollowLookup:
+    """Canonical company metadata used by follow actions."""
+
+    company_id: int
+    company_name: str
+    company_domain: str
+
+
+@dataclass
 class CompanyPubIDTotals:
     """Totals for a publisher ID."""
 

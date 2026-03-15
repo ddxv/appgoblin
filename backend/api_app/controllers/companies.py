@@ -20,6 +20,7 @@ import pandas as pd
 from litestar import Controller, get
 from litestar.config.response_cache import CACHE_FOREVER
 from litestar.datastructures import State
+from litestar.exceptions import NotFoundException
 from litestar.response import Stream
 
 from api_app.models import (
@@ -28,6 +29,7 @@ from api_app.models import (
     CompaniesOverview,
     CompanyCategoryOverview,
     CompanyDetail,
+    CompanyFollowLookup,
     CompanyPatternsDict,
     CompanyPlatformOverview,
     CompanyPubIDOverview,
@@ -49,6 +51,7 @@ from dbcon.queries import (
     get_company_adstxt_publisher_id_apps_raw,
     get_company_adstxt_publishers_overview,
     get_company_categories_topn,
+    get_company_follow_lookup,
     get_company_sdks,
     get_company_stats,
     get_company_tree,
@@ -822,6 +825,28 @@ class CompaniesController(Controller):
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(f"GET /api/companies/{company_domain} took {duration}ms")
         return overview
+
+    @get(path="/companies/{company_domain:str}/lookup", cache=3600)
+    async def company_lookup(
+        self: Self,
+        state: State,
+        company_domain: str,
+    ) -> CompanyFollowLookup:
+        """Resolve a company domain to company_id metadata for follow actions."""
+        start = time.perf_counter() * 1000
+        df = get_company_follow_lookup(state=state, company_domain=company_domain)
+        if df.empty:
+            msg = f"Company domain not found: {company_domain!r}"
+            raise NotFoundException(msg, status_code=404)
+
+        row = df.to_dict(orient="records")[0]
+        duration = round((time.perf_counter() * 1000 - start), 2)
+        logger.info(f"GET /api/companies/{company_domain}/lookup took {duration}ms")
+        return CompanyFollowLookup(
+            company_id=int(row["company_id"]),
+            company_name=str(row["company_name"]),
+            company_domain=str(row["company_domain"]),
+        )
 
     @get(
         path="/companies/{company_domain:str}/topapps",

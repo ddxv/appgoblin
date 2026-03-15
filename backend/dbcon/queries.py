@@ -845,6 +845,16 @@ def search_companies(state: State, search_input: str, limit: int = 10) -> pd.Dat
     return df
 
 
+def get_company_follow_lookup(state: State, company_domain: str) -> pd.DataFrame:
+    """Resolve company domain to canonical company metadata."""
+    df = pd.read_sql(
+        sql.company_follow_lookup,
+        state.dbcon.engine,
+        params={"company_domain": company_domain},
+    )
+    return df
+
+
 def search_apps(state: State, search_input: str, limit: int = 100) -> pd.DataFrame:
     """Search apps by term in database."""
     logger.info(f"App search: {search_input=}")
@@ -967,10 +977,21 @@ def query_apps_crossfilter(
     return df
 
 
-def get_single_app_keywords(state: State, store_id: str) -> pd.DataFrame:
+def get_single_app_keywords(
+    state: State, store_id: str, keyword_texts: list[str] | None = None
+) -> pd.DataFrame:
     """Get single app keywords."""
+    if keyword_texts is None:
+        keyword_texts = []
+
+    keyword_texts = [
+        text.strip().lower() for text in keyword_texts if text and text.strip()
+    ]
+
     df = pd.read_sql(
-        sql.single_app_keywords, state.dbcon.engine, params={"store_id": store_id}
+        sql.single_app_keywords,
+        state.dbcon.engine,
+        params={"store_id": store_id, "keyword_texts": keyword_texts},
     )
     df = df.sort_values(by="d30_best_rank", ascending=True)
     return df
@@ -1056,3 +1077,25 @@ def insert_search_query(state: State, search_term: str, user_id: int | None) -> 
 
     with state.dbconwrite.engine.connect() as connection, connection.begin():
         connection.execute(sql.insert_search_query, data)
+
+
+def get_app_keywords_history(
+    state: State, store_app_id: int, keyword_ids: tuple[int, ...], days: int = 120
+) -> pd.DataFrame:
+    """Get app keyword rank history."""
+    start_date = (
+        datetime.datetime.now(datetime.UTC) - datetime.timedelta(days=days)
+    ).strftime("%Y-%m-%d")
+    query = sql.app_keywords_history.bindparams(
+        bindparam("keyword_ids", expanding=True)
+    )
+    df = pd.read_sql_query(
+        query,
+        state.dbcon.engine,
+        params={
+            "store_app_id": store_app_id,
+            "keyword_ids": keyword_ids,
+            "start_date": start_date,
+        },
+    )
+    return df

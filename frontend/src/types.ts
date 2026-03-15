@@ -198,7 +198,6 @@ export interface CompanySDKParts {
 
 export interface AppHistoryInfo {
 	crawled_date: string;
-	review_count: number;
 	rating: number;
 	installs: number;
 	country: string;
@@ -503,6 +502,10 @@ export interface KeywordScore {
 	keyword_text: string;
 	app_count: number;
 	total_apps: number;
+	is_keyword_ranking?: boolean;
+	is_keyword_generated?: boolean;
+	is_keyword_user_added?: boolean;
+	is_user_added?: boolean;
 	competitiveness_score: number | null;
 	d30_best_rank: number | string | null;
 	latest_app_rank: number | string | null;
@@ -550,7 +553,6 @@ export interface AppCountryMetrics {
 	country: string;
 	rating: number;
 	rating_count: number;
-	review_count: number;
 	one_star: number;
 	two_star: number;
 	three_star: number;
@@ -558,9 +560,6 @@ export interface AppCountryMetrics {
 	five_star: number;
 	new_rating: number;
 	rating_rate_of_change: number;
-	new_review_count: number;
-	review_count_rate_of_change: number;
-	review_count_avg_per_day: number;
 	new_rating_count: number;
 	rating_count_rate_of_change: number;
 	rating_count_avg_per_day: number;
@@ -587,7 +586,6 @@ export interface AppGlobalMetrics {
 	rating: number;
 	weekly_ratings: number;
 	weekly_active_users: number;
-	monthly_active_users: number;
 	weekly_ad_revenue: number;
 	weekly_iap_revenue: number;
 	cumulative_installs: number;
