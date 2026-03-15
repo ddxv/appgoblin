@@ -19,9 +19,11 @@
 
 	// ── Active keyword set (drives the URL) ───────────────────────────────────
 	// Start from the server-resolved set so the chip list is always in sync.
-	let activeKeywords = $state<string[]>(
-		data.resolvedKeywords.map((k) => k.keyword_text)
-	);
+	let activeKeywords = $state<string[]>([]);
+
+	$effect(() => {
+		activeKeywords = data.resolvedKeywords.map((keyword) => keyword.keyword_text);
+	});
 
 	// Search / picker state
 	let searchQuery = $state('');
@@ -88,18 +90,37 @@
 		const history = data.keywordHistory;
 		if (!history || history.length === 0) return [];
 
-		const dateMap = new Map<string, Record<string, any>>();
-		for (const row of history) {
-			const d: string = row.crawled_date;
-			if (!dateMap.has(d)) dateMap.set(d, { crawled_date: d });
-			const entry = dateMap.get(d)!;
-			const kw = data.resolvedKeywords.find((k) => k.keyword_id === row.keyword_id);
-			if (kw) entry[kw.keyword_text] = row.app_rank;
-		}
+		const keywordTextById = new Map<string, string>(
+			data.resolvedKeywords.map((keyword) => [String(keyword.keyword_id), keyword.keyword_text])
+		);
 
-		return Array.from(dateMap.values()).sort(
+		const rows = history.map((row) => {
+			const entry: Record<string, string | number | null> = {
+				crawled_date: String(row.crawled_date)
+			};
+
+			for (const [key, rawValue] of Object.entries(row)) {
+				if (key === 'crawled_date') continue;
+				const keywordText = keywordTextById.get(key);
+				if (!keywordText) continue;
+				entry[keywordText] =
+					typeof rawValue === 'number'
+						? Number.isFinite(rawValue)
+							? rawValue
+							: null
+						: rawValue === null
+							? null
+							: Number.isFinite(Number(rawValue))
+								? Number(rawValue)
+								: null;
+			}
+
+			return entry;
+		});
+
+		return rows.sort(
 			(a, b) =>
-				new Date(a.crawled_date).getTime() - new Date(b.crawled_date).getTime()
+				new Date(String(a.crawled_date)).getTime() - new Date(String(b.crawled_date)).getTime()
 		);
 	});
 
@@ -113,14 +134,23 @@
 
 	const yDomain = $derived.by((): [number, number] => {
 		if (chartData.length === 0) return [10, 1];
-		const maxRank = Math.max(
-			...chartData.flatMap((d) =>
-				Object.entries(d)
-					.filter(([k]) => k !== 'crawled_date')
-					.map(([, v]) => (typeof v === 'number' ? v : 0))
-			)
+		const rankValues = chartData.flatMap((row) =>
+			Object.entries(row)
+				.filter(([key]) => key !== 'crawled_date')
+				.map(([, value]) => (typeof value === 'number' ? value : null))
+				.filter((value): value is number => value !== null)
 		);
+		if (rankValues.length === 0) return [10, 1];
+		const maxRank = Math.max(...rankValues);
 		return [Math.max(maxRank + 5, 10), 1];
+	});
+
+	$effect(() => {
+		console.debug('[keywords-compare] raw keywordHistory', data.keywordHistory);
+		console.debug('[keywords-compare] resolvedKeywords', data.resolvedKeywords);
+		console.debug('[keywords-compare] chartData', chartData);
+		console.debug('[keywords-compare] seriesKeys', seriesKeys);
+		console.debug('[keywords-compare] yDomain', yDomain);
 	});
 
 	// ── Styles ─────────────────────────────────────────────────────────────────
@@ -147,8 +177,8 @@
 	<section class={cardPadding}>
 		<h1 class="h4 md:h3 mb-1">Keyword Rank Comparison</h1>
 		<p class={textMuted}>
-			Compare rank history for <strong>{data.myapp.name}</strong> across multiple keywords.
-			Select up to 10.
+			Compare rank history for <strong>{data.myapp.name}</strong> across multiple keywords. Select up
+			to 10.
 		</p>
 	</section>
 
@@ -164,7 +194,9 @@
 			{#each activeKeywords as kw, i (kw)}
 				<span
 					class="flex items-center gap-1.5 rounded-full border px-3 py-1 text-sm font-medium"
-					style="border-color: {plotColors[i % plotColors.length]}; background-color: {plotColors[i % plotColors.length]}22"
+					style="border-color: {plotColors[i % plotColors.length]}; background-color: {plotColors[
+						i % plotColors.length
+					]}22"
 				>
 					<span
 						class="h-2.5 w-2.5 rounded-full"
@@ -209,7 +241,10 @@
 							<button
 								type="button"
 								class="absolute right-2 top-1/2 -translate-y-1/2 text-primary-500 hover:text-primary-900"
-								onclick={() => { searchQuery = ''; pickerOpen = false; }}
+								onclick={() => {
+									searchQuery = '';
+									pickerOpen = false;
+								}}
 							>
 								✕
 							</button>
@@ -230,7 +265,9 @@
 							{@const appVisible = filteredCandidates.filter((c) => !c.isTracked)}
 
 							{#if trackedVisible.length > 0}
-								<div class="border-b border-surface-200-800 px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-primary-700-300">
+								<div
+									class="border-b border-surface-200-800 px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-primary-700-300"
+								>
 									Your tracked keywords
 								</div>
 								{#each trackedVisible as candidate}
@@ -247,7 +284,9 @@
 
 							{#if appVisible.length > 0}
 								{#if trackedVisible.length > 0}
-									<div class="border-b border-surface-200-800 px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-primary-700-300">
+									<div
+										class="border-b border-surface-200-800 px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-primary-700-300"
+									>
 										App keywords
 									</div>
 								{/if}
@@ -273,7 +312,9 @@
 				{/if}
 			</p>
 		{:else}
-			<p class="text-xs text-warning-600">Maximum of 10 keywords reached. Remove one to add another.</p>
+			<p class="text-xs text-warning-600">
+				Maximum of 10 keywords reached. Remove one to add another.
+			</p>
 		{/if}
 	</section>
 

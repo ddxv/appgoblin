@@ -1069,16 +1069,22 @@ def insert_search_query(state: State, search_term: str, user_id: int | None) -> 
 
 
 def get_app_keywords_history(
-    state: State, myapp: int, myid: tuple[int, ...], days: int = 90
+    state: State, store_app_id: int, keyword_ids: tuple[int, ...], days: int = 120
 ) -> pd.DataFrame:
     """Get app keyword rank history."""
     start_date = (
         datetime.datetime.now(datetime.UTC) - datetime.timedelta(days=days)
     ).strftime("%Y-%m-%d")
-    query = sql.app_keywords_history.bindparams(bindparam("myid", expanding=True))
+    query = sql.app_keywords_history.bindparams(
+        bindparam("keyword_ids", expanding=True)
+    )
     df = pd.read_sql_query(
         query,
         state.dbcon.engine,
-        params={"myapp": myapp, "myid": myid, "start_date": start_date},
+        params={
+            "store_app_id": store_app_id,
+            "keyword_ids": keyword_ids,
+            "start_date": start_date,
+        },
     )
     return df

@@ -1,8 +1,11 @@
 import type { PageServerLoad } from './$types';
 import { createApiClient } from '$lib/server/api';
 import { db } from '$lib/server/auth/db';
+import { requireAuth } from '$lib/server/auth/auth';
 
-export const load: PageServerLoad = async ({ fetch, url, parent, locals }) => {
+export const load: PageServerLoad = async (event) => {
+	const { fetch, url, parent } = event;
+	const { user } = requireAuth(event);
 	const api = createApiClient(fetch);
 	const { myapp } = await parent();
 	const storeId = myapp.store_id as string;
@@ -28,25 +31,19 @@ export const load: PageServerLoad = async ({ fetch, url, parent, locals }) => {
 	if (myKeywords && typeof myKeywords === 'object' && 'keyword_scores' in myKeywords) {
 		const scores = (myKeywords as any).keyword_scores as any[];
 		availableKeywords = [...scores]
-			.sort(
-				(a, b) =>
-					(Number(b.opportunity_score) || 0) - (Number(a.opportunity_score) || 0)
-			)
+			.sort((a, b) => (Number(b.opportunity_score) || 0) - (Number(a.opportunity_score) || 0))
 			.map((s) => s.keyword_text as string)
 			.filter(Boolean);
 	}
 
 	// Fetch user's personally tracked keywords for this app
-	let trackedKeywords: string[] = [];
-	if (locals.user) {
-		const rows = await db.query<{ keyword_text: string }>(
-			`SELECT keyword_text FROM public.user_tracked_keywords
-			 WHERE user_id = $1 AND store_id = $2
-			 ORDER BY created_at DESC`,
-			[locals.user.id, storeId]
-		);
-		trackedKeywords = rows.map((r) => r.keyword_text);
-	}
+	const rows = await db.query<{ keyword_text: string }>(
+		`SELECT keyword_text FROM public.user_tracked_keywords
+		 WHERE user_id = $1 AND store_id = $2
+		 ORDER BY created_at DESC`,
+		[user.id, storeId]
+	);
+	const trackedKeywords = rows.map((r) => r.keyword_text);
 
 	let keywordHistory: any[] = [];
 	let resolvedKeywords: { keyword_id: number; keyword_text: string }[] = [];
@@ -65,7 +62,7 @@ export const load: PageServerLoad = async ({ fetch, url, parent, locals }) => {
 			.slice(0, 10);
 
 		if (resolvedKeywords.length > 0) {
-			const queryParams = resolvedKeywords.map((k) => `myid=${k.keyword_id}`).join('&');
+			const queryParams = resolvedKeywords.map((k) => `keyword_ids=${k.keyword_id}`).join('&');
 			try {
 				keywordHistory = await api.get(
 					`/keywords/app/${myapp.id}?${queryParams}`,

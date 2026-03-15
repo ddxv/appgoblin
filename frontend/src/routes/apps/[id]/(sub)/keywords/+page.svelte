@@ -2,9 +2,6 @@
 	import { page } from '$app/state';
 	import type { AppFullDetail, KeywordScore } from '../../../../../types';
 	import AppKeywordsTable from '$lib/AppKeywordsTable.svelte';
-	import { LineChart } from 'layerchart';
-	import { format, PeriodType } from '@layerstack/utils';
-	import { plotColors } from '$lib/constants';
 
 	type KeywordData = {
 		keywords: string[];
@@ -385,59 +382,6 @@
 	const headingListClass = 'h5 md:h4 mb-3';
 	const summaryParagraphClass = 'mt-4 text-sm text-primary-900-100';
 	const descriptionSnippetClass = 'mt-2 text-xs text-primary-800-200';
-
-	// Chart preparation
-	const keywordHistoryData = $derived.by(() => {
-		const history = data.keywordHistory as any[] | undefined;
-		if (!history || history.length === 0) return [];
-
-		// group by crawled_date to create a single row per date with rank per keyword
-		const dateMap = new Map<string, any>();
-
-		for (const row of history) {
-			const d = row.crawled_date;
-			if (!dateMap.has(d)) {
-				dateMap.set(d, { crawled_date: d });
-			}
-			const entry = dateMap.get(d);
-			// Find the keyword text from our keyword data based on the keyword_id
-			const ks = keywordScores.find((s) => s.keyword_id === row.keyword_id);
-			if (ks) {
-				entry[ks.keyword_text] = row.app_rank;
-			}
-		}
-
-		return Array.from(dateMap.values()).sort(
-			(a, b) => new Date(a.crawled_date).getTime() - new Date(b.crawled_date).getTime()
-		);
-	});
-
-	const historyRankYDomain = $derived.by((): [number, number] => {
-		if (keywordHistoryData.length === 0) return [10, 1];
-		const maxRank = Math.max(
-			...keywordHistoryData.flatMap((d) =>
-				Object.entries(d)
-					.filter(([k]) => k !== 'crawled_date')
-					.map(([, v]) => (typeof v === 'number' ? v : 0))
-			)
-		);
-		return [Math.max(maxRank + 5, 10), 1];
-	});
-	const seriesKeys = $derived.by(() => {
-		if (keywordHistoryData.length === 0) return [];
-		// get all keys except crawled_date
-		const keys = new Set<string>();
-		for (const row of keywordHistoryData) {
-			for (const key of Object.keys(row)) {
-				if (key !== 'crawled_date') keys.add(key);
-			}
-		}
-		return Array.from(keys).map((key, i) => ({
-			key,
-			label: key,
-			color: plotColors[i % plotColors.length]
-		}));
-	});
 </script>
 
 {#await data.myapp}
@@ -527,33 +471,6 @@
 				{/if}
 			</div>
 		</section>
-
-		{#if keywordHistoryData.length > 0}
-			<section class={cardPaddingLg}>
-				<div class="mb-4 flex items-center justify-between">
-					<h4 class="h5 md:h4">Tracked Keywords History</h4>
-					<p class={textMutedXsClass}>Top 5 tracked keywords ranking over time (Lower is better)</p>
-				</div>
-				<div class="h-[350px]">
-					<LineChart
-						data={keywordHistoryData}
-						x="crawled_date"
-						series={seriesKeys}
-						layer="svg"
-						props={{
-							xAxis: {
-								format: (d) => format(d, PeriodType.Day, { variant: 'short' }),
-								ticks: 5
-							},
-							yAxis: {
-								format: (d) => `#${d}`
-							}
-						}}
-						yDomain={historyRankYDomain}
-					/>
-				</div>
-			</section>
-		{/if}
 
 		{#if hasKeywordData}
 			<section class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">

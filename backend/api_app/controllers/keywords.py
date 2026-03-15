@@ -55,9 +55,9 @@ class KeywordsController(Controller):
             "google": {"ranks": df_android.to_dict(orient="records")},
         }
 
-    @get(path="/app/{myapp:int}", cache=3600)
+    @get(path="/app/{store_app_id:int}", cache=3600)
     async def get_app_keywords(
-        self: Self, state: State, myapp: int, myid: list[int]
+        self: Self, state: State, store_app_id: int, keyword_ids: list[int]
     ) -> list[dict]:
         """Handle GET request for app keywords history.
 
@@ -66,10 +66,34 @@ class KeywordsController(Controller):
             A list of dictionary representations of the history
 
         """
-        if not myid:
+        if not keyword_ids:
             return []
-        df = get_app_keywords_history(state, myapp=myapp, myid=tuple(myid))
+        logger.info(
+            f"Getting keyword history for app {store_app_id} and keywords {keyword_ids}"
+        )
+        df = get_app_keywords_history(
+            state, store_app_id=store_app_id, keyword_ids=tuple(keyword_ids)
+        )
         if df.empty:
             return []
+
+        # Build one row per date with keyword_id columns, then carry rank forward.
         df["crawled_date"] = pd.to_datetime(df["crawled_date"]).dt.strftime("%Y-%m-%d")
-        return df.to_dict(orient="records")
+        pivoted = (
+            df.pivot_table(
+                index="crawled_date",
+                columns="keyword_id",
+                values="app_rank",
+                aggfunc="first",
+            )
+            .sort_index()
+            .ffill()
+        )
+
+        # Use string keys for stable JSON object fields.
+        pivoted.columns = pivoted.columns.astype(str)
+        pivoted = pivoted.reset_index()
+        pivoted = pivoted.astype(object).where(pd.notna(pivoted), None)
+        pdicts = pivoted.to_dict(orient="records")
+
+        return pdicts
