@@ -159,78 +159,80 @@
 {#await data.myapp}
 	<div class={`${cardBase} p-6 text-center`}>Loading app details...</div>
 {:then myapp}
-	<div class="space-y-6">
+	<div class="space-y-6 px-2 md:px-8">
 		<AppKeywordsNav storeId={myapp.store_id} />
-
-		<section class={`${cardBase} p-6`}>
-			<h1 class="h4 md:h3 mb-3">My Tracked Keywords</h1>
-			<p class="text-sm text-primary-800-200 mb-4">
-				Manage your personal watchlist for {myapp.name}.
-			</p>
-			<p class="text-sm text-primary-800-200 mb-4">
-				Tracked keywords are your priority ASO set for this app. Use this list to build focused
-				compare views and monitor movement over time.
-			</p>
-			<form
-				onsubmit={(event) => {
-					event.preventDefault();
-					addTrackedKeywordForApp();
-				}}
-				class="flex flex-col gap-2 md:flex-row"
-			>
-				<input
-					type="text"
-					class="input flex-1"
-					placeholder="Add a keyword to track"
-					bind:value={newKeywordText}
-					disabled={keywordTrackerLoading}
-				/>
-				<button
-					type="submit"
-					class="btn preset-tonal w-full md:w-auto"
-					disabled={keywordTrackerLoading}
+		<div class="grid grid-cols-2 gap-2 md:gap-8">
+			<section class={`${cardBase} p-6`}>
+				<h1 class="h4 md:h3 mb-3">My Keywords</h1>
+				<p class="text-sm text-primary-800-200 mb-4">
+					Manage your personal watchlist for {myapp.name}.
+				</p>
+				<p class="text-sm text-primary-800-200 mb-4">
+					Tracked keywords are your priority ASO set for this app. Use this list to build focused
+					compare views and monitor movement over time.
+				</p>
+				<form
+					onsubmit={(event) => {
+						event.preventDefault();
+						addTrackedKeywordForApp();
+					}}
+					class="flex flex-col gap-2 md:flex-row"
 				>
-					{keywordTrackerLoading ? 'Saving...' : 'Add Keyword'}
-				</button>
-			</form>
+					<input
+						type="text"
+						class="input flex-1"
+						placeholder="Add a keyword to track"
+						bind:value={newKeywordText}
+						disabled={keywordTrackerLoading}
+					/>
+					<button
+						type="submit"
+						class="btn preset-tonal w-full md:w-auto"
+						disabled={keywordTrackerLoading}
+					>
+						{keywordTrackerLoading ? 'Saving...' : 'Add Keyword'}
+					</button>
+				</form>
 
-			{#if keywordTrackerMessage}
-				<p class="mt-2 text-sm text-primary-800-200">{keywordTrackerMessage}</p>
-			{/if}
-		</section>
+				{#if keywordTrackerMessage}
+					<p class="mt-2 text-sm text-primary-800-200">{keywordTrackerMessage}</p>
+				{/if}
+			</section>
 
-		<section class={`${cardBase} p-6`}>
-			<h2 class="h5 md:h4 mb-3">Tracked List</h2>
-			<p class="mb-3 text-xs text-primary-800-200">
-				Keep this list tight: remove low-value terms so compare stays focused on strategic keywords.
-			</p>
-			{#if trackedKeywordRows.length === 0}
-				<p class="text-sm text-primary-800-200">No personal tracked keywords for this app yet.</p>
-			{:else}
-				<div class="space-y-2">
-					{#each trackedKeywordRows as row (row.id)}
-						<div
-							class="flex flex-col gap-3 rounded-lg border border-surface-300-700 p-3 md:flex-row md:items-center md:justify-between"
-						>
-							<div>
-								<p class="font-medium">{row.keyword_text}</p>
-								<p class="text-xs text-primary-800-200">
-									Added {new Date(row.created_at).toLocaleString()}
-								</p>
-							</div>
-							<button
-								type="button"
-								class="btn preset-outlined-error-500 btn-sm w-full md:w-auto"
-								onclick={() => removeTrackedKeywordForApp(row.keyword_text)}
-								disabled={keywordTrackerLoading}
+			<section class={`${cardBase} p-6`}>
+				<h2 class="h5 md:h4 mb-3">Current List</h2>
+				<p class="mb-3 text-xs text-primary-800-200">
+					Keep this list tight: remove low-value terms so compare stays focused on strategic
+					keywords.
+				</p>
+				{#if trackedKeywordRows.length === 0}
+					<p class="text-sm text-primary-800-200">No personal tracked keywords for this app yet.</p>
+				{:else}
+					<div class="space-y-2">
+						{#each trackedKeywordRows as row (row.id)}
+							<div
+								class="flex flex-col gap-3 rounded-lg border border-surface-300-700 p-3 md:flex-row md:items-center md:justify-between"
 							>
-								Remove
-							</button>
-						</div>
-					{/each}
-				</div>
-			{/if}
-		</section>
+								<div>
+									<p class="font-medium">{row.keyword_text}</p>
+									<p class="text-xs text-primary-800-200">
+										Added {new Date(row.created_at).toLocaleString()}
+									</p>
+								</div>
+								<button
+									type="button"
+									class="btn preset-outlined-error-500 btn-sm w-full md:w-auto"
+									onclick={() => removeTrackedKeywordForApp(row.keyword_text)}
+									disabled={keywordTrackerLoading}
+								>
+									Remove
+								</button>
+							</div>
+						{/each}
+					</div>
+				{/if}
+			</section>
+		</div>
 
 		<section class={`${cardBase} p-6`}>
 			<h2 class="h5 md:h4 mb-3">My Keyword Performance Table</h2>

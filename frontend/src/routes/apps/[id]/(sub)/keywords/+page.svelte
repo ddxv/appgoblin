@@ -183,7 +183,7 @@
 				<p class="mt-2 text-xs text-primary-800-200">Suggestions extracted from app metadata</p>
 			</div>
 			<div class={cardBase + ' p-4'}>
-				<p class="text-xs uppercase tracking-wide text-primary-900-100">My tracked keywords</p>
+				<p class="text-xs uppercase tracking-wide text-primary-900-100">My keywords</p>
 				<p class="text-3xl font-semibold text-primary-900-100 mt-1">
 					{trackedRows.length.toLocaleString()}
 				</p>

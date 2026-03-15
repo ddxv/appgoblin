@@ -1,12 +1,12 @@
 <script lang="ts">
-	type FollowEntity = 'app' | 'keyword' | 'company';
+	import LogIn from 'lucide-svelte/icons/log-in';
+	type FollowEntity = 'app' | 'company';
 
 	let {
 		entity,
 		label,
 		initialFollowing = false,
 		storeId,
-		keywordText,
 		companyId,
 		compact = false
 	}: {
@@ -14,7 +14,6 @@
 		label: string;
 		initialFollowing?: boolean;
 		storeId?: string;
-		keywordText?: string;
 		companyId?: number;
 		compact?: boolean;
 	} = $props();
@@ -42,7 +41,6 @@
 					entity,
 					follow: !following,
 					storeId,
-					keywordText,
 					companyId
 				})
 			});
@@ -74,7 +72,7 @@
 		{:else if following}
 			Following {label}
 		{:else}
-			Follow {label}
+			<LogIn class="h-3.5 w-3.5" aria-hidden="true" /> Follow {label}
 		{/if}
 	</button>
 	{#if message}
