@@ -63,11 +63,14 @@
 			<p class="text-sm text-primary-800-200">
 				These are suggestion keywords extracted from metadata and may not rank for this app.
 			</p>
+			<p class="mt-2 text-sm text-primary-800-200">
+				Treat these as expansion ideas: validate opportunity and difficulty before adding terms to
+				your tracked list.
+			</p>
 			<p class="mt-3 text-xs text-primary-800-200">
 				Use the action button to open the global keyword page outside this app dashboard.
 			</p>
 		</section>
-
 		<section class={`${cardBase} p-6`}>
 			{#if discoveryKeywords.length > 0}
 				<AppKeywordsTable data={discoveryKeywords} linkMode="global" />

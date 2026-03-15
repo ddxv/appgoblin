@@ -19,11 +19,11 @@
 </script>
 
 <nav class="rounded-xl border border-surface-300-700 bg-surface-100-900 p-3 shadow-sm">
-	<div class="flex flex-wrap gap-2">
+	<div class="flex gap-2 overflow-x-auto pb-1">
 		{#each items as item (item.href)}
 			<a
 				href={item.href}
-				class={`rounded-md px-3 py-2 text-sm font-medium transition-colors ${
+				class={`whitespace-nowrap rounded-md px-3 py-2 text-sm font-medium transition-colors ${
 					isActive(item.href)
 						? 'bg-primary-500 text-primary-contrast-500'
 						: 'bg-surface-200-800 text-primary-900-100 hover:bg-surface-300-700'

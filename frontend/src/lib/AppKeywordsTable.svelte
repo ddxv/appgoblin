@@ -83,6 +83,11 @@
 		{ title: 'Keyword', accessorKey: 'keyword_text', isSortable: true },
 		{ title: 'Origin', accessorKey: 'is_keyword_ranking', isSortable: false },
 		{
+			title: 'Action',
+			accessorKey: 'keyword_action',
+			isSortable: false
+		},
+		{
 			title: 'Opportunity',
 			accessorKey: 'opportunity_score',
 			isSortable: true
@@ -115,11 +120,6 @@
 		{
 			title: 'Major Competitors',
 			accessorKey: 'major_competitors',
-			isSortable: false
-		},
-		{
-			title: 'Action',
-			accessorKey: 'keyword_action',
 			isSortable: false
 		}
 	]);
@@ -191,6 +191,24 @@
 								{keywordOriginLabel(row.original)}
 							</span>
 						</td>
+						<td class="px-4 py-3 align-top text-xs md:text-sm">
+							{#if linkMode === 'global'}
+								<a
+									class="btn btn-sm preset-tonal"
+									href={`/keywords/en/${encodeURIComponent(row.original.keyword_text)}`}
+								>
+									Open Global Keyword Page
+								</a>
+								<p class="mt-1 text-xs text-primary-800-200">Leaves this app dashboard</p>
+							{:else if storeId}
+								<a
+									class="btn btn-sm preset-tonal"
+									href={`/apps/${storeId}/keywords/compare?k=${encodeURIComponent(row.original.keyword_text)}`}
+								>
+									View History
+								</a>
+							{/if}
+						</td>
 						<td class="px-4 py-3 align-top text-sm md:text-lg">
 							{formatScore(row.original.opportunity_score)}
 						</td>
@@ -227,24 +245,6 @@
 								<p class="font-medium">{formatScore(row.original.major_competitors, 0)}</p>
 								<p class="text-xs text-primary-800-200">major competitor apps</p>
 							</div>
-						</td>
-						<td class="px-4 py-3 align-top text-xs md:text-sm">
-							{#if linkMode === 'global'}
-								<a
-									class="btn btn-sm preset-tonal"
-									href={`/keywords/en/${encodeURIComponent(row.original.keyword_text)}`}
-								>
-									Open Global Keyword Page
-								</a>
-								<p class="mt-1 text-xs text-primary-800-200">Leaves this app dashboard</p>
-							{:else if storeId}
-								<a
-									class="btn btn-sm preset-tonal"
-									href={`/apps/${storeId}/keywords/compare?k=${encodeURIComponent(row.original.keyword_text)}`}
-								>
-									View In This App
-								</a>
-							{/if}
 						</td>
 					</tr>
 				{:else}

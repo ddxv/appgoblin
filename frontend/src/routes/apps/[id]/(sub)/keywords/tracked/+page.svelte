@@ -126,6 +126,10 @@
 			<p class="text-sm text-primary-800-200 mb-4">
 				Manage your personal watchlist for {myapp.name}.
 			</p>
+			<p class="text-sm text-primary-800-200 mb-4">
+				Tracked keywords are your priority ASO set for this app. Use this list to build focused
+				compare views and monitor movement over time.
+			</p>
 			<form
 				onsubmit={(event) => {
 					event.preventDefault();
@@ -140,7 +144,11 @@
 					bind:value={newKeywordText}
 					disabled={keywordTrackerLoading}
 				/>
-				<button type="submit" class="btn preset-tonal" disabled={keywordTrackerLoading}>
+				<button
+					type="submit"
+					class="btn preset-tonal w-full md:w-auto"
+					disabled={keywordTrackerLoading}
+				>
 					{keywordTrackerLoading ? 'Saving...' : 'Add Keyword'}
 				</button>
 			</form>
@@ -152,13 +160,16 @@
 
 		<section class={`${cardBase} p-6`}>
 			<h2 class="h5 md:h4 mb-3">Tracked List</h2>
+			<p class="mb-3 text-xs text-primary-800-200">
+				Keep this list tight: remove low-value terms so compare stays focused on strategic keywords.
+			</p>
 			{#if trackedKeywordRows.length === 0}
 				<p class="text-sm text-primary-800-200">No personal tracked keywords for this app yet.</p>
 			{:else}
 				<div class="space-y-2">
 					{#each trackedKeywordRows as row (row.id)}
 						<div
-							class="flex items-center justify-between rounded-lg border border-surface-300-700 p-3"
+							class="flex flex-col gap-3 rounded-lg border border-surface-300-700 p-3 md:flex-row md:items-center md:justify-between"
 						>
 							<div>
 								<p class="font-medium">{row.keyword_text}</p>
@@ -168,7 +179,7 @@
 							</div>
 							<button
 								type="button"
-								class="btn preset-outlined-error-500 btn-sm"
+								class="btn preset-outlined-error-500 btn-sm w-full md:w-auto"
 								onclick={() => removeTrackedKeywordForApp(row.keyword_text)}
 								disabled={keywordTrackerLoading}
 							>

@@ -183,6 +183,14 @@
 			Compare rank history for <strong>{data.myapp.name}</strong> across multiple keywords. Select up
 			to 10.
 		</p>
+		<p class="mt-2 text-sm text-primary-800-200">
+			This view helps you measure momentum, spot ranking drops, and evaluate whether tracked terms
+			are improving after metadata changes.
+		</p>
+		<p class="mt-2 text-xs text-primary-800-200">
+			Mobile tip: start with 3 to 5 keywords for easier chart readability, then add more when
+			needed.
+		</p>
 	</section>
 
 	<!-- Keyword Picker ───────────────────────────────────────────────────────── -->
