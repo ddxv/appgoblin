@@ -169,16 +169,24 @@
 									class="btn btn-sm preset-tonal"
 									href={`/keywords/en/${encodeURIComponent(row.original.keyword_text)}`}
 								>
-									Open Global Keyword Page
+									View Keyword Global Page
 								</a>
 								<p class="mt-1 text-xs text-primary-800-200">Leaves this app dashboard</p>
 							{:else if storeId}
-								<a
-									class="btn btn-sm preset-tonal"
-									href={`/apps/${storeId}/keywords/compare?k=${encodeURIComponent(row.original.keyword_text)}`}
-								>
-									View History
-								</a>
+								<div class="grid grid-cols-1 space-y-1">
+									<a
+										class="btn btn-sm preset-tonal"
+										href={`/apps/${storeId}/keywords/compare?k=${encodeURIComponent(row.original.keyword_text)}`}
+									>
+										View App's Keyword History
+									</a>
+									<a
+										class="btn btn-sm preset-tonal"
+										href={`/keywords/en/${encodeURIComponent(row.original.keyword_text)}`}
+									>
+										View Keyword Global Page
+									</a>
+								</div>
 							{/if}
 						</td>
 						<td class="px-4 py-3 align-top text-sm md:text-lg">

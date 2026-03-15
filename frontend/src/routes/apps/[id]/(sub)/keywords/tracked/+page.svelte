@@ -237,8 +237,9 @@
 		<section class={`${cardBase} p-6`}>
 			<h2 class="h5 md:h4 mb-3">My Keyword Performance Table</h2>
 			<p class="mb-3 text-sm text-primary-800-200">
-				Shows keyword metrics for rows flagged as user-added (`is_keyword_user_added`) in app
-				keyword scores.
+				Shows keyword metrics for keywords you've added to this app's tracked list that also have
+				ranking signals. Note if you added a new keyword recently, it may take some time for ranking
+				data to populate and show up in this
 			</p>
 			{#if userAddedKeywordScores.length > 0}
 				<AppKeywordsTable data={userAddedKeywordScores} storeId={myapp.store_id} linkMode="app" />
