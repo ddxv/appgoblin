@@ -180,17 +180,13 @@
 	<section class={cardPadding}>
 		<h1 class="h4 md:h3 mb-1">Keyword Rank Comparison</h1>
 		<p class={textMuted}>
-			Compare rank history for <strong>{data.myapp.name}</strong> across multiple keywords. Select up
-			to 10.
+			Compare rank history for <strong>{data.myapp.name}</strong> across multiple keywords.
 		</p>
 		<p class="mt-2 text-sm text-primary-800-200">
 			This view helps you measure momentum, spot ranking drops, and evaluate whether tracked terms
 			are improving after metadata changes.
 		</p>
-		<p class="mt-2 text-xs text-primary-800-200">
-			Mobile tip: start with 3 to 5 keywords for easier chart readability, then add more when
-			needed.
-		</p>
+		<p class="mt-2 text-xs text-primary-800-200">Tip: Add more keywords for comparison.</p>
 	</section>
 
 	<!-- Keyword Picker ───────────────────────────────────────────────────────── -->
@@ -213,7 +209,13 @@
 						class="h-2.5 w-2.5 rounded-full"
 						style="background-color: {plotColors[i % plotColors.length]}"
 					></span>
-					{kw}
+					<a
+						href={`/apps/${data.myapp.store_id}/keywords`}
+						class="hover:underline"
+						title="Open app keyword dashboard"
+					>
+						{kw}
+					</a>
 					<button
 						type="button"
 						onclick={() => removeKeyword(kw)}
@@ -227,7 +229,7 @@
 		</div>
 
 		<!-- Search / add picker -->
-		{#if activeKeywords.length < 10}
+		{#if activeKeywords.length <= 5}
 			<div class="relative">
 				<div class="flex gap-2">
 					<div class="relative flex-1">
@@ -377,15 +379,6 @@
 		<section class={`${cardPadding} text-center`}>
 			<h2 class="h5 mb-2">No keywords selected</h2>
 			<p class={textMuted}>Use the picker above to add keywords to compare.</p>
-		</section>
-	{/if}
-
-	<!-- Shareable URL tip -->
-	{#if activeKeywords.length > 0}
-		<section class={cardPadding}>
-			<p class="text-xs text-primary-800-200">
-				📎 This comparison is shareable — the URL updates as you add/remove keywords.
-			</p>
 		</section>
 	{/if}
 </div>
