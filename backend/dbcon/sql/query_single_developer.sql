@@ -47,7 +47,6 @@ SELECT
     sa.installs,
     sa.rating_count,
     sa.icon_url_100,
-    sa.icon_url_512,
     sa.featured_image_url,
     sa.tablet_image_url_1,
     sa.category AS app_category,

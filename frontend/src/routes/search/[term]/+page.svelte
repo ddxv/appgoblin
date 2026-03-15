@@ -10,7 +10,7 @@
 	}
 
 	let { data }: Props = $props();
-	let searchTerm: string | null = $state(page.params.term || '');
+	const searchTerm = $derived(page.params.term || '');
 
 	// App store filter state
 	type AppStore = 'apple' | 'google';

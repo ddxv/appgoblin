@@ -79,6 +79,8 @@ def get_search_results(state: State, search_term: str) -> AppGroupByStore:
     if decoded_input[-1] == "+":
         decoded_input = decoded_input[:-1]
     df = search_apps(state, search_input=decoded_input, limit=60)
+    logger.info(df)
+    logger.info(df.columns)
     df = extend_app_icon_url(df)
     logger.info(f"{decoded_input=} returned rows: {df.shape[0]}")
     apple_apps_dict: list[AppDetail] = df[df["store"].str.startswith("Apple")].to_dict(
