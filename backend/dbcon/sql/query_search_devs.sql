@@ -18,7 +18,6 @@ SELECT
    a.store_id,
    a.name,
    a.icon_url_100,
-   a.icon_url_512,
    a.featured_image_url,
    agml.total_installs AS installs,
    agml.rating,

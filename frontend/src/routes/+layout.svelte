@@ -2,7 +2,6 @@
 	import '../app.css';
 	import { page } from '$app/state';
 	import { Menu, Portal } from '@skeletonlabs/skeleton-svelte';
-	import { invalidate } from '$app/navigation';
 
 	import IconSearch from '$lib/svg/IconSearch.svelte';
 	import MenuIcon from 'lucide-svelte/icons/menu';
@@ -11,20 +10,6 @@
 
 	import LoginAccountButton from '$lib/LoginAccountButton.svelte';
 	import NavTabs from '$lib/NavTabs.svelte';
-
-	import { goto } from '$app/navigation';
-
-	let searchTerm: string = $state('');
-
-	function navigateToSearch(event: any) {
-		if (event.key === 'Enter' && searchTerm.trim() !== '') {
-			// Replace spaces with '+'
-			const encodedSearchTerm = encodeURIComponent(searchTerm.replace(/\s+/g, '+'));
-
-			// Navigate to the search route
-			goto(`/search/${encodedSearchTerm}`);
-		}
-	}
 
 	let { children } = $props();
 </script>
@@ -55,25 +40,23 @@
 
 				<AppBar.Trail class="overflow-hidden flex justify-end">
 					<div class="flex gap-1 md:gap-2">
-						<div class="input-group grid-cols-[auto_1fr_auto]">
-							<div class="ig-cell preset-tonal p-2 md:p-4">
-								<IconSearch />
-							</div>
+						<form
+							action="/search"
+							method="GET"
+							class="input-group grid-cols-[1fr_auto]"
+							role="search"
+						>
 							<input
-								class="ig-input md:hidden"
+								class="ig-input"
 								type="search"
-								placeholder="Search Apps..."
-								bind:value={searchTerm}
-								onkeydown={navigateToSearch}
-							/>
-							<input
-								class="ig-input hidden md:block"
-								type="search"
+								name="term"
 								placeholder="Search Apps & Companies"
-								bind:value={searchTerm}
-								onkeydown={navigateToSearch}
+								required
 							/>
-						</div>
+							<button class="ig-cell preset-tonal p-2 md:p-4" type="submit" aria-label="Search">
+								<IconSearch />
+							</button>
+						</form>
 
 						<LoginAccountButton />
 					</div>
