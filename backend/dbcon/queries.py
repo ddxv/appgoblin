@@ -447,7 +447,6 @@ def get_company_stats(
                     "app_count",
                     "installs_total",
                     "installs_d30",
-                    "rating_count_total",
                 ]
             ]
             .sum()
