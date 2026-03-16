@@ -1,6 +1,7 @@
 <script lang="ts">
 	import '../app.css';
 	import { page } from '$app/state';
+	import { goto } from '$app/navigation';
 	import { Menu, Portal } from '@skeletonlabs/skeleton-svelte';
 
 	import IconSearch from '$lib/svg/IconSearch.svelte';
@@ -41,10 +42,13 @@
 				<AppBar.Trail class="overflow-hidden flex justify-end">
 					<div class="flex gap-1 md:gap-2">
 						<form
-							action="/search"
-							method="GET"
 							class="input-group grid-cols-[1fr_auto]"
 							role="search"
+							onsubmit={(e) => {
+								e.preventDefault();
+								const term = (e.currentTarget as HTMLFormElement).term.value.trim();
+								if (term) goto(`/search/${encodeURIComponent(term)}`);
+							}}
 						>
 							<input
 								class="ig-input"

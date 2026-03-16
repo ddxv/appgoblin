@@ -209,13 +209,7 @@
 						class="h-2.5 w-2.5 rounded-full"
 						style="background-color: {plotColors[i % plotColors.length]}"
 					></span>
-					<a
-						href={`/apps/${data.myapp.store_id}/keywords`}
-						class="hover:underline"
-						title="Open app keyword dashboard"
-					>
-						{kw}
-					</a>
+					{kw}
 					<button
 						type="button"
 						onclick={() => removeKeyword(kw)}
