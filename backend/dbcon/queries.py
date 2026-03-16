@@ -857,7 +857,7 @@ def get_company_follow_lookup(state: State, company_domain: str) -> pd.DataFrame
 def search_apps(state: State, search_input: str, limit: int = 100) -> pd.DataFrame:
     """Search apps by term in database."""
     logger.info(f"App search: {search_input=}")
-    search_input = search_input.replace("+", " & ")
+    search_input = " & ".join(search_input.replace("+", " ").split())
     apps = pd.read_sql(
         sql.search_apps,
         state.dbcon.engine,
