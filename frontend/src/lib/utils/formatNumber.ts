@@ -45,3 +45,23 @@ export function getRevenueBucket(value: number): string {
 
 	return '$10K+';
 }
+
+/**
+ * Formats counts into broad MAU-style buckets.
+ * Uses lower-bound labels (e.g. '100K+') and reserves '<' for the smallest bucket.
+ * @param value - The count to bucket
+ * @returns Bucket label (e.g. '1M+') or empty string
+ */
+export function getMauBucket(value: number): string {
+	if (value <= 0) return '';
+
+	if (value < 10000) return '<10K';
+	if (value >= 10000000) return '10M+';
+	if (value >= 1000000) return '1M+';
+	if (value >= 500000) return '500K+';
+	if (value >= 200000) return '200K+';
+	if (value >= 100000) return '100K+';
+	if (value >= 50000) return '50K+';
+
+	return '10K+';
+}
