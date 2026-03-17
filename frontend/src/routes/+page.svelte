@@ -3,6 +3,18 @@
 	import CompaniesBarChart from '$lib/CompaniesBarChart.svelte';
 	import AdvertiserCreativeRankingsTableTop from '$lib/AdvertiserCreativeRankingsTableTop.svelte';
 	import { formatNumber } from '$lib/utils/formatNumber.js';
+	import {
+		ClipboardList,
+		TrendingUp,
+		Layers,
+		BarChart3,
+		Smartphone,
+		Gamepad2,
+		Sparkles,
+		Zap,
+		Calendar,
+		Star
+	} from 'lucide-svelte';
 
 	let { data } = $props();
 
@@ -158,14 +170,7 @@
 			<div
 				class="bg-gradient-to-br from-secondary-900-100 to-secondary-600 p-4 rounded-2xl shadow-lg mr-4"
 			>
-				<svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-					<path
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						stroke-width="2"
-						d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-					/>
-				</svg>
+				<ClipboardList class="h-8 w-8 text-white" />
 			</div>
 			<div>
 				<h2 class={sectionTitleClass}>
@@ -184,10 +189,12 @@
 		<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
 			<div class="rounded-xl border border-white/10 p-4 bg-white/5">
 				<h4 class="font-bold text-primary-900-100 mb-2">
-					<a href="/" class="hover:text-primary-600-400">App Intelligence</a>
+					<a href="/rankings/store/1/collection/1/category/1/US" class="hover:text-primary-600-400"
+						>App Intelligence</a
+					>
 				</h4>
 				<p class="text-sm text-gray-300 mb-3">Data on 4M+ iOS and Android apps, updated daily.</p>
-				<ul class="text-sm space-y-1.5 text-gray-400">
+				<ul class="text-sm space-y-1.5">
 					<li>
 						<span class="text-white/80 font-medium">Keywords</span> — Track your or competitors' keywords
 						and the top ranking apps
@@ -214,17 +221,18 @@
 				<h4 class="font-bold text-primary-900-100 mb-2">
 					<a href="/sdks" class="hover:text-primary-600-400">SDK Analysis</a>
 				</h4>
-				<p class="text-sm text-gray-300">
+				<p class="text-sm">
 					Detailed breakdown of SDKs found in decompiled Android and iOS apps — advertising,
 					analytics, and open-source libraries to see what any app is really running.
 				</p>
+				<p>Free: Request any app for analysis.</p>
 			</div>
 
 			<div class="rounded-xl border border-white/10 p-4 bg-white/5">
 				<h4 class="font-bold text-primary-900-100 mb-2">
 					<a href="/companies" class="hover:text-primary-600-400">Companies Directory</a>
 				</h4>
-				<p class="text-sm text-gray-300 mb-3">
+				<p class="text-sm mb-3">
 					Rankings of mobile app companies by SDK integration frequency, filterable by app category.
 				</p>
 				<div class="flex flex-wrap gap-2">
@@ -243,9 +251,7 @@
 
 			<div class="rounded-xl border border-white/10 p-4 bg-white/5">
 				<h4 class="font-bold text-primary-900-100 mb-2">Company Intelligence</h4>
-				<p class="text-sm text-gray-300 mb-3">
-					See the top client apps for any mobile SDK or services company.
-				</p>
+				<p class="text-sm mb-3">See the top client apps for any mobile SDK or services company.</p>
 				<div class="flex flex-wrap gap-2">
 					<a
 						href="/companies/salesforce.com"
@@ -262,14 +268,14 @@
 
 			<div class="rounded-xl border border-white/10 p-4 bg-white/5">
 				<h4 class="font-bold text-primary-900-100 mb-2">Ad Tech Insights</h4>
-				<p class="text-sm text-gray-300">
+				<p class="text-sm">
 					Tracks live ad campaigns and the ad tech domains apps communicate with in real time.
 				</p>
 			</div>
 
 			<div class="rounded-xl border border-white/10 p-4 bg-white/5">
 				<h4 class="font-bold text-primary-900-100 mb-2">ASO Tools</h4>
-				<p class="text-sm text-gray-300">
+				<p class="text-sm">
 					Free keyword research tools and data dumps to optimize app store visibility for Android
 					and iOS.
 				</p>
@@ -277,7 +283,7 @@
 
 			<div class="rounded-xl border border-white/10 p-4 bg-white/5 md:col-span-2">
 				<h4 class="font-bold text-primary-900-100 mb-2">App-Ads.txt</h4>
-				<p class="text-sm text-gray-300">
+				<p class="text-sm">
 					Daily-updated files tying apps to their DIRECT and RESELLER ad networks and SSPs — mapped
 					to real app store IDs (e.g. <code class="text-white/70">com.example.app</code>) rather
 					than just domain names, for supply-path analysis and fraud detection.
@@ -296,7 +302,7 @@
 							>{audience.badge}</span
 						>
 					</div>
-					<p class="text-sm text-gray-300">{audience.description}</p>
+					<p class="text-sm">{audience.description}</p>
 				</div>
 			{/each}
 		</div>
@@ -324,14 +330,7 @@
 			<div
 				class="bg-gradient-to-br from-success-900-100 to-success-600 p-4 rounded-2xl shadow-lg mr-4"
 			>
-				<svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-					<path
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						stroke-width="2"
-						d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
-					/>
-				</svg>
+				<TrendingUp class="h-8 w-8 text-white" />
 			</div>
 			<div>
 				<h2 class={sectionTitleClass}>{monthYear} Top Android Advertiser</h2>
@@ -372,14 +371,7 @@
 	>
 		<div class="flex items-center mb-6">
 			<div class="bg-gradient-to-br from-primary-900-100 to-primary-600 rounded-2xl shadow-lg mr-4">
-				<svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-					<path
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						stroke-width="2"
-						d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
-					/>
-				</svg>
+				<Layers class="h-8 w-8 text-white" />
 			</div>
 			<div>
 				<h2 class={sectionTitleClass}>Most Popular SDKs & Analytics</h2>
@@ -396,16 +388,6 @@
 		<div class="grid grid-cols-1 md:grid-cols-2 md:gap-8 mb-6">
 			<div class={cardContainerClass}>
 				<div class="flex items-center mb-3">
-					<div class="bg-gradient-to-br from-purple-500 to-purple-600 {iconContainerClass}">
-						<svg class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-							<path
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								stroke-width="2"
-								d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-							/>
-						</svg>
-					</div>
 					<a href="/companies/types/ad-attribution">
 						<h4 class="{cardTitleClass} ">MMPs</h4>
 					</a>
@@ -419,16 +401,6 @@
 			</div>
 			<div class={cardContainerClass}>
 				<div class="flex items-center mb-3">
-					<div class="bg-gradient-to-br from-green-500 to-green-600 {iconContainerClass}">
-						<svg class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-							<path
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								stroke-width="2"
-								d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-							/>
-						</svg>
-					</div>
 					<a href="/companies/types/product-analytics">
 						<h4 class="{cardTitleClass} hover:text-green-400">Product Analytics</h4>
 					</a>
@@ -466,14 +438,7 @@
 			<div
 				class="bg-gradient-to-br from-warning-900-100 to-warning-600 p-1 md:p-4 rounded-2xl shadow-lg mr-4"
 			>
-				<svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-					<path
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						stroke-width="2"
-						d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-					/>
-				</svg>
+				<BarChart3 class="h-8 w-8 text-white" />
 			</div>
 			<div>
 				<h2 class={sectionTitleClass}>Today's App Store Rankings</h2>
@@ -490,14 +455,7 @@
 			<div class={cardContainerClass}>
 				<div class="flex items-center mb-3">
 					<div class="bg-gradient-to-br from-green-500 to-green-600 {iconContainerClass}">
-						<svg class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-							<path
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								stroke-width="2"
-								d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"
-							/>
-						</svg>
+						<Smartphone class="h-4 w-4 text-white" />
 					</div>
 					<a href="/rankings/store/1/collection/1/category/1/US">
 						<h3 class="{cardTitleClass} hover:text-green-400">Android Apps</h3>
@@ -510,14 +468,7 @@
 			<div class={cardContainerClass}>
 				<div class="flex items-center mb-3">
 					<div class="bg-gradient-to-br from-green-500 to-green-600 {iconContainerClass}">
-						<svg class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-							<path
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								stroke-width="2"
-								d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1.01M15 10h1.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-							/>
-						</svg>
+						<Gamepad2 class="h-4 w-4 text-white" />
 					</div>
 					<a href="/rankings/store/1/collection/1/category/36/US">
 						<h3 class="{cardTitleClass} hover:text-green-400">Android Games</h3>
@@ -530,14 +481,7 @@
 			<div class={cardContainerClass}>
 				<div class="flex items-center mb-3">
 					<div class="bg-gradient-to-br from-gray-500 to-gray-600 {iconContainerClass}">
-						<svg class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-							<path
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								stroke-width="2"
-								d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"
-							/>
-						</svg>
+						<Smartphone class="h-4 w-4 text-white" />
 					</div>
 					<a href="/rankings/store/2/collection/4/category/120/US">
 						<h3 class="{cardTitleClass} hover:text-gray-400">iOS Apps</h3>
@@ -550,14 +494,7 @@
 			<div class={cardContainerClass}>
 				<div class="flex items-center mb-3">
 					<div class="bg-gradient-to-br from-gray-500 to-gray-600 {iconContainerClass}">
-						<svg class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-							<path
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								stroke-width="2"
-								d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1.01M15 10h1.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-							/>
-						</svg>
+						<Gamepad2 class="h-4 w-4 text-white" />
 					</div>
 					<a href="/rankings/store/2/collection/4/category/62/US">
 						<h3 class="{cardTitleClass} hover:text-gray-400">iOS Games</h3>
@@ -588,14 +525,7 @@
 	<section class="card preset-tonal p-8 rounded-2xl shadow-xl border border-info-900-100/20">
 		<div class="flex items-center mb-6">
 			<div class="bg-gradient-to-br from-info-900-100 to-info-600 p-4 rounded-2xl shadow-lg mr-4">
-				<svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-					<path
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						stroke-width="2"
-						d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
-					/>
-				</svg>
+				<Sparkles class="h-8 w-8 text-white" />
 			</div>
 			<div>
 				<h2 class={sectionTitleClass}>Discover New Apps</h2>
@@ -615,14 +545,7 @@
 				>
 					<div class="flex items-center mb-4">
 						<div class="bg-gradient-to-br from-cyan-500 to-cyan-600 p-3 rounded-lg mr-4 shrink-0">
-							<svg class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									stroke-width="2"
-									d="M13 10V3L4 14h7v7l9-11h-7z"
-								/>
-							</svg>
+							<Zap class="h-5 w-5 text-white" />
 						</div>
 						<div>
 							<h3
@@ -643,14 +566,7 @@
 						<div
 							class="bg-gradient-to-br from-info-900-100 to-info-600 p-3 rounded-lg mr-4 shrink-0"
 						>
-							<svg class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									stroke-width="2"
-									d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-								/>
-							</svg>
+							<Calendar class="h-5 w-5 text-white" />
 						</div>
 						<div>
 							<h3
@@ -671,14 +587,7 @@
 						<div
 							class="bg-gradient-to-br from-yellow-500 to-yellow-600 p-3 rounded-lg mr-4 shrink-0"
 						>
-							<svg class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									stroke-width="2"
-									d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
-								/>
-							</svg>
+							<Star class="h-5 w-5 text-white" />
 						</div>
 						<div>
 							<h3
@@ -701,7 +610,7 @@
 			</div>
 			<a
 				href="/collections/new_monthly/google/overall"
-				class="{gradientButtonClass} from-info-900-100 to-info-600"
+				class="{gradientButtonClass} from-error-700-300 to-error-900-100"
 			>
 				<span class={buttonTextColor}>Explore New Apps →</span>
 			</a>
