@@ -7,7 +7,7 @@
 		ClipboardList,
 		TrendingUp,
 		Layers,
-		BarChart3,
+		ChartNoAxesColumnIncreasing,
 		Smartphone,
 		Gamepad2,
 		Sparkles,
@@ -168,21 +168,20 @@
 	>
 		<div class="flex items-center mb-6">
 			<div
-				class="bg-gradient-to-br from-secondary-900-100 to-secondary-600 p-4 rounded-2xl shadow-lg mr-4"
+				class="bg-gradient-to-br from-secondary-900-100 to-secondary-600 p-1 rounded-2xl shadow-lg mr-4"
 			>
 				<ClipboardList class="h-8 w-8 text-white" />
 			</div>
 			<div>
-				<h2 class={sectionTitleClass}>
-					AppGoblin features mobile app intelligence across SDK, API, ads, and ASO
-				</h2>
+				<h2 class={sectionTitleClass}>Power app growth</h2>
 				<p class={sectionSubtitleClass}></p>
 			</div>
 		</div>
 
 		<p class={sectionDescriptionClass}>
-			AppGoblin is a free resource for mobile app marketers, sales teams, and researchers. Paid
-			export-ready datasets are also available for teams that need raw data for custom analysis.
+			Mobile app intelligence across SDK, API, ads, and ASO. AppGoblin has free resources for mobile
+			app marketers, sales teams, and researchers. Paid export-ready datasets are also available for
+			teams that need raw data for custom analysis.
 		</p>
 
 		<h3 class="text-lg font-bold text-primary-900-100 mb-3">Features</h3>
@@ -328,7 +327,7 @@
 	>
 		<div class="flex items-center mb-6">
 			<div
-				class="bg-gradient-to-br from-success-900-100 to-success-600 p-4 rounded-2xl shadow-lg mr-4"
+				class="bg-gradient-to-br from-success-900-100 to-success-600 p-1 rounded-2xl shadow-lg mr-4"
 			>
 				<TrendingUp class="h-8 w-8 text-white" />
 			</div>
@@ -370,7 +369,9 @@
 		class="card preset-tonal p-1 md:p-8 rounded-2xl shadow-xl border border-primary-900-100/20"
 	>
 		<div class="flex items-center mb-6">
-			<div class="bg-gradient-to-br from-primary-900-100 to-primary-600 rounded-2xl shadow-lg mr-4">
+			<div
+				class="bg-gradient-to-br from-primary-900-100 to-primary-600 rounded-2xl p-1 shadow-lg mr-4"
+			>
 				<Layers class="h-8 w-8 text-white" />
 			</div>
 			<div>
@@ -436,9 +437,9 @@
 	>
 		<div class="flex items-center mb-6">
 			<div
-				class="bg-gradient-to-br from-warning-900-100 to-warning-600 p-1 md:p-4 rounded-2xl shadow-lg mr-4"
+				class="bg-gradient-to-br from-warning-900-100 to-warning-600 p-1 rounded-2xl shadow-lg mr-4"
 			>
-				<BarChart3 class="h-8 w-8 text-white" />
+				<ChartNoAxesColumnIncreasing class="h-8 w-8 text-white" />
 			</div>
 			<div>
 				<h2 class={sectionTitleClass}>Today's App Store Rankings</h2>
@@ -524,7 +525,7 @@
 	<!-- New Apps Section -->
 	<section class="card preset-tonal p-8 rounded-2xl shadow-xl border border-info-900-100/20">
 		<div class="flex items-center mb-6">
-			<div class="bg-gradient-to-br from-info-900-100 to-info-600 p-4 rounded-2xl shadow-lg mr-4">
+			<div class="bg-gradient-to-br from-info-900-100 to-info-600 p-1 rounded-2xl shadow-lg mr-4">
 				<Sparkles class="h-8 w-8 text-white" />
 			</div>
 			<div>
