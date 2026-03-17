@@ -361,25 +361,53 @@ export interface CategoryAppStats {
 	adstxt_reseller_ios_total_apps: number;
 	adstxt_reseller_android_total_apps: number;
 	total_apps: number;
+	sdk_android_installs_d30: number;
 }
 
-export interface ChildrenCompanyTree {
+export interface CompanyDomain {
+	domain_name: string;
+	is_primary: boolean;
+	country: string[];
+	org: string[];
+}
+
+export interface ChildCompany {
 	company_name: string;
-	domain: string;
-	company_logo_url: string;
+	company_domain: string;
+	company_logo_url: string | null;
+	domains: CompanyDomain[];
 }
 
-export interface ParentCompanyTree {
-	is_parent_company: boolean;
+export interface ParentCompanyContext {
+	company_name: string;
+	company_domain: string;
+	company_logo_url: string | null;
+}
+
+export interface CompanyTree {
+	queried_domain: string;
 	is_secondary_domain: boolean;
-	parent_company_name: string;
-	parent_company_domain: string;
-	parent_company_logo_url: string;
-	queried_company_domain: string;
-	queried_company_name: string;
-	queried_company_logo_url: string;
-	domains: { company_domain: string; tld_url: string; country: string[]; org: string[] }[];
-	children_companies: ChildrenCompanyTree[];
+	is_orphan: boolean;
+	is_root: boolean; // derived property from Python, will be serialised
+	company_name: string | null;
+	company_domain: string | null;
+	company_logo_url: string | null;
+	domains: CompanyDomain[];
+	parent: ParentCompanyContext | null;
+	children: ChildCompany[];
+}
+
+export interface CompanyLookup {
+	company_id: number;
+	company_name: string;
+	company_domain: string;
+}
+
+export interface CompanyLayoutDetails {
+	companyDetails: CompanyCategoryOverview;
+	companyTree: CompanyTree;
+	companyLookup: CompanyLookup | null;
+	isFollowingCompany: boolean;
 }
 
 export interface CompanyPatterns {
@@ -484,7 +512,7 @@ export interface CompanyFullDetails {
 	companyTopApps: CompanyOverviewSections;
 	appCats: CatData;
 
-	companyTree: ParentCompanyTree;
+	companyTree: CompanyTree;
 	companySdks: CompanySDKsDict;
 	companyParentCategories: ChartTabularData;
 	companyCreatives: CompanyCreative[];
@@ -494,7 +522,7 @@ export interface CompanyCategoryDetails {
 	error?: string;
 	companyDetails: CompanyCategoryOverview;
 	companyCategoryApps: CompanyOverviewSections;
-	companyTree: ParentCompanyTree;
+	companyTree: CompanyTree;
 }
 
 export interface KeywordScore {

@@ -524,13 +524,27 @@ def get_company_adstxt_ad_domain_overview(
 
 
 @cache_by_params
-def get_company_tree(state: State, company_domain: str) -> pd.DataFrame:
+def get_company_tree_base(state: State, queried_domain: str) -> pd.DataFrame:
     """Get a company tree with parent companies and domains."""
-    logger.info(f"query company tree: {company_domain=}")
+    logger.info(f"query company tree: {queried_domain=}")
     df = pd.read_sql(
-        sql.company_tree,
+        sql.company_tree_base,
         state.dbcon.engine,
-        params={"company_domain": company_domain},
+        params={"queried_domain": queried_domain},
+    )
+    return df
+
+
+@cache_by_params
+def get_company_tree_related_domains(
+    state: State, company_id: int, is_parent: bool
+) -> pd.DataFrame:
+    """Get a company tree with parent companies and domains."""
+    logger.info(f"query company tree related domains: {company_id=}")
+    df = pd.read_sql(
+        sql.company_tree_related_domains,
+        state.dbcon.engine,
+        params={"company_id": company_id, "is_parent": is_parent},
     )
     return df
 

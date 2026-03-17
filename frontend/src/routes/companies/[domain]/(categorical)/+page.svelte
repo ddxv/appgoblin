@@ -5,26 +5,44 @@
 	import SideBarCompanies from '$lib/SideBarCompanies.svelte';
 
 	import TotalsBox from '$lib/TotalsBox.svelte';
-	import CompanyButton from '$lib/CompanyButton.svelte';
 	import CompanyCategoryPie from '$lib/CompanyCategoryPie.svelte';
 	import AdsTxtTotalsBox from '$lib/AdsTxtTotalsBox.svelte';
 	import CompanyTableGrid from '$lib/CompanyTableGrid.svelte';
-	import CompanyTree from '$lib/CompanyTree.svelte';
+	import HierarchyTree from '$lib/HierarchyTree.svelte';
 	import WhiteCard from '$lib/WhiteCard.svelte';
 	import CompaniesLayout from '$lib/CompaniesLayout.svelte';
-	import { countryCodeToEmoji } from '$lib/utils/countryCodeToEmoji';
 	interface Props {
 		data: CompanyFullDetails;
 	}
 
 	let { data }: Props = $props();
 	let companyName = $derived(
-		data.companyTree.queried_company_name || data.companyTree.queried_company_domain
+		data.companyTree.is_secondary_domain
+			? data.companyTree.queried_domain
+			: data.companyTree.company_name ||
+					data.companyTree.company_domain ||
+					data.companyTree.queried_domain
+	);
+	let hasHigherLevelParent = $derived(
+		Boolean(
+			data.companyTree.parent &&
+			data.companyTree.parent.company_domain !== data.companyTree.company_domain
+		)
+	);
+	let hasHierarchyContext = $derived(
+		Boolean(data.companyTree.company_domain || data.companyTree.parent)
+	);
+	let queriedIsMappedCompany = $derived(
+		data.companyTree.queried_domain === data.companyTree.company_domain
 	);
 	let associatedDomains = $derived(data.companyTree?.domains ?? []);
-	let hasManyAssociatedDomains = $derived(associatedDomains.length > 4);
-	let associatedDomainsPreview = $derived(associatedDomains.slice(0, 4));
 </script>
+
+<p class="text-sm text-surface-600-400 mb-4">
+	AppGoblin intelligence for {companyName} SDKs, API calls, app-ads.txt records. Browse {companyName}
+	creatives, and mediation relationships tied to real mobile app IDs so you can evaluate technical footprint
+	and competitive position quickly.
+</p>
 
 <CompaniesLayout>
 	{#snippet card1()}
@@ -39,16 +57,43 @@
 						{/snippet}
 
 						<TotalsBox
-							companyName={data.companyTree.queried_company_name ||
-								data.companyTree.queried_company_domain}
+							{companyName}
 							myTotals={data.companyDetails.categories.all}
 							myType={{ name: 'All Companies & Domains', url_slug: 'all-companies' }}
 							hideAdstxtApps={true}
+							isSecondaryDomain={data.companyTree.is_secondary_domain}
 						/>
 						{#if data.companyDetails && data.companyDetails.adstxt_ad_domain_overview && data.companyDetails.adstxt_ad_domain_overview.google}
 							<AdsTxtTotalsBox myTotals={data.companyDetails.adstxt_ad_domain_overview} />
 						{/if}
 					</WhiteCard>
+				{/if}
+			</WhiteCard>
+		{:else if typeof data.companyParentCategories == 'string'}
+			<p class="text-red-500 text-center">Failed to load company details.</p>
+		{:else if data.companyParentCategories && data.companyParentCategories.length > 0}
+			<WhiteCard>
+				{#snippet title()}
+					<span>{companyName} Apps</span>
+				{/snippet}
+				<p class="text-sm text-gray-600 mb-2">
+					This queried domain maps to {data.companyTree.company_name ||
+						data.companyTree.company_domain}.
+					{#if hasHigherLevelParent}
+						The larger parent company is {data.companyTree.parent?.company_name ||
+							data.companyTree.parent?.company_domain}.
+					{/if}
+				</p>
+
+				<TotalsBox
+					{companyName}
+					myTotals={data.companyDetails.categories.all}
+					myType={{ name: 'All Companies & Domains', url_slug: 'all-companies' }}
+					hideAdstxtApps={true}
+					isSecondaryDomain={data.companyTree.is_secondary_domain}
+				/>
+				{#if data.companyDetails && data.companyDetails.adstxt_ad_domain_overview && data.companyDetails.adstxt_ad_domain_overview.google}
+					<AdsTxtTotalsBox myTotals={data.companyDetails.adstxt_ad_domain_overview} />
 				{/if}
 			</WhiteCard>
 		{/if}
@@ -82,74 +127,30 @@
 				<span>{companyName}'s Related Entities</span>
 			{/snippet}
 			<div class="p-2">
+				{#if hasHierarchyContext}
+					<p class="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-2">Hierarchy</p>
+					<div class="mb-4 rounded-md border border-surface-200-800 bg-surface-100-900 p-3">
+						<HierarchyTree
+							companyTree={data.companyTree}
+							{hasHigherLevelParent}
+							{queriedIsMappedCompany}
+							{associatedDomains}
+							showTruncated={true}
+						/>
+					</div>
+				{/if}
+
 				{#if typeof data.companyTree == 'string'}
 					<p class="text-red-500 text-center">Failed to load company tree.</p>
-				{:else if data.companyTree && data.companyTree.children_companies.length > 0}
-					<!-- HAS CHILD COMPANY -->
-					<p class="text-sm text-gray-600 mb-2">
-						The companies shown below are actual companies that are owned or controlled by
-						{companyName}.
-					</p>
-					<CompanyTree myTree={data.companyTree} />
-				{:else if data.companyTree && data.companyTree.parent_company_domain}
-					<!-- HAS PARENT COMPANY -->
-					<p class="text-lg font-semibold mb-4">Parent Company:</p>
-					<CompanyButton
-						companyName={data.companyTree.parent_company_name}
-						companyDomain={data.companyTree.parent_company_domain}
-						companyLogoUrl={data.companyTree.parent_company_logo_url}
-					/>
-				{:else if data.companyTree.is_secondary_domain}
-					<!-- UNKNOWN COMPANY -->
-					<p class="text-red-200 text-center">
-						This domain is not associated with any apps or companies yet. If you would like this
-						domain mapped to related SDKs and mobile apps please contact us.
+				{:else if data.companyTree.is_orphan}
+					<p class="text-sm text-gray-500 text-center">
+						This domain has not been mapped to a company yet. If you would like it added, please <a
+							href="/contact"
+							class="underline hover:text-gray-700">reach out</a
+						>.
 					</p>
 				{:else}
 					<!-- REGULAR COMPANY (no child or parent companies) -->
-				{/if}
-				{#if data.companyTree && associatedDomains.length > 1}
-					<h2 class="text-lg font-semibold mb-2">
-						Associated Domains
-						<span class="text-sm font-normal text-gray-600">
-							({associatedDomains.length} in total)
-						</span>
-					</h2>
-					<div class="flex flex-col gap-1">
-						{#each associatedDomainsPreview as domain}
-							<div>
-								<!-- Domain URL -->
-								<div
-									class="font-semibold text-md"
-									title={`IP addresses for this domain commonly resolve to: ${domain.country.join(', ')}`}
-								>
-									<span>
-										<a href="/companies/{domain.tld_url}">{domain.tld_url}</a>
-										<!-- Countries as flags -->
-										{#if domain.country.length > 0}
-											<span class="gap-2 ml-2">
-												{#each domain.country as country}
-													<span class="text-lg">{countryCodeToEmoji(country)}</span>
-												{/each}
-											</span>
-										{/if}
-									</span>
-								</div>
-								<!-- Organizations -->
-								{#if domain.org.length > 0}
-									<div class="text-sm text-gray-600">
-										<span class="text-gray-500">{domain.org.join(', ')}</span>
-									</div>
-								{/if}
-							</div>
-						{/each}
-					</div>
-					{#if hasManyAssociatedDomains}
-						<p class="mt-2 text-xs text-gray-500">
-							Showing the first 4 associated domains here. The full list is available below the Top
-							Apps table.
-						</p>
-					{/if}
 				{/if}
 			</div>
 		</WhiteCard>
@@ -159,49 +160,22 @@
 {#if typeof data.companyTopApps == 'string'}
 	Failed to load company's apps.
 {:else}
-	<CompanyTableGrid
-		tableData={data.companyTopApps}
-		detailsData={data.companyDetails}
-		category="all"
-		isSecondaryDomain={data.companyTree.is_secondary_domain}
-		{companyName}
-	/>
+	<CompanyTableGrid tableData={data.companyTopApps} companyName={companyName || ''} />
 {/if}
-{#if data.companyTree && hasManyAssociatedDomains}
+{#if data.companyTree && (associatedDomains.length > 0 || data.companyTree.children.length > 0)}
 	<section class="mt-6">
-		<h2 class="text-xl font-semibold mb-2">All Associated Domains</h2>
+		<h2 class="text-xl font-semibold mb-2">Full Hierarchy</h2>
 		<p class="text-sm text-gray-600 mb-3">
-			This company is associated with the following domains. Click a domain to see its detailed apps
-			and company information.
+			Complete company ownership structure and all associated domains.
 		</p>
-		<div class="flex flex-col gap-1">
-			{#each associatedDomains as domain}
-				<div>
-					<!-- Domain URL -->
-					<div
-						class="font-semibold text-md"
-						title={`IP addresses for this domain commonly resolve to: ${domain.country.join(', ')}`}
-					>
-						<span>
-							<a href="/companies/{domain.tld_url}">{domain.tld_url}</a>
-							<!-- Countries as flags -->
-							{#if domain.country.length > 0}
-								<span class="gap-2 ml-2">
-									{#each domain.country as country}
-										<span class="text-lg">{countryCodeToEmoji(country)}</span>
-									{/each}
-								</span>
-							{/if}
-						</span>
-					</div>
-					<!-- Organizations -->
-					{#if domain.org.length > 0}
-						<div class="text-sm text-gray-600">
-							<span class="text-gray-500">{domain.org.join(', ')}</span>
-						</div>
-					{/if}
-				</div>
-			{/each}
+		<div class="p-4 rounded-md border border-surface-200-800 bg-surface-100-900">
+			<HierarchyTree
+				companyTree={data.companyTree}
+				{hasHigherLevelParent}
+				{queriedIsMappedCompany}
+				{associatedDomains}
+				showTruncated={false}
+			/>
 		</div>
 	</section>
 {/if}
