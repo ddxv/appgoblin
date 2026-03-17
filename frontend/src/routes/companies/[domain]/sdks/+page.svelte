@@ -19,8 +19,9 @@
 	<WhiteCard>
 		{#snippet title()}
 			<span
-				>{data.companyTree.queried_company_name || data.companyTree.queried_company_domain}'s
-				Company SDKs</span
+				>{data.companyTree.company_name ||
+					data.companyTree.company_domain ||
+					data.companyTree.queried_domain}'s Company SDKs</span
 			>
 		{/snippet}
 		{#if typeof data.companySdks == 'string'}

@@ -13,6 +13,7 @@
 import io
 import time
 import urllib
+from collections import defaultdict
 from typing import Self
 
 import numpy as np
@@ -25,17 +26,20 @@ from litestar.response import Stream
 
 from api_app.models import (
     AppGroup,
+    ChildCompany,
     CompaniesCategoryOverview,
     CompaniesOverview,
     CompanyCategoryOverview,
     CompanyDetail,
+    CompanyDomain,
     CompanyFollowLookup,
     CompanyPatternsDict,
     CompanyPlatformOverview,
     CompanyPubIDOverview,
     CompanyPubIDTotals,
+    CompanyTree,
     CompanyTypes,
-    ParentCompanyTree,
+    ParentCompanyContext,
     TopCompaniesOverviewShort,
     TopCompaniesShort,
 )
@@ -54,7 +58,8 @@ from dbcon.queries import (
     get_company_follow_lookup,
     get_company_sdks,
     get_company_stats,
-    get_company_tree,
+    get_company_tree_base,
+    get_company_tree_related_domains,
     get_mediation_adapters,
     get_tag_source_category_totals,
     get_topapps_for_company,
@@ -76,6 +81,17 @@ from dbcon.static import (
 logger = get_logger(__name__)
 
 
+def enrich_domains(
+    domains: list[CompanyDomain], api_data: list[dict]
+) -> list[CompanyDomain]:
+    lookup = {d["tld_url"]: d for d in api_data}
+    for domain in domains:
+        if domain.domain_name in lookup:
+            domain.country = lookup[domain.domain_name]["country"]
+            domain.org = lookup[domain.domain_name]["org"]
+    return domains
+
+
 def make_company_api_domains_dict(
     state: State, company_domains: list[str]
 ) -> list[dict]:
@@ -83,12 +99,9 @@ def make_company_api_domains_dict(
     df = get_company_api_call_countrys(state)
     reg_df = df[df["company_domain"].isin(company_domains)]
     p_df = df[df["parent_company_domain"].isin(company_domains)]
-
     df = pd.concat([reg_df, p_df]).drop_duplicates()
-
     if df.empty:
         return []
-
     df = (
         df.groupby(["tld_url"])[["country", "org"]]
         .agg(
@@ -97,7 +110,6 @@ def make_company_api_domains_dict(
         )
         .reset_index()
     )
-
     # Pandas 3.0 defaulting to ArrowStringArray
     df["org"] = df["org"].apply(
         lambda x: (
@@ -106,7 +118,6 @@ def make_company_api_domains_dict(
             else x
         )
     )
-
     df["country"] = df["country"].apply(
         lambda x: (
             x.tolist()
@@ -114,14 +125,12 @@ def make_company_api_domains_dict(
             else x
         )
     )
-
     missing_domains = [
         {"tld_url": x, "country": [], "org": []}
         for x in company_domains
         if x not in df["tld_url"].tolist()
     ]
     df = pd.concat([df, pd.DataFrame(missing_domains)])
-
     return df.to_dict(orient="records")
 
 
@@ -325,9 +334,7 @@ def get_overviews(
                 state=state, type_slug=type_slug
             )
     else:
-        companies_df = get_companies_parent_category_stats(
-            state=state, app_category=category
-        )
+        companies_df = get_companies_parent_category_stats(state, app_category=category)
 
     if type_slug:
         tag_source_category_app_counts = get_category_tag_type_stats(
@@ -335,7 +342,7 @@ def get_overviews(
         )
     else:
         tag_source_category_app_counts = get_tag_source_category_totals(
-            state=state, app_category=category
+            state, app_category=category
         )
 
     companies_df = companies_df.merge(
@@ -398,7 +405,7 @@ def make_companies_stats(
     df: pd.DataFrame,
     tag_source_category_app_counts: pd.DataFrame,
 ) -> CompaniesCategoryOverview:
-    """Make category sums for overview."""
+    """Make category sums for multiple companies overview."""
     overview = CompaniesCategoryOverview()
 
     # Precompute boolean masks
@@ -491,14 +498,6 @@ def make_companies_stats(
             ),
         }
     )
-    # else:
-    #     overall_stats.update({
-    #     # On overview page, this is incorreclty added per company when there are overlapping apps
-    #     "sdk_ios_total_apps": get_app_count(df_is_apple & df_is_sdk),
-    #     "sdk_android_total_apps": get_app_count(df_is_google & df_is_sdk),
-    #     "sdk_android_installs_d30": get_installs_d30(df_is_google & df_is_sdk),
-    #     "sdk_ios_installs_d30": get_installs_d30(df_is_apple & df_is_sdk),
-    #     })
 
     overview.update_stats("all", **overall_stats)
     overview.update_stats("all", **sdk_app_counts)
@@ -507,7 +506,7 @@ def make_companies_stats(
 
 
 def make_company_stats(df: pd.DataFrame) -> CompanyCategoryOverview:
-    """Make category sums for overview."""
+    """Make stats for a single company."""
     overview = CompanyCategoryOverview()
     if df.empty:
         return overview
@@ -924,7 +923,7 @@ class CompaniesController(Controller):
         self: Self,
         state: State,
         queried_domain: str,
-    ) -> ParentCompanyTree:
+    ) -> CompanyTree:
         """Handle GET request for company tree.
 
         Args:
@@ -934,96 +933,110 @@ class CompaniesController(Controller):
 
         Returns:
         -------
-        ParentCompanyTree
+        CompanyTree
             An overview of companies, filtered for the specified company and category.
 
         """
-        start = time.perf_counter() * 1000
-
-        df = get_company_tree(state=state, company_domain=queried_domain)
+        df = get_company_tree_base(state=state, queried_domain=queried_domain)
 
         if df.empty:
-            return ParentCompanyTree(
-                is_secondary_domain=True,
-                is_parent_company=False,
-                parent_company_name=None,
-                parent_company_domain=None,
-                queried_company_domain=queried_domain,
-                queried_company_name=queried_domain,
+            # queried domain is not associated with any company
+            return CompanyTree(
+                queried_domain=queried_domain,
+                is_secondary_domain=False,
+                is_orphan=True,
+                company_name=None,
+                company_domain=None,
+                company_logo_url=None,
                 domains=[],
-                children_companies=[],
+                parent=None,
+                children=[],
             )
 
-        is_queried_company = queried_domain == df["company_domain"]
-        queried_company_names = df[is_queried_company]["company_name"].tolist()
+        is_orphan = False
+        anchor = df.iloc[0]
+        company_id = anchor["company_id"]
+        parent_id = anchor["parent_id"]
+        is_secondary_domain = bool(anchor["is_secondary_domain"])
 
-        queried_company_logo_urls = df[is_queried_company]["company_logo_url"].tolist()
+        children = []
+        own_domains = []
+        # Secondary domain has no children
+        if not is_secondary_domain:
+            # not secondary domain we are looking at a main company domain
+            # fill out own_domains and children companies (if there are any)
+            related = get_company_tree_related_domains(
+                state=state, company_id=company_id, is_parent=parent_id is None
+            )
+            child_domain_map = defaultdict(list)
+            child_meta_map = {}
+            # First pass: collect all domain mappings and metadata
+            for _, r in related.iterrows():
+                if r["company_id"] == company_id:
+                    own_domains.append(
+                        CompanyDomain(
+                            domain_name=r["domain_name"], is_primary=r["is_primary"]
+                        )
+                    )
+                else:
+                    child_domain_map[r["company_id"]].append(
+                        CompanyDomain(
+                            domain_name=r["domain_name"], is_primary=r["is_primary"]
+                        )
+                    )
+                    if r["company_id"] not in child_meta_map:
+                        child_meta_map[r["company_id"]] = {
+                            "company_name": r["company_name"],
+                            "company_logo_url": r["company_logo"],
+                        }
+            # Collect all domain names from own domains and all children
+            all_domain_names = [d.domain_name for d in own_domains] + [
+                d.domain_name for domains in child_domain_map.values() for d in domains
+            ]
+            # Make one API call to enrich all domains
+            if all_domain_names:
+                api_data = make_company_api_domains_dict(state, all_domain_names)
+                # Enrich own domains with country / org
+                enrich_domains(own_domains, api_data)
+            else:
+                api_data = {}
+            # Build children with enriched domains
+            children = [
+                ChildCompany(
+                    company_name=str(meta["company_name"]),
+                    company_domain=next(
+                        (d.domain_name for d in domains if d.is_primary),
+                        domains[0].domain_name if domains else None,
+                    ),
+                    company_logo_url=meta["company_logo_url"],
+                    domains=enrich_domains(domains, api_data),
+                )
+                for _cid, (meta, domains) in {
+                    cid: (child_meta_map[cid], child_domain_map[cid])
+                    for cid in child_meta_map
+                }.items()
+            ]
 
-        if len(queried_company_names) > 0:
-            queried_company_name = queried_company_names[0]
-        else:
-            queried_company_name = queried_domain
+        parent = None
+        # Build parent context if this is a child company
+        if parent_id is not None:
+            parent = ParentCompanyContext(
+                company_name=anchor["parent_name"],
+                company_domain=anchor["parent_domain"],
+                company_logo_url=anchor["parent_logo_url"],
+            )
 
-        parent_company_name = df["parent_company_name"].tolist()[0]
-        if parent_company_name == queried_company_name:
-            parent_company_name = None
-        parent_company_domain = df["parent_company_domain"].tolist()[0]
-        if parent_company_domain == queried_domain:
-            parent_company_domain = None
-        parent_company_logo_url = df["parent_company_logo_url"].tolist()[0]
-
-        if len(queried_company_logo_urls) > 0:
-            queried_company_logo_url = queried_company_logo_urls[0]
-        else:
-            queried_company_logo_url = None
-
-        if parent_company_name == queried_domain:
-            parent_company_name = None
-
-        parent_companies = get_parent_companies(state)
-        secondary_domains = get_company_secondary_domains(state)
-        is_secondary_domain = queried_domain in secondary_domains
-        is_parent_company = queried_domain in parent_companies
-
-        domains = (
-            df[~(parent_company_name == df["company_name"])]["company_domain"]
-            .unique()
-            .tolist()
-        )
-        sub_domains = df["sub_domain"].unique().tolist()
-        domains = list(set(domains + sub_domains))
-
-        detailed_domains = make_company_api_domains_dict(state, domains)
-
-        children_companies = (
-            df[
-                ~(parent_company_name == df["company_name"])
-                & (queried_domain != df["company_domain"])
-                & df["company_domain"].notna()
-            ][["company_name", "company_domain", "company_logo_url"]]
-            .drop_duplicates()
-            .rename(columns={"company_domain": "domain"})
-            .reset_index(drop=True)
-            .to_dict(orient="records")
-        )
-
-        tree = ParentCompanyTree(
+        return CompanyTree(
+            queried_domain=queried_domain,
+            is_orphan=is_orphan,
             is_secondary_domain=is_secondary_domain,
-            is_parent_company=is_parent_company,
-            parent_company_name=parent_company_name,
-            parent_company_domain=parent_company_domain,
-            queried_company_domain=queried_domain,
-            queried_company_name=queried_company_name,
-            queried_company_logo_url=queried_company_logo_url,
-            parent_company_logo_url=parent_company_logo_url,
-            domains=detailed_domains,
-            children_companies=children_companies,
+            company_name=anchor["company_name"],
+            company_domain=anchor["company_domain"],
+            company_logo_url=anchor["company_logo_url"],
+            domains=own_domains,
+            parent=parent,
+            children=children,
         )
-
-        duration = round((time.perf_counter() * 1000 - start), 2)
-        logger.info(f"GET /api/companies/{queried_domain}/tree took {duration}ms")
-
-        return tree
 
     @get(
         path="/companies/{company_domain:str}/sdks",

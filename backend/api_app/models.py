@@ -176,27 +176,50 @@ class CompanyPatternsDict:
 
 
 @dataclass
-class ChildrenCompanyTree:
-    """A company tree with parent companies and domains."""
-
-    company_name: str
-    domains: list[str]
+class CompanyDomain:
+    domain_name: str
+    is_primary: bool
+    country: list[str] = field(default_factory=list)
+    org: list[str] = field(default_factory=list)
 
 
 @dataclass
-class ParentCompanyTree:
-    """A company tree with parent companies and domains."""
+class ChildCompany:
+    company_name: str
+    company_domain: str  # primary domain
+    company_logo_url: str | None
+    domains: list[CompanyDomain]
 
+
+@dataclass
+class ParentCompanyContext:
+    company_name: str
+    company_domain: str
+    company_logo_url: str | None
+
+
+@dataclass
+class CompanyTree:
+    queried_domain: str
     is_secondary_domain: bool
-    is_parent_company: bool
-    parent_company_name: str | None
-    parent_company_domain: str | None
-    queried_company_domain: str
-    queried_company_name: str
-    domains: list[dict]
-    children_companies: list[ChildrenCompanyTree]
-    queried_company_logo_url: str | None = None
-    parent_company_logo_url: str | None = None
+    is_orphan: bool
+
+    # None when domain has no company attached
+    company_name: str | None
+    company_domain: str | None  # canonical/primary domain
+    company_logo_url: str | None
+
+    domains: list[CompanyDomain]
+
+    # None when queried company is root or orphan
+    parent: ParentCompanyContext | None
+
+    # Empty when queried company is a child or orphan
+    children: list[ChildCompany]
+
+    @property
+    def is_root(self) -> bool:
+        return not self.is_orphan and self.parent is None
 
 
 @dataclass

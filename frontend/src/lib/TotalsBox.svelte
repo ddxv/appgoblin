@@ -3,7 +3,13 @@
 
 	import { page } from '$app/state';
 
-	let { myTotals, myType, hideAdstxtApps = false, companyName } = $props();
+	let {
+		myTotals,
+		myType,
+		hideAdstxtApps = false,
+		companyName,
+		isSecondaryDomain = false
+	} = $props();
 
 	let categoryTitle = $derived(
 		page.params.category
@@ -18,43 +24,45 @@
 	const greyFont = 'text-xs text-surface-500';
 </script>
 
-<div class="table-container p-4">
-	<div class={titleFont}>
-		{categoryTitle ? `${categoryTitle} Apps` : 'Apps'} with {companyName} SDKs
-		<p class="text-xs text-surface-500">
-			Verified SDK counts are based on apps decompiled by AppGoblin.
-		</p>
+{#if !isSecondaryDomain}
+	<div class="table-container p-4">
+		<div class={titleFont}>
+			{categoryTitle ? `${categoryTitle} Apps` : 'Apps'} with {companyName} SDKs
+			<p class="text-xs text-surface-500">
+				Verified SDK counts are based on apps decompiled by AppGoblin.
+			</p>
+		</div>
+		{#if myTotals.sdk_android_total_apps === 0 && myTotals.sdk_ios_total_apps === 0}
+			<p class={greyFont}>
+				No apps with {companyName} SDKs found. Please feel free to contact if you would like this mapped.
+			</p>
+		{:else}
+			<table class="table w-full">
+				<thead>
+					<tr>
+						<th class="text-left py-2 px-1"></th>
+						<th class="text-left py-2 px-1">Android</th>
+						<th class="text-left py-2 px-1">iOS</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td class="py-2 px-1 {rowTitleFont}"
+							>{categoryTitle ? `${categoryTitle} Apps` : 'Apps'}</td
+						>
+						<td class="py-2 px-1">{formatNumberLocale(myTotals.sdk_android_total_apps)}</td>
+						<td class="py-2 px-1">{formatNumberLocale(myTotals.sdk_ios_total_apps)}</td>
+					</tr>
+					<tr>
+						<td class="py-2 px-1 {rowTitleFont}">Monthly Installs</td>
+						<td class="py-2 px-1">{formatNumber(myTotals.sdk_android_installs_d30)}</td>
+						<td class="py-2 px-1">{formatNumber(myTotals.sdk_ios_installs_d30)}</td>
+					</tr>
+				</tbody>
+			</table>
+		{/if}
 	</div>
-	{#if myTotals.sdk_android_total_apps === 0 && myTotals.sdk_ios_total_apps === 0}
-		<p class={greyFont}>
-			No apps with {companyName} SDKs found. Please feel free to contact if you would like this mapped.
-		</p>
-	{:else}
-		<table class="table w-full">
-			<thead>
-				<tr>
-					<th class="text-left py-2 px-1"></th>
-					<th class="text-left py-2 px-1">Android</th>
-					<th class="text-left py-2 px-1">iOS</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td class="py-2 px-1 {rowTitleFont}"
-						>{categoryTitle ? `${categoryTitle} Apps` : 'Apps'}</td
-					>
-					<td class="py-2 px-1">{formatNumberLocale(myTotals.sdk_android_total_apps)}</td>
-					<td class="py-2 px-1">{formatNumberLocale(myTotals.sdk_ios_total_apps)}</td>
-				</tr>
-				<tr>
-					<td class="py-2 px-1 {rowTitleFont}">Monthly Installs</td>
-					<td class="py-2 px-1">{formatNumber(myTotals.sdk_android_installs_d30)}</td>
-					<td class="py-2 px-1">{formatNumber(myTotals.sdk_ios_installs_d30)}</td>
-				</tr>
-			</tbody>
-		</table>
-	{/if}
-</div>
+{/if}
 
 {#if myType.url_slug === 'ad-networks' || myType.url_slug === 'all-companies'}
 	{#if myTotals.total_companies}

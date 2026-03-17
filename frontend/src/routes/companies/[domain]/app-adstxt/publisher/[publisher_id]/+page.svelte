@@ -4,11 +4,18 @@
 	import WhiteCard from '$lib/WhiteCard.svelte';
 	let { data } = $props();
 	const tree = $derived(
-		(data as { companyTree?: { queried_company_name?: string; queried_company_domain?: string } })
-			.companyTree
+		(
+			data as {
+				companyTree?: {
+					company_name?: string | null;
+					company_domain?: string | null;
+					queried_domain?: string;
+				};
+			}
+		).companyTree
 	);
 	let companyName = $derived(
-		tree?.queried_company_name || tree?.queried_company_domain || page.params.domain
+		tree?.company_name || tree?.company_domain || tree?.queried_domain || page.params.domain
 	);
 </script>
 

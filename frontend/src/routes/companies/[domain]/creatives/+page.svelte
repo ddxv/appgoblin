@@ -18,7 +18,11 @@
 {#if data.companyCreatives && data.companyCreatives.length > 0}
 	<WhiteCard>
 		{#snippet title()}
-			<span>Recent Creatives from {data.companyTree.queried_company_name}</span>
+			<span
+				>Recent Creatives from {data.companyTree.company_name ||
+					data.companyTree.company_domain ||
+					data.companyTree.queried_domain}</span
+			>
 		{/snippet}
 		<div class="grid grid-cols-3 gap-2 p-2">
 			{#each data.companyCreatives as creative}

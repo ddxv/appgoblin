@@ -118,10 +118,9 @@
 					href="https://linkedin.com/companies/AppGoblin"
 					class="underline hover:text-primary-900-100">LinkedIn</a
 				>
+
 				&nbsp;|&nbsp;
-				<a href="mailto:contact@appgoblin.info" class="underline hover:text-primary-900-100"
-					>Contact</a
-				>
+				<a href="/contact" class="underline hover:text-primary-900-100">Contact</a>
 			</div>
 			<div>© {new Date().getFullYear()} AppGoblin. All rights reserved.</div>
 		</div>
