@@ -22,19 +22,19 @@
 				<AppBar.Lead class="shrink-0 min-w-fit">
 					<a href="/" class="flex items-center shrink-0">
 						<img
-							class="h-8 w-8 shrink-0 md:ml-2 md:h-12 md:w-12"
+							class="h-8 w-8 shrink-0 lg:ml-2 lg:h-12 lg:w-12"
 							src="/goblin_purple_hat_60.png"
 							alt="AppGoblin Icon"
 						/>
 						<strong
-							class="hidden md:inline-flex text-xs ml-1 md:ml-2 md:text-lg xl:text-xl uppercase text-primary-900-100"
+							class="hidden lg:inline-flex text-xs ml-1 lg:ml-2 lg:text-lg xl:text-xl uppercase text-primary-900-100"
 							>AppGoblin</strong
 						>
 					</a>
 				</AppBar.Lead>
 
 				<AppBar.Headline class="hidden md:inline-flex">
-					<div class="gap-1 md:gap-2 justify-center">
+					<div class="gap-1 lg:gap-2 justify-center">
 						<NavTabs />
 					</div>
 				</AppBar.Headline>
@@ -86,7 +86,7 @@
 						<Portal>
 							<Menu.Positioner>
 								<Menu.Content>
-									<NavTabs />
+									<NavTabs flat={true} />
 								</Menu.Content>
 							</Menu.Positioner>
 						</Portal>

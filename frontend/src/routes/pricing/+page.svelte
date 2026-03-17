@@ -43,7 +43,7 @@
 	<title>Pricing - AppGoblin</title>
 </svelte:head>
 
-<div class="p-2 px-2 md:px-16 lg:px-32 grid grid-cols-1 gap-4 md:gap-8">
+<div class="px-2 lg:px-4 xl:px-16 grid grid-cols-1 gap-4 md:gap-4 lg:gap-8">
 	<h1 class="text-3xl font-bold text-primary-900-100">Pricing</h1>
 
 	<div class="card preset-filled-surface-100-900 {cardPadding}">
@@ -57,8 +57,8 @@
 
 			<br />
 
-			<div class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-5">
-				<div class="card preset-filled-surface-50-950 p-4 flex flex-col gap-3">
+			<div class="grid grid-cols-1 gap-2 lg:gap-4 md:grid-cols-2 lg:grid-cols-5">
+				<div class="card preset-filled-surface-50-950 p-1 lg:p-4 flex flex-col gap-2 md:gap-4">
 					<div>
 						<p class="text-xs uppercase tracking-wide opacity-60">Free</p>
 						<p class="text-2xl font-semibold">$0</p>
