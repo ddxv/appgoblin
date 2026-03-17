@@ -33,8 +33,8 @@
 					</a>
 				</AppBar.Lead>
 
-				<AppBar.Headline class="hidden md:inline-flex">
-					<div class="gap-1 lg:gap-2 justify-center">
+				<AppBar.Headline class="hidden md:inline-flex md:ml-8 ">
+					<div>
 						<NavTabs />
 					</div>
 				</AppBar.Headline>

@@ -105,26 +105,29 @@
 <div class="flex flex-col gap-8 px-2 md:px-20 lg:px-48">
 	<!-- Hero Header Section -->
 	<section class="text-center mt-8 mb-8 space-y-4">
-		<h1 class="text-5xl md:text-7xl text-primary-900-100 font-bold mb-4">AppGoblin</h1>
-		<h2 class="text-xl md:text-2xl font-bold text-primary mb-4">
-			Free App Marketing Insights and Research
-		</h2>
-		<p class="text-lg md:text-xl max-w-3xl mb-6 text-primary-900-100 mx-auto">
-			Real time app intelligence • Live advertising data • Competitor insights
-		</p>
+		<h1 class="text-xl md:text-3xl text-primary-900-100 font-bold mb-4">
+			App Marketing Tools and Mobile Intelligence
+		</h1>
 		<div class="flex flex-wrap justify-center gap-4 text-sm text-primary-900-100 mb-6">
-			<span class="px-3 py-1 bg-primary-100-900/20 rounded-full">⚡ Real-time Data</span>
-			<span class="px-3 py-1 bg-warning-100-900/20 rounded-full">🚀 Free Reports</span>
-			<span class="px-3 py-1 bg-success-100-900/20 rounded-full">✨ Ad and Creative Insights</span>
+			<span class="px-3 py-1 bg-primary-100-900/20 rounded-full">🚀 Free ASO Tools</span>
+			<span class="px-3 py-1 bg-warning-100-900/20 rounded-full"
+				>⚡ Find High Growth Apps and Advertisers</span
+			>
+			<span class="px-3 py-1 bg-success-100-900/20 rounded-full"
+				>✨ Mobile Ad and Creative Insights</span
+			>
 		</div>
 		<p class="text-base md:text-lg max-w-2xl mx-auto">
-			AppGoblin is a free resource for app marketers, developers, and researchers. Analyze
+			Analyze your competitors' growth and marketing tools.
+		</p>
+		<p>
+			Browse
 			<span class="font-bold text-success-900-100"
 				>{formatNumber(data.appsOverview.android_apps)}</span
 			>
-			Android apps and
+			Android and
 			<span class="font-bold text-success-900-100">{formatNumber(data.appsOverview.ios_apps)}</span>
-			iOS apps, track ad buyers, SDKs, and more.
+			iOS apps.
 		</p>
 
 		<div class="items-center">
@@ -138,14 +141,11 @@
 						<span class="text-black font-bold">→</span>
 					</a>
 					<a
-						href="mailto:contact@appgoblin.info"
+						href="/contact"
 						class="btn preset-outlined-primary-100-900 inline-flex items-center gap-2 px-6 py-3 rounded-lg"
 					>
 						<span class="font-bold text-white">Get in Touch</span>
 					</a>
-				</div>
-				<div class="text-white/80 text-sm pt-1">
-					Free demo & walkthroughs: <p>contact@appgoblin.info</p>
 				</div>
 			</div>
 		</div>
@@ -168,8 +168,10 @@
 				</svg>
 			</div>
 			<div>
-				<h2 class={sectionTitleClass}>Features & Who It's For</h2>
-				<p class={sectionSubtitleClass}>Mobile app intelligence across SDK, API, ads, and ASO</p>
+				<h2 class={sectionTitleClass}>
+					AppGoblin features mobile app intelligence across SDK, API, ads, and ASO
+				</h2>
+				<p class={sectionSubtitleClass}></p>
 			</div>
 		</div>
 
