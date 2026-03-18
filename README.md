@@ -58,7 +58,7 @@ NOTE: This repo is not direclty meant to be rerun without the DB, and is here fo
 ### Running
 
 - To run locally for testing use
-  - Backend: in `backend/` run `gunicorn -k uvicorn.workers.UvicornWorker app:app` or `litestar run dev`
+  - Backend: in `backend/` run `litestar run dev`
   - Frontend: in `frontend` run `npm run dev`
 - This repo includes the scripts used to run in production as well. These are located in the steps in `.github/actions` as well as `scripts` for systemd services for frontend and backend.
 - Additionally, you will need a proxy. I used Nginx. This is wherever you have your nginx configuration set, possibly sites-available `/etc/nginx/sites-available/appgoblin-api` or `/etc/nginx/conf.d/appgoblin-api.conf`

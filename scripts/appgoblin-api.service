@@ -1,14 +1,19 @@
 [Unit]
-Description=Gunicorn instance to serve App Store API
+Description=Uvicorn instance to serve App Store API
 After=network.target
 
 [Service]
 User=goblin
 Group=goblin
-RuntimeDirectory=gunicorn
+RuntimeDirectory=uvicorn
 WorkingDirectory=/home/goblin/appgoblin/backend
 Environment=PYTHONUNBUFFERED=1
-ExecStart=/home/goblin/venvs/appgoblin-env/bin/gunicorn -k uvicorn.workers.UvicornWorker --workers 2 --bind 127.0.0.1:8000 -m 007 --timeout 45 --graceful-timeout 35 app:app
+ExecStart=/home/goblin/venvs/appgoblin-env/bin/uvicorn \
+    --workers 4 \
+    --host 127.0.0.1 \
+    --port 8000 \
+    --timeout-graceful-shutdown 35 \
+    app:app
 ExecReload=/bin/kill -s HUP $MAINPID
 Restart=on-failure
 RestartSec=5
