@@ -54,6 +54,10 @@ from dbcon.static import get_company_logos_df, get_total_counts
 
 logger = get_logger(__name__)
 
+# Constants for URL truncation
+MAX_URL_DISPLAY_LENGTH = 44
+TRUNCATED_LENGTH = 41
+
 
 def api_call_dfs(state: State, store_id: str) -> pd.DataFrame:
     """Get the API calls for an app."""
@@ -63,7 +67,9 @@ def api_call_dfs(state: State, store_id: str) -> pd.DataFrame:
     df["url"] = df["url"].apply(lambda x: "/".join(x.split("/")[0:3]))
     df["url"] = df["url"].str.replace(r"\?.*$", "", regex=True)
     df["url"] = np.where(
-        df["url"].str.len() > 44, df["url"].str[:41] + "...", df["url"]
+        df["url"].str.len() > MAX_URL_DISPLAY_LENGTH,
+        df["url"].str[:TRUNCATED_LENGTH] + "...",
+        df["url"],
     )
     df["request_mime_type"] = df["request_mime_type"].replace(r"\;.*$", "", regex=True)
     df["response_mime_type"] = df["response_mime_type"].replace(
@@ -131,7 +137,7 @@ def create_app_country_plot_dict(app_hist: pd.DataFrame) -> pd.DataFrame:
     app_hist[xaxis_col] = pd.to_datetime(app_hist[xaxis_col])
     app_hist = app_hist.sort_values(["country", xaxis_col])
 
-    def process_country_group(group):
+    def process_country_group(group: pd.DataFrame) -> pd.DataFrame:
         """Process a single country's data independently."""
         # Store the country value before resampling
         country_value = group.name
@@ -142,13 +148,13 @@ def create_app_country_plot_dict(app_hist: pd.DataFrame) -> pd.DataFrame:
         # Resample to weekly frequency - creates missing weeks with NaN
         group = group.resample("W").last()
 
-        # Replace zeros with NaN for cumulative metrics (zeros are data holes, not valid values)
+        # Replace zeros with NaN for cumulative metrics (zeros are data holes)
         cumulative_metrics = ["rating_count", *star_cols]
 
         # Metrics to turn numeric / clean
         nmetrics = [
             m
-            for m in cumulative_metrics + ["rating", *weekly_metrics]
+            for m in [*cumulative_metrics, "rating", *weekly_metrics]
             if m in group.columns
         ]
         group[nmetrics] = (
@@ -231,7 +237,10 @@ def create_app_country_plot_dict(app_hist: pd.DataFrame) -> pd.DataFrame:
 
 
 def create_app_plot_df(app_hist: pd.DataFrame) -> pd.DataFrame:
-    """Create plot dicts for the app history with linear interpolation for missing weeks."""
+    """Create plot dicts for app history with linear interpolation.
+
+    Interpolates missing weeks for all metrics.
+    """
     star_cols = ["one_star", "two_star", "three_star", "four_star", "five_star"]
     cumulative_metrics = ["rating", *star_cols]
     weekly_metrics = [
@@ -250,7 +259,6 @@ def create_app_plot_df(app_hist: pd.DataFrame) -> pd.DataFrame:
     for metric in weekly_metrics:
         rate_of_change_metric = f"{metric}_rate_of_change"
         avg_per_day_metric = f"{metric}_avg_per_day"
-        # Formula is ((new - old) / old) * 100
         app_hist[rate_of_change_metric] = (
             app_hist[metric] / app_hist[metric].shift(1)
         ) * 100
@@ -264,7 +272,7 @@ def create_app_plot_df(app_hist: pd.DataFrame) -> pd.DataFrame:
         avg_per_day_metric = f"{metric}_avg_per_day"
         # Calculate the change (difference from previous period)
         app_hist[change_metric] = app_hist[metric] - app_hist[metric].shift(1)
-        # Formula: ((new - old) / old) * 100
+        # Formula ((new - old) / old) * 100 noqa: ERA001
         app_hist[rate_of_change_metric] = (
             (app_hist[metric] - app_hist[metric].shift(1)) / app_hist[metric].shift(1)
         ) * 100
@@ -274,7 +282,8 @@ def create_app_plot_df(app_hist: pd.DataFrame) -> pd.DataFrame:
         metrics_to_add.append(rate_of_change_metric)
         metrics_to_add.append(avg_per_day_metric)
 
-    # Include cumulative/base columns for charts (cumulative_installs, cumulative_ratings, rating, star_cols)
+    # Include cumulative/base columns for charts (cumulative_installs,
+    # cumulative_ratings, rating, star_cols)
     base_cols = ["cumulative_installs", "cumulative_ratings", "rating", *star_cols]
     available_base = [c for c in base_cols if c in app_hist.columns]
     # Select final columns and drop the first row (no previous data to compare)
@@ -344,9 +353,10 @@ class AppController(Controller):
 
         Args:
         ----
-            period: these are appgoblin specific collections of 'new' apps
-            store: which store to query
-            category: app category
+            state: Application state
+            period: Appgoblin specific collections of 'new' apps
+            store: Which store to query
+            category: App category
 
         Returns:
         -------
@@ -370,8 +380,9 @@ class AppController(Controller):
 
         Args:
         ----
-            store (int): The store to retrieve.
-            app_category (str): The category of apps to retrieve.
+            state: Application state
+            store: The store to retrieve
+            app_category: The category of apps to retrieve
 
         Returns:
         -------
@@ -603,12 +614,12 @@ class AppController(Controller):
             }
             company_sdk_dict[cat] = cat_dict
             # Collect all nested keys from each category
-            found_sdk_tlds.extend(key for x in cat_dict for key in cat_dict[x].keys())
+            found_sdk_tlds.extend(key for x in cat_dict for key in cat_dict[x])
 
         # Get unique SDK TLDs across all categories
         found_sdk_tlds = list(set(found_sdk_tlds))
 
-        unwanted_value_names = ["smali"] + found_sdk_tlds
+        unwanted_value_names = ["smali", *found_sdk_tlds]
 
         is_permission = df["xml_path"] == "uses-permission"
         df.loc[df["xml_path"].str.contains("key", case=False), "value_name"] = (
@@ -685,7 +696,8 @@ class AppController(Controller):
 
         Args:
         ----
-            store_id (str): The id of the store to retrieve.
+            state: Application state
+            store_id: The id of the store to retrieve
 
         Returns:
         -------
@@ -713,8 +725,9 @@ class AppController(Controller):
 
         Args:
         ----
-            store_id (str): The id of the store to retrieve.
-            country (str): The country to retrieve, alpha2 code (capitalized)
+            state: Application state
+            store_id: The id of the store to retrieve
+            country: The country to retrieve, alpha2 code (capitalized)
 
         Returns:
         -------
@@ -757,7 +770,8 @@ class AppController(Controller):
 
         Args:
         ----
-            store_id (str): The url of the store_id's ads txt to retrieve
+            state: Application state
+            store_id: The url of the store_id's ads txt to retrieve
 
         Returns:
         -------
@@ -793,7 +807,8 @@ class AppController(Controller):
 
         Args:
         ----
-            store_id (str): The url of the store_id's ads txt to retrieve
+            state: Application state
+            store_id: The url of the store_id's ads txt to retrieve
 
         Returns:
         -------
@@ -821,7 +836,7 @@ class AppController(Controller):
         logger.info(f"{self.path}/{store_id}/adstxt took {duration}ms")
         return txts
 
-    @get(path="/search/{search_term:str}", cache=3600)
+    @get(path="/search/{search_term:str}")
     async def search(
         self: Self,
         state: State,
@@ -832,9 +847,10 @@ class AppController(Controller):
 
         Args:
         ----
-            search_term: str the search term to search for.
+            state: Application state
+            search_term: The search term to search for.
                 Can search packages, developers and app names.
-            user_id: int | None the user id of the user searching.
+            user_id: The user id of the user searching.
 
         """
         start = time.perf_counter() * 1000
@@ -866,7 +882,7 @@ class AppController(Controller):
         self: Self,
         state: State,
         store_id: str,
-        keyword_text: list[str] | None = Parameter(
+        keyword_text: list[str] | None = Parameter(  # noqa: B008
             query="keyword_text", required=False
         ),
     ) -> dict:

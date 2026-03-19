@@ -122,22 +122,22 @@ class DeveloperController(Controller):
 
         developer_apps = DeveloperApps(
             google=PlatformDeveloper(
-                developer_id=google_developer_id,
+                developer_id=google_developer_id or "",
                 developer_name=google_developer_name,
-                developer_url=google_developer_url,
+                developer_url=google_developer_url or "",
                 pub_domain_url=google_pub_domain_url,
                 apps=AppGroup(title="Google", apps=google_apps_dict),
                 apps_by_url=AppGroup(title="Google", apps=google_apps_dict_url),
             ),
             apple=PlatformDeveloper(
-                developer_id=apple_developer_id,
+                developer_id=apple_developer_id or "",
                 developer_name=apple_developer_name,
-                developer_url=apple_developer_url,
+                developer_url=apple_developer_url or "",
                 pub_domain_url=apple_pub_domain_url,
                 apps=AppGroup(title="Apple", apps=apple_apps_dict),
                 apps_by_url=AppGroup(title="Apple", apps=apple_apps_dict_url),
             ),
-            title=developer_name,
+            title=developer_name or "",
         )
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(f"{self.path}/{developer_id} took {duration}ms")

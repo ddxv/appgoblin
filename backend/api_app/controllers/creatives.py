@@ -75,7 +75,6 @@ class CreativesController(Controller):
         )
         df = append_ad_networks_dict_to_df(df=df, state=state)
         df["last_seen"] = df["last_seen"].dt.strftime("%Y-%m-%d")
-        df = df.head(100)
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(f"{self.path} took {duration}ms")
         return df.to_dict(orient="records")

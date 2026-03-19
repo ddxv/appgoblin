@@ -27,12 +27,15 @@
 
 - **ASO Tools** — Free keyword research tools and data dumps to optimize app store visibility
 
+- **[Free App Datasets](https://appgoblin.info/free-app-datasets)** — Free app metrics and app description exports for researchers, marketers, and data scientists (TSV + XZ)
+
 - **App-Ads.txt** — Daily-updated files tying apps to their DIRECT and RESELLER ad networks and SSPs
 
 ## Who It's For
 
 - **App & game developers** looking to grow using free ASO tools
 - **Researchers & journalists** needing deep technical analysis across millions of apps
+- **Data scientists & marketers** needing reproducible app datasets for modeling, market mapping, and analysis
 - **Ad sales teams** prospecting clients by analyzing competitor app portfolios
 - **Ad networks & DSPs** doing fraud detection
 - **DSPs** needing App-Ads.txt tied to real app store IDs (e.g. `com.example.app`) rather than just domain names

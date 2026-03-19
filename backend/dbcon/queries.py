@@ -202,7 +202,6 @@ def get_most_recent_top_ranks(
     return df
 
 
-@cache_by_params
 def get_country_id(state: State, country: str) -> int:
     """Get country id."""
     df = get_country_map(state)
@@ -319,7 +318,6 @@ def get_app_adstxt_overview(state: State, store_id: str) -> pd.DataFrame:
     return df
 
 
-@cache_by_params
 def get_companies_parent_category_stats(
     state: State,
     app_category: str | None = None,
@@ -523,7 +521,6 @@ def get_company_adstxt_ad_domain_overview(
     return df
 
 
-@cache_by_params
 def get_company_tree_base(state: State, queried_domain: str) -> pd.DataFrame:
     """Get a company tree with parent companies and domains."""
     logger.info(f"query company tree: {queried_domain=}")
@@ -535,7 +532,6 @@ def get_company_tree_base(state: State, queried_domain: str) -> pd.DataFrame:
     return df
 
 
-@cache_by_params
 def get_company_tree_related_domains(
     state: State, company_id: int, is_parent: bool
 ) -> pd.DataFrame:
@@ -624,8 +620,11 @@ def get_category_tag_type_stats(
     state: State, type_slug: str, category: str | None = None
 ) -> pd.DataFrame:
     """Get category tag type stats."""
-    df = pd.read_sql(sql.category_tag_type_stats, state.dbcon.engine)
-    df = df[df["type_url_slug"] == type_slug]
+    df = pd.read_sql(
+        sql.category_tag_type_stats,
+        state.dbcon.engine,
+        params={"type_url_slug": type_slug},
+    )
     if category:
         df = df[df["app_category"] == category]
     else:

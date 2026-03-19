@@ -9,7 +9,7 @@
 	<title>About AppGoblin: Competitor Analysis and App Marketing Tools</title>
 	<meta
 		name="description"
-		content="Free ASO tools, competitor analysis, lead generation and ad analytics platform for apps. Tools for competitor analysis, app-ads.txt analysis, and more."
+		content="Free ASO tools, competitor analysis, lead generation and ad analytics platform for apps. Includes free app datasets for researchers, marketers, and data scientists."
 	/>
 	<meta
 		name="keywords"
@@ -50,6 +50,15 @@
 		>
 		for plan details. We offer Free access for exploration, Premium Access for exports, and B2B tiers
 		for SDK intelligence, app-ads.txt datasets, and combined access.
+	</p>
+	<p class="text-sm text-surface-600-400">
+		Looking for open app data? Browse our
+		<a
+			href="/free-app-datasets"
+			class="underline decoration-primary-500/60 hover:decoration-primary-500"
+			>free app datasets page</a
+		>
+		for app metrics and app descriptions available with a free account.
 	</p>
 
 	<div class="items-center">
@@ -198,8 +207,13 @@
 		<h2 class="h2 {titlePadding}">Free Resources</h2>
 		<div class={contentPadding}>
 			<p>
-				The majority of AppGoblin's marketing data and ASO features are free to browse. Some open
-				source data sets are available for free download. They can be found on
+				The majority of AppGoblin's marketing data and ASO features are free to browse. You can also
+				access free exports from our
+				<a
+					href="/free-app-datasets"
+					class="underline decoration-primary-500/60 hover:decoration-primary-500"
+					>free app datasets page</a
+				>. Some open source data sets are available for free download on
 				<strong
 					><a href="https://github.com/appgoblin-dev/appgoblin-data"
 						>github.com/appgoblin-dev/appgoblin-data</a

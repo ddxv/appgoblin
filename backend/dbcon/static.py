@@ -1,11 +1,11 @@
 """Static queries - data preloaded at application startup."""
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 import pandas as pd
 from litestar.datastructures import State
 
-from config import get_logger
+from config import CONFIG, get_logger, PUBLIC_DATA_URL
 from dbcon.connections import PostgresCon
 from dbcon.utils import sql
 
@@ -31,6 +31,46 @@ class StaticData:
     company_open_source: pd.DataFrame
     company_api_call_countrys: pd.DataFrame
     mediation_companies: pd.DataFrame
+    s3_datasets: list[dict] = field(default_factory=list)
+
+
+def load_s3_datasets() -> list[dict]:
+    """Load list of public export datasets from S3 at startup."""
+    s3_key = "public-s3"
+    if s3_key not in CONFIG:
+        logger.warning("public-s3 config section missing, skipping S3 dataset loading")
+        return []
+    try:
+        import boto3
+
+        session = boto3.session.Session()
+        s3 = session.client(
+            "s3",
+            region_name=CONFIG[s3_key]["region_name"],
+            endpoint_url="https://" + CONFIG[s3_key]["host"],
+            aws_access_key_id=CONFIG[s3_key]["access_key_id"],
+            aws_secret_access_key=CONFIG[s3_key]["secret_key"],
+        )
+        bucket = CONFIG[s3_key]["bucket"]
+
+        paginator = s3.get_paginator("list_objects_v2")
+        datasets = []
+        for page in paginator.paginate(Bucket=bucket):
+            for obj in page.get("Contents", []):
+                key = obj["Key"]
+                datasets.append(
+                    {
+                        "key": key,
+                        "size_bytes": obj["Size"],
+                        "last_modified": obj["LastModified"].isoformat(),
+                        "download_url": f"{PUBLIC_DATA_URL}{key}",
+                    }
+                )
+        logger.info(f"Loaded {len(datasets)} S3 export datasets")
+        return datasets
+    except Exception:
+        logger.exception("Failed to load S3 datasets")
+        return []
 
 
 def load_static_data(engine: PostgresCon) -> StaticData:
@@ -106,6 +146,10 @@ def load_static_data(engine: PostgresCon) -> StaticData:
         engine,
     )
 
+    # Load S3 public export datasets
+    logger.info("Loading S3 public export datasets...")
+    s3_datasets = load_s3_datasets()
+
     logger.info("Static data loading complete!")
 
     return StaticData(
@@ -124,6 +168,7 @@ def load_static_data(engine: PostgresCon) -> StaticData:
         company_open_source=company_open_source,
         company_api_call_countrys=company_api_call_countrys,
         mediation_companies=mediation_companies,
+        s3_datasets=s3_datasets,
     )
 
 
@@ -201,3 +246,8 @@ def get_company_api_call_countrys(state: State) -> pd.DataFrame:
 def get_mediation_companies(state: State) -> pd.DataFrame:
     """Get mediation companies (preloaded at startup)."""
     return state.static_data.mediation_companies
+
+
+def get_s3_datasets(state: State) -> list[dict]:
+    """Get S3 public export datasets (preloaded at startup)."""
+    return state.static_data.s3_datasets

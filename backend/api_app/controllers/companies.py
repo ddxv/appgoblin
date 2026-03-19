@@ -12,7 +12,7 @@
 
 import io
 import time
-import urllib
+import urllib.parse
 from collections import defaultdict
 from typing import Self
 
@@ -35,6 +35,8 @@ from api_app.models import (
     CompanyFollowLookup,
     CompanyPatternsDict,
     CompanyPlatformOverview,
+    CompanyPubIDApps,
+    CompanyPubIDAppsRelationship,
     CompanyPubIDOverview,
     CompanyPubIDTotals,
     CompanyTree,
@@ -236,7 +238,7 @@ def make_top_companies(top_df: pd.DataFrame) -> TopCompaniesShort:
 def prep_companies_overview_df(
     state: State,
     overview_df: pd.DataFrame,
-) -> tuple[pd.DataFrame, CompaniesCategoryOverview]:
+) -> pd.DataFrame:
     """Prep companies overview dataframe."""
     overview_df = (
         overview_df.groupby(
@@ -999,14 +1001,14 @@ class CompaniesController(Controller):
                 # Enrich own domains with country / org
                 enrich_domains(own_domains, api_data)
             else:
-                api_data = {}
+                api_data = []
             # Build children with enriched domains
             children = [
                 ChildCompany(
                     company_name=str(meta["company_name"]),
                     company_domain=next(
                         (d.domain_name for d in domains if d.is_primary),
-                        domains[0].domain_name if domains else None,
+                        domains[0].domain_name if domains else "",
                     ),
                     company_logo_url=meta["company_logo_url"],
                     domains=enrich_domains(domains, api_data),
@@ -1307,9 +1309,20 @@ class CompaniesController(Controller):
             ),
         )
 
+        typed_apps = CompanyPubIDApps(
+            google=CompanyPubIDAppsRelationship(
+                direct=apps["google"]["direct"],
+                reseller=apps["google"]["reseller"],
+            ),
+            apple=CompanyPubIDAppsRelationship(
+                direct=apps["apple"]["direct"],
+                reseller=apps["apple"]["reseller"],
+            ),
+        )
+
         overview = CompanyPubIDOverview(
             totals=totals,
-            apps=apps,
+            apps=typed_apps,
         )
 
         duration = round((time.perf_counter() * 1000 - start), 2)

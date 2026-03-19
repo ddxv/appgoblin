@@ -24,8 +24,14 @@ ssh_pkey_password = "mypassword"
 [cloud]
 access_key_id = "myaccesskey"
 secret_key = "mysecretkey"
-adstxt_endpoint = "https://mybucket.myregion.digitaloceanspaces.com/app-ads-txt/domains/domain="
 
 [umami]
 site_id = "my-site-id"
 base_url = "https://my-umami-instance.com"
+
+[public-s3]
+region_name = "nyc3"
+host = "nyc3.digitaloceanspaces.com"
+access_key_id = "myaccesskey"
+secret_key = "mysecretkey"
+bucket = "my-public-bucket"

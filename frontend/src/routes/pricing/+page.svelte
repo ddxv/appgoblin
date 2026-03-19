@@ -1,5 +1,6 @@
-<script>
+<script lang="ts">
 	import { enhance } from '$app/forms';
+	import { Check, X } from 'lucide-svelte';
 
 	/** @type {import('./$types').PageData} */
 	export let data;
@@ -9,11 +10,164 @@
 	let cardPadding = 'p-2 md:p-4';
 
 	let loading = false;
-	/** @type {string | null} */
-	let activePriceKey = null;
+	let activePriceKey: string | null = null;
+
+	const plans = [
+		{
+			key: 'free',
+			name: 'Free',
+			price: '$0',
+			description: 'Indie devs, researchers, casual users',
+			included: true
+		},
+		{
+			key: 'app_dev',
+			name: 'Premium Access',
+			price: '$49',
+			period: '/mo',
+			description: 'Freelance ASO, small teams, power users'
+		},
+		{
+			key: 'b2b_sdk',
+			name: 'B2B SDK Intelligence',
+			price: '$299',
+			period: '/mo',
+			description: 'Sales teams, ad networks, agencies'
+		},
+		{
+			key: 'b2b_appads',
+			name: 'App-Ads.txt',
+			price: '$299',
+			period: '/mo',
+			description: 'Ad networks, DSPs, SSPs'
+		},
+		{
+			key: 'b2b_premium',
+			name: 'Premium B2B',
+			price: '$499',
+			period: '/mo',
+			description: 'Larger companies, security teams, ad networks, hedge funds',
+			featured: true
+		}
+	];
+
+	const features = [
+		{
+			category: 'Core Features',
+			name: 'Advanced App SDK view',
+			free: true,
+			premium: true,
+			sdk: true,
+			appads: true,
+			b2b: true
+		},
+		{
+			category: 'Core Features',
+			name: 'Request SDK/API scans',
+			free: true,
+			premium: true,
+			sdk: true,
+			appads: true,
+			b2b: true
+		},
+		{
+			category: 'Core Features',
+			name: 'App Comparisons',
+			free: true,
+			premium: true,
+			sdk: true,
+			appads: true,
+			b2b: true
+		},
+		{
+			category: 'Core Features',
+			name: 'ASO keyword dash',
+			free: true,
+			premium: true,
+			sdk: true,
+			appads: true,
+			b2b: true
+		},
+		{
+			category: 'Core Features',
+			name: 'Ad intelligence',
+			free: true,
+			premium: true,
+			sdk: true,
+			appads: true,
+			b2b: true
+		},
+		{
+			category: 'Premium Tools',
+			name: 'App Explorer dash',
+			free: false,
+			premium: true,
+			sdk: true,
+			appads: true,
+			b2b: true
+		},
+		{
+			category: 'Data Export',
+			name: 'List of apps for any company',
+			free: false,
+			premium: false,
+			sdk: true,
+			appads: false,
+			b2b: true
+		},
+		{
+			category: 'Data Export',
+			name: 'Export all apps per SDK/API breakdown',
+			free: false,
+			premium: false,
+			sdk: true,
+			appads: false,
+			b2b: true
+		},
+		{
+			category: 'Data Export',
+			name: 'All apps per company/domain',
+			free: false,
+			premium: false,
+			sdk: false,
+			appads: true,
+			b2b: true
+		},
+		{
+			category: 'Data Export',
+			name: 'Bulk app-ads.txt datasets',
+			free: false,
+			premium: false,
+			sdk: false,
+			appads: true,
+			b2b: true
+		},
+		{
+			category: 'Enterprise',
+			name: 'Compliance & security requests',
+			free: false,
+			premium: false,
+			sdk: false,
+			appads: false,
+			b2b: true
+		},
+		{
+			category: 'Enterprise',
+			name: 'Custom reports & integration',
+			free: false,
+			premium: false,
+			sdk: false,
+			appads: false,
+			b2b: true
+		}
+	];
 
 	/** @param {{ result: import('@sveltejs/kit').ActionResult }} param0 */
-	const handleSubscribeResult = async ({ result }) => {
+	const handleSubscribeResult = async ({
+		result
+	}: {
+		result: import('@sveltejs/kit').ActionResult;
+	}) => {
 		console.log('Form result:', result);
 
 		if (result.type === 'redirect') {
@@ -31,11 +185,20 @@
 	};
 
 	/** @param {{ formElement: HTMLFormElement }} param0 */
-	const subscribeEnhance = ({ formElement }) => {
+	const subscribeEnhance = ({ formElement }: { formElement: HTMLFormElement }) => {
 		activePriceKey = formElement.dataset.priceKey ?? null;
 		loading = true;
 
 		return handleSubscribeResult;
+	};
+
+	const getFeatureValue = (feature: (typeof features)[0], planKey: string): boolean => {
+		if (planKey === 'free') return feature.free;
+		if (planKey === 'app_dev') return feature.premium;
+		if (planKey === 'b2b_sdk') return feature.sdk;
+		if (planKey === 'b2b_appads') return feature.appads;
+		if (planKey === 'b2b_premium') return feature.b2b;
+		return false;
 	};
 </script>
 
@@ -57,149 +220,90 @@
 
 			<br />
 
-			<div class="grid grid-cols-1 gap-2 lg:gap-4 md:grid-cols-2 lg:grid-cols-5">
-				<div class="card preset-filled-surface-50-950 p-1 lg:p-4 flex flex-col gap-2 md:gap-4">
-					<div>
-						<p class="text-xs uppercase tracking-wide opacity-60">Free</p>
-						<p class="text-2xl font-semibold">$0</p>
-						<p class="text-xs opacity-70">Indie devs, researchers, casual users</p>
-					</div>
-					<ul class="text-xs list-disc list-inside space-y-1 opacity-90">
-						<li>Advanced App SDK breakdowns</li>
-						<li>Request Apps for SDK and API scanning</li>
-						<li>App Comparisons</li>
-						<li>Keyword tools</li>
-						<li>App rankings</li>
-						<li>Ad intelligence, trending growth apps</li>
-					</ul>
-					<p class="text-xs opacity-60">Included with every account</p>
-					{#if !data?.user}
-						<a href="/auth/signup" class="btn preset-filled-primary-500 w-full mt-auto"
-							>Create Account</a
-						>
-					{/if}
-				</div>
-
-				<div class="card preset-filled-surface-50-950 p-4 flex flex-col gap-3">
-					<div>
-						<p class="text-xs uppercase tracking-wide opacity-60">Premium Access</p>
-						<p class="text-2xl font-semibold">
-							$49<span class="text-xs opacity-60 ml-1">/mo</span>
-						</p>
-						<p class="text-xs opacity-70">Freelance ASO, small teams, power users</p>
-					</div>
-					<ul class="text-xs list-disc list-inside space-y-1 opacity-90">
-						<li>Everything in Free</li>
-						<li>App Explorer dashboard</li>
-						<li>Feature requests and feedback</li>
-					</ul>
-					<form
-						method="POST"
-						action="?/subscribe"
-						use:enhance={subscribeEnhance}
-						data-price-key="app_dev"
-						class="mt-auto"
-					>
-						<input type="hidden" name="priceKey" value="app_dev" />
-						<button type="submit" disabled={loading} class="btn preset-filled-primary-500 w-full">
-							{loading && activePriceKey === 'app_dev'
-								? 'Redirecting to checkout...'
-								: 'Get Premium Access'}
-						</button>
-					</form>
-				</div>
-
-				<div class="card preset-filled-surface-50-950 p-4 flex flex-col gap-3">
-					<div>
-						<p class="text-xs uppercase tracking-wide opacity-60">
-							Business Intelligence (SDK data)
-						</p>
-						<p class="text-2xl font-semibold">
-							$299<span class="text-xs opacity-60 ml-1">/mo</span>
-						</p>
-						<p class="text-xs opacity-70">Sales teams, ad networks, agencies</p>
-					</div>
-					<ul class="text-xs list-disc list-inside space-y-1 opacity-90">
-						<li>Everything in Premium</li>
-						<li>Export all apps for any company</li>
-						<li>Export all apps per SDK/API breakdowns</li>
-					</ul>
-					<form
-						method="POST"
-						action="?/subscribe"
-						use:enhance={subscribeEnhance}
-						data-price-key="b2b_sdk"
-						class="mt-auto"
-					>
-						<input type="hidden" name="priceKey" value="b2b_sdk" />
-						<button type="submit" disabled={loading} class="btn preset-filled-primary-500 w-full">
-							{loading && activePriceKey === 'b2b_sdk'
-								? 'Redirecting to checkout...'
-								: 'Get Business Intelligence'}
-						</button>
-					</form>
-				</div>
-
-				<div class="card preset-filled-surface-50-950 p-4 flex flex-col gap-3">
-					<div>
-						<p class="text-xs uppercase tracking-wide opacity-60">App-Ads.txt</p>
-						<p class="text-2xl font-semibold">
-							$299<span class="text-xs opacity-60 ml-1">/mo</span>
-						</p>
-						<p class="text-xs opacity-70">Ad networks, DSPs, SSPs</p>
-					</div>
-					<ul class="text-xs list-disc list-inside space-y-1 opacity-90">
-						<li>Everything in Premium</li>
-						<li>Daily app-ads.txt files per company / ad domain.</li>
-						<li>Daily bulk app-ads.txt dataset ~80GB</li>
-					</ul>
-					<form
-						method="POST"
-						action="?/subscribe"
-						use:enhance={subscribeEnhance}
-						data-price-key="b2b_appads"
-						class="mt-auto"
-					>
-						<input type="hidden" name="priceKey" value="b2b_appads" />
-						<button type="submit" disabled={loading} class="btn preset-filled-primary-500 w-full">
-							{loading && activePriceKey === 'b2b_appads'
-								? 'Redirecting to checkout...'
-								: 'Get App-Ads.txt'}
-						</button>
-					</form>
-				</div>
-
+			<!-- Features Table -->
+			<div class="overflow-x-auto">
 				<div
-					class="card preset-filled-surface-50-950 p-4 flex flex-col gap-3 border border-primary-500/40"
+					class="grid gap-px border border-surface-500/20"
+					style="grid-template-columns: 300px repeat(5, 1fr); min-width: 900px;"
 				>
-					<div>
-						<p class="text-xs uppercase tracking-wide opacity-60">Premium B2B</p>
-						<p class="text-2xl font-semibold">
-							$499<span class="text-xs opacity-60 ml-1">/mo</span>
-						</p>
-						<p class="text-xs opacity-70">
-							Larger companies, security teams, ad networks, hedge funds
-						</p>
-					</div>
-					<ul class="text-xs list-disc list-inside space-y-1 opacity-90">
-						<li>Business SDK + App-Ads.txt</li>
-						<li>Compliance</li>
-						<li>Custom reports</li>
-					</ul>
-					<form
-						method="POST"
-						action="?/subscribe"
-						use:enhance={subscribeEnhance}
-						data-price-key="b2b_premium"
-						class="mt-auto"
-					>
-						<input type="hidden" name="priceKey" value="b2b_premium" />
-						<button type="submit" disabled={loading} class="btn preset-filled-primary-500 w-full">
-							{loading && activePriceKey === 'b2b_premium'
-								? 'Redirecting to checkout...'
-								: 'Get Premium B2B'}
-						</button>
-					</form>
+					<!-- Plan header row -->
+					<div class="p-2 bg-surface-50-950 font-semibold text-xs">Feature</div>
+					{#each plans as plan (plan.key)}
+						<div
+							class="p-2 border-l border-surface-500/20 bg-surface-50-950 text-center {plan.featured
+								? 'bg-primary-500/5'
+								: ''}"
+						>
+							<p class="text-xs uppercase tracking-wide opacity-60">{plan.name}</p>
+							<p class="text-base font-semibold leading-tight mt-1">
+								{plan.price}<span class="text-xs opacity-60 ml-1">{plan.period || ''}</span>
+							</p>
+							<p class="text-xs opacity-70 mt-1 leading-snug">{plan.description}</p>
+						</div>
+					{/each}
+
+					<!-- Feature rows -->
+					{#each features as feature}
+						<!-- Feature name cell -->
+						<div class="p-2 bg-surface-50-950 text-xs md:text-sm">{feature.name}</div>
+
+						<!-- Feature checkmark cells -->
+						{#each plans as plan (plan.key)}
+							{@const hasFeature = getFeatureValue(feature, plan.key)}
+							<div
+								class="p-2 border-l border-surface-500/20 bg-surface-50-950 text-center {plan.featured
+									? 'bg-primary-500/5'
+									: ''}"
+							>
+								{#if hasFeature}
+									<Check
+										class="w-4 h-4 mx-auto text-success-700-300 opacity-75"
+										aria-hidden="true"
+									/>
+									<span class="sr-only">Included</span>
+								{:else}
+									<X class="w-4 h-4 mx-auto opacity-20" aria-hidden="true" />
+									<span class="sr-only">Not included</span>
+								{/if}
+							</div>
+						{/each}
+					{/each}
+
+					<!-- CTA row -->
+					<div class="p-2 bg-surface-50-950 font-semibold text-xs">Choose Plan</div>
+					{#each plans as plan (plan.key)}
+						<div
+							class="p-2 border-l border-surface-500/20 bg-surface-50-950 {plan.featured
+								? 'bg-primary-500/5'
+								: ''}"
+						>
+							{#if plan.included}
+								{#if !data?.user}
+									<a href="/auth/signup" class="btn preset-filled-primary-500 w-full text-xs"
+										>Create Account</a
+									>
+								{:else}
+									<p class="text-center text-xs opacity-60">Included with your account</p>
+								{/if}
+							{:else}
+								<form
+									method="POST"
+									action="?/subscribe"
+									use:enhance={subscribeEnhance}
+									data-price-key={plan.key}
+								>
+									<input type="hidden" name="priceKey" value={plan.key} />
+									<button
+										type="submit"
+										disabled={loading}
+										class="btn preset-filled-primary-500 w-full text-xs"
+									>
+										{loading && activePriceKey === plan.key ? 'Redirecting...' : 'Get ' + plan.name}
+									</button>
+								</form>
+							{/if}
+						</div>
+					{/each}
 				</div>
 			</div>
 
@@ -216,8 +320,16 @@
 				<div class="card preset-filled-surface-50-950 p-5 space-y-3">
 					<h3 class="text-lg font-semibold">Free Resources</h3>
 					<p class="text-sm text-surface-600-400">
-						The majority of AppGoblin's marketing data and ASO features are free to browse. Some
-						open source data sets are available for free download at
+						The majority of AppGoblin's marketing data and ASO features are free to browse. You can
+						also use the
+						<a
+							href="/free-app-datasets"
+							class="underline decoration-primary-500/60 hover:decoration-primary-500"
+						>
+							free app datasets page
+						</a>
+						for free app metrics and app description exports with a free account. Additional open source
+						data sets are available for free download at
 						<a
 							href="https://github.com/appgoblin-dev/appgoblin-data"
 							class="underline decoration-primary-500/60 hover:decoration-primary-500"
