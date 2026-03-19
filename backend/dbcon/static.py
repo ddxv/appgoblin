@@ -5,7 +5,7 @@ from dataclasses import dataclass, field
 import pandas as pd
 from litestar.datastructures import State
 
-from config import CONFIG, get_logger, PUBLIC_DATA_URL
+from config import CONFIG, PUBLIC_DATA_URL, get_logger
 from dbcon.connections import PostgresCon
 from dbcon.utils import sql
 
