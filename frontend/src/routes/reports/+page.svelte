@@ -28,13 +28,6 @@
 		'Browse AppGoblin mobile app marketing reports for ad buyers and mobile app publishers. Compare ad network reach, creatives, UA trends, and advertiser strategies.';
 
 	// Class constants
-	const statCardClass =
-		'bg-white dark:bg-surface-900 rounded-lg p-6 border border-surface-200 dark:border-surface-700';
-	const statLabelClass =
-		'text-sm font-semibold text-surface-600 dark:text-surface-400 uppercase tracking-wide';
-	const statValueClass = 'text-4xl font-bold text-surface-900 dark:text-surface-50 mt-2';
-	const featureIconClass =
-		'w-10 h-10 bg-surface-200 dark:bg-surface-700 rounded-lg flex items-center justify-center';
 	const tagClass =
 		'inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-surface-200 dark:bg-surface-700 text-surface-900 dark:text-surface-50';
 	const reportCardClass =
@@ -42,7 +35,6 @@
 	const reportTitleClass =
 		'text-2xl font-bold text-surface-900 dark:text-surface-100 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition';
 	const reportPeriodClass = 'text-xl font-semibold text-primary-900-100 mt-2';
-	const reportDescClass = 'text-sm text-surface-600 dark:text-surface-400 mb-6 line-clamp-3';
 	const ctaLinkClass =
 		'flex items-center gap-2 text-sm font-semibold text-purple-600 dark:text-purple-400 group-hover:gap-3 transition-all';
 
