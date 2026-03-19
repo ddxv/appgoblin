@@ -3,6 +3,7 @@
 import logging
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
+from datetime import datetime, timedelta
 
 from litestar import Litestar, Request
 from litestar.config.cors import CORSConfig
@@ -78,6 +79,36 @@ private_controllers = [
 # Set the guard on private controllers
 for controller in private_controllers:
     controller.guards = [restrict_access]
+
+
+async def cleanup_expired_responses(request: Request) -> None:
+    """Periodically clean up expired entries from the response cache store.
+
+    Litestar's MemoryStore doesn't automatically evict expired entries. This
+    handler runs after each response and checks if cleanup is needed (at most
+    every 10 minutes). This prevents the cache dict from growing unbounded.
+
+    At 1M requests/day, this results in ~144 cleanup cycles/day, which is
+    minimal overhead. The timestamp check on each request is negligible
+    (~microseconds), only the cleanup cycle (every 10 min) has material cost.
+
+    This pattern is from the official Litestar documentation:
+    https://docs.litestar.dev/2/usage/stores.html#deleting-expired-values
+    """
+    now = datetime.datetime.now(datetime.timezone.utc)
+    last_cleared = request.app.state.get("store_last_cleared")
+
+    # Only run cleanup every 10 minutes at most
+    if last_cleared is None or now - last_cleared > timedelta(seconds=600):
+        try:
+            store = request.app.stores.get("response_cache")
+            if hasattr(store, "delete_expired"):
+                await store.delete_expired()
+                logger.debug("Purged expired response cache entries")
+        except Exception:
+            logger.exception("Error during response cache cleanup")
+
+        request.app.state["store_last_cleared"] = now
 
 
 @asynccontextmanager
@@ -159,4 +190,5 @@ app = Litestar(
     ),
     lifespan=[db_lifespan],
     logging_config=logging_config,
+    after_response=cleanup_expired_responses,
 )

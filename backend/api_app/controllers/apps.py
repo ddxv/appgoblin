@@ -821,7 +821,7 @@ class AppController(Controller):
         logger.info(f"{self.path}/{store_id}/adstxt took {duration}ms")
         return txts
 
-    @get(path="/search/{search_term:str}", cache=3600)
+    @get(path="/search/{search_term:str}")
     async def search(
         self: Self,
         state: State,
