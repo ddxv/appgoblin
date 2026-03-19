@@ -3,10 +3,11 @@
 import logging
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
-from datetime import datetime, timedelta
+from datetime import UTC, datetime, timedelta
 
 from litestar import Litestar, Request
 from litestar.config.cors import CORSConfig
+from litestar.handlers.base import RouteHandler
 from litestar.logging import LoggingConfig
 from litestar.openapi import OpenAPIConfig, OpenAPIController
 
@@ -47,7 +48,7 @@ logging_config = LoggingConfig(
 )
 
 
-def restrict_access(request: Request, route_handler) -> None:
+def restrict_access(request: Request, route_handler: RouteHandler) -> None:
     """Guard to restrict access.
 
     - ScryController endpoints are always public
@@ -78,7 +79,7 @@ private_controllers = [
 
 # Set the guard on private controllers
 for controller in private_controllers:
-    controller.guards = [restrict_access]
+    setattr(controller, "guards", [restrict_access])
 
 
 async def cleanup_expired_responses(request: Request) -> None:
@@ -95,7 +96,7 @@ async def cleanup_expired_responses(request: Request) -> None:
     This pattern is from the official Litestar documentation:
     https://docs.litestar.dev/2/usage/stores.html#deleting-expired-values
     """
-    now = datetime.datetime.now(datetime.timezone.utc)
+    now = datetime.now(UTC)
     last_cleared = request.app.state.get("store_last_cleared")
 
     # Only run cleanup every 10 minutes at most
