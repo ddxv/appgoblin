@@ -8,6 +8,8 @@ from logging.handlers import RotatingFileHandler
 
 PROJECT_NAME = "appgoblin"
 
+PUBLIC_DATA_URL = "https://data.appgoblin.info/"
+
 HOME = pathlib.Path.home()
 
 # load config in /home/my-user/appboblin/config.toml

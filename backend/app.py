@@ -7,7 +7,6 @@ from datetime import UTC, datetime, timedelta
 
 from litestar import Litestar, Request
 from litestar.config.cors import CORSConfig
-from litestar.handlers.base import RouteHandler
 from litestar.logging import LoggingConfig
 from litestar.openapi import OpenAPIConfig, OpenAPIController
 
@@ -16,6 +15,7 @@ from api_app.controllers.categories import CategoryController
 from api_app.controllers.companies import CompaniesController
 from api_app.controllers.creatives import CreativesController
 from api_app.controllers.developers import DeveloperController
+from api_app.controllers.exports import ExportsController
 from api_app.controllers.keywords import KeywordsController
 from api_app.controllers.rankings import RankingsController
 from api_app.controllers.scry import ScryController
@@ -48,7 +48,7 @@ logging_config = LoggingConfig(
 )
 
 
-def restrict_access(request: Request, route_handler: RouteHandler) -> None:
+def restrict_access(request: Request, route_handler) -> None:
     """Guard to restrict access.
 
     - ScryController endpoints are always public
@@ -182,6 +182,7 @@ app = Litestar(
         KeywordsController,
         ScryController,
         CreativesController,
+        ExportsController,
     ],
     cors_config=cors_config,
     openapi_config=OpenAPIConfig(

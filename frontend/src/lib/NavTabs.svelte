@@ -74,6 +74,13 @@
 				>REPORTS</a
 			>
 			<div class={myDivider}></div>
+			<a
+				href="/free-app-datasets"
+				class={isHighlighted('/free-app-datasets') ? topBarHighlightedFont : topBarFont}
+			>
+				DATA EXPORTS</a
+			>
+			<div class={myDivider}></div>
 		{/if}
 		<a href="/pricing" class={isHighlighted('/pricing') ? topBarHighlightedFont : topBarFont}
 			>PRICING</a
@@ -162,7 +169,7 @@
 		<!-- RESOURCES dropdown -->
 		<div class="relative group">
 			<button
-				class="flex items-center gap-0.5 {isHighlighted('/blog', '/reports')
+				class="flex items-center gap-0.5 {isHighlighted('/blog', '/reports', '/free-app-datasets')
 					? topBarHighlightedFont
 					: topBarFont}"
 			>
@@ -176,6 +183,11 @@
 					<a
 						href="/reports"
 						class={isHighlighted('/reports') ? dropdownHighlightedItem : dropdownItem}>Reports</a
+					>
+					<a
+						href="/free-app-datasets"
+						class={isHighlighted('/free-app-datasets') ? dropdownHighlightedItem : dropdownItem}
+						>Data Exports</a
 					>
 				</div>
 			</div>

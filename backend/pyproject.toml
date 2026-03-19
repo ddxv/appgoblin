@@ -10,6 +10,7 @@ dependencies = [
     "pandas",
     "numpy",
     "sqlalchemy",
+    "boto3",
 ]
 
 [project.optional-dependencies]
