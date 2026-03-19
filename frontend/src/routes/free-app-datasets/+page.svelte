@@ -182,57 +182,47 @@
 	<meta name="robots" content="index, follow" />
 	<link rel="canonical" href="https://appgoblin.info/free-app-datasets" />
 	<!-- Schema.org structured data for SEO -->
-	<script type="application/ld+json">
-		{JSON.stringify({
-			'@context': 'https://schema.org',
-			'@type': 'DataCatalog',
-			name: 'AppGoblin Free App Data Exports',
-			description: 'Free mobile app datasets for researchers, data scientists, and marketers',
-			url: 'https://appgoblin.info/free-app-datasets',
-			imageName: 'AppGoblin Logo',
-			imageUrl: 'https://appgoblin.info/goblin_purple_hat_250.png',
-			creator: {
-				'@type': 'Organization',
-				name: 'AppGoblin',
-				url: 'https://appgoblin.info'
-			},
-			dataset: [
-				{
-					'@type': 'Dataset',
-					name: 'App Metrics',
-					description:
-						'App store metrics and metadata for 5+ million apps covering installs, ratings, categories, pricing, and more',
-					keyword: [
-						'app metrics',
-						'app store data',
-						'market research'
-					],
-					distribution: {
-						'@type': 'DataDownload',
-						encodingFormat: 'TSV',
-						compressionFormat: 'XZ'
-					}
-				},
-				{
-					'@type': 'Dataset',
-					name: 'App Descriptions',
-					description:
-						'English-language app store descriptions from Google Play and Apple App Store for NLP, text analysis, and market research',
-					keyword: [
-						'app descriptions',
-						'text data',
-						'NLP dataset'
-					],
-					distribution: {
-						'@type': 'DataDownload',
-						encodingFormat: 'TSV',
-						compressionFormat: 'XZ'
-					}
+	{@html `<script type="application/ld+json">${JSON.stringify({
+		'@context': 'https://schema.org',
+		'@type': 'DataCatalog',
+		name: 'AppGoblin Free App Data Exports',
+		description: 'Free mobile app datasets for researchers, data scientists, and marketers',
+		url: 'https://appgoblin.info/free-app-datasets',
+		imageName: 'AppGoblin Logo',
+		imageUrl: 'https://appgoblin.info/goblin_purple_hat_250.png',
+		creator: {
+			'@type': 'Organization',
+			name: 'AppGoblin',
+			url: 'https://appgoblin.info'
+		},
+		dataset: [
+			{
+				'@type': 'Dataset',
+				name: 'App Metrics',
+				description:
+					'App store metrics and metadata for 5+ million apps covering installs, ratings, categories, pricing, and more',
+				keyword: ['app metrics', 'app store data', 'market research'],
+				distribution: {
+					'@type': 'DataDownload',
+					encodingFormat: 'TSV',
+					compressionFormat: 'XZ'
 				}
-			],
-			andience: ['Researchers', 'Data Scientists', 'Marketers']
-		})}
-	</script>
+			},
+			{
+				'@type': 'Dataset',
+				name: 'App Descriptions',
+				description:
+					'English-language app store descriptions from Google Play and Apple App Store for NLP, text analysis, and market research',
+				keyword: ['app descriptions', 'text data', 'NLP dataset'],
+				distribution: {
+					'@type': 'DataDownload',
+					encodingFormat: 'TSV',
+					compressionFormat: 'XZ'
+				}
+			}
+		],
+		audience: ['Researchers', 'Data Scientists', 'Marketers']
+	})}<\/script>`}
 </svelte:head>
 
 <div class="px-2 md:px-8 xl:px-24 grid grid-cols-1 gap-6 md:gap-10 py-4 md:py-8">
