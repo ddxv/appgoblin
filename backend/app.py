@@ -159,5 +159,4 @@ app = Litestar(
     ),
     lifespan=[db_lifespan],
     logging_config=logging_config,
-    debug=True,
 )
