@@ -1,13 +1,8 @@
 import { redirect, fail } from '@sveltejs/kit';
-import type { Actions, PageServerLoadEvent } from './$types';
+import type { Actions } from './$types';
 import { createCheckoutSession, type StripePriceKey } from '$lib/server/stripe';
 import { requireFullAuth, loginUrl } from '$lib/server/auth/auth';
 import { db } from '$lib/server/auth/db';
-
-export const load = async (event: PageServerLoadEvent) => {
-	// Optional: Pass user data if needed for the page UI
-	return {};
-};
 
 export const actions: Actions = {
 	subscribe: async (event) => {

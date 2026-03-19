@@ -15,8 +15,22 @@ const config = {
 
 		prerender: {
 			entries: [
-				'*',
+				'/',
+				'/about',
+				'/ad-creatives',
+				'/app-explorer',
 				'/blog',
+				'/contact',
+				'/free-app-datasets',
+				'/keywords',
+				'/pricing',
+				'/reports',
+				'/reports/ad-user-acquisition-2025-august',
+				'/reports/ad-user-acquisition-2025-september',
+				'/reports/ad-user-acquisition-2025-october',
+				'/reports/ad-user-acquisition-2026-january',
+				'/reports/mobile-apps-growth-sdks-2025',
+				'/sdks',
 				'/blog/apple-ios-ipa-downloads-working-again',
 				'/blog/first-post',
 				'/blog/free-ad-creatives-from-ad-networks',
