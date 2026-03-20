@@ -1,0 +1,112 @@
+[
+  {
+    "phash": "1fe51bde1fe3",
+    "md5_hash": "7108cc0783fb50e0fa7bf6b054bdf7e9",
+    "file_extension": "mp4",
+    "advertiser_count": 1,
+    "publisher_count": 15,
+    "first_seen": "2026-02-18T10:46:26.838",
+    "last_seen": "2026-02-22T17:29:50.606",
+    "advertiser_store_id": "com.netease.idv.googleplay",
+    "advertiser_icon_url_100": "ac5b33d08d5a134f.png"
+  },
+  {
+    "phash": "bdc98cb357fd",
+    "md5_hash": "9371c4b03c97f7ac30b4cb6964c65f18",
+    "file_extension": "mp4",
+    "advertiser_count": 1,
+    "publisher_count": 10,
+    "first_seen": "2026-02-03T04:42:54.509",
+    "last_seen": "2026-02-10T09:54:55.866",
+    "advertiser_store_id": "net.mbc.shahid",
+    "advertiser_icon_url_100": "d4a96b964b6994c3.png"
+  },
+  {
+    "phash": "bc5f7eef5a2d",
+    "md5_hash": "6a023e0b05271aacd3a4201c7d4b5ccf",
+    "file_extension": "mp4",
+    "advertiser_count": 1,
+    "publisher_count": 8,
+    "first_seen": "2026-02-18T10:46:26.838",
+    "last_seen": "2026-02-22T07:00:46.314",
+    "advertiser_store_id": "com.netease.idv.googleplay",
+    "advertiser_icon_url_100": "ac5b33d08d5a134f.png"
+  },
+  {
+    "phash": "cfffdc52ef8b",
+    "md5_hash": "1b3f5d9111a6d128c8ca0876b2019415",
+    "file_extension": "mp4",
+    "advertiser_count": 1,
+    "publisher_count": 5,
+    "first_seen": "2026-02-11T22:35:45.889",
+    "last_seen": "2026-02-15T08:30:07.356",
+    "advertiser_store_id": "net.mbc.shahid",
+    "advertiser_icon_url_100": "d4a96b964b6994c3.png"
+  },
+  {
+    "phash": "87e2cd737e7a",
+    "md5_hash": "72864c731970641c6a13df3f1ced8544",
+    "file_extension": "mp4",
+    "advertiser_count": 1,
+    "publisher_count": 4,
+    "first_seen": "2026-02-18T05:07:21.758",
+    "last_seen": "2026-02-26T10:16:15.835",
+    "advertiser_store_id": "com.zhiliaoapp.musically",
+    "advertiser_icon_url_100": "d93b2ee16686303e.png"
+  },
+  {
+    "phash": "2461e6337272",
+    "md5_hash": "03b10610ea7050490b04c1c7af837eb3",
+    "file_extension": "mp4",
+    "advertiser_count": 1,
+    "publisher_count": 4,
+    "first_seen": "2026-02-17T02:41:32.396",
+    "last_seen": "2026-02-24T10:06:55.937",
+    "advertiser_store_id": "com.zhiliaoapp.musically",
+    "advertiser_icon_url_100": "d93b2ee16686303e.png"
+  },
+  {
+    "phash": "7b649ca63366",
+    "md5_hash": "af94ab921e045a9799bd9fcb89e93005",
+    "file_extension": "webm",
+    "advertiser_count": 1,
+    "publisher_count": 3,
+    "first_seen": "2026-02-26T14:46:26.461",
+    "last_seen": "2026-02-27T18:06:45.060",
+    "advertiser_store_id": "com.dinoapp.chat",
+    "advertiser_icon_url_100": "ec7bc58f04f244a5.png"
+  },
+  {
+    "phash": "3e7ffbb5bbbf",
+    "md5_hash": "7a5b3bbe113173909d618aee78962476",
+    "file_extension": "mp4",
+    "advertiser_count": 1,
+    "publisher_count": 3,
+    "first_seen": "2026-02-14T20:32:16.310",
+    "last_seen": "2026-02-20T14:49:24.283",
+    "advertiser_store_id": "com.carfax.consumer",
+    "advertiser_icon_url_100": "9b646db34c399632.png"
+  },
+  {
+    "phash": "6b842f953e61",
+    "md5_hash": "b7729426d524a3400f695d743c576974",
+    "file_extension": "mp4",
+    "advertiser_count": 1,
+    "publisher_count": 3,
+    "first_seen": "2026-02-03T11:30:16.504",
+    "last_seen": "2026-02-19T19:15:47.139",
+    "advertiser_store_id": "com.logoquiz.triviagame",
+    "advertiser_icon_url_100": "98ca66846df36336.png"
+  },
+  {
+    "phash": "3d078ff47f5f",
+    "md5_hash": "12b5b734ef795b0f72abbceb1c54ef3f",
+    "file_extension": "webm",
+    "advertiser_count": 1,
+    "publisher_count": 3,
+    "first_seen": "2026-02-14T23:18:36.831",
+    "last_seen": "2026-02-15T11:41:35.987",
+    "advertiser_store_id": "ctrip.english",
+    "advertiser_icon_url_100": "93e16c1e966169b5.png"
+  }
+]

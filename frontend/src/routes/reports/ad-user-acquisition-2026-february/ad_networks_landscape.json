@@ -1,0 +1,113 @@
+[
+  {
+    "ad_network_name": "Google",
+    "ad_network_domain": "google.com",
+    "company_logo_url": "company-logos/google.com/logo_200x200.jpeg",
+    "all_domains": [
+      "google.com"
+    ],
+    "publisher_count": 540,
+    "advertiser_count": 80,
+    "creatives_count": 574
+  },
+  {
+    "ad_network_name": "Criteo",
+    "ad_network_domain": "criteo.com",
+    "company_logo_url": "company-logos/criteo.com/logo_200x200.jpeg",
+    "all_domains": [
+      "criteo.com"
+    ],
+    "publisher_count": 156,
+    "advertiser_count": 0,
+    "creatives_count": 32
+  },
+  {
+    "ad_network_name": "Remerge",
+    "ad_network_domain": "remerge.io",
+    "company_logo_url": "company-logos/remerge.io/logo_200x200.jpeg",
+    "all_domains": [
+      "remerge.io"
+    ],
+    "publisher_count": 111,
+    "advertiser_count": 2,
+    "creatives_count": 38
+  },
+  {
+    "ad_network_name": "AppLovin",
+    "ad_network_domain": "applovin.com",
+    "company_logo_url": "company-logos/applovin.com/logo_200x200.jpeg",
+    "all_domains": [
+      "applovin.com"
+    ],
+    "publisher_count": 89,
+    "advertiser_count": 0,
+    "creatives_count": 164
+  },
+  {
+    "ad_network_name": "RTB House",
+    "ad_network_domain": "rtbhouse.com",
+    "company_logo_url": "company-logos/rtbhouse.com/logo_200x200.jpeg",
+    "all_domains": [
+      "rtbhouse.com"
+    ],
+    "publisher_count": 35,
+    "advertiser_count": 1,
+    "creatives_count": 8
+  },
+  {
+    "ad_network_name": "Mobvista",
+    "ad_network_domain": "mobvista.com",
+    "company_logo_url": "company-logos/mobvista.com/logo_200x200.jpeg",
+    "all_domains": [
+      "mintegral.com"
+    ],
+    "publisher_count": 34,
+    "advertiser_count": 5,
+    "creatives_count": 37
+  },
+  {
+    "ad_network_name": "Digital Turbine",
+    "ad_network_domain": "digitalturbine.com",
+    "company_logo_url": "company-logos/digitalturbine.com/logo_200x200.jpeg",
+    "all_domains": [
+      "fyber.com"
+    ],
+    "publisher_count": 14,
+    "advertiser_count": 4,
+    "creatives_count": 24
+  },
+  {
+    "ad_network_name": "Smadex",
+    "ad_network_domain": "smadex.com",
+    "company_logo_url": "company-logos/smadex.com/logo_200x200.jpeg",
+    "all_domains": [
+      "smadex.com"
+    ],
+    "publisher_count": 12,
+    "advertiser_count": 2,
+    "creatives_count": 7
+  },
+  {
+    "ad_network_name": "LiftOff",
+    "ad_network_domain": "liftoff.io",
+    "company_logo_url": "company-logos/liftoff.io/logo_200x200.jpeg",
+    "all_domains": [
+      "liftoff.io",
+      "vungle.com"
+    ],
+    "publisher_count": 11,
+    "advertiser_count": 4,
+    "creatives_count": 10
+  },
+  {
+    "ad_network_name": "Publicis Groupe",
+    "ad_network_domain": "publicisgroupe.com",
+    "company_logo_url": null,
+    "all_domains": [
+      "epsilon.com"
+    ],
+    "publisher_count": 11,
+    "advertiser_count": 0,
+    "creatives_count": 12
+  }
+]
