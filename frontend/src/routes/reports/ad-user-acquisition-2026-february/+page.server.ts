@@ -50,6 +50,7 @@ interface MostPopularCreativeData {
 	last_seen: string;
 	advertiser_store_id: string;
 	advertiser_icon_url_100: string;
+	advertiser_name?: string | null;
 }
 
 interface AdNetworkData {
@@ -349,12 +350,27 @@ export const load: PageServerLoad = async () => {
 			}))
 		}));
 
+	const advertiserNameByStoreId = new Map<string, string>();
+	rawAppReachData.forEach((app) => {
+		if (app.advertiser_name) {
+			advertiserNameByStoreId.set(app.advertiser_store_id, app.advertiser_name);
+		}
+	});
+	apps.forEach((app) => {
+		advertiserNameByStoreId.set(app.store_id, app.app_name);
+	});
+
+	const popularCreatives = rawMostPopularCreatives.map((creative) => ({
+		...creative,
+		advertiser_name: advertiserNameByStoreId.get(creative.advertiser_store_id) ?? null
+	}));
+
 	const exec = rawSummaryData[0] ?? null;
 
 	return {
 		apps,
 		adNetworks,
-		popularCreatives: rawMostPopularCreatives,
+		popularCreatives,
 		reachTiers,
 		reachStats,
 		appReachData: topReachApps,

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import CompanyButton from '$lib/CompanyButton.svelte';
 	import CreativeModal from '$lib/CreativeModal.svelte';
+	import PopularCreativeCard from '$lib/PopularCreativeCard.svelte';
 	import { createCreativeModal } from '$lib/stores/creativeModal.svelte';
 
 	import { formatNumber } from '$lib/utils/formatNumber.js';
@@ -9,9 +10,9 @@
 
 	// Creative modal state
 	const creativeModal = createCreativeModal();
-	const reportUrl = 'https://appgoblin.info/reports/ad-user-acquisition-2026-january';
-	const reportPublishedDate = '2026-03-11';
-	const reportTemporalCoverage = '2026-01-01/2026-01-31';
+	const reportUrl = 'https://appgoblin.info/reports/ad-user-acquisition-2026-february';
+	const reportPublishedDate = '2026-03-20';
+	const reportTemporalCoverage = '2026-02-01/2026-02-28';
 
 	function formatPercent(num: number): string {
 		return num.toFixed(1) + '%';
@@ -56,11 +57,6 @@
 		return '';
 	}
 
-	function formatDate(dateStr: string): string {
-		const date = new Date(dateStr);
-		return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-	}
-
 	function formatOptional(num?: number | null): string {
 		return num == null ? '—' : String(formatNumber(num));
 	}
@@ -69,31 +65,38 @@
 		return num == null ? '—' : String(formatNumber(Math.round(num)));
 	}
 
+	function formatWeekDate(dateStr?: string | null): string {
+		if (!dateStr) return '—';
+		if (dateStr.includes('T')) return dateStr.split('T')[0];
+		return dateStr;
+	}
+
 	const sectionTitleClass =
-		'p-4 text-3xl font-bold bg-gradient-to-r from-primary-900-100 to-secondary-900-100 bg-clip-text text-transparent';
-	const sectionContainerClass = 'mb-24 pt-12 border-t-2 border-surface-200-800';
-	const sectionHeaderSubtitleClass = 'text-sm ml-4';
-	const sectionHeaderBaseClass = 'my-8 p-4 border-t-2 border-l-1';
-	const sectionDescriptionClass = 'text-lg space-y-4 mb-6';
-	const sectionIntroRowClass = 'flex items-center gap-2 mb-6';
+		'p-3 md:p-4 text-2xl md:text-3xl font-bold bg-gradient-to-r from-primary-900-100 to-secondary-900-100 bg-clip-text text-transparent';
+	const sectionContainerClass = 'mb-20 pt-10 md:pt-12 border-t-2 border-surface-200-800';
+	const sectionHeaderSubtitleClass =
+		'text-sm md:text-base ml-3 md:ml-4 text-surface-600 dark:text-surface-300';
+	const sectionHeaderBaseClass = 'my-6 md:my-8 p-3 md:p-4 border-t-2 border-l-1';
+	const sectionDescriptionClass = 'text-base md:text-lg space-y-3 md:space-y-4 mb-6';
+	const sectionIntroRowClass = 'flex items-center gap-2 mb-4 md:mb-6';
 
 	const publisherTextColor = 'text-sm md:text-xl text-bold text-emerald-400';
 	const creativesTextColor = 'text-sm md:text-xl text-bold text-pink-600';
 	const advertisersTextColor = 'text-sm md:text-xl text-bold text-purple-400';
 	const simpleMetricColor = 'text-sm md:text-xl text-bold text-surface-800-200';
 	const sectionBodyClass = 'max-w-none mb-6';
-	const paragraphClass = 'text-lg leading-relaxed text-primary-900-100';
+	const paragraphClass = 'text-base md:text-lg leading-relaxed text-primary-900-100';
 	const textMutedXsClass = 'text-xs text-surface-500 dark:text-surface-400';
 	const textMutedXsCapClass = `${textMutedXsClass} capitalize`;
-	const storeIdClass = `${textMutedXsClass} truncate max-w-[9rem] md:max-w-[16rem]`;
-	const appLinkClass = 'block text-sm md:text-base truncate max-w-[9rem] md:max-w-[16rem]';
+	const storeIdClass = `${textMutedXsClass} truncate max-w-[10rem] md:max-w-[16rem]`;
+	const appLinkClass =
+		'block text-sm md:text-base font-semibold truncate max-w-[10rem] md:max-w-[16rem]';
 	const tableRowClass =
 		'border-b border-surface-200 dark:border-surface-700 hover:bg-surface-100-900 transition-colors';
-	const tableAppIconClass = 'w-10 h-10 md:w-20 md:h-20 rounded-lg shadow-sm flex-shrink-0';
-	const creativeAppLinkClass = 'flex items-center gap-2 mb-3 hover:opacity-80 transition-opacity';
-	const creativeAppIconClass = 'w-14 h-14 rounded-lg shadow-sm';
+	const tableAppIconClass =
+		'w-9 h-9 sm:w-11 sm:h-11 lg:w-14 lg:h-14 rounded-lg shadow-sm flex-shrink-0';
 	const cardTableWrapperClass = 'card overflow-hidden';
-	const tableWrapperClass = 'table-container overflow-x-auto';
+	const tableWrapperClass = 'report-table-shell report-table-scroll';
 	const tableHeaderText = 'text-xs md:text-sm font-bold text-primary-900-100';
 	const tableHeaderLeftClass = `px-1 md:px-2 py-2 text-left ${tableHeaderText}`;
 	const tableHeaderCenterClass = `px-1 md:px-2 py-2 text-center ${tableHeaderText}`;
@@ -112,9 +115,9 @@
 	const insightIconClass =
 		'flex-shrink-0 w-12 h-12 bg-gradient-to-br rounded-full flex items-center justify-center text-2xl';
 	const ctaPrimaryClass =
-		'btn-primary inline-flex items-center gap-2 px-6 py-3 bg-white rounded-lg hover:scale-105 transition-transform duration-200 shadow-lg';
+		'btn-primary inline-flex w-full justify-center items-center gap-2 px-6 py-3 bg-white rounded-lg hover:scale-105 transition-transform duration-200 shadow-lg md:w-auto';
 	const ctaSecondaryClass =
-		'btn preset-outlined-primary-100-900 inline-flex items-center gap-2 px-6 py-3 rounded-lg';
+		'btn preset-outlined-primary-100-900 inline-flex w-full justify-center items-center gap-2 px-6 py-3 rounded-lg md:w-auto';
 
 	const tHeadClass = 'bg-gradient-to-r from-purple-600 to-pink-600 text-white';
 </script>
@@ -192,7 +195,7 @@
 					{
 						'@type': 'Thing',
 						name: 'Creative Performance',
-						description: 'Most-distributed video creatives in January 2026'
+						description: 'Most-distributed video creatives in February 2026'
 					}
 				],
 				mentions: [
@@ -221,7 +224,7 @@
 			{
 				'@type': 'Dataset',
 				'@id': `${reportUrl}#dataset`,
-				name: 'January 2026 Mobile App Advertising Intelligence',
+				name: 'February 2026 Mobile App Advertising Intelligence',
 				description:
 					'Comprehensive dataset of app performance, ad networks, and creative strategies',
 				publisher: {
@@ -345,67 +348,119 @@
 	})}<\/script>`}
 </svelte:head>
 
-<div class="container mx-auto px-2 md:px-16 py-6 md:py-8">
+<div class="container mx-auto px-3 md:px-8 xl:px-16 py-6 md:py-8">
 	<!-- Header Section -->
-	<div class="mb-12 text-center">
-		<div
-			class="inline-block px-4 py-2 bg-surface-100-900 text-white rounded-full text-sm font-semibold mb-4"
-		>
-			User Acquisition Intelligence Report
-		</div>
+	<div class="mb-10 md:mb-12 text-center max-w-4xl mx-auto">
 		<h1
-			class="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-primary-900-100 to-secondary-900-100 bg-clip-text text-transparent"
+			class="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-primary-900-100 to-secondary-900-100 bg-clip-text text-transparent"
 		>
-			{data.summary.reportPeriod} Ads & App Growth Analysis
+			Mobile UA Report - {data.summary.reportPeriod}
 		</h1>
-		<p class="text-xl max-w-3xl mx-auto">
-			See the mobile ad campaigns behind January's fastest growing mobile apps. AppGoblin breaks
-			down the biggest ad networks, the best creatives and the mobile app campaigns we saw achieving
-			the most reach in January.
+		<p
+			class="text-base sm:text-lg md:text-xl max-w-3xl mx-auto text-surface-700 dark:text-surface-200"
+		>
+			The ad campaigns behind February's fastest growing mobile apps. AppGoblin breaks the best
+			creatives we tracked in app ad campaigns.
 		</p>
 	</div>
 
-	<!-- Key Metrics Dashboard -->
-	<div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-		<div class={`${kpiCardBaseClass} bg-gradient-to-r from-primary-100-900 to-primary-400-600`}>
-			<div class={kpiValueClass}>{formatOptional(data.summary.totalApps)}</div>
-			<div class={`${kpiLabelClass}`}>Apps Analyzed</div>
+	<!-- February Snapshot -->
+	<div
+		class="mb-12 rounded-2xl border border-surface-200 dark:border-surface-700 bg-gradient-to-br from-surface-50 to-white dark:from-surface-900 dark:to-surface-800 p-5 md:p-7 shadow-md"
+	>
+		<div class="flex flex-col md:flex-row md:items-center md:justify-between gap-2 md:gap-3 mb-5">
+			<h2 class="text-2xl md:text-3xl font-bold text-primary-900-100">
+				App advertising overview - Feb 2026
+			</h2>
+			<div class="text-sm md:text-base text-surface-600 dark:text-surface-300">
+				What stood out this month
+			</div>
 		</div>
 
-		<div class={`${kpiCardBaseClass} bg-gradient-to-b to-purple-800 from-purple-400`}>
-			<div class={kpiValueClass}>{formatOptional(data.summary.advertisers)}</div>
-			<div class={`${kpiLabelClass}`}>Advertisers</div>
-		</div>
+		<div class="grid grid-cols-1 xl:grid-cols-12 gap-5 md:gap-6 xl:items-stretch">
+			<div class="space-y-4 xl:col-span-4">
+				<div class="rounded-xl bg-gradient-to-r from-pink-600 to-rose-500 text-white p-5">
+					<div class="text-xl md:text-2xl font-bold leading-tight">
+						Familiar advertisers from January and new apps with big growth spikes
+					</div>
+				</div>
 
-		<div class={`${kpiCardBaseClass} bg-gradient-to-l from-primary-100-900 to-primary-400-600`}>
-			<div class={kpiValueClass}>{formatOptional(data.summary.adtechCompanies)}</div>
-			<div class={`${kpiLabelClass}`}>AdTech Platforms</div>
-		</div>
+				<div
+					class="rounded-xl border border-surface-200 dark:border-surface-700 p-4 md:p-5 bg-white/80 dark:bg-surface-900/80"
+				>
+					<div class="text-base md:text-lg font-semibold mb-3 text-primary-900-100">
+						Top Advertising Apps
+					</div>
+					<div class="grid grid-cols-5 sm:grid-cols-10 xl:grid-cols-5 gap-2 md:gap-3 mb-4">
+						{#each data.apps.slice(0, 10) as app}
+							<a href="/apps/{app.store_id}" class="group" title={app.app_name}>
+								<img
+									src="https://media.appgoblin.info/app-icons/{app.store_id}/{app.icon_url_100}"
+									alt={app.app_name}
+									class="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-xl border border-surface-200 dark:border-surface-700 shadow-sm group-hover:scale-105 transition-transform"
+									onerror={(e) =>
+										((e.currentTarget as HTMLImageElement).src = '/default_company_logo.png')}
+								/>
+							</a>
+						{/each}
+					</div>
 
-		<div class={`${kpiCardBaseClass} bg-gradient-to-t from-error-200-800 to-pink-600`}>
-			<div class={kpiValueClass}>{formatOptional(data.summary.totalCreatives)}</div>
-			<div class={`${kpiLabelClass}`}>Creative Assets</div>
-		</div>
+					<div class="text-base md:text-lg font-semibold mb-3 text-primary-900-100">
+						Ad Networks
+					</div>
+					<div class="flex flex-wrap gap-2 md:gap-3">
+						{#each data.adNetworks.slice(0, 6) as network}
+							<CompanyButton
+								companyDomain={network.ad_network_domain}
+								companyName={network.ad_network_name}
+								companyLogoUrl={network.company_logo_url}
+								size="logo-only"
+							/>
+						{/each}
+					</div>
+				</div>
 
-		<div class={`${kpiCardBaseClass} bg-gradient-to-t from-primary-100-900 to-primary-400-600`}>
-			<div class={kpiValueClass}>{formatOptional(data.summary.httpsTracked)}</div>
-			<div class={`${kpiLabelClass}`}>Events Captured</div>
-		</div>
+				<div class="grid grid-cols-3 gap-3 text-center">
+					<div class="rounded-lg bg-emerald-700 dark:bg-emerald-800 p-3 shadow-sm">
+						<div class="text-xl md:text-2xl font-bold text-white">
+							{formatOptional(data.summary.totalApps)}
+						</div>
+						<div class="text-sm font-bold text-white">Apps</div>
+					</div>
+					<div class="rounded-lg bg-purple-700 dark:bg-purple-800 p-3 shadow-sm">
+						<div class="text-xl md:text-2xl font-bold text-white">
+							{formatOptional(data.summary.advertisers)}
+						</div>
+						<div class="text-sm font-bold text-white">Advertisers</div>
+					</div>
+					<div class="rounded-lg bg-pink-700 dark:bg-pink-800 p-3 shadow-sm">
+						<div class="text-xl md:text-2xl font-bold text-white">
+							{formatOptional(data.summary.adtechCompanies)}
+						</div>
+						<div class="text-sm font-bold text-white">Platforms</div>
+					</div>
+				</div>
+			</div>
 
-		<div class={`${kpiCardBaseClass} bg-gradient-to-t from-emerald-800 to-emerald-400`}>
-			<div class={kpiValueClass}>{formatOptional(data.summary.apiDomains)}</div>
-			<div class={`${kpiLabelClass}`}>Unique API Domains</div>
+			<div class="xl:col-span-8 xl:h-full xl:flex xl:flex-col">
+				<div class="featured-creatives-strip xl:flex-1">
+					{#each data.popularCreatives.slice(0, 3) as creative, index}
+						<div class="featured-creative-slide">
+							<PopularCreativeCard
+								{creative}
+								{index}
+								titlePrefix="February Featured Creative"
+								badgeLabel="Popular Creative"
+								compact={true}
+								dense={true}
+								onOpen={(md5Hash, fileExtension, title) =>
+									creativeModal.open(md5Hash, fileExtension, title)}
+							/>
+						</div>
+					{/each}
+				</div>
+			</div>
 		</div>
-	</div>
-	<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-16 max-w-3xl mx-auto">
-		<a href="/pricing" class={ctaSecondaryClass}>
-			<span class="font-bold">Get Access to AppGoblin Data</span>
-			<span class="font-bold">→</span>
-		</a>
-		<a href="/auth/signup" class={ctaPrimaryClass}>
-			<span class="text-black font-bold">Create Free Account</span>
-			<span class="text-black font-bold">→</span>
-		</a>
 	</div>
 
 	<!-- ========================================= -->
@@ -515,30 +570,36 @@
 		</div>
 		<div class={sectionDescriptionClass}>
 			<p class="mt-2">
-				January 2026's strongest breakouts combined sharp install spikes with high statistical
-				significance. {data.apps[0].app_name} led this ranking with
+				Remember January's 2026 top app that saw high impact from it's ads? Well <span
+					class={publisherTextColor}>{data.apps[0].app_name}</span
+				>
+				is back! What happened here is it looks like the ad campaign was in full force last week of January
+				and first week of February. This led this ranking with
 				<strong class={publisherTextColor}>{formatNumber(data.apps[0].weekly_installs)}</strong>
-				installs in its best week and a standout recent momentum signal.
+				installs that were higher, but a big decrease from the the huge numbers it got last week of January.
 			</p>
-			<p>
-				The long term column shows which existing apps saw strong growth while the short term
-				momentum shows which apps saw sudden spikes in growth.
+			<p class="mt-2">
+				Another returning app, <span class={publisherTextColor}>{data.apps[1].app_name}</span>, but
+				this time it saw an even bigger install growth in the first week of February, which then
+				went down a bit in the second week, but still had a very strong growth compared to January.
+				This shows that the ad campaign for this app was also very effective in driving installs,
+				and it seems like they are maintaining a strong presence in the market.
 			</p>
 		</div>
 		<div class={cardTableWrapperClass}>
 			<div class={tableWrapperClass}>
-				<table class="w-full">
+				<table class="report-table report-table--apps w-full">
 					<thead class={tHeadClass}>
 						<tr>
 							<th class={tableHeaderLeftClass}>Rank</th>
 							<th class={tableHeaderLeftClass}>App</th>
-							<th class={tableHeaderLeftClass}>Best Week</th>
+							<th class={`${tableHeaderLeftClass} hidden md:table-cell`}>Best Week</th>
 							<th class={tableHeaderRightClass}>Installs (week)</th>
-							<th class={tableHeaderRightClass}>Long-Term Trend</th>
-							<th class={tableHeaderRightClass}>Short-Term Momentum</th>
+							<th class={`${tableHeaderRightClass} hidden xl:table-cell`}>Long-Term Trend</th>
+							<th class={`${tableHeaderRightClass} hidden lg:table-cell`}>Short-Term Momentum</th>
 							<th class={tableHeaderCenterClass}>Ad Creatives</th>
 							<th class={tableHeaderCenterClass}>Ad Networks</th>
-							<th class={tableHeaderCenterClass}>MMP</th>
+							<th class={`${tableHeaderCenterClass} hidden lg:table-cell`}>MMP</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -570,8 +631,12 @@
 										</div>
 									</a>
 								</td>
-								<td class="px-1 md:px-4 py-2 md:py-4 text-right">
-									<div class="text-xs md:text-lg font-semibold">{app.best_week}</div>
+								<td
+									class="hidden md:table-cell px-1 md:px-4 py-2 md:py-4 text-right whitespace-nowrap"
+								>
+									<div class="text-xs md:text-lg font-semibold">
+										{formatWeekDate(app.best_week)}
+									</div>
 									{#if app.installs_acceleration > 0}
 										<div class={`${textMutedXsClass} ${getTrendColor(app.installs_acceleration)}`}>
 											Accel {formatDecimal(app.installs_acceleration)}
@@ -586,7 +651,7 @@
 										Base {formatRoundedOptional(app.baseline_installs)}
 									</div>
 								</td>
-								<td class="px-2 text-right">
+								<td class="hidden xl:table-cell px-2 text-right whitespace-nowrap">
 									{#if getLongTermTrendLabel(app.installs_z_score_4w)}
 										<div
 											class={`text-xs md:text-base font-bold ${getTrendColor(app.installs_z_score_4w)}`}
@@ -595,7 +660,9 @@
 										</div>
 									{/if}
 								</td>
-								<td class="px-1 md:px-4 py-2 md:py-4 text-right">
+								<td
+									class="hidden lg:table-cell px-1 md:px-4 py-2 md:py-4 text-right whitespace-nowrap"
+								>
 									{#if getShortTermMomentumLabel(app.installs_z_score_2w, app.wow_growth_pct)}
 										<div
 											class={`text-xs md:text-base font-bold ${getTrendColor(app.installs_z_score_2w)}`}
@@ -648,7 +715,7 @@
 										{/if}
 									</div>
 								</td>
-								<td class="px-1 md:px-4 py-2 md:py-4">
+								<td class="px-1 md:px-4 py-2 md:py-4 min-w-[8rem]">
 									<div class={companyButtonListClass}>
 										{#each app.ad_networks as network}
 											<CompanyButton
@@ -659,7 +726,7 @@
 										{/each}
 									</div>
 								</td>
-								<td class="px-1 md:px-4 py-2 md:py-4">
+								<td class="hidden lg:table-cell px-1 md:px-4 py-2 md:py-4 min-w-[6rem]">
 									{#if app.mmps && app.mmps.length > 0}
 										<div class={companyButtonListClass}>
 											{#each app.mmps as mmp}
@@ -705,7 +772,7 @@
 				These mobile app ad video creatives achieved the widest distribution among mobile publishers
 				in {data.summary.reportPeriod}. The top performer was showing across
 				<strong class="text-pink-600">{data.popularCreatives[0].publisher_count} publishers</strong>
-				demonstrating it's popularity and success as a mobile app ad creative.
+				demonstrating its popularity and success as a mobile app ad creative.
 			</p>
 			<p>
 				The leading creative in this sample belongs to
@@ -722,87 +789,17 @@
 			</p>
 		</div>
 		<!-- Creatives Grid -->
-		<div class="grid grid-cols-3 md:grid-cols-2 lg:grid-cols-5 gap-2 md:gap-6">
+		<div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-3 md:gap-4 xl:gap-6">
 			{#each data.popularCreatives as creative, index}
-				<div
-					class="bg-white dark:bg-surface-900 rounded-lg border-2 border-pink-200 dark:border-pink-800 overflow-hidden hover:shadow-xl transition-shadow duration-300"
-				>
-					<!-- Rank Badge -->
-					<div
-						class="bg-gradient-to-r from-pink-500 to-rose-500 text-white px-3 py-1 text-sm font-bold"
-					>
-						#{index + 1} Most Popular
-					</div>
-					<!-- Thumbnail with Play Button -->
-					<button
-						onclick={() =>
-							creativeModal.open(
-								creative.md5_hash,
-								creative.file_extension,
-								`Popular Creative #${index + 1}`
-							)}
-						class="relative w-full aspect-video bg-gradient-to-br from-purple-200 to-pink-200 dark:from-purple-900 dark:to-pink-900 cursor-pointer group overflow-hidden"
-						title="Click to play video"
-					>
-						<img
-							src="https://media.appgoblin.info/creatives/thumbs/{creative.md5_hash}.jpg"
-							alt={`Popular creative ${index + 1}`}
-							class="w-full h-full object-cover"
-							onerror={(e) => {
-								const target = e.currentTarget as HTMLImageElement;
-								target.style.display = 'none';
-							}}
-						/>
-						<!-- Play Button Overlay -->
-						<div
-							class="absolute inset-0 flex items-center justify-center bg-surface-100-900/20 group-hover:bg-surface-100-900/10 transition-all duration-200"
-						>
-							<div
-								class="w-12 h-12 bg-white rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-200 shadow-lg"
-							>
-								<svg class="w-8 h-8 text-pink-600 ml-1" fill="currentColor" viewBox="0 0 20 20">
-									<path
-										d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z"
-									/>
-								</svg>
-							</div>
-						</div>
-					</button>
-					<!-- Stats -->
-					<div class="p-4 space-y-2">
-						<!-- Advertiser Info -->
-						<a href="/apps/{creative.advertiser_store_id}" class={creativeAppLinkClass}>
-							<img
-								src="https://media.appgoblin.info/app-icons/{creative.advertiser_store_id}/{creative.advertiser_icon_url_100}"
-								alt="App icon"
-								class={creativeAppIconClass}
-								onerror={(e) =>
-									((e.currentTarget as HTMLImageElement).src = '/default_company_logo.png')}
-							/>
-							<span class={`${textMutedXsClass} truncate hover:underline`}
-								>{creative.advertiser_store_id}</span
-							>
-						</a>
-						<!-- Publisher Count -->
-						<div class="flex justify-between items-center">
-							<span class="text-sm text-surface-600 dark:text-surface-400">Publishers</span>
-							<span class={publisherTextColor}>{creative.publisher_count}</span>
-						</div>
-						<!-- Date Range -->
-						<div
-							class="text-xs text-surface-500 dark:text-surface-500 pt-2 border-t border-surface-200 dark:border-surface-700"
-						>
-							<div class="flex justify-between">
-								<span>First seen:</span>
-								<span class="font-semibold">{formatDate(creative.first_seen)}</span>
-							</div>
-							<div class="flex justify-between">
-								<span>Last seen:</span>
-								<span class="font-semibold">{formatDate(creative.last_seen)}</span>
-							</div>
-						</div>
-					</div>
-				</div>
+				<PopularCreativeCard
+					{creative}
+					{index}
+					titlePrefix="Popular Creative"
+					badgeLabel="Most Popular"
+					dense={true}
+					onOpen={(md5Hash, fileExtension, title) =>
+						creativeModal.open(md5Hash, fileExtension, title)}
+				/>
 			{/each}
 		</div>
 	</div>
@@ -848,8 +845,7 @@
 		</div>
 		<div class={sectionDescriptionClass}>
 			<p>
-				January 2026 shows a mix of scaled SDK inventory and programmatic distribution. In this
-				sample,
+				February 2026 shows a mix of SDK inventory and programmatic distribution. In this sample,
 				<a href="/companies/{data.adNetworks[0].ad_network_domain}"
 					>{data.adNetworks[0].ad_network_name}</a
 				>
@@ -861,10 +857,6 @@
 				<li>
 					Publisher coverage and advertiser coverage do not move in lockstep, so broad reach does
 					not always mean the widest advertiser base.
-				</li>
-				<li>
-					The top ten still account for most observed distribution, which keeps concentration high
-					in the network layer.
 				</li>
 			</div>
 		</div>
@@ -881,15 +873,15 @@
 		<!-- Top Networks Table -->
 		<div class={cardTableWrapperClass}>
 			<div class={tableWrapperClass}>
-				<table class="w-full">
+				<table class="report-table report-table--network w-full">
 					<thead class={tHeadClass}>
 						<tr>
 							<th class={tableHeaderLeftClass}>Rank</th>
 							<th class={tableHeaderLeftClass}>Ad Network</th>
 							<th class={tableHeaderRightClass}>Publishers</th>
 							<th class={tableHeaderRightClass}>Advertisers</th>
-							<th class={tableHeaderRightClass}>Creatives</th>
-							<th class={tableHeaderRightClass}>Market Share</th>
+							<th class={`${tableHeaderRightClass} hidden sm:table-cell`}>Creatives</th>
+							<th class={`${tableHeaderRightClass} hidden md:table-cell`}>Market Share</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -910,7 +902,7 @@
 										{index + 1}
 									</span>
 								</td>
-								<td class="px-1 md:px-4 py-2 md:py-4">
+								<td class="px-1 md:px-4 py-2 md:py-4 min-w-[13rem]">
 									<CompanyButton
 										companyDomain={network.ad_network_domain}
 										companyName={network.ad_network_name}
@@ -935,12 +927,16 @@
 										{network.advertiser_count.toLocaleString()}
 									</span>
 								</td>
-								<td class="px-1 md:px-4 py-2 md:py-4 text-right">
+								<td
+									class="hidden sm:table-cell px-1 md:px-4 py-2 md:py-4 text-right whitespace-nowrap"
+								>
 									<span class={creativesTextColor}>
 										{network.creatives_count.toLocaleString()}
 									</span>
 								</td>
-								<td class="px-1 md:px-4 py-2 md:py-4 text-right">
+								<td
+									class="hidden md:table-cell px-1 md:px-4 py-2 md:py-4 text-right whitespace-nowrap"
+								>
 									<div class="flex items-center justify-end gap-2">
 										<div
 											class="w-24 h-2 bg-surface-200 dark:bg-surface-700 rounded-full overflow-hidden"
@@ -998,13 +994,13 @@
 			</p>
 			<p class={paragraphClass}>
 				This is a useful set of apps for understanding which advertisers were able to spread
-				creative across the widest publisher footprint in January 2026.
+				creative across the widest publisher footprint in February 2026.
 			</p>
 		</div>
 		<!-- Top Apps by Publisher Reach -->
 		<div class={`mt-6 ${cardTableWrapperClass}`}>
 			<div class={tableWrapperClass}>
-				<table class="table table-compact">
+				<table class="report-table report-table--reach table table-compact">
 					<thead class={tHeadClass}>
 						<tr>
 							<th class={tableHeaderLeftClass}>Rank</th>
@@ -1012,7 +1008,7 @@
 							<th class={tableHeaderRightClass}>Publishers</th>
 							<th class={tableHeaderRightClass}>Creatives</th>
 							<th class={tableHeaderLeftClass}>Ad Networks</th>
-							<th class={tableHeaderCenterClass}>MMP</th>
+							<th class={`${tableHeaderCenterClass} hidden lg:table-cell`}>MMP</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -1065,22 +1061,27 @@
 										{app.unique_creatives}
 									</span>
 								</td>
-								<td class="px-1 md:px-2 py-2 md:py-4">
+								<td class="px-1 md:px-2 py-2 md:py-4 min-w-[8rem]">
 									{#if app.ad_networks && app.ad_networks.length > 0}
 										<div class={companyButtonListClass}>
-											{#each app.ad_networks as network}
+											{#each app.ad_networks.slice(0, 4) as network}
 												<CompanyButton
 													companyDomain={network.domain}
 													companyLogoUrl={network.logo_url}
 													size="logo-only"
 												/>
 											{/each}
+											{#if app.ad_networks.length > 4}
+												<span class={`${textMutedXsClass} font-semibold`}
+													>+{app.ad_networks.length - 4}</span
+												>
+											{/if}
 										</div>
 									{:else}
 										<span class="text-xs text-surface-400">—</span>
 									{/if}
 								</td>
-								<td class="px-1 md:px-2 py-2 md:py-4 text-right">
+								<td class="hidden lg:table-cell px-1 md:px-2 py-2 md:py-4 text-right min-w-[6rem]">
 									{#if app.mmps && app.mmps.length > 0}
 										<div class={companyButtonListClass}>
 											{#each app.mmps as mmp}
@@ -1126,10 +1127,9 @@
 					<div>
 						<h3 class="text-lg font-bold text-blue-900 dark:text-blue-100 mb-2">Creative Cycles</h3>
 						<p>
-							The month to month changes in ad ecosystm is not just the changes you make in your own
-							campaigns, but also the decisions of every other advertising campaign you're going up
-							against. Keep an eye on the creative and buying trends to know what your competition
-							is doin.
+							Month-to-month changes in the ad ecosystem are not just the result of updates in your
+							own campaigns, but also the decisions of every competing advertiser. Keep an eye on
+							creative and buying trends so you understand what your competition is doing.
 						</p>
 					</div>
 				</div>
@@ -1145,9 +1145,9 @@
 							High Growth Opportunities
 						</h3>
 						<p class="text-surface-700 dark:text-surface-300">
-							Apps that ran January 2026 campaigns averaged {data.summary.avgGrowth}% week-over-week
-							growth on this ranking, which reinforces how quickly paid acquisition can change
-							install trajectories when creative and distribution line up.
+							Apps that ran February 2026 campaigns averaged {data.summary.avgGrowth}%
+							week-over-week growth on this ranking, which reinforces how quickly paid acquisition
+							can change install trajectories when creative and distribution line up.
 						</p>
 					</div>
 				</div>
@@ -1231,3 +1231,67 @@
 	creativeUrl={creativeModal.creativeUrl}
 	title={creativeModal.title}
 />
+
+<style>
+	.featured-creatives-strip {
+		display: flex;
+		gap: 1rem;
+		overflow-x: auto;
+		padding-bottom: 0.25rem;
+		scroll-snap-type: x proximity;
+		overscroll-behavior-x: contain;
+		-webkit-overflow-scrolling: touch;
+	}
+
+	.featured-creative-slide {
+		min-width: min(18rem, 82vw);
+		flex: 0 0 auto;
+		scroll-snap-align: start;
+	}
+
+	.report-table-shell {
+		max-width: 100%;
+	}
+
+	.report-table-scroll {
+		overflow-x: auto;
+		overflow-y: hidden;
+		overscroll-behavior-x: contain;
+		-webkit-overflow-scrolling: touch;
+		padding-bottom: 0.25rem;
+	}
+
+	.report-table {
+		min-width: 100%;
+	}
+
+	@media (max-width: 767px) {
+		.report-table--apps {
+			min-width: 45rem;
+		}
+
+		.report-table--network {
+			min-width: 34rem;
+		}
+
+		.report-table--reach {
+			min-width: 38rem;
+		}
+	}
+
+	@media (min-width: 768px) {
+		.featured-creatives-strip {
+			display: grid;
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+			align-items: stretch;
+			height: 100%;
+			overflow: visible;
+			padding-bottom: 0;
+		}
+
+		.featured-creative-slide {
+			min-width: 0;
+			height: 100%;
+		}
+	}
+</style>
