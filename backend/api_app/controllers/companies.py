@@ -98,6 +98,19 @@ def make_company_api_domains_dict(
     state: State, company_domains: list[str]
 ) -> list[dict]:
     """Make company api domains dict."""
+
+    def _to_string_list(value: object) -> list[str]:
+        """Normalize pandas / numpy containers to plain list[str] for JSON responses."""
+        if value is None:
+            return []
+        if isinstance(value, np.ndarray | pd.api.extensions.ExtensionArray):
+            return [str(v) for v in value.tolist() if pd.notna(v)]
+        if isinstance(value, list | tuple | set | pd.Index):
+            return [str(v) for v in value if pd.notna(v)]
+        if pd.isna(value):
+            return []
+        return [str(value)]
+
     df = get_company_api_call_countrys(state)
     reg_df = df[df["company_domain"].isin(company_domains)]
     p_df = df[df["parent_company_domain"].isin(company_domains)]
@@ -112,21 +125,9 @@ def make_company_api_domains_dict(
         )
         .reset_index()
     )
-    # Pandas 3.0 defaulting to ArrowStringArray
-    df["org"] = df["org"].apply(
-        lambda x: (
-            x.tolist()
-            if isinstance(x, np.ndarray) or isinstance(x, pd.arrays.ArrowStringArray)
-            else x
-        )
-    )
-    df["country"] = df["country"].apply(
-        lambda x: (
-            x.tolist()
-            if isinstance(x, np.ndarray) or isinstance(x, pd.arrays.ArrowStringArray)
-            else x
-        )
-    )
+    # Pandas 3.0 may return ArrowStringArray or StringArray here.
+    df["org"] = df["org"].apply(_to_string_list)
+    df["country"] = df["country"].apply(_to_string_list)
     missing_domains = [
         {"tld_url": x, "country": [], "org": []}
         for x in company_domains
