@@ -16,17 +16,28 @@ SITEMAP_DIR = MODULE_DIR.parent / pathlib.Path("frontend/static")
 
 STATIC_URLS = [
     "https://appgoblin.info",
-    "https://appgoblin.info/ad-creatives",
-    "https://appgoblin.info/blog",
     "https://appgoblin.info/about",
+    "https://appgoblin.info/ad-creatives",
+    "https://appgoblin.info/app-explorer",
+    "https://appgoblin.info/blog",
+    "https://appgoblin.info/companies",
+    "https://appgoblin.info/contact",
+    "https://appgoblin.info/free-app-datasets",
+    "https://appgoblin.info/keywords",
+    "https://appgoblin.info/pricing",
+    "https://appgoblin.info/reports",
+    "https://appgoblin.info/reports/ad-user-acquisition-2025-august",
+    "https://appgoblin.info/reports/ad-user-acquisition-2025-october",
+    "https://appgoblin.info/reports/ad-user-acquisition-2025-september",
+    "https://appgoblin.info/reports/ad-user-acquisition-2026-february",
+    "https://appgoblin.info/reports/ad-user-acquisition-2026-january",
+    "https://appgoblin.info/reports/mobile-apps-growth-sdks-2025",
     "https://appgoblin.info/fastest-growing-apps/google/overall",
     "https://appgoblin.info/fastest-growing-apps/ios/overall",
-    "https://appgoblin.info/companies",
     "https://appgoblin.info/collections/new_monthly/google/overall",
     "https://appgoblin.info/collections/new_weekly/apple/overall",
     "https://appgoblin.info/collections/new_weekly/google/overall",
     "https://appgoblin.info/collections/new_monthly/apple/overall",
-    "https://appgoblin.info/collections/new_monthly/google/overall",
     "https://appgoblin.info/collections/new_yearly/apple/overall",
     "https://appgoblin.info/collections/new_yearly/google/overall",
     "https://appgoblin.info/rankings/store/1/collection/1/category/1/US",
@@ -88,27 +99,8 @@ def create_static_sitemap() -> str:
         Filename of the generated static sitemap
 
     """
-    # Static URLs to include
-    static_urls = [
-        "https://appgoblin.info",
-        "https://appgoblin.info/about",
-        "https://appgoblin.info/ad-creatives",
-        "https://appgoblin.info/blog",
-        "https://appgoblin.info/fastest-growing-apps/google/overall",
-        "https://appgoblin.info/fastest-growing-apps/ios/overall",
-        "https://appgoblin.info/companies",
-        "https://appgoblin.info/collections/new_monthly/google/overall",
-        "https://appgoblin.info/collections/new_weekly/apple/overall",
-        "https://appgoblin.info/collections/new_weekly/google/overall",
-        "https://appgoblin.info/collections/new_yearly/apple/overall",
-        "https://appgoblin.info/collections/new_yearly/google/overall",
-        "https://appgoblin.info/collections/new_weekly/apple/overall",
-        "https://appgoblin.info/sdks",
-        "https://appgoblin.info/rankings/store/1/collection/1/category/1/US",
-        "https://appgoblin.info/rankings/store/2/collection/4/category/120/US",
-    ]
 
-    static_df = pd.DataFrame({"url": static_urls})
+    static_df = pd.DataFrame({"url": STATIC_URLS})
     static_df = set_df_sitemap_columns(static_df, priority=1.0)
 
     filename = "sitemap_static.xml"
@@ -251,7 +243,6 @@ allurls = pd.concat(
     [
         static_pages,
         company_types,
-        company_categories,
         company_type_categories,
         companies,
         apps,
