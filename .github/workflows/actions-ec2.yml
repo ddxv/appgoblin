@@ -9,6 +9,7 @@ on:
 jobs:
   deploy:
     name: Deploy to cloud on main branch push
+    if: github.repository == 'appgoblin-dev/appgoblin'
     runs-on: ubuntu-latest
     environment: production
     steps:

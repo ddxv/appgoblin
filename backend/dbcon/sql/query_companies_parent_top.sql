@@ -3,6 +3,7 @@ WITH ranked_apps AS (
         tag_source,
         store,
         COALESCE(company_name, company_domain) AS company_name,
+        MIN(company_domain) AS company_domain,
         SUM(app_count) AS app_count,
         ROW_NUMBER() OVER (
             PARTITION BY tag_source, store
@@ -21,6 +22,7 @@ SELECT
     tag_source,
     store,
     company_name,
+    company_domain,
     app_count
 FROM ranked_apps
 WHERE rank <= :mylimit

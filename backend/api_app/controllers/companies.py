@@ -168,23 +168,27 @@ def get_company_apps(
     secondary_domains = get_company_secondary_domains(state)
     is_secondary_domain = company_domain in secondary_domains
     is_parent_company = company_domain in parent_companies
+    limit = 5 if category else 10
     if is_secondary_domain:
         df = get_topapps_for_company_secondary(
             state=state,
             company_domain=company_domain,
             mapped_category=category,
+            limit=limit,
         )
     elif is_parent_company:
         df = get_topapps_for_company_parent(
             state=state,
             company_domain=company_domain,
             mapped_category=category,
+            limit=limit,
         )
     else:
         df = get_topapps_for_company(
             state=state,
             company_domain=company_domain,
             mapped_category=category,
+            limit=limit,
         )
 
     df = df[~df["store"].isna()]
@@ -321,9 +325,19 @@ def get_overviews(
     type_slug: str | None = None,
 ) -> CompaniesOverview:
     """Get the overview data from the database."""
+    company_logos_df = get_company_logos_df(state).drop_duplicates(
+        subset=["company_domain"], keep="first"
+    )
+
     # Get Top 5 Companies for Plots
     top_df = get_companies_top(
         state=state, type_slug=type_slug, app_category=category, limit=5
+    )
+    top_df = top_df.merge(
+        company_logos_df,
+        on="company_domain",
+        how="left",
+        validate="m:1",
     )
     top_companies_short = make_top_companies(top_df)
 
@@ -1149,14 +1163,36 @@ class CompaniesController(Controller):
 
         """
         start = time.perf_counter() * 1000
+        company_logos_df = get_company_logos_df(state).drop_duplicates(
+            subset=["company_domain"], keep="first"
+        )
+
         adnetworks = get_companies_top(
             state=state, type_slug="ad-networks", app_category=None, limit=5
+        )
+        adnetworks = adnetworks.merge(
+            company_logos_df,
+            on="company_domain",
+            how="left",
+            validate="m:1",
         )
         mmps = get_companies_top(
             state=state, type_slug="ad-attribution", app_category=None, limit=5
         )
+        mmps = mmps.merge(
+            company_logos_df,
+            on="company_domain",
+            how="left",
+            validate="m:1",
+        )
         analytics = get_companies_top(
             state=state, type_slug="product-analytics", app_category=None, limit=5
+        )
+        analytics = analytics.merge(
+            company_logos_df,
+            on="company_domain",
+            how="left",
+            validate="m:1",
         )
         top_ad_networks = make_top_companies(adnetworks)
         top_mmps = make_top_companies(mmps)
