@@ -109,9 +109,10 @@ jobs:
             echo "| Endpoint | Attempts | HTTP | Latency(s) | CF-Cache-Status | Result |"
             echo "|---|---:|---:|---:|---|---|"
             printf '%b\n' "$SUMMARY_ROWS"
-          } >> "$GITHUB_STEP_SUMMARY"
+          } | tee -a "$GITHUB_STEP_SUMMARY"
 
           if [ "$FAILURES" -gt 0 ]; then
+            echo "::error::$FAILURES endpoint(s) failed — see table above"
             exit 1
           fi
 
@@ -212,8 +213,9 @@ jobs:
             echo "| Endpoint | Attempts | HTTP | Latency(s) | CF-Cache-Status | Result |"
             echo "|---|---:|---:|---:|---|---|"
             printf '%b\n' "$SUMMARY_ROWS"
-          } >> "$GITHUB_STEP_SUMMARY"
+          } | tee -a "$GITHUB_STEP_SUMMARY"
 
           if [ "$FAILURES" -gt 0 ]; then
+            echo "::error::$FAILURES endpoint(s) failed — see table above"
             exit 1
           fi

@@ -99,7 +99,6 @@ def create_static_sitemap() -> str:
         Filename of the generated static sitemap
 
     """
-
     static_df = pd.DataFrame({"url": STATIC_URLS})
     static_df = set_df_sitemap_columns(static_df, priority=1.0)
 
@@ -164,7 +163,7 @@ def create_paginated_sitemaps(
 dbcon = get_db_connection("madrone")
 
 apps = get_sitemap_apps(dbcon)
-apps = apps.head(100)
+apps = apps.head(10000)
 
 
 cdf = get_sitemap_companies(dbcon)
