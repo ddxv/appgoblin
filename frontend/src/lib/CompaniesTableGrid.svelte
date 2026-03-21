@@ -37,11 +37,7 @@
 			? overview.categories.categories.all
 			: null
 	);
-	const companyCount = $derived(
-		typeof overview === 'object' && Array.isArray(overview?.companies_overview)
-			? overview.companies_overview.length
-			: null
-	);
+
 	const showAdstxt = $derived(!page.params.type || page.params.type === 'ad-networks');
 
 	const TYPE_DESCRIPTIONS: Record<string, string> = {
@@ -51,8 +47,6 @@
 			'Ad Attribution / MMP companies track and attribute app installs and user actions to specific marketing campaigns. Attribution is a tightly controlled set of companies by the self attributing ad networks such as Apple, Google and Meta. MMPs collect user data and share with ad networks.',
 		'product-analytics':
 			'Product Analytics providers offer tools to track user behavior, app performance, and other metrics to help developers optimize their apps and improve user retention.',
-		'marketing-automation':
-			'Marketing Automation tools help developers automate marketing tasks such as push notifications, email campaigns, and user segmentation to engage and retain users.',
 		'development-tools':
 			'Development Tools include SDKs, libraries, and platforms that assist developers in building, testing, and deploying mobile applications.',
 		'business-tools':
