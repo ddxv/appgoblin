@@ -16,6 +16,7 @@ from api_app.controllers.companies import CompaniesController
 from api_app.controllers.creatives import CreativesController
 from api_app.controllers.developers import DeveloperController
 from api_app.controllers.exports import ExportsController
+from api_app.controllers.health import HealthController
 from api_app.controllers.keywords import KeywordsController
 from api_app.controllers.rankings import RankingsController
 from api_app.controllers.scry import ScryController
@@ -183,6 +184,7 @@ app = Litestar(
         ScryController,
         CreativesController,
         ExportsController,
+        HealthController,
     ],
     cors_config=cors_config,
     openapi_config=OpenAPIConfig(
