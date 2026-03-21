@@ -8,10 +8,7 @@
 		value?: number;
 	};
 
-	let {
-		plotData,
-		plotHeightPx = 300
-	} = $props();
+	let { plotData, plotHeightPx = 300 } = $props();
 
 	const palette = ['#6929C4', '#1192E8', '#005D5D', '#9F1853', '#FA4D56', '#FF832B', '#198038'];
 
@@ -103,11 +100,11 @@
 
 	<div class="mt-2 grid grid-cols-1 gap-1 text-xs md:grid-cols-2">
 		{#each labeledPlotData as item}
-			<div class="flex items-center justify-between gap-3 rounded-md bg-surface-100-900/60 px-2 py-1">
+			<div
+				class="flex items-center justify-between gap-3 rounded-md bg-surface-100-900/60 px-2 py-1"
+			>
 				<div class="flex min-w-0 items-center gap-2">
-					<span
-						class="h-2.5 w-2.5 shrink-0 rounded-full"
-						style={`background-color: ${item.color};`}
+					<span class="h-2.5 w-2.5 shrink-0 rounded-full" style={`background-color: ${item.color};`}
 					></span>
 					<span class="truncate text-surface-50">{item.label}</span>
 				</div>

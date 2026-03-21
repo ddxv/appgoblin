@@ -1,4 +1,4 @@
-import type { ChartTabularData } from '@carbon/charts-svelte';
+type TabularData = Array<Record<string, any>>;
 
 export type Crumb<M = any> = {
 	title?: string;
@@ -244,6 +244,8 @@ export interface CompaniesOverviewPlatforms {
 	top: {
 		group: string;
 		value: number;
+		company_domain?: string | null;
+		company_logo_url?: string | null;
 	}[];
 }
 
@@ -462,15 +464,15 @@ export interface CompanyCategoryOverview {
 	adstxt_ad_domain_overview: AdsTxtAdDomainOverview;
 	adstxt_publishers_overview: AdsTxtPublishersOverview;
 	mediation_adapters:
-		| {
-				adapter_string: string;
-				adapter_company_domain: string;
-				adapter_company_name: string;
-				adapter_logo_url: string;
-				app_category: string;
-				app_count: number;
-		  }[]
-		| null;
+	| {
+		adapter_string: string;
+		adapter_company_domain: string;
+		adapter_company_name: string;
+		adapter_logo_url: string;
+		app_category: string;
+		app_count: number;
+	}[]
+	| null;
 	categories: {
 		[key: string]: CategoryAppStats;
 	};
@@ -514,7 +516,7 @@ export interface CompanyFullDetails {
 
 	companyTree: CompanyTree;
 	companySdks: CompanySDKsDict;
-	companyParentCategories: ChartTabularData;
+	companyParentCategories: TabularData;
 	companyCreatives: CompanyCreative[];
 }
 export interface CompanyCategoryDetails {
@@ -647,11 +649,11 @@ export interface AppGlobalMetrics {
 }
 
 export interface AppGlobalMetricsPlotData {
-	changes: ChartTabularData;
-	installs: ChartTabularData;
-	ratings: ChartTabularData;
-	ratings_stars: ChartTabularData;
-	ratings_stars_new: ChartTabularData;
+	changes: TabularData;
+	installs: TabularData;
+	ratings: TabularData;
+	ratings_stars: TabularData;
+	ratings_stars_new: TabularData;
 }
 
 export interface AppFullDetails {
@@ -672,11 +674,11 @@ export interface AppFullDetails {
 			five_star: number;
 		};
 		plot_data?: {
-			changes: ChartTabularData;
-			installs: ChartTabularData;
-			ratings: ChartTabularData;
-			ratings_stars: ChartTabularData;
-			ratings_stars_new: ChartTabularData;
+			changes: TabularData;
+			installs: TabularData;
+			ratings: TabularData;
+			ratings_stars: TabularData;
+			ratings_stars_new: TabularData;
 		};
 	}>;
 	appSDKsOverview: AppSDKsOverview;

@@ -73,7 +73,7 @@ class HealthController(Controller):
 
     @get(path="/check")
     async def check(self: Self) -> Response:
-        """Basic backend liveness endpoint."""
+        """Check basic backend liveness endpoint."""
         payload = {
             "status": "ok",
             "service": "backend",
