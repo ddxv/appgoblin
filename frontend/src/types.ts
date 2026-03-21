@@ -464,15 +464,15 @@ export interface CompanyCategoryOverview {
 	adstxt_ad_domain_overview: AdsTxtAdDomainOverview;
 	adstxt_publishers_overview: AdsTxtPublishersOverview;
 	mediation_adapters:
-	| {
-		adapter_string: string;
-		adapter_company_domain: string;
-		adapter_company_name: string;
-		adapter_logo_url: string;
-		app_category: string;
-		app_count: number;
-	}[]
-	| null;
+		| {
+				adapter_string: string;
+				adapter_company_domain: string;
+				adapter_company_name: string;
+				adapter_logo_url: string;
+				app_category: string;
+				app_count: number;
+		  }[]
+		| null;
 	categories: {
 		[key: string]: CategoryAppStats;
 	};

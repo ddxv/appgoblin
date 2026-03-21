@@ -77,10 +77,10 @@
 				dy={-4}
 			/>
 			<Text
-				value="Apps"
+				value="Apps (all sources)"
 				textAnchor="middle"
 				verticalAnchor="middle"
-				class="text-[11px] fill-surface-300"
+				class="text-base"
 				dy={16}
 			/>
 		{/snippet}
