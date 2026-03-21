@@ -1,0 +1,219 @@
+name: Production Health Monitor
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '*/15 * * * *'
+    - cron: '7 */6 * * *'
+
+concurrency:
+  group: production-health-monitor
+  cancel-in-progress: false
+
+jobs:
+  core-monitor:
+    name: Core Endpoint Monitor
+    if: github.event_name == 'workflow_dispatch' || github.event.schedule == '*/15 * * * *'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Probe production endpoints
+        shell: bash
+        env:
+          PRODUCTION_BASE_URL: ${{ vars.PRODUCTION_BASE_URL }}
+        run: |
+          set -euo pipefail
+
+          BASE_URL="${PRODUCTION_BASE_URL:-https://appgoblin.info}"
+          BASE_URL="${BASE_URL%/}"
+          MAX_ATTEMPTS=2
+          FAILURES=0
+          SUMMARY_ROWS=""
+
+          probe_endpoint() {
+            local name="$1"
+            local endpoint_url="$2"
+            local enforce_no_cf_hit="$3"
+
+            local attempt=1
+            local http_code="000"
+            local latency="0"
+            local cf_status="(missing)"
+            local result="FAIL"
+
+            while [ "$attempt" -le "$MAX_ATTEMPTS" ]; do
+              local sep='?'
+              if [[ "$endpoint_url" == *'?'* ]]; then
+                sep='&'
+              fi
+              local run_marker="${GITHUB_RUN_ID:-manual}-$(date +%s%N)"
+              local request_url="${endpoint_url}${sep}monitor_run=${run_marker}"
+
+              local headers_file
+              local body_file
+              headers_file="$(mktemp)"
+              body_file="$(mktemp)"
+
+              local curl_out
+              curl_out="$(curl -sS -L --max-time 25 \
+                -H 'Cache-Control: no-cache, no-store' \
+                -H 'Pragma: no-cache' \
+                -D "$headers_file" \
+                -o "$body_file" \
+                -w '%{http_code} %{time_total}' \
+                "$request_url" || true)"
+
+              http_code="${curl_out%% *}"
+              latency="${curl_out##* }"
+              cf_status="$(awk -F': *' 'tolower($1)=="cf-cache-status" {gsub("\r", "", $2); print $2; exit}' "$headers_file")"
+              if [ -z "$cf_status" ]; then
+                cf_status="(missing)"
+              fi
+
+              local http_ok=0
+              local cf_ok=1
+              if [[ "$http_code" =~ ^2[0-9][0-9]$ ]]; then
+                http_ok=1
+              fi
+              if [ "$enforce_no_cf_hit" = "1" ] && [ "$cf_status" = "HIT" ]; then
+                cf_ok=0
+              fi
+
+              rm -f "$headers_file" "$body_file"
+
+              if [ "$http_ok" -eq 1 ] && [ "$cf_ok" -eq 1 ]; then
+                result="PASS"
+                break
+              fi
+
+              if [ "$attempt" -lt "$MAX_ATTEMPTS" ]; then
+                sleep 5
+              fi
+              attempt=$((attempt + 1))
+            done
+
+            SUMMARY_ROWS+="\n| ${name} | ${attempt} | ${http_code} | ${latency} | ${cf_status} | ${result} |"
+            if [ "$result" != "PASS" ]; then
+              FAILURES=$((FAILURES + 1))
+            fi
+          }
+
+          probe_endpoint "frontend /check" "${BASE_URL}/check" "1"
+          probe_endpoint "backend /api/check" "${BASE_URL}/api/check" "1"
+          probe_endpoint "backend /api/checkdb" "${BASE_URL}/api/checkdb" "1"
+          probe_endpoint "frontend /companies/google.com" "${BASE_URL}/companies/google.com" "0"
+          probe_endpoint "frontend /search/appgoblin" "${BASE_URL}/search/appgoblin" "0"
+
+          {
+            echo "### Core Monitor"
+            echo ""
+            echo "| Endpoint | Attempts | HTTP | Latency(s) | CF-Cache-Status | Result |"
+            echo "|---|---:|---:|---:|---|---|"
+            printf '%b\n' "$SUMMARY_ROWS"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          if [ "$FAILURES" -gt 0 ]; then
+            exit 1
+          fi
+
+  freshness-monitor:
+    name: Freshness Monitor
+    if: github.event_name == 'workflow_dispatch' || github.event.schedule == '7 */6 * * *'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Probe freshness endpoint
+        shell: bash
+        env:
+          PRODUCTION_BASE_URL: ${{ vars.PRODUCTION_BASE_URL }}
+        run: |
+          set -euo pipefail
+
+          BASE_URL="${PRODUCTION_BASE_URL:-https://appgoblin.info}"
+          BASE_URL="${BASE_URL%/}"
+          MAX_ATTEMPTS=2
+          FAILURES=0
+          SUMMARY_ROWS=""
+
+          probe_endpoint() {
+            local name="$1"
+            local endpoint_url="$2"
+            local enforce_no_cf_hit="$3"
+
+            local attempt=1
+            local http_code="000"
+            local latency="0"
+            local cf_status="(missing)"
+            local result="FAIL"
+
+            while [ "$attempt" -le "$MAX_ATTEMPTS" ]; do
+              local sep='?'
+              if [[ "$endpoint_url" == *'?'* ]]; then
+                sep='&'
+              fi
+              local run_marker="${GITHUB_RUN_ID:-manual}-$(date +%s%N)"
+              local request_url="${endpoint_url}${sep}monitor_run=${run_marker}"
+
+              local headers_file
+              local body_file
+              headers_file="$(mktemp)"
+              body_file="$(mktemp)"
+
+              local curl_out
+              curl_out="$(curl -sS -L --max-time 25 \
+                -H 'Cache-Control: no-cache, no-store' \
+                -H 'Pragma: no-cache' \
+                -D "$headers_file" \
+                -o "$body_file" \
+                -w '%{http_code} %{time_total}' \
+                "$request_url" || true)"
+
+              http_code="${curl_out%% *}"
+              latency="${curl_out##* }"
+              cf_status="$(awk -F': *' 'tolower($1)=="cf-cache-status" {gsub("\r", "", $2); print $2; exit}' "$headers_file")"
+              if [ -z "$cf_status" ]; then
+                cf_status="(missing)"
+              fi
+
+              local http_ok=0
+              local cf_ok=1
+              if [[ "$http_code" =~ ^2[0-9][0-9]$ ]]; then
+                http_ok=1
+              fi
+              if [ "$enforce_no_cf_hit" = "1" ] && [ "$cf_status" = "HIT" ]; then
+                cf_ok=0
+              fi
+
+              rm -f "$headers_file" "$body_file"
+
+              if [ "$http_ok" -eq 1 ] && [ "$cf_ok" -eq 1 ]; then
+                result="PASS"
+                break
+              fi
+
+              if [ "$attempt" -lt "$MAX_ATTEMPTS" ]; then
+                sleep 5
+              fi
+              attempt=$((attempt + 1))
+            done
+
+            SUMMARY_ROWS+="\n| ${name} | ${attempt} | ${http_code} | ${latency} | ${cf_status} | ${result} |"
+            if [ "$result" != "PASS" ]; then
+              FAILURES=$((FAILURES + 1))
+            fi
+          }
+
+          probe_endpoint \
+            "backend /api/checkdb?include_apps_freshness=1" \
+            "${BASE_URL}/api/checkdb?include_apps_freshness=1" \
+            "1"
+
+          {
+            echo "### Freshness Monitor"
+            echo ""
+            echo "| Endpoint | Attempts | HTTP | Latency(s) | CF-Cache-Status | Result |"
+            echo "|---|---:|---:|---:|---|---|"
+            printf '%b\n' "$SUMMARY_ROWS"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          if [ "$FAILURES" -gt 0 ]; then
+            exit 1
+          fi
