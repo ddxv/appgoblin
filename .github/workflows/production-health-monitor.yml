@@ -131,10 +131,57 @@ jobs:
           set -euo pipefail
 
           BASE_URL="${PRODUCTION_BASE_URL:-https://appgoblin.info}"
+          BASE_API_URL="${PRODUCTION_BASE_URL:-https://appgoblin.info}"
+          BASE_API_URL="${BASE_API_URL%/}/api/public"
           BASE_URL="${BASE_URL%/}"
           MAX_ATTEMPTS=2
           FAILURES=0
           SUMMARY_ROWS=""
+
+          summarize_failure() {
+            local body_file="$1"
+            local failed_checks=""
+            local detail=""
+
+            if command -v jq >/dev/null 2>&1; then
+              failed_checks="$(jq -r '.failed_checks // [] | join(",")' "$body_file" 2>/dev/null || true)"
+            else
+              failed_checks="$(tr -d '\n' < "$body_file" | sed -n 's/.*"failed_checks"[[:space:]]*:[[:space:]]*\[\([^]]*\)\].*/\1/p' | tr -d '"[:space:]' || true)"
+            fi
+
+            if [ -n "$failed_checks" ] && [ "$failed_checks" != "null" ]; then
+              IFS=',' read -r -a checks_array <<< "$failed_checks"
+              for check_name in "${checks_array[@]}"; do
+                case "$check_name" in
+                  apps_freshness)
+                    detail+="apps_freshness (frontend.store_apps_overview); "
+                    ;;
+                  ranks_freshness)
+                    detail+="ranks_freshness (frontend.store_app_ranks_weekly); "
+                    ;;
+                  db_connection)
+                    detail+="db_connection (database connectivity); "
+                    ;;
+                  "")
+                    ;;
+                  *)
+                    detail+="${check_name}; "
+                    ;;
+                esac
+              done
+              detail="${detail%%; }"
+              echo "$detail"
+              return
+            fi
+
+            local raw
+            raw="$(tr -d '\r\n' < "$body_file")"
+            if [ -n "$raw" ]; then
+              echo "body: ${raw:0:240}"
+            else
+              echo "no response body"
+            fi
+          }
 
           probe_endpoint() {
             local name="$1"
@@ -146,6 +193,7 @@ jobs:
             local latency="0"
             local cf_status="(missing)"
             local result="FAIL"
+            local failure_reason=""
 
             while [ "$attempt" -le "$MAX_ATTEMPTS" ]; do
               local sep='?'
@@ -185,6 +233,10 @@ jobs:
                 cf_ok=0
               fi
 
+              if [ "$http_ok" -eq 0 ] || [ "$cf_ok" -eq 0 ]; then
+                failure_reason="$(summarize_failure "$body_file")"
+              fi
+
               rm -f "$headers_file" "$body_file"
 
               if [ "$http_ok" -eq 1 ] && [ "$cf_ok" -eq 1 ]; then
@@ -198,7 +250,7 @@ jobs:
               attempt=$((attempt + 1))
             done
 
-            SUMMARY_ROWS+="\n| ${name} | ${attempt} | ${http_code} | ${latency} | ${cf_status} | ${result} |"
+            SUMMARY_ROWS+="\n| ${name} | ${attempt} | ${http_code} | ${latency} | ${cf_status} | ${result} | ${failure_reason:-n/a} |"
             if [ "$result" != "PASS" ]; then
               FAILURES=$((FAILURES + 1))
             fi
@@ -206,14 +258,14 @@ jobs:
 
           probe_endpoint \
             "backend /api/checkdb?include_apps_freshness=1" \
-            "${BASE_URL}/api/checkdb?include_apps_freshness=1" \
+            "${BASE_API_URL}/checkdb?include_apps_freshness=1" \
             "1"
 
           {
             echo "### Freshness Monitor"
             echo ""
-            echo "| Endpoint | Attempts | HTTP | Latency(s) | CF-Cache-Status | Result |"
-            echo "|---|---:|---:|---:|---|---|"
+            echo "| Endpoint | Attempts | HTTP | Latency(s) | CF-Cache-Status | Result | Failure Detail |"
+            echo "|---|---:|---:|---:|---|---|---|"
             printf '%b\n' "$SUMMARY_ROWS"
           } | tee -a "$GITHUB_STEP_SUMMARY"
 
