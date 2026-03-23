@@ -148,7 +148,7 @@ class HealthController(Controller):
                     last_apps_utc = _normalize_to_utc(last_apps_raw)
                     apps_ok = (
                         last_apps_utc is not None
-                        and now_utc - last_apps_utc <= timedelta(hours=3)
+                        and now_utc - last_apps_utc <= timedelta(hours=5)
                     )
                     checks["apps_freshness"] = {
                         "ok": apps_ok,
