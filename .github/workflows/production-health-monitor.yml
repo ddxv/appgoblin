@@ -3,7 +3,7 @@ name: Production Health Monitor
 on:
   workflow_dispatch:
   schedule:
-    - cron: '*/15 * * * *'
+    - cron: '5 * * * *'
     - cron: '7 */6 * * *'
 
 concurrency:
@@ -13,7 +13,7 @@ concurrency:
 jobs:
   core-monitor:
     name: Core Endpoint Monitor
-    if: github.event_name == 'workflow_dispatch' || github.event.schedule == '*/15 * * * *'
+    if: github.event_name == 'workflow_dispatch' || github.event.schedule == '5 * * * *'
     runs-on: ubuntu-latest
     steps:
       - name: Probe production endpoints
@@ -24,6 +24,8 @@ jobs:
           set -euo pipefail
 
           BASE_URL="${PRODUCTION_BASE_URL:-https://appgoblin.info}"
+          BASE_API_URL="${PRODUCTION_BASE_URL:-https://appgoblin.info}"
+          BASE_API_URL="${BASE_API_URL%/}/api/public"
           BASE_URL="${BASE_URL%/}"
           MAX_ATTEMPTS=2
           FAILURES=0
@@ -98,8 +100,8 @@ jobs:
           }
 
           probe_endpoint "frontend /check" "${BASE_URL}/check" "1"
-          probe_endpoint "backend /api/check" "${BASE_URL}/api/check" "1"
-          probe_endpoint "backend /api/checkdb" "${BASE_URL}/api/checkdb" "1"
+          probe_endpoint "backend /api/check" "${BASE_API_URL}/check" "1"
+          probe_endpoint "backend /api/checkdb" "${BASE_API_URL}/checkdb" "1"
           probe_endpoint "frontend /companies/google.com" "${BASE_URL}/companies/google.com" "0"
           probe_endpoint "frontend /search/appgoblin" "${BASE_URL}/search/appgoblin" "0"
 
