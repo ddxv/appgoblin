@@ -69,9 +69,9 @@ def _is_truthy(value: str | None) -> bool:
 class HealthController(Controller):
     """Health endpoints for backend service and DB freshness checks."""
 
-    path = "/api"
+    path = "/api/public/"
 
-    @get(path="/check")
+    @get(path="check")
     async def check(self: Self) -> Response:
         """Check basic backend liveness endpoint."""
         payload = {
@@ -86,7 +86,7 @@ class HealthController(Controller):
         }
         return Response(payload, status_code=200, headers=NO_CACHE_HEADERS)
 
-    @get(path="/checkdb")
+    @get(path="checkdb")
     async def checkdb(
         self: Self,
         state: State,
