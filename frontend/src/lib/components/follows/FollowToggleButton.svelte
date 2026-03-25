@@ -8,7 +8,8 @@
 		initialFollowing = false,
 		storeId,
 		companyId,
-		compact = false
+		compact = false,
+		fullWidth = false
 	}: {
 		entity: FollowEntity;
 		label: string;
@@ -16,6 +17,7 @@
 		storeId?: string;
 		companyId?: number;
 		compact?: boolean;
+		fullWidth?: boolean;
 	} = $props();
 
 	let following = $state(false);
@@ -63,7 +65,7 @@
 <div class="space-y-1">
 	<button
 		type="button"
-		class={`btn ${following ? 'preset-filled-primary-500' : 'preset-tonal'} ${compact ? 'btn-sm' : ''}`}
+		class={`btn ${following ? 'preset-filled-primary-500' : 'preset-tonal'} ${compact ? 'btn-sm' : ''} ${fullWidth ? 'w-full justify-center' : ''}`}
 		onclick={toggleFollow}
 		disabled={isLoading}
 	>
