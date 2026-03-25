@@ -122,15 +122,22 @@ class CreativesController(Controller):
         Returns
         -------
             A dictionary representation of the creative clusters
+
         """
         start = time.perf_counter() * 1000
         df = get_creative_clusters(
-            state, app_category=app_category, file_format=format, company=company, limit=limit
+            state,
+            app_category=app_category,
+            file_format=format,
+            company=company,
+            limit=limit,
         )
-        
+
         # Add thumbnail URLs
         df["creative_thumb_url"] = (
-            "https://media.appgoblin.info/creatives/thumbs/" + df["representative_md5"] + ".jpg"
+            "https://media.appgoblin.info/creatives/thumbs/"
+            + df["representative_md5"]
+            + ".jpg"
         )
         # Format dates
         if not df.empty:
@@ -139,12 +146,40 @@ class CreativesController(Controller):
 
             # Also construct adv_icon_url and pub_icon_url similar to query_creatives
             df["adv_icon_url"] = df.apply(
-                lambda row: f"https://media.appgoblin.info/app-icons/{row['top_advertiser_store_id']}/{row['adv_icon_url_100']}" 
-                if pd.notna(row['adv_icon_url_100']) else None, axis=1
+                lambda row: (
+                    f"https://media.appgoblin.info/app-icons/{row['top_advertiser_store_id']}/{row['adv_icon_url_100']}"
+                    if pd.notna(row["adv_icon_url_100"])
+                    else None
+                ),
+                axis=1,
             )
             df["pub_icon_url"] = df.apply(
-                lambda row: f"https://media.appgoblin.info/app-icons/{row['top_advertiser_store_id']}/{row['pub_icon_url_100']}" 
-                if pd.notna(row['pub_icon_url_100']) else None, axis=1
+                lambda row: (
+                    f"https://media.appgoblin.info/app-icons/{row['top_advertiser_store_id']}/{row['pub_icon_url_100']}"
+                    if pd.notna(row["pub_icon_url_100"])
+                    else None
+                ),
+                axis=1,
+            )
+
+            company_logos_df = get_company_logos_df(state)
+
+            df = df.merge(
+                company_logos_df,
+                left_on="top_host_domain_company_domain",
+                right_on="company_domain",
+                how="left",
+                validate="m:1",
+            ).merge(
+                company_logos_df,
+                left_on="top_ad_domain_company_domain",
+                right_on="company_domain",
+                how="left",
+                validate="m:1",
+                suffixes=("_host", "_ad"),
+            )
+            df = df.drop(
+                columns=["company_domain_host", "company_domain_ad"], errors="ignore"
             )
 
         duration = round((time.perf_counter() * 1000 - start), 2)

@@ -9,9 +9,9 @@
 		unique_pub_names: number;
 		unique_ad_networks: number;
 		unique_ad_domains: number;
-		unique_mmps: number;
-		total_impressions: number;
-		
+		unique_mmp_names: number;
+		unique_mmp_domains: number;
+
 		top_adv_name: string | null;
 		top_advertiser_store_id: string | null;
 		top_pub_name: string | null;
@@ -21,14 +21,18 @@
 		top_ad_domain_company: string | null;
 		top_mmp_name: string | null;
 		top_mmp_domain: string | null;
-		
+
 		adv_icon_url: string | null;
 		pub_icon_url: string | null;
-		
+		company_logo_url_host: string | null;
+		company_logo_url_ad: string | null;
+
 		first_seen_at: string;
 		last_seen_at: string;
 		creative_thumb_url: string;
 	}
+
+	import CompanyButton from '$lib/CompanyButton.svelte';
 
 	let { data }: { data: CreativeCluster[] } = $props();
 
@@ -47,7 +51,6 @@
 				<th class="px-4 py-3 text-left font-semibold">Format</th>
 				<th class="px-4 py-3 text-left font-semibold">Top Advertiser</th>
 				<th class="px-4 py-3 text-left font-semibold">Top Ad Network</th>
-				<th class="px-4 py-3 text-right font-semibold">Impressions</th>
 				<th class="px-4 py-3 text-right font-semibold">Unique Pubs</th>
 				<th class="px-4 py-3 text-right font-semibold">First Seen</th>
 				<th class="px-4 py-3 text-right font-semibold">Last Seen</th>
@@ -91,17 +94,32 @@
 					</td>
 					<!-- Network -->
 					<td class="px-4 py-3">
-						<div class="flex flex-col">
-							<span class="font-medium">{row.top_host_domain_company || row.top_host_domain || '-'}</span>
+						<div class="flex flex-col gap-1 items-start">
+							{#if row.top_host_domain}
+								<CompanyButton
+									companyName={row.top_host_domain_company || 'Network'}
+									companyDomain={row.top_host_domain}
+									companyLogoUrl={row.company_logo_url_host || ''}
+									size="sm"
+								/>
+							{/if}
 							{#if row.top_ad_domain && row.top_ad_domain !== row.top_host_domain}
-								<span class="text-xs opacity-70">via {row.top_ad_domain_company || row.top_ad_domain}</span>
+								<div class="flex items-center gap-1">
+									<span class="text-xs opacity-70">via</span>
+									<CompanyButton
+										companyName={row.top_ad_domain_company || 'Ad'}
+										companyDomain={row.top_ad_domain}
+										companyLogoUrl={row.company_logo_url_ad || ''}
+										size="sm"
+									/>
+								</div>
+							{/if}
+							{#if !row.top_host_domain && !row.top_ad_domain}
+								<span class="font-medium">-</span>
 							{/if}
 						</div>
 					</td>
 					<!-- Stats -->
-					<td class="px-4 py-3 text-right font-semibold text-primary-600-300-token">
-						{formatNumber(row.total_impressions)}
-					</td>
 					<td class="px-4 py-3 text-right font-semibold text-tertiary-600-300-token">
 						{formatNumber(row.unique_publisher_apps)}
 					</td>

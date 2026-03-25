@@ -7,7 +7,8 @@
 	let { data }: { data: PageData } = $props();
 
 	let pageTitle = 'Creative Clusters Explorer';
-	let pageDescription = 'Browse top mobile advertising videos and images for inspiration and competitor analysis.';
+	let pageDescription =
+		'Browse top mobile advertising videos and images for inspiration and competitor analysis.';
 
 	const categories = [
 		{ value: 'overall', label: 'Overall (All Apps)' },
@@ -30,20 +31,20 @@
 	];
 
 	let creativeClusters = $derived(data.creativeClusters || []);
-	
+
 	function handleFilterChange(e: Event) {
 		const target = e.target as HTMLSelectElement;
 		const { id, value } = target;
-		
+
 		const params = new URLSearchParams();
 		const catSelect = document.getElementById('category-select') as HTMLSelectElement;
 		const fmtSelect = document.getElementById('format-select') as HTMLSelectElement;
 		const cmpSelect = document.getElementById('company-search') as HTMLInputElement;
-		
-		const cat = catSelect ? catSelect.value : (data.selectedCategory || 'overall');
-		const fmt = fmtSelect ? fmtSelect.value : (data.selectedFormat || 'all');
-		const cmp = cmpSelect ? cmpSelect.value : (data.searchCompany || '');
-		
+
+		const cat = catSelect ? catSelect.value : data.selectedCategory || 'overall';
+		const fmt = fmtSelect ? fmtSelect.value : data.selectedFormat || 'all';
+		const cmp = cmpSelect ? cmpSelect.value : data.searchCompany || '';
+
 		if (cat && cat !== 'overall') {
 			params.set('category', cat);
 		}
@@ -53,7 +54,7 @@
 		if (cmp) {
 			params.set('company', cmp);
 		}
-		
+
 		const queryString = params.toString();
 		const navUrl = queryString ? `?${queryString}` : '?';
 		goto(navUrl, { keepFocus: true, noScroll: true });
@@ -96,7 +97,7 @@
 					<option value={fm.value}>{fm.label}</option>
 				{/each}
 			</select>
-			
+
 			<select
 				id="category-select"
 				class="select variant-glass rounded-lg border-surface-300 focus:ring-primary-500 focus:border-primary-500 w-full sm:w-auto"
@@ -119,14 +120,18 @@
 		</div>
 		<div class="rounded-lg border bg-surface-100-800-token p-5 shadow-sm">
 			<div class="text-sm font-medium opacity-70">Competitors</div>
-			<div class="my-2 text-3xl font-bold">{new Set((data.creativeClusters || []).map((c: any) => c.top_advertiser_store_id)).size}</div>
+			<div class="my-2 text-3xl font-bold">
+				{new Set((data.creativeClusters || []).map((c: any) => c.top_advertiser_store_id)).size}
+			</div>
 			<div class="text-xs opacity-60">Advertisers running these specific creatives</div>
 		</div>
 	</div>
 
 	<!-- Creatives Grid -->
 	{#if (data.creativeClusters || []).length > 0}
-		<div class="columns-2 sm:columns-3 lg:columns-4 xl:columns-5 gap-4 md:gap-6 space-y-4 md:space-y-6">
+		<div
+			class="columns-2 sm:columns-3 lg:columns-4 xl:columns-5 gap-4 md:gap-6 space-y-4 md:space-y-6"
+		>
 			{#each data.creativeClusters || [] as cluster}
 				<div class="break-inside-avoid">
 					<AdCreativeCard data={cluster} />
@@ -136,8 +141,9 @@
 	{:else}
 		<div class="py-16 text-center rounded-xl border-dashed border-2 border-surface-300-600-token">
 			<h3 class="text-xl font-medium opacity-70">No ad creatives found</h3>
-			<p class="mt-2 opacity-60 text-sm">Try selecting a different category or adjusting filters.</p>
+			<p class="mt-2 opacity-60 text-sm">
+				Try selecting a different category or adjusting filters.
+			</p>
 		</div>
 	{/if}
 </div>
-

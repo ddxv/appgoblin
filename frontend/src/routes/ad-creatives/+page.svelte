@@ -46,6 +46,11 @@
 			These are top mobile ad buyers (advertisers) from this month. The top advertisers and their
 			creatives are based on actual ads seen in publishing apps in the past month.
 		</p>
+		<div class="mt-4">
+			<a href="/ad-creatives/dash" class="btn variant-filled-secondary">
+				View Ad Creative Clusters Dashboard 📈
+			</a>
+		</div>
 	</div>
 
 	<WhiteCard>

@@ -28,8 +28,13 @@ export const load: PageServerLoad = async ({ fetch, url }) => {
 	if (queryString) {
 		apiUrl += `?${queryString}`;
 	}
-	
+
 	const creativeClusters = await api.get(apiUrl, 'Creative Clusters');
 
-	return { creativeClusters, selectedCategory: category, selectedFormat: format, searchCompany: company };
+	return {
+		creativeClusters,
+		selectedCategory: category,
+		selectedFormat: format,
+		searchCompany: company
+	};
 };

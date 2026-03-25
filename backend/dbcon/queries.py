@@ -786,11 +786,16 @@ def get_creative_clusters(
         app_category = "game%"
     if company:
         company = f"%{company}%"
-        
+
     df = pd.read_sql(
         sql.creative_clusters,
         con=state.dbcon.engine,
-        params={"mylimit": limit, "app_category": app_category, "file_format": file_format, "company": company},
+        params={
+            "mylimit": limit,
+            "app_category": app_category,
+            "file_format": file_format,
+            "company": company,
+        },
     )
     return df
 
