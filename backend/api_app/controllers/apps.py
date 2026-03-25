@@ -110,27 +110,7 @@ def create_app_country_plot_dict(app_hist: pd.DataFrame) -> pd.DataFrame:
     Processes each country independently using groupby to maintain separate time series.
     """
     star_cols = ["one_star", "two_star", "three_star", "four_star", "five_star"]
-    metrics = ["rating", "rating_count", *star_cols]
-    weekly_metrics = [
-        metric
-        for metric in [
-            "weekly_installs",
-            "weekly_ratings",
-            "weekly_active_users",
-            "monthly_active_users",
-            "weekly_ad_revenue",
-            "weekly_iap_revenue",
-        ]
-        if metric in app_hist.columns
-    ]
-    metrics = [
-        *metrics,
-        *[
-            m
-            for m in ["cumulative_installs", "cumulative_ratings"]
-            if m in app_hist.columns
-        ],
-    ]
+    metrics = ["rating", "rating_count", "installs", *star_cols]
     xaxis_col = "week_start"
 
     # Convert to datetime and sort by country and date
@@ -149,12 +129,13 @@ def create_app_country_plot_dict(app_hist: pd.DataFrame) -> pd.DataFrame:
         group = group.resample("W").last()
 
         # Replace zeros with NaN for cumulative metrics (zeros are data holes)
-        cumulative_metrics = ["rating_count", *star_cols]
+        cumulative_metrics = ["rating_count", "installs", *star_cols]
 
         # Metrics to turn numeric / clean
         nmetrics = [
             m
-            for m in [*cumulative_metrics, "rating", *weekly_metrics]
+            # for m in [*cumulative_metrics, "rating", *weekly_metrics]
+            for m in [*cumulative_metrics, "rating"]
             if m in group.columns
         ]
         group[nmetrics] = (
@@ -177,39 +158,26 @@ def create_app_country_plot_dict(app_hist: pd.DataFrame) -> pd.DataFrame:
 
         # Calculate derived metrics
         for metric in metrics:
-            change_metric = f"new_{metric}"
-            rate_of_change_metric = f"{metric}_rate_of_change"
-            avg_per_day_metric = f"{metric}_avg_per_day"
+            change_metric = f"weekly_{metric}"
+            if metric in ["installs", "rating_count"]:
+                rate_of_change_metric = f"weekly_{metric}_rate_of_change"
+            else:
+                rate_of_change_metric = f"{metric}_rate_of_change"
 
             # Change (difference from previous period)
             group[change_metric] = group[metric] - group[metric].shift(1)
 
             # Rate of change: ((new - old) / old) * 100
             group[rate_of_change_metric] = (
-                (group[metric] - group[metric].shift(1)) / group[metric].shift(1)
+                group[change_metric] / group[metric].shift(1)
             ) * 100
 
-            # Avg per day (daily average of the change)
-            group[avg_per_day_metric] = group[change_metric] / group["days_changed"]
-
-        for metric in weekly_metrics:
-            rate_of_change_metric = f"{metric}_rate_of_change"
-            avg_per_day_metric = f"{metric}_avg_per_day"
-            group[rate_of_change_metric] = (
-                group[metric] / group[metric].shift(1)
-            ) * 100
-            group[avg_per_day_metric] = group[metric] / group["days_changed"]
-
-        if (
-            "cumulative_ratings" not in group.columns
-            and "rating_count" in group.columns
-        ):
-            group["cumulative_ratings"] = group["rating_count"]
-        if (
-            "weekly_ratings" not in group.columns
-            and "new_rating_count" in group.columns
-        ):
-            group["weekly_ratings"] = group["new_rating_count"]
+        group = group.rename(
+            columns={
+                "rating_count": "cumulative_ratings",
+                "installs": "cumulative_installs",
+            }
+        )
 
         return group
 
@@ -267,7 +235,7 @@ def create_app_plot_df(app_hist: pd.DataFrame) -> pd.DataFrame:
         metrics_to_add.append(avg_per_day_metric)
 
     for metric in cumulative_metrics:
-        change_metric = f"new_{metric}"
+        change_metric = f"weekly_{metric}"
         rate_of_change_metric = f"{metric}_rate_of_change"
         avg_per_day_metric = f"{metric}_avg_per_day"
         # Calculate the change (difference from previous period)

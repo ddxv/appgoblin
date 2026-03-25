@@ -27,9 +27,15 @@
 		titleMetric: string
 	): SeriesEntry[] {
 		// Keys ordered from 1-star to 5-star to match color array
-		const isNew = titleMetric.startsWith('new_');
+		const isNew = titleMetric.startsWith('weekly_') && titleMetric.endsWith('_star');
 		const uniqueKeys = isNew
-			? ['new_one_star', 'new_two_star', 'new_three_star', 'new_four_star', 'new_five_star']
+			? [
+					'weekly_one_star',
+					'weekly_two_star',
+					'weekly_three_star',
+					'weekly_four_star',
+					'weekly_five_star'
+				]
 			: ['one_star', 'two_star', 'three_star', 'four_star', 'five_star'];
 
 		// Calculate total value for each key
@@ -96,7 +102,7 @@
 		hasField(latestRow, 'cumulative_ratings') ? 'cumulative_ratings' : 'rating_count'
 	);
 	const newRatingCountKey = $derived(
-		hasField(latestRow, 'weekly_ratings') ? 'weekly_ratings' : 'new_rating_count'
+		hasField(latestRow, 'weekly_ratings') ? 'weekly_ratings' : 'weekly_rating_count'
 	);
 	const getRatingCount = (d: (AppGlobalMetrics | AppCountryMetrics) | undefined) =>
 		(d ? Number((d as unknown as Record<string, unknown>)[ratingCountKey]) : 0) || 0;
@@ -386,59 +392,70 @@
 			</div>
 		</div>
 
-		<!-- Engagement & Revenue Section -->
-		<div class="rounded-lg border p-6">
-			<h2 class="mb-6 text-xl font-bold">Engagement & Revenue</h2>
-			<div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
-				<div>
-					<h3 class="mb-3 text-sm font-semibold">Weekly Active Users</h3>
-					<div class="h-[300px]">
-						<BarChart
-							data={filteredData}
-							x={xAxisKey}
-							y="weekly_active_users"
-							{layer}
-							props={{
-								xAxis: { format: (d) => format(d, PeriodType.Day, { variant: 'short' }), ticks: 5 },
-								yAxis: { format: (d) => formatNumber(d) }
-							}}
-						/>
+		{#if selectedCountry === 'global'}
+			<!-- Engagement & Revenue Section -->
+			<div class="rounded-lg border p-6">
+				<h2 class="mb-6 text-xl font-bold">Engagement & Revenue</h2>
+				<div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+					<div>
+						<h3 class="mb-3 text-sm font-semibold">Weekly Active Users</h3>
+						<div class="h-[300px]">
+							<BarChart
+								data={filteredData}
+								x={xAxisKey}
+								y="weekly_active_users"
+								{layer}
+								props={{
+									xAxis: {
+										format: (d) => format(d, PeriodType.Day, { variant: 'short' }),
+										ticks: 5
+									},
+									yAxis: { format: (d) => formatNumber(d) }
+								}}
+							/>
+						</div>
 					</div>
-				</div>
 
-				<div>
-					<h3 class="mb-3 text-sm font-semibold">Weekly Ad Revenue</h3>
-					<div class="h-[300px]">
-						<BarChart
-							data={filteredData}
-							x={xAxisKey}
-							y="weekly_ad_revenue"
-							{layer}
-							props={{
-								xAxis: { format: (d) => format(d, PeriodType.Day, { variant: 'short' }), ticks: 5 },
-								yAxis: { format: (d) => formatNumber(d) }
-							}}
-						/>
+					<div>
+						<h3 class="mb-3 text-sm font-semibold">Weekly Ad Revenue</h3>
+						<div class="h-[300px]">
+							<BarChart
+								data={filteredData}
+								x={xAxisKey}
+								y="weekly_ad_revenue"
+								{layer}
+								props={{
+									xAxis: {
+										format: (d) => format(d, PeriodType.Day, { variant: 'short' }),
+										ticks: 5
+									},
+									yAxis: { format: (d) => formatNumber(d) }
+								}}
+							/>
+						</div>
 					</div>
-				</div>
 
-				<div>
-					<h3 class="mb-3 text-sm font-semibold">Weekly IAP Revenue</h3>
-					<div class="h-[300px]">
-						<BarChart
-							data={filteredData}
-							x={xAxisKey}
-							y="weekly_iap_revenue"
-							{layer}
-							props={{
-								xAxis: { format: (d) => format(d, PeriodType.Day, { variant: 'short' }), ticks: 5 },
-								yAxis: { format: (d) => formatNumber(d) }
-							}}
-						/>
+					<div>
+						<h3 class="mb-3 text-sm font-semibold">Weekly IAP Revenue</h3>
+						<div class="h-[300px]">
+							<BarChart
+								data={filteredData}
+								x={xAxisKey}
+								y="weekly_iap_revenue"
+								{layer}
+								props={{
+									xAxis: {
+										format: (d) => format(d, PeriodType.Day, { variant: 'short' }),
+										ticks: 5
+									},
+									yAxis: { format: (d) => formatNumber(d) }
+								}}
+							/>
+						</div>
 					</div>
 				</div>
 			</div>
-		</div>
+		{/if}
 	{/if}
 
 	<!-- Ratings Section -->
@@ -622,7 +639,7 @@
 						<BarChart
 							data={filteredData}
 							x={xAxisKey}
-							y="new_five_star"
+							y="weekly_five_star"
 							{layer}
 							props={{
 								xAxis: { format: (d) => format(d, PeriodType.Day, { variant: 'short' }), ticks: 4 },
@@ -674,7 +691,7 @@
 						<BarChart
 							data={filteredData}
 							x={xAxisKey}
-							y="new_four_star"
+							y="weekly_four_star"
 							{layer}
 							props={{
 								xAxis: { format: (d) => format(d, PeriodType.Day, { variant: 'short' }), ticks: 4 },
@@ -726,7 +743,7 @@
 						<BarChart
 							data={filteredData}
 							x={xAxisKey}
-							y="new_three_star"
+							y="weekly_three_star"
 							{layer}
 							props={{
 								xAxis: { format: (d) => format(d, PeriodType.Day, { variant: 'short' }), ticks: 4 },
@@ -778,7 +795,7 @@
 						<BarChart
 							data={filteredData}
 							x={xAxisKey}
-							y="new_two_star"
+							y="weekly_two_star"
 							{layer}
 							props={{
 								xAxis: { format: (d) => format(d, PeriodType.Day, { variant: 'short' }), ticks: 4 },
@@ -830,7 +847,7 @@
 						<BarChart
 							data={filteredData}
 							x={xAxisKey}
-							y="new_one_star"
+							y="weekly_one_star"
 							{layer}
 							props={{
 								xAxis: { format: (d) => format(d, PeriodType.Day, { variant: 'short' }), ticks: 4 },
