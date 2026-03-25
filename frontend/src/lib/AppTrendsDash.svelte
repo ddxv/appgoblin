@@ -110,7 +110,7 @@
 	// Generate series keys based on whether we're showing new or cumulative
 	let seriesKeysBar = $derived(
 		showNewStars
-			? generateSeriesKeys(filteredData, keyColors, 'new_one_star')
+			? generateSeriesKeys(filteredData, keyColors, 'weekly_one_star')
 			: generateSeriesKeys(filteredData, keyColors, 'one_star')
 	);
 
