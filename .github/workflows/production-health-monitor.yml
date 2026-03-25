@@ -13,7 +13,7 @@ concurrency:
 jobs:
   core-monitor:
     name: Core Endpoint Monitor
-    if: github.event_name == 'workflow_dispatch' || github.event.schedule == '5 * * * *'
+    if: (github.event.repository.fork == false) && (github.event_name == 'workflow_dispatch' || github.event.schedule == '5 * * * *')
     runs-on: ubuntu-latest
     steps:
       - name: Probe production endpoints
@@ -120,7 +120,7 @@ jobs:
 
   freshness-monitor:
     name: Freshness Monitor
-    if: github.event_name == 'workflow_dispatch' || github.event.schedule == '7 */6 * * *'
+    if: (github.event.repository.fork == false) && (github.event_name == 'workflow_dispatch' || github.event.schedule == '7 */6 * * *')
     runs-on: ubuntu-latest
     steps:
       - name: Probe freshness endpoint

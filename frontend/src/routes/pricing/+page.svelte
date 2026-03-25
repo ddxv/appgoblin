@@ -108,29 +108,11 @@
 		},
 		{
 			category: 'Data Export',
-			name: 'List of apps for any company',
-			free: false,
-			premium: false,
-			sdk: true,
-			appads: false,
-			b2b: true
-		},
-		{
-			category: 'Data Export',
 			name: 'Export all apps per SDK/API breakdown',
 			free: false,
 			premium: false,
 			sdk: true,
 			appads: false,
-			b2b: true
-		},
-		{
-			category: 'Data Export',
-			name: 'All apps per company/domain',
-			free: false,
-			premium: false,
-			sdk: false,
-			appads: true,
 			b2b: true
 		},
 		{

@@ -2,6 +2,7 @@ SELECT
     acmh.week_start,
     c.alpha2 AS country,
     acmh.rating,
+    acmh.installs,
     acmh.rating_count,
     acmh.one_star,
     acmh.two_star,

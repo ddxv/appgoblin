@@ -3,6 +3,7 @@
 	import RatingInstallsLarge from '$lib/RatingInstallsLarge.svelte';
 	import StarsRating from '$lib/StarsRating.svelte';
 	import FollowToggleButton from '$lib/components/follows/FollowToggleButton.svelte';
+	import LogIn from 'lucide-svelte/icons/log-in';
 	import type { CompanyTypes, AppFullDetail, CatData } from '../../../types';
 	import AvailableOniOs from '$lib/svg/AvailableOniOS.svelte';
 	import AppTabs from '$lib/utils/AppTabs.svelte';
@@ -173,16 +174,23 @@
 						Category: {getCategoryName(data.myapp.category)}
 					</span>
 				</div>
-				<div class="btn preset-tonal hover:preset-tonal-primary w-full text-xs md:text-sm">
-					<a href="/apps/comparison/{data.myapp.store_id}"> Add App to Comparison </a>
-				</div>
-				<div>
-					<FollowToggleButton
-						entity="app"
-						label="App"
-						storeId={data.myapp.store_id}
-						initialFollowing={Boolean(data.isFollowingApp)}
-					/>
+				<div class="flex flex-row items-center gap-2">
+					<a
+						href="/apps/comparison/{data.myapp.store_id}"
+						class="btn preset-tonal w-full inline-flex items-center justify-center gap-2"
+					>
+						<LogIn class="h-3.5 w-3.5" aria-hidden="true" />
+						Add App to Comparison
+					</a>
+					<div class="w-full">
+						<FollowToggleButton
+							entity="app"
+							label="App"
+							storeId={data.myapp.store_id}
+							initialFollowing={Boolean(data.isFollowingApp)}
+							fullWidth={true}
+						/>
+					</div>
 				</div>
 			</div>
 		</div>
