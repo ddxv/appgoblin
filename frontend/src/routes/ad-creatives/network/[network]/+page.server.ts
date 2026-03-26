@@ -6,10 +6,10 @@ export const ssr = true;
 export const csr = true;
 
 export const load: PageServerLoad = async ({ fetch, params, url }) => {
-    return loadAdCreativesPage({
-        fetch,
-        url,
-        primaryFilter: 'network',
-        network: params.network
-    });
+	return loadAdCreativesPage({
+		fetch,
+		url,
+		primaryFilter: 'network',
+		network: params.network
+	});
 };

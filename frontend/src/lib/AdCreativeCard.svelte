@@ -32,21 +32,57 @@
 		creative_thumb_url: string;
 	}
 
+	type CreativeOrientation = 'portrait' | 'landscape';
+
 	import { createCreativeModal } from '$lib/stores/creativeModal.svelte';
 	import CreativeModal from '$lib/CreativeModal.svelte';
 	import CompanyButton from '$lib/CompanyButton.svelte';
 
-	let { data }: { data: CreativeCluster } = $props();
+	let {
+		data,
+		orientation = 'landscape'
+	}: {
+		data: CreativeCluster;
+		orientation?: CreativeOrientation;
+	} = $props();
 
 	// If the file is video, construct proper video URL, otherwise use image
 	let isVideo = $derived(['mp4', 'webm'].includes(data.file_extension.toLowerCase()));
 	let mediaUrl = $derived(
 		`https://media.appgoblin.info/creatives/${data.representative_md5}.${data.file_extension}`
 	);
+	let isPortrait = $derived(orientation === 'portrait');
+	let imageFallbackAttempted = $state(false);
+	let thumbLoadFailed = $state(false);
 
 	let isHovered = $state(false);
 
 	const creativeModal = createCreativeModal();
+
+	function handleThumbLoadError(event: Event) {
+		thumbLoadFailed = true;
+		const image = event.currentTarget as HTMLImageElement;
+		image.onerror = null;
+		image.style.display = 'none';
+	}
+
+	function handleCreativeImageError(event: Event) {
+		const image = event.currentTarget as HTMLImageElement;
+
+		if (
+			!imageFallbackAttempted &&
+			data.creative_thumb_url &&
+			image.src !== data.creative_thumb_url
+		) {
+			imageFallbackAttempted = true;
+			image.src = data.creative_thumb_url;
+			return;
+		}
+
+		thumbLoadFailed = true;
+		image.onerror = null;
+		image.style.display = 'none';
+	}
 </script>
 
 <!-- Creative Modal -->
@@ -64,7 +100,7 @@
 >
 	<!-- Media Display area -->
 	<button
-		class="relative bg-black w-full overflow-hidden flex items-center justify-center cursor-pointer group"
+		class={`relative bg-black w-full overflow-hidden flex items-center justify-center cursor-pointer group ${isPortrait ? 'max-h-[260px] md:max-h-[340px] lg:max-h-[420px]' : 'max-h-[140px] md:max-h-[180px] lg:max-h-[250px]'}`}
 		onclick={() =>
 			creativeModal.open(
 				data.representative_md5,
@@ -75,17 +111,21 @@
 	>
 		{#if isVideo}
 			<!-- Primary static structure defining natural size -->
-			<img
-				src={data.creative_thumb_url}
-				alt={data.vhash}
-				class="w-full h-auto object-contain opacity-90 transition-opacity"
-				onerror={(e) => ((e.currentTarget as HTMLImageElement).style.display = 'none')}
-			/>
+			{#if !thumbLoadFailed}
+				<img
+					src={data.creative_thumb_url}
+					alt={data.vhash}
+					class={`w-full ${isPortrait ? 'h-full object-contain' : 'h-auto object-contain'} opacity-90 transition-opacity`}
+					loading="lazy"
+					decoding="async"
+					onerror={handleThumbLoadError}
+				/>
+			{/if}
 
 			{#if isHovered}
 				<video
 					src={mediaUrl}
-					poster={data.creative_thumb_url}
+					poster={thumbLoadFailed ? undefined : data.creative_thumb_url}
 					class="absolute inset-0 w-full h-full object-contain bg-black/90"
 					autoplay
 					muted
@@ -97,28 +137,36 @@
 				<div
 					class="absolute inset-0 flex flex-col items-center justify-center opacity-70 group-hover:bg-black/30 transition-all duration-300"
 				>
-					<div class="bg-primary-500 rounded-full p-2 md:p-3">
-						<svg class="w-6 h-6 text-gray-800" fill="currentColor" viewBox="0 0 24 24">
+					<div class="bg-primary-500 rounded-full p-1.5 md:p-2 lg:p-3">
+						<svg
+							class="h-4 w-4 text-gray-800 md:h-5 md:w-5 lg:h-6 lg:w-6"
+							fill="currentColor"
+							viewBox="0 0 24 24"
+						>
 							<path d="M8 5v14l11-7z" />
 						</svg>
 					</div>
 				</div>
 			{/if}
 		{:else}
-			<img
-				src={mediaUrl}
-				alt={data.vhash}
-				class="w-full h-auto object-contain"
-				onerror={(e) => ((e.currentTarget as HTMLImageElement).src = data.creative_thumb_url)}
-			/>
+			{#if !thumbLoadFailed}
+				<img
+					src={mediaUrl}
+					alt={data.vhash}
+					class={`w-full ${isPortrait ? 'h-full object-contain' : 'h-auto object-contain'}`}
+					loading="lazy"
+					decoding="async"
+					onerror={handleCreativeImageError}
+				/>
+			{/if}
 			<div
 				class="absolute inset-0 hidden group-hover:flex items-center justify-center bg-black/30 transition-all duration-300"
 			>
-				<div class="bg-primary-500 rounded-full p-2 md:p-3 opacity-90">
+				<div class="bg-primary-500 rounded-full p-1.5 opacity-90 md:p-2 lg:p-3">
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
-						width="24"
-						height="24"
+						width="18"
+						height="18"
 						viewBox="0 0 24 24"
 						fill="none"
 						stroke="black"
@@ -133,9 +181,9 @@
 			</div>
 		{/if}
 
-		<div class="absolute top-2 right-2 z-10">
+		<div class="absolute right-1.5 top-1.5 z-10 md:right-2 md:top-2">
 			<span
-				class="badge variant-filled-surface text-xs font-semibold shadow-sm uppercase opacity-90"
+				class="badge variant-filled-surface text-[10px] font-semibold uppercase opacity-90 shadow-sm md:text-xs"
 			>
 				{data.file_extension}
 			</span>
@@ -143,32 +191,40 @@
 	</button>
 
 	<!-- Info Area -->
-	<div class="p-4 flex-grow flex flex-col justify-between">
+	<div class="flex flex-grow flex-col justify-between p-2.5 md:p-3 lg:p-3.5">
 		<div>
 			<!-- Advertiser Details -->
-			<div class="flex items-center gap-3 mb-3">
+			<div class="mb-2 flex items-center gap-2 md:mb-2.5 md:gap-2.5">
 				{#if data.adv_icon_url}
 					<img
 						src={data.adv_icon_url}
-						class="w-10 h-10 rounded shadow-sm flex-shrink-0"
+						class="h-6 w-6 rounded shadow-sm flex-shrink-0 md:h-8 md:w-8 lg:h-9 lg:w-9"
 						alt="adv icon"
 					/>
 				{:else}
 					<div
-						class="w-10 h-10 rounded bg-surface-300-600-token flex-shrink-0 flex items-center justify-center text-xs opacity-50"
+						class="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded bg-surface-300-600-token text-[9px] opacity-50 md:h-8 md:w-8 md:text-[10px] lg:h-9 lg:w-9"
 					>
 						App
 					</div>
 				{/if}
 				<div class="overflow-hidden">
-					<a
-						href={data.top_advertiser_store_id ? `/apps/${data.top_advertiser_store_id}` : '#'}
-						class="font-bold text-sm hover:text-primary-500 truncate block"
-						title={data.top_adv_name || data.top_advertiser_store_id || 'Unknown Advertiser'}
-					>
-						{data.top_adv_name || data.top_advertiser_store_id || 'Unknown Advertiser'}
-					</a>
-					<div class="text-xs opacity-70 mt-1 flex flex-col gap-1 items-start">
+					{#if data.top_advertiser_store_id}
+						<a
+							href={`/apps/${data.top_advertiser_store_id}`}
+							class="block truncate text-xs font-bold hover:text-primary-500 md:text-sm"
+							title={data.top_adv_name || data.top_advertiser_store_id}
+						>
+							{data.top_adv_name || data.top_advertiser_store_id}
+						</a>
+					{:else}
+						<div
+							class="block truncate text-[11px] font-medium text-surface-500-400-token md:text-xs"
+						>
+							Unknown Advertiser
+						</div>
+					{/if}
+					<div class="mt-1 flex flex-col items-start gap-1 text-xs opacity-70">
 						{#if data.top_ad_domain_company || data.top_ad_domain}
 							<CompanyButton
 								companyName={data.top_ad_domain_company || 'Ad'}
@@ -189,7 +245,9 @@
 			</div>
 
 			<!-- Publisher / Reach context -->
-			<div class="text-xs bg-surface-100-800-token p-2 rounded flex flex-col gap-1">
+			<div
+				class="flex flex-col gap-1 rounded bg-surface-100-800-token p-1.5 text-[11px] md:p-2 md:text-xs"
+			>
 				<div class="flex justify-between items-center text-surface-600-300-token">
 					<span>Unique Publishers:</span>
 					<span class="font-bold">{data.unique_publisher_apps}</span>

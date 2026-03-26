@@ -1,15 +1,9 @@
-export const adCreativeCategories = [
-    { value: 'overall', label: 'Overall (All Apps)' },
-    { value: 'game%', label: 'All Games' },
-    { value: 'game_action', label: 'Game: Action' },
-    { value: 'game_puzzle', label: 'Game: Puzzle' },
-    { value: 'game_strategy', label: 'Game: Strategy' },
-    { value: 'game_simulation', label: 'Game: Simulation' },
-    { value: 'lifestyle', label: 'Lifestyle' },
-    { value: 'finance', label: 'Finance' },
-    { value: 'shopping', label: 'Shopping' },
-    { value: 'social', label: 'Social' }
-] as const;
+import type { CatData } from '../types';
+
+export interface AdCreativeCategoryOption {
+    value: string;
+    label: string;
+}
 
 export const adCreativeFormats = [
     { value: 'all', label: 'All Formats' },
@@ -45,13 +39,28 @@ export function normalizeAdCreativeNetwork(network?: string | null): string | nu
     return normalized;
 }
 
-export function getAdCreativeCategoryLabel(category?: string | null): string {
+export function buildAdCreativeCategoryOptions(appCats: CatData): AdCreativeCategoryOption[] {
+    const categoryOptions = appCats.categories
+        .map((category) => ({
+            value: category.id,
+            label: category.name
+        }))
+        .sort((left, right) => left.label.localeCompare(right.label));
+
+    return [{ value: 'overall', label: 'Overall (All Apps)' }, ...categoryOptions];
+}
+
+export function getAdCreativeCategoryLabel(
+    category?: string | null,
+    categoryOptions: AdCreativeCategoryOption[] = []
+): string {
     if (!category || category === 'overall') {
         return 'All Apps';
     }
 
     return (
-        adCreativeCategories.find((item) => item.value === category)?.label ?? humanizeFilterLabel(category)
+        categoryOptions.find((item) => item.value === category)?.label ??
+        humanizeFilterLabel(category)
     );
 }
 
