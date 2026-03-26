@@ -356,7 +356,7 @@
 				<span class={featureBulletClass}>📊 Network insights</span>
 			</div>
 			<a
-				href="/ad-creatives"
+				href="/top-mobile-advertisers"
 				class="{gradientButtonClass} from-success-700-300 to-success-900-100 text-black"
 			>
 				<span class={buttonTextColor}>Browse All Ad Buyers →</span>

@@ -102,7 +102,11 @@
 			<p class={sectionLabel}>Apps</p>
 			<a
 				href="/ad-creatives"
-				class={isHighlighted('/ad-creatives') ? topBarHighlightedFont : topBarFont}
+				class={isHighlighted('/ad-creatives') ? topBarHighlightedFont : topBarFont}>AD CREATIVES</a
+			>
+			<a
+				href="/top-mobile-advertisers"
+				class={isHighlighted('/top-mobile-advertisers') ? topBarHighlightedFont : topBarFont}
 				>TOP ADVERTISERS</a
 			>
 			<div class={myDivider}></div>
@@ -185,6 +189,7 @@
 				class="flex items-center gap-0.5 {isHighlighted(
 					'/companies',
 					'/ad-creatives',
+					'/top-mobile-advertisers',
 					'/app-explorer',
 					'/sdks'
 				)
@@ -242,7 +247,13 @@
 					<a
 						href="/ad-creatives"
 						class={isHighlighted('/ad-creatives') ? dropdownHighlightedItem : dropdownItem}
-						>Top Advertisers</a
+						>Ad Creatives</a
+					>
+					<a
+						href="/top-mobile-advertisers"
+						class={isHighlighted('/top-mobile-advertisers')
+							? dropdownHighlightedItem
+							: dropdownItem}>Top Mobile Advertisers</a
 					>
 					<a
 						href="/app-explorer"

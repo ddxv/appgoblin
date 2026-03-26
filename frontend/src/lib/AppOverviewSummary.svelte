@@ -201,7 +201,7 @@
 		<p>
 			<span class="font-medium text-primary-800-200">Advertising:</span>
 			{#if adCreativeCount > 0}
-				AppGoblin has tracked <a href="{appBasePath}/ad-creatives" class="font-semibold"
+				AppGoblin has tracked <a href="{appBasePath}/top-mobile-advertisers" class="font-semibold"
 					>{formatNumber(adCreativeCount)} ad creatives</a
 				> this app uses for paid user acquisition across ad networks.
 			{/if}
