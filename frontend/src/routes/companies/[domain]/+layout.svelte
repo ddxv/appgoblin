@@ -36,6 +36,10 @@
 	let companyDomain = $derived(
 		data.companyTree?.queried_domain || data.companyTree?.company_domain || domain
 	);
+	let showMediationTab = $derived(Boolean(data.companyDetails?.mediation_adapters));
+	let showCreativesTab = $derived(
+		Boolean(data.companyDetails?.company_types?.some((companyType) => companyType === 'ad-networks'))
+	);
 	let companyDisplayName = $derived(
 		data.companyTree?.company_name ||
 			data.companyTree?.company_domain ||
@@ -302,22 +306,26 @@
 	>
 		{companyDisplayName} Apps Overview
 	</a>
-	<a
-		href={`/companies/${companyDomain}/mediation`}
-		class="btn btn-sm {page.url.pathname.includes('/mediation')
-			? 'variant-filled-primary'
-			: 'variant-ghost-surface'}"
-	>
-		{companyDisplayName} Mediation Adapters
-	</a>
-	<a
-		href={`/companies/${companyDomain}/creatives`}
-		class="btn btn-sm {page.url.pathname.includes('/creatives')
-			? 'variant-filled-primary'
-			: 'variant-ghost-surface'}"
-	>
-		Creatives
-	</a>
+	{#if showMediationTab}
+		<a
+			href={`/companies/${companyDomain}/mediation`}
+			class="btn btn-sm {page.url.pathname.includes('/mediation')
+				? 'variant-filled-primary'
+				: 'variant-ghost-surface'}"
+		>
+			{companyDisplayName} Mediation Adapters
+		</a>
+	{/if}
+	{#if showCreativesTab}
+		<a
+			href={`/companies/${companyDomain}/creatives`}
+			class="btn btn-sm {page.url.pathname.includes('/creatives')
+				? 'variant-filled-primary'
+				: 'variant-ghost-surface'}"
+		>
+			Creatives
+		</a>
+	{/if}
 	<a
 		href={`/companies/${companyDomain}/sdks`}
 		class="btn btn-sm {page.url.pathname.includes('/sdks')
