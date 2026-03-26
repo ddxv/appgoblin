@@ -63,6 +63,10 @@
 		selectedCategory?: string;
 		selectedFormat?: string;
 		searchCompany?: string;
+		isSignedIn?: boolean;
+		allowAdvancedFilters?: boolean;
+		anonymousCreativeLimit?: number;
+		signInUrl?: string;
 		pageTitle?: string;
 		pageDescription?: string;
 		pageHeading?: string;
@@ -70,7 +74,7 @@
 		canonicalUrl?: string;
 	}
 
-	let { data }: { data: AdCreativesPageData } = $props();
+	let { data = {} as AdCreativesPageData }: { data?: AdCreativesPageData } = $props();
 
 	let selectedCategory = $derived(data.selectedCategory || 'overall');
 	let selectedFormat = $derived(data.selectedFormat || 'all');
@@ -79,6 +83,10 @@
 		data.categoryOptions || [{ value: 'overall', label: 'Overall (All Apps)' }]
 	);
 	let creativeClusters = $derived(data.creativeClusters || []);
+	let isSignedIn = $derived(Boolean(data.isSignedIn));
+	let allowAdvancedFilters = $derived(Boolean(data.allowAdvancedFilters));
+	let anonymousCreativeLimit = $derived(data.anonymousCreativeLimit || 8);
+	let signInUrl = $derived(data.signInUrl || '/auth/login');
 	let networkFilterSourceClusters = $derived(data.networkFilterSourceClusters || creativeClusters);
 	let detectedAdvertiserCount = $derived(
 		new Set(
@@ -105,11 +113,10 @@
 	function handleFilterChange() {
 		const catSelect = document.getElementById('category-select') as HTMLSelectElement | null;
 		const fmtSelect = document.getElementById('format-select') as HTMLSelectElement | null;
-		const cmpSelect = document.getElementById('company-search') as HTMLInputElement | null;
 
 		const category = catSelect ? catSelect.value : selectedCategory;
 		const format = fmtSelect ? fmtSelect.value : selectedFormat;
-		const network = cmpSelect ? cmpSelect.value.trim() : selectedSearchCompany;
+		const network = selectedSearchCompany;
 
 		goto(buildAdCreativesUrl({ category, format, network }), {
 			keepFocus: true,
@@ -140,6 +147,10 @@
 	}
 
 	function setOrientationFilter(value: 'all' | 'portrait' | 'landscape') {
+		if (!allowAdvancedFilters) {
+			return;
+		}
+
 		selectedOrientationFilter = value;
 	}
 
@@ -189,8 +200,7 @@
 		}
 
 		return Array.from(networkMap.values())
-			.sort((left, right) => right.count - left.count || left.label.localeCompare(right.label))
-			.slice(0, 12);
+			.sort((left, right) => right.count - left.count || left.label.localeCompare(right.label));
 	}
 
 	async function populateOrientations(clusters: CreativeCluster[]) {
@@ -292,192 +302,191 @@
 	}
 </script>
 
-<div class="px-4 py-8 md:px-10 lg:px-14 xl:px-16">
-	<div class="mx-auto max-w-[1440px] space-y-8">
+<div class="px-4 py-5 md:px-8 lg:px-10 xl:px-12">
+	<div class="mx-auto max-w-[1440px] space-y-6">
 		<div
 			class="rounded-2xl border border-surface-200-700-token bg-surface-50-900-token p-4 shadow-sm md:p-5"
 		>
-			<div class="grid gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(300px,440px)] xl:items-start">
-				<div class="min-w-0">
-					<div class="flex flex-col gap-2 lg:flex-row lg:items-end lg:justify-between">
-						<div class="min-w-0">
-							<h1 class="text-2xl font-bold md:text-3xl">
-								{data.pageHeading || 'Ad Creative Explorer'}
-							</h1>
-							<p class="mt-2 max-w-3xl text-sm leading-6 opacity-75">
-								{data.pageIntro ||
-									'Browse actual videos and images used by top advertisers across ad networks.'}
-							</p>
-						</div>
-						<div class="flex flex-wrap gap-2 text-sm lg:justify-end">
-							<span class="rounded-full bg-surface-100-800-token px-3 py-1.5 font-medium"
-								>{creativeClusters.length} clusters</span
-							>
-							<span class="rounded-full bg-surface-100-800-token px-3 py-1.5 font-medium"
-								>{detectedAdvertiserCount} detected advertisers</span
-							>
-							{#if undetectedAdvertiserCount > 0}
-								<span class="rounded-full bg-surface-100-800-token px-3 py-1.5 font-medium"
-									>{undetectedAdvertiserCount} not yet detected</span
-								>
-							{/if}
-						</div>
-					</div>
-				</div>
-
-				<div class="rounded-2xl border border-surface-200-700-token bg-surface-100-800-token p-4">
-					<div class="flex flex-wrap items-start gap-3">
-						<div class="min-w-[120px] flex-1 rounded-xl bg-surface-50-950-token px-3 py-2.5">
-							<div class="text-[11px] uppercase tracking-[0.16em] opacity-55">
-								Detected App Advertisers
+			<div class="flex flex-col gap-4">
+				<div class="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+					<div class="min-w-0">
+						<div class="flex flex-col gap-2 xl:flex-row xl:items-end xl:justify-between">
+							<div class="min-w-0">
+								<h1 class="text-xl font-bold md:text-2xl">
+									{data.pageHeading || 'Ad Creative Explorer'}
+								</h1>
+								<p class="mt-1 max-w-3xl text-sm leading-5 opacity-75">
+									{data.pageIntro ||
+										'Browse actual videos and images used by top advertisers across ad networks.'}
+								</p>
 							</div>
-							<div class="mt-1 text-lg font-bold">{detectedAdvertiserCount}</div>
-						</div>
-						<div class="min-w-[120px] flex-1 rounded-xl bg-surface-50-950-token px-3 py-2.5">
-							<div class="text-[11px] uppercase tracking-[0.16em] opacity-55">Not Yet Detected</div>
-							<div class="mt-1 text-lg font-bold">{undetectedAdvertiserCount}</div>
-						</div>
-						<div class="min-w-[120px] flex-1 rounded-xl bg-surface-50-950-token px-3 py-2.5">
-							<div class="text-[11px] uppercase tracking-[0.16em] opacity-55">Networks In View</div>
-							<div class="mt-1 text-lg font-bold">{networkFilters.length}</div>
+							<div class="flex flex-wrap gap-2 text-xs font-medium md:text-sm xl:justify-end">
+								{#if !isSignedIn}
+									<span class="rounded-full border border-primary-300/60 bg-primary-50/60 px-3 py-1.5 text-primary-700">
+										Preview
+									</span>
+								{/if}
+								<span class="rounded-full bg-surface-100-800-token px-3 py-1.5">
+									{creativeClusters.length} creatives
+								</span>
+								<span class="rounded-full bg-surface-100-800-token px-3 py-1.5">
+									{detectedAdvertiserCount} advertisers
+								</span>
+								<span class="rounded-full bg-surface-100-800-token px-3 py-1.5">
+									{networkFilters.length} networks
+								</span>
+								{#if undetectedAdvertiserCount > 0}
+									<span class="rounded-full bg-surface-100-800-token px-3 py-1.5">
+										{undetectedAdvertiserCount} undetected
+									</span>
+								{/if}
+							</div>
 						</div>
 					</div>
 				</div>
-			</div>
-		</div>
 
-		<div class="space-y-6">
-			<div
-				class="rounded-2xl border border-surface-200-700-token bg-surface-50-900-token p-4 shadow-sm md:p-5 lg:p-6"
-			>
-				<div class="flex flex-col gap-5">
+				<div class="flex flex-col gap-4 border-t border-surface-200-700-token pt-4">
 					<div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
 						<div>
-							<h2 class="text-lg font-semibold">Filters</h2>
-							<p class="mt-1 text-sm opacity-70">
-								Refine by network, advertiser search, category, or format in one place.
+							<h2 class="text-base font-semibold md:text-lg">Filters</h2>
+							<p class="mt-0.5 text-sm opacity-70">
+								Adjust network, category, format, and orientation without losing the grid.
 							</p>
 						</div>
-						<div class="text-sm opacity-60">{networkFilters.length} networks shown</div>
+						<div class="text-xs opacity-60 md:text-sm">{networkFilters.length} networks shown</div>
 					</div>
 
-					<div class="grid grid-cols-4 gap-1 md:grid-cols-6 md:gap-3 xl:grid-cols-8">
-						<button
-							type="button"
-							class={`flex min-w-0 flex-col items-center gap-1.5 rounded-xl border px-2 py-2 text-center transition md:gap-2 md:px-3 md:py-3 ${getNetworkButtonClass(!selectedSearchCompany)}`}
-							onclick={() => handleNetworkFilter('')}
+					{#if !isSignedIn}
+						<div
+							class="flex flex-col gap-3 rounded-2xl border border-primary-300/60 bg-primary-50/60 p-4 md:flex-row md:items-center md:justify-between"
 						>
-							<div
-								class="flex h-9 w-9 items-center justify-center rounded-lg bg-surface-50-950-token text-xs font-semibold md:h-11 md:w-11 md:text-sm"
+							<div>
+								<div class="text-[11px] font-semibold uppercase tracking-[0.14em] text-primary-700">
+									Signed-out preview
+								</div>
+								<p class="mt-1 text-sm leading-6 text-primary-900">
+									You can browse up to {anonymousCreativeLimit} creatives before signing in. Category, format, and orientation filters unlock once you sign in.
+								</p>
+							</div>
+							<a
+								href={signInUrl}
+								class="inline-flex items-center justify-center rounded-full bg-primary-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-primary-700"
 							>
-								All
-							</div>
-							<div class="line-clamp-2 text-xs font-medium leading-4 md:text-sm md:leading-5">
-								All Networks
-							</div>
-						</button>
+								Sign in to unlock filters
+							</a>
+						</div>
+					{/if}
 
-						{#each networkFilters as network}
+					<div>
+						<div
+							class="mb-1.5 block text-[11px] font-medium uppercase tracking-[0.14em] opacity-60"
+						>
+							Networks
+						</div>
+						<div class="flex gap-2 overflow-x-auto pb-1">
 							<button
 								type="button"
-								class={`flex min-w-0 flex-col items-center gap-1.5 rounded-xl border px-2 py-2 text-center transition md:gap-2 md:px-3 md:py-3 ${getNetworkButtonClass(activeNetworkFilter === network.key)}`}
-								onclick={() => handleNetworkFilter(network.filterValue)}
-								aria-pressed={activeNetworkFilter === network.key}
+								class={`flex min-w-[108px] shrink-0 items-center gap-2 rounded-xl border px-2.5 py-2 text-left text-sm transition ${getNetworkButtonClass(!selectedSearchCompany)}`}
+								onclick={() => handleNetworkFilter('')}
 							>
 								<div
-									class="flex h-9 w-9 items-center justify-center overflow-hidden rounded-lg bg-surface-50-950-token md:h-11 md:w-11 md:rounded-xl"
+									class="flex h-8 w-8 items-center justify-center rounded-lg bg-surface-50-950-token text-xs font-semibold"
 								>
-									{#if network.logoUrl}
-										<img
-											src={`https://media.appgoblin.info/${network.logoUrl}`}
-											alt={network.label}
-											class="h-7 w-7 rounded object-contain md:h-9 md:w-9 md:rounded-lg"
-											loading="lazy"
-										/>
-									{:else}
-										<span class="text-xs font-semibold md:text-sm"
-											>{network.label.slice(0, 2).toUpperCase()}</span
-										>
-									{/if}
+									All
 								</div>
-								<div class="line-clamp-2 text-xs font-medium leading-4 md:text-sm md:leading-5">
-									{network.label}
+								<div class="min-w-0 flex-1">
+									<div class="truncate text-sm font-medium leading-4">All Networks</div>
 								</div>
-								<div class="text-xs opacity-60">({network.count})</div>
 							</button>
-						{/each}
+
+							{#each networkFilters as network}
+								<button
+									type="button"
+									class={`flex min-w-[132px] shrink-0 items-center gap-2 rounded-xl border px-2.5 py-2 text-left text-sm transition ${getNetworkButtonClass(activeNetworkFilter === network.key)}`}
+									onclick={() => handleNetworkFilter(network.filterValue)}
+									aria-pressed={activeNetworkFilter === network.key}
+								>
+									<div
+										class="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-surface-50-950-token"
+									>
+										{#if network.logoUrl}
+											<img
+												src={`https://media.appgoblin.info/${network.logoUrl}`}
+												alt={network.label}
+												class="h-6 w-6 rounded object-contain"
+												loading="lazy"
+											/>
+										{:else}
+											<span class="text-xs font-semibold"
+												>{network.label.slice(0, 2).toUpperCase()}</span
+											>
+										{/if}
+									</div>
+									<div class="min-w-0 flex-1">
+										<div class="truncate text-sm font-medium leading-4">{network.label}</div>
+										<div class="text-xs opacity-60">{network.count}</div>
+									</div>
+								</button>
+							{/each}
+						</div>
 					</div>
 
 					<div
-						class="grid gap-3 md:grid-cols-2 xl:grid-cols-[minmax(220px,1fr)_180px_200px_minmax(240px,300px)_auto] xl:items-end"
+						class="grid gap-2.5 md:grid-cols-2 xl:grid-cols-[170px_180px_minmax(220px,280px)_auto] xl:items-end"
 					>
-						<div class="relative min-w-0">
-							<label
-								class="mb-2 block text-xs font-medium uppercase tracking-[0.14em] opacity-60"
-								for="company-search"
-							>
-								Advertiser or network search
+						<div>
+							<label class="label">
+								<span class="label-text text-[11px] uppercase tracking-[0.14em] opacity-60"
+									>Category</span
+								>
+								<select
+									id="category-select"
+									class={`select ${!allowAdvancedFilters ? 'cursor-not-allowed opacity-60' : ''}`}
+									disabled={!allowAdvancedFilters}
+									value={data.selectedCategory || 'overall'}
+									onchange={handleFilterChange}
+								>
+									{#each categoryOptions as cat}
+										<option value={cat.value}>{cat.label}</option>
+									{/each}
+								</select>
 							</label>
-							<input
-								id="company-search"
-								class="input variant-glass h-11 rounded-xl border-surface-300 px-4 py-2 w-full"
-								type="search"
-								placeholder="Search advertiser or network..."
-								value={data.searchCompany || ''}
-								onkeydown={(e) => e.key === 'Enter' && handleFilterChange()}
-							/>
 						</div>
 
 						<div>
-							<label
-								class="mb-2 block text-xs font-medium uppercase tracking-[0.14em] opacity-60"
-								for="category-select"
-							>
-								Category
+							<label class="label">
+								<span class="label-text text-[11px] uppercase tracking-[0.14em] opacity-60"
+									>Format</span
+								>
+								<select
+									id="format-select"
+									class={`select ${!allowAdvancedFilters ? 'cursor-not-allowed opacity-60' : ''}`}
+									disabled={!allowAdvancedFilters}
+									value={data.selectedFormat || 'all'}
+									onchange={handleFilterChange}
+								>
+									{#each adCreativeFormats as fm}
+										<option value={fm.value}>{fm.label}</option>
+									{/each}
+								</select>
 							</label>
-							<select
-								id="category-select"
-								class="select variant-glass h-11 rounded-xl border-surface-300 focus:ring-primary-500 focus:border-primary-500 w-full"
-								value={data.selectedCategory || 'overall'}
-								onchange={handleFilterChange}
-							>
-								{#each categoryOptions as cat}
-									<option value={cat.value}>{cat.label}</option>
-								{/each}
-							</select>
 						</div>
 
 						<div>
-							<label
-								class="mb-2 block text-xs font-medium uppercase tracking-[0.14em] opacity-60"
-								for="format-select"
+							<div
+								class="mb-1.5 block text-[11px] font-medium uppercase tracking-[0.14em] opacity-60"
 							>
-								Format
-							</label>
-							<select
-								id="format-select"
-								class="select variant-glass h-11 rounded-xl border-surface-300 focus:ring-primary-500 focus:border-primary-500 w-full"
-								value={data.selectedFormat || 'all'}
-								onchange={handleFilterChange}
-							>
-								{#each adCreativeFormats as fm}
-									<option value={fm.value}>{fm.label}</option>
-								{/each}
-							</select>
-						</div>
-
-						<div>
-							<div class="mb-2 block text-xs font-medium uppercase tracking-[0.14em] opacity-60">
 								Orientation
 							</div>
 							<div
-								class="flex h-11 w-full rounded-xl border border-surface-300 bg-surface-100-800-token p-1"
+								class="flex h-10 w-full rounded-xl border border-surface-300 bg-surface-100-800-token p-1"
 								role="radiogroup"
 								aria-label="Creative orientation"
 							>
 								<button
 									type="button"
-									class={`flex min-w-0 flex-1 items-center justify-center gap-1.5 rounded-lg px-3 text-sm transition ${getOrientationButtonClass(selectedOrientationFilter === 'all')}`}
+									class={`flex min-w-0 flex-1 items-center justify-center gap-1 rounded-lg px-2 text-sm transition ${getOrientationButtonClass(selectedOrientationFilter === 'all')} ${!allowAdvancedFilters ? 'cursor-not-allowed opacity-55' : ''}`}
+									disabled={!allowAdvancedFilters}
 									role="radio"
 									aria-checked={selectedOrientationFilter === 'all'}
 									onclick={() => setOrientationFilter('all')}
@@ -487,7 +496,8 @@
 								</button>
 								<button
 									type="button"
-									class={`flex min-w-0 flex-1 items-center justify-center gap-1.5 rounded-lg px-3 text-sm transition ${getOrientationButtonClass(selectedOrientationFilter === 'landscape')}`}
+									class={`flex min-w-0 flex-1 items-center justify-center gap-1 rounded-lg px-2 text-sm transition ${getOrientationButtonClass(selectedOrientationFilter === 'landscape')} ${!allowAdvancedFilters ? 'cursor-not-allowed opacity-55' : ''}`}
+									disabled={!allowAdvancedFilters}
 									role="radio"
 									aria-checked={selectedOrientationFilter === 'landscape'}
 									onclick={() => setOrientationFilter('landscape')}
@@ -497,7 +507,8 @@
 								</button>
 								<button
 									type="button"
-									class={`flex min-w-0 flex-1 items-center justify-center gap-1.5 rounded-lg px-3 text-sm transition ${getOrientationButtonClass(selectedOrientationFilter === 'portrait')}`}
+									class={`flex min-w-0 flex-1 items-center justify-center gap-1 rounded-lg px-2 text-sm transition ${getOrientationButtonClass(selectedOrientationFilter === 'portrait')} ${!allowAdvancedFilters ? 'cursor-not-allowed opacity-55' : ''}`}
+									disabled={!allowAdvancedFilters}
 									role="radio"
 									aria-checked={selectedOrientationFilter === 'portrait'}
 									onclick={() => setOrientationFilter('portrait')}
@@ -509,10 +520,10 @@
 						</div>
 
 						<div class="flex flex-wrap gap-2 lg:justify-end">
-							{#if selectedCategory !== 'overall' || selectedFormat !== 'all' || selectedSearchCompany || selectedOrientationFilter !== 'all'}
+							{#if selectedSearchCompany || (allowAdvancedFilters && (selectedCategory !== 'overall' || selectedFormat !== 'all' || selectedOrientationFilter !== 'all'))}
 								<button
 									type="button"
-									class="rounded-full border border-surface-300 px-3 py-2 text-sm transition hover:bg-surface-100-800-token"
+									class="rounded-full border border-surface-300 px-3 py-1.5 text-sm transition hover:bg-surface-100-800-token"
 									onclick={clearAllFilters}
 								>
 									Clear all
@@ -523,22 +534,27 @@
 
 					<div class="flex flex-wrap items-center gap-2 text-xs md:text-sm">
 						<span class="opacity-60">Current view:</span>
+						{#if !isSignedIn}
+							<span class="rounded-full border border-primary-300/60 bg-primary-50/60 px-2.5 py-1 text-primary-700 md:px-3 md:py-1.5">
+								Preview limit {anonymousCreativeLimit}
+							</span>
+						{/if}
 						<span class="rounded-full bg-surface-100-800-token px-2.5 py-1 md:px-3 md:py-1.5"
 							>{creativeClusters.length} creatives</span
 						>
-						{#if selectedCategory !== 'overall'}
+						{#if allowAdvancedFilters && selectedCategory !== 'overall'}
 							<span class="rounded-full bg-surface-100-800-token px-2.5 py-1 md:px-3 md:py-1.5"
 								>{categoryOptions.find((cat) => cat.value === selectedCategory)?.label ||
 									selectedCategory}</span
 							>
 						{/if}
-						{#if selectedFormat !== 'all'}
+						{#if allowAdvancedFilters && selectedFormat !== 'all'}
 							<span class="rounded-full bg-surface-100-800-token px-2.5 py-1 md:px-3 md:py-1.5"
 								>{adCreativeFormats.find((format) => format.value === selectedFormat)?.label ||
 									selectedFormat}</span
 							>
 						{/if}
-						{#if selectedOrientationFilter !== 'all'}
+						{#if allowAdvancedFilters && selectedOrientationFilter !== 'all'}
 							<span class="rounded-full bg-surface-100-800-token px-2.5 py-1 md:px-3 md:py-1.5"
 								>{selectedOrientationFilter === 'portrait'
 									? 'Portrait only'
@@ -555,11 +571,11 @@
 			</div>
 
 			{#if creativeClusters.length > 0}
-				<div class="space-y-8">
+				<div class="space-y-6">
 					{#each creativeSections as section}
 						<section class="space-y-5">
 							<div
-								class="flex flex-col gap-1 border-b border-surface-200-700-token pb-3 md:flex-row md:items-end md:justify-between"
+								class="flex flex-col gap-1 border-b border-surface-200-700-token pb-2 md:flex-row md:items-end md:justify-between"
 							>
 								<div>
 									<h2 class="text-xl font-semibold">{section.label}</h2>
@@ -569,7 +585,7 @@
 							</div>
 
 							<div
-								class={`grid grid-cols-2 gap-x-3 gap-y-5 md:gap-y-6 ${section.orientation === 'portrait' ? 'md:grid-cols-3 md:gap-x-4 lg:grid-cols-4 2xl:grid-cols-5 2xl:gap-x-8' : 'md:grid-cols-2 md:gap-x-4 lg:grid-cols-3 lg:gap-x-6 2xl:grid-cols-4 2xl:gap-x-8'} 2xl:gap-y-8`}
+								class={`grid grid-cols-2 gap-x-3 gap-y-4 md:gap-y-5 ${section.orientation === 'portrait' ? 'md:grid-cols-3 md:gap-x-4 lg:grid-cols-4 2xl:grid-cols-5 2xl:gap-x-8' : 'md:grid-cols-2 md:gap-x-4 lg:grid-cols-3 lg:gap-x-6 2xl:grid-cols-4 2xl:gap-x-8'} 2xl:gap-y-6`}
 							>
 								{#each section.items as cluster}
 									<div class="min-w-0">

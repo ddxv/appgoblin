@@ -1,8 +1,9 @@
 <script lang="ts">
 	import AdCreativesReport from '$lib/AdCreativesReport.svelte';
+	import type { PageData } from './$types';
 
-	let { data } = $props();
-	let pageTitle = $derived(data.pageTitle || 'Creative Clusters Explorer | AppGoblin');
+	let { data = {} as PageData }: { data?: PageData } = $props();
+	let pageTitle = $derived(data.pageTitle || 'Ad Creative Explorer | AppGoblin');
 	let pageDescription = $derived(
 		data.pageDescription ||
 			'Browse top mobile advertising videos and images for inspiration and competitor analysis.'

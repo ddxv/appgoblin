@@ -135,7 +135,7 @@
 			{#if data.length === 0}
 				<tr>
 					<td colspan="8" class="px-4 py-8 text-center text-sm opacity-70">
-						No creative clusters found.
+						No creatives found.
 					</td>
 				</tr>
 			{/if}

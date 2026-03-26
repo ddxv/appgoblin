@@ -1,15 +1,16 @@
 import { error, redirect } from '@sveltejs/kit';
 
 import {
-    buildAdCreativeCategoryOptions,
-    buildAdCreativesPath,
-    buildAdCreativesUrl,
-    getAdCreativeCategoryLabel,
-    getAdCreativeNetworkLabel,
-    normalizeAdCreativeCategory,
-    normalizeAdCreativeFormat,
-    normalizeAdCreativeNetwork
+	buildAdCreativeCategoryOptions,
+	buildAdCreativesPath,
+	buildAdCreativesUrl,
+	getAdCreativeCategoryLabel,
+	getAdCreativeNetworkLabel,
+	normalizeAdCreativeCategory,
+	normalizeAdCreativeFormat,
+	normalizeAdCreativeNetwork
 } from '$lib/ad-creatives';
+import { loginUrl } from '$lib/server/auth/auth';
 import { createApiClient } from '$lib/server/api';
 
 import { getCachedData } from '../../hooks.server';
@@ -17,168 +18,185 @@ import { getCachedData } from '../../hooks.server';
 type PrimaryFilter = 'base' | 'network' | 'app-category';
 
 interface LoadAdCreativesPageOptions {
-    fetch: typeof globalThis.fetch;
-    url: URL;
-    primaryFilter: PrimaryFilter;
-    category?: string | null;
-    network?: string | null;
+	fetch: typeof globalThis.fetch;
+	isSignedIn: boolean;
+	url: URL;
+	primaryFilter: PrimaryFilter;
+	category?: string | null;
+	network?: string | null;
 }
 
+const ANONYMOUS_CREATIVE_LIMIT = 8;
+const NETWORK_FILTER_SOURCE_LIMIT = 1000;
+
 export async function loadAdCreativesPage({
-    fetch,
-    url,
-    primaryFilter,
-    category,
-    network
+	fetch,
+	isSignedIn,
+	url,
+	primaryFilter,
+	category,
+	network
 }: LoadAdCreativesPageOptions) {
-    const queryCategory = normalizeAdCreativeCategory(url.searchParams.get('category'));
-    const queryFormat = normalizeAdCreativeFormat(url.searchParams.get('format'));
-    const queryCompany = normalizeAdCreativeNetwork(url.searchParams.get('company'));
-    const routeCategory = normalizeAdCreativeCategory(category);
-    const routeNetwork = normalizeAdCreativeNetwork(network);
+	const queryCategory = normalizeAdCreativeCategory(url.searchParams.get('category'));
+	const queryFormat = normalizeAdCreativeFormat(url.searchParams.get('format'));
+	const queryCompany = normalizeAdCreativeNetwork(url.searchParams.get('company'));
+	const routeCategory = normalizeAdCreativeCategory(category);
+	const routeNetwork = normalizeAdCreativeNetwork(network);
+	const allowAdvancedFilters = isSignedIn;
 
-    if (primaryFilter === 'base' && (queryCategory || queryCompany)) {
-        throw redirect(
-            308,
-            buildAdCreativesUrl({
-                category: queryCategory,
-                format: queryFormat,
-                network: queryCompany
-            })
-        );
-    }
+	if (!allowAdvancedFilters && primaryFilter === 'app-category') {
+		throw redirect(308, '/ad-creatives');
+	}
 
-    const selectedCategory = routeCategory ?? queryCategory ?? 'overall';
-    const selectedFormat = queryFormat ?? 'all';
-    const searchCompany = routeNetwork ?? queryCompany ?? '';
-    const { appCats } = await getCachedData();
-    const categoryOptions = buildAdCreativeCategoryOptions(appCats);
+	if (primaryFilter === 'base' && (queryCategory || queryCompany)) {
+		throw redirect(
+			308,
+			buildAdCreativesUrl({
+				category: allowAdvancedFilters ? queryCategory : null,
+				format: allowAdvancedFilters ? queryFormat : null,
+				network: queryCompany
+			})
+		);
+	}
 
-    if (selectedCategory !== 'overall') {
-        validateCategory(selectedCategory, appCats);
-    }
+	const selectedCategory = allowAdvancedFilters ? (routeCategory ?? queryCategory ?? 'overall') : 'overall';
+	const selectedFormat = allowAdvancedFilters ? (queryFormat ?? 'all') : 'all';
+	const searchCompany = routeNetwork ?? queryCompany ?? '';
+	const { appCats } = await getCachedData();
+	const categoryOptions = buildAdCreativeCategoryOptions(appCats);
 
-    const api = createApiClient(fetch);
-    const params = new URLSearchParams();
-    let apiUrl = '/creatives/clusters';
+	if (selectedCategory !== 'overall') {
+		validateCategory(selectedCategory, appCats);
+	}
 
-    if (selectedCategory !== 'overall') {
-        params.set('app_category', selectedCategory);
-    }
-    if (selectedFormat !== 'all') {
-        params.set('format', selectedFormat);
-    }
-    if (searchCompany) {
-        params.set('company', searchCompany);
-    }
+	const api = createApiClient(fetch);
+	const params = new URLSearchParams();
+	let apiUrl = '/creatives/clusters';
 
-    const queryString = params.toString();
-    if (queryString) {
-        apiUrl += `?${queryString}`;
-    }
+	if (selectedCategory !== 'overall') {
+		params.set('app_category', selectedCategory);
+	}
+	if (selectedFormat !== 'all') {
+		params.set('format', selectedFormat);
+	}
+	if (searchCompany) {
+		params.set('company', searchCompany);
+	}
 
-    let networkApiUrl = '/creatives/clusters';
-    const networkParams = new URLSearchParams();
-    if (selectedCategory !== 'overall') {
-        networkParams.set('app_category', selectedCategory);
-    }
-    if (selectedFormat !== 'all') {
-        networkParams.set('format', selectedFormat);
-    }
-    networkParams.set('limit', '250');
+	const queryString = params.toString();
+	if (queryString) {
+		apiUrl += `?${queryString}`;
+	}
 
-    const networkQueryString = networkParams.toString();
-    if (networkQueryString) {
-        networkApiUrl += `?${networkQueryString}`;
-    }
+	let networkApiUrl = '/creatives/clusters';
+	const networkParams = new URLSearchParams();
+	if (selectedCategory !== 'overall') {
+		networkParams.set('app_category', selectedCategory);
+	}
+	if (selectedFormat !== 'all') {
+		networkParams.set('format', selectedFormat);
+	}
+	networkParams.set('limit', String(NETWORK_FILTER_SOURCE_LIMIT));
 
-    const [creativeClusters, networkFilterSourceClusters] = await Promise.all([
-        api.get(apiUrl, 'Creative Clusters'),
-        searchCompany ? api.get(networkApiUrl, 'Creative Cluster Network Filters') : Promise.resolve(null)
-    ]);
-    const seo = getAdCreativesSeo({
-        primaryFilter,
-        categoryOptions,
-        selectedCategory,
-        searchCompany
-    });
+	const networkQueryString = networkParams.toString();
+	if (networkQueryString) {
+		networkApiUrl += `?${networkQueryString}`;
+	}
 
-    return {
-        creativeClusters,
-        networkFilterSourceClusters: networkFilterSourceClusters || creativeClusters,
-        categoryOptions,
-        selectedCategory,
-        selectedFormat,
-        searchCompany,
-        ...seo
-    };
+	const [creativeClustersResponse, networkFilterSourceClusters] = await Promise.all([
+		api.get(apiUrl, 'Ad Creatives'),
+		api.get(networkApiUrl, 'Ad Creative Network Filters')
+	]);
+	const creativeClusters = Array.isArray(creativeClustersResponse)
+		? creativeClustersResponse.slice(0, allowAdvancedFilters ? creativeClustersResponse.length : ANONYMOUS_CREATIVE_LIMIT)
+		: creativeClustersResponse;
+	const seo = getAdCreativesSeo({
+		primaryFilter,
+		categoryOptions,
+		selectedCategory,
+		searchCompany
+	});
+
+	return {
+		creativeClusters,
+		networkFilterSourceClusters,
+		categoryOptions,
+		selectedCategory,
+		selectedFormat,
+		searchCompany,
+		isSignedIn,
+		allowAdvancedFilters,
+		anonymousCreativeLimit: ANONYMOUS_CREATIVE_LIMIT,
+		signInUrl: loginUrl(url.pathname + url.search),
+		...seo
+	};
 }
 
 function validateCategory(
-    category: string,
-    appCats: Awaited<ReturnType<typeof getCachedData>>['appCats']
+	category: string,
+	appCats: Awaited<ReturnType<typeof getCachedData>>['appCats']
 ) {
-    const isValidCategory = appCats.categories.some((item) => item.id === category);
+	const isValidCategory = appCats.categories.some((item) => item.id === category);
 
-    if (!isValidCategory) {
-        throw error(404, {
-            message: `Category "${category}" not found`
-        });
-    }
+	if (!isValidCategory) {
+		throw error(404, {
+			message: `Category "${category}" not found`
+		});
+	}
 }
 
 function getAdCreativesSeo({
-    primaryFilter,
-    categoryOptions,
-    selectedCategory,
-    searchCompany
+	primaryFilter,
+	categoryOptions,
+	selectedCategory,
+	searchCompany
 }: {
-    primaryFilter: PrimaryFilter;
-    categoryOptions: ReturnType<typeof buildAdCreativeCategoryOptions>;
-    selectedCategory: string;
-    searchCompany: string;
+	primaryFilter: PrimaryFilter;
+	categoryOptions: ReturnType<typeof buildAdCreativeCategoryOptions>;
+	selectedCategory: string;
+	searchCompany: string;
 }) {
-    const categoryLabel = getAdCreativeCategoryLabel(selectedCategory, categoryOptions);
-    const networkLabel = getAdCreativeNetworkLabel(searchCompany);
+	const categoryLabel = getAdCreativeCategoryLabel(selectedCategory, categoryOptions);
+	const networkLabel = getAdCreativeNetworkLabel(searchCompany);
 
-    if (primaryFilter === 'network' && searchCompany) {
-        const canonicalPath = buildAdCreativesPath({ network: searchCompany });
-        const inCategoryText =
-            selectedCategory !== 'overall' ? ` filtered to ${categoryLabel} apps` : '';
+	if (primaryFilter === 'network' && searchCompany) {
+		const canonicalPath = buildAdCreativesPath({ network: searchCompany });
+		const inCategoryText =
+			selectedCategory !== 'overall' ? ` filtered to ${categoryLabel} apps` : '';
 
-        return {
-            pageTitle: `${networkLabel} Mobile Ad Creatives | AppGoblin`,
-            pageDescription: `Browse top mobile ad videos and images associated with ${networkLabel}${inCategoryText}.`,
-            pageHeading: `${networkLabel} Ad Creative Explorer`,
-            pageIntro: `Browse actual videos and images seen across mobile ads associated with ${networkLabel}${inCategoryText}.`,
-            canonicalPath,
-            canonicalUrl: `https://appgoblin.info${canonicalPath}`
-        };
-    }
+		return {
+			pageTitle: `${networkLabel} Mobile Ad Creatives | AppGoblin`,
+			pageDescription: `Browse top mobile ad videos and images associated with ${networkLabel}${inCategoryText}.`,
+			pageHeading: `${networkLabel} Ad Creative Explorer`,
+			pageIntro: `Browse actual videos and images seen across mobile ads associated with ${networkLabel}${inCategoryText}.`,
+			canonicalPath,
+			canonicalUrl: `https://appgoblin.info${canonicalPath}`
+		};
+	}
 
-    if (primaryFilter === 'app-category' && selectedCategory !== 'overall') {
-        const canonicalPath = buildAdCreativesPath({ category: selectedCategory });
-        const onNetworkText = searchCompany ? ` associated with ${networkLabel}` : '';
+	if (primaryFilter === 'app-category' && selectedCategory !== 'overall') {
+		const canonicalPath = buildAdCreativesPath({ category: selectedCategory });
+		const onNetworkText = searchCompany ? ` associated with ${networkLabel}` : '';
 
-        return {
-            pageTitle: `${categoryLabel} Mobile Ad Creatives | AppGoblin`,
-            pageDescription: `Browse top mobile ad videos and images running in ${categoryLabel} apps${onNetworkText}.`,
-            pageHeading: `${categoryLabel} Ad Creative Explorer`,
-            pageIntro: `Browse actual videos and images used by leading advertisers in ${categoryLabel} apps${onNetworkText}.`,
-            canonicalPath,
-            canonicalUrl: `https://appgoblin.info${canonicalPath}`
-        };
-    }
+		return {
+			pageTitle: `${categoryLabel} Mobile Ad Creatives | AppGoblin`,
+			pageDescription: `Browse top mobile ad videos and images running in ${categoryLabel} apps${onNetworkText}.`,
+			pageHeading: `${categoryLabel} Ad Creative Explorer`,
+			pageIntro: `Browse actual videos and images used by leading advertisers in ${categoryLabel} apps${onNetworkText}.`,
+			canonicalPath,
+			canonicalUrl: `https://appgoblin.info${canonicalPath}`
+		};
+	}
 
-    const canonicalPath = '/ad-creatives';
+	const canonicalPath = '/ad-creatives';
 
-    return {
-        pageTitle: 'Creative Clusters Explorer | AppGoblin',
-        pageDescription:
-            'Browse top mobile advertising videos and images for inspiration and competitor analysis.',
-        pageHeading: 'Ad Creative Explorer',
-        pageIntro: 'Browse actual videos and images used by top advertisers across ad networks.',
-        canonicalPath,
-        canonicalUrl: `https://appgoblin.info${canonicalPath}`
-    };
+	return {
+		pageTitle: 'Ad Creative Explorer | AppGoblin',
+		pageDescription:
+			'Browse top mobile advertising videos and images for inspiration and competitor analysis.',
+		pageHeading: 'Ad Creative Explorer',
+		pageIntro: 'Browse actual videos and images used by top advertisers across ad networks.',
+		canonicalPath,
+		canonicalUrl: `https://appgoblin.info${canonicalPath}`
+	};
 }

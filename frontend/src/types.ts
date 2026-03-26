@@ -461,6 +461,7 @@ export interface AdsTxtPublishersOverview {
 }
 
 export interface CompanyCategoryOverview {
+	company_types: string[];
 	adstxt_ad_domain_overview: AdsTxtAdDomainOverview;
 	adstxt_publishers_overview: AdsTxtPublishersOverview;
 	mediation_adapters:
