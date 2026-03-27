@@ -17,19 +17,8 @@
 		document.documentElement.dataset.mode = preferredThemeMode;
 		document.documentElement.style.colorScheme = preferredThemeMode;
 	</script>
-	<script>
-		const host = window.location.hostname;
-		const isProductionHost = host === 'appgoblin.info' || host.endsWith('.appgoblin.info');
-
-		if (isProductionHost) {
-			const analyticsScript = document.createElement('script');
-			analyticsScript.async = true;
-			analyticsScript.src = 'https://caz.appgoblin.info/script.js';
-			analyticsScript.dataset.websiteId = '3a063390-a9d5-4743-af11-e7ef3fc10cb3';
-			analyticsScript.dataset.domains = 'appgoblin.info';
-			document.head.appendChild(analyticsScript);
-		}
-	</script>
+	<script async src="https://caz.appgoblin.info/script.js" data-website-id="3a063390-a9d5-4743-af11-e7ef3fc10cb3"
+		data-domains="appgoblin.info"></script>
 	%sveltekit.head%
 </head>
 
