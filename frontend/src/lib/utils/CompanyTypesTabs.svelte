@@ -27,9 +27,8 @@
 
 	function typeTabClass(tab: string) {
 		const selectedClass =
-			'px-2 md:px-4 py-2 border-t-2 border-r-2 border-l-2 border-primary-100-900 rounded-t-md relative top-[1px] ';
-		const unselectedClass =
-			'px-2 md:px-4 py-2 border-b-2 border-surface-800-200 hover:border-primary-300-700 hover:border-b-2 hover:underline';
+			'px-2 md:px-4 py-2 border-t-1 border-r-1 border-l-1 bg-secondary-100-900 border-secondary-100-900 rounded-t-md relative';
+		const unselectedClass = 'px-2 md:px-4 py-2 border-b-1 border-surface-800-200 ';
 		if (isCurrentTab(tab)) {
 			return selectedClass;
 		} else return unselectedClass;

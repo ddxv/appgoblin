@@ -33,7 +33,7 @@
 	}
 </script>
 
-<div class="preset-filled-surface-100-900 p-2 md:p-16 mt-2 md:mt-4">
+<div class="p-2 md:p-16 mt-2 md:mt-4">
 	<h1 class="h1 md:h3 p-2">SDKs, Trackers & Permissions for {data.myapp.name || ''}</h1>
 
 	<div class="grid grid-cols-1 md:grid-cols-2 gap-4">

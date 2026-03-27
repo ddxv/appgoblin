@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import SideBarCatsListBoxItem from './SideBarCatsListBoxItem.svelte';
-	// import { storeIDLookup } from './constants';
 	import CardFirst from './CardFirst.svelte';
 	import type { CatData, StoreIDLookup } from '../types';
 
@@ -27,8 +26,8 @@
 		}
 	});
 
-	const buttonSelectedClass = 'preset-outlined-primary-900-100 text-left relative  rounded-md p-2';
-	const buttonDeselectedClass = 'p-1 md:p-2 text-tertiary-900-100 text-left hover:';
+	const buttonSelectedClass = 'p-1 preset-filled-secondary-100-900';
+	const buttonDeselectedClass = 'p-1';
 
 	function classesActiveStore(store: string) {
 		return page.params.store!.toLowerCase() == store.toLowerCase()

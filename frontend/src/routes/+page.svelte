@@ -119,7 +119,7 @@
 	<section class="text-center mt-8 mb-8 space-y-4">
 		<h1 class="text-xl md:text-3xl font-bold mb-4">App Marketing Tools and Mobile Intelligence</h1>
 		<div class="flex flex-wrap justify-center gap-4 text-sm mb-6">
-			<span class="px-3 py-1 bg-primary-100-900/20 rounded-full">🚀 Free ASO Tools</span>
+			<span class="px-3 py-1 bg-secondary-100-900/20 rounded-full">🚀 Free ASO Tools</span>
 			<span class="px-3 py-1 bg-warning-100-900/20 rounded-full"
 				>⚡ Find High Growth Apps and Advertisers</span
 			>
@@ -145,16 +145,15 @@
 				<div class="flex flex-wrap items-center justify-center gap-3">
 					<a
 						href="/auth/signup"
-						class="btn-primary inline-flex items-center gap-2 px-6 py-3 bg-white rounded-lg hover:scale-105 transition-transform duration-200 shadow-lg"
+						class="btn preset-filled-primary-500 inline-flex items-center gap-2 p-3"
 					>
-						<span class="text-black font-bold">Create Free Account</span>
-						<span class="text-black font-bold">→</span>
+						<span class="text-black">Create Free Account</span>
 					</a>
 					<a
 						href="/contact"
-						class="btn preset-outlined-primary-100-900 inline-flex items-center gap-2 px-6 py-3 rounded-lg"
+						class="btn preset-outlined-primary-500 inline-flex items-center gap-2 p-3"
 					>
-						<span class="font-bold text-white">Get in Touch</span>
+						<span>Get in Touch</span>
 					</a>
 				</div>
 			</div>
@@ -188,7 +187,7 @@
 						>App Intelligence</a
 					>
 				</h4>
-				<p class="text-sm text-gray-300 mb-3">Data on 4M+ iOS and Android apps, updated daily.</p>
+				<p class="text-sm mb-3">Data on 4M+ iOS and Android apps, updated daily.</p>
 				<ul class="text-sm space-y-1.5">
 					<li>
 						<span class="text-white/80 font-medium">Keywords</span> — Track your or competitors' keywords
@@ -230,11 +229,11 @@
 				<p class="text-sm mb-3">
 					Rankings of mobile app companies by SDK integration frequency, filterable by app category.
 				</p>
+
 				<div class="flex flex-wrap gap-2">
 					<a
 						href="/companies/types/ad-networks/game_casino"
-						class="text-xs px-2 py-1 rounded-full bg-white/10 hover:bg-white/20 text-white/80"
-						>Ad Networks for Casino Games →</a
+						class="text-xs px-2 py-1 rounded-full text-white/80">Ad Networks for Casino Games</a
 					>
 					<a
 						href="/companies/types/product-analytics/business"
@@ -308,11 +307,8 @@
 				<span class={featureBulletClass}>🧩 SDK and API intelligence</span>
 				<span class={featureBulletClass}>🛡️ App-ads.txt verification</span>
 			</div>
-			<a
-				href="/companies"
-				class="{gradientButtonClass} from-secondary-700-300 to-secondary-900-100 text-black"
-			>
-				<span class={buttonTextColor}>Start With Company Intelligence →</span>
+			<a href="/companies" class="btn preset-filled-secondary-200-800">
+				Start With Company Intelligence
 			</a>
 		</div>
 	</section>
@@ -349,11 +345,8 @@
 				<span class={featureBulletClass}>🎨 Creative analysis</span>
 				<span class={featureBulletClass}>📊 Network insights</span>
 			</div>
-			<a
-				href="/top-mobile-advertisers"
-				class="{gradientButtonClass} from-success-700-300 to-success-900-100 text-black"
-			>
-				<span class={buttonTextColor}>Browse All Ad Buyers →</span>
+			<a href="/top-mobile-advertisers" class="btn preset-filled-success-200-800">
+				Browse All Ad Buyers
 			</a>
 		</div>
 	</section>
@@ -414,12 +407,7 @@
 				<span class={featureBulletClass}>📈 Market share analytics</span>
 				<span class={featureBulletClass}>🏢 Company profiles</span>
 			</div>
-			<a
-				href="/companies"
-				class="{gradientButtonClass} from-primary-700-300 to-primary-900-100 text-black"
-			>
-				<span class={buttonTextColor}>Browse 500+ Companies →</span>
-			</a>
+			<a href="/companies" class="btn preset-filled-primary-200-800"> Browse 500+ Companies</a>
 		</div>
 	</section>
 
@@ -505,9 +493,9 @@
 			</div>
 			<a
 				href="/rankings/store/1/collection/1/category/1/US"
-				class="{gradientButtonClass} from-warning-700-300 to-warning-900-100 text-black"
+				class="btn preset-filled-secondary-200-800"
 			>
-				<span class={buttonTextColor}>See All Rankings →</span>
+				See All Rankings
 			</a>
 		</div>
 	</section>
@@ -593,11 +581,8 @@
 				<span class={featureBulletClass}>📈 Trending analysis</span>
 				<span class={featureBulletClass}>🎯 Category insights</span>
 			</div>
-			<a
-				href="/collections/new_monthly/google/overall"
-				class="{gradientButtonClass} from-error-700-300 to-error-900-100"
-			>
-				<span class={buttonTextColor}>Explore New Apps →</span>
+			<a href="/collections/new_monthly/google/overall" class="btn preset-filled-primary-200-800">
+				Explore New Apps
 			</a>
 		</div>
 	</section>

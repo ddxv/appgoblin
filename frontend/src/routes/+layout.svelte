@@ -35,7 +35,7 @@
 							alt="AppGoblin Icon"
 						/>
 						<strong
-							class="hidden lg:inline-flex text-xs ml-1 lg:ml-2 lg:text-lg xl:text-xl uppercase"
+							class="hidden lg:inline-flex text-xs ml-1 lg:ml-2 lg:text-lg xl:text-xl uppercase text-secondary-800-200"
 							>AppGoblin</strong
 						>
 					</a>

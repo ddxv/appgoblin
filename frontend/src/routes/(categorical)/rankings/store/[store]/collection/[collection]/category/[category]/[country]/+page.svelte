@@ -110,24 +110,7 @@
 					{/each}
 				</select>
 			</div>
-			<table class="table table-compact">
-				<thead>
-					<tr>
-						<th>App Store</th>
-						<th>Collection</th>
-						<th>Category</th>
-						<th>Country</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td>{data.storeIDLookup[store].store_name}</td>
-						<td>{collectionName}</td>
-						<td>{categoryName}</td>
-						<td>{country}</td>
-					</tr>
-				</tbody>
-			</table>
+
 			{#await data.history then history}
 				<RankChart plotData={history.history} maxValue={10.5} />
 			{/await}

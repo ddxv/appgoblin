@@ -214,7 +214,7 @@
 			<Portal>
 				<Popover.Positioner>
 					<Popover.Content>
-						<form class="space-y-2 card bg-surface-200-800 p-4 space-y-4 max-w-[320px]">
+						<form class="space-y-2 bg-surface-100-900 p-4 space-y-4 max-w-[320px]">
 							{#each table.getAllColumns().filter((col) => col.getCanHide()) as column (column.id)}
 								{#if hideableColumns.includes(column.id)}
 									<label class="label flex items-center space-x-2">
@@ -234,7 +234,7 @@
 			</Portal>
 		</Popover>
 
-		<div class="preset-filled-surface-100-900 flex items-center flex-col p-2">
+		<div class="flex items-center flex-col p-2">
 			<input
 				placeholder="Filter apps..."
 				value={globalFilter}
@@ -242,10 +242,10 @@
 					const value = e.currentTarget.value;
 					table.setGlobalFilter(value);
 				}}
-				class="max-w-sm p-1"
+				class="preset-filled-surface-50-950 max-w-sm p-1"
 			/>
 		</div>
-		<div class="preset-filled-surface-100-900 flex items-center p-2">
+		<div class="flex items-center p-2">
 			<label for="data-source" class="px-4 text-sm md:text-base">Revenue Source: </label>
 			<form class="flex flex-row space-x-4">
 				<label class="flex flex-row items-center space-x-1">

@@ -18,7 +18,7 @@
 	{#await data.creatives}
 		loading...
 	{:then creatives}
-		<div class="preset-filled-surface-100-900 p-2 md:p-8 mt-2 md:mt-4">
+		<div class="p-2 md:p-8 mt-2 md:mt-4">
 			<WhiteCard>
 				{#if creatives && creatives.by_publisher.length > 0}
 					<CreativesMonetizedTable data={creatives.by_publisher} />

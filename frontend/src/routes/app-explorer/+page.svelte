@@ -190,22 +190,11 @@
 		</p>
 	</div>
 
-	<div class="mt-6">
-		{#if !hasPaidAccess}
-			<h2 class="text-xl md:text-2xl font-bold mb-4">Preview</h2>
-		{/if}
-	</div>
-
 	<div class="grid grid-cols-2 lg:grid-cols-[320px_1fr] gap-4 md:gap-6">
 		<!-- Sidebar Filters -->
-		<aside class="preset-filled-surface-100-900 p-4 space-y-5 lg:sticky lg:top-20 overflow-y-auto">
-			<div class="flex items-center gap-2 pb-3 border-b border-surface-300-700">
-				<Filter size={20} class="text-primary-500" />
-				<h2 class="text-lg font-semibold">Filters</h2>
-			</div>
-
+		<aside class="p-4 space-y-5 lg:sticky lg:top-20 overflow-y-auto">
 			{#if !hasPaidAccess}
-				<div class="mb-4 p-3 bg-warning-900-100/20 rounded-lg border border-warning-500">
+				<div class="mb-4 p-3 bg-warning-50-950/20 rounded-lg border border-warning-500">
 					<p class="text-xs text-warning-900-100 flex items-center gap-2">
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
@@ -225,6 +214,11 @@
 					</p>
 				</div>
 			{/if}
+
+			<div class="flex items-center gap-2 pb-3 border-b border-surface-300-700">
+				<Filter size={20} class="text-primary-500" />
+				<h2 class="text-lg font-semibold">Filters</h2>
+			</div>
 
 			<form
 				method="POST"
@@ -268,7 +262,7 @@
 					: undefined}
 				class="space-y-5"
 			>
-				<div class="space-y-4 p-3 rounded-lg border border-surface-300-700 bg-surface-100-900/40">
+				<div class="space-y-4 p-3 rounded-lg border border-surface-300-700">
 					<h3 class="font-semibold text-sm uppercase tracking-wide">App Details & Metrics</h3>
 
 					<!-- App Details -->
@@ -386,7 +380,7 @@
 					</div>
 				</div>
 
-				<div class="space-y-4 p-3 rounded-lg border border-surface-300-700 bg-surface-100-900/40">
+				<div class="space-y-4 p-3 rounded-lg border border-surface-300-700">
 					<h3 class="font-semibold text-sm uppercase tracking-wide">App Store Ranks</h3>
 					<div class="space-y-2">
 						<label class="label font-medium text-sm" for="ranking-filter">Ranking Filter</label>
@@ -407,11 +401,11 @@
 					</div>
 				</div>
 
-				<div class="space-y-4 p-3 rounded-lg border border-surface-300-700 bg-surface-100-900/40">
+				<div class="space-y-4 p-3 rounded-lg border border-surface-300-700">
 					<h3 class="font-semibold text-sm uppercase tracking-wide">Company Filters</h3>
 
 					{#if !hasB2BSdkAccess}
-						<div class="p-3 rounded-lg border border-warning-500 bg-warning-900-100/20">
+						<div class="p-3 rounded-lg border border-warning-500 bg-warning-50-950/20">
 							<p class="text-xs text-warning-900-100">
 								Company include/exclude filters are available on the B2B SDK tier.
 								<a href="/pricing" class="underline hover:text-primary-600-400">Upgrade</a>
@@ -439,7 +433,7 @@
 							/>
 							{#if includeDropdownOpen && filteredIncludeCompanies().length > 0}
 								<div
-									class="absolute z-50 w-full mt-1 bg-surface-100-900 border border-surface-300-700 rounded-lg shadow-lg max-h-48 lg:max-h-92 overflow-y-auto"
+									class="absolute z-50 w-full mt-1 border border-surface-300-700 rounded-lg shadow-lg max-h-48 lg:max-h-92 overflow-y-auto"
 								>
 									{#each filteredIncludeCompanies() as company (company.company_domain)}
 										<button
@@ -593,7 +587,7 @@
 		</aside>
 
 		<!-- Results Table -->
-		<main class="preset-filled-surface-100-900 p-4 overflow-hidden">
+		<main class="p-4 overflow-hidden">
 			{#if !hasPaidAccess}
 				<div class="py-10 relative">
 					<div class="absolute inset-0 flex items-start justify-center opacity-10 pt-8">
@@ -617,9 +611,8 @@
 						</svg>
 						<p class="text-lg font-medium mb-3 text-center">Results Area Locked</p>
 						<p class="text-sm mb-6 text-center">
-							The <strong>App Explorer</strong> (also known as <strong>App CrossFilter</strong> or
-							<strong>App Query</strong>) helps you discover and filter mobile apps with advanced
-							criteria.
+							Explore all apps. Discover and filter mobile apps with advanced filters and
+							dimensions.
 						</p>
 
 						<div class="space-y-6">
@@ -667,9 +660,7 @@
 							</div>
 						</div>
 
-						<div
-							class="mt-6 p-4 bg-surface-100-900 rounded-lg border border-surface-300-700 text-center"
-						>
+						<div class="mt-6 p-4 rounded-lg border border-surface-300-700 text-center">
 							<p class="text-sm mb-3">
 								<strong>Access Required:</strong> App Explorer is available to paid subscribers.
 							</p>

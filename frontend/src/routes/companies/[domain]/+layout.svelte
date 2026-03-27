@@ -232,7 +232,8 @@
 					{#if !myTree.parent && !myTree.is_secondary_domain && !myTree.is_orphan}
 						<!-- IS PARENT COMPANY -->
 						<h1 class={titleClass}>
-							{myTree.company_name || myTree.company_domain || myTree.queried_domain} / Category: {categoryName}
+							{myTree.company_name || myTree.company_domain || myTree.queried_domain}, App Category:
+							{categoryName}
 						</h1>
 						<div class={titleDividerClass}></div>
 						<ExternalLink domain={myTree.company_domain || myTree.queried_domain} />
@@ -324,8 +325,7 @@
 			class="btn btn-sm {page.url.pathname.includes('/creatives')
 				? 'variant-filled-primary'
 				: 'variant-ghost-surface'}"
-		>
-			Creatives
+			>{companyDisplayName} Creatives
 		</a>
 	{/if}
 	<a
@@ -334,15 +334,14 @@
 			? 'variant-filled-primary'
 			: 'variant-ghost-surface'}"
 	>
-		SDKs
+		{companyDisplayName} SDKs
 	</a>
 	<a
 		href={`/companies/${companyDomain}/app-adstxt`}
 		class="btn btn-sm {page.url.pathname.includes('/app-adstxt')
 			? 'variant-filled-primary'
 			: 'variant-ghost-surface'}"
-	>
-		App-ads.txt
+		>{companyDisplayName} App-ads.txt
 	</a>
 	<a
 		href={`/companies/${companyDomain}/data-exports`}
