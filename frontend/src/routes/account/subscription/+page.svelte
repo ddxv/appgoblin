@@ -9,10 +9,10 @@
 	<title>Subscription - AppGoblin</title>
 </svelte:head>
 
-<div class="card preset-tonal p-6 md:p-8 space-y-8">
+<div class="preset-filled-surface-100-900 p-6 md:p-8 space-y-8">
 	<div>
 		<h1 class="text-2xl font-bold">Subscription</h1>
-		<p class="text-sm text-surface-600-400">Manage your billing and subscription plan</p>
+		<p class="text-sm">Manage your billing and subscription plan</p>
 	</div>
 
 	<section class="space-y-4">
@@ -64,7 +64,7 @@
 				<div class="text-center py-8">
 					<div class="mb-4">
 						<h3 class="text-lg font-bold">Free Plan</h3>
-						<p class="text-surface-600-400 mt-2">You are currently on the free plan.</p>
+						<p class=" mt-2">You are currently on the free plan.</p>
 					</div>
 					<a href="/pricing" class="btn preset-filled-primary-500">View Pricing & Upgrade</a>
 				</div>

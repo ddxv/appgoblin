@@ -100,7 +100,7 @@
 </svelte:head>
 
 <div class="card-header px-4 md:px-8">
-	<h1 class="text-primary-900-100 text-3xl font-bold mb-4">{data.myapp.name}</h1>
+	<h1 class=" text-3xl font-bold mb-4">{data.myapp.name}</h1>
 	<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
 		<!-- COL 1  -->
 		<div class="grid grid-cols-3 gap-0">

@@ -2,15 +2,15 @@
 	import { page } from '$app/state';
 	import ChevronDown from 'lucide-svelte/icons/chevron-down';
 
-	const topBarFont = 'text-xs md:text-base hover:text-primary-900-100';
-	const topBarHighlightedFont = 'text-xs md:text-base text-primary-900-100';
+	const topBarFont = 'text-xs md:text-base hover:';
+	const topBarHighlightedFont = 'text-xs md:text-base ';
 	const myDivider = 'h-px w-[50%] md:h-12 md:w-px bg-secondary-100-900';
 	const topDivider =
 		'w-full border-t-[1px] md:border-t-0 md:border-b-[1px] border-secondary-100-900 p-1 xxl:p-2';
 	const dropdownItem =
-		'block px-4 py-2 text-xs md:text-base hover:text-primary-900-100 hover:preset-tonal w-full text-left whitespace-nowrap';
+		'block px-4 py-2 text-xs md:text-base hover: hover:preset-tonal w-full text-left whitespace-nowrap';
 	const dropdownHighlightedItem =
-		'block px-4 py-2 text-xs md:text-base text-primary-900-100 preset-tonal w-full text-left whitespace-nowrap';
+		'block px-4 py-2 text-xs md:text-base  preset-tonal w-full text-left whitespace-nowrap';
 	const sectionLabel = 'text-xs font-semibold text-surface-400-600 uppercase tracking-widest pt-1';
 	const dropdownSectionLabel =
 		'px-4 pt-2 pb-1 text-[11px] font-semibold uppercase tracking-widest text-surface-400-600';

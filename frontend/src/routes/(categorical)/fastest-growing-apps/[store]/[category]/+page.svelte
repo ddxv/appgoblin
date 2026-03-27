@@ -51,11 +51,11 @@
 </svelte:head>
 
 <div class="p-2 px-2 md:px-16 lg:px-32">
-	<h1 class="text-3xl text-primary-900-100">Fastest Growing Apps</h1>
-	<p class="text-sm text-primary-900-100">
+	<h1 class="text-3xl">Fastest Growing Apps</h1>
+	<p class="text-sm">
 		AppGoblin's weekly list of the fastest growing apps on the Apple and Google Play App Stores.
 	</p>
-	<div class="card preset-tonal">
+	<div class="preset-filled-surface-100-900">
 		<FastestGrowingAppsTable data={data.growthApps.apps} />
 	</div>
 </div>

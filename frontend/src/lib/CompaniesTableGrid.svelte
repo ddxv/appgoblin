@@ -81,11 +81,11 @@
 </script>
 
 {#if introText}
-	<div class="text-sm md:text-base text-surface-600-400 leading-relaxed space-y-2">
-		<p class="text-primary-900-100">
+	<div class="text-sm md:text-base leading-relaxed space-y-2">
+		<p class="">
 			{introText}
 		</p>
-		<p class="text-primary-900-100">
+		<p class="">
 			{#if totals && (hasSdkTotals || hasAdstxtTotals)}
 				{#if hasSdkTotals}
 					AppGoblin has mapped and verified {formatNumber(totals.sdk_android_total_companies)} companies
@@ -106,10 +106,8 @@
 
 <div class="grid grid-cols-1 gap-8 mt-6">
 	<!-- MAIN TABLE -->
-	<div class="card preset-tonal">
-		<div class="card-content">
-			{@render mainTable()}
-		</div>
+	<div class="card-content">
+		{@render mainTable()}
 	</div>
 
 	<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-6">
@@ -126,7 +124,7 @@
 			</p>
 			<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 				<!-- Android SDK -->
-				<div class="card preset-tonal">
+				<div class="preset-filled-surface-100-900">
 					<div class="card-header">
 						<p class="text-sm md:text-lg">
 							{@render sdkAndroidTotalApps()}
@@ -135,7 +133,7 @@
 					<div class="card-content"></div>
 				</div>
 				<!-- iOS SDK -->
-				<div class="card preset-tonal">
+				<div class="preset-filled-surface-100-900">
 					<div class="card-header">
 						<p class="text-sm md:text-lg">
 							{@render sdkIosTotalApps()}
@@ -160,7 +158,7 @@
 				</p>
 				<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 					<!-- Android App Ads.txt -->
-					<div class="card preset-tonal">
+					<div class="preset-filled-surface-100-900">
 						<div class="card-header">
 							<p class="text-sm md:text-lg">
 								{@render adstxtAndroidTotalApps()}
@@ -169,7 +167,7 @@
 						<div class="card-content"></div>
 					</div>
 					<!-- iOS App Ads.txt -->
-					<div class="card preset-tonal">
+					<div class="preset-filled-surface-100-900">
 						<div class="card-header">
 							<p class="text-sm md:text-lg">
 								{@render adstxtIosTotalApps()}

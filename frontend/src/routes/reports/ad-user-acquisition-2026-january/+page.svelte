@@ -82,7 +82,7 @@
 	const advertisersTextColor = 'text-sm md:text-xl text-bold text-purple-400';
 	const simpleMetricColor = 'text-sm md:text-xl text-bold text-surface-800-200';
 	const sectionBodyClass = 'max-w-none mb-6';
-	const paragraphClass = 'text-lg leading-relaxed text-primary-900-100';
+	const paragraphClass = 'text-lg leading-relaxed ';
 	const textMutedXsClass = 'text-xs text-surface-500 dark:text-surface-400';
 	const textMutedXsCapClass = `${textMutedXsClass} capitalize`;
 	const storeIdClass = `${textMutedXsClass} truncate max-w-[9rem] md:max-w-[16rem]`;
@@ -94,7 +94,7 @@
 	const creativeAppIconClass = 'w-14 h-14 rounded-lg shadow-sm';
 	const cardTableWrapperClass = 'card overflow-hidden';
 	const tableWrapperClass = 'table-container overflow-x-auto';
-	const tableHeaderText = 'text-xs md:text-sm font-bold text-primary-900-100';
+	const tableHeaderText = 'text-xs md:text-sm font-bold ';
 	const tableHeaderLeftClass = `px-1 md:px-2 py-2 text-left ${tableHeaderText}`;
 	const tableHeaderCenterClass = `px-1 md:px-2 py-2 text-center ${tableHeaderText}`;
 	const tableHeaderRightClass = `px-1 md:px-2 py-2 text-right ${tableHeaderText}`;
@@ -435,17 +435,17 @@
 							{formatNumber(data.summary.totalApps)} mobile apps
 						</strong>
 						and captured
-						<strong class="text-primary-900-100">
+						<strong class="">
 							{formatNumber(data.summary.httpsTracked)} HTTPS events
 						</strong>
 						across
-						<strong class="text-primary-900-100">
+						<strong class="">
 							{formatNumber(data.summary.apiDomains)} unique API domains
 						</strong>, providing a comprehensive view of acquisition activity.
 					</p>
 					<p class={`${paragraphClass} mt-4`}>
 						This activity spanned
-						<strong class="text-primary-900-100">
+						<strong class="">
 							{formatNumber(data.summary.adtechCompanies)} AdTech platforms
 						</strong>
 						supporting
@@ -457,9 +457,7 @@
 							{formatNumber(data.summary.totalCreatives)} creative assets
 						</strong>
 						driving some ad campaigns to
-						<strong class="text-primary-900-100"
-							>{data.summary.avgGrowth}% week on week installs growth
-						</strong>.
+						<strong class="">{data.summary.avgGrowth}% week on week installs growth </strong>.
 					</p>
 
 					<div class="mt-6 p-4 rounded-lg border border-surface-200">
@@ -490,7 +488,7 @@
 								different advertising platforms and services
 							</li>
 							<li>
-								<strong class="text-primary-900-100 text-lg font-bold"
+								<strong class=" text-lg font-bold"
 									>How the whole system works — over
 									{formatNumber(data.summary.httpsTracked)}</strong
 								>

@@ -24,11 +24,11 @@
 	const title = 'AppGoblin Free App Marketing Tools';
 
 	const featureBulletClass = 'text-sm md:text-lg font-medium';
-	const sectionTitleClass = 'text-2xl font-black text-primary-900-100 transition-colors';
-	const sectionSubtitleClass = 'text-gray-400 font-medium';
+	const sectionTitleClass = 'text-2xl transition-colors';
+	const sectionSubtitleClass = 'text-primary-800-200 font-medium';
 	const sectionDescriptionClass = 'mb-6';
 	const cardContainerClass = 'p-4';
-	const cardTitleClass = 'text-lg font-bold text-primary-900-100 transition-colors';
+	const cardTitleClass = 'text-lg font-bold transition-colors';
 	const cardDescriptionClass = 'text-sm text-gray-400 mb-4';
 	const iconContainerClass = 'p-2 rounded-lg mr-3';
 	const buttonTextColor = 'text-black';
@@ -117,10 +117,8 @@
 <div class="flex flex-col gap-8 px-2 md:px-20 lg:px-48">
 	<!-- Hero Header Section -->
 	<section class="text-center mt-8 mb-8 space-y-4">
-		<h1 class="text-xl md:text-3xl text-primary-900-100 font-bold mb-4">
-			App Marketing Tools and Mobile Intelligence
-		</h1>
-		<div class="flex flex-wrap justify-center gap-4 text-sm text-primary-900-100 mb-6">
+		<h1 class="text-xl md:text-3xl font-bold mb-4">App Marketing Tools and Mobile Intelligence</h1>
+		<div class="flex flex-wrap justify-center gap-4 text-sm mb-6">
 			<span class="px-3 py-1 bg-primary-100-900/20 rounded-full">🚀 Free ASO Tools</span>
 			<span class="px-3 py-1 bg-warning-100-900/20 rounded-full"
 				>⚡ Find High Growth Apps and Advertisers</span
@@ -163,9 +161,7 @@
 		</div>
 	</section>
 
-	<section
-		class="card preset-tonal p-4 md:p-8 rounded-2xl shadow-xl border border-secondary-900-100/20"
-	>
+	<section class="card p-4 md:p-8 rounded-2xl shadow-xl border border-secondary-900-100/20">
 		<div class="flex items-center mb-6">
 			<div
 				class="bg-gradient-to-br from-secondary-900-100 to-secondary-600 p-1 rounded-2xl shadow-lg mr-4"
@@ -184,10 +180,10 @@
 			teams that need raw data for custom analysis.
 		</p>
 
-		<h3 class="text-lg font-bold text-primary-900-100 mb-3">Features</h3>
+		<h3 class="text-lg font-bold mb-3">Features</h3>
 		<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
 			<div class="rounded-xl border border-white/10 p-4 bg-white/5">
-				<h4 class="font-bold text-primary-900-100 mb-2">
+				<h4 class="font-bold mb-2">
 					<a href="/rankings/store/1/collection/1/category/1/US" class="hover:text-primary-600-400"
 						>App Intelligence</a
 					>
@@ -217,7 +213,7 @@
 			</div>
 
 			<div class="rounded-xl border border-white/10 p-4 bg-white/5">
-				<h4 class="font-bold text-primary-900-100 mb-2">
+				<h4 class="font-bold mb-2">
 					<a href="/sdks" class="hover:text-primary-600-400">SDK Analysis</a>
 				</h4>
 				<p class="text-sm">
@@ -228,7 +224,7 @@
 			</div>
 
 			<div class="rounded-xl border border-white/10 p-4 bg-white/5">
-				<h4 class="font-bold text-primary-900-100 mb-2">
+				<h4 class="font-bold mb-2">
 					<a href="/companies" class="hover:text-primary-600-400">Companies Directory</a>
 				</h4>
 				<p class="text-sm mb-3">
@@ -249,7 +245,7 @@
 			</div>
 
 			<div class="rounded-xl border border-white/10 p-4 bg-white/5">
-				<h4 class="font-bold text-primary-900-100 mb-2">Company Intelligence</h4>
+				<h4 class="font-bold mb-2">Company Intelligence</h4>
 				<p class="text-sm mb-3">See the top client apps for any mobile SDK or services company.</p>
 				<div class="flex flex-wrap gap-2">
 					<a
@@ -266,14 +262,14 @@
 			</div>
 
 			<div class="rounded-xl border border-white/10 p-4 bg-white/5">
-				<h4 class="font-bold text-primary-900-100 mb-2">Ad Tech Insights</h4>
+				<h4 class="font-bold mb-2">Ad Tech Insights</h4>
 				<p class="text-sm">
 					Tracks live ad campaigns and the ad tech domains apps communicate with in real time.
 				</p>
 			</div>
 
 			<div class="rounded-xl border border-white/10 p-4 bg-white/5">
-				<h4 class="font-bold text-primary-900-100 mb-2">ASO Tools</h4>
+				<h4 class="font-bold mb-2">ASO Tools</h4>
 				<p class="text-sm">
 					Free keyword research tools and data dumps to optimize app store visibility for Android
 					and iOS.
@@ -281,7 +277,7 @@
 			</div>
 
 			<div class="rounded-xl border border-white/10 p-4 bg-white/5 md:col-span-2">
-				<h4 class="font-bold text-primary-900-100 mb-2">App-Ads.txt</h4>
+				<h4 class="font-bold mb-2">App-Ads.txt</h4>
 				<p class="text-sm">
 					Daily-updated files tying apps to their DIRECT and RESELLER ad networks and SSPs — mapped
 					to real app store IDs (e.g. <code class="text-white/70">com.example.app</code>) rather
@@ -290,12 +286,12 @@
 			</div>
 		</div>
 
-		<h3 class="text-lg font-bold text-primary-900-100 mb-3">Who It's For</h3>
+		<h3 class="text-lg font-bold mb-3">Who It's For</h3>
 		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 mb-6">
 			{#each audiences as audience}
 				<div class="rounded-xl border border-white/10 p-4 bg-white/5">
 					<div class="flex items-start justify-between mb-2">
-						<h4 class="text-sm md:text-base font-bold text-primary-900-100">{audience.title}</h4>
+						<h4 class="text-sm md:text-base font-bold">{audience.title}</h4>
 						<span
 							class="text-xs font-semibold px-2 py-1 rounded-full bg-white/10 text-white/90 ml-2 shrink-0"
 							>{audience.badge}</span
@@ -322,9 +318,7 @@
 	</section>
 
 	<!-- Top Advertiser Section -->
-	<section
-		class="card preset-tonal p-4 md:p-8 rounded-2xl shadow-xl border border-success-900-100/20"
-	>
+	<section class="card p-4 md:p-8 rounded-2xl shadow-xl border border-success-900-100/20">
 		<div class="flex items-center mb-6">
 			<div
 				class="bg-gradient-to-br from-success-900-100 to-success-600 p-1 rounded-2xl shadow-lg mr-4"
@@ -365,9 +359,7 @@
 	</section>
 
 	<!-- Popular Companies/SDKs Section -->
-	<section
-		class="card preset-tonal p-1 md:p-8 rounded-2xl shadow-xl border border-primary-900-100/20"
-	>
+	<section class="card p-1 md:p-8 rounded-2xl shadow-xl border border-primary-900-100/20">
 		<div class="flex items-center mb-6">
 			<div
 				class="bg-gradient-to-br from-primary-900-100 to-primary-600 rounded-2xl p-1 shadow-lg mr-4"
@@ -432,9 +424,7 @@
 	</section>
 
 	<!-- App Store Rankings Section -->
-	<section
-		class="card preset-tonal p-1 md:p-4 md:p-8 rounded-2xl shadow-xl border border-warning-900-100/20"
-	>
+	<section class="card p-1 md:p-4 md:p-8 rounded-2xl shadow-xl border border-warning-900-100/20">
 		<div class="flex items-center mb-6">
 			<div
 				class="bg-gradient-to-br from-warning-900-100 to-warning-600 p-1 rounded-2xl shadow-lg mr-4"
@@ -523,7 +513,7 @@
 	</section>
 
 	<!-- New Apps Section -->
-	<section class="card preset-tonal p-8 rounded-2xl shadow-xl border border-info-900-100/20">
+	<section class="card p-8 rounded-2xl shadow-xl border border-info-900-100/20">
 		<div class="flex items-center mb-6">
 			<div class="bg-gradient-to-br from-info-900-100 to-info-600 p-1 rounded-2xl shadow-lg mr-4">
 				<Sparkles class="h-8 w-8 text-white" />
@@ -549,9 +539,7 @@
 							<Zap class="h-5 w-5 text-white" />
 						</div>
 						<div>
-							<h3
-								class="text-lg font-bold text-primary-900-100 group-hover/card:text-cyan-400 transition-colors"
-							>
+							<h3 class="text-lg font-bold group-hover/card:text-cyan-400 transition-colors">
 								This Week
 							</h3>
 							<p class="text-sm text-gray-500">Newest releases</p>
@@ -570,9 +558,7 @@
 							<Calendar class="h-5 w-5 text-white" />
 						</div>
 						<div>
-							<h3
-								class="text-lg font-bold text-primary-900-100 group-hover/card:text-info-900-100 transition-colors"
-							>
+							<h3 class="text-lg font-bold group-hover/card:text-info-900-100 transition-colors">
 								This Month
 							</h3>
 							<p class="text-sm text-gray-500">Popular releases</p>
@@ -591,9 +577,7 @@
 							<Star class="h-5 w-5 text-white" />
 						</div>
 						<div>
-							<h3
-								class="text-lg font-bold text-primary-900-100 group-hover/card:text-yellow-400 transition-colors"
-							>
+							<h3 class="text-lg font-bold group-hover/card:text-yellow-400 transition-colors">
 								2025 Best
 							</h3>
 							<p class="text-sm text-gray-500">Top of the year</p>

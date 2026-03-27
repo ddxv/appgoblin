@@ -10,12 +10,10 @@
 	<title>Security - AppGoblin</title>
 </svelte:head>
 
-<div class="card preset-tonal p-6 md:p-8 space-y-8">
+<div class="preset-filled-surface-100-900 p-6 md:p-8 space-y-8">
 	<div>
 		<h1 class="text-2xl font-bold">Security</h1>
-		<p class="text-sm text-surface-600-400">
-			Manage your account security and authentication methods
-		</p>
+		<p class="text-sm">Manage your account security and authentication methods</p>
 	</div>
 
 	<section class="space-y-4">

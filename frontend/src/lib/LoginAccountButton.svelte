@@ -15,7 +15,7 @@
 			class="btn preset-tonal hover:preset-tonal-primary p-1.5 md:p-2 flex items-center gap-1 md:gap-2"
 			title={user ? `Account: ${user.username}` : 'Login'}
 		>
-			<UserRound size={20} class="text-primary-900-100" />
+			<UserRound size={20} class="" />
 			<span class="hidden lg:inline text-sm">{user.username}</span>
 		</a>
 	{:else}

@@ -228,7 +228,7 @@
 <div class="px-2 md:px-8 xl:px-24 grid grid-cols-1 gap-6 md:gap-10 py-4 md:py-8">
 	<!-- Hero -->
 	<div class="grid gap-2">
-		<h1 class="text-3xl md:text-4xl font-black text-primary-900-100">
+		<h1 class="text-3xl md:text-4xl font-black">
 			Free App Data Exports for Researchers & Data Scientists
 		</h1>
 		<p class="text-lg text-gray-400 max-w-2xl">
@@ -242,7 +242,7 @@
 		class="card preset-filled-surface-100-900 p-4 flex flex-col md:flex-row gap-3 items-start md:items-center"
 	>
 		<div class="text-sm text-gray-400">
-			<strong class="text-primary-900-100">File format:</strong> All files are
+			<strong class="">File format:</strong> All files are
 			<code class="font-mono text-primary-400">.tsv.xz</code> tab-separated values compressed with XZ.
 			Files uncompressed are a few gigabytes. Use appropriate tools when opening.
 		</div>
@@ -266,7 +266,7 @@
 							<Icon class="h-6 w-6 text-primary-500" />
 						</div>
 						<div class="flex-1 min-w-0">
-							<h2 class="text-xl font-bold text-primary-900-100">{meta.name}</h2>
+							<h2 class="text-xl font-bold">{meta.name}</h2>
 							{#if meta.rows}
 								<p class="text-xs text-gray-500 mt-0.5">{meta.rows}</p>
 							{/if}
@@ -373,9 +373,7 @@
 	{/if}
 
 	<div class="card preset-filled-surface-100-900 p-5 md:p-6">
-		<h2 class="text-xl md:text-2xl font-bold text-primary-900-100 mb-3">
-			Premium Datasets Available Now
-		</h2>
+		<h2 class="text-xl md:text-2xl font-bold mb-3">Premium Datasets Available Now</h2>
 		<p class="text-sm md:text-base text-gray-400 mb-3 max-w-3xl">
 			Beyond the free exports on this page, AppGoblin already provides premium datasets for teams
 			who need deeper app monetization and company relationship data.

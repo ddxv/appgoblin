@@ -38,7 +38,9 @@
 	);
 	let showMediationTab = $derived(Boolean(data.companyDetails?.mediation_adapters));
 	let showCreativesTab = $derived(
-		Boolean(data.companyDetails?.company_types?.some((companyType) => companyType === 'ad-networks'))
+		Boolean(
+			data.companyDetails?.company_types?.some((companyType) => companyType === 'ad-networks')
+		)
 	);
 	let companyDisplayName = $derived(
 		data.companyTree?.company_name ||
@@ -164,8 +166,8 @@
 		};
 	});
 
-	let titleClass = 'h1 text-2xl md:text-3xl font-bold text-primary-900-100';
-	let titleSecondaryClass = 'text-xl font-bold text-primary-900-100 mr-2';
+	let titleClass = 'h1 text-2xl md:text-3xl font-bold ';
+	let titleSecondaryClass = 'text-xl font-bold  mr-2';
 	let titleDividerClass = 'md:h-8 w-px bg-gray-300 mx-2';
 </script>
 

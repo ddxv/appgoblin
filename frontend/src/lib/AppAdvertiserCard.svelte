@@ -10,18 +10,17 @@
 	<AppCard {app} showHeader={false} />
 	<div>
 		<p class="text-primary-700-300">
-			Ads Last Seen:<span class="text-primary-900-100 mx-2">{app.last_seen}</span>
+			Ads Last Seen:<span class=" mx-2">{app.last_seen}</span>
 		</p>
 		<p class="text-primary-700-300">
-			Creatives:<span class="text-primary-900-100 mx-2">{app.unique_creatives}</span>
+			Creatives:<span class=" mx-2">{app.unique_creatives}</span>
 		</p>
 		<p class="text-primary-700-300">
-			Apps seen publishing ads:<span class="text-primary-900-100 mx-2">{app.unique_publishers}</span
-			>
+			Apps seen publishing ads:<span class=" mx-2">{app.unique_publishers}</span>
 		</p>
 		{#if app.mmp_domains && app.mmp_domains.length > 0}
 			<p class="text-primary-700-300">
-				MMPs:<span class="text-primary-900-100 mx-2">{app.mmp_domains.length}</span>
+				MMPs:<span class=" mx-2">{app.mmp_domains.length}</span>
 			</p>
 		{/if}
 

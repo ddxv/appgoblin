@@ -58,15 +58,13 @@
 		<span>{data.companyName}'s Data Exports</span>
 	{/snippet}
 	<div class="p-4 flex flex-col gap-4">
-		<p class="text-sm text-surface-600-400">
+		<p class="text-sm">
 			Exports provide raw, analysis-ready datasets tied to this company so teams can run custom
 			modeling, compliance checks, and longitudinal market tracking outside the dashboard.
 		</p>
 
 		{#if exportRows.length === 0}
-			<p class="text-sm text-surface-600-400">
-				No exports are currently available for this domain.
-			</p>
+			<p class="text-sm">No exports are currently available for this domain.</p>
 		{:else}
 			<div class="overflow-x-auto border border-surface-200-800 rounded-md">
 				<table class="table w-full">
@@ -103,7 +101,7 @@
 			</div>
 
 			{#if !data.canDownload}
-				<p class="text-surface-600-400 text-sm">
+				<p class=" text-sm">
 					Data exports are included with a paid subscription.
 					<a href="/pricing" class="underline hover:text-primary-600-400">View pricing</a> to unlock.
 				</p>

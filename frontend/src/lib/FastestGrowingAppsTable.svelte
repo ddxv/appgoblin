@@ -234,7 +234,7 @@
 			</Portal>
 		</Popover>
 
-		<div class="card preset-tonal flex items-center flex-col p-2">
+		<div class="preset-filled-surface-100-900 flex items-center flex-col p-2">
 			<input
 				placeholder="Filter apps..."
 				value={globalFilter}
@@ -245,7 +245,7 @@
 				class="max-w-sm p-1"
 			/>
 		</div>
-		<div class="card preset-tonal flex items-center p-2">
+		<div class="preset-filled-surface-100-900 flex items-center p-2">
 			<label for="data-source" class="px-4 text-sm md:text-base">Revenue Source: </label>
 			<form class="flex flex-row space-x-4">
 				<label class="flex flex-row items-center space-x-1">
@@ -259,7 +259,7 @@
 							dataSource = 'iap';
 						}}
 					/>
-					<p class="text-xs md:text-sm text-primary-900-100">IAP</p>
+					<p class="text-xs md:text-sm">IAP</p>
 				</label>
 				<label class="flex flex-row items-center space-x-1">
 					<input
@@ -272,7 +272,7 @@
 							dataSource = 'ads';
 						}}
 					/>
-					<p class="text-xs md:text-sm text-primary-900-100">Ads</p>
+					<p class="text-xs md:text-sm">Ads</p>
 				</label>
 				<label class="flex flex-row items-center space-x-1">
 					<input
@@ -285,7 +285,7 @@
 							dataSource = 'both';
 						}}
 					/>
-					<p class="text-xs md:text-sm text-primary-900-100">Both</p>
+					<p class="text-xs md:text-sm">Both</p>
 				</label>
 			</form>
 		</div>

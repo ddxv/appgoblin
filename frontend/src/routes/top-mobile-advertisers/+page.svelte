@@ -37,7 +37,7 @@
 </svelte:head>
 
 <div class="p-2 px-2 md:px-16 lg:px-32">
-	<h1 class="text-3xl font-bold text-primary-900-100">Top Mobile Ad Buyers & Their Ad Creatives</h1>
+	<h1 class="text-3xl font-bold">Top Mobile Ad Buyers & Their Ad Creatives</h1>
 
 	<br />
 

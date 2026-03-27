@@ -27,7 +27,7 @@
 				class={`whitespace-nowrap px-3 py-2 text-sm font-medium transition-colors ${
 					isActive(item.href)
 						? 'bg-surface-200-800 text-primary-contrast-500'
-						: 'text-primary-900-100 hover:bg-surface-300-700'
+						: ' hover:bg-surface-300-700'
 				}`}
 			>
 				<span class="inline-flex items-center gap-1.5">

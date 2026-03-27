@@ -14,12 +14,12 @@
 	<Breadcrumbs url={page.url} routeId={page.route.id} pageData={page.data} crumbs={pageDataCrumbs}>
 		{#snippet children({ crumbs })}
 			<div>
-				<span><a href="/" class="text-surface-900-100 hover:text-primary-900-100">Home</a></span>
+				<span><a href="/" class="text-surface-900-100 hover:">Home</a></span>
 				{#each crumbs as c}
 					<span>/</span>
 					<span>
 						{#if c.title != 'Types' && c.title != 'Categories' && c.title != 'Publisher' && c.title != 'App-adstxt'}
-							<a href={c.url} class="text-surface-900-100 hover:text-primary-900-100">
+							<a href={c.url} class="text-surface-900-100 hover:">
 								{c.title}
 								{c.metadata ? `(${c.metadata.extraValue})` : ''}
 							</a>

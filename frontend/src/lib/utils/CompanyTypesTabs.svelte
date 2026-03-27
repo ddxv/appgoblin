@@ -19,7 +19,7 @@
 
 	function textColorClass(tab: string) {
 		if (isCurrentTab(tab)) {
-			return 'text-primary-900-100';
+			return '';
 		} else {
 			return '';
 		}
@@ -27,7 +27,7 @@
 
 	function typeTabClass(tab: string) {
 		const selectedClass =
-			'px-2 md:px-4 py-2 border-t-2 border-r-2 border-l-2 border-primary-100-900 rounded-t-md relative top-[1px] text-primary-900-100';
+			'px-2 md:px-4 py-2 border-t-2 border-r-2 border-l-2 border-primary-100-900 rounded-t-md relative top-[1px] ';
 		const unselectedClass =
 			'px-2 md:px-4 py-2 border-b-2 border-surface-800-200 hover:border-primary-300-700 hover:border-b-2 hover:underline';
 		if (isCurrentTab(tab)) {

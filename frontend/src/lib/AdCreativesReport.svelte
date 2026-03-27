@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { LayoutGrid, RectangleHorizontal, RectangleVertical } from 'lucide-svelte';
+	import { LayoutGrid, Lock, RectangleHorizontal, RectangleVertical } from 'lucide-svelte';
 	import AdCreativeCard from '$lib/AdCreativeCard.svelte';
 	import {
 		type AdCreativeCategoryOption,
@@ -46,14 +46,6 @@
 		filterValue: string;
 		logoUrl: string | null;
 		count: number;
-	}
-
-	interface CreativeSection {
-		key: string;
-		label: string;
-		description: string;
-		orientation: 'portrait' | 'landscape';
-		items: CreativeCluster[];
 	}
 
 	interface AdCreativesPageData {
@@ -102,8 +94,18 @@
 	let activeNetworkFilter = $derived(normalizeFilterValue(selectedSearchCompany));
 	let orientationLookup = $state<Record<string, 'portrait' | 'landscape'>>({});
 	let selectedOrientationFilter = $state<'all' | 'portrait' | 'landscape'>('all');
-	let creativeSections = $derived(
-		getCreativeSections(creativeClusters, orientationLookup, selectedOrientationFilter)
+	let displayedClusters = $derived(
+		getDisplayedClusters(creativeClusters, orientationLookup, selectedOrientationFilter)
+	);
+	let lockedPreviewClusters = $derived(
+		!isSignedIn
+			? getLockedPreviewClusters(
+					networkFilterSourceClusters,
+					creativeClusters,
+					selectedSearchCompany,
+					anonymousCreativeLimit
+				)
+			: []
 	);
 
 	$effect(() => {
@@ -199,8 +201,9 @@
 			});
 		}
 
-		return Array.from(networkMap.values())
-			.sort((left, right) => right.count - left.count || left.label.localeCompare(right.label));
+		return Array.from(networkMap.values()).sort(
+			(left, right) => right.count - left.count || left.label.localeCompare(right.label)
+		);
 	}
 
 	async function populateOrientations(clusters: CreativeCluster[]) {
@@ -222,45 +225,18 @@
 		};
 	}
 
-	function getCreativeSections(
+	function getDisplayedClusters(
 		clusters: CreativeCluster[],
 		lookup: Record<string, 'portrait' | 'landscape'>,
 		orientationFilter: 'all' | 'portrait' | 'landscape'
-	): CreativeSection[] {
-		const portraitItems: CreativeCluster[] = [];
-		const landscapeItems: CreativeCluster[] = [];
-
-		for (const cluster of clusters) {
-			const orientation = lookup[getClusterKey(cluster)] || 'landscape';
-			if (orientation === 'portrait') {
-				portraitItems.push(cluster);
-			} else {
-				landscapeItems.push(cluster);
-			}
+	): CreativeCluster[] {
+		if (orientationFilter === 'all') {
+			return clusters;
 		}
 
-		const sections: CreativeSection[] = [];
-		if (orientationFilter !== 'portrait' && landscapeItems.length > 0) {
-			sections.push({
-				key: 'landscape',
-				label: 'Landscape Ad Creatives',
-				description: 'Wider creatives grouped together to keep rows even and compact.',
-				orientation: 'landscape',
-				items: landscapeItems
-			});
-		}
-		if (orientationFilter !== 'landscape' && portraitItems.length > 0) {
-			sections.push({
-				key: 'portrait',
-				label: 'Portrait Ad Creatives',
-				description:
-					'Taller creatives grouped separately so they do not disrupt the landscape grid.',
-				orientation: 'portrait',
-				items: portraitItems
-			});
-		}
-
-		return sections;
+		return clusters.filter(
+			(cluster) => (lookup[getClusterKey(cluster)] || 'landscape') === orientationFilter
+		);
 	}
 
 	function getClusterKey(cluster: CreativeCluster): string {
@@ -300,6 +276,40 @@
 	function normalizeFilterValue(value: string): string {
 		return value.toLowerCase().trim();
 	}
+
+	function getClusterNetworkKey(cluster: CreativeCluster): string {
+		const filterValue = getNetworkFilterValue(
+			cluster.top_ad_domain_company_domain || cluster.top_host_domain_company_domain || null,
+			cluster.top_ad_domain_company || cluster.top_host_domain_company || null
+		);
+
+		return filterValue ? normalizeFilterValue(filterValue) : '';
+	}
+
+	function getClusterOrientation(cluster: CreativeCluster): 'portrait' | 'landscape' {
+		return orientationLookup[getClusterKey(cluster)] || 'landscape';
+	}
+
+	function getLockedPreviewClusters(
+		sourceClusters: CreativeCluster[],
+		visibleClusters: CreativeCluster[],
+		selectedNetwork: string,
+		visibleLimit: number
+	): CreativeCluster[] {
+		const visibleKeys = new Set(visibleClusters.map(getClusterKey));
+		const selectedNetworkKey = normalizeFilterValue(selectedNetwork || '');
+		const scopedClusters = sourceClusters.filter((cluster) => {
+			if (!selectedNetworkKey) {
+				return true;
+			}
+
+			return getClusterNetworkKey(cluster) === selectedNetworkKey;
+		});
+
+		return scopedClusters
+			.filter((cluster) => !visibleKeys.has(getClusterKey(cluster)))
+			.slice(0, Math.max(4, Math.min(visibleLimit, 6)));
+	}
 </script>
 
 <div class="px-4 py-5 md:px-8 lg:px-10 xl:px-12">
@@ -322,7 +332,7 @@
 							</div>
 							<div class="flex flex-wrap gap-2 text-xs font-medium md:text-sm xl:justify-end">
 								{#if !isSignedIn}
-									<span class="rounded-full border border-primary-300/60 bg-primary-50/60 px-3 py-1.5 text-primary-700">
+									<span class="rounded-full bg-primary-100/80 px-3 py-1.5 text-primary-700">
 										Preview
 									</span>
 								{/if}
@@ -355,27 +365,6 @@
 						</div>
 						<div class="text-xs opacity-60 md:text-sm">{networkFilters.length} networks shown</div>
 					</div>
-
-					{#if !isSignedIn}
-						<div
-							class="flex flex-col gap-3 rounded-2xl border border-primary-300/60 bg-primary-50/60 p-4 md:flex-row md:items-center md:justify-between"
-						>
-							<div>
-								<div class="text-[11px] font-semibold uppercase tracking-[0.14em] text-primary-700">
-									Signed-out preview
-								</div>
-								<p class="mt-1 text-sm leading-6 text-primary-900">
-									You can browse up to {anonymousCreativeLimit} creatives before signing in. Category, format, and orientation filters unlock once you sign in.
-								</p>
-							</div>
-							<a
-								href={signInUrl}
-								class="inline-flex items-center justify-center rounded-full bg-primary-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-primary-700"
-							>
-								Sign in to unlock filters
-							</a>
-						</div>
-					{/if}
 
 					<div>
 						<div
@@ -432,113 +421,139 @@
 					</div>
 
 					<div
-						class="grid gap-2.5 md:grid-cols-2 xl:grid-cols-[170px_180px_minmax(220px,280px)_auto] xl:items-end"
+						class={`rounded-2xl border p-3 md:p-4 ${!allowAdvancedFilters ? 'border-primary-300/60 bg-primary-50/40' : 'border-surface-200-700-token bg-surface-100-900/30'}`}
 					>
-						<div>
-							<label class="label">
-								<span class="label-text text-[11px] uppercase tracking-[0.14em] opacity-60"
-									>Category</span
-								>
-								<select
-									id="category-select"
-									class={`select ${!allowAdvancedFilters ? 'cursor-not-allowed opacity-60' : ''}`}
-									disabled={!allowAdvancedFilters}
-									value={data.selectedCategory || 'overall'}
-									onchange={handleFilterChange}
-								>
-									{#each categoryOptions as cat}
-										<option value={cat.value}>{cat.label}</option>
-									{/each}
-								</select>
-							</label>
-						</div>
-
-						<div>
-							<label class="label">
-								<span class="label-text text-[11px] uppercase tracking-[0.14em] opacity-60"
-									>Format</span
-								>
-								<select
-									id="format-select"
-									class={`select ${!allowAdvancedFilters ? 'cursor-not-allowed opacity-60' : ''}`}
-									disabled={!allowAdvancedFilters}
-									value={data.selectedFormat || 'all'}
-									onchange={handleFilterChange}
-								>
-									{#each adCreativeFormats as fm}
-										<option value={fm.value}>{fm.label}</option>
-									{/each}
-								</select>
-							</label>
-						</div>
-
-						<div>
-							<div
-								class="mb-1.5 block text-[11px] font-medium uppercase tracking-[0.14em] opacity-60"
-							>
-								Orientation
+						<div class="mb-3 flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+							<div>
+								<div class="flex items-center gap-2 text-sm font-semibold">
+									<span>Advanced filters</span>
+								</div>
+								{#if !allowAdvancedFilters}
+									<p class="mt-1 text-xs text-primary-600 font-medium">
+										Available with a free account
+									</p>
+								{:else}
+									<p class="mt-1 text-xs opacity-70">
+										Filter by category, format, and orientation.
+									</p>
+								{/if}
 							</div>
-							<div
-								class="flex h-10 w-full rounded-xl border border-surface-300 bg-surface-100-800-token p-1"
-								role="radiogroup"
-								aria-label="Creative orientation"
-							>
-								<button
-									type="button"
-									class={`flex min-w-0 flex-1 items-center justify-center gap-1 rounded-lg px-2 text-sm transition ${getOrientationButtonClass(selectedOrientationFilter === 'all')} ${!allowAdvancedFilters ? 'cursor-not-allowed opacity-55' : ''}`}
-									disabled={!allowAdvancedFilters}
-									role="radio"
-									aria-checked={selectedOrientationFilter === 'all'}
-									onclick={() => setOrientationFilter('all')}
+							{#if !allowAdvancedFilters}
+								<a
+									href={signInUrl}
+									class="inline-flex items-center gap-2 self-start rounded-full bg-primary-600 px-4 py-1.5 text-xs font-semibold text-white transition hover:bg-primary-700"
 								>
-									<LayoutGrid size={16} />
-									<span>All</span>
-								</button>
-								<button
-									type="button"
-									class={`flex min-w-0 flex-1 items-center justify-center gap-1 rounded-lg px-2 text-sm transition ${getOrientationButtonClass(selectedOrientationFilter === 'landscape')} ${!allowAdvancedFilters ? 'cursor-not-allowed opacity-55' : ''}`}
-									disabled={!allowAdvancedFilters}
-									role="radio"
-									aria-checked={selectedOrientationFilter === 'landscape'}
-									onclick={() => setOrientationFilter('landscape')}
-								>
-									<RectangleHorizontal size={16} />
-									<span>Landscape</span>
-								</button>
-								<button
-									type="button"
-									class={`flex min-w-0 flex-1 items-center justify-center gap-1 rounded-lg px-2 text-sm transition ${getOrientationButtonClass(selectedOrientationFilter === 'portrait')} ${!allowAdvancedFilters ? 'cursor-not-allowed opacity-55' : ''}`}
-									disabled={!allowAdvancedFilters}
-									role="radio"
-									aria-checked={selectedOrientationFilter === 'portrait'}
-									onclick={() => setOrientationFilter('portrait')}
-								>
-									<RectangleVertical size={16} />
-									<span>Portrait</span>
-								</button>
-							</div>
-						</div>
-
-						<div class="flex flex-wrap gap-2 lg:justify-end">
-							{#if selectedSearchCompany || (allowAdvancedFilters && (selectedCategory !== 'overall' || selectedFormat !== 'all' || selectedOrientationFilter !== 'all'))}
-								<button
-									type="button"
-									class="rounded-full border border-surface-300 px-3 py-1.5 text-sm transition hover:bg-surface-100-800-token"
-									onclick={clearAllFilters}
-								>
-									Clear all
-								</button>
+									Create free account
+								</a>
 							{/if}
+						</div>
+
+						<div
+							class="grid gap-2.5 md:grid-cols-2 xl:grid-cols-[170px_180px_minmax(220px,280px)_auto] xl:items-end"
+						>
+							<div>
+								<label class="label">
+									<span
+										class="label-text flex items-center gap-1.5 text-[11px] uppercase tracking-[0.14em] opacity-60"
+										>Category</span
+									>
+									<select
+										id="category-select"
+										class={`select ${!allowAdvancedFilters ? 'cursor-not-allowed opacity-60' : ''}`}
+										disabled={!allowAdvancedFilters}
+										value={data.selectedCategory || 'overall'}
+										onchange={handleFilterChange}
+									>
+										{#each categoryOptions as cat}
+											<option value={cat.value}>{cat.label}</option>
+										{/each}
+									</select>
+								</label>
+							</div>
+
+							<div>
+								<label class="label">
+									<span
+										class="label-text flex items-center gap-1.5 text-[11px] uppercase tracking-[0.14em] opacity-60"
+										>Format</span
+									>
+									<select
+										id="format-select"
+										class={`select ${!allowAdvancedFilters ? 'cursor-not-allowed opacity-60' : ''}`}
+										disabled={!allowAdvancedFilters}
+										value={data.selectedFormat || 'all'}
+										onchange={handleFilterChange}
+									>
+										{#each adCreativeFormats as fm}
+											<option value={fm.value}>{fm.label}</option>
+										{/each}
+									</select>
+								</label>
+							</div>
+
+							<div>
+								<div
+									class="mb-1.5 flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-[0.14em] opacity-60"
+								>
+									<span>Orientation</span>
+								</div>
+								<div
+									class="flex h-10 w-full rounded-xl border border-surface-300 bg-surface-100-800-token p-1"
+									role="radiogroup"
+									aria-label="Creative orientation"
+								>
+									<button
+										type="button"
+										class={`flex min-w-0 flex-1 items-center justify-center gap-1 rounded-lg px-2 text-sm transition ${getOrientationButtonClass(selectedOrientationFilter === 'all')} ${!allowAdvancedFilters ? 'cursor-not-allowed opacity-55' : ''}`}
+										disabled={!allowAdvancedFilters}
+										role="radio"
+										aria-checked={selectedOrientationFilter === 'all'}
+										onclick={() => setOrientationFilter('all')}
+									>
+										<LayoutGrid size={16} />
+										<span>All</span>
+									</button>
+									<button
+										type="button"
+										class={`flex min-w-0 flex-1 items-center justify-center gap-1 rounded-lg px-2 text-sm transition ${getOrientationButtonClass(selectedOrientationFilter === 'landscape')} ${!allowAdvancedFilters ? 'cursor-not-allowed opacity-55' : ''}`}
+										disabled={!allowAdvancedFilters}
+										role="radio"
+										aria-checked={selectedOrientationFilter === 'landscape'}
+										onclick={() => setOrientationFilter('landscape')}
+									>
+										<RectangleHorizontal size={16} />
+										<span>Landscape</span>
+									</button>
+									<button
+										type="button"
+										class={`flex min-w-0 flex-1 items-center justify-center gap-1 rounded-lg px-2 text-sm transition ${getOrientationButtonClass(selectedOrientationFilter === 'portrait')} ${!allowAdvancedFilters ? 'cursor-not-allowed opacity-55' : ''}`}
+										disabled={!allowAdvancedFilters}
+										role="radio"
+										aria-checked={selectedOrientationFilter === 'portrait'}
+										onclick={() => setOrientationFilter('portrait')}
+									>
+										<RectangleVertical size={16} />
+										<span>Portrait</span>
+									</button>
+								</div>
+							</div>
+
+							<div class="flex flex-wrap gap-2 lg:justify-end">
+								{#if selectedSearchCompany || (allowAdvancedFilters && (selectedCategory !== 'overall' || selectedFormat !== 'all' || selectedOrientationFilter !== 'all'))}
+									<button
+										type="button"
+										class="rounded-full border border-surface-300 px-3 py-1.5 text-sm transition hover:bg-surface-100-800-token"
+										onclick={clearAllFilters}
+									>
+										Clear all
+									</button>
+								{/if}
+							</div>
 						</div>
 					</div>
 
 					<div class="flex flex-wrap items-center gap-2 text-xs md:text-sm">
 						<span class="opacity-60">Current view:</span>
-						{#if !isSignedIn}
-							<span class="rounded-full border border-primary-300/60 bg-primary-50/60 px-2.5 py-1 text-primary-700 md:px-3 md:py-1.5">
-								Preview limit {anonymousCreativeLimit}
-							</span>
-						{/if}
 						<span class="rounded-full bg-surface-100-800-token px-2.5 py-1 md:px-3 md:py-1.5"
 							>{creativeClusters.length} creatives</span
 						>
@@ -570,31 +585,82 @@
 				</div>
 			</div>
 
-			{#if creativeClusters.length > 0}
+			{#if displayedClusters.length > 0}
 				<div class="space-y-6">
-					{#each creativeSections as section}
-						<section class="space-y-5">
-							<div
-								class="flex flex-col gap-1 border-b border-surface-200-700-token pb-2 md:flex-row md:items-end md:justify-between"
-							>
-								<div>
-									<h2 class="text-xl font-semibold">{section.label}</h2>
-									<p class="mt-1 text-sm opacity-68">{section.description}</p>
-								</div>
-								<div class="text-sm opacity-60">{section.items.length} creatives</div>
-							</div>
+					<div
+						class="flex flex-col gap-1 border-b border-surface-200-700-token pb-2 md:flex-row md:items-end md:justify-between"
+					>
+						<div>
+							<h2 class="text-xl font-semibold">Ad Creatives Feed</h2>
+							<p class="mt-1 text-sm opacity-68">
+								Portrait and landscape creatives are shown together in one feed.
+							</p>
+						</div>
+						<div class="text-sm opacity-60">{displayedClusters.length} creatives</div>
+					</div>
 
-							<div
-								class={`grid grid-cols-2 gap-x-3 gap-y-4 md:gap-y-5 ${section.orientation === 'portrait' ? 'md:grid-cols-3 md:gap-x-4 lg:grid-cols-4 2xl:grid-cols-5 2xl:gap-x-8' : 'md:grid-cols-2 md:gap-x-4 lg:grid-cols-3 lg:gap-x-6 2xl:grid-cols-4 2xl:gap-x-8'} 2xl:gap-y-6`}
-							>
-								{#each section.items as cluster}
-									<div class="min-w-0">
-										<AdCreativeCard data={cluster} orientation={section.orientation} />
-									</div>
-								{/each}
+					<div
+						class="grid grid-cols-2 gap-x-3 gap-y-4 md:grid-cols-3 md:gap-x-4 md:gap-y-5 lg:grid-cols-4 lg:gap-x-6 2xl:grid-cols-5 2xl:gap-x-8 2xl:gap-y-6"
+					>
+						{#each displayedClusters as cluster}
+							<div class="min-w-0">
+								<AdCreativeCard data={cluster} orientation={getClusterOrientation(cluster)} />
 							</div>
-						</section>
-					{/each}
+						{/each}
+					</div>
+
+					{#if !isSignedIn && lockedPreviewClusters.length > 0}
+						<div class="space-y-3">
+							<div class="flex items-center justify-between gap-3">
+								<div>
+									<h3 class="text-lg font-semibold">
+										View all {networkFilterSourceClusters.length} creatives for free
+									</h3>
+									<p class="mt-1 text-sm opacity-68">
+										Create a free account to unlock the full feed and advanced filters.
+									</p>
+								</div>
+								<a
+									href={signInUrl}
+									class="inline-flex items-center gap-2 rounded-full bg-primary-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-primary-700"
+								>
+									Create free account
+								</a>
+							</div>
+							<div class="relative">
+								<div
+									class="grid grid-cols-2 gap-x-3 gap-y-4 opacity-40 blur-[1px] saturate-50 md:grid-cols-3 md:gap-x-4 md:gap-y-5 lg:grid-cols-4 lg:gap-x-6 2xl:grid-cols-5 2xl:gap-x-8 2xl:gap-y-6"
+								>
+									{#each lockedPreviewClusters as cluster}
+										<div class="min-w-0 pointer-events-none select-none">
+											<AdCreativeCard data={cluster} orientation={getClusterOrientation(cluster)} />
+										</div>
+									{/each}
+								</div>
+								<div
+									class="absolute inset-0 flex items-center justify-center rounded-2xl bg-gradient-to-b from-surface-50/10 via-surface-50/55 to-surface-50/85 dark:from-surface-900/10 dark:via-surface-900/50 dark:to-surface-900/80"
+								>
+									<div
+										class="mx-4 max-w-md rounded-2xl border border-primary-300/60 bg-white/88 p-5 text-center shadow-lg backdrop-blur-sm dark:bg-surface-900/88"
+									>
+										<h4 class="text-lg font-bold text-primary-700">Unlock full access for free</h4>
+										<p class="mt-2 text-sm font-medium opacity-80">
+											Sign up for a free account to view the complete creative library, unlock
+											advanced filters, and more.
+										</p>
+										<div class="mt-5 flex justify-center gap-3">
+											<a
+												href={signInUrl}
+												class="inline-flex items-center justify-center rounded-full bg-primary-600 px-6 py-2.5 text-sm font-bold text-white transition hover:bg-primary-700"
+											>
+												Create Free Account
+											</a>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					{/if}
 				</div>
 			{:else}
 				<div

@@ -17,6 +17,13 @@ import { getCachedData } from '../../hooks.server';
 
 type PrimaryFilter = 'base' | 'network' | 'app-category';
 
+interface CreativeCluster {
+	top_advertiser_store_id?: string | null;
+	top_adv_name?: string | null;
+	unique_publisher_apps?: number | null;
+	last_seen_at?: string | null;
+}
+
 interface LoadAdCreativesPageOptions {
 	fetch: typeof globalThis.fetch;
 	isSignedIn: boolean;
@@ -59,7 +66,9 @@ export async function loadAdCreativesPage({
 		);
 	}
 
-	const selectedCategory = allowAdvancedFilters ? (routeCategory ?? queryCategory ?? 'overall') : 'overall';
+	const selectedCategory = allowAdvancedFilters
+		? (routeCategory ?? queryCategory ?? 'overall')
+		: 'overall';
 	const selectedFormat = allowAdvancedFilters ? (queryFormat ?? 'all') : 'all';
 	const searchCompany = routeNetwork ?? queryCompany ?? '';
 	const { appCats } = await getCachedData();
@@ -107,9 +116,18 @@ export async function loadAdCreativesPage({
 		api.get(apiUrl, 'Ad Creatives'),
 		api.get(networkApiUrl, 'Ad Creative Network Filters')
 	]);
-	const creativeClusters = Array.isArray(creativeClustersResponse)
-		? creativeClustersResponse.slice(0, allowAdvancedFilters ? creativeClustersResponse.length : ANONYMOUS_CREATIVE_LIMIT)
+	const sortedCreativeClusters = Array.isArray(creativeClustersResponse)
+		? [...creativeClustersResponse].sort(compareCreativeClusters)
 		: creativeClustersResponse;
+	const sortedNetworkFilterSourceClusters = Array.isArray(networkFilterSourceClusters)
+		? [...networkFilterSourceClusters].sort(compareCreativeClusters)
+		: networkFilterSourceClusters;
+	const creativeClusters = Array.isArray(sortedCreativeClusters)
+		? sortedCreativeClusters.slice(
+				0,
+				allowAdvancedFilters ? sortedCreativeClusters.length : ANONYMOUS_CREATIVE_LIMIT
+			)
+		: sortedCreativeClusters;
 	const seo = getAdCreativesSeo({
 		primaryFilter,
 		categoryOptions,
@@ -119,7 +137,7 @@ export async function loadAdCreativesPage({
 
 	return {
 		creativeClusters,
-		networkFilterSourceClusters,
+		networkFilterSourceClusters: sortedNetworkFilterSourceClusters,
 		categoryOptions,
 		selectedCategory,
 		selectedFormat,
@@ -130,6 +148,24 @@ export async function loadAdCreativesPage({
 		signInUrl: loginUrl(url.pathname + url.search),
 		...seo
 	};
+}
+
+function compareCreativeClusters(left: CreativeCluster, right: CreativeCluster): number {
+	const leftHasAdvertiser = Boolean(left.top_advertiser_store_id || left.top_adv_name);
+	const rightHasAdvertiser = Boolean(right.top_advertiser_store_id || right.top_adv_name);
+
+	if (leftHasAdvertiser !== rightHasAdvertiser) {
+		return leftHasAdvertiser ? -1 : 1;
+	}
+
+	const seenDifference = (right.unique_publisher_apps || 0) - (left.unique_publisher_apps || 0);
+	if (seenDifference !== 0) {
+		return seenDifference;
+	}
+
+	const leftLastSeen = left.last_seen_at ? Date.parse(left.last_seen_at) : 0;
+	const rightLastSeen = right.last_seen_at ? Date.parse(right.last_seen_at) : 0;
+	return rightLastSeen - leftLastSeen;
 }
 
 function validateCategory(
