@@ -69,7 +69,7 @@
 	}
 </script>
 
-<div class="preset-filled-surface-100-900 p-2 md:p-8 mt-2 md:mt-4">
+<div class="p-2 md:p-8 mt-2 md:mt-4">
 	<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 		<div>
 			<h4 class="h4 md:h3 p-2">Best App Store Ranks This Month</h4>

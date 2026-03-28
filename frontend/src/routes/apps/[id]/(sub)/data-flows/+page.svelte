@@ -37,7 +37,7 @@
 	const cardClass = 'p-4 bg-surface-100-900 rounded-md';
 </script>
 
-<div class="preset-filled-surface-100-900 p-2 md:p-16 mt-2 md:mt-4">
+<div class="p-2 md:p-16 mt-2 md:mt-4">
 	<h4 class="h4 md:h3 p-2">Data calls made by {data.myapp.name}</h4>
 
 	{#await data.apis}

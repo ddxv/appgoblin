@@ -27,13 +27,13 @@
 	const sectionTitleClass = 'text-2xl transition-colors';
 	const sectionSubtitleClass = 'text-primary-800-200 font-medium';
 	const sectionDescriptionClass = 'mb-6';
-	const cardContainerClass = 'p-4';
+	const subSectionClass = 'p-4';
 	const cardTitleClass = 'text-lg font-bold transition-colors';
 	const cardDescriptionClass = 'text-sm text-gray-400 mb-4';
 	const iconContainerClass = 'p-2 rounded-lg mr-3';
-	const buttonTextColor = 'text-black';
-	const gradientButtonClass =
-		'bg-gradient-to-r text-white font-bold px-6 py-3 rounded-xl shadow-lg group-hover:shadow-xl transition-shadow';
+	('bg-gradient-to-r text-white font-bold px-6 py-3 rounded-xl shadow-lg group-hover:shadow-xl transition-shadow');
+	const mainSectionClass =
+		'card p-4 md:p-8 rounded-2xl shadow-xl border border-secondary-900-100/20';
 
 	// Get current month and year for display
 	const now = new Date();
@@ -160,7 +160,7 @@
 		</div>
 	</section>
 
-	<section class="card p-4 md:p-8 rounded-2xl shadow-xl border border-secondary-900-100/20">
+	<section class={mainSectionClass}>
 		<div class="flex items-center mb-6">
 			<div
 				class="bg-gradient-to-br from-secondary-900-100 to-secondary-600 p-1 rounded-2xl shadow-lg mr-4"
@@ -314,7 +314,7 @@
 	</section>
 
 	<!-- Top Advertiser Section -->
-	<section class="card p-4 md:p-8 rounded-2xl shadow-xl border border-success-900-100/20">
+	<section class={mainSectionClass}>
 		<div class="flex items-center mb-6">
 			<div
 				class="bg-gradient-to-br from-success-900-100 to-success-600 p-1 rounded-2xl shadow-lg mr-4"
@@ -352,7 +352,7 @@
 	</section>
 
 	<!-- Popular Companies/SDKs Section -->
-	<section class="card p-1 md:p-8 rounded-2xl shadow-xl border border-primary-900-100/20">
+	<section class={mainSectionClass}>
 		<div class="flex items-center mb-6">
 			<div
 				class="bg-gradient-to-br from-primary-900-100 to-primary-600 rounded-2xl p-1 shadow-lg mr-4"
@@ -372,7 +372,7 @@
 		</p>
 
 		<div class="grid grid-cols-1 md:grid-cols-2 md:gap-8 mb-6">
-			<div class={cardContainerClass}>
+			<div class={subSectionClass}>
 				<div class="flex items-center mb-3">
 					<a href="/companies/types/ad-attribution">
 						<h4 class="{cardTitleClass} ">MMPs</h4>
@@ -385,7 +385,7 @@
 					<CompaniesBarChart plotData={data.topCompanies.attribution.sdk_ios} />
 				{/if}
 			</div>
-			<div class={cardContainerClass}>
+			<div class={subSectionClass}>
 				<div class="flex items-center mb-3">
 					<a href="/companies/types/product-analytics">
 						<h4 class="{cardTitleClass} hover:text-green-400">Product Analytics</h4>
@@ -412,7 +412,7 @@
 	</section>
 
 	<!-- App Store Rankings Section -->
-	<section class="card p-1 md:p-4 md:p-8 rounded-2xl shadow-xl border border-warning-900-100/20">
+	<section class={mainSectionClass}>
 		<div class="flex items-center mb-6">
 			<div
 				class="bg-gradient-to-br from-warning-900-100 to-warning-600 p-1 rounded-2xl shadow-lg mr-4"
@@ -430,55 +430,55 @@
 			details.
 		</p>
 
-		<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-			<div class={cardContainerClass}>
-				<div class="flex items-center mb-3">
-					<div class="bg-gradient-to-br from-green-500 to-green-600 {iconContainerClass}">
-						<Smartphone class="h-4 w-4 text-white" />
-					</div>
-					<a href="/rankings/store/1/collection/1/category/1/US">
-						<h3 class="{cardTitleClass} hover:text-green-400">Android Apps</h3>
-					</a>
-				</div>
+		<div class="grid grid-cols-1 grid-cols-2 gap-6 mb-6">
+			<div class={subSectionClass}>
+				<a href="/rankings/store/1/collection/1/category/1/US">
+					<span
+						class="text-base md:text-lg inline-flex gap-2 items-center font-bold hover:text-green-400"
+					>
+						<Smartphone class="h-4 w-4" />
+						Today's Top 5 Android Apps
+					</span>
+				</a>
 				{#if data.androidAppRanks}
 					<AppRankTableShort myTable={data.androidAppRanks} />
 				{/if}
 			</div>
-			<div class={cardContainerClass}>
-				<div class="flex items-center mb-3">
-					<div class="bg-gradient-to-br from-green-500 to-green-600 {iconContainerClass}">
-						<Gamepad2 class="h-4 w-4 text-white" />
-					</div>
-					<a href="/rankings/store/1/collection/1/category/36/US">
-						<h3 class="{cardTitleClass} hover:text-green-400">Android Games</h3>
-					</a>
-				</div>
+			<div class={subSectionClass}>
+				<a href="/rankings/store/1/collection/1/category/36/US">
+					<span
+						class="text-base md:text-lg inline-flex gap-2 items-center font-bold hover:text-green-400"
+					>
+						<Gamepad2 class="h-4 w-4" />
+						Today's Top 5 Android Games
+					</span>
+				</a>
 				{#if data.androidGameRanks}
 					<AppRankTableShort myTable={data.androidGameRanks} />
 				{/if}
 			</div>
-			<div class={cardContainerClass}>
-				<div class="flex items-center mb-3">
-					<div class="bg-gradient-to-br from-gray-500 to-gray-600 {iconContainerClass}">
-						<Smartphone class="h-4 w-4 text-white" />
-					</div>
-					<a href="/rankings/store/2/collection/4/category/120/US">
-						<h3 class="{cardTitleClass} hover:text-gray-400">iOS Apps</h3>
-					</a>
-				</div>
+			<div class={subSectionClass}>
+				<a href="/rankings/store/2/collection/4/category/120/US">
+					<span
+						class="text-base md:text-lg inline-flex gap-2 items-center font-bold hover:text-gray-400"
+					>
+						<Smartphone class="h-4 w-4" />
+						Today's Top 5 iOS Apps
+					</span>
+				</a>
 				{#if data.iOSAppRanks}
 					<AppRankTableShort myTable={data.iOSAppRanks} />
 				{/if}
 			</div>
-			<div class={cardContainerClass}>
-				<div class="flex items-center mb-3">
-					<div class="bg-gradient-to-br from-gray-500 to-gray-600 {iconContainerClass}">
-						<Gamepad2 class="h-4 w-4 text-white" />
-					</div>
-					<a href="/rankings/store/2/collection/4/category/62/US">
-						<h3 class="{cardTitleClass} hover:text-gray-400">iOS Games</h3>
-					</a>
-				</div>
+			<div class={subSectionClass}>
+				<a href="/rankings/store/2/collection/4/category/62/US">
+					<span
+						class="text-base md:text-lg inline-flex gap-2 items-center font-bold hover:text-gray-400"
+					>
+						<Gamepad2 class="h-4 w-4" />
+						Today's Top 5 iOS Games
+					</span>
+				</a>
 				{#if data.iOSGameRanks}
 					<AppRankTableShort myTable={data.iOSGameRanks} />
 				{/if}
@@ -501,7 +501,7 @@
 	</section>
 
 	<!-- New Apps Section -->
-	<section class="card p-8 rounded-2xl shadow-xl border border-info-900-100/20">
+	<section class={mainSectionClass}>
 		<div class="flex items-center mb-6">
 			<div class="bg-gradient-to-br from-info-900-100 to-info-600 p-1 rounded-2xl shadow-lg mr-4">
 				<Sparkles class="h-8 w-8 text-white" />

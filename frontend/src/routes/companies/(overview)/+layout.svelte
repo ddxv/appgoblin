@@ -35,9 +35,10 @@
 	<div>
 		<div class="flex items-center mb-2">
 			<h1 class="h1 text-3xl font-bold">
-				<span class="text-primary-700-300">{currentType ? currentType.name : ''}</span>
+				<span class="text-secondary-700-300">{currentType ? currentType.name : ''}</span>
 				for
-				<span class="text-primary-700-300">{currentCategoryName ? currentCategoryName : 'All'}</span
+				<span class="text-secondary-700-300"
+					>{currentCategoryName ? currentCategoryName : 'All'}</span
 				>
 				Apps
 			</h1>

@@ -14,7 +14,12 @@
 			}
 		} else if (page.url.pathname.startsWith(`/companies/types/${tab}`)) {
 			return true;
-		} else return false;
+		} else if (page.params.domain) {
+			const companyTypes = (page.data.companyDetails as { company_types?: string[] } | undefined)
+				?.company_types;
+			return companyTypes?.[0] === tab;
+		}
+		return false;
 	}
 
 	function textColorClass(tab: string) {
@@ -53,7 +58,7 @@
 	}
 </script>
 
-<div class="flex flex-row flex-wrap text-sm md:text-base">
+<div class="flex flex-row flex-wrap text-sm md:text-base mb-2 md:mb-4">
 	<a
 		href={getCategoryUrlPart(page.url.pathname.toString(), '', page.params.category!)}
 		class={typeTabClass('all')}

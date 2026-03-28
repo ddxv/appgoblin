@@ -296,7 +296,7 @@ export interface SDKAppsOverview {
 	developer_domain_crawled_at: string;
 }
 
-export interface CompanyOverviewAppsNEW {
+export interface CompanyOverviewApps {
 	name: string;
 	store_id: string;
 	store: number;
