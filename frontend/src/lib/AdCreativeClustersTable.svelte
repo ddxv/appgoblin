@@ -46,7 +46,7 @@
 <div class="overflow-x-auto">
 	<table class="table min-inline-size-full whitespace-nowrap align-middle">
 		<thead>
-			<tr class="bg-surface-100-800-token">
+			<tr>
 				<th class="px-4 py-3 text-left font-semibold">Creative</th>
 				<th class="px-4 py-3 text-left font-semibold">Format</th>
 				<th class="px-4 py-3 text-left font-semibold">Top Advertiser</th>
@@ -58,7 +58,7 @@
 		</thead>
 		<tbody>
 			{#each data as row}
-				<tr class="border-surface-200-700-token border-b hover:bg-surface-hover-token">
+				<tr class="border-b hover:bg-surface-hover-token">
 					<!-- Thumbnail -->
 					<td class="px-4 py-3">
 						<img

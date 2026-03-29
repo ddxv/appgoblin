@@ -93,7 +93,7 @@
 />
 
 <div
-	class="card card-hover overflow-hidden rounded-xl border border-surface-200-700-token bg-surface-50-900-token shadow-sm transition-all flex h-full flex-col"
+	class="card card-hover overflow-hidden rounded-xl border shadow-sm transition-all flex h-full flex-col"
 	role="group"
 	onmouseenter={() => (isHovered = true)}
 	onmouseleave={() => (isHovered = false)}
@@ -203,7 +203,7 @@
 					/>
 				{:else}
 					<div
-						class="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded bg-surface-300-600-token text-[9px] opacity-50 md:h-8 md:w-8 md:text-[10px] lg:h-9 lg:w-9"
+						class="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded text-[9px] opacity-50 md:h-8 md:w-8 md:text-[10px] lg:h-9 lg:w-9"
 					>
 						App
 					</div>
@@ -218,11 +218,7 @@
 							{data.top_adv_name || data.top_advertiser_store_id}
 						</a>
 					{:else}
-						<div
-							class="block truncate text-[11px] font-medium text-surface-500-400-token md:text-xs"
-						>
-							Unknown Advertiser
-						</div>
+						<div class="block truncate text-[11px] font-medium md:text-xs">Unknown Advertiser</div>
 					{/if}
 					<div class="mt-1 flex flex-col items-start gap-1 text-xs opacity-70">
 						{#if data.top_ad_domain_company || data.top_ad_domain}
@@ -245,9 +241,7 @@
 			</div>
 
 			<!-- Publisher / Reach context -->
-			<div
-				class="flex flex-col gap-1 rounded bg-surface-100-800-token p-1.5 text-[11px] md:p-2 md:text-xs"
-			>
+			<div class="flex flex-col gap-1 rounded p-1.5 text-[11px] md:p-2 md:text-xs">
 				<div class="flex justify-between items-center text-surface-600-300-token">
 					<span>Unique Publishers:</span>
 					<span class="font-bold">{data.unique_publisher_apps}</span>

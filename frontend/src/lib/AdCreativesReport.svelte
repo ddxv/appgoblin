@@ -158,14 +158,14 @@
 
 	function getNetworkButtonClass(isActive: boolean): string {
 		return isActive
-			? 'border-primary-500 text-primary-500'
-			: 'border-surface-200-700-token bg-surface-100-800-token hover:border-surface-400-500-token';
+			? 'border-secondary-700-300 text-secondary-700-300'
+			: 'hover:border-secondary-800-200 hover:text-secondary-800-200';
 	}
 
 	function getOrientationButtonClass(isActive: boolean): string {
 		return isActive
-			? 'border border-primary-500 text-primary-500'
-			: 'text-surface-700-200-token hover:bg-surface-50-950-token';
+			? 'border border-secondary-700-300 text-secondary-700-300'
+			: 'hover:border-secondary-800-200 hover:text-secondary-800-200';
 	}
 
 	function getNetworkFilters(clusters: CreativeCluster[]): NetworkFilter[] {
@@ -314,9 +314,7 @@
 
 <div class="px-4 py-5 md:px-8 lg:px-10 xl:px-12">
 	<div class="mx-auto max-w-[1440px] space-y-6">
-		<div
-			class="rounded-2xl border border-surface-200-700-token bg-surface-50-900-token p-4 shadow-sm md:p-5"
-		>
+		<div class="rounded-2xl border p-4 shadow-sm md:p-5">
 			<div class="flex flex-col gap-4">
 				<div class="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
 					<div class="min-w-0">
@@ -330,32 +328,11 @@
 										'Browse actual videos and images used by top advertisers across ad networks.'}
 								</p>
 							</div>
-							<div class="flex flex-wrap gap-2 text-xs font-medium md:text-sm xl:justify-end">
-								{#if !isSignedIn}
-									<span class="rounded-full bg-primary-100/80 px-3 py-1.5 text-primary-700">
-										Preview
-									</span>
-								{/if}
-								<span class="rounded-full bg-surface-100-800-token px-3 py-1.5">
-									{creativeClusters.length} creatives
-								</span>
-								<span class="rounded-full bg-surface-100-800-token px-3 py-1.5">
-									{detectedAdvertiserCount} advertisers
-								</span>
-								<span class="rounded-full bg-surface-100-800-token px-3 py-1.5">
-									{networkFilters.length} networks
-								</span>
-								{#if undetectedAdvertiserCount > 0}
-									<span class="rounded-full bg-surface-100-800-token px-3 py-1.5">
-										{undetectedAdvertiserCount} undetected
-									</span>
-								{/if}
-							</div>
 						</div>
 					</div>
 				</div>
 
-				<div class="flex flex-col gap-4 border-t border-surface-200-700-token pt-4">
+				<div class="flex flex-col gap-4 border-t pt-4">
 					<div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
 						<div>
 							<h2 class="text-base font-semibold md:text-lg">Filters</h2>
@@ -379,7 +356,7 @@
 								onclick={() => handleNetworkFilter('')}
 							>
 								<div
-									class="flex h-8 w-8 items-center justify-center rounded-lg bg-surface-50-950-token text-xs font-semibold"
+									class="flex h-8 w-8 items-center justify-center rounded-lg text-xs font-semibold"
 								>
 									All
 								</div>
@@ -396,7 +373,7 @@
 									aria-pressed={activeNetworkFilter === network.key}
 								>
 									<div
-										class="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-surface-50-950-token"
+										class="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-lg"
 									>
 										{#if network.logoUrl}
 											<img
@@ -421,12 +398,12 @@
 					</div>
 
 					<div
-						class={`rounded-2xl border p-3 md:p-4 ${!allowAdvancedFilters ? 'border-primary-300/60 bg-primary-50/40' : 'border-surface-200-700-token bg-surface-100-900/30'}`}
+						class={`rounded-2xl border p-3 md:p-4 ${!allowAdvancedFilters ? 'border-primary-300/60 bg-primary-50/40' : ''}`}
 					>
 						<div class="mb-3 flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
 							<div>
 								<div class="flex items-center gap-2 text-sm font-semibold">
-									<span>Advanced filters</span>
+									<span>Advanced Filters</span>
 								</div>
 								{#if !allowAdvancedFilters}
 									<p class="mt-1 text-xs text-primary-600 font-medium">
@@ -498,7 +475,7 @@
 									<span>Orientation</span>
 								</div>
 								<div
-									class="flex h-10 w-full rounded-xl border border-surface-300 bg-surface-100-800-token p-1"
+									class="flex h-10 w-full rounded-xl border border-surface-300-700 p-1"
 									role="radiogroup"
 									aria-label="Creative orientation"
 								>
@@ -542,7 +519,7 @@
 								{#if selectedSearchCompany || (allowAdvancedFilters && (selectedCategory !== 'overall' || selectedFormat !== 'all' || selectedOrientationFilter !== 'all'))}
 									<button
 										type="button"
-										class="rounded-full border border-surface-300 px-3 py-1.5 text-sm transition hover:bg-surface-100-800-token"
+										class="rounded-full border border-surface-300-700 px-3 py-1.5 text-sm transition"
 										onclick={clearAllFilters}
 									>
 										Clear all
@@ -554,30 +531,30 @@
 
 					<div class="flex flex-wrap items-center gap-2 text-xs md:text-sm">
 						<span class="opacity-60">Current view:</span>
-						<span class="rounded-full bg-surface-100-800-token px-2.5 py-1 md:px-3 md:py-1.5"
+						<span class="rounded-full px-2.5 py-1 md:px-3 md:py-1.5"
 							>{creativeClusters.length} creatives</span
 						>
 						{#if allowAdvancedFilters && selectedCategory !== 'overall'}
-							<span class="rounded-full bg-surface-100-800-token px-2.5 py-1 md:px-3 md:py-1.5"
+							<span class="rounded-full px-2.5 py-1 md:px-3 md:py-1.5"
 								>{categoryOptions.find((cat) => cat.value === selectedCategory)?.label ||
 									selectedCategory}</span
 							>
 						{/if}
 						{#if allowAdvancedFilters && selectedFormat !== 'all'}
-							<span class="rounded-full bg-surface-100-800-token px-2.5 py-1 md:px-3 md:py-1.5"
+							<span class="rounded-full px-2.5 py-1 md:px-3 md:py-1.5"
 								>{adCreativeFormats.find((format) => format.value === selectedFormat)?.label ||
 									selectedFormat}</span
 							>
 						{/if}
 						{#if allowAdvancedFilters && selectedOrientationFilter !== 'all'}
-							<span class="rounded-full bg-surface-100-800-token px-2.5 py-1 md:px-3 md:py-1.5"
+							<span class="rounded-full px-2.5 py-1 md:px-3 md:py-1.5"
 								>{selectedOrientationFilter === 'portrait'
 									? 'Portrait only'
 									: 'Landscape only'}</span
 							>
 						{/if}
 						{#if selectedSearchCompany}
-							<span class="rounded-full bg-surface-100-800-token px-2.5 py-1 md:px-3 md:py-1.5"
+							<span class="rounded-full px-2.5 py-1 md:px-3 md:py-1.5"
 								>{getAdCreativeNetworkLabel(selectedSearchCompany)}</span
 							>
 						{/if}
@@ -588,7 +565,7 @@
 			{#if displayedClusters.length > 0}
 				<div class="space-y-6">
 					<div
-						class="flex flex-col gap-1 border-b border-surface-200-700-token pb-2 md:flex-row md:items-end md:justify-between"
+						class="flex flex-col gap-1 border-b pb-2 md:flex-row md:items-end md:justify-between"
 					>
 						<div>
 							<h2 class="text-xl font-semibold">Ad Creatives Feed</h2>
@@ -663,9 +640,7 @@
 					{/if}
 				</div>
 			{:else}
-				<div
-					class="rounded-2xl border-2 border-dashed border-surface-300-600-token py-16 text-center"
-				>
+				<div class="rounded-2xl border-2 border-dashed py-16 text-center">
 					<h3 class="text-xl font-medium opacity-70">No ad creatives found</h3>
 					<p class="mt-2 text-sm opacity-60">
 						Try selecting a different category or adjusting filters.
