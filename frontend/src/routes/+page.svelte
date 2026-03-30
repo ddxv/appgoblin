@@ -30,59 +30,15 @@
 	const subSectionClass = 'p-4';
 	const cardTitleClass = 'text-lg font-bold transition-colors';
 	const cardDescriptionClass = 'text-sm text-gray-400 mb-4';
-	const iconContainerClass = 'p-2 rounded-lg mr-3';
+	const featureCtaClass =
+		'btn px-3 py-1.5 bg-primary-300-700 text-base hover:bg-primary-500-300 text-white font-medium';
 	('bg-gradient-to-r text-white font-bold px-6 py-3 rounded-xl shadow-lg group-hover:shadow-xl transition-shadow');
 	const mainSectionClass =
 		'card p-4 md:p-8 rounded-2xl shadow-xl border border-secondary-900-100/20';
 
 	// Get current month and year for display
 	const now = new Date();
-	const monthYear = now.toLocaleString('default', { month: 'long', year: 'numeric' });
-
-	const audiences = [
-		{
-			title: 'App & Game Developers',
-			description:
-				'Grow your app with free ASO tools, keyword tracking, rankings data, and competitor SDK analysis.',
-			badge: 'Growth'
-		},
-		{
-			title: 'Ad Sales Teams',
-			description:
-				'Prospect clients by analyzing which apps use your target ad networks, mediation platforms, and analytics providers.',
-			badge: 'Sales'
-		},
-		{
-			title: 'Ad Networks & DSPs',
-			description:
-				'Perform fraud detection by auditing SDK integrations and validating app-ads.txt supply-path data across millions of apps.',
-			badge: 'Fraud Detection'
-		},
-		{
-			title: 'DSPs — App-Ads.txt Verification',
-			description:
-				'Map app-ads.txt DIRECT and RESELLER entries to real app store IDs (e.g. com.example.app) rather than just domain names.',
-			badge: 'Verification'
-		},
-		{
-			title: 'Researchers & Journalists',
-			description:
-				'Deep technical analysis across millions of apps — SDKs, API calls, and data security patterns at scale.',
-			badge: 'Research'
-		},
-		{
-			title: 'Competitor Researchers',
-			description:
-				"Track which SDKs competitors are adopting, how fast they're growing, and who their top app clients are.",
-			badge: 'Intelligence'
-		},
-		{
-			title: 'Privacy Advocates',
-			description:
-				'Identify hidden trackers, ad-tech domains, and SDK networks embedded in popular apps.',
-			badge: 'Privacy'
-		}
-	];
+	const monthYear = now.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
 </script>
 
 <svelte:head>
@@ -168,47 +124,62 @@
 				<ClipboardList class="h-8 w-8 text-white" />
 			</div>
 			<div>
-				<h2 class={sectionTitleClass}>Power app growth</h2>
-				<p class={sectionSubtitleClass}></p>
+				<h2 class={sectionTitleClass}>Core App Growth Intelligence</h2>
+				<p class={sectionSubtitleClass}>Free tools with export-ready datasets</p>
 			</div>
 		</div>
 
 		<p class={sectionDescriptionClass}>
-			Mobile app intelligence across SDK, API, ads, and ASO. AppGoblin has free resources for mobile
-			app marketers, sales teams, and researchers. Paid export-ready datasets are also available for
-			teams that need raw data for custom analysis.
+			Free tools to analyze app performance, competitive landscape, and ad-tech activity across 4M+
+			Android and iOS apps.
 		</p>
 
-		<h3 class="text-lg font-bold mb-3">Features</h3>
+		<h3 class="text-lg font-bold mb-3">Core Features</h3>
 		<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
 			<div class="rounded-xl border border-white/10 p-4 bg-white/5">
 				<h4 class="font-bold mb-2">
 					<a href="/rankings/store/1/collection/1/category/1/US" class="hover:text-primary-600-400"
-						>App Intelligence</a
+						>App Intelligence (Free)</a
 					>
 				</h4>
-				<p class="text-sm mb-3">Data on 4M+ iOS and Android apps, updated daily.</p>
+				<p class="text-sm mb-3">Daily intelligence on 4M+ Android and iOS apps.</p>
 				<ul class="text-sm space-y-1.5">
 					<li>
-						<span class="text-white/80 font-medium">Keywords</span> — Track your or competitors' keywords
-						and the top ranking apps
+						<span class="text-white/80 font-medium">Keyword Tracking</span> — Monitor target terms and
+						top ranking apps
 					</li>
 					<li>
-						<span class="text-white/80 font-medium">Trends</span> — Track installs and ratings over time
+						<span class="text-white/80 font-medium">Growth Trends</span> — Follow install and rating changes
+						over time
 					</li>
 					<li>
-						<span class="text-white/80 font-medium">Rankings</span> — Daily tracking from Google Play
-						and the App Store
+						<span class="text-white/80 font-medium">Store Rankings</span> — Track Google Play and App
+						Store positions daily
 					</li>
 					<li>
-						<span class="text-white/80 font-medium">New Apps Discovery</span> — Surfaces newly released
-						apps buried by store algorithms
+						<span class="text-white/80 font-medium">New App Discovery</span> — Surface new releases early
+						across categories
 					</li>
 					<li>
-						<span class="text-white/80 font-medium">Growth Metrics</span> — Daily install estimates and
-						rating change tracking
+						<span class="text-white/80 font-medium">SDK Footprints</span> — See which SDKs each app is
+						using
 					</li>
 				</ul>
+				<p class="text-xs text-white/60 mt-3 mb-1">Who it's for:</p>
+				<p class="text-sm">App marketers, ASO teams, and competitor researchers.</p>
+				<p class="text-xs text-white/60 mt-3 mb-2">Examples:</p>
+				<div class="flex justify-between items-end gap-2 mb-0">
+					<div class="flex flex-wrap gap-2">
+						<a
+							href="/apps/com.rovio.baba"
+							class="text-xs px-2 py-1 rounded-full bg-white/10 hover:bg-white/20 text-white/80"
+							>Angry Birds 2 App</a
+						>
+					</div>
+					<a href="/rankings/store/1/collection/1/category/1/US" class={featureCtaClass}
+						>Track Rankings →</a
+					>
+				</div>
 			</div>
 
 			<div class="rounded-xl border border-white/10 p-4 bg-white/5">
@@ -216,100 +187,128 @@
 					<a href="/sdks" class="hover:text-primary-600-400">SDK Analysis</a>
 				</h4>
 				<p class="text-sm">
-					Detailed breakdown of SDKs found in decompiled Android and iOS apps — advertising,
-					analytics, and open-source libraries to see what any app is really running.
+					Inspect SDK footprints from decompiled Android and iOS apps, including ad, analytics, and
+					open-source libraries.
 				</p>
-				<p>Free: Request any app for analysis.</p>
-			</div>
-
-			<div class="rounded-xl border border-white/10 p-4 bg-white/5">
-				<h4 class="font-bold mb-2">
-					<a href="/companies" class="hover:text-primary-600-400">Companies Directory</a>
-				</h4>
-				<p class="text-sm mb-3">
-					Rankings of mobile app companies by SDK integration frequency, filterable by app category.
-				</p>
-
-				<div class="flex flex-wrap gap-2">
-					<a
-						href="/companies/types/ad-networks/game_casino"
-						class="text-xs px-2 py-1 rounded-full text-white/80">Ad Networks for Casino Games</a
-					>
-					<a
-						href="/companies/types/product-analytics/business"
-						class="text-xs px-2 py-1 rounded-full bg-white/10 hover:bg-white/20 text-white/80"
-						>Product Analytics for Business Apps →</a
-					>
+				<ul class="text-sm space-y-1.5 mt-3">
+					<li>
+						<span class="text-white/80 font-medium">Library Detection</span> — Identify ad, analytics,
+						and open-source packages in each app
+					</li>
+					<li>
+						<span class="text-white/80 font-medium">On-Demand Scans</span> — Request app analysis and
+						review newly processed results
+					</li>
+				</ul>
+				<p class="text-xs text-white/60 mt-3 mb-1">Who it's for:</p>
+				<p class="text-sm">Developers, technical researchers, and security analysts.</p>
+				<p class="text-sm mt-3 mb-3">Free: request any app for analysis.</p>
+				<p class="text-xs text-white/60 mb-2">Examples:</p>
+				<div class="flex justify-between items-end gap-2 mb-0">
+					<div class="flex flex-wrap gap-2">
+						<a
+							href="/sdks"
+							class="text-xs px-2 py-1 rounded-full bg-white/10 hover:bg-white/20 text-white/80"
+							>Recently Requested SDK Scans</a
+						>
+					</div>
+					<a href="/sdks" class={featureCtaClass}>Request Scan →</a>
 				</div>
 			</div>
 
 			<div class="rounded-xl border border-white/10 p-4 bg-white/5">
-				<h4 class="font-bold mb-2">Company Intelligence</h4>
-				<p class="text-sm mb-3">See the top client apps for any mobile SDK or services company.</p>
-				<div class="flex flex-wrap gap-2">
-					<a
-						href="/companies/salesforce.com"
-						class="text-xs px-2 py-1 rounded-full bg-white/10 hover:bg-white/20 text-white/80"
-						>Salesforce Clients →</a
-					>
-					<a
-						href="/companies/appsflyer.com"
-						class="text-xs px-2 py-1 rounded-full bg-white/10 hover:bg-white/20 text-white/80"
-						>AppsFlyer Top Apps →</a
-					>
+				<h4 class="font-bold mb-2">
+					<a href="/companies" class="hover:text-primary-600-400">Company Intelligence</a>
+				</h4>
+				<p class="text-sm mb-3">
+					Rank and filter companies by SDK adoption, then drill into the top apps using each SDK,
+					API, or mobile services provider.
+				</p>
+				<ul class="text-sm space-y-1.5 mb-3">
+					<li>
+						<span class="text-white/80 font-medium">Category Filters</span> — Slice company adoption by
+						app vertical and use case
+					</li>
+					<li>
+						<span class="text-white/80 font-medium">Client App Visibility</span> — See leading apps tied
+						to each provider
+					</li>
+				</ul>
+				<p class="text-xs text-white/60 mb-1">Who it's for:</p>
+				<p class="text-sm mb-3">Ad sales teams, partner teams, and market intelligence analysts.</p>
+				<p class="text-xs text-white/60 mb-2">Examples:</p>
+				<div class="flex justify-between items-end gap-2 mb-0">
+					<div class="flex flex-wrap gap-2">
+						<a
+							href="/companies/types/ad-networks/game_casino"
+							class="text-xs px-2 py-1 rounded-full bg-white/10 hover:bg-white/20 text-white/80"
+							>Ad Networks for Casino Games</a
+						>
+						<a
+							href="/companies/types/product-analytics/business"
+							class="text-xs px-2 py-1 rounded-full bg-white/10 hover:bg-white/20 text-white/80"
+							>Product Analytics for Business Apps →</a
+						>
+						<a
+							href="/companies/salesforce.com"
+							class="text-xs px-2 py-1 rounded-full bg-white/10 hover:bg-white/20 text-white/80"
+							>Salesforce Clients →</a
+						>
+						<a
+							href="/companies/appsflyer.com"
+							class="text-xs px-2 py-1 rounded-full bg-white/10 hover:bg-white/20 text-white/80"
+							>AppsFlyer Top Apps →</a
+						>
+					</div>
+					<a href="/companies" class={featureCtaClass}>Browse Companies →</a>
 				</div>
 			</div>
 
 			<div class="rounded-xl border border-white/10 p-4 bg-white/5">
 				<h4 class="font-bold mb-2">Ad Tech Insights</h4>
 				<p class="text-sm">
-					Tracks live ad campaigns and the ad tech domains apps communicate with in real time.
+					Track active ad campaigns, ad-tech domains apps contact in production traffic, and
+					app-ads.txt mappings of DIRECT and RESELLER entries to real app IDs.
 				</p>
-			</div>
-
-			<div class="rounded-xl border border-white/10 p-4 bg-white/5">
-				<h4 class="font-bold mb-2">ASO Tools</h4>
-				<p class="text-sm">
-					Free keyword research tools and data dumps to optimize app store visibility for Android
-					and iOS.
-				</p>
-			</div>
-
-			<div class="rounded-xl border border-white/10 p-4 bg-white/5 md:col-span-2">
-				<h4 class="font-bold mb-2">App-Ads.txt</h4>
-				<p class="text-sm">
-					Daily-updated files tying apps to their DIRECT and RESELLER ad networks and SSPs — mapped
-					to real app store IDs (e.g. <code class="text-white/70">com.example.app</code>) rather
-					than just domain names, for supply-path analysis and fraud detection.
-				</p>
-			</div>
-		</div>
-
-		<h3 class="text-lg font-bold mb-3">Who It's For</h3>
-		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 mb-6">
-			{#each audiences as audience}
-				<div class="rounded-xl border border-white/10 p-4 bg-white/5">
-					<div class="flex items-start justify-between mb-2">
-						<h4 class="text-sm md:text-base font-bold">{audience.title}</h4>
-						<span
-							class="text-xs font-semibold px-2 py-1 rounded-full bg-white/10 text-white/90 ml-2 shrink-0"
-							>{audience.badge}</span
+				<ul class="text-sm space-y-1.5 mt-3">
+					<li>
+						<span class="text-white/80 font-medium">Live Campaign Tracking</span> — Monitor active advertisers
+						and creatives in market
+					</li>
+					<li>
+						<span class="text-white/80 font-medium">Supply Path Validation</span> — Map app-ads.txt entries
+						to real app IDs for verification
+					</li>
+				</ul>
+				<p class="text-xs text-white/60 mt-3 mb-1">Who it's for:</p>
+				<p class="text-sm">Ad networks, DSP teams, and fraud detection analysts.</p>
+				<p class="text-xs text-white/60 mt-3 mb-2">Examples:</p>
+				<div class="flex justify-between items-end gap-2 mb-0">
+					<div class="flex flex-wrap gap-2">
+						<a
+							href="/top-mobile-advertisers"
+							class="text-xs px-2 py-1 rounded-full bg-white/10 hover:bg-white/20 text-white/80"
+							>Top Mobile Advertisers</a
+						>
+						<a
+							href="/ad-creatives"
+							class="text-xs px-2 py-1 rounded-full bg-white/10 hover:bg-white/20 text-white/80"
+							>Browse Thousands of Ad-Creatives</a
+						>
+						<a
+							href="/companies/applovin.com/app-adstxt"
+							class="text-xs px-2 py-1 rounded-full bg-white/10 hover:bg-white/20 text-white/80"
+							>AppLovin App-Ads.txt Entries</a
+						>
+						<a
+							href="/apps/com.rovio.baba/ads-txt"
+							class="text-xs px-2 py-1 rounded-full bg-white/10 hover:bg-white/20 text-white/80"
+							>Angry Birds 2 App Example</a
 						>
 					</div>
-					<p class="text-sm">{audience.description}</p>
+					<a href="/top-mobile-advertisers" class={featureCtaClass}>View Campaigns →</a>
 				</div>
-			{/each}
-		</div>
-
-		<div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
-			<div class="flex gap-4">
-				<span class={featureBulletClass}>🔎 4M+ app coverage</span>
-				<span class={featureBulletClass}>🧩 SDK and API intelligence</span>
-				<span class={featureBulletClass}>🛡️ App-ads.txt verification</span>
 			</div>
-			<a href="/companies" class="btn preset-filled-secondary-200-800">
-				Start With Company Intelligence
-			</a>
 		</div>
 	</section>
 
