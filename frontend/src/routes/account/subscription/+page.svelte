@@ -9,19 +9,19 @@
 	<title>Subscription - AppGoblin</title>
 </svelte:head>
 
-<div class="preset-filled-surface-100-900 p-6 md:p-8 space-y-8">
+<div class="p-6 md:p-8 space-y-8">
 	<div>
 		<h1 class="text-2xl font-bold">Subscription</h1>
 		<p class="text-sm">Manage your billing and subscription plan</p>
 	</div>
 
 	<section class="space-y-4">
-		<div class="p-6 rounded-lg bg-surface-100-900 border border-surface-200-800">
+		<div class="p-6 rounded-lg border border-surface-100-900">
 			{#if data.subscription}
 				<div class="flex justify-between items-start mb-6">
 					<div>
 						{#if data.subscription.status === 'active' && data.subscription.cancel_at}
-							<p class="text-sm text-warning-500 font-medium mb-1">
+							<p class="text-sm text-warning-700-300 font-medium mb-1">
 								Active (Cancels {new Date(data.subscription.cancel_at).toLocaleDateString()})
 							</p>
 						{:else}
@@ -38,7 +38,7 @@
 
 						<div class="mt-2">
 							{#if data.subscription.cancel_at}
-								<p class="text-sm text-warning-500">Access available until end of period</p>
+								<p class="text-sm text-warning-700-300">Access available until end of period</p>
 							{:else}
 								<p class="text-sm text-surface-500">
 									Renews on {new Date(data.subscription.current_period_end).toLocaleDateString()}

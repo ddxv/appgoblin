@@ -16,7 +16,7 @@
 </svelte:head>
 
 <div class="space-y-6">
-	<div class="preset-filled-surface-100-900 p-6 md:p-8 space-y-6">
+	<div class="p-6 md:p-8 space-y-6">
 		<div class="border-b border-surface-300-700 pb-4">
 			<h1 class="text-2xl font-bold">Account Overview</h1>
 			<p class="text-sm">Manage your watchlists for apps, companies, and keywords</p>

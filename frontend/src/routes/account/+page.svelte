@@ -9,7 +9,7 @@
 	<title>Account - AppGoblin</title>
 </svelte:head>
 
-<div class="preset-filled-surface-100-900 p-6 md:p-8 space-y-8">
+<div class="p-6 md:p-8 space-y-8">
 	<div>
 		<h1 class="text-2xl font-bold">Hello, {data.user.username}!</h1>
 		<p class="text-sm">Welcome to your AppGoblin account</p>
@@ -18,7 +18,7 @@
 	<section class="space-y-4">
 		<div class="grid gap-3 md:grid-cols-2">
 			<!-- Subscription Status -->
-			<div class="p-6 rounded-lg bg-surface-100-900 border border-surface-200-800">
+			<div class="p-6 rounded-lg border border-surface-100-900">
 				<h2 class="text-sm font-semibold text-surface-500 uppercase tracking-wide mb-2">
 					Subscription Plan
 				</h2>
@@ -34,7 +34,7 @@
 			</div>
 
 			<!-- Quick Security Status -->
-			<div class="p-6 rounded-lg bg-surface-100-900 border border-surface-200-800">
+			<div class="p-6 rounded-lg border border-surface-100-900">
 				<h2 class="text-sm font-semibold text-surface-500 uppercase tracking-wide mb-2">
 					Security Status
 				</h2>

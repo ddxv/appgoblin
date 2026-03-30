@@ -25,7 +25,7 @@
 	<div class="flex flex-col md:flex-row gap-8">
 		<!-- Sidebar Navigation -->
 		<aside class="w-full md:w-64 shrink-0">
-			<div class="preset-filled-surface-100-900 p-4 md:sticky md:top-24">
+			<div class="p-4 md:sticky md:top-24">
 				<div class="flex items-center gap-3 mb-6 p-2">
 					<div class="p-2 rounded-full bg-primary-500/20">
 						<UserRound size={24} class="text-primary-500" />

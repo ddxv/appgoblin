@@ -15,7 +15,7 @@
 	<div class="grid md:grid-cols-2 gap-6 md:gap-12 lg:gap-16 items-start">
 		<!-- Dynamic Sign Up CTA / SEO Callouts -->
 		<div
-			class="card preset-filled-surface-100-900 border border-surface-200-800 p-6 md:p-8 flex flex-col justify-center space-y-4"
+			class="card border border-surface-100-900 p-6 md:p-8 flex flex-col justify-center space-y-4"
 		>
 			{#if data.redirectTo?.includes('/sdks/')}
 				<h3 class="text-xl md:text-2xl font-bold">Unlock Mobile SDK Data for Free</h3>
@@ -26,7 +26,7 @@
 					competitor research, and tracking the latest mobile trends with AppGoblin's high-quality
 					technical intelligence.
 				</p>
-				<div class="pt-4 mt-4 border-t border-surface-200-800">
+				<div class="pt-4 mt-4 border-t border-surface-100-900">
 					<p class="text-sm">
 						<span class="font-semibold">Looking for business intelligence?</span>
 						Our paid
@@ -44,7 +44,7 @@
 					>! Create an account to browse AppGoblin's high-quality technical data. Use our tools to
 					map programmatic supply chains, fight ad fraud, and conduct rigorous ad network research.
 				</p>
-				<div class="pt-4 mt-4 border-t border-surface-200-800">
+				<div class="pt-4 mt-4 border-t border-surface-100-900">
 					<p class="text-sm">
 						<span class="font-semibold">Need bulk ad-tech data?</span>
 						Our paid
@@ -72,7 +72,7 @@
 		</div>
 
 		<!-- Sign In Form -->
-		<div class="preset-filled-surface-100-900 p-6 md:p-8 space-y-6">
+		<div class="border border-surface-100-900 rounded-lg p-6 md:p-8 space-y-6">
 			<div>
 				<h2 class="text-2xl font-bold">Sign In</h2>
 				<p class=" text-sm mt-1">Welcome back to AppGoblin</p>
