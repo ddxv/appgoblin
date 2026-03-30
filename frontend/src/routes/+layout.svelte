@@ -104,41 +104,45 @@
 		</div>
 		<!-- Footer -->
 		<div class="mt-12 border-t py-8 text-sm text-surface-600 dark:text-surface-400">
-			<div class="mx-auto flex max-w-6xl flex-col items-center gap-4 px-4 text-center">
-				<div class="flex flex-wrap items-center justify-center gap-x-2 gap-y-3">
-					<a href="/about" class="underline hover:">About AppGoblin</a>
-					&nbsp;|&nbsp;
-					<a href="/blog" class="underline hover:">Blog</a>
-					&nbsp;|&nbsp;
-					<a href="/reports" class="underline hover:">Reports</a>
-					&nbsp;|&nbsp;
-					<a href="/pricing" class="underline hover:">Pricing</a>
-					&nbsp;|&nbsp;
-					<a href="/privacy_policy.html" class="underline hover:">Privacy Policy</a>
-					&nbsp;|&nbsp;
-					<a href="https://github.com/appgoblin-dev/appgoblin" class="underline hover:">GitHub</a>
-					&nbsp;|&nbsp;
-					<a href="https://linkedin.com/companies/AppGoblin" class="underline hover:">LinkedIn</a>
-					&nbsp;|&nbsp;
-					<a href="/contact" class="underline hover:">Contact</a>
+			<div class="mx-auto max-w-6xl px-4">
+				<div class="flex flex-col gap-4 md:relative md:items-center">
+					<div class="self-start md:absolute md:left-0 md:top-1/2 md:-translate-y-1/2">
+						<button
+							type="button"
+							class="inline-flex items-center gap-2 rounded-full border border-surface-300 px-3 py-1.5 font-medium text-surface-700 transition-colors hover:bg-surface-100 dark:border-surface-700 dark:text-surface-200 dark:hover:bg-surface-800"
+							onclick={toggleTheme}
+							aria-label={$resolvedThemeMode === 'dark'
+								? 'Switch to light mode'
+								: 'Switch to dark mode'}
+							aria-pressed={$resolvedThemeMode === 'dark'}
+						>
+							{#if $resolvedThemeMode === 'dark'}
+								<SunIcon class="size-4" />
+								<span>Light mode</span>
+							{:else}
+								<MoonIcon class="size-4" />
+								<span>Dark mode</span>
+							{/if}
+						</button>
+					</div>
 
-					<button
-						type="button"
-						class="inline-flex items-center gap-2 rounded-full border border-surface-300 px-3 py-1.5 font-medium text-surface-700 transition-colors hover:bg-surface-100 dark:border-surface-700 dark:text-surface-200 dark:hover:bg-surface-800"
-						onclick={toggleTheme}
-						aria-label={$resolvedThemeMode === 'dark'
-							? 'Switch to light mode'
-							: 'Switch to dark mode'}
-						aria-pressed={$resolvedThemeMode === 'dark'}
-					>
-						{#if $resolvedThemeMode === 'dark'}
-							<SunIcon class="size-4" />
-							<span>Light mode</span>
-						{:else}
-							<MoonIcon class="size-4" />
-							<span>Dark mode</span>
-						{/if}
-					</button>
+					<div class="flex flex-wrap items-center justify-center gap-x-2 gap-y-3 text-center">
+						<a href="/about" class="underline hover:">About AppGoblin</a>
+						&nbsp;|&nbsp;
+						<a href="/blog" class="underline hover:">Blog</a>
+						&nbsp;|&nbsp;
+						<a href="/reports" class="underline hover:">Reports</a>
+						&nbsp;|&nbsp;
+						<a href="/pricing" class="underline hover:">Pricing</a>
+						&nbsp;|&nbsp;
+						<a href="/privacy_policy.html" class="underline hover:">Privacy Policy</a>
+						&nbsp;|&nbsp;
+						<a href="https://github.com/appgoblin-dev/appgoblin" class="underline hover:">GitHub</a>
+						&nbsp;|&nbsp;
+						<a href="https://linkedin.com/companies/AppGoblin" class="underline hover:">LinkedIn</a>
+						&nbsp;|&nbsp;
+						<a href="/contact" class="underline hover:">Contact</a>
+					</div>
 				</div>
 			</div>
 			<div>© {new Date().getFullYear()} AppGoblin. All rights reserved.</div>

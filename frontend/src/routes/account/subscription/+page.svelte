@@ -47,7 +47,7 @@
 						</div>
 					</div>
 					<span
-						class="badge px-3 py-1 font-medium text-white {data.subscription.status === 'active'
+						class="badge px-3 py-1 font-medium {data.subscription.status === 'active'
 							? 'preset-filled-success-500'
 							: 'preset-filled-warning-500'}"
 					>

@@ -32,7 +32,7 @@
 					</p>
 				</div>
 				{#if data.user.registered2FA}
-					<span class="badge preset-filled-success-900-100 text-xs text-white">Enabled</span>
+					<span class="badge preset-filled-success-900-100 text-xs">Enabled</span>
 				{:else}
 					<span class="badge preset-filled-surface-500 text-xs">Not set up</span>
 				{/if}

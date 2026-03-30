@@ -30,6 +30,7 @@
 	const subSectionClass = 'p-4';
 	const cardTitleClass = 'text-lg font-bold transition-colors';
 	const cardDescriptionClass = 'text-sm text-gray-400 mb-4';
+	const coreFeatureBulletSpanClass = 'text-primary-900-100/80 font-medium';
 	const featureCtaClass = 'btn px-3 py-1.5 bg-primary-300-700 font-medium';
 	const exampleAnchorClass =
 		'text-xs md:text-md px-2 py-1 rounded-md bg-secondary-900-100/10 hover:bg-secondary-50-950/50';
@@ -145,29 +146,29 @@
 				<p class="text-sm mb-3">Daily intelligence on 4M+ Android and iOS apps.</p>
 				<ul class="text-sm space-y-1.5">
 					<li>
-						<span class="text-white/80 font-medium">Keyword Tracking</span> — Monitor target terms and
+						<span class={coreFeatureBulletSpanClass}>Keyword Tracking</span> — Monitor target terms and
 						top ranking apps
 					</li>
 					<li>
-						<span class="text-white/80 font-medium">Growth Trends</span> — Follow install and rating changes
-						over time
+						<span class={coreFeatureBulletSpanClass}>Growth Trends</span> — Follow install and rating
+						changes over time
 					</li>
 					<li>
-						<span class="text-white/80 font-medium">Store Rankings</span> — Track Google Play and App
+						<span class={coreFeatureBulletSpanClass}>Store Rankings</span> — Track Google Play and App
 						Store positions daily
 					</li>
 					<li>
-						<span class="text-white/80 font-medium">New App Discovery</span> — Surface new releases early
+						<span class={coreFeatureBulletSpanClass}>New App Discovery</span> — Surface new releases early
 						across categories
 					</li>
 					<li>
-						<span class="text-white/80 font-medium">SDK Footprints</span> — See which SDKs each app is
+						<span class={coreFeatureBulletSpanClass}>SDK Footprints</span> — See which SDKs each app is
 						using
 					</li>
 				</ul>
-				<p class="text-xs text-white/60 mt-3 mb-1">Who it's for:</p>
+				<p class="text-xs text-surface-500/60 mt-3 mb-1">Who it's for:</p>
 				<p class="text-sm">App marketers, ASO teams, and competitor researchers.</p>
-				<p class="text-xs text-white/60 mt-3 mb-2">Examples:</p>
+				<p class="text-xs text-surface-500/60 mt-3 mb-2">Examples:</p>
 				<div class="flex justify-between items-end gap-2 mb-0">
 					<div class="flex flex-wrap gap-2">
 						<a href="/apps/com.rovio.baba" class={exampleAnchorClass}>Angry Birds 2 App</a>
@@ -188,11 +189,11 @@
 				</p>
 				<ul class="text-sm space-y-1.5 mt-3">
 					<li>
-						<span class="text-white/80 font-medium">Library Detection</span> — Identify ad, analytics,
+						<span class={coreFeatureBulletSpanClass}>Library Detection</span> — Identify ad, analytics,
 						and open-source packages in each app
 					</li>
 					<li>
-						<span class="text-white/80 font-medium">On-Demand Scans</span> — Request app analysis and
+						<span class={coreFeatureBulletSpanClass}>On-Demand Scans</span> — Request app analysis and
 						review newly processed results
 					</li>
 				</ul>
@@ -218,11 +219,11 @@
 				</p>
 				<ul class="text-sm space-y-1.5 mb-3">
 					<li>
-						<span class="text-white/80 font-medium">Category Filters</span> — Slice company adoption by
-						app vertical and use case
+						<span class={coreFeatureBulletSpanClass}>Category Filters</span> — Slice company adoption
+						by app vertical and use case
 					</li>
 					<li>
-						<span class="text-white/80 font-medium">Client App Visibility</span> — See leading apps tied
+						<span class={coreFeatureBulletSpanClass}>Client App Visibility</span> — See leading apps tied
 						to each provider
 					</li>
 				</ul>
@@ -252,17 +253,17 @@
 				</p>
 				<ul class="text-sm space-y-1.5 mt-3">
 					<li>
-						<span class="text-white/80 font-medium">Live Campaign Tracking</span> — Monitor active advertisers
+						<span class={coreFeatureBulletSpanClass}>Live Campaign Tracking</span> — Monitor active advertisers
 						and creatives in market
 					</li>
 					<li>
-						<span class="text-white/80 font-medium">Supply Path Validation</span> — Map app-ads.txt entries
+						<span class={coreFeatureBulletSpanClass}>Supply Path Validation</span> — Map app-ads.txt entries
 						to real app IDs for verification
 					</li>
 				</ul>
-				<p class="text-xs text-white/60 mt-3 mb-1">Who it's for:</p>
+				<p class="text-xs text-surface-500/60 mt-3 mb-1">Who it's for:</p>
 				<p class="text-sm">Ad networks, DSP teams, and fraud detection analysts.</p>
-				<p class="text-xs text-white/60 mt-3 mb-2">Examples:</p>
+				<p class="text-xs text-surface-500/60 mt-3 mb-2">Examples:</p>
 				<div class="flex justify-between items-end gap-2 mb-0">
 					<div class="flex flex-wrap gap-2">
 						<a href="/top-mobile-advertisers" class={exampleAnchorClass}>Top Mobile Advertisers</a>

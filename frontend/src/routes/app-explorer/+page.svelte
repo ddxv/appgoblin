@@ -668,7 +668,7 @@
 								href="/pricing"
 								class="btn preset-filled-primary-500 inline-flex items-center gap-2"
 							>
-								<span class="inline text-white"> View Pricing Plans</span>
+								<span class="inline"> View Pricing Plans</span>
 							</a>
 						</div>
 					</div>

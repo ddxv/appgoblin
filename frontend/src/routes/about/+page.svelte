@@ -83,7 +83,7 @@
 				<span>Get in Touch</span>
 			</a>
 
-			<div class="text-white/80 text-sm pt-1">
+			<div class="text-primary-900-100 text-sm pt-1">
 				<p>contact@appgoblin.info</p>
 			</div>
 		</div>

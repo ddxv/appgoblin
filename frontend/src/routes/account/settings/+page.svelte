@@ -28,7 +28,7 @@
 				<p class="font-medium">{data.user.email}</p>
 			</div>
 			{#if data.user.emailVerified}
-				<span class="ml-auto badge preset-filled-success-900-100 text-xs text-white">Verified</span>
+				<span class="ml-auto badge preset-filled-success-300-700 text-xs">Verified</span>
 			{:else}
 				<a
 					href="/auth/verify-email"
