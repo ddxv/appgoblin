@@ -30,9 +30,9 @@
 	const subSectionClass = 'p-4';
 	const cardTitleClass = 'text-lg font-bold transition-colors';
 	const cardDescriptionClass = 'text-sm text-gray-400 mb-4';
-	const featureCtaClass =
-		'btn px-3 py-1.5 bg-primary-300-700 text-base hover:bg-primary-500-300 text-white font-medium';
-	('bg-gradient-to-r text-white font-bold px-6 py-3 rounded-xl shadow-lg group-hover:shadow-xl transition-shadow');
+	const featureCtaClass = 'btn px-3 py-1.5 bg-primary-300-700 font-medium';
+	const exampleAnchorClass =
+		'text-xs md:text-md px-2 py-1 rounded-md bg-secondary-900-100/10 hover:bg-secondary-50-950/50';
 	const mainSectionClass =
 		'card p-4 md:p-8 rounded-2xl shadow-xl border border-secondary-900-100/20';
 
@@ -134,9 +134,9 @@
 			Android and iOS apps.
 		</p>
 
-		<h3 class="text-lg font-bold mb-3">Core Features</h3>
+		<h3 class="text-lg font-bold mb-3">AppGoblin Tools</h3>
 		<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-			<div class="rounded-xl border border-white/10 p-4 bg-white/5">
+			<div class="rounded-md border border-surface-100-900 p-4 bg-surface-100-900/50">
 				<h4 class="font-bold mb-2">
 					<a href="/rankings/store/1/collection/1/category/1/US" class="hover:text-primary-600-400"
 						>App Intelligence (Free)</a
@@ -170,11 +170,7 @@
 				<p class="text-xs text-white/60 mt-3 mb-2">Examples:</p>
 				<div class="flex justify-between items-end gap-2 mb-0">
 					<div class="flex flex-wrap gap-2">
-						<a
-							href="/apps/com.rovio.baba"
-							class="text-xs px-2 py-1 rounded-full bg-white/10 hover:bg-white/20 text-white/80"
-							>Angry Birds 2 App</a
-						>
+						<a href="/apps/com.rovio.baba" class={exampleAnchorClass}>Angry Birds 2 App</a>
 					</div>
 					<a href="/rankings/store/1/collection/1/category/1/US" class={featureCtaClass}
 						>Track Rankings →</a
@@ -182,7 +178,7 @@
 				</div>
 			</div>
 
-			<div class="rounded-xl border border-white/10 p-4 bg-white/5">
+			<div class="rounded-md border border-surface-100-900 p-4 bg-surface-100-900/50">
 				<h4 class="font-bold mb-2">
 					<a href="/sdks" class="hover:text-primary-600-400">SDK Analysis</a>
 				</h4>
@@ -206,17 +202,13 @@
 				<p class="text-xs text-white/60 mb-2">Examples:</p>
 				<div class="flex justify-between items-end gap-2 mb-0">
 					<div class="flex flex-wrap gap-2">
-						<a
-							href="/sdks"
-							class="text-xs px-2 py-1 rounded-full bg-white/10 hover:bg-white/20 text-white/80"
-							>Recently Requested SDK Scans</a
-						>
+						<a href="/sdks" class={exampleAnchorClass}>Recently Requested SDK Scans</a>
 					</div>
 					<a href="/sdks" class={featureCtaClass}>Request Scan →</a>
 				</div>
 			</div>
 
-			<div class="rounded-xl border border-white/10 p-4 bg-white/5">
+			<div class="rounded-md border border-surface-100-900 p-4 bg-surface-100-900/50">
 				<h4 class="font-bold mb-2">
 					<a href="/companies" class="hover:text-primary-600-400">Company Intelligence</a>
 				</h4>
@@ -239,32 +231,20 @@
 				<p class="text-xs text-white/60 mb-2">Examples:</p>
 				<div class="flex justify-between items-end gap-2 mb-0">
 					<div class="flex flex-wrap gap-2">
-						<a
-							href="/companies/types/ad-networks/game_casino"
-							class="text-xs px-2 py-1 rounded-full bg-white/10 hover:bg-white/20 text-white/80"
+						<a href="/companies/types/ad-networks/game_casino" class={exampleAnchorClass}
 							>Ad Networks for Casino Games</a
 						>
-						<a
-							href="/companies/types/product-analytics/business"
-							class="text-xs px-2 py-1 rounded-full bg-white/10 hover:bg-white/20 text-white/80"
+						<a href="/companies/types/product-analytics/business" class={exampleAnchorClass}
 							>Product Analytics for Business Apps →</a
 						>
-						<a
-							href="/companies/salesforce.com"
-							class="text-xs px-2 py-1 rounded-full bg-white/10 hover:bg-white/20 text-white/80"
-							>Salesforce Clients →</a
-						>
-						<a
-							href="/companies/appsflyer.com"
-							class="text-xs px-2 py-1 rounded-full bg-white/10 hover:bg-white/20 text-white/80"
-							>AppsFlyer Top Apps →</a
-						>
+						<a href="/companies/salesforce.com" class={exampleAnchorClass}>Salesforce Clients →</a>
+						<a href="/companies/appsflyer.com" class={exampleAnchorClass}>AppsFlyer Top Apps →</a>
 					</div>
 					<a href="/companies" class={featureCtaClass}>Browse Companies →</a>
 				</div>
 			</div>
 
-			<div class="rounded-xl border border-white/10 p-4 bg-white/5">
+			<div class="rounded-md border border-surface-100-900 p-4 bg-surface-100-900/50">
 				<h4 class="font-bold mb-2">Ad Tech Insights</h4>
 				<p class="text-sm">
 					Track active ad campaigns, ad-tech domains apps contact in production traffic, and
@@ -285,24 +265,12 @@
 				<p class="text-xs text-white/60 mt-3 mb-2">Examples:</p>
 				<div class="flex justify-between items-end gap-2 mb-0">
 					<div class="flex flex-wrap gap-2">
-						<a
-							href="/top-mobile-advertisers"
-							class="text-xs px-2 py-1 rounded-full bg-white/10 hover:bg-white/20 text-white/80"
-							>Top Mobile Advertisers</a
-						>
-						<a
-							href="/ad-creatives"
-							class="text-xs px-2 py-1 rounded-full bg-white/10 hover:bg-white/20 text-white/80"
-							>Browse Thousands of Ad-Creatives</a
-						>
-						<a
-							href="/companies/applovin.com/app-adstxt"
-							class="text-xs px-2 py-1 rounded-full bg-white/10 hover:bg-white/20 text-white/80"
+						<a href="/top-mobile-advertisers" class={exampleAnchorClass}>Top Mobile Advertisers</a>
+						<a href="/ad-creatives" class={exampleAnchorClass}>Browse Thousands of Ad-Creatives</a>
+						<a href="/companies/applovin.com/app-adstxt" class={exampleAnchorClass}
 							>AppLovin App-Ads.txt Entries</a
 						>
-						<a
-							href="/apps/com.rovio.baba/ads-txt"
-							class="text-xs px-2 py-1 rounded-full bg-white/10 hover:bg-white/20 text-white/80"
+						<a href="/apps/com.rovio.baba/ads-txt" class={exampleAnchorClass}
 							>Angry Birds 2 App Example</a
 						>
 					</div>
