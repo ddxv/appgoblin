@@ -59,8 +59,8 @@
 
 <div class="p-2 px-2 md:px-16 lg:px-32 grid grid-cols-1 gap-6 md:gap-10 max-w-3xl mx-auto">
 	<div>
-		<h1 class="text-3xl font-bold text-primary-900-100">Contact</h1>
-		<p class="mt-2 text-surface-600-400">Reach out via whichever channel suits you best.</p>
+		<h1 class="text-3xl font-bold">Contact</h1>
+		<p class="mt-2">Reach out via whichever channel suits you best.</p>
 	</div>
 
 	<div class="grid grid-cols-1 gap-4">
@@ -84,7 +84,7 @@
 				</div>
 				<div class="min-w-0">
 					<p class="font-semibold text-base">{channel.label}</p>
-					<p class="text-sm text-surface-600-400 mt-0.5">{channel.description}</p>
+					<p class="text-sm mt-0.5">{channel.description}</p>
 					<p class="text-xs text-primary-600-400 mt-1 truncate">{channel.display}</p>
 				</div>
 				<div class="ml-auto shrink-0 self-center text-surface-400-600">→</div>
