@@ -431,8 +431,7 @@
 											<button
 												onclick={() =>
 													creativeModal.open(
-														creative.md5_hash,
-														creative.file_extension,
+														`https://media.appgoblin.info/creatives/raw/${creative.md5_hash.substring(0, 3)}/${creative.md5_hash}.${creative.file_extension}`,
 														app.app_name
 													)}
 												class="relative group cursor-pointer hover:scale-110 transition-transform duration-200"
@@ -545,8 +544,7 @@
 					<button
 						onclick={() =>
 							creativeModal.open(
-								creative.md5_hash,
-								creative.file_extension,
+								`https://media.appgoblin.info/creatives/raw/${creative.md5_hash.substring(0, 3)}/${creative.md5_hash}.${creative.file_extension}`,
 								`Popular Creative #${index + 1}`
 							)}
 						class="relative w-full aspect-video bg-gradient-to-br from-purple-200 to-pink-200 dark:from-purple-900 dark:to-pink-900 cursor-pointer group overflow-hidden"

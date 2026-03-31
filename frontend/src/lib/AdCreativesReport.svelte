@@ -373,24 +373,23 @@
 									aria-pressed={activeNetworkFilter === network.key}
 								>
 									<div
-										class="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-lg"
+										class="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-lg"
 									>
 										{#if network.logoUrl}
 											<img
 												src={`https://media.appgoblin.info/${network.logoUrl}`}
 												alt={network.label}
-												class="h-6 w-6 rounded object-contain"
+												class="h-9 w-9 rounded object-contain"
 												loading="lazy"
 											/>
 										{:else}
-											<span class="text-xs font-semibold"
+											<span class="text-sm font-semibold"
 												>{network.label.slice(0, 2).toUpperCase()}</span
 											>
 										{/if}
 									</div>
 									<div class="min-w-0 flex-1">
 										<div class="truncate text-sm font-medium leading-4">{network.label}</div>
-										<div class="text-xs opacity-60">{network.count}</div>
 									</div>
 								</button>
 							{/each}
