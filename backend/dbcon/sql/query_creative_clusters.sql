@@ -1,7 +1,3 @@
---noqa: disable=LT01
---noqa: disable=all
--- Trouble related to issue:https://github.com/sqlfluff/sqlfluff/issues/7570
-
 WITH creative_clusters AS (
     SELECT
         ac.vhash,
@@ -24,11 +20,13 @@ WITH creative_clusters AS (
         MODE() WITHIN GROUP (ORDER BY ac.host_domain) AS top_host_domain,
         MODE() WITHIN GROUP (ORDER BY ac.host_domain_company_name)
             AS top_host_domain_company,
-        MODE() WITHIN GROUP (ORDER BY ac.host_domain_company_domain) AS top_host_domain_company_domain,
+        MODE() WITHIN GROUP (ORDER BY ac.host_domain_company_domain)
+            AS top_host_domain_company_domain,
         MODE() WITHIN GROUP (ORDER BY ac.ad_domain) AS top_ad_domain,
         MODE() WITHIN GROUP (ORDER BY ac.ad_domain_company_name)
             AS top_ad_domain_company,
-        MODE() WITHIN GROUP (ORDER BY ac.ad_domain_company_domain) AS top_ad_domain_company_domain,
+        MODE() WITHIN GROUP (ORDER BY ac.ad_domain_company_domain)
+            AS top_ad_domain_company_domain,
         MODE() WITHIN GROUP (ORDER BY ac.mmp_name) AS top_mmp_name,
         MODE() WITHIN GROUP (ORDER BY ac.mmp_domain) AS top_mmp_domain,
         MODE() WITHIN GROUP (ORDER BY sao.category) AS advertiser_category,
@@ -44,33 +42,36 @@ WITH creative_clusters AS (
     LEFT JOIN frontend.store_apps_overview AS sao
         ON ac.advertiser_store_id = sao.store_id
     WHERE
-        (:app_category ::text IS NULL OR sao.category LIKE :app_category ::text)
+        (
+            CAST(:app_category AS text) IS NULL
+            OR sao.category LIKE CAST(:app_category AS text)
+        )
         AND (
-            :file_format ::text IS NULL
+            CAST(:file_format AS text) IS NULL
             OR (
-                :file_format ::text = 'video'
+                CAST(:file_format AS text) = 'video'
                 AND ac.file_extension IN ('mp4', 'webm', 'ogg', 'avi', 'mov')
             )
             OR (
-                :file_format ::text = 'image'
+                CAST(:file_format AS text) = 'image'
                 AND ac.file_extension IN (
                     'jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp'
                 )
             )
             OR (
-                :file_format ::text = 'html'
+                CAST(:file_format AS text) = 'html'
                 AND ac.file_extension IN ('html', 'htm')
             )
         )
         AND (
-            :company ::text IS NULL
-            OR ac.host_domain ILIKE :company ::text
-            OR ac.host_domain_company_name ILIKE :company ::text
-            OR ac.ad_domain ILIKE :company ::text
-            OR ac.ad_domain_company_name ILIKE :company ::text
-            OR ac.mmp_name ILIKE :company ::text
-            OR ac.mmp_domain ILIKE :company ::text
-            OR ac.adv_name ILIKE :company ::text
+            CAST(:company AS text) IS NULL
+            OR ac.host_domain ILIKE CAST(:company AS text)
+            OR ac.host_domain_company_name ILIKE CAST(:company AS text)
+            OR ac.ad_domain ILIKE CAST(:company AS text)
+            OR ac.ad_domain_company_name ILIKE CAST(:company AS text)
+            OR ac.mmp_name ILIKE CAST(:company AS text)
+            OR ac.mmp_domain ILIKE CAST(:company AS text)
+            OR ac.adv_name ILIKE CAST(:company AS text)
         )
     GROUP BY ac.vhash, ac.file_extension
 )
