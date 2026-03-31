@@ -48,11 +48,12 @@
 
 	// If the file is video, construct proper video URL, otherwise use image
 	let isVideo = $derived(['mp4', 'webm'].includes(data.file_extension.toLowerCase()));
+	// Raw URL is derived client-side only (never serialized in page data) to prevent browser prefetching
 	let mediaUrl = $derived(
-		`https://media.appgoblin.info/creatives/${data.representative_md5}.${data.file_extension}`
+		`https://media.appgoblin.info/creatives/raw/${data.representative_md5.substring(0, 3)}/${data.representative_md5}.${data.file_extension}`
 	);
+	let thumbUrl = $derived(data.creative_thumb_url);
 	let isPortrait = $derived(orientation === 'portrait');
-	let imageFallbackAttempted = $state(false);
 	let thumbLoadFailed = $state(false);
 
 	let isHovered = $state(false);
@@ -62,24 +63,6 @@
 	function handleThumbLoadError(event: Event) {
 		thumbLoadFailed = true;
 		const image = event.currentTarget as HTMLImageElement;
-		image.onerror = null;
-		image.style.display = 'none';
-	}
-
-	function handleCreativeImageError(event: Event) {
-		const image = event.currentTarget as HTMLImageElement;
-
-		if (
-			!imageFallbackAttempted &&
-			data.creative_thumb_url &&
-			image.src !== data.creative_thumb_url
-		) {
-			imageFallbackAttempted = true;
-			image.src = data.creative_thumb_url;
-			return;
-		}
-
-		thumbLoadFailed = true;
 		image.onerror = null;
 		image.style.display = 'none';
 	}
@@ -102,18 +85,14 @@
 	<button
 		class={`relative bg-black w-full overflow-hidden flex items-center justify-center cursor-pointer group ${isPortrait ? 'max-h-[260px] md:max-h-[340px] lg:max-h-[420px]' : 'max-h-[140px] md:max-h-[180px] lg:max-h-[250px]'}`}
 		onclick={() =>
-			creativeModal.open(
-				data.representative_md5,
-				data.file_extension,
-				data.top_adv_name || data.top_advertiser_store_id || 'Creative'
-			)}
+			creativeModal.open(mediaUrl, data.top_adv_name || data.top_advertiser_store_id || 'Creative')}
 		aria-label="View Media"
 	>
 		{#if isVideo}
 			<!-- Primary static structure defining natural size -->
 			{#if !thumbLoadFailed}
 				<img
-					src={data.creative_thumb_url}
+					src={thumbUrl}
 					alt={data.vhash}
 					class={`w-full ${isPortrait ? 'h-full object-contain' : 'h-auto object-contain'} opacity-90 transition-opacity`}
 					loading="lazy"
@@ -125,7 +104,7 @@
 			{#if isHovered}
 				<video
 					src={mediaUrl}
-					poster={thumbLoadFailed ? undefined : data.creative_thumb_url}
+					poster={thumbLoadFailed ? undefined : thumbUrl}
 					class="absolute inset-0 w-full h-full object-contain bg-black/90"
 					autoplay
 					muted
@@ -151,12 +130,12 @@
 		{:else}
 			{#if !thumbLoadFailed}
 				<img
-					src={mediaUrl}
+					src={thumbUrl}
 					alt={data.vhash}
 					class={`w-full ${isPortrait ? 'h-full object-contain' : 'h-auto object-contain'}`}
 					loading="lazy"
 					decoding="async"
-					onerror={handleCreativeImageError}
+					onerror={handleThumbLoadError}
 				/>
 			{/if}
 			<div

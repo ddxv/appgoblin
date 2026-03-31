@@ -447,8 +447,7 @@
 								badgeLabel="Popular Creative"
 								compact={true}
 								dense={true}
-								onOpen={(md5Hash, fileExtension, title) =>
-									creativeModal.open(md5Hash, fileExtension, title)}
+								onOpen={(rawUrl, title) => creativeModal.open(rawUrl, title)}
 							/>
 						</div>
 					{/each}
@@ -674,8 +673,7 @@
 											<button
 												onclick={() =>
 													creativeModal.open(
-														creative.md5_hash,
-														creative.file_extension,
+														`https://media.appgoblin.info/creatives/raw/${creative.md5_hash.substring(0, 3)}/${creative.md5_hash}.${creative.file_extension}`,
 														app.app_name
 													)}
 												class="relative group cursor-pointer hover:scale-110 transition-transform duration-200"
@@ -789,8 +787,7 @@
 					titlePrefix="Popular Creative"
 					badgeLabel="Most Popular"
 					dense={true}
-					onOpen={(md5Hash, fileExtension, title) =>
-						creativeModal.open(md5Hash, fileExtension, title)}
+					onOpen={(rawUrl, title) => creativeModal.open(rawUrl, title)}
 				/>
 			{/each}
 		</div>
