@@ -8,6 +8,7 @@ from datetime import UTC, datetime, timedelta
 from litestar import Litestar, Request
 from litestar.config.cors import CORSConfig
 from litestar.logging import LoggingConfig
+from litestar.middleware import DefineMiddleware
 from litestar.openapi import OpenAPIConfig, OpenAPIController
 
 from api_app.controllers.apps import AppController
@@ -21,6 +22,9 @@ from api_app.controllers.keywords import KeywordsController
 from api_app.controllers.rankings import RankingsController
 from api_app.controllers.scry import ScryController
 from api_app.controllers.sdks import SdksController
+from api_app.guards import configure_tier_mapping
+from api_app.controllers.v1_companies import V1CompaniesController
+from config import CONFIG
 from dbcon.connections import get_db_connection
 from dbcon.static import load_static_data
 
@@ -83,6 +87,51 @@ for controller in private_controllers:
     setattr(controller, "guards", [restrict_access])
 
 
+class RateLimitMiddleware:
+    """Adds X-RateLimit-* headers to V1 API responses."""
+
+    def __init__(self, app) -> None:
+        self.app = app
+
+    async def __call__(self, scope, receive, send) -> None:
+        if scope["type"] != "http":
+            await self.app(scope, receive, send)
+            return
+
+        async def send_with_rate_limit_headers(message):
+            if message["type"] == "http.response.start":
+                rate_info = scope.get("_rate_limit_info")
+                if rate_info:
+                    headers = list(message.get("headers", []))
+                    # Per-minute headers (standard)
+                    headers.append(
+                        (b"x-ratelimit-limit", str(rate_info["minute_limit"]).encode())
+                    )
+                    headers.append(
+                        (
+                            b"x-ratelimit-remaining",
+                            str(rate_info["minute_remaining"]).encode(),
+                        )
+                    )
+                    # Daily quota headers (IETF RateLimit-Fields draft)
+                    headers.append(
+                        (
+                            b"x-ratelimit-policy",
+                            f'{rate_info["daily_limit"]};w=86400'.encode(),
+                        )
+                    )
+                    headers.append(
+                        (
+                            b"x-ratelimit-quota-remaining",
+                            str(rate_info["daily_remaining"]).encode(),
+                        )
+                    )
+                    message = {**message, "headers": headers}
+            await send(message)
+
+        await self.app(scope, receive, send_with_rate_limit_headers)
+
+
 async def cleanup_expired_responses(request: Request) -> None:
     """Periodically clean up expired entries from the response cache store.
 
@@ -123,6 +172,12 @@ async def db_lifespan(app: Litestar) -> AsyncGenerator[None]:
     3. Ensures proper cleanup on shutdown, even if errors occur
     """
     logger.info("Starting database connections...")
+
+    # Load Stripe price → tier mapping from config
+    tier_prices = CONFIG.get("tier_prices", {})
+    if tier_prices:
+        configure_tier_mapping(tier_prices)
+        logger.info(f"Loaded {len(tier_prices)} tier price mappings")
 
     # Initialize connections
     try:
@@ -185,6 +240,7 @@ app = Litestar(
         CreativesController,
         ExportsController,
         HealthController,
+        V1CompaniesController,
     ],
     cors_config=cors_config,
     openapi_config=OpenAPIConfig(
@@ -195,4 +251,5 @@ app = Litestar(
     lifespan=[db_lifespan],
     logging_config=logging_config,
     after_response=cleanup_expired_responses,
+    middleware=[DefineMiddleware(RateLimitMiddleware)],
 )
