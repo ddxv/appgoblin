@@ -40,35 +40,32 @@
 		});
 	}
 
-	function handleCreateSuccess() {
+	$effect(() => {
 		if (form?.success && form.section === 'create') {
 			showCreateForm = false;
 			newKeyName = '';
 		}
-	}
+	});
 </script>
 
 <svelte:head>
 	<title>API Keys - AppGoblin</title>
 </svelte:head>
 
-<div class="space-y-6">
+<div class="p-6 md:p-8 space-y-8">
 	<!-- Header -->
-	<div class="card preset-tonal p-6 md:p-8 space-y-4">
+	<section class="space-y-4">
 		<div class="flex items-start justify-between gap-4">
 			<div>
 				<h1 class="text-2xl font-bold flex items-center gap-3">
 					<KeyRound size={28} class="text-primary-500" />
 					API Keys
 				</h1>
-				<p class="text-sm text-surface-600-400 mt-1">
+				<p class="text-sm mt-1">
 					Generate API keys to access the AppGoblin public API programmatically.
 				</p>
 			</div>
-			<a
-				href="/account/api-keys/docs"
-				class="btn preset-tonal flex items-center gap-2 text-sm"
-			>
+			<a href="/account/api-keys/docs" class="btn preset-tonal flex items-center gap-2 text-sm">
 				<ExternalLink size={16} />
 				API Docs
 			</a>
@@ -76,13 +73,13 @@
 
 		<!-- Rate limit info -->
 		{#if data.subscription}
-			<div class="p-4 rounded-lg bg-surface-100-900 border border-surface-200-800">
+			<div class="p-4 rounded-lg border border-surface-100-900">
 				<p class="text-sm">
 					<span class="font-semibold">Current Plan:</span>
 					<span class="text-primary-500">{data.subscriptionTier ?? 'Free'}</span>
 					<span class="text-surface-500 ml-2">|</span>
 					<span class="ml-2 font-semibold">Limits:</span>
-					<span class="text-surface-600-400">
+					<span class="text-surface-500">
 						{#if data.subscriptionTier === 'Premium B2B'}
 							10,000 req/min, 500,000 req/day
 						{:else if data.subscriptionTier === 'Business SDK' || data.subscriptionTier === 'App-Ads.txt'}
@@ -96,17 +93,17 @@
 				</p>
 			</div>
 		{:else}
-			<div class="p-4 rounded-lg bg-surface-100-900 border border-surface-200-800">
+			<div class="p-4 rounded-lg border border-surface-100-900">
 				<p class="text-sm">
 					<span class="font-semibold">Current Plan:</span>
-					<span class="text-surface-600-400">Free</span>
+					<span class="text-surface-500">Free</span>
 					<span class="text-surface-500 ml-2">|</span>
 					<span class="ml-2 font-semibold">Limits:</span>
-					<span class="text-surface-600-400">30 req/min, 1,000 req/day</span>
+					<span class="text-surface-500">30 req/min, 1,000 req/day</span>
 				</p>
 			</div>
 		{/if}
-	</div>
+	</section>
 
 	<!-- Messages -->
 	{#if form?.message}
@@ -121,13 +118,13 @@
 
 	<!-- New key display (shown once after creation) -->
 	{#if form?.rawKey && form.section === 'create'}
-		<div class="card preset-tonal p-6 space-y-3 border border-warning-500/30">
-			<p class="text-warning-500 font-semibold text-sm">
-				Save this key now — it will not be shown again.
-			</p>
+		<div class="p-6 rounded-lg border border-warning-500/40 bg-warning-500/10 space-y-3">
+			<p class="font-semibold text-sm">Save this key now — it will not be shown again.</p>
+			<p class="font-semibold text-sm">Add to headers.</p>
+			<p class="text-sm"><code>X-API-KEY: ag_123...</code></p>
 			<div class="flex items-center gap-2">
 				<code
-					class="flex-1 p-3 rounded-lg bg-surface-950-50 text-sm font-mono break-all select-all"
+					class="flex-1 p-3 rounded-lg border border-surface-100-900 text-sm font-mono break-all select-all"
 				>
 					{form.rawKey}
 				</code>
@@ -147,116 +144,123 @@
 	{/if}
 
 	<!-- Create new key -->
-	<div class="card preset-tonal p-6 md:p-8 space-y-4">
-		{#if !showCreateForm}
-			<button
-				class="btn preset-filled-primary-500 flex items-center gap-2"
-				onclick={() => (showCreateForm = true)}
-			>
-				<Plus size={18} />
-				Generate New Key
-			</button>
-		{:else}
-			<form method="post" action="?/create" use:enhance class="space-y-4">
-				<div>
-					<label for="key-name" class="block text-sm font-medium mb-1">Key Name</label>
-					<input
-						id="key-name"
-						name="name"
-						type="text"
-						bind:value={newKeyName}
-						placeholder="e.g., Production API, CI/CD Pipeline"
-						maxlength="100"
-						required
-						class="input p-3 rounded-lg bg-surface-100-900 border border-surface-300-700 w-full"
-					/>
-				</div>
-				<div class="flex gap-3">
-					<button type="submit" class="btn preset-filled-primary-500">
-						Create Key
-					</button>
-					<button
-						type="button"
-						class="btn preset-tonal"
-						onclick={() => {
-							showCreateForm = false;
-							newKeyName = '';
-						}}
-					>
-						Cancel
-					</button>
-				</div>
-			</form>
-		{/if}
-	</div>
+	<section class="space-y-4">
+		<div class="p-6 rounded-lg border border-surface-100-900 space-y-4">
+			{#if !showCreateForm}
+				<button
+					class="btn preset-filled-primary-500 flex items-center gap-2"
+					onclick={() => (showCreateForm = true)}
+				>
+					<Plus size={18} />
+					Generate New Key
+				</button>
+			{:else}
+				<form method="post" action="?/create" use:enhance class="space-y-4">
+					<div>
+						<label
+							for="key-name"
+							class="block text-sm font-semibold text-surface-500 uppercase tracking-wide mb-1"
+						>
+							Key Name
+						</label>
+						<input
+							id="key-name"
+							name="name"
+							type="text"
+							bind:value={newKeyName}
+							placeholder="e.g., Production API, CI/CD Pipeline"
+							maxlength="100"
+							required
+							class="input w-full"
+						/>
+					</div>
+					<div class="flex gap-3">
+						<button type="submit" class="btn preset-filled-primary-500"> Create Key </button>
+						<button
+							type="button"
+							class="btn preset-tonal"
+							onclick={() => {
+								showCreateForm = false;
+								newKeyName = '';
+							}}
+						>
+							Cancel
+						</button>
+					</div>
+				</form>
+			{/if}
+		</div>
+	</section>
 
 	<!-- Keys list -->
-	<div class="card preset-tonal p-6 md:p-8">
-		{#if data.apiKeys.length === 0}
-			<p class="text-surface-500 text-center py-8">
-				No API keys yet. Generate one to get started.
-			</p>
-		{:else}
-			<div class="overflow-x-auto">
-				<table class="w-full text-sm">
-					<thead>
-						<tr class="border-b border-surface-300-700 text-left">
-							<th class="pb-3 font-semibold">Name</th>
-							<th class="pb-3 font-semibold">Key</th>
-							<th class="pb-3 font-semibold">Created</th>
-							<th class="pb-3 font-semibold">Last Used</th>
-							<th class="pb-3 font-semibold">Status</th>
-							<th class="pb-3 font-semibold"></th>
-						</tr>
-					</thead>
-					<tbody>
-						{#each data.apiKeys as key (key.id)}
-							<tr class="border-b border-surface-300-700/50">
-								<td class="py-4 font-medium">{key.name}</td>
-								<td class="py-4">
-									<code class="text-xs bg-surface-200-800 px-2 py-1 rounded">
-										{key.key_prefix}•••
-									</code>
-								</td>
-								<td class="py-4 text-surface-500">{formatDate(key.created_at)}</td>
-								<td class="py-4 text-surface-500">{formatLastUsed(key.last_used_at)}</td>
-								<td class="py-4">
-									{#if key.is_active}
-										<span class="badge preset-filled-success-900-100 text-xs">Active</span>
-									{:else}
-										<span class="badge preset-filled-surface-500 text-xs">Revoked</span>
-									{/if}
-								</td>
-								<td class="py-4 text-right">
-									{#if key.is_active}
-										<form
-											method="post"
-											action="?/revoke"
-											use:enhance={() => {
-												revokingId = key.id;
-												return async ({ update }) => {
-													revokingId = null;
-													await update();
-												};
-											}}
-										>
-											<input type="hidden" name="id" value={key.id} />
-											<button
-												type="submit"
-												class="btn btn-sm preset-tonal text-error-500 flex items-center gap-1"
-												disabled={revokingId === key.id}
-											>
-												<Trash2 size={14} />
-												{revokingId === key.id ? 'Revoking...' : 'Revoke'}
-											</button>
-										</form>
-									{/if}
-								</td>
+	<section class="space-y-4">
+		<div class="p-6 rounded-lg border border-surface-100-900">
+			{#if data.apiKeys.length === 0}
+				<p class="text-surface-500 text-center py-8">
+					No API keys yet. Generate one to get started.
+				</p>
+			{:else}
+				<div class="overflow-x-auto">
+					<table class="w-full text-sm">
+						<thead>
+							<tr class="border-b border-surface-100-900 text-left">
+								<th class="pb-3 font-semibold">Name</th>
+								<th class="pb-3 font-semibold">Key</th>
+								<th class="pb-3 font-semibold">Created</th>
+								<th class="pb-3 font-semibold">Last Used</th>
+								<th class="pb-3 font-semibold">Status</th>
+								<th class="pb-3 font-semibold"></th>
 							</tr>
-						{/each}
-					</tbody>
-				</table>
-			</div>
-		{/if}
-	</div>
+						</thead>
+						<tbody>
+							{#each data.apiKeys as key (key.id)}
+								<tr class="border-b border-surface-100-900/70">
+									<td class="py-4 font-medium">{key.name}</td>
+									<td class="py-4">
+										<code class="text-xs border border-surface-100-900 px-2 py-1 rounded">
+											{key.key_prefix}•••
+										</code>
+									</td>
+									<td class="py-4 text-surface-500">{formatDate(key.created_at)}</td>
+									<td class="py-4 text-surface-500">{formatLastUsed(key.last_used_at)}</td>
+									<td class="py-4">
+										{#if key.is_active}
+											<span class="badge preset-filled-success-900-100 text-xs">Active</span>
+										{:else}
+											<span class="badge preset-filled-surface-500 text-xs">Revoked</span>
+										{/if}
+									</td>
+									<td class="py-4 text-right">
+										{#if key.is_active}
+											<form
+												method="post"
+												action="?/revoke"
+												use:enhance={() => {
+													revokingId = key.id;
+													return async ({ update }) => {
+														revokingId = null;
+														await update();
+													};
+												}}
+											>
+												<input type="hidden" name="id" value={key.id} />
+												<button
+													type="submit"
+													class="btn btn-sm preset-tonal text-error-500 flex items-center gap-1"
+													disabled={revokingId === key.id}
+												>
+													<Trash2 size={14} />
+													{revokingId === key.id ? 'Revoking...' : 'Revoke'}
+												</button>
+											</form>
+										{/if}
+									</td>
+								</tr>
+							{/each}
+						</tbody>
+					</table>
+				</div>
+			{/if}
+		</div>
+	</section>
 </div>

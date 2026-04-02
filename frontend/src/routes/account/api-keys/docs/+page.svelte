@@ -53,65 +53,70 @@ data.forEach(company => {
 	<title>API Documentation - AppGoblin</title>
 </svelte:head>
 
-<div class="space-y-6">
+<div class="p-6 md:p-8 space-y-8">
 	<!-- Header -->
-	<div class="card preset-tonal p-6 md:p-8 space-y-4">
-		<a href="/account/api-keys" class="flex items-center gap-2 text-sm text-surface-500 hover:text-surface-300 transition-colors">
+	<section class="space-y-4">
+		<a
+			href="/account/api-keys"
+			class="flex items-center gap-2 text-sm text-surface-500 hover:text-primary-500 transition-colors"
+		>
 			<ArrowLeft size={16} />
 			Back to API Keys
 		</a>
 		<h1 class="text-2xl font-bold">API Documentation</h1>
-		<p class="text-surface-600-400">
+		<p class="text-sm">
 			Reference for the AppGoblin public API. All endpoints require authentication via API key.
 		</p>
-	</div>
+	</section>
 
 	<!-- Base URL -->
-	<div class="card preset-tonal p-6 md:p-8 space-y-3">
-		<h2 class="text-lg font-semibold">Base URL</h2>
-		<code class="block p-3 rounded-lg bg-surface-950-50 text-sm font-mono">
+	<section class="space-y-3 p-6 rounded-lg border border-surface-100-900">
+		<h2 class="text-sm font-semibold text-surface-500 uppercase tracking-wide">Base URL</h2>
+		<code class="block p-3 rounded-lg border border-surface-100-900 text-sm font-mono">
 			https://appgoblin.info/api/v1/
 		</code>
-	</div>
+	</section>
 
 	<!-- Authentication -->
-	<div class="card preset-tonal p-6 md:p-8 space-y-3">
-		<h2 class="text-lg font-semibold">Authentication</h2>
-		<p class="text-sm text-surface-600-400">
-			Include your API key in the <code class="bg-surface-200-800 px-1.5 py-0.5 rounded text-xs">X-API-Key</code> header of every request.
+	<section class="space-y-3 p-6 rounded-lg border border-surface-100-900">
+		<h2 class="text-sm font-semibold text-surface-500 uppercase tracking-wide">Authentication</h2>
+		<p class="text-sm">
+			Include your API key in the
+			<code class="border border-surface-100-900 px-1.5 py-0.5 rounded text-xs">X-API-Key</code>
+			header of every request.
 		</p>
-		<code class="block p-3 rounded-lg bg-surface-950-50 text-sm font-mono">
+		<code class="block p-3 rounded-lg border border-surface-100-900 text-sm font-mono">
 			X-API-Key: ag_your_api_key_here
 		</code>
-	</div>
+	</section>
 
 	<!-- Rate Limits -->
-	<div class="card preset-tonal p-6 md:p-8 space-y-3">
-		<h2 class="text-lg font-semibold">Rate Limits</h2>
-		<p class="text-sm text-surface-600-400">
+	<section class="space-y-3 p-6 rounded-lg border border-surface-100-900">
+		<h2 class="text-sm font-semibold text-surface-500 uppercase tracking-wide">Rate Limits</h2>
+		<p class="text-sm">
 			Every API key has two layers of rate limiting: per-minute burst protection and a daily quota.
 		</p>
 		<div class="overflow-x-auto">
 			<table class="w-full text-sm">
 				<thead>
-					<tr class="border-b border-surface-300-700 text-left">
+					<tr class="border-b border-surface-100-900 text-left">
 						<th class="pb-2 font-semibold">Plan</th>
 						<th class="pb-2 font-semibold">req/min</th>
 						<th class="pb-2 font-semibold">req/day</th>
 					</tr>
 				</thead>
 				<tbody>
-					<tr class="border-b border-surface-300-700/50">
+					<tr class="border-b border-surface-100-900/70">
 						<td class="py-2">Free</td>
 						<td class="py-2 text-surface-500">30</td>
 						<td class="py-2 text-surface-500">1,000</td>
 					</tr>
-					<tr class="border-b border-surface-300-700/50">
+					<tr class="border-b border-surface-100-900/70">
 						<td class="py-2">Premium Access</td>
 						<td class="py-2 text-surface-500">200</td>
 						<td class="py-2 text-surface-500">10,000</td>
 					</tr>
-					<tr class="border-b border-surface-300-700/50">
+					<tr class="border-b border-surface-100-900/70">
 						<td class="py-2">Business SDK / App-Ads.txt</td>
 						<td class="py-2 text-surface-500">2,000</td>
 						<td class="py-2 text-surface-500">100,000</td>
@@ -124,47 +129,50 @@ data.forEach(company => {
 				</tbody>
 			</table>
 		</div>
-		<p class="text-sm text-surface-600-400">
-			Rate limit and quota information is returned in response headers:
-		</p>
-		<code class="block p-3 rounded-lg bg-surface-950-50 text-sm font-mono whitespace-pre">X-RateLimit-Limit: 200&#10;X-RateLimit-Remaining: 195&#10;X-RateLimit-Policy: 10000;w=86400&#10;X-RateLimit-Quota-Remaining: 9805</code>
-	</div>
+		<p class="text-sm">Rate limit and quota information is returned in response headers:</p>
+		<code
+			class="block p-3 rounded-lg border border-surface-100-900 text-sm font-mono whitespace-pre"
+			>X-RateLimit-Limit: 200&#10;X-RateLimit-Remaining: 195&#10;X-RateLimit-Policy:
+			10000;w=86400&#10;X-RateLimit-Quota-Remaining: 9805</code
+		>
+	</section>
 
 	<!-- Endpoints -->
-	<div class="card preset-tonal p-6 md:p-8 space-y-3">
-		<h2 class="text-lg font-semibold">Endpoints</h2>
+	<section class="space-y-3 p-6 rounded-lg border border-surface-100-900">
+		<h2 class="text-sm font-semibold text-surface-500 uppercase tracking-wide">Endpoints</h2>
 
 		<!-- GET /companies -->
-		<div class="border border-surface-300-700 rounded-lg overflow-hidden">
-			<div class="p-4 bg-surface-100-900 flex items-center gap-3">
+		<div class="border border-surface-100-900 rounded-lg overflow-hidden">
+			<div class="p-4 border-b border-surface-100-900 flex items-center gap-3">
 				<span class="badge preset-filled-success-900-100 text-xs font-mono">GET</span>
 				<code class="text-sm font-mono">/api/v1/companies</code>
 			</div>
 			<div class="p-4 space-y-3">
-				<p class="text-sm text-surface-600-400">
+				<p class="text-sm">
 					Returns a list of all mapped companies with their app counts across stores.
 				</p>
 				<p class="text-xs text-surface-500">
 					<strong>Tier required:</strong> All plans
 				</p>
 				<p class="text-sm font-medium">Response</p>
-				<pre class="block p-3 rounded-lg bg-surface-950-50 text-xs font-mono overflow-x-auto">{responseExample}</pre>
+				<pre
+					class="block p-3 rounded-lg border border-surface-100-900 text-xs font-mono overflow-x-auto">{responseExample}</pre>
 			</div>
 		</div>
-	</div>
+	</section>
 
 	<!-- Error Responses -->
-	<div class="card preset-tonal p-6 md:p-8 space-y-3">
-		<h2 class="text-lg font-semibold">Error Responses</h2>
+	<section class="space-y-3 p-6 rounded-lg border border-surface-100-900">
+		<h2 class="text-sm font-semibold text-surface-500 uppercase tracking-wide">Error Responses</h2>
 		<div class="space-y-2">
-			<div class="flex items-start gap-3 p-3 rounded-lg bg-surface-100-900">
+			<div class="flex items-start gap-3 p-3 rounded-lg border border-surface-100-900">
 				<span class="badge preset-filled-error-500 text-xs font-mono shrink-0 mt-0.5">401</span>
 				<div>
 					<p class="text-sm font-medium">Unauthorized</p>
 					<p class="text-xs text-surface-500">Missing or invalid <code>X-API-Key</code> header.</p>
 				</div>
 			</div>
-			<div class="flex items-start gap-3 p-3 rounded-lg bg-surface-100-900">
+			<div class="flex items-start gap-3 p-3 rounded-lg border border-surface-100-900">
 				<span class="badge preset-filled-warning-500 text-xs font-mono shrink-0 mt-0.5">429</span>
 				<div>
 					<p class="text-sm font-medium">Too Many Requests</p>
@@ -175,11 +183,11 @@ data.forEach(company => {
 				</div>
 			</div>
 		</div>
-	</div>
+	</section>
 
 	<!-- Code Examples -->
-	<div class="card preset-tonal p-6 md:p-8 space-y-3">
-		<h2 class="text-lg font-semibold">Code Examples</h2>
+	<section class="space-y-4 p-6 rounded-lg border border-surface-100-900">
+		<h2 class="text-sm font-semibold text-surface-500 uppercase tracking-wide">Code Examples</h2>
 
 		<!-- cURL -->
 		<div>
@@ -197,7 +205,8 @@ data.forEach(company => {
 					{/if}
 				</button>
 			</div>
-			<pre class="p-3 rounded-lg bg-surface-950-50 text-sm font-mono overflow-x-auto">{curlExample}</pre>
+			<pre
+				class="p-3 rounded-lg border border-surface-100-900 text-sm font-mono overflow-x-auto">{curlExample}</pre>
 		</div>
 
 		<!-- Python -->
@@ -216,7 +225,8 @@ data.forEach(company => {
 					{/if}
 				</button>
 			</div>
-			<pre class="p-3 rounded-lg bg-surface-950-50 text-sm font-mono overflow-x-auto">{pythonExample}</pre>
+			<pre
+				class="p-3 rounded-lg border border-surface-100-900 text-sm font-mono overflow-x-auto">{pythonExample}</pre>
 		</div>
 
 		<!-- JavaScript -->
@@ -235,7 +245,8 @@ data.forEach(company => {
 					{/if}
 				</button>
 			</div>
-			<pre class="p-3 rounded-lg bg-surface-950-50 text-sm font-mono overflow-x-auto">{jsExample}</pre>
+			<pre
+				class="p-3 rounded-lg border border-surface-100-900 text-sm font-mono overflow-x-auto">{jsExample}</pre>
 		</div>
-	</div>
+	</section>
 </div>

@@ -6,7 +6,7 @@ from typing import Self
 from litestar import Controller, get
 from litestar.datastructures import State
 
-from api_app.controllers.companies import get_overviews
+from api_app.controllers.companies import get_companies_parent_category_stats
 from api_app.guards import validate_api_key
 from config import get_logger
 
@@ -33,8 +33,15 @@ class V1CompaniesController(Controller):
         (number of apps associated with the company across stores).
         """
         start = time.perf_counter() * 1000
-        overview = get_overviews(state=state)
+        df = get_companies_parent_category_stats(state)
+        df = (
+            df.groupby(["company_domain", "company_name", "tag_source"])[
+                ["app_count", "installs_d30"]
+            ]
+            .sum()
+            .reset_index()
+        )
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(f"GET /api/v1/companies took {duration}ms")
 
-        return overview.companies_overview
+        return df.to_dict(orient="records")
