@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import AppRankTableShort from '$lib/AppRankTableShort.svelte';
 	import CompaniesBarChart from '$lib/CompaniesBarChart.svelte';
 	import AdvertiserCreativeRankingsTableTop from '$lib/AdvertiserCreativeRankingsTableTop.svelte';
@@ -40,6 +41,109 @@
 	// Get current month and year for display
 	const now = new Date();
 	const monthYear = now.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+
+	type DashboardHighlight = {
+		kicker: string;
+		title: string;
+		description: string;
+		points: string[];
+		href: string;
+		cta: string;
+		imageLight: string;
+		imageDark: string;
+		imageAlt: string;
+	};
+
+	const dashboardHighlights: DashboardHighlight[] = [
+		{
+			kicker: 'Competitor app intelligence',
+			title: 'Analyze Competitor Apps',
+			description: 'See growth, monetization, creatives, and store performance in one place.',
+			points: [
+				'Track installs and ratings',
+				'Review monetization signals',
+				'Scan creatives and rankings'
+			],
+			href: '/apps/com.rovio.baba',
+			cta: 'View App Intelligence',
+			imageLight: '/frontpage/app_page_light.png',
+			imageDark: '/frontpage/app_page_dark.png',
+			imageAlt:
+				'App intelligence dashboard preview showing app overview, installs, ratings, and monetization data.'
+		},
+		{
+			kicker: 'Creative market visibility',
+			title: 'Browse the Creatives Top Advertisers Use',
+			description: 'Browse live creative libraries to see what advertisers are running right now.',
+			points: [
+				'Browse live creative feeds',
+				'Filter by network and format',
+				'Spot active campaign patterns'
+			],
+			href: '/ad-creatives',
+			cta: 'Browse Creatives',
+			imageLight: '/frontpage/creative_explorer_light.png',
+			imageDark: '/frontpage/creative_explorer_dark.png',
+			imageAlt:
+				'Ad creative explorer preview showing network filters and a feed of advertiser creatives.'
+		},
+		{
+			kicker: 'Company and SDK intelligence',
+			title: "See Who's Actually Using Mobile Adtech Products",
+			description: 'See which apps, categories, and related entities are tied to each company.',
+			points: ['Find top apps by company', 'Compare category adoption', 'Follow related entities'],
+			href: '/companies/google.com',
+			cta: 'View Companies',
+			imageLight: '/frontpage/app_intelligence_company_overview_light.png',
+			imageDark: '/frontpage/app_intelligence_company_overview_dark.png',
+			imageAlt:
+				'Company intelligence dashboard preview showing category breakdowns, related entities, and top customer apps.'
+		}
+	];
+
+	const dashboardAutoplayMs = 7000;
+	let activeDashboardIndex = $state(0);
+	let dashboardInterval: number | undefined;
+
+	function showDashboard(index: number) {
+		activeDashboardIndex = index;
+		restartDashboardAutoplay();
+	}
+
+	function showPreviousDashboard() {
+		activeDashboardIndex =
+			(activeDashboardIndex - 1 + dashboardHighlights.length) % dashboardHighlights.length;
+		restartDashboardAutoplay();
+	}
+
+	function showNextDashboard() {
+		advanceDashboard();
+		restartDashboardAutoplay();
+	}
+
+	function advanceDashboard() {
+		activeDashboardIndex = (activeDashboardIndex + 1) % dashboardHighlights.length;
+	}
+
+	function restartDashboardAutoplay() {
+		if (dashboardInterval) {
+			clearInterval(dashboardInterval);
+		}
+
+		dashboardInterval = window.setInterval(() => {
+			advanceDashboard();
+		}, dashboardAutoplayMs);
+	}
+
+	onMount(() => {
+		restartDashboardAutoplay();
+
+		return () => {
+			if (dashboardInterval) {
+				clearInterval(dashboardInterval);
+			}
+		};
+	});
 </script>
 
 <svelte:head>
@@ -114,6 +218,140 @@
 					</a>
 				</div>
 			</div>
+		</div>
+	</section>
+
+	<section
+		class="relative overflow-hidden rounded-[2rem] border border-secondary-900-100/20 bg-surface-100-900/40 px-4 py-6 shadow-2xl md:px-8 md:py-10"
+	>
+		<div
+			class="pointer-events-none absolute -right-16 top-0 h-48 w-48 rounded-full bg-secondary-500/10 blur-3xl"
+		></div>
+		<div
+			class="pointer-events-none absolute -left-12 bottom-0 h-40 w-40 rounded-full bg-primary-500/10 blur-3xl"
+		></div>
+
+		<div class="relative">
+			<div class="mb-8 max-w-3xl">
+				<p class="mb-3 text-xs font-bold uppercase tracking-[0.32em] text-secondary-700-300">
+					See how the dashboards work
+				</p>
+				<h2 class="mb-3 text-3xl font-bold leading-tight md:text-4xl">
+					See the workflows teams use most
+				</h2>
+				<p class="text-base md:text-lg">
+					Research apps, monitor creatives, and find the companies behind the mobile stack.
+				</p>
+			</div>
+
+			<article
+				class="overflow-hidden rounded-[1.75rem] border border-surface-100-900/70 bg-surface-100-900/55 shadow-lg"
+			>
+				<div class="grid gap-6 p-4 md:grid-cols-[minmax(0,0.78fr)_minmax(0,1.22fr)] md:p-6">
+					<div class="flex flex-col justify-between gap-6">
+						<div>
+							<p class="mb-3 text-xs font-bold uppercase tracking-[0.28em] text-primary-800-200">
+								{dashboardHighlights[activeDashboardIndex].kicker}
+							</p>
+							<h3 class="mb-3 text-2xl font-bold leading-tight md:text-3xl">
+								{dashboardHighlights[activeDashboardIndex].title}
+							</h3>
+							<p class="mb-5 text-sm leading-7 md:text-base">
+								{dashboardHighlights[activeDashboardIndex].description}
+							</p>
+
+							<ul class="mb-6 space-y-2 text-sm md:text-base">
+								{#each dashboardHighlights[activeDashboardIndex].points as point}
+									<li class="flex items-start gap-3">
+										<span class="mt-1 h-2.5 w-2.5 shrink-0 rounded-full bg-success-500"></span>
+										<span>{point}</span>
+									</li>
+								{/each}
+							</ul>
+
+							<div class="flex flex-wrap items-center gap-3">
+								<a
+									href={dashboardHighlights[activeDashboardIndex].href}
+									class="btn preset-filled-primary-500 px-4 py-2 font-medium"
+								>
+									{dashboardHighlights[activeDashboardIndex].cta}
+								</a>
+							</div>
+						</div>
+
+						<div class="flex items-center gap-3">
+							<button
+								type="button"
+								class="flex h-10 w-10 items-center justify-center rounded-full border border-surface-100-900/60 bg-surface-50-950/35 text-lg font-bold transition-colors hover:border-secondary-600/60 hover:bg-surface-50-950/55"
+								onclick={showPreviousDashboard}
+								aria-label="Show previous dashboard"
+							>
+								&lt;
+							</button>
+
+							<div class="flex items-center gap-2">
+								{#each dashboardHighlights as _, index}
+									<button
+										type="button"
+										class={[
+											'h-3 w-3 rounded-full transition-all',
+											activeDashboardIndex === index
+												? 'bg-primary-500 shadow-[0_0_0_4px_rgba(125,211,252,0.12)]'
+												: 'bg-surface-500/40 hover:bg-surface-500/70'
+										].join(' ')}
+										onclick={() => showDashboard(index)}
+										aria-label={`Show dashboard ${index + 1}`}
+										aria-pressed={activeDashboardIndex === index}
+									></button>
+								{/each}
+							</div>
+
+							<button
+								type="button"
+								class="flex h-10 w-10 items-center justify-center rounded-full border border-surface-100-900/60 bg-surface-50-950/35 text-lg font-bold transition-colors hover:border-secondary-600/60 hover:bg-surface-50-950/55"
+								onclick={showNextDashboard}
+								aria-label="Show next dashboard"
+							>
+								&gt;
+							</button>
+						</div>
+					</div>
+
+					<a
+						href={dashboardHighlights[activeDashboardIndex].href}
+						class="group relative block overflow-hidden rounded-[1.5rem] border border-secondary-900-100/20 bg-surface-50-950/70 p-2 shadow-xl"
+					>
+						<div
+							class="absolute inset-0 z-10 bg-gradient-to-tr from-surface-950/35 via-transparent to-primary-500/15"
+						></div>
+						<div
+							class="absolute inset-x-0 bottom-0 z-10 h-28 bg-gradient-to-t from-surface-950/45 to-transparent"
+						></div>
+						<div
+							class="absolute inset-y-0 left-0 z-10 hidden w-24 bg-gradient-to-r from-surface-950/25 to-transparent md:block"
+						></div>
+						<div
+							class="absolute right-4 top-4 z-20 rounded-full border border-white/20 bg-surface-950/55 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.2em] text-white/90 backdrop-blur-sm"
+						>
+							Live Preview
+						</div>
+						<div class="aspect-[16/11] overflow-hidden rounded-[1rem]">
+							<img
+								src={dashboardHighlights[activeDashboardIndex].imageLight}
+								alt={dashboardHighlights[activeDashboardIndex].imageAlt}
+								class="block h-full w-full object-cover object-top-left opacity-90 saturate-[0.92] transition-transform duration-500 group-hover:scale-[1.015] dark:hidden"
+								loading="eager"
+							/>
+							<img
+								src={dashboardHighlights[activeDashboardIndex].imageDark}
+								alt={dashboardHighlights[activeDashboardIndex].imageAlt}
+								class="hidden h-full w-full object-cover object-top-left opacity-90 saturate-[0.92] transition-transform duration-500 group-hover:scale-[1.015] dark:block"
+								loading="eager"
+							/>
+						</div>
+					</a>
+				</div>
+			</article>
 		</div>
 	</section>
 
