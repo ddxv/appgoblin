@@ -2,6 +2,7 @@
 	import X from 'lucide-svelte/icons/x';
 	import Filter from 'lucide-svelte/icons/filter';
 	import Search from 'lucide-svelte/icons/search';
+	import Mail from 'lucide-svelte/icons/mail';
 	import Loader2 from 'lucide-svelte/icons/loader-2';
 	import RotateCcw from 'lucide-svelte/icons/rotate-ccw';
 	import { formatNumber } from '$lib/utils/formatNumber';
@@ -83,12 +84,77 @@
 
 	// Results state
 	let isLoading = $state(false);
+	let isExporting = $state(false);
 	let sorting = $state<SortingState>([{ id: 'installs', desc: true }]);
 
 	const exportFilename = `appgoblin-crossfilter-${new Date().toISOString().split('T')[0]}`;
 	const formApps = $derived(() => (form?.apps ?? []) as CrossfilterApp[]);
 	const formError = $derived(() => form?.error ?? '');
+	const exportMessage = $derived(() => form?.exportMessage ?? '');
 	const hasSearched = $derived(() => !!form?.success || !!form?.error);
+
+	function appendFilterFields(formData: FormData) {
+		formData.set('include_domains', JSON.stringify(hasB2BSdkAccess ? includeDomains : []));
+		formData.set('exclude_domains', JSON.stringify(hasB2BSdkAccess ? excludeDomains : []));
+		formData.set('require_sdk_api', requireSdkApi.toString());
+		formData.set('require_iap', requireIap.toString());
+		formData.set('require_ads', requireAds.toString());
+		formData.set('mydate', myDate);
+
+		if (rankingFilter) {
+			formData.set('ranking_country', rankingFilter);
+		} else {
+			formData.delete('ranking_country');
+		}
+
+		if (selectedCategory) {
+			formData.set('category', selectedCategory);
+		} else {
+			formData.delete('category');
+		}
+
+		if (selectedStore) {
+			formData.set('store', selectedStore.toString());
+		} else {
+			formData.delete('store');
+		}
+
+		if (minInstalls != null) {
+			formData.set('min_installs', minInstalls.toString());
+		} else {
+			formData.delete('min_installs');
+		}
+
+		if (maxInstalls != null) {
+			formData.set('max_installs', maxInstalls.toString());
+		} else {
+			formData.delete('max_installs');
+		}
+
+		if (minRatings != null) {
+			formData.set('min_rating_count', minRatings.toString());
+		} else {
+			formData.delete('min_rating_count');
+		}
+
+		if (maxRatings != null) {
+			formData.set('max_rating_count', maxRatings.toString());
+		} else {
+			formData.delete('max_rating_count');
+		}
+
+		if (minMonthlyInstalls != null) {
+			formData.set('min_installs_d30', minMonthlyInstalls.toString());
+		} else {
+			formData.delete('min_installs_d30');
+		}
+
+		if (maxMonthlyInstalls != null) {
+			formData.set('max_installs_d30', maxMonthlyInstalls.toString());
+		} else {
+			formData.delete('max_installs_d30');
+		}
+	}
 
 	// Filtered companies for dropdowns - with null safety
 	let filteredIncludeCompanies = $derived(() => {
@@ -164,6 +230,7 @@
 		sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
 		myDate = sixMonthsAgo.toISOString().split('T')[0];
 		isLoading = false;
+		isExporting = false;
 	}
 
 	function getCompanyName(domain: string): string {
@@ -224,39 +291,17 @@
 				method="POST"
 				action="?/search"
 				use:enhance={hasPaidAccess
-					? ({ formData }) => {
-							// Manually append complex data structures
-							formData.append(
-								'include_domains',
-								JSON.stringify(hasB2BSdkAccess ? includeDomains : [])
-							);
-							formData.append(
-								'exclude_domains',
-								JSON.stringify(hasB2BSdkAccess ? excludeDomains : [])
-							);
-							formData.append('require_sdk_api', requireSdkApi.toString());
-							formData.append('require_iap', requireIap.toString());
-							formData.append('require_ads', requireAds.toString());
-							if (rankingFilter) formData.append('ranking_country', rankingFilter);
-							formData.append('mydate', myDate);
-							if (selectedCategory) formData.append('category', selectedCategory);
-							if (selectedStore) formData.append('store', selectedStore.toString());
+					? ({ formData, submitter }) => {
+							appendFilterFields(formData);
+							const intent = submitter?.getAttribute('data-intent') ?? 'search';
 
-							// Metrics
-							if (minInstalls) formData.append('min_installs', minInstalls.toString());
-							if (maxInstalls) formData.append('max_installs', maxInstalls.toString());
-							if (minRatings) formData.append('min_rating_count', minRatings.toString());
-							if (maxRatings) formData.append('max_rating_count', maxRatings.toString());
-							if (minMonthlyInstalls)
-								formData.append('min_installs_d30', minMonthlyInstalls.toString());
-							if (maxMonthlyInstalls)
-								formData.append('max_installs_d30', maxMonthlyInstalls.toString());
-
-							isLoading = true;
+							isLoading = intent === 'search';
+							isExporting = intent === 'email-export';
 
 							return async ({ update }) => {
 								await update({ reset: false }); // Don't reset form fields
 								isLoading = false;
+								isExporting = false;
 							};
 						}
 					: undefined}
@@ -528,8 +573,9 @@
 				<div class="space-y-2">
 					<button
 						type="submit"
+						data-intent="search"
 						class="btn preset-filled-primary-500 w-full flex items-center justify-center gap-2"
-						disabled={!hasPaidAccess || isLoading}
+						disabled={!hasPaidAccess || isLoading || isExporting}
 					>
 						{#if !hasPaidAccess}
 							<svg
@@ -557,16 +603,36 @@
 					</button>
 
 					<button
+						type="submit"
+						data-intent="email-export"
+						formaction="?/emailCsv"
+						class="btn preset-tonal-primary w-full flex items-center justify-center gap-2 text-sm"
+						disabled={!hasPaidAccess || isLoading || isExporting}
+					>
+						{#if isExporting}
+							<Loader2 size={16} class="animate-spin" />
+							Queueing CSV Email...
+						{:else}
+							<Mail size={16} />
+							Email CSV Link
+						{/if}
+					</button>
+
+					<button
 						type="button"
 						class="btn preset-tonal w-full flex items-center justify-center gap-2 text-sm"
 						onclick={resetFilters}
-						disabled={isLoading}
+						disabled={isLoading || isExporting}
 					>
 						<RotateCcw size={16} />
 						Reset Filters
 					</button>
 				</div>
 			</form>
+
+			{#if exportMessage()}
+				<p class="text-success-900-100 text-sm text-center">{exportMessage()}</p>
+			{/if}
 
 			{#if formError()}
 				<p class="text-error-900-100 text-sm text-center">{formError()}</p>

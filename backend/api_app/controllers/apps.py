@@ -27,6 +27,11 @@ from api_app.models import (
     AppSDKsOverview,
     SDKsDetails,
 )
+from api_app.report_exports import (
+    create_report_id,
+    run_app_explorer_export_job,
+    validate_export_dependencies,
+)
 from api_app.utils import extend_app_icon_url
 from config import get_logger
 from dbcon.queries import (
@@ -971,6 +976,41 @@ class AppController(Controller):
             f"{self.path}/crossfilter returned {len(apps_list)} apps in {duration}ms"
         )
         return apps_dict
+
+    @post(path="/crossfilter/export")
+    async def export_crossfilter_apps(self: Self, state: State, data: dict) -> Response:
+        """Queue an app explorer CSV export and email the download link."""
+        validate_export_dependencies()
+
+        recipient_email = str(data.get("recipient_email", "")).strip()
+        if not recipient_email:
+            return Response(
+                {"success": False, "error": "recipient_email is required"},
+                status_code=400,
+            )
+
+        report_id = create_report_id()
+        logger.info(
+            "Queueing app explorer export %s for %s",
+            report_id,
+            recipient_email,
+        )
+
+        response = {
+            "success": True,
+            "report_id": report_id,
+            "message": "Export queued. A download link will be sent by email.",
+        }
+        return Response(
+            response,
+            background=BackgroundTask(
+                run_app_explorer_export_job,
+                state=state,
+                payload=data,
+                recipient_email=recipient_email,
+                report_id=report_id,
+            ),
+        )
 
 
 COLLECTIONS = {
