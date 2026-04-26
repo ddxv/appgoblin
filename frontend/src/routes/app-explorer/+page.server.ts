@@ -78,6 +78,25 @@ function buildCrossfilterPayload(data: FormData, hasB2BSdkAccess: boolean): Cros
 	};
 }
 
+function hasExportFilters(payload: CrossfilterPayload): boolean {
+	return (
+		payload.include_domains.length > 0 ||
+		payload.exclude_domains.length > 0 ||
+		payload.require_sdk_api ||
+		payload.require_iap ||
+		payload.require_ads ||
+		payload.ranking_country != null ||
+		payload.category != null ||
+		payload.store != null ||
+		payload.min_installs != null ||
+		payload.max_installs != null ||
+		payload.min_rating_count != null ||
+		payload.max_rating_count != null ||
+		payload.min_installs_d30 != null ||
+		payload.max_installs_d30 != null
+	);
+}
+
 async function getSubscriptionAccess(userId: number) {
 	const row = await db.queryOne<ActiveSubscriptionRow>(
 		`SELECT provider_price_id FROM subscriptions
@@ -171,21 +190,25 @@ export const actions = {
 
 		const payload = buildCrossfilterPayload(data, access.hasB2BSdkAccess);
 
+		if (!hasExportFilters(payload)) {
+			return {
+				success: false,
+				error: 'Set at least one filter before exporting a CSV.',
+				apps: []
+			};
+		}
+
 		try {
-			const [searchResponse, exportResponse] = await Promise.all([
-				api.post('/apps/crossfilter', payload, 'Crossfilter Search'),
-				api.post(
-					'/apps/crossfilter/export',
-					{ ...payload, recipient_email: user.email },
-					'Crossfilter Export'
-				)
-			]);
+			const exportResponse = await api.post(
+				'/apps/crossfilter/export',
+				{ ...payload, recipient_email: user.email },
+				'Crossfilter Export'
+			);
 
 			return {
 				success: true,
-				apps: searchResponse.apps,
 				exportQueued: true,
-				exportMessage: `CSV export queued. A download link will be sent to ${user.email}.`,
+				exportMessage: `CSV export queued. A download link will be sent to ${user.email} within the next 15 minutes.`,
 				reportId: exportResponse.report_id
 			};
 		} catch (error) {

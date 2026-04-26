@@ -64,6 +64,42 @@ MAX_URL_DISPLAY_LENGTH = 44
 TRUNCATED_LENGTH = 41
 
 
+def has_crossfilter_export_filters(payload: dict) -> bool:
+    """Return True when at least one meaningful export filter is set."""
+    array_fields = ("include_domains", "exclude_domains")
+    boolean_fields = ("require_sdk_api", "require_iap", "require_ads")
+    value_fields = (
+        "ranking_country",
+        "category",
+        "store",
+        "min_installs",
+        "max_installs",
+        "min_rating_count",
+        "max_rating_count",
+        "min_installs_d30",
+        "max_installs_d30",
+    )
+
+    for field in array_fields:
+        value = payload.get(field)
+        if isinstance(value, list) and len(value) > 0:
+            return True
+
+    for field in boolean_fields:
+        if payload.get(field) is True:
+            return True
+
+    for field in value_fields:
+        value = payload.get(field)
+        if value is None:
+            continue
+        if isinstance(value, str) and not value.strip():
+            continue
+        return True
+
+    return False
+
+
 def api_call_dfs(state: State, store_id: str) -> pd.DataFrame:
     """Get the API calls for an app."""
     df = get_app_api_details(state, store_id)
@@ -986,6 +1022,15 @@ class AppController(Controller):
         if not recipient_email:
             return Response(
                 {"success": False, "error": "recipient_email is required"},
+                status_code=400,
+            )
+
+        if not has_crossfilter_export_filters(data):
+            return Response(
+                {
+                    "success": False,
+                    "error": "At least one filter must be set before exporting.",
+                },
                 status_code=400,
             )
 

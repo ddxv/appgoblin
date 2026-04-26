@@ -5,9 +5,14 @@
 	import Mail from 'lucide-svelte/icons/mail';
 	import Loader2 from 'lucide-svelte/icons/loader-2';
 	import RotateCcw from 'lucide-svelte/icons/rotate-ccw';
-	import { formatNumber } from '$lib/utils/formatNumber';
 	import { countryCodeToEmoji } from '$lib/utils/countryCodeToEmoji';
-	import { enhance } from '$app/forms';
+	import { applyAction, enhance } from '$app/forms';
+	import {
+		Combobox,
+		Portal,
+		type ComboboxRootProps,
+		useListCollection
+	} from '@skeletonlabs/skeleton-svelte';
 	import CrossfilterAppsTable from '$lib/CrossfilterAppsTable.svelte';
 
 	import type { CatData, CrossfilterApp, Countries } from '../.././types';
@@ -19,6 +24,11 @@
 		company_name: string;
 		company_domain: string;
 		total_apps: number;
+	}
+
+	interface CompanyOption {
+		label: string;
+		value: string;
 	}
 
 	let { data, form } = $props();
@@ -76,21 +86,20 @@
 	sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
 	let myDate = $state(sixMonthsAgo.toISOString().split('T')[0]);
 
-	// Search state for dropdowns
-	let includeSearch = $state('');
-	let excludeSearch = $state('');
-	let includeDropdownOpen = $state(false);
-	let excludeDropdownOpen = $state(false);
+	// Company combobox state
+	let includeItems = $state<CompanyOption[]>([]);
+	let excludeItems = $state<CompanyOption[]>([]);
 
 	// Results state
 	let isLoading = $state(false);
 	let isExporting = $state(false);
+	let exportFeedback = $state('');
+	let exportError = $state('');
 	let sorting = $state<SortingState>([{ id: 'installs', desc: true }]);
 
 	const exportFilename = `appgoblin-crossfilter-${new Date().toISOString().split('T')[0]}`;
 	const formApps = $derived(() => (form?.apps ?? []) as CrossfilterApp[]);
 	const formError = $derived(() => form?.error ?? '');
-	const exportMessage = $derived(() => form?.exportMessage ?? '');
 	const hasSearched = $derived(() => !!form?.success || !!form?.error);
 
 	function appendFilterFields(formData: FormData) {
@@ -156,59 +165,108 @@
 		}
 	}
 
-	// Filtered companies for dropdowns - with null safety
-	let filteredIncludeCompanies = $derived(() => {
+	function getActionStringField(
+		data: Record<string, unknown> | null | undefined,
+		key: string
+	): string {
+		const value = data?.[key];
+		return typeof value === 'string' ? value : '';
+	}
+
+	const companyOptions = $derived.by<CompanyOption[]>(() => {
 		if (!companies || companies.length === 0) return [];
-		const searchLower = (includeSearch ?? '').toLowerCase();
 		return companies
-			.filter((c) => {
-				if (!c?.company_name || !c?.company_domain) return false;
-				return (
-					c.company_name.toLowerCase().includes(searchLower) ||
-					c.company_domain.toLowerCase().includes(searchLower)
-				);
-			})
-			.filter((c) => !includeDomains.includes(c.company_domain))
-			.slice(0, 25);
+			.filter((company) => company?.company_name && company?.company_domain)
+			.map((company) => ({
+				label: company.company_name,
+				value: company.company_domain
+			}));
 	});
 
-	let filteredExcludeCompanies = $derived(() => {
-		if (!companies || companies.length === 0) return [];
-		const searchLower = (excludeSearch ?? '').toLowerCase();
-		return companies
-			.filter((c) => {
-				if (!c?.company_name || !c?.company_domain) return false;
-				return (
-					c.company_name.toLowerCase().includes(searchLower) ||
-					c.company_domain.toLowerCase().includes(searchLower)
-				);
-			})
-			.filter((c) => !excludeDomains.includes(c.company_domain))
+	function getAvailableCompanyOptions(selectedDomains: string[]): CompanyOption[] {
+		return companyOptions
+			.filter((company) => !selectedDomains.includes(company.value))
 			.slice(0, 25);
-	});
+	}
+
+	const includeCollection = $derived(
+		useListCollection({
+			items: includeItems,
+			itemToString: (item) => item.label,
+			itemToValue: (item) => item.value
+		})
+	);
+
+	const excludeCollection = $derived(
+		useListCollection({
+			items: excludeItems,
+			itemToString: (item) => item.label,
+			itemToValue: (item) => item.value
+		})
+	);
+
+	const onIncludeOpenChange = () => {
+		includeItems = getAvailableCompanyOptions(includeDomains);
+	};
+
+	const onExcludeOpenChange = () => {
+		excludeItems = getAvailableCompanyOptions(excludeDomains);
+	};
+
+	const onIncludeInputValueChange: ComboboxRootProps['onInputValueChange'] = (event) => {
+		const searchValue = event.inputValue.toLowerCase();
+		const options = getAvailableCompanyOptions(includeDomains);
+		const filtered = options.filter(
+			(item) =>
+				item.label.toLowerCase().includes(searchValue) ||
+				item.value.toLowerCase().includes(searchValue)
+		);
+		includeItems = filtered.length > 0 ? filtered : options;
+	};
+
+	const onExcludeInputValueChange: ComboboxRootProps['onInputValueChange'] = (event) => {
+		const searchValue = event.inputValue.toLowerCase();
+		const options = getAvailableCompanyOptions(excludeDomains);
+		const filtered = options.filter(
+			(item) =>
+				item.label.toLowerCase().includes(searchValue) ||
+				item.value.toLowerCase().includes(searchValue)
+		);
+		excludeItems = filtered.length > 0 ? filtered : options;
+	};
+
+	const onIncludeValueChange: ComboboxRootProps['onValueChange'] = (event) => {
+		includeDomains = event.value as string[];
+		includeItems = getAvailableCompanyOptions(includeDomains);
+	};
+
+	const onExcludeValueChange: ComboboxRootProps['onValueChange'] = (event) => {
+		excludeDomains = event.value as string[];
+		excludeItems = getAvailableCompanyOptions(excludeDomains);
+	};
 
 	function addIncludeDomain(domain: string) {
 		if (domain && !includeDomains.includes(domain)) {
 			includeDomains = [...includeDomains, domain];
 		}
-		includeSearch = '';
-		includeDropdownOpen = false;
+		includeItems = getAvailableCompanyOptions(includeDomains);
 	}
 
 	function removeIncludeDomain(domain: string) {
 		includeDomains = includeDomains.filter((d) => d !== domain);
+		includeItems = getAvailableCompanyOptions(includeDomains);
 	}
 
 	function addExcludeDomain(domain: string) {
 		if (domain && !excludeDomains.includes(domain)) {
 			excludeDomains = [...excludeDomains, domain];
 		}
-		excludeSearch = '';
-		excludeDropdownOpen = false;
+		excludeItems = getAvailableCompanyOptions(excludeDomains);
 	}
 
 	function removeExcludeDomain(domain: string) {
 		excludeDomains = excludeDomains.filter((d) => d !== domain);
+		excludeItems = getAvailableCompanyOptions(excludeDomains);
 	}
 
 	function resetFilters() {
@@ -231,6 +289,10 @@
 		myDate = sixMonthsAgo.toISOString().split('T')[0];
 		isLoading = false;
 		isExporting = false;
+		exportFeedback = '';
+		exportError = '';
+		includeItems = getAvailableCompanyOptions([]);
+		excludeItems = getAvailableCompanyOptions([]);
 	}
 
 	function getCompanyName(domain: string): string {
@@ -238,6 +300,14 @@
 		const company = companies.find((c) => c?.company_domain === domain);
 		return company?.company_name || domain;
 	}
+
+	$effect(() => {
+		includeItems = getAvailableCompanyOptions(includeDomains);
+	});
+
+	$effect(() => {
+		excludeItems = getAvailableCompanyOptions(excludeDomains);
+	});
 </script>
 
 <svelte:head>
@@ -294,12 +364,29 @@
 					? ({ formData, submitter }) => {
 							appendFilterFields(formData);
 							const intent = submitter?.getAttribute('data-intent') ?? 'search';
+							exportFeedback = '';
+							exportError = '';
 
 							isLoading = intent === 'search';
 							isExporting = intent === 'email-export';
 
-							return async ({ update }) => {
-								await update({ reset: false }); // Don't reset form fields
+							return async ({ result, update }) => {
+								if (intent === 'email-export') {
+									if (result.type === 'redirect' || result.type === 'error') {
+										await applyAction(result);
+									} else if (result.type === 'success') {
+										const actionData = result.data as Record<string, unknown>;
+										exportFeedback =
+											getActionStringField(actionData, 'exportMessage') || 'CSV export queued.';
+										exportError = getActionStringField(actionData, 'error');
+									} else if (result.type === 'failure') {
+										const actionData = result.data as Record<string, unknown>;
+										exportError =
+											getActionStringField(actionData, 'error') || 'Failed to queue CSV export';
+									}
+								} else {
+									await update({ reset: false }); // Don't reset form fields
+								}
 								isLoading = false;
 								isExporting = false;
 							};
@@ -463,36 +550,47 @@
 					<div class="space-y-2">
 						<label class="label font-medium text-sm" for="include-search">Include Companies</label>
 						<p class="text-xs">Apps must use ALL selected SDKs/companies</p>
-						<div class="relative">
-							<input
-								type="text"
-								id="include-search"
-								class="input text-sm {!hasPaidAccess || !hasB2BSdkAccess
-									? 'opacity-50 cursor-not-allowed'
-									: ''}"
-								placeholder="Search companies..."
-								bind:value={includeSearch}
-								disabled={!hasPaidAccess || !hasB2BSdkAccess}
-								onfocus={() => hasPaidAccess && hasB2BSdkAccess && (includeDropdownOpen = true)}
-								onblur={() => setTimeout(() => (includeDropdownOpen = false), 200)}
-							/>
-							{#if includeDropdownOpen && filteredIncludeCompanies().length > 0}
-								<div
-									class="absolute z-50 w-full mt-1 border border-surface-300-700 rounded-lg shadow-lg max-h-48 lg:max-h-92 overflow-y-auto"
-								>
-									{#each filteredIncludeCompanies() as company (company.company_domain)}
-										<button
-											type="button"
-											class="w-full px-3 py-2 text-left text-sm hover:bg-surface-200-800 flex justify-between items-center"
-											onmousedown={() => addIncludeDomain(company.company_domain)}
-										>
-											<span>{company.company_name}</span>
-											<span class="text-xs">{formatNumber(company.total_apps)} apps</span>
-										</button>
-									{/each}
-								</div>
-							{/if}
-						</div>
+						<Combobox
+							placeholder="Search companies..."
+							collection={includeCollection}
+							onOpenChange={onIncludeOpenChange}
+							onInputValueChange={onIncludeInputValueChange}
+							value={includeDomains}
+							onValueChange={onIncludeValueChange}
+							class="w-full {!hasPaidAccess || !hasB2BSdkAccess
+								? 'opacity-50 cursor-not-allowed'
+								: ''}"
+							multiple
+							disabled={!hasPaidAccess || !hasB2BSdkAccess}
+						>
+							<Combobox.Control>
+								<Combobox.Input id="include-search" />
+								<Combobox.Trigger />
+							</Combobox.Control>
+							<Portal>
+								<Combobox.Positioner>
+									<Combobox.Content
+										class="bg-surface-100-900 border border-surface-300-700 rounded-lg shadow-lg p-1 w-[min(22rem,calc(100vw-2rem))] max-h-48 lg:max-h-92 overflow-y-auto"
+									>
+										{#if includeItems.length > 0}
+											{#each includeItems as item (item.value)}
+												<Combobox.Item
+													{item}
+													class="flex justify-between items-center rounded px-3 py-2 text-sm hover:bg-surface-200-800"
+												>
+													<div class="min-w-0">
+														<Combobox.ItemText>{item.label}</Combobox.ItemText>
+													</div>
+													<Combobox.ItemIndicator />
+												</Combobox.Item>
+											{/each}
+										{:else}
+											<p class="px-3 py-2 text-sm opacity-70">No matching companies</p>
+										{/if}
+									</Combobox.Content>
+								</Combobox.Positioner>
+							</Portal>
+						</Combobox>
 
 						{#if includeDomains.length > 0}
 							<div class="flex flex-wrap gap-1 mt-2">
@@ -514,36 +612,47 @@
 					<div class="space-y-2">
 						<label class="label font-medium text-sm" for="exclude-search">Exclude Companies</label>
 						<p class="text-xs">Apps must NOT use any of these</p>
-						<div class="relative">
-							<input
-								type="text"
-								id="exclude-search"
-								class="input text-sm {!hasPaidAccess || !hasB2BSdkAccess
-									? 'opacity-50 cursor-not-allowed'
-									: ''}"
-								placeholder="Search companies to exclude..."
-								bind:value={excludeSearch}
-								disabled={!hasPaidAccess || !hasB2BSdkAccess}
-								onfocus={() => hasPaidAccess && hasB2BSdkAccess && (excludeDropdownOpen = true)}
-								onblur={() => setTimeout(() => (excludeDropdownOpen = false), 200)}
-							/>
-							{#if excludeDropdownOpen && filteredExcludeCompanies().length > 0}
-								<div
-									class="absolute z-50 w-full mt-1 bg-surface-100-900 border border-surface-300-700 rounded-lg shadow-lg max-h-48 overflow-y-auto"
-								>
-									{#each filteredExcludeCompanies() as company (company.company_domain)}
-										<button
-											type="button"
-											class="w-full px-3 py-2 text-left text-sm hover:bg-surface-200-800 flex justify-between items-center"
-											onmousedown={() => addExcludeDomain(company.company_domain)}
-										>
-											<span>{company.company_name}</span>
-											<span class="text-xs">{formatNumber(company.total_apps)} apps</span>
-										</button>
-									{/each}
-								</div>
-							{/if}
-						</div>
+						<Combobox
+							placeholder="Search companies to exclude..."
+							collection={excludeCollection}
+							onOpenChange={onExcludeOpenChange}
+							onInputValueChange={onExcludeInputValueChange}
+							value={excludeDomains}
+							onValueChange={onExcludeValueChange}
+							class="w-full {!hasPaidAccess || !hasB2BSdkAccess
+								? 'opacity-50 cursor-not-allowed'
+								: ''}"
+							multiple
+							disabled={!hasPaidAccess || !hasB2BSdkAccess}
+						>
+							<Combobox.Control>
+								<Combobox.Input id="exclude-search" />
+								<Combobox.Trigger />
+							</Combobox.Control>
+							<Portal>
+								<Combobox.Positioner>
+									<Combobox.Content
+										class="bg-surface-100-900 border border-surface-300-700 rounded-lg shadow-lg p-1 w-[min(22rem,calc(100vw-2rem))] max-h-48 overflow-y-auto"
+									>
+										{#if excludeItems.length > 0}
+											{#each excludeItems as item (item.value)}
+												<Combobox.Item
+													{item}
+													class="flex justify-between items-center rounded px-3 py-2 text-sm hover:bg-surface-200-800"
+												>
+													<div class="min-w-0">
+														<Combobox.ItemText>{item.label}</Combobox.ItemText>
+													</div>
+													<Combobox.ItemIndicator />
+												</Combobox.Item>
+											{/each}
+										{:else}
+											<p class="px-3 py-2 text-sm opacity-70">No matching companies</p>
+										{/if}
+									</Combobox.Content>
+								</Combobox.Positioner>
+							</Portal>
+						</Combobox>
 						{#if excludeDomains.length > 0}
 							<div class="flex flex-wrap gap-1 mt-2">
 								{#each excludeDomains as domain}
@@ -630,8 +739,12 @@
 				</div>
 			</form>
 
-			{#if exportMessage()}
-				<p class="text-success-900-100 text-sm text-center">{exportMessage()}</p>
+			{#if exportFeedback}
+				<p class="text-success-900-100 text-sm text-center">{exportFeedback}</p>
+			{/if}
+
+			{#if exportError}
+				<p class="text-error-900-100 text-sm text-center">{exportError}</p>
 			{/if}
 
 			{#if formError()}

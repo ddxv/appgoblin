@@ -41,5 +41,3 @@ host = "smtp.zoho.com"
 port = 465
 user = "contact@appgoblin.info"
 password = "my-email-password"
-from_address = "contact@appgoblin.info"
-from_name = "AppGoblin"
