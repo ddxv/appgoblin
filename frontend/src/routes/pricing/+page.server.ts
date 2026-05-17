@@ -37,7 +37,7 @@ export const actions: Actions = {
              FROM subscriptions
              WHERE user_id = $1
              AND status IN ('active', 'trialing')
-             ORDER BY current_period_end DESC
+			 ORDER BY updated_at DESC
              LIMIT 1`,
 			[user.id]
 		);

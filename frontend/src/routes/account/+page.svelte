@@ -90,7 +90,7 @@
 						</p>
 						<p class="mt-1 font-semibold">
 							{data.subscription
-								? formatDate(data.subscription.current_period_end)
+								? formatDate(data.subscription.cancel_at ?? data.subscription.current_period_end)
 								: 'See pricing for paid plans'}
 						</p>
 					</div>
