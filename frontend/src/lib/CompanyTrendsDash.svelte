@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { LineChart } from 'layerchart';
-	import { formatNumber } from '$lib/utils/formatNumber';
 	import type { CompanyTrendPoint, CompanyTrendSummary, CompanyTrends } from '../types';
 
 	interface Props {
@@ -26,8 +25,8 @@
 		colors: SourceMeta;
 		summary: CompanyTrendSummary;
 		history: IndexedTrendPoint[];
+		tableHistory: IndexedTrendPoint[];
 		pastYear: IndexedTrendPoint[];
-		trailingYearShareChange: number | null;
 	};
 
 	type PlatformSection = {
@@ -93,10 +92,9 @@
 		return `${formatTrimmed(value, getShareDigits(value))}%`;
 	};
 
-	const formatSharePointChange = (value: number | null | undefined): string => {
+	const formatWholeNumber = (value: number | null | undefined): string => {
 		if (typeof value !== 'number' || Number.isNaN(value)) return 'n/a';
-		const prefix = value > 0 ? '+' : '';
-		return `${prefix}${formatTrimmed(value, getShareDigits(value))} pts`;
+		return value.toLocaleString();
 	};
 
 	const formatRelativeChange = (value: number | null | undefined): string => {
@@ -105,6 +103,12 @@
 		const digits = absolute >= 100 ? 1 : absolute >= 10 ? 2 : 3;
 		const prefix = value > 0 ? '+' : '';
 		return `${prefix}${formatTrimmed(value, digits)}%`;
+	};
+
+	const formatSignedCount = (value: number | null | undefined): string => {
+		if (typeof value !== 'number' || Number.isNaN(value)) return 'n/a';
+		if (value === 0) return '0';
+		return `${value > 0 ? '+' : ''}${formatWholeNumber(value)}`;
 	};
 
 	const toneClass = (value: number | null | undefined): string => {
@@ -138,9 +142,8 @@
 		return entries
 			.map(([sourceKey, summary]) => {
 				const history = withIndex(trends?.history?.[sourceKey]);
+				const tableHistory = [...history].reverse();
 				const pastYear = history.slice(-4);
-				const startShare = pastYear[0]?.pct_market_share;
-				const endShare = pastYear[pastYear.length - 1]?.pct_market_share;
 				const platform = summary.platform ?? 'unknown';
 				const tagSource = summary.tag_source ?? sourceKey;
 				const meta = getSourceMeta(sourceKey, tagSource);
@@ -154,11 +157,8 @@
 					colors: meta,
 					summary,
 					history,
-					pastYear,
-					trailingYearShareChange:
-						typeof startShare === 'number' && typeof endShare === 'number'
-							? endShare - startShare
-							: null
+					tableHistory,
+					pastYear
 				};
 			})
 			.sort((a, b) => {
@@ -244,7 +244,9 @@
 									<div
 										class="rounded-full border border-surface-200-800 px-3 py-1 text-xs font-medium text-surface-600"
 									>
-										QoQ share {formatSharePointChange(card.summary.latest_pct_market_share_change)}
+										QoQ share {formatRelativeChange(
+											card.summary.latest_pct_market_share_change_pct
+										)}
 									</div>
 								</div>
 
@@ -263,49 +265,45 @@
 
 									<div class="rounded-lg border border-surface-200-800 bg-surface-100-900/60 p-3">
 										<div class="text-[11px] uppercase tracking-[0.16em] text-surface-500">
-											QoQ Delta
+											QoQ Share %
 										</div>
 										<div
-											class={`mt-2 text-xl font-semibold ${toneClass(card.summary.latest_pct_market_share_change)}`}
+											class={`mt-2 text-xl font-semibold ${toneClass(card.summary.latest_pct_market_share_change_pct)}`}
 										>
-											{formatSharePointChange(card.summary.latest_pct_market_share_change)}
-										</div>
-										<div
-											class={`text-xs ${toneClass(card.summary.latest_pct_market_share_change_pct)}`}
-										>
-											Relative {formatRelativeChange(
-												card.summary.latest_pct_market_share_change_pct
-											)}
-										</div>
-									</div>
-
-									<div class="rounded-lg border border-surface-200-800 bg-surface-100-900/60 p-3">
-										<div class="text-[11px] uppercase tracking-[0.16em] text-surface-500">
-											Trailing Year
-										</div>
-										<div
-											class={`mt-2 text-xl font-semibold ${toneClass(card.trailingYearShareChange)}`}
-										>
-											{formatSharePointChange(card.trailingYearShareChange)}
+											{formatRelativeChange(card.summary.latest_pct_market_share_change_pct)}
 										</div>
 										<div class="text-xs text-surface-500">
-											{formatSharePercent(card.pastYear[0]?.pct_market_share)} to {formatSharePercent(
-												card.pastYear[card.pastYear.length - 1]?.pct_market_share
+											{formatSharePercent(card.summary.previous_pct_market_share)} to {formatSharePercent(
+												card.summary.latest_pct_market_share
 											)}
 										</div>
 									</div>
 
 									<div class="rounded-lg border border-surface-200-800 bg-surface-100-900/60 p-3">
 										<div class="text-[11px] uppercase tracking-[0.16em] text-surface-500">
-											Tracked Apps
+											Apps Now
 										</div>
 										<div class="mt-2 text-xl font-semibold">
-											{formatNumber(card.summary.latest_total_apps)}
+											{formatWholeNumber(card.summary.latest_total_apps)}
 										</div>
 										<div class="text-xs text-surface-500">
-											+{formatNumber(card.summary.latest_apps_added)} / -{formatNumber(
+											+{formatWholeNumber(card.summary.latest_apps_added)} added / -{formatWholeNumber(
 												card.summary.latest_apps_lost
-											)}
+											)} lost
+										</div>
+									</div>
+
+									<div class="rounded-lg border border-surface-200-800 bg-surface-100-900/60 p-3">
+										<div class="text-[11px] uppercase tracking-[0.16em] text-surface-500">
+											QoQ Apps %
+										</div>
+										<div
+											class={`mt-2 text-xl font-semibold ${toneClass(card.summary.qoq_total_apps_change_pct)}`}
+										>
+											{formatRelativeChange(card.summary.qoq_total_apps_change_pct)}
+										</div>
+										<div class={`text-xs ${toneClass(card.summary.qoq_total_apps_change)}`}>
+											{formatSignedCount(card.summary.qoq_total_apps_change)} apps
 										</div>
 									</div>
 								</div>
@@ -340,14 +338,14 @@
 									</div>
 
 									<div class="rounded-lg border border-surface-200-800 p-3">
-										<h5 class="mb-2 text-sm font-semibold">Quarter-over-Quarter Share Change</h5>
+										<h5 class="mb-2 text-sm font-semibold">Quarter-over-Quarter Share % Change</h5>
 										<div class="h-[220px]">
-											{#if card.pastYear.some((point) => typeof point.pct_market_share_change === 'number')}
+											{#if card.pastYear.some((point) => typeof point.pct_market_share_change_pct === 'number')}
 												<LineChart
 													data={card.pastYear}
 													x="period_index"
 													series={[
-														{ key: 'pct_market_share_change', color: card.colors.secondary }
+														{ key: 'pct_market_share_change_pct', color: card.colors.secondary }
 													]}
 													props={{
 														xAxis: {
@@ -355,7 +353,7 @@
 															ticks: Math.min(card.pastYear.length, 4)
 														},
 														yAxis: {
-															format: (value: number) => formatSharePointChange(Number(value))
+															format: (value: number) => formatRelativeChange(Number(value))
 														}
 													}}
 												/>
@@ -363,10 +361,82 @@
 												<div
 													class="flex h-full items-center justify-center text-sm text-surface-500"
 												>
-													No recent share-change data yet
+													No recent q/q share-change data yet
 												</div>
 											{/if}
 										</div>
+									</div>
+								</div>
+
+								<div class="rounded-lg border border-surface-200-800 p-3">
+									<div class="mb-3 flex flex-col gap-1 md:flex-row md:items-end md:justify-between">
+										<div>
+											<h5 class="text-sm font-semibold">Quarterly Raw Data</h5>
+											<p class="text-xs text-surface-500">
+												Raw quarterly counts alongside q/q percentage change.
+											</p>
+										</div>
+										<div class="text-xs text-surface-500">Newest quarter first</div>
+									</div>
+
+									<div class="overflow-x-auto">
+										<table class="w-full min-w-[980px] table-auto text-sm">
+											<thead>
+												<tr
+													class="border-b border-surface-200-800 text-left text-[11px] uppercase tracking-[0.14em] text-surface-500"
+												>
+													<th class="py-2 pr-4 font-medium">Quarter</th>
+													<th class="py-2 pr-4 font-medium">Tracked Apps</th>
+													<th class="py-2 pr-4 font-medium">Quarter Pool</th>
+													<th class="py-2 pr-4 font-medium">Added</th>
+													<th class="py-2 pr-4 font-medium">Lost</th>
+													<th class="py-2 pr-4 font-medium">Net</th>
+													<th class="py-2 pr-4 font-medium">Market Share</th>
+													<th class="py-2 pr-4 font-medium">Q/Q Share %</th>
+													<th class="py-2 pr-4 font-medium">Q/Q Apps</th>
+													<th class="py-2 font-medium">Q/Q Apps %</th>
+												</tr>
+											</thead>
+											<tbody>
+												{#if card.tableHistory.length > 0}
+													{#each card.tableHistory as point}
+														<tr
+															class="border-b border-surface-200-800/70 align-top text-sm last:border-b-0"
+														>
+															<td class="py-3 pr-4 font-medium">{point.period}</td>
+															<td class="py-3 pr-4">{formatWholeNumber(point.total_apps)}</td>
+															<td class="py-3 pr-4"
+																>{formatWholeNumber(point.total_apps_in_quarter)}</td
+															>
+															<td class="py-3 pr-4">{formatWholeNumber(point.apps_added)}</td>
+															<td class="py-3 pr-4">{formatWholeNumber(point.apps_lost)}</td>
+															<td class={`py-3 pr-4 ${toneClass(point.net_apps_change)}`}>
+																{formatSignedCount(point.net_apps_change)}
+															</td>
+															<td class="py-3 pr-4">{formatSharePercent(point.pct_market_share)}</td
+															>
+															<td
+																class={`py-3 pr-4 ${toneClass(point.pct_market_share_change_pct)}`}
+															>
+																{formatRelativeChange(point.pct_market_share_change_pct)}
+															</td>
+															<td class={`py-3 pr-4 ${toneClass(point.total_apps_change)}`}>
+																{formatSignedCount(point.total_apps_change)}
+															</td>
+															<td class={`py-3 ${toneClass(point.total_apps_change_pct)}`}>
+																{formatRelativeChange(point.total_apps_change_pct)}
+															</td>
+														</tr>
+													{/each}
+												{:else}
+													<tr>
+														<td colspan="10" class="py-6 text-center text-sm text-surface-500">
+															No quarterly rows available yet.
+														</td>
+													</tr>
+												{/if}
+											</tbody>
+										</table>
 									</div>
 								</div>
 							</section>

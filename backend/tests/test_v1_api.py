@@ -108,6 +108,23 @@ FAKE_OVERVIEW = FakeCompaniesOverview(
             "api_ip_resolved_country": "US",
             "total_app_count": 50000,
             "installs_d30": 123456789,
+            "trends_latest_period": "2026Q1",
+            "google_sdk_latest_pct_market_share_change": 20.0,
+            "apple_sdk_latest_pct_market_share_change": 100.0,
+            "google_app_ads_direct_latest_pct_market_share_change": 75.0,
+            "apple_app_ads_direct_latest_pct_market_share_change": None,
+            "google_sdk_latest_total_apps_change_pct": 12.5,
+            "apple_sdk_latest_total_apps_change_pct": 4.0,
+            "google_app_ads_direct_latest_total_apps_change_pct": 9.25,
+            "apple_app_ads_direct_latest_total_apps_change_pct": None,
+            "google_sdk_latest_apps_added": 40,
+            "apple_sdk_latest_apps_added": 10,
+            "google_app_ads_direct_latest_apps_added": 20,
+            "apple_app_ads_direct_latest_apps_added": None,
+            "google_sdk_latest_apps_lost": 10,
+            "apple_sdk_latest_apps_lost": 0,
+            "google_app_ads_direct_latest_apps_lost": 5,
+            "apple_app_ads_direct_latest_apps_lost": None,
         },
         {
             "company_name": float("nan"),
@@ -264,6 +281,23 @@ class TestV1CompaniesAuth:
         assert data[0]["api_ip_resolved_country"] == "US"
         assert data[0]["total_app_count"] == 50000
         assert data[0]["installs_d30"] == 123456789
+        assert data[0]["trends_latest_period"] == "2026Q1"
+        assert data[0]["google_sdk_latest_pct_market_share_change"] == 20.0
+        assert data[0]["apple_sdk_latest_pct_market_share_change"] == 100.0
+        assert data[0]["google_app_ads_direct_latest_pct_market_share_change"] == 75.0
+        assert data[0]["apple_app_ads_direct_latest_pct_market_share_change"] is None
+        assert data[0]["google_sdk_latest_total_apps_change_pct"] == 12.5
+        assert data[0]["apple_sdk_latest_total_apps_change_pct"] == 4.0
+        assert data[0]["google_app_ads_direct_latest_total_apps_change_pct"] == 9.25
+        assert data[0]["apple_app_ads_direct_latest_total_apps_change_pct"] is None
+        assert data[0]["google_sdk_latest_apps_added"] == 40
+        assert data[0]["apple_sdk_latest_apps_added"] == 10
+        assert data[0]["google_app_ads_direct_latest_apps_added"] == 20
+        assert data[0]["apple_app_ads_direct_latest_apps_added"] is None
+        assert data[0]["google_sdk_latest_apps_lost"] == 10
+        assert data[0]["apple_sdk_latest_apps_lost"] == 0
+        assert data[0]["google_app_ads_direct_latest_apps_lost"] == 5
+        assert data[0]["apple_app_ads_direct_latest_apps_lost"] is None
         assert data[1]["name"] is None
         assert data[1]["company_domain"] == "blasto.ai"
         assert data[1]["parent_company_domain"] is None
@@ -271,6 +305,23 @@ class TestV1CompaniesAuth:
         assert data[1]["api_ip_resolved_country"] is None
         assert data[1]["total_app_count"] == 30000
         assert data[1]["installs_d30"] == 450000
+        assert data[1]["trends_latest_period"] is None
+        assert data[1]["google_sdk_latest_pct_market_share_change"] is None
+        assert data[1]["apple_sdk_latest_pct_market_share_change"] is None
+        assert data[1]["google_app_ads_direct_latest_pct_market_share_change"] is None
+        assert data[1]["apple_app_ads_direct_latest_pct_market_share_change"] is None
+        assert data[1]["google_sdk_latest_total_apps_change_pct"] is None
+        assert data[1]["apple_sdk_latest_total_apps_change_pct"] is None
+        assert data[1]["google_app_ads_direct_latest_total_apps_change_pct"] is None
+        assert data[1]["apple_app_ads_direct_latest_total_apps_change_pct"] is None
+        assert data[1]["google_sdk_latest_apps_added"] is None
+        assert data[1]["apple_sdk_latest_apps_added"] is None
+        assert data[1]["google_app_ads_direct_latest_apps_added"] is None
+        assert data[1]["apple_app_ads_direct_latest_apps_added"] is None
+        assert data[1]["google_sdk_latest_apps_lost"] is None
+        assert data[1]["apple_sdk_latest_apps_lost"] is None
+        assert data[1]["google_app_ads_direct_latest_apps_lost"] is None
+        assert data[1]["apple_app_ads_direct_latest_apps_lost"] is None
 
 
 class TestV1CompaniesRateLimitHeaders:
@@ -813,7 +864,25 @@ class TestV1Docs:
             companies_operation["description"]
             == "Endpoint: `GET /api/v1/companies`\n\n"
             "Returns the public company index with queryable company domains, "
-            "display names, parent mappings, and lightweight summary metrics."
+            "display names, parent mappings, installs, and the latest trend "
+            "snapshot fields for market-share change, total-app change, apps "
+            "added, and apps lost."
+        )
+        companies_examples = companies_operation["responses"]["200"]["content"][
+            "application/json"
+        ]["examples"]
+        assert companies_examples["companies_index"]["value"][0]["company_domain"] == (
+            "unity.com"
+        )
+        assert (
+            companies_examples["companies_index"]["value"][0]["trends_latest_period"]
+            == "2026Q1"
+        )
+        assert (
+            companies_examples["companies_index"]["value"][0][
+                "google_sdk_latest_total_apps_change_pct"
+            ]
+            == 3.91
         )
         company_domain_parameter = next(
             parameter

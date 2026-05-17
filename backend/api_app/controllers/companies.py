@@ -82,6 +82,8 @@ from dbcon.static import (
     get_company_logos_df,
     get_company_open_source,
     get_company_secondary_domains,
+    get_company_trends_overview,
+    get_company_trends_summary,
     get_mediation_companies,
     get_parent_companies,
 )
@@ -274,6 +276,8 @@ def make_top_companies(top_df: pd.DataFrame) -> TopCompaniesShort:
 def prep_companies_overview_df(
     state: State,
     overview_df: pd.DataFrame,
+    *,
+    include_trends_overview: bool = True,
 ) -> pd.DataFrame:
     """Prep companies overview dataframe."""
     overview_df = (
@@ -424,6 +428,30 @@ def prep_companies_overview_df(
         how="left",
         validate="m:1",
     )
+    company_categories_df = (
+        _get_normalized_company_categories(state)
+        .dropna(subset=["company_domain", "company_type"])
+        .drop_duplicates(subset=["company_domain"], keep="first")
+        .rename(columns={"company_type": "company_category"})[
+            ["company_domain", "company_category"]
+        ]
+    )
+    overview_df = overview_df.merge(
+        company_categories_df,
+        on="company_domain",
+        how="left",
+        validate="1:1",
+    )
+
+    if include_trends_overview:
+        company_trends_overview_df = get_company_trends_overview(state)
+        if not company_trends_overview_df.empty:
+            overview_df = overview_df.merge(
+                company_trends_overview_df,
+                on="company_domain",
+                how="left",
+                validate="1:1",
+            )
 
     return overview_df
 
@@ -482,7 +510,11 @@ def get_overviews(
         tag_source_category_app_counts=tag_source_category_app_counts,
     )
 
-    companies_df = prep_companies_overview_df(state, companies_df)
+    companies_df = prep_companies_overview_df(
+        state,
+        companies_df,
+        include_trends_overview=category is None,
+    )
 
     results = CompaniesOverview(
         companies_overview=companies_df.to_dict(orient="records"),
@@ -832,6 +864,14 @@ def get_count(df: pd.DataFrame, condition: pd.Series, column: str) -> int:
     return int(filtered.iloc[0]) if not filtered.empty else 0
 
 
+def _get_normalized_company_categories(state: State) -> pd.DataFrame:
+    """Return company categories with mediation rows removed."""
+    company_categories = get_company_categories(state)
+    return company_categories.loc[
+        company_categories["company_type_slug"] != "mediation"
+    ].copy()
+
+
 def get_company_types_for_domain(state: State, company_domain: str) -> list[str]:
     """Get company category slugs for a domain, resolving secondary domains."""
     company_categories = get_company_categories(state)
@@ -1065,10 +1105,8 @@ def make_company_trends_summary(df: pd.DataFrame) -> CompanyTrendsSummary | None
 
 def build_company_trends_payload(state: State, company_domain: str) -> CompanyTrends:
     """Build the full quarterly company trends payload."""
-    trends_df = get_combined_companies_history(
-        state=state, company_domain=company_domain
-    )
-    trends = make_company_trends(trends_df)
+    df = get_combined_companies_history(state=state, company_domain=company_domain)
+    trends = make_company_trends(df)
     if trends is None:
         return CompanyTrends()
     return trends
@@ -1080,9 +1118,6 @@ def build_company_overview_base(
     """Compute company overview data shared by private and public endpoints."""
     df = get_company_stats(
         state=state, company_domain=company_domain, app_category=category
-    )
-    trends_df = get_combined_companies_history(
-        state=state, company_domain=company_domain
     )
 
     if df["tag_source"].str.contains("app_ads").any():
@@ -1146,7 +1181,10 @@ def build_company_overview_base(
     overview.adstxt_ad_domain_overview = final_ad_domain_overview
     overview.adstxt_publishers_overview = final_publishers_overview
     overview.mediation_adapters = mediation_adapters
-    overview.trends_summary = make_company_trends_summary(trends_df)
+    overview.trends_summary = get_company_trends_summary(
+        state=state,
+        company_domain=company_domain,
+    )
     return overview
 
 

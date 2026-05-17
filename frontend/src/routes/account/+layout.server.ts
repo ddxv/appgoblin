@@ -9,13 +9,15 @@ export async function load(event: LayoutServerLoadEvent) {
 
 	interface Subscription {
 		status: string;
+		current_period_start: Date | null;
 		current_period_end: Date;
 		cancel_at: Date | null;
+		cancel_requested_at: Date | null;
 		provider_price_id: string;
 	}
 
 	const subscription = await db.queryOne<Subscription>(
-		`SELECT status, current_period_end, cancel_at, provider_price_id
+		`SELECT status, current_period_start, current_period_end, cancel_at, cancel_requested_at, provider_price_id
          FROM subscriptions 
          WHERE user_id = $1 
          ORDER BY created_at DESC LIMIT 1`,

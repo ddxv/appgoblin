@@ -23,8 +23,25 @@
 	import { formatNumber } from '$lib/utils/formatNumber';
 	import { countryCodeToEmoji } from '$lib/utils/countryCodeToEmoji';
 
+	type MetricValue =
+		| 'installs'
+		| 'market_share'
+		| 'qoq_share'
+		| 'pct_change'
+		| 'apps_added'
+		| 'apps_lost'
+		| 'app_count';
+
+	type MetricOption = {
+		value: MetricValue;
+		label: string;
+	};
+
+	type ViewMode = 'auto' | 'sdk' | 'ads' | 'both';
+
 	type DataTableProps<CompaniesOverviewEntries, TValue> = {
 		data: CompaniesOverviewEntries[];
+		viewMode?: ViewMode;
 	};
 
 	let pagination = $state<PaginationState>({ pageIndex: 0, pageSize: 50 });
@@ -32,9 +49,9 @@
 	let columnFilters = $state<ColumnFiltersState>([]);
 
 	let globalFilter = $state<string>('');
-	let dataMetric = $state<string>('installs');
+	let dataMetric = $state<MetricValue>('installs');
 
-	let { data }: DataTableProps<CompaniesOverviewEntries, TValue> = $props();
+	let { data, viewMode = 'auto' }: DataTableProps<CompaniesOverviewEntries, TValue> = $props();
 
 	import { page } from '$app/state';
 
@@ -104,6 +121,86 @@
 		{
 			title: 'Direct iOS',
 			accessorKey: 'apple_app_ads_direct_percentage',
+			isSortable: true
+		},
+		{
+			title: 'SDK Android',
+			accessorKey: 'google_sdk_latest_pct_market_share_change',
+			isSortable: true
+		},
+		{
+			title: 'SDK iOS',
+			accessorKey: 'apple_sdk_latest_pct_market_share_change',
+			isSortable: true
+		},
+		{
+			title: 'Direct Android',
+			accessorKey: 'google_app_ads_direct_latest_pct_market_share_change',
+			isSortable: true
+		},
+		{
+			title: 'Direct iOS',
+			accessorKey: 'apple_app_ads_direct_latest_pct_market_share_change',
+			isSortable: true
+		},
+		{
+			title: 'SDK Android',
+			accessorKey: 'google_sdk_latest_total_apps_change_pct',
+			isSortable: true
+		},
+		{
+			title: 'SDK iOS',
+			accessorKey: 'apple_sdk_latest_total_apps_change_pct',
+			isSortable: true
+		},
+		{
+			title: 'Direct Android',
+			accessorKey: 'google_app_ads_direct_latest_total_apps_change_pct',
+			isSortable: true
+		},
+		{
+			title: 'Direct iOS',
+			accessorKey: 'apple_app_ads_direct_latest_total_apps_change_pct',
+			isSortable: true
+		},
+		{
+			title: 'SDK Android',
+			accessorKey: 'google_sdk_latest_apps_added',
+			isSortable: true
+		},
+		{
+			title: 'SDK iOS',
+			accessorKey: 'apple_sdk_latest_apps_added',
+			isSortable: true
+		},
+		{
+			title: 'Direct Android',
+			accessorKey: 'google_app_ads_direct_latest_apps_added',
+			isSortable: true
+		},
+		{
+			title: 'Direct iOS',
+			accessorKey: 'apple_app_ads_direct_latest_apps_added',
+			isSortable: true
+		},
+		{
+			title: 'SDK Android',
+			accessorKey: 'google_sdk_latest_apps_lost',
+			isSortable: true
+		},
+		{
+			title: 'SDK iOS',
+			accessorKey: 'apple_sdk_latest_apps_lost',
+			isSortable: true
+		},
+		{
+			title: 'Direct Android',
+			accessorKey: 'google_app_ads_direct_latest_apps_lost',
+			isSortable: true
+		},
+		{
+			title: 'Direct iOS',
+			accessorKey: 'apple_app_ads_direct_latest_apps_lost',
 			isSortable: true
 		}
 	]);
@@ -188,7 +285,89 @@
 		return '';
 	}
 
-	let isAdsPage = $derived(!page.params.type || page.params.type == 'ad-networks');
+	function formatTrimmed(num: number, digits: number) {
+		return num.toFixed(digits).replace(/\.0+$|(?<=\.[0-9]*[1-9])0+$/, '');
+	}
+
+	function getShareDigits(num: number) {
+		const absolute = Math.abs(num);
+		if (absolute >= 10) return 2;
+		if (absolute >= 1) return 3;
+		if (absolute >= 0.1) return 4;
+		if (absolute >= 0.01) return 5;
+		return 6;
+	}
+
+	const MAX_QOQ_SHARE_CHANGE_PCT = 500;
+
+	function formatQoqShareChangePct(num: number | null | undefined) {
+		if (typeof num !== 'number' || Number.isNaN(num)) {
+			return '';
+		}
+		const capped = Math.min(num, MAX_QOQ_SHARE_CHANGE_PCT);
+		const absolute = Math.abs(capped);
+		const digits = absolute >= 100 ? 0 : absolute >= 10 ? 1 : 2;
+		const prefix = capped > 0 ? '+' : '';
+		const suffix = capped >= MAX_QOQ_SHARE_CHANGE_PCT ? '%+' : '%';
+		return `${prefix}${formatTrimmed(capped, digits)}${suffix}`;
+	}
+
+	function formatQoqAppsChangePct(num: number | null | undefined) {
+		if (typeof num !== 'number' || Number.isNaN(num)) {
+			return '';
+		}
+		const absolute = Math.abs(num);
+		const digits = absolute >= 100 ? 0 : absolute >= 10 ? 1 : 2;
+		const prefix = num > 0 ? '+' : '';
+		return `${prefix}${formatTrimmed(num, digits)}%`;
+	}
+
+	function formatOptionalNumber(num: number | null | undefined) {
+		if (typeof num !== 'number' || Number.isNaN(num)) {
+			return '';
+		}
+		return formatNumber(num);
+	}
+
+	let routeDefaultsToAds = $derived(!page.params.type || page.params.type == 'ad-networks');
+	let resolvedViewMode = $derived.by<ViewMode>(() => {
+		if (viewMode !== 'auto') {
+			return viewMode;
+		}
+		return routeDefaultsToAds ? 'ads' : 'sdk';
+	});
+	let showsSdkColumns = $derived(resolvedViewMode !== 'ads');
+	let showsAdsColumns = $derived(resolvedViewMode !== 'sdk');
+	let isAdsPage = $derived(resolvedViewMode === 'ads');
+	let hasCategorySelected = $derived(Boolean(page.params.category));
+	const QOQ_METRICS: MetricValue[] = ['qoq_share', 'pct_change', 'apps_added', 'apps_lost'];
+	const BASE_METRIC_OPTIONS: MetricOption[] = [
+		{ value: 'installs', label: 'Installs (Last 30 Days)' },
+		{ value: 'market_share', label: 'Market Share' },
+		{ value: 'app_count', label: 'Company Total Apps' }
+	];
+	const QOQ_METRIC_OPTIONS: MetricOption[] = [
+		{ value: 'qoq_share', label: 'Q/Q Market Share Change %' },
+		{ value: 'pct_change', label: 'Q/Q % Change in Company Apps' },
+		{ value: 'apps_added', label: 'Q/Q Apps Added' },
+		{ value: 'apps_lost', label: 'Q/Q Apps Lost' }
+	];
+	let metricOptions = $derived(
+		hasCategorySelected
+			? BASE_METRIC_OPTIONS
+			: [
+					BASE_METRIC_OPTIONS[0],
+					BASE_METRIC_OPTIONS[1],
+					...QOQ_METRIC_OPTIONS,
+					BASE_METRIC_OPTIONS[2]
+				]
+	);
+
+	$effect(() => {
+		if (hasCategorySelected && QOQ_METRICS.includes(dataMetric)) {
+			dataMetric = 'installs';
+		}
+	});
 
 	function shouldShowHeader(header: any) {
 		if (header.column.id === 'percent_open_source') return true;
@@ -199,30 +378,33 @@
 
 		let headerHasInstall = header.column.id.includes('install');
 		let headerHasPercent = header.column.id.includes('percentage');
+		let headerHasShareChange = header.column.id.includes('latest_pct_market_share_change');
+		let headerHasPctChange = header.column.id.includes('latest_total_apps_change_pct');
+		let headerHasAppsAdded = header.column.id.includes('latest_apps_added');
+		let headerHasAppsLost = header.column.id.includes('latest_apps_lost');
 		let headerIsDirect = header.column.id.includes('direct');
-		let doShowAdsCol = isAdsPage && headerIsDirect;
-		let doNotShowAdsCol = !isAdsPage && headerIsDirect;
 
 		if (dataMetric === 'installs' && headerHasInstall) {
-			if (doShowAdsCol) {
-				return true;
-			} else if (doNotShowAdsCol) {
-				return false;
-			}
-			return true;
-		} else if (dataMetric === 'percent' && headerHasPercent) {
-			if (doShowAdsCol) {
-				return true;
-			} else if (doNotShowAdsCol) {
-				return false;
-			}
-			return true;
+			return headerIsDirect ? showsAdsColumns : showsSdkColumns;
+		} else if (dataMetric === 'market_share' && headerHasPercent) {
+			return headerIsDirect ? showsAdsColumns : showsSdkColumns;
+		} else if (dataMetric === 'qoq_share' && headerHasShareChange) {
+			return headerIsDirect ? showsAdsColumns : showsSdkColumns;
+		} else if (dataMetric === 'pct_change' && headerHasPctChange) {
+			return headerIsDirect ? showsAdsColumns : showsSdkColumns;
+		} else if (dataMetric === 'apps_added' && headerHasAppsAdded) {
+			return headerIsDirect ? showsAdsColumns : showsSdkColumns;
+		} else if (dataMetric === 'apps_lost' && headerHasAppsLost) {
+			return headerIsDirect ? showsAdsColumns : showsSdkColumns;
 		}
 		return false;
 	}
 
 	function getCompanyNameColumnWidth(header: any) {
 		if (header.column.id === 'company_name') {
+			if (resolvedViewMode === 'both') {
+				return 'w-[24%]';
+			}
 			if (isAdsPage) {
 				return 'w-[30%]';
 			} else {
@@ -255,49 +437,22 @@
 				class="max-w-sm p-1"
 			/>
 		</div>
-		<div class="flex items-center p-2">
-			<label for="data-source" class="px-4 text-sm md:text-base">Metric: </label>
-			<form class="flex flex-row space-x-4">
-				<label class="flex flex-row items-center space-x-1">
-					<input
-						class="radio"
-						type="radio"
-						checked={dataMetric == 'installs'}
-						name="radio-direct"
-						value="installs"
-						onchange={() => {
-							dataMetric = 'installs';
-						}}
-					/>
-					<p class="text-xs md:text-sm">Installs Last 30 Days</p>
-				</label>
-				<label class="flex flex-row items-center space-x-1">
-					<input
-						class="radio"
-						type="radio"
-						checked={dataMetric == 'percent'}
-						name="radio-direct"
-						value="percent"
-						onchange={() => {
-							dataMetric = 'percent';
-						}}
-					/>
-					<p class="text-xs md:text-sm">Percent</p>
-				</label>
-				<label class="flex flex-row items-center space-x-1">
-					<input
-						class="radio"
-						type="radio"
-						checked={dataMetric == 'app_count'}
-						name="radio-direct"
-						value="app_count"
-						onchange={() => {
-							dataMetric = 'app_count';
-						}}
-					/>
-					<p class="text-xs md:text-sm">Total Apps</p>
-				</label>
-			</form>
+		<div class="flex flex-col justify-center gap-1 p-2 md:items-start">
+			<label for="metric-select" class="px-1 text-sm md:text-base">Metric</label>
+			<select
+				id="metric-select"
+				class="select select-sm preset-outlined-primary-100-900 w-full max-w-sm p-1"
+				bind:value={dataMetric}
+			>
+				{#each metricOptions as option (option.value)}
+					<option value={option.value}>{option.label}</option>
+				{/each}
+			</select>
+			{#if hasCategorySelected}
+				<p class="px-1 text-xs text-surface-500-400">
+					Q/Q metrics are only available on the all-companies overview.
+				</p>
+			{/if}
 		</div>
 	</div>
 	<div class="overflow-x-auto pl-0">
@@ -442,17 +597,19 @@
 						{/if}
 
 						{#if dataMetric == 'installs'}
-							<td class="table-cell-fit">
-								<p class="text-xs md:text-sm">
-									{formatNumber(row.original.google_sdk_installs_d30)}
-								</p>
-							</td>
-							<td class="table-cell-fit">
-								<p class="text-xs md:text-sm">
-									{formatNumber(row.original.apple_sdk_installs_d30)}
-								</p>
-							</td>
-							{#if isAdsPage}
+							{#if showsSdkColumns}
+								<td class="table-cell-fit">
+									<p class="text-xs md:text-sm">
+										{formatNumber(row.original.google_sdk_installs_d30)}
+									</p>
+								</td>
+								<td class="table-cell-fit">
+									<p class="text-xs md:text-sm">
+										{formatNumber(row.original.apple_sdk_installs_d30)}
+									</p>
+								</td>
+							{/if}
+							{#if showsAdsColumns}
 								<td class="table-cell-fit">
 									<p class="text-xs md:text-sm">
 										{formatNumber(row.original.google_app_ads_direct_installs_d30)}
@@ -467,20 +624,22 @@
 							{/if}
 						{/if}
 
-						{#if dataMetric == 'percent'}
-							<td class="table-cell-fit">
-								<p class="text-xs md:text-sm">
-									{formatPercentage(row.original.google_sdk_percentage)}
-								</p>
-							</td>
+						{#if dataMetric == 'market_share'}
+							{#if showsSdkColumns}
+								<td class="table-cell-fit">
+									<p class="text-xs md:text-sm">
+										{formatPercentage(row.original.google_sdk_percentage)}
+									</p>
+								</td>
 
-							<td class="table-cell-fit">
-								<p class="text-xs md:text-sm">
-									{formatPercentage(row.original.apple_sdk_percentage)}
-								</p>
-							</td>
+								<td class="table-cell-fit">
+									<p class="text-xs md:text-sm">
+										{formatPercentage(row.original.apple_sdk_percentage)}
+									</p>
+								</td>
+							{/if}
 
-							{#if isAdsPage}
+							{#if showsAdsColumns}
 								<td class="table-cell-fit">
 									<p class="text-xs md:text-sm">
 										{formatPercentage(row.original.google_app_ads_direct_percentage)}
@@ -490,6 +649,136 @@
 								<td class="table-cell-fit">
 									<p class="text-xs md:text-sm">
 										{formatPercentage(row.original.apple_app_ads_direct_percentage)}
+									</p>
+								</td>
+							{/if}
+						{/if}
+
+						{#if dataMetric == 'qoq_share'}
+							{#if showsSdkColumns}
+								<td class="table-cell-fit">
+									<p class="text-xs md:text-sm">
+										{formatQoqShareChangePct(
+											row.original.google_sdk_latest_pct_market_share_change
+										)}
+									</p>
+								</td>
+
+								<td class="table-cell-fit">
+									<p class="text-xs md:text-sm">
+										{formatQoqShareChangePct(row.original.apple_sdk_latest_pct_market_share_change)}
+									</p>
+								</td>
+							{/if}
+
+							{#if showsAdsColumns}
+								<td class="table-cell-fit">
+									<p class="text-xs md:text-sm">
+										{formatQoqShareChangePct(
+											row.original.google_app_ads_direct_latest_pct_market_share_change
+										)}
+									</p>
+								</td>
+
+								<td class="table-cell-fit">
+									<p class="text-xs md:text-sm">
+										{formatQoqShareChangePct(
+											row.original.apple_app_ads_direct_latest_pct_market_share_change
+										)}
+									</p>
+								</td>
+							{/if}
+						{/if}
+
+						{#if dataMetric == 'pct_change'}
+							{#if showsSdkColumns}
+								<td class="table-cell-fit">
+									<p class="text-xs md:text-sm">
+										{formatQoqAppsChangePct(row.original.google_sdk_latest_total_apps_change_pct)}
+									</p>
+								</td>
+
+								<td class="table-cell-fit">
+									<p class="text-xs md:text-sm">
+										{formatQoqAppsChangePct(row.original.apple_sdk_latest_total_apps_change_pct)}
+									</p>
+								</td>
+							{/if}
+
+							{#if showsAdsColumns}
+								<td class="table-cell-fit">
+									<p class="text-xs md:text-sm">
+										{formatQoqAppsChangePct(
+											row.original.google_app_ads_direct_latest_total_apps_change_pct
+										)}
+									</p>
+								</td>
+
+								<td class="table-cell-fit">
+									<p class="text-xs md:text-sm">
+										{formatQoqAppsChangePct(
+											row.original.apple_app_ads_direct_latest_total_apps_change_pct
+										)}
+									</p>
+								</td>
+							{/if}
+						{/if}
+
+						{#if dataMetric == 'apps_added'}
+							{#if showsSdkColumns}
+								<td class="table-cell-fit">
+									<p class="text-xs md:text-sm">
+										{formatOptionalNumber(row.original.google_sdk_latest_apps_added)}
+									</p>
+								</td>
+
+								<td class="table-cell-fit">
+									<p class="text-xs md:text-sm">
+										{formatOptionalNumber(row.original.apple_sdk_latest_apps_added)}
+									</p>
+								</td>
+							{/if}
+
+							{#if showsAdsColumns}
+								<td class="table-cell-fit">
+									<p class="text-xs md:text-sm">
+										{formatOptionalNumber(row.original.google_app_ads_direct_latest_apps_added)}
+									</p>
+								</td>
+
+								<td class="table-cell-fit">
+									<p class="text-xs md:text-sm">
+										{formatOptionalNumber(row.original.apple_app_ads_direct_latest_apps_added)}
+									</p>
+								</td>
+							{/if}
+						{/if}
+
+						{#if dataMetric == 'apps_lost'}
+							{#if showsSdkColumns}
+								<td class="table-cell-fit">
+									<p class="text-xs md:text-sm">
+										{formatOptionalNumber(row.original.google_sdk_latest_apps_lost)}
+									</p>
+								</td>
+
+								<td class="table-cell-fit">
+									<p class="text-xs md:text-sm">
+										{formatOptionalNumber(row.original.apple_sdk_latest_apps_lost)}
+									</p>
+								</td>
+							{/if}
+
+							{#if showsAdsColumns}
+								<td class="table-cell-fit">
+									<p class="text-xs md:text-sm">
+										{formatOptionalNumber(row.original.google_app_ads_direct_latest_apps_lost)}
+									</p>
+								</td>
+
+								<td class="table-cell-fit">
+									<p class="text-xs md:text-sm">
+										{formatOptionalNumber(row.original.apple_app_ads_direct_latest_apps_lost)}
 									</p>
 								</td>
 							{/if}

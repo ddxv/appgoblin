@@ -12,19 +12,19 @@
 	<title>Settings - AppGoblin</title>
 </svelte:head>
 
-<div class="p-6 md:p-8 space-y-8">
-	<div>
+<div class="space-y-6">
+	<div class="border-b border-surface-300-700 p-6 md:p-8 space-y-2">
 		<h1 class="text-2xl font-bold">Settings</h1>
-		<p class="text-sm">Manage your profile and account preferences</p>
+		<p class="text-sm">Manage your profile and account preferences.</p>
 	</div>
 
 	<!-- Account Info -->
-	<section class="space-y-4">
+	<section class="p-6 md:p-8 space-y-4">
 		<h2 class="text-lg font-semibold">Account Information</h2>
-		<div class="flex items-center gap-3 p-4 rounded-lg border border-surface-100-900">
+		<div class="flex items-center gap-3 rounded-lg border border-surface-300-700 p-4">
 			<Mail size={20} class="text-surface-500" />
 			<div>
-				<p class="text-xs text-surface-500 uppercase tracking-wide">Email</p>
+				<p class="text-xs uppercase tracking-wide">Email</p>
 				<p class="font-medium">{data.user.email}</p>
 			</div>
 			{#if data.user.emailVerified}
@@ -40,22 +40,22 @@
 		</div>
 	</section>
 
-	<section class="space-y-4">
+	<section class="p-6 md:p-8 space-y-4">
 		<h2 class="text-lg font-semibold">Change Details</h2>
 		<a
 			href="/auth/settings"
-			class="flex items-center gap-3 p-4 rounded-lg border border-surface-100-900 hover:bg-surface-200-800 transition-colors"
+			class="flex items-center gap-3 rounded-lg border border-surface-300-700 p-4 transition-colors hover:bg-surface-200-800/40"
 		>
 			<KeyRound size={20} class="text-surface-500" />
 			<div class="flex-1">
 				<p class="font-medium">Password & Email</p>
-				<p class="text-sm text-surface-500">Update your password or email address</p>
+				<p class="text-sm">Update your password or email address</p>
 			</div>
 			<span class="text-surface-400">→</span>
 		</a>
 	</section>
 
-	<section class="pt-6 border-t border-surface-300-700">
+	<section class="p-6 md:p-8">
 		<form method="post" action="?/logout" use:enhance>
 			<button class="btn preset-tonal w-full sm:w-auto flex items-center justify-center gap-2">
 				<span class="flex items-center justify-center gap-2"> <LogOut size={18} /> Sign Out</span>

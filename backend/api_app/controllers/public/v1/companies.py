@@ -72,6 +72,13 @@ def _optional_int(value: object) -> int | None:
     return int(value)
 
 
+def _optional_float(value: object) -> float | None:
+    """Normalize optional floats from serialized pandas rows."""
+    if _is_missing_value(value):
+        return None
+    return float(value)
+
+
 def _api_key_guard(request: ASGIConnection, route_handler: BaseRouteHandler) -> None:
     """Guard that validates the X-API-Key header."""
     state = request.app.state
@@ -149,6 +156,55 @@ def _to_public_company_list_item(
         ),
         total_app_count=_optional_int(company.get("total_app_count")),
         installs_d30=_optional_int(company.get("installs_d30")),
+        trends_latest_period=_optional_string(company.get("trends_latest_period")),
+        google_sdk_latest_pct_market_share_change=_optional_float(
+            company.get("google_sdk_latest_pct_market_share_change")
+        ),
+        apple_sdk_latest_pct_market_share_change=_optional_float(
+            company.get("apple_sdk_latest_pct_market_share_change")
+        ),
+        google_app_ads_direct_latest_pct_market_share_change=_optional_float(
+            company.get("google_app_ads_direct_latest_pct_market_share_change")
+        ),
+        apple_app_ads_direct_latest_pct_market_share_change=_optional_float(
+            company.get("apple_app_ads_direct_latest_pct_market_share_change")
+        ),
+        google_sdk_latest_total_apps_change_pct=_optional_float(
+            company.get("google_sdk_latest_total_apps_change_pct")
+        ),
+        apple_sdk_latest_total_apps_change_pct=_optional_float(
+            company.get("apple_sdk_latest_total_apps_change_pct")
+        ),
+        google_app_ads_direct_latest_total_apps_change_pct=_optional_float(
+            company.get("google_app_ads_direct_latest_total_apps_change_pct")
+        ),
+        apple_app_ads_direct_latest_total_apps_change_pct=_optional_float(
+            company.get("apple_app_ads_direct_latest_total_apps_change_pct")
+        ),
+        google_sdk_latest_apps_added=_optional_int(
+            company.get("google_sdk_latest_apps_added")
+        ),
+        apple_sdk_latest_apps_added=_optional_int(
+            company.get("apple_sdk_latest_apps_added")
+        ),
+        google_app_ads_direct_latest_apps_added=_optional_int(
+            company.get("google_app_ads_direct_latest_apps_added")
+        ),
+        apple_app_ads_direct_latest_apps_added=_optional_int(
+            company.get("apple_app_ads_direct_latest_apps_added")
+        ),
+        google_sdk_latest_apps_lost=_optional_int(
+            company.get("google_sdk_latest_apps_lost")
+        ),
+        apple_sdk_latest_apps_lost=_optional_int(
+            company.get("apple_sdk_latest_apps_lost")
+        ),
+        google_app_ads_direct_latest_apps_lost=_optional_int(
+            company.get("google_app_ads_direct_latest_apps_lost")
+        ),
+        apple_app_ads_direct_latest_apps_lost=_optional_int(
+            company.get("apple_app_ads_direct_latest_apps_lost")
+        ),
     )
 
 
@@ -225,8 +281,8 @@ class V1CompaniesController(Controller):
         """Return a list of all queryable company domains.
 
         Each entry contains the exact ``company_domain``, display ``name``,
-        parent company mapping fields, and lightweight summary fields already
-        present in the overview data.
+        parent company mapping fields, and the latest overview trend snapshot
+        fields already present in the shared companies index.
         """
         start = time.perf_counter() * 1000
         overview = get_overviews(state=state)

@@ -48,12 +48,6 @@
 		return `${formatTrimmed(value, getShareDigits(value))}%`;
 	};
 
-	const formatSharePointChange = (value: number | null | undefined): string => {
-		if (typeof value !== 'number' || Number.isNaN(value)) return 'n/a';
-		const prefix = value > 0 ? '+' : '';
-		return `${prefix}${formatTrimmed(value, getShareDigits(value))} pts`;
-	};
-
 	const formatRelativeChange = (value: number | null | undefined): string => {
 		if (typeof value !== 'number' || Number.isNaN(value)) return 'n/a';
 		const prefix = value > 0 ? '+' : '';
@@ -132,9 +126,9 @@
 							<h3 class="mt-1 text-base font-semibold">{card.label}</h3>
 						</div>
 						<div
-							class={`text-sm font-semibold ${toneClass(card.summary.latest_pct_market_share_change)}`}
+							class={`text-sm font-semibold ${toneClass(card.summary.latest_pct_market_share_change_pct)}`}
 						>
-							{formatSharePointChange(card.summary.latest_pct_market_share_change)}
+							{formatRelativeChange(card.summary.latest_pct_market_share_change_pct)}
 						</div>
 					</div>
 

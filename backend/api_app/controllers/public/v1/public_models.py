@@ -23,6 +23,23 @@ class PublicCompanyListItem:
     api_ip_resolved_country: str | None = None
     total_app_count: int | None = None
     installs_d30: int | None = None
+    trends_latest_period: str | None = None
+    google_sdk_latest_pct_market_share_change: float | None = None
+    apple_sdk_latest_pct_market_share_change: float | None = None
+    google_app_ads_direct_latest_pct_market_share_change: float | None = None
+    apple_app_ads_direct_latest_pct_market_share_change: float | None = None
+    google_sdk_latest_total_apps_change_pct: float | None = None
+    apple_sdk_latest_total_apps_change_pct: float | None = None
+    google_app_ads_direct_latest_total_apps_change_pct: float | None = None
+    apple_app_ads_direct_latest_total_apps_change_pct: float | None = None
+    google_sdk_latest_apps_added: int | None = None
+    apple_sdk_latest_apps_added: int | None = None
+    google_app_ads_direct_latest_apps_added: int | None = None
+    apple_app_ads_direct_latest_apps_added: int | None = None
+    google_sdk_latest_apps_lost: int | None = None
+    apple_sdk_latest_apps_lost: int | None = None
+    google_app_ads_direct_latest_apps_lost: int | None = None
+    apple_app_ads_direct_latest_apps_lost: int | None = None
 
 
 @dataclass
