@@ -9,6 +9,7 @@ export async function load(event: LayoutServerLoadEvent) {
 
 	interface Subscription {
 		status: string;
+		provider_name: string;
 		current_period_start: Date | null;
 		current_period_end: Date;
 		cancel_at: Date | null;
@@ -21,7 +22,7 @@ export async function load(event: LayoutServerLoadEvent) {
 	}
 
 	const subscription = await db.queryOne<Subscription>(
-		`SELECT status, current_period_start, current_period_end, cancel_at, cancel_requested_at, provider_price_id
+		`SELECT status, provider_name, current_period_start, current_period_end, cancel_at, cancel_requested_at, provider_price_id
          FROM subscriptions 
 	         WHERE user_id = $1
 	         AND (
@@ -56,6 +57,7 @@ export async function load(event: LayoutServerLoadEvent) {
 	return {
 		user,
 		subscription,
+		showStripePortal: subscription?.provider_name === 'stripe',
 		subscriptionHistory: subscriptionHistory.map((entry) => ({
 			...entry,
 			planName: priceIdToLabel[entry.provider_price_id] ?? entry.provider_price_id

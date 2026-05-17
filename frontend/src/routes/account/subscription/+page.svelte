@@ -102,11 +102,15 @@
 					</div>
 				{/if}
 
-				<form method="POST" action="?/portal" use:enhance>
-					<button type="submit" class="btn preset-tonal w-full sm:w-auto"
-						>Manage Subscription at Stripe</button
-					>
-				</form>
+				{#if data.showStripePortal}
+					<form method="POST" action="?/portal" use:enhance>
+						<button type="submit" class="btn preset-tonal w-full sm:w-auto"
+							>Manage Subscription at Stripe</button
+						>
+					</form>
+				{:else if data.subscription.status === 'trialing'}
+					<a href="/pricing" class="btn preset-filled-primary-500 w-full sm:w-auto">Upgrade Plan</a>
+				{/if}
 			{:else}
 				<div class="space-y-6 py-2">
 					<div>
