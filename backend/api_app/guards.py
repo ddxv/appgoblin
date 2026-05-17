@@ -27,14 +27,22 @@ class TierLimits:
     requests_per_day: int
 
 
-TIER_LIMITS: dict[str, TierLimits] = {
+PUBLIC_TIER_LIMITS: dict[str, TierLimits] = {
     "free": TierLimits(requests_per_minute=30, requests_per_day=1_000),
     "b2b_sdk": TierLimits(requests_per_minute=2_000, requests_per_day=100_000),
     "b2b_appads": TierLimits(requests_per_minute=2_000, requests_per_day=100_000),
     "b2b_premium": TierLimits(requests_per_minute=10_000, requests_per_day=500_000),
 }
 
-REQUIRED_PRICE_MAPPED_TIERS = frozenset(tier for tier in TIER_LIMITS if tier != "free")
+LEGACY_TIER_LIMITS: dict[str, TierLimits] = {
+    "premium_access": TierLimits(requests_per_minute=200, requests_per_day=10_000),
+}
+
+TIER_LIMITS: dict[str, TierLimits] = {**PUBLIC_TIER_LIMITS, **LEGACY_TIER_LIMITS}
+
+REQUIRED_PRICE_MAPPED_TIERS = frozenset(
+    tier for tier in PUBLIC_TIER_LIMITS if tier != "free"
+)
 
 PRICE_ID_TO_TIER: dict[str, str] = {}
 
@@ -248,8 +256,14 @@ def _query_key(engine: Engine, key_hash: str) -> _CachedKey | None:
             SELECT provider_price_id
             FROM public.subscriptions sub
             WHERE sub.user_id = ak.user_id
-              AND sub.status IN ('active', 'trialing')
-            ORDER BY sub.created_at DESC
+                            AND (
+                                    (sub.cancel_at IS NOT NULL AND sub.cancel_at > now())
+                                    OR (
+                                            sub.cancel_at IS NULL
+                                            AND sub.status IN ('active', 'trialing')
+                                    )
+                            )
+                        ORDER BY sub.updated_at DESC
             LIMIT 1
         ) s ON TRUE
         WHERE ak.key_hash = :key_hash

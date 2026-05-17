@@ -13,6 +13,7 @@ from api_app.guards import (
     TierLimits,
     _DailyQuotaTracker,
     _RateLimiter,
+    _query_key,
     _resolve_tier,
     configure_tier_mapping,
     get_tier_limits,
@@ -29,6 +30,9 @@ class TestTierConfig:
     def test_all_tiers_have_limits(self):
         for tier in ("free", "premium_access", "b2b_sdk", "b2b_appads", "b2b_premium"):
             assert tier in TIER_LIMITS
+
+    def test_legacy_tiers_are_not_required_in_price_mapping(self):
+        assert "premium_access" not in REQUIRED_PRICE_MAPPED_TIERS
 
     def test_tiers_are_frozen(self):
         limits = TIER_LIMITS["free"]
@@ -86,7 +90,6 @@ class TestValidateTierMappingConfig:
             validate_tier_mapping_config(
                 {
                     "price_unknown": "enterprise",
-                    "price_app_dev": "premium_access",
                     "price_sdk": "b2b_sdk",
                     "price_appads": "b2b_appads",
                     "price_premium": "b2b_premium",
@@ -265,6 +268,24 @@ def _make_db_row(user_id: int = 1, price_id: str | None = None):
     row.user_id = user_id
     row.price_id = price_id
     return row
+
+
+class TestQueryKey:
+    def test_subscription_lookup_honors_cancel_at_window(self):
+        engine = MagicMock()
+        conn = engine.connect.return_value.__enter__.return_value
+        conn.execute.return_value.fetchone.return_value = _make_db_row(
+            user_id=9, price_id="b2b_sdk"
+        )
+
+        result = _query_key(engine, "hash123")
+
+        assert result is not None
+        query = conn.execute.call_args[0][0]
+        assert "sub.cancel_at IS NOT NULL AND sub.cancel_at > now()" in query.text
+        assert "sub.cancel_at IS NULL" in query.text
+        assert "sub.status IN ('active', 'trialing')" in query.text
+        assert "ORDER BY sub.updated_at DESC" in query.text
 
 
 class TestValidateApiKey:
