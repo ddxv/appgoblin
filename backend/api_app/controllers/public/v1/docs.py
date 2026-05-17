@@ -85,11 +85,22 @@ COMPANY_OVERVIEW_EXAMPLE_RESPONSE = {
         "sdk_ios_total_apps": 16381,
         "sdk_total_apps": 55833,
         "api_android_total_apps": 11175,
-        "api_ios_total_apps": 0,
         "api_total_apps": 11175,
         "sdk_android_installs_d30": 86325326083,
+        "sdk_ios_installs_d30": 31415926535,
         "adstxt_direct_android_installs_d30": 96783797489,
         "adstxt_reseller_android_installs_d30": 42347935007,
+    },
+    "trends": {
+        "latest_period": "2026Q1",
+        "android_app_ads_direct_market_share_change_pct": -0.57,
+        "android_app_ads_direct_apps_lost": 406,
+        "android_sdk_api_market_share_change_pct": 4.63,
+        "android_sdk_api_apps_lost": 221,
+        "ios_app_ads_direct_market_share_change_pct": 0.14,
+        "ios_app_ads_direct_apps_lost": 27,
+        "ios_sdk_api_market_share_change_pct": 1.82,
+        "ios_sdk_api_apps_lost": 18,
     },
     "mapping_notice": None,
     "datasets": {
@@ -124,7 +135,8 @@ V1_OPERATION_DOCS = {
             "description": (
                 "Endpoint: `GET /api/v1/companies/{company_domain}`\n\n"
                 "Returns the public company overview for a single domain, including "
-                "mapping status, company types, key metrics, and dataset availability."
+                "mapping status, company types, key metrics, a latest-trends summary, "
+                "and dataset availability."
             ),
         }
     },

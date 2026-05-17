@@ -23,9 +23,11 @@ from api_app.controllers.public.v1.public_models import (
     CompanyDatasetTarget,
     PublicCategoryCompanyStats,
     PublicCompanyOverview,
+    PublicCompanyTrends,
 )
 from api_app.controllers.public.v1.docs import V1DocsController
 from api_app.guards import _CachedKey
+from api_app.models import CategoryCompanyStats
 from app import RateLimitMiddleware
 
 
@@ -40,6 +42,7 @@ class FakeCompaniesOverview:
 class FakeCompanyCategoryOverview:
     categories: dict
     company_types: list | None = None
+    trends_summary: object | None = None
     adstxt_ad_domain_overview: dict | None = None
     adstxt_publishers_overview: dict | None = None
     mediation_adapters: dict | None = None
@@ -433,6 +436,12 @@ class TestV1CompanyDetail:
                 sdk_android_total_apps=123,
                 sdk_ios_total_apps=45,
                 sdk_total_apps=168,
+                sdk_ios_installs_d30=456,
+            ),
+            trends=PublicCompanyTrends(
+                latest_period="2026Q1",
+                ios_sdk_api_market_share_change_pct=1.82,
+                ios_sdk_api_apps_lost=18,
             ),
             company_types=["ad-network"],
             domain_is_mapped=True,
@@ -480,11 +489,22 @@ class TestV1CompanyDetail:
                 "sdk_ios_total_apps": 45,
                 "sdk_total_apps": 168,
                 "api_android_total_apps": 0,
-                "api_ios_total_apps": 0,
                 "api_total_apps": 0,
                 "sdk_android_installs_d30": 0,
+                "sdk_ios_installs_d30": 456,
                 "adstxt_direct_android_installs_d30": 0,
                 "adstxt_reseller_android_installs_d30": 0,
+            },
+            "trends": {
+                "latest_period": "2026Q1",
+                "android_app_ads_direct_market_share_change_pct": None,
+                "android_app_ads_direct_apps_lost": None,
+                "android_sdk_api_market_share_change_pct": None,
+                "android_sdk_api_apps_lost": None,
+                "ios_app_ads_direct_market_share_change_pct": None,
+                "ios_app_ads_direct_apps_lost": None,
+                "ios_sdk_api_market_share_change_pct": 1.82,
+                "ios_sdk_api_apps_lost": 18,
             },
             "company_types": ["ad-network"],
             "domain_is_mapped": True,
@@ -510,6 +530,79 @@ class TestV1CompanyDetail:
             },
             "mapping_notice": None,
         }
+
+    def test_company_detail_projects_trends_summary(self):
+        app = _make_test_app()
+        trend_summary = MagicMock()
+        trend_summary.latest_period = "2026Q1"
+        trend_summary.sources = {
+            "android_sdk_api": MagicMock(
+                platform="android",
+                tag_source="sdk_api",
+                latest_period="2026Q1",
+                latest_pct_market_share_change_pct=20.0,
+                latest_apps_lost=10,
+            )
+        }
+        overview = FakeCompanyCategoryOverview(
+            categories={
+                "all": PublicCategoryCompanyStats(
+                    sdk_android_total_apps=123,
+                    sdk_ios_installs_d30=45,
+                )
+            },
+            company_types=["ad-network"],
+            trends_summary=trend_summary,
+        )
+
+        with (
+            _patch_key_found("b2b_sdk"),
+            _patch_raw_company_detail(overview),
+            TestClient(app=app, raise_server_exceptions=False) as client,
+        ):
+            resp = client.get(
+                "/api/v1/companies/google.com",
+                headers={"X-API-Key": "ag_companydetail"},
+            )
+
+        assert resp.status_code == 200
+        assert resp.json()["trends"] == {
+            "latest_period": "2026Q1",
+            "android_app_ads_direct_market_share_change_pct": None,
+            "android_app_ads_direct_apps_lost": None,
+            "android_sdk_api_market_share_change_pct": 20.0,
+            "android_sdk_api_apps_lost": 10,
+            "ios_app_ads_direct_market_share_change_pct": None,
+            "ios_app_ads_direct_apps_lost": None,
+            "ios_sdk_api_market_share_change_pct": None,
+            "ios_sdk_api_apps_lost": None,
+        }
+
+    def test_company_detail_projects_sdk_ios_installs_from_private_overview(self):
+        app = _make_test_app()
+        overview = FakeCompanyCategoryOverview(
+            categories={
+                "all": CategoryCompanyStats(
+                    sdk_android_total_apps=123,
+                    sdk_ios_total_apps=45,
+                    sdk_ios_installs_d30=456,
+                )
+            },
+            company_types=["ad-network"],
+        )
+
+        with (
+            _patch_key_found("b2b_sdk"),
+            _patch_raw_company_detail(overview),
+            TestClient(app=app, raise_server_exceptions=False) as client,
+        ):
+            resp = client.get(
+                "/api/v1/companies/google.com",
+                headers={"X-API-Key": "ag_companydetail"},
+            )
+
+        assert resp.status_code == 200
+        assert resp.json()["metrics"]["sdk_ios_installs_d30"] == 456
 
     def test_company_detail_returns_mapping_notice_for_unmapped_company(self):
         app = _make_test_app()

@@ -22,10 +22,12 @@ from api_app.controllers.public.v1.public_models import (
     PublicCategoryCompanyStats,
     PublicCompanyListItem,
     PublicCompanyOverview,
+    PublicCompanyTrends,
 )
 from api_app.guards import validate_api_key
 from api_app.models import (
     CategoryCompanyStats,
+    CompanyTrendsSummary,
 )
 from api_app.models import (
     CompanyCategoryOverview as PrivateCompanyCategoryOverview,
@@ -234,14 +236,38 @@ def _to_public_category_company_stats(
         sdk_ios_total_apps=metrics.sdk_ios_total_apps,
         sdk_total_apps=metrics.sdk_total_apps,
         api_android_total_apps=metrics.api_android_total_apps,
-        api_ios_total_apps=metrics.api_ios_total_apps,
         api_total_apps=metrics.api_total_apps,
         sdk_android_installs_d30=metrics.sdk_android_installs_d30,
+        sdk_ios_installs_d30=metrics.sdk_ios_installs_d30,
         adstxt_direct_android_installs_d30=metrics.adstxt_direct_android_installs_d30,
         adstxt_reseller_android_installs_d30=(
             metrics.adstxt_reseller_android_installs_d30
         ),
     )
+
+
+def _to_public_company_trends(
+    trends: CompanyTrendsSummary | None,
+) -> PublicCompanyTrends | None:
+    """Project private company trend summaries into the public contract."""
+    if trends is None:
+        return None
+
+    public_trends = PublicCompanyTrends(latest_period=trends.latest_period)
+    for source_key, source_summary in trends.sources.items():
+        market_share_field = f"{source_key}_market_share_change_pct"
+        apps_lost_field = f"{source_key}_apps_lost"
+
+        if hasattr(public_trends, market_share_field):
+            setattr(
+                public_trends,
+                market_share_field,
+                source_summary.latest_pct_market_share_change_pct,
+            )
+        if hasattr(public_trends, apps_lost_field):
+            setattr(public_trends, apps_lost_field, source_summary.latest_apps_lost)
+
+    return public_trends
 
 
 def _build_public_company_overview_payload(
@@ -263,6 +289,7 @@ def _build_public_company_overview_payload(
 
     return PublicCompanyOverview(
         metrics=metrics_overview,
+        trends=_to_public_company_trends(overview.trends_summary),
         company_types=overview.company_types,
         domain_is_mapped=domain_is_mapped,
         mapping_notice=mapping_notice,

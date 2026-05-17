@@ -369,6 +369,7 @@ class CategoryCompanyStats:
     api_android_total_apps: int = 0
     api_total_apps: int = 0
     sdk_android_installs_d30: int = 0
+    sdk_ios_installs_d30: int = 0
     adstxt_direct_android_installs_d30: int = 0
     adstxt_reseller_android_installs_d30: int = 0
 

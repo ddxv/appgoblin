@@ -719,10 +719,12 @@ def make_company_stats(df: pd.DataFrame) -> CompanyCategoryOverview:
     )
 
     (
+        sdk_ios_installs_d30,
         sdk_android_installs_d30,
         adstxt_direct_android_installs_d30,
         adstxt_reseller_android_installs_d30,
     ) = (
+        res_installs_d30["sdk_ios"],
         res_installs_d30["sdk_android"],
         res_installs_d30["adstxt_direct_android"],
         res_installs_d30["adstxt_reseller_android"],
@@ -750,6 +752,7 @@ def make_company_stats(df: pd.DataFrame) -> CompanyCategoryOverview:
         sdk_android_total_apps=int(sdk_android_total_apps),
         sdk_total_apps=int(sdk_total_apps),
         sdk_android_installs_d30=int(sdk_android_installs_d30),
+        sdk_ios_installs_d30=int(sdk_ios_installs_d30),
         api_ios_total_apps=int(api_ios_total_apps),
         api_android_total_apps=int(api_android_total_apps),
         api_total_apps=int(api_total_apps),
@@ -1197,6 +1200,27 @@ def build_private_company_overview_payload(
     )
 
 
+def _strip_private_companies_overview_metrics(
+    overview: CompaniesOverview,
+) -> CompaniesOverview:
+    """Remove unstable QoQ app-scan metrics from private companies overview rows."""
+    dropped_keys = {
+        "google_sdk_latest_total_apps_change_pct",
+        "apple_sdk_latest_total_apps_change_pct",
+        "google_app_ads_direct_latest_total_apps_change_pct",
+        "apple_app_ads_direct_latest_total_apps_change_pct",
+        "google_sdk_latest_apps_added",
+        "apple_sdk_latest_apps_added",
+        "google_app_ads_direct_latest_apps_added",
+        "apple_app_ads_direct_latest_apps_added",
+    }
+    overview.companies_overview = [
+        {key: value for key, value in company.items() if key not in dropped_keys}
+        for company in overview.companies_overview
+    ]
+    return overview
+
+
 class CompaniesController(Controller):
     """API EndPoint return for all ad tech companies."""
 
@@ -1214,7 +1238,7 @@ class CompaniesController(Controller):
         """
         start = time.perf_counter() * 1000
 
-        overview = get_overviews(state=state)
+        overview = _strip_private_companies_overview_metrics(get_overviews(state=state))
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(f"GET /api/companies took {duration}ms")
         return overview
@@ -1233,7 +1257,9 @@ class CompaniesController(Controller):
         """
         start = time.perf_counter() * 1000
 
-        overview = get_overviews(state=state, category=category)
+        overview = _strip_private_companies_overview_metrics(
+            get_overviews(state=state, category=category)
+        )
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(f"GET /api/companies/categories/{category} took {duration}ms")
         return overview

@@ -55,11 +55,26 @@ class PublicCategoryCompanyStats:
     sdk_ios_total_apps: int = 0
     sdk_total_apps: int = 0
     api_android_total_apps: int = 0
-    api_ios_total_apps: int = 0
     api_total_apps: int = 0
     sdk_android_installs_d30: int = 0
+    sdk_ios_installs_d30: int = 0
     adstxt_direct_android_installs_d30: int = 0
     adstxt_reseller_android_installs_d30: int = 0
+
+
+@dataclass
+class PublicCompanyTrends:
+    """Public quarterly trend summary flattened by platform and signal source."""
+
+    latest_period: str | None = None
+    android_app_ads_direct_market_share_change_pct: float | None = None
+    android_app_ads_direct_apps_lost: int | None = None
+    android_sdk_api_market_share_change_pct: float | None = None
+    android_sdk_api_apps_lost: int | None = None
+    ios_app_ads_direct_market_share_change_pct: float | None = None
+    ios_app_ads_direct_apps_lost: int | None = None
+    ios_sdk_api_market_share_change_pct: float | None = None
+    ios_sdk_api_apps_lost: int | None = None
 
 
 @dataclass
@@ -88,6 +103,7 @@ class PublicCompanyOverview:
     metrics: PublicCategoryCompanyStats = field(
         default_factory=PublicCategoryCompanyStats
     )
+    trends: PublicCompanyTrends | None = None
     mapping_notice: str | None = None
     datasets: CompanyDatasets | None = None
 

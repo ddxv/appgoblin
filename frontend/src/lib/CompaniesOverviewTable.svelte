@@ -23,14 +23,7 @@
 	import { formatNumber } from '$lib/utils/formatNumber';
 	import { countryCodeToEmoji } from '$lib/utils/countryCodeToEmoji';
 
-	type MetricValue =
-		| 'installs'
-		| 'market_share'
-		| 'qoq_share'
-		| 'pct_change'
-		| 'apps_added'
-		| 'apps_lost'
-		| 'app_count';
+	type MetricValue = 'installs' | 'market_share' | 'qoq_share' | 'apps_lost' | 'app_count';
 
 	type MetricOption = {
 		value: MetricValue;
@@ -49,7 +42,7 @@
 	let columnFilters = $state<ColumnFiltersState>([]);
 
 	let globalFilter = $state<string>('');
-	let dataMetric = $state<MetricValue>('installs');
+	let dataMetric = $state<MetricValue>('market_share');
 
 	let { data, viewMode = 'auto' }: DataTableProps<CompaniesOverviewEntries, TValue> = $props();
 
@@ -141,46 +134,6 @@
 		{
 			title: 'Direct iOS',
 			accessorKey: 'apple_app_ads_direct_latest_pct_market_share_change',
-			isSortable: true
-		},
-		{
-			title: 'SDK Android',
-			accessorKey: 'google_sdk_latest_total_apps_change_pct',
-			isSortable: true
-		},
-		{
-			title: 'SDK iOS',
-			accessorKey: 'apple_sdk_latest_total_apps_change_pct',
-			isSortable: true
-		},
-		{
-			title: 'Direct Android',
-			accessorKey: 'google_app_ads_direct_latest_total_apps_change_pct',
-			isSortable: true
-		},
-		{
-			title: 'Direct iOS',
-			accessorKey: 'apple_app_ads_direct_latest_total_apps_change_pct',
-			isSortable: true
-		},
-		{
-			title: 'SDK Android',
-			accessorKey: 'google_sdk_latest_apps_added',
-			isSortable: true
-		},
-		{
-			title: 'SDK iOS',
-			accessorKey: 'apple_sdk_latest_apps_added',
-			isSortable: true
-		},
-		{
-			title: 'Direct Android',
-			accessorKey: 'google_app_ads_direct_latest_apps_added',
-			isSortable: true
-		},
-		{
-			title: 'Direct iOS',
-			accessorKey: 'apple_app_ads_direct_latest_apps_added',
 			isSortable: true
 		},
 		{
@@ -312,16 +265,6 @@
 		return `${prefix}${formatTrimmed(capped, digits)}${suffix}`;
 	}
 
-	function formatQoqAppsChangePct(num: number | null | undefined) {
-		if (typeof num !== 'number' || Number.isNaN(num)) {
-			return '';
-		}
-		const absolute = Math.abs(num);
-		const digits = absolute >= 100 ? 0 : absolute >= 10 ? 1 : 2;
-		const prefix = num > 0 ? '+' : '';
-		return `${prefix}${formatTrimmed(num, digits)}%`;
-	}
-
 	function formatOptionalNumber(num: number | null | undefined) {
 		if (typeof num !== 'number' || Number.isNaN(num)) {
 			return '';
@@ -329,18 +272,20 @@
 		return formatNumber(num);
 	}
 
-	let routeDefaultsToAds = $derived(!page.params.type || page.params.type == 'ad-networks');
 	let resolvedViewMode = $derived.by<ViewMode>(() => {
 		if (viewMode !== 'auto') {
 			return viewMode;
 		}
-		return routeDefaultsToAds ? 'ads' : 'sdk';
+		if (!page.params.type) {
+			return 'both';
+		}
+		return page.params.type == 'ad-networks' ? 'ads' : 'sdk';
 	});
 	let showsSdkColumns = $derived(resolvedViewMode !== 'ads');
 	let showsAdsColumns = $derived(resolvedViewMode !== 'sdk');
 	let isAdsPage = $derived(resolvedViewMode === 'ads');
 	let hasCategorySelected = $derived(Boolean(page.params.category));
-	const QOQ_METRICS: MetricValue[] = ['qoq_share', 'pct_change', 'apps_added', 'apps_lost'];
+	const QOQ_METRICS: MetricValue[] = ['qoq_share', 'apps_lost'];
 	const BASE_METRIC_OPTIONS: MetricOption[] = [
 		{ value: 'installs', label: 'Installs (Last 30 Days)' },
 		{ value: 'market_share', label: 'Market Share' },
@@ -348,8 +293,6 @@
 	];
 	const QOQ_METRIC_OPTIONS: MetricOption[] = [
 		{ value: 'qoq_share', label: 'Q/Q Market Share Change %' },
-		{ value: 'pct_change', label: 'Q/Q % Change in Company Apps' },
-		{ value: 'apps_added', label: 'Q/Q Apps Added' },
 		{ value: 'apps_lost', label: 'Q/Q Apps Lost' }
 	];
 	let metricOptions = $derived(
@@ -379,8 +322,6 @@
 		let headerHasInstall = header.column.id.includes('install');
 		let headerHasPercent = header.column.id.includes('percentage');
 		let headerHasShareChange = header.column.id.includes('latest_pct_market_share_change');
-		let headerHasPctChange = header.column.id.includes('latest_total_apps_change_pct');
-		let headerHasAppsAdded = header.column.id.includes('latest_apps_added');
 		let headerHasAppsLost = header.column.id.includes('latest_apps_lost');
 		let headerIsDirect = header.column.id.includes('direct');
 
@@ -389,10 +330,6 @@
 		} else if (dataMetric === 'market_share' && headerHasPercent) {
 			return headerIsDirect ? showsAdsColumns : showsSdkColumns;
 		} else if (dataMetric === 'qoq_share' && headerHasShareChange) {
-			return headerIsDirect ? showsAdsColumns : showsSdkColumns;
-		} else if (dataMetric === 'pct_change' && headerHasPctChange) {
-			return headerIsDirect ? showsAdsColumns : showsSdkColumns;
-		} else if (dataMetric === 'apps_added' && headerHasAppsAdded) {
 			return headerIsDirect ? showsAdsColumns : showsSdkColumns;
 		} else if (dataMetric === 'apps_lost' && headerHasAppsLost) {
 			return headerIsDirect ? showsAdsColumns : showsSdkColumns;
@@ -685,70 +622,6 @@
 										{formatQoqShareChangePct(
 											row.original.apple_app_ads_direct_latest_pct_market_share_change
 										)}
-									</p>
-								</td>
-							{/if}
-						{/if}
-
-						{#if dataMetric == 'pct_change'}
-							{#if showsSdkColumns}
-								<td class="table-cell-fit">
-									<p class="text-xs md:text-sm">
-										{formatQoqAppsChangePct(row.original.google_sdk_latest_total_apps_change_pct)}
-									</p>
-								</td>
-
-								<td class="table-cell-fit">
-									<p class="text-xs md:text-sm">
-										{formatQoqAppsChangePct(row.original.apple_sdk_latest_total_apps_change_pct)}
-									</p>
-								</td>
-							{/if}
-
-							{#if showsAdsColumns}
-								<td class="table-cell-fit">
-									<p class="text-xs md:text-sm">
-										{formatQoqAppsChangePct(
-											row.original.google_app_ads_direct_latest_total_apps_change_pct
-										)}
-									</p>
-								</td>
-
-								<td class="table-cell-fit">
-									<p class="text-xs md:text-sm">
-										{formatQoqAppsChangePct(
-											row.original.apple_app_ads_direct_latest_total_apps_change_pct
-										)}
-									</p>
-								</td>
-							{/if}
-						{/if}
-
-						{#if dataMetric == 'apps_added'}
-							{#if showsSdkColumns}
-								<td class="table-cell-fit">
-									<p class="text-xs md:text-sm">
-										{formatOptionalNumber(row.original.google_sdk_latest_apps_added)}
-									</p>
-								</td>
-
-								<td class="table-cell-fit">
-									<p class="text-xs md:text-sm">
-										{formatOptionalNumber(row.original.apple_sdk_latest_apps_added)}
-									</p>
-								</td>
-							{/if}
-
-							{#if showsAdsColumns}
-								<td class="table-cell-fit">
-									<p class="text-xs md:text-sm">
-										{formatOptionalNumber(row.original.google_app_ads_direct_latest_apps_added)}
-									</p>
-								</td>
-
-								<td class="table-cell-fit">
-									<p class="text-xs md:text-sm">
-										{formatOptionalNumber(row.original.apple_app_ads_direct_latest_apps_added)}
 									</p>
 								</td>
 							{/if}

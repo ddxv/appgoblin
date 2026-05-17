@@ -281,29 +281,13 @@
 
 									<div class="rounded-lg border border-surface-200-800 bg-surface-100-900/60 p-3">
 										<div class="text-[11px] uppercase tracking-[0.16em] text-surface-500">
-											Apps Now
+											Tracked Apps
 										</div>
 										<div class="mt-2 text-xl font-semibold">
 											{formatWholeNumber(card.summary.latest_total_apps)}
 										</div>
 										<div class="text-xs text-surface-500">
-											+{formatWholeNumber(card.summary.latest_apps_added)} added / -{formatWholeNumber(
-												card.summary.latest_apps_lost
-											)} lost
-										</div>
-									</div>
-
-									<div class="rounded-lg border border-surface-200-800 bg-surface-100-900/60 p-3">
-										<div class="text-[11px] uppercase tracking-[0.16em] text-surface-500">
-											QoQ Apps %
-										</div>
-										<div
-											class={`mt-2 text-xl font-semibold ${toneClass(card.summary.qoq_total_apps_change_pct)}`}
-										>
-											{formatRelativeChange(card.summary.qoq_total_apps_change_pct)}
-										</div>
-										<div class={`text-xs ${toneClass(card.summary.qoq_total_apps_change)}`}>
-											{formatSignedCount(card.summary.qoq_total_apps_change)} apps
+											Current tracked total in {card.summary.latest_period}
 										</div>
 									</div>
 								</div>
@@ -373,7 +357,7 @@
 										<div>
 											<h5 class="text-sm font-semibold">Quarterly Raw Data</h5>
 											<p class="text-xs text-surface-500">
-												Raw quarterly counts alongside q/q percentage change.
+												Raw quarterly counts alongside market-share change.
 											</p>
 										</div>
 										<div class="text-xs text-surface-500">Newest quarter first</div>
@@ -388,13 +372,11 @@
 													<th class="py-2 pr-4 font-medium">Quarter</th>
 													<th class="py-2 pr-4 font-medium">Tracked Apps</th>
 													<th class="py-2 pr-4 font-medium">Quarter Pool</th>
-													<th class="py-2 pr-4 font-medium">Added</th>
 													<th class="py-2 pr-4 font-medium">Lost</th>
 													<th class="py-2 pr-4 font-medium">Net</th>
 													<th class="py-2 pr-4 font-medium">Market Share</th>
 													<th class="py-2 pr-4 font-medium">Q/Q Share %</th>
 													<th class="py-2 pr-4 font-medium">Q/Q Apps</th>
-													<th class="py-2 font-medium">Q/Q Apps %</th>
 												</tr>
 											</thead>
 											<tbody>
@@ -408,7 +390,6 @@
 															<td class="py-3 pr-4"
 																>{formatWholeNumber(point.total_apps_in_quarter)}</td
 															>
-															<td class="py-3 pr-4">{formatWholeNumber(point.apps_added)}</td>
 															<td class="py-3 pr-4">{formatWholeNumber(point.apps_lost)}</td>
 															<td class={`py-3 pr-4 ${toneClass(point.net_apps_change)}`}>
 																{formatSignedCount(point.net_apps_change)}
@@ -423,14 +404,11 @@
 															<td class={`py-3 pr-4 ${toneClass(point.total_apps_change)}`}>
 																{formatSignedCount(point.total_apps_change)}
 															</td>
-															<td class={`py-3 ${toneClass(point.total_apps_change_pct)}`}>
-																{formatRelativeChange(point.total_apps_change_pct)}
-															</td>
 														</tr>
 													{/each}
 												{:else}
 													<tr>
-														<td colspan="10" class="py-6 text-center text-sm text-surface-500">
+														<td colspan="8" class="py-6 text-center text-sm text-surface-500">
 															No quarterly rows available yet.
 														</td>
 													</tr>
