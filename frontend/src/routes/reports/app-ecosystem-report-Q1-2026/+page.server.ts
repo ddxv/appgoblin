@@ -189,8 +189,7 @@ const SECTION_CONFIGS: MetricSectionConfig[] = [
 		basisLabel: 'Based on Q/Q market share change',
 		description:
 			'Standout quarter-over-quarter market share breakouts across ad networks, business tools, analytics, and development tools.',
-		descriptionHtml:
-			`<p>Ad Networks were led by <a href="/companies/verve.com">Verve</a> once again after its strong Q4 2025, with other notable breakouts from <a href="/companies/snapchat.com">Snap</a>, <a href="/companies/taurusx.com">TaurusX</a>, <a href="/companies/adjoe-programmatic.com">AdJoe</a>, and <a href="/companies/moloco.com">Moloco</a>.</p><p>Business Tools were driven by smaller but fast-growing names like <a href="/companies/luciq.ai">Luciq</a>. <a href="/companies/paypal.com">PayPal</a> also posted strong mobile growth, while emerging companies like <a href="/companies/appharbr.com">AppHarbr</a> and <a href="/companies/getthinkup.com">ThinkUp</a> stood out.</p><p>In attribution analytics, growth was broadly healthy across the category and was led by <a href="/companies/tenjin.com">Tenjin</a>. One notable absence from the growth list was <a href="/companies/appsflyer.com">AppsFlyer</a>, which has historically been one of the category's largest and most consistent performers.</p><p>For Development Tools, <a href="/companies/divkit.tech">Divkit</a> posted solid growth. The framework launched in 2025 and is backed by <a href="/companies/yandex.com">Yandex</a>.</p>`,
+		descriptionHtml: `<p>Ad Networks were led by <a href="/companies/verve.com">Verve</a> once again after its strong Q4 2025, with other notable breakouts from <a href="/companies/snapchat.com">Snap</a>, <a href="/companies/taurusx.com">TaurusX</a>, <a href="/companies/adjoe-programmatic.com">AdJoe</a>, and <a href="/companies/moloco.com">Moloco</a>.</p><p>Business Tools were driven by smaller but fast-growing names like <a href="/companies/luciq.ai">Luciq</a>. <a href="/companies/paypal.com">PayPal</a> also posted strong mobile growth, while emerging companies like <a href="/companies/appharbr.com">AppHarbr</a> and <a href="/companies/getthinkup.com">ThinkUp</a> stood out.</p><p>In attribution analytics, growth was broadly healthy across the category and was led by <a href="/companies/tenjin.com">Tenjin</a>. One notable absence from the growth list was <a href="/companies/appsflyer.com">AppsFlyer</a>, which has historically been one of the category's largest and most consistent performers.</p><p>For Development Tools, <a href="/companies/divkit.tech">Divkit</a> posted solid growth. The framework launched in 2025 and is backed by <a href="/companies/yandex.com">Yandex</a>.</p>`,
 		presentation: 'single',
 		metricKey: 'shareChangeKey',
 		primaryMetricLabel: 'Q/Q Market Share Change',
@@ -363,12 +362,7 @@ function parseCSV(csvContent: string): EcosystemCompanyData[] {
 		);
 		const totalAppCount =
 			getNumberByKeys(record, 'total_app_count') ??
-			sumNullable([
-				appleDirectAppCount,
-				appleSdkAppCount,
-				googleDirectAppCount,
-				googleSdkAppCount
-			]);
+			sumNullable([appleDirectAppCount, appleSdkAppCount, googleDirectAppCount, googleSdkAppCount]);
 
 		return {
 			company_name: getRequiredStringByKeys(record, 'company_name'),
@@ -399,9 +393,15 @@ function parseCSV(csvContent: string): EcosystemCompanyData[] {
 				'google_sdk_percentage',
 				'google_sdk_pct_market_share'
 			),
-			apple_app_ads_direct_installs_d30: getNumberByKeys(record, 'apple_app_ads_direct_installs_d30'),
+			apple_app_ads_direct_installs_d30: getNumberByKeys(
+				record,
+				'apple_app_ads_direct_installs_d30'
+			),
 			apple_sdk_installs_d30: getNumberByKeys(record, 'apple_sdk_installs_d30'),
-			google_app_ads_direct_installs_d30: getNumberByKeys(record, 'google_app_ads_direct_installs_d30'),
+			google_app_ads_direct_installs_d30: getNumberByKeys(
+				record,
+				'google_app_ads_direct_installs_d30'
+			),
 			google_sdk_installs_d30: getNumberByKeys(record, 'google_sdk_installs_d30'),
 			total_app_count: totalAppCount,
 			installs_d30: getNumberByKeys(record, 'installs_d30'),
@@ -527,7 +527,6 @@ function getCompanyTypeLabel(value: string): string {
 	return value;
 }
 
-
 function buildCompanyTypeOptions(rows: EcosystemCompanyData[]): CompanyTypeOption[] {
 	const counts = new Map<string, number>();
 	const mappedRows = rows.filter((row) => getCompanyTypeValue(row) !== UNMAPPED_COMPANY_TYPE);
@@ -560,7 +559,9 @@ function buildMauCompanyTypeOptions(
 	rows: EcosystemCompanyData[],
 	exhibitorDomains: Set<string>
 ): CompanyTypeOption[] {
-	const exhibitorRows = rows.filter((row) => exhibitorDomains.has(row.company_domain.toLowerCase()));
+	const exhibitorRows = rows.filter((row) =>
+		exhibitorDomains.has(row.company_domain.toLowerCase())
+	);
 	const counts = new Map<string, number>();
 	let combinedAnalyticsCount = 0;
 
@@ -678,9 +679,9 @@ function buildSingleSurfacePanel(
 		.sort(
 			(a, b) =>
 				getShareWeightedImpact(b, surface, section.metricKey) -
-				getShareWeightedImpact(a, surface, section.metricKey) ||
+					getShareWeightedImpact(a, surface, section.metricKey) ||
 				(getSurfaceMetricValue(b, surface, section.metricKey) ?? Number.NEGATIVE_INFINITY) -
-				(getSurfaceMetricValue(a, surface, section.metricKey) ?? Number.NEGATIVE_INFINITY)
+					(getSurfaceMetricValue(a, surface, section.metricKey) ?? Number.NEGATIVE_INFINITY)
 		);
 
 	return {
@@ -726,7 +727,9 @@ function buildReportMetricSections(
 	rows: EcosystemCompanyData[],
 	exhibitorDomains: Set<string>
 ): MetricSection[] {
-	const exhibitorRows = rows.filter((row) => exhibitorDomains.has(row.company_domain.toLowerCase()));
+	const exhibitorRows = rows.filter((row) =>
+		exhibitorDomains.has(row.company_domain.toLowerCase())
+	);
 
 	return [
 		...buildMetricSections(rows),
@@ -753,7 +756,9 @@ function buildMetricSectionsByCompanyType(
 
 		if (option.value === MAU_COMBINED_ANALYTICS_COMPANY_TYPE) {
 			sectionsByCompanyType[MAU_COMBINED_ANALYTICS_COMPANY_TYPE] = buildReportMetricSections(
-				rows.filter((row) => MAU_COMBINED_ANALYTICS_COMPANY_TYPES.includes(getCompanyTypeValue(row))),
+				rows.filter((row) =>
+					MAU_COMBINED_ANALYTICS_COMPANY_TYPES.includes(getCompanyTypeValue(row))
+				),
 				exhibitorDomains
 			);
 			continue;

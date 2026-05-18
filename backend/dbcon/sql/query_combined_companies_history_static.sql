@@ -15,6 +15,4 @@ SELECT
     COALESCE(apps_added, 0) AS apps_added
 FROM adtech.combined_companies_history
 WHERE (year > 2025 OR (year = 2025 AND quarter >= 2))
--- TEMP
-AND NOT (year = 2026 and quarter = 2)
 ORDER BY company_domain ASC, year ASC, quarter ASC, store ASC, tag_source ASC;

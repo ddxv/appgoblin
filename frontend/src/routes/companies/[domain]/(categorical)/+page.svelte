@@ -11,7 +11,6 @@
 	import HierarchyTree from '$lib/HierarchyTree.svelte';
 	import WhiteCard from '$lib/WhiteCard.svelte';
 	import CompaniesLayout from '$lib/CompaniesLayout.svelte';
-	import CompanyTrendsSummary from '$lib/CompanyTrendsSummary.svelte';
 	interface Props {
 		data: CompanyFullDetails;
 	}
@@ -63,9 +62,13 @@
 							myType={{ name: 'All Companies & Domains', url_slug: 'all-companies' }}
 							hideAdstxtApps={true}
 							isSecondaryDomain={data.companyTree.is_secondary_domain}
+							trendsSummary={data.companyDetails.trends_summary}
 						/>
 						{#if data.companyDetails && data.companyDetails.adstxt_ad_domain_overview && data.companyDetails.adstxt_ad_domain_overview.google}
-							<AdsTxtTotalsBox myTotals={data.companyDetails.adstxt_ad_domain_overview} />
+							<AdsTxtTotalsBox
+								myTotals={data.companyDetails.adstxt_ad_domain_overview}
+								trendsSummary={data.companyDetails.trends_summary}
+							/>
 						{/if}
 					</WhiteCard>
 				{/if}
@@ -92,9 +95,13 @@
 					myType={{ name: 'All Companies & Domains', url_slug: 'all-companies' }}
 					hideAdstxtApps={true}
 					isSecondaryDomain={data.companyTree.is_secondary_domain}
+					trendsSummary={data.companyDetails.trends_summary}
 				/>
 				{#if data.companyDetails && data.companyDetails.adstxt_ad_domain_overview && data.companyDetails.adstxt_ad_domain_overview.google}
-					<AdsTxtTotalsBox myTotals={data.companyDetails.adstxt_ad_domain_overview} />
+					<AdsTxtTotalsBox
+						myTotals={data.companyDetails.adstxt_ad_domain_overview}
+						trendsSummary={data.companyDetails.trends_summary}
+					/>
 				{/if}
 			</WhiteCard>
 		{/if}
@@ -152,20 +159,6 @@
 				{/if}
 			</div>
 		</WhiteCard>
-	{/snippet}
-
-	{#snippet card4()}
-		{#if data.companyDetails?.trends_summary}
-			<WhiteCard>
-				{#snippet title()}
-					<span>{companyName}'s Trend Snapshot</span>
-				{/snippet}
-				<CompanyTrendsSummary
-					summary={data.companyDetails.trends_summary}
-					companyDomain={data.companyTree.company_domain || data.companyTree.queried_domain}
-				/>
-			</WhiteCard>
-		{/if}
 	{/snippet}
 </CompaniesLayout>
 

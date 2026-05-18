@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { formatNumber, formatNumberLocale } from '$lib/utils/formatNumber';
+	import type { CompanyTrendSummary, CompanyTrendsSummary } from '../types';
 
 	import { page } from '$app/state';
 
@@ -8,7 +9,8 @@
 		myType,
 		hideAdstxtApps = false,
 		companyName,
-		isSecondaryDomain = false
+		isSecondaryDomain = false,
+		trendsSummary = null
 	} = $props();
 
 	let categoryTitle = $derived(
@@ -22,6 +24,33 @@
 	const subTitleFont = 'text-large -200 tracking-wide';
 	const rowTitleFont = 'text-sm -200 tracking-wide';
 	const greyFont = 'text-xs text-surface-500';
+
+	const formatTrimmed = (value: number, digits: number): string =>
+		value.toFixed(digits).replace(/\.0+$|(?<=\.[0-9]*[1-9])0+$/, '');
+
+	const formatRelativeChange = (value: number | null | undefined): string => {
+		if (typeof value !== 'number' || Number.isNaN(value)) return 'n/a';
+		const prefix = value > 0 ? '+' : '';
+		return `${prefix}${formatTrimmed(value, 2)}%`;
+	};
+
+	const toneClass = (value: number | null | undefined): string => {
+		const normalized = Number(value ?? 0);
+		if (normalized === 0) return 'text-surface-500';
+		return normalized > 0 ? 'text-success-700-300' : 'text-error-700-300';
+	};
+
+	const getTrendSource = (
+		summary: CompanyTrendsSummary | null | undefined,
+		platform: string,
+		tagSource: string
+	): CompanyTrendSummary | undefined =>
+		Object.values(summary?.sources ?? {}).find(
+			(source) => source.platform === platform && source.tag_source === tagSource
+		);
+
+	const sdkAndroidTrend = $derived(getTrendSource(trendsSummary, 'android', 'sdk_api'));
+	const sdkIosTrend = $derived(getTrendSource(trendsSummary, 'ios', 'sdk_api'));
 </script>
 
 {#if !isSecondaryDomain}
@@ -58,6 +87,19 @@
 						<td class="py-2 px-1">{formatNumber(myTotals.sdk_android_installs_d30)}</td>
 						<td class="py-2 px-1">{formatNumber(myTotals.sdk_ios_installs_d30)}</td>
 					</tr>
+					{#if trendsSummary}
+						<tr>
+							<td class="py-2 px-1 {rowTitleFont}">Q/Q Change in Market Share</td>
+							<td
+								class={`py-2 px-1 ${toneClass(sdkAndroidTrend?.latest_pct_market_share_change_pct)}`}
+							>
+								{formatRelativeChange(sdkAndroidTrend?.latest_pct_market_share_change_pct)}
+							</td>
+							<td class={`py-2 px-1 ${toneClass(sdkIosTrend?.latest_pct_market_share_change_pct)}`}>
+								{formatRelativeChange(sdkIosTrend?.latest_pct_market_share_change_pct)}
+							</td>
+						</tr>
+					{/if}
 				</tbody>
 			</table>
 		{/if}

@@ -447,6 +447,9 @@ def prep_companies_overview_df(
 
     if include_trends_overview:
         company_trends_overview_df = get_company_trends_overview(state)
+        # TODO: The trends can have different values due to parent vs not parent grouping
+        # Trends currently have no parent grouping
+        # companies overview_df does have parent grouping
         tcols = company_trends_overview_df.columns
         if not company_trends_overview_df.empty:
             overview_df = overview_df.merge(
@@ -455,25 +458,25 @@ def prep_companies_overview_df(
                 how="left",
                 validate="1:1",
             )
-            base_cols = [
-                "company_domain",
-                "company_name",
-                "company_category",
-                "parent_company_domain",
-                "parent_company_name",
-                "company_logo_url",
-                "parent_company_logo_url",
-            ]
-            inscols = [x for x in overview_df.columns if "installs_d30" in x]
-            csv_df = overview_df[
-                base_cols + inscols + [tcol for tcol in tcols if tcol not in base_cols]
-            ]
-            csv_df.rename(
-                columns={tcol: tcol.replace("_latest_", "_") for tcol in tcols},
-                inplace=True,
-            )
-            logger.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX NEW CSV")
-            csv_df.to_csv("AppGoblin Mobile Ecosystem 2026 Q1.csv", index=False)
+            # base_cols = [
+            #     "company_domain",
+            #     "company_name",
+            #     "company_category",
+            #     "parent_company_domain",
+            #     "parent_company_name",
+            #     "company_logo_url",
+            #     "parent_company_logo_url",
+            # ]
+            # inscols = [x for x in overview_df.columns if "installs_d30" in x]
+            # csv_df = overview_df[
+            #     base_cols + inscols + [tcol for tcol in tcols if tcol not in base_cols]
+            # ]
+            # csv_df.rename(
+            #     columns={tcol: tcol.replace("_latest_", "_") for tcol in tcols},
+            #     inplace=True,
+            # )
+            # logger.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX NEW CSV")
+            # csv_df.to_csv("AppGoblin Mobile Ecosystem 2026 Q1.csv", index=False)
 
     return overview_df
 

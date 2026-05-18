@@ -21,6 +21,7 @@
 		key: string;
 		platform: string;
 		platformLabel: string;
+		tagSource: string;
 		label: string;
 		colors: SourceMeta;
 		summary: CompanyTrendSummary;
@@ -29,14 +30,14 @@
 		pastYear: IndexedTrendPoint[];
 	};
 
-	type PlatformSection = {
-		platform: string;
-		platformLabel: string;
+	type SourceSection = {
+		tagSource: string;
+		label: string;
 		cards: SourceCard[];
 	};
 
 	const palette = ['#6929C4', '#1192E8', '#005D5D', '#9F1853', '#FA4D56'];
-	const platformOrder: Record<string, number> = { ios: 0, android: 1 };
+	const platformOrder: Record<string, number> = { android: 0, ios: 1 };
 	const sourceOrder: Record<string, number> = { sdk_api: 0, app_ads_direct: 1 };
 	const sourceLabels: Record<string, string> = {
 		sdk_api: 'SDK/API Footprint',
@@ -153,6 +154,7 @@
 					platform,
 					platformLabel:
 						platform === 'ios' ? 'iOS' : platform === 'android' ? 'Android' : titleCase(platform),
+					tagSource,
 					label: meta.label,
 					colors: meta,
 					summary,
@@ -171,29 +173,34 @@
 			});
 	});
 
-	const platformSections = $derived.by((): PlatformSection[] => {
-		const sections = new Map<string, PlatformSection>();
+	const sourceSections = $derived.by((): SourceSection[] => {
+		const sections = new Map<string, SourceSection>();
 		for (const card of sourceCards) {
-			const existing = sections.get(card.platform);
+			const existing = sections.get(card.tagSource);
 			if (existing) {
 				existing.cards.push(card);
 				continue;
 			}
 
-			sections.set(card.platform, {
-				platform: card.platform,
-				platformLabel: card.platformLabel,
+			sections.set(card.tagSource, {
+				tagSource: card.tagSource,
+				label: card.label,
 				cards: [card]
 			});
 		}
 
-		return Array.from(sections.values()).sort(
-			(a, b) => (platformOrder[a.platform] ?? 99) - (platformOrder[b.platform] ?? 99)
-		);
+		return Array.from(sections.values())
+			.map((section) => ({
+				...section,
+				cards: [...section.cards].sort(
+					(a, b) => (platformOrder[a.platform] ?? 99) - (platformOrder[b.platform] ?? 99)
+				)
+			}))
+			.sort((a, b) => (sourceOrder[a.tagSource] ?? 99) - (sourceOrder[b.tagSource] ?? 99));
 	});
 </script>
 
-{#if platformSections.length > 0}
+{#if sourceSections.length > 0}
 	<div class="p-3 md:p-5">
 		<div class="mb-5 flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
 			<div>
@@ -214,14 +221,14 @@
 		</div>
 
 		<div class="space-y-6">
-			{#each platformSections as section}
+			{#each sourceSections as section}
 				<section class="rounded-xl border border-surface-200-800 bg-surface-50-950/30 p-4 md:p-5">
 					<div class="mb-4">
 						<p class="text-xs font-semibold uppercase tracking-[0.2em] text-surface-500">
-							{section.platformLabel}
+							{section.label}
 						</p>
 						<h3 class="mt-1 text-lg font-semibold">
-							{section.platformLabel} quarterly share trends
+							{section.label} quarterly share trends
 						</h3>
 					</div>
 
@@ -234,7 +241,7 @@
 											class="text-xs font-semibold uppercase tracking-[0.18em]"
 											style={`color: ${card.colors.primary};`}
 										>
-											{card.label}
+											{card.platformLabel}
 										</p>
 										<h4 class="mt-1 text-lg font-semibold">
 											{formatSharePercent(card.summary.latest_pct_market_share)} market share
@@ -247,48 +254,6 @@
 										QoQ share {formatRelativeChange(
 											card.summary.latest_pct_market_share_change_pct
 										)}
-									</div>
-								</div>
-
-								<div class="mb-4 grid grid-cols-2 gap-3 md:grid-cols-4">
-									<div class="rounded-lg border border-surface-200-800 bg-surface-100-900/60 p-3">
-										<div class="text-[11px] uppercase tracking-[0.16em] text-surface-500">
-											Share Now
-										</div>
-										<div class="mt-2 text-xl font-semibold">
-											{formatSharePercent(card.summary.latest_pct_market_share)}
-										</div>
-										<div class="text-xs text-surface-500">
-											Prev. {formatSharePercent(card.summary.previous_pct_market_share)}
-										</div>
-									</div>
-
-									<div class="rounded-lg border border-surface-200-800 bg-surface-100-900/60 p-3">
-										<div class="text-[11px] uppercase tracking-[0.16em] text-surface-500">
-											QoQ Share %
-										</div>
-										<div
-											class={`mt-2 text-xl font-semibold ${toneClass(card.summary.latest_pct_market_share_change_pct)}`}
-										>
-											{formatRelativeChange(card.summary.latest_pct_market_share_change_pct)}
-										</div>
-										<div class="text-xs text-surface-500">
-											{formatSharePercent(card.summary.previous_pct_market_share)} to {formatSharePercent(
-												card.summary.latest_pct_market_share
-											)}
-										</div>
-									</div>
-
-									<div class="rounded-lg border border-surface-200-800 bg-surface-100-900/60 p-3">
-										<div class="text-[11px] uppercase tracking-[0.16em] text-surface-500">
-											Tracked Apps
-										</div>
-										<div class="mt-2 text-xl font-semibold">
-											{formatWholeNumber(card.summary.latest_total_apps)}
-										</div>
-										<div class="text-xs text-surface-500">
-											Current tracked total in {card.summary.latest_period}
-										</div>
 									</div>
 								</div>
 
