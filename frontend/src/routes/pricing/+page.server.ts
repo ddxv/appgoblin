@@ -30,20 +30,22 @@ export const actions: Actions = {
 		// Check for existing active subscription (allow checkout if previously canceled)
 		const existingSubscription = await db.queryOne<{
 			status: string;
+			provider_name: string;
 			cancel_at: Date | null;
 			cancel_requested_at: Date | null;
 		}>(
-			`SELECT status, cancel_at, cancel_requested_at
+			`SELECT status, provider_name, cancel_at, cancel_requested_at
              FROM subscriptions
              WHERE user_id = $1
              AND status IN ('active', 'trialing')
-             ORDER BY current_period_end DESC
+			 ORDER BY updated_at DESC
              LIMIT 1`,
 			[user.id]
 		);
 
 		if (
 			existingSubscription &&
+			existingSubscription.provider_name === 'stripe' &&
 			!existingSubscription.cancel_at &&
 			!existingSubscription.cancel_requested_at
 		) {

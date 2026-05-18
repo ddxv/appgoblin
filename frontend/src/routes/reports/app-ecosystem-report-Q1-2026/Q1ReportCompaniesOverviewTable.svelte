@@ -11,17 +11,12 @@
 
 	import Pagination from '$lib/components/data-table/Pagination.svelte';
 	import ExportAsCSV from '$lib/components/data-table/ExportAsCSV.svelte';
-	import type { CompaniesOverviewEntries } from '../types';
 
 	import { createSvelteTable, FlexRender } from '$lib/components/data-table/index.js';
 
 	import { genericColumns } from '$lib/components/data-table/generic-column';
-	import Shield from 'lucide-svelte/icons/shield';
-	import CircleHalf from 'lucide-svelte/icons/shield-half';
-	import Eye from 'lucide-svelte/icons/eye';
 
 	import { formatNumber } from '$lib/utils/formatNumber';
-	import { countryCodeToEmoji } from '$lib/utils/countryCodeToEmoji';
 
 	type MetricValue = 'installs' | 'market_share' | 'qoq_share' | 'apps_lost' | 'app_count';
 
@@ -32,8 +27,38 @@
 
 	type ViewMode = 'auto' | 'sdk' | 'ads' | 'both';
 
-	type DataTableProps<CompaniesOverviewEntries, TValue> = {
-		data: CompaniesOverviewEntries[];
+	type ReportCompaniesOverviewEntry = {
+		company_domain: string;
+		company_name: string;
+		parent_company_domain?: string | null;
+		parent_company_name?: string | null;
+		company_logo_url?: string | null;
+		parent_company_logo_url?: string | null;
+		total_app_count?: number | null;
+		google_sdk_app_count?: number | null;
+		apple_sdk_app_count?: number | null;
+		google_app_ads_direct_app_count?: number | null;
+		apple_app_ads_direct_app_count?: number | null;
+		google_sdk_installs_d30?: number | null;
+		apple_sdk_installs_d30?: number | null;
+		google_app_ads_direct_installs_d30?: number | null;
+		apple_app_ads_direct_installs_d30?: number | null;
+		google_sdk_percentage?: number | null;
+		apple_sdk_percentage?: number | null;
+		google_app_ads_direct_percentage?: number | null;
+		apple_app_ads_direct_percentage?: number | null;
+		google_sdk_latest_pct_market_share_change?: number | null;
+		apple_sdk_latest_pct_market_share_change?: number | null;
+		google_app_ads_direct_latest_pct_market_share_change?: number | null;
+		apple_app_ads_direct_latest_pct_market_share_change?: number | null;
+		google_sdk_latest_apps_lost?: number | null;
+		apple_sdk_latest_apps_lost?: number | null;
+		google_app_ads_direct_latest_apps_lost?: number | null;
+		apple_app_ads_direct_latest_apps_lost?: number | null;
+	};
+
+	type DataTableProps<TValue> = {
+		data: ReportCompaniesOverviewEntry[];
 		viewMode?: ViewMode;
 	};
 
@@ -44,21 +69,11 @@
 	let globalFilter = $state<string>('');
 	let dataMetric = $state<MetricValue>('market_share');
 
-	let { data, viewMode = 'auto' }: DataTableProps<CompaniesOverviewEntries, TValue> = $props();
+	let { data, viewMode = 'auto' }: DataTableProps<TValue> = $props();
 
 	import { page } from '$app/state';
 
 	const columns = genericColumns([
-		{
-			title: 'Tracking',
-			accessorKey: 'percent_open_source',
-			isSortable: true
-		},
-		{
-			title: 'Servers',
-			accessorKey: 'api_ip_resolved_country',
-			isSortable: true
-		},
 		{
 			title: 'Company',
 			accessorKey: 'company_name',
@@ -85,16 +100,6 @@
 			isSortable: true
 		},
 		{
-			title: 'API Android',
-			accessorKey: 'google_api_call_app_count',
-			isSortable: true
-		},
-		{
-			title: 'API iOS',
-			accessorKey: 'apple_api_call_app_count',
-			isSortable: true
-		},
-		{
 			title: 'Direct Android',
 			accessorKey: 'google_app_ads_direct_app_count',
 			isSortable: true
@@ -102,16 +107,6 @@
 		{
 			title: 'Direct iOS',
 			accessorKey: 'apple_app_ads_direct_app_count',
-			isSortable: true
-		},
-		{
-			title: 'Reseller Android',
-			accessorKey: 'google_app_ads_reseller_app_count',
-			isSortable: true
-		},
-		{
-			title: 'Reseller iOS',
-			accessorKey: 'apple_app_ads_reseller_app_count',
 			isSortable: true
 		},
 		// ### SDK Stats
@@ -353,8 +348,6 @@
 	});
 
 	function shouldShowHeader(header: any) {
-		if (header.column.id === 'percent_open_source') return true;
-		if (header.column.id === 'api_ip_resolved_country') return true;
 		if (header.column.id === 'company_name') return true;
 		if (header.column.id === 'parent_company_name') return true;
 		if (header.column.id === 'total_app_count') return dataMetric === 'app_count';
@@ -365,7 +358,7 @@
 		let headerHasPercent = header.column.id.includes('percentage');
 		let headerHasShareChange = header.column.id.includes('latest_pct_market_share_change');
 		let headerHasAppsLost = header.column.id.includes('latest_apps_lost');
-		let headerIsAds = header.column.id.includes('direct') || header.column.id.includes('reseller');
+		let headerIsAds = header.column.id.includes('direct');
 
 		if (dataMetric === 'app_count' && headerHasAppCount) {
 			return headerIsAds ? showsAdsColumns : showsSdkColumns;
@@ -461,50 +454,6 @@
 			<tbody>
 				{#each table.getRowModel().rows as row (row.id)}
 					<tr class="px-0">
-						<td class="text-center">
-							{#if row.original.percent_open_source > 0.75}
-								<div
-									class="flex items-center justify-center gap-1 text-success-900-100"
-									title="Mostly open source - minimal tracking"
-								>
-									<Shield class="w-4 h-4" />
-									<span class="text-xs">Open Source</span>
-								</div>
-							{:else if row.original.percent_open_source > 0.3}
-								<div
-									class="flex items-center justify-center gap-1 text-warning-900-100"
-									title="Mixed open/closed source"
-								>
-									<CircleHalf class="w-4 h-4" />
-									<span class="text-xs">Mixed</span>
-								</div>
-							{:else if row.original.percent_open_source == 0}
-								<div
-									class="flex items-center justify-center gap-1 text-error-900-100"
-									title="Closed source - likely tracking"
-								>
-									<Eye class="w-4 h-4" />
-									<span class="text-xs">Tracking</span>
-								</div>
-							{:else}
-								<div
-									class="flex items-center justify-center gap-1 text-gray-500"
-									title="Unknown tracking status"
-								>
-									<span class="text-xs">Unknown</span>
-								</div>
-							{/if}
-						</td>
-						<td class="text-center">
-							{#if row.original.api_ip_resolved_country}
-								<span
-									class="text-xs md:text-sm"
-									title={`API IP addresses for this domain commonly resolve to: ${row.original.api_ip_resolved_country}`}
-								>
-									{countryCodeToEmoji(row.original.api_ip_resolved_country)}
-								</span>
-							{/if}
-						</td>
 						<td class="w-0">
 							<a
 								href="/companies/{row.original.company_domain}"
@@ -588,16 +537,6 @@
 										{formatOptionalNumber(row.original.apple_sdk_app_count)}
 									</p>
 								</td>
-								<td class="table-cell-fit">
-									<p class="text-xs md:text-sm">
-										{formatOptionalNumber(row.original.google_api_call_app_count)}
-									</p>
-								</td>
-								<td class="table-cell-fit">
-									<p class="text-xs md:text-sm">
-										{formatOptionalNumber(row.original.apple_api_call_app_count)}
-									</p>
-								</td>
 							{/if}
 							{#if showsAdsColumns}
 								<td class="table-cell-fit">
@@ -608,16 +547,6 @@
 								<td class="table-cell-fit">
 									<p class="text-xs md:text-sm">
 										{formatOptionalNumber(row.original.apple_app_ads_direct_app_count)}
-									</p>
-								</td>
-								<td class="table-cell-fit">
-									<p class="text-xs md:text-sm">
-										{formatOptionalNumber(row.original.google_app_ads_reseller_app_count)}
-									</p>
-								</td>
-								<td class="table-cell-fit">
-									<p class="text-xs md:text-sm">
-										{formatOptionalNumber(row.original.apple_app_ads_reseller_app_count)}
 									</p>
 								</td>
 							{/if}

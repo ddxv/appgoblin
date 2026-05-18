@@ -132,7 +132,7 @@
 				href="/free-app-datasets"
 				class={isHighlighted('/free-app-datasets') ? topBarHighlightedFont : topBarFont}
 			>
-				DATA EXPORTS</a
+				Free datasets</a
 			>
 			<div class={myDivider}></div>
 		{/if}
@@ -304,7 +304,7 @@
 					<a
 						href="/free-app-datasets"
 						class={isHighlighted('/free-app-datasets') ? dropdownHighlightedItem : dropdownItem}
-						>Data Exports</a
+						>Free Datasets</a
 					>
 				</div>
 			</div>

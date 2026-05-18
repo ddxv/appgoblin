@@ -39,6 +39,38 @@ APP_BASICS_EXAMPLE_RESPONSE = {
         "https://play.google.com/store/apps/details?id=dev.thirdgate.appgoblin"
     ),
 }
+COMPANIES_INDEX_EXAMPLE_RESPONSE = [
+    {
+        "name": "Unity",
+        "company_domain": "unity.com",
+        "parent_company_domain": None,
+        "parent_company_name": None,
+        "api_ip_resolved_country": "US",
+        "total_app_count": 145_516,
+        "installs_d30": 96_783_797_489,
+        "trends_latest_period": "2026Q1",
+        "google_sdk_latest_pct_market_share": 18.34,
+        "apple_sdk_latest_pct_market_share": 7.91,
+        "google_app_ads_direct_latest_pct_market_share": 2.06,
+        "apple_app_ads_direct_latest_pct_market_share": 0.73,
+        "google_sdk_latest_pct_market_share_change": 4.63,
+        "apple_sdk_latest_pct_market_share_change": 1.82,
+        "google_app_ads_direct_latest_pct_market_share_change": -0.57,
+        "apple_app_ads_direct_latest_pct_market_share_change": 0.14,
+        "google_sdk_latest_total_apps": 51_202,
+        "apple_sdk_latest_total_apps": 16_887,
+        "google_app_ads_direct_latest_total_apps": 1_904,
+        "apple_app_ads_direct_latest_total_apps": 612,
+        "google_sdk_latest_apps_added": 1487,
+        "apple_sdk_latest_apps_added": 311,
+        "google_app_ads_direct_latest_apps_added": 127,
+        "apple_app_ads_direct_latest_apps_added": 42,
+        "google_sdk_latest_apps_lost": 221,
+        "apple_sdk_latest_apps_lost": 18,
+        "google_app_ads_direct_latest_apps_lost": 406,
+        "apple_app_ads_direct_latest_apps_lost": 27,
+    }
+]
 COMPANY_OVERVIEW_EXAMPLE_DOMAIN = "unity.com"
 COMPANY_OVERVIEW_EXAMPLE_RESPONSE = {
     "domain_is_mapped": True,
@@ -57,11 +89,22 @@ COMPANY_OVERVIEW_EXAMPLE_RESPONSE = {
         "sdk_ios_total_apps": 16381,
         "sdk_total_apps": 55833,
         "api_android_total_apps": 11175,
-        "api_ios_total_apps": 0,
         "api_total_apps": 11175,
         "sdk_android_installs_d30": 86325326083,
+        "sdk_ios_installs_d30": 31415926535,
         "adstxt_direct_android_installs_d30": 96783797489,
         "adstxt_reseller_android_installs_d30": 42347935007,
+    },
+    "trends": {
+        "latest_period": "2026Q1",
+        "android_app_ads_direct_market_share_change_pct": -0.57,
+        "android_app_ads_direct_apps_lost": 406,
+        "android_sdk_api_market_share_change_pct": 4.63,
+        "android_sdk_api_apps_lost": 221,
+        "ios_app_ads_direct_market_share_change_pct": 0.14,
+        "ios_app_ads_direct_apps_lost": 27,
+        "ios_sdk_api_market_share_change_pct": 1.82,
+        "ios_sdk_api_apps_lost": 18,
     },
     "mapping_notice": None,
     "datasets": {
@@ -84,7 +127,9 @@ V1_OPERATION_DOCS = {
             "description": (
                 "Endpoint: `GET /api/v1/companies`\n\n"
                 "Returns the public company index with queryable company domains, "
-                "display names, parent mappings, and lightweight summary metrics."
+                "display names, parent mappings, installs, and the latest trend "
+                "snapshot fields for market share, market-share change, total "
+                "apps, apps added, and apps lost."
             ),
         }
     },
@@ -94,7 +139,8 @@ V1_OPERATION_DOCS = {
             "description": (
                 "Endpoint: `GET /api/v1/companies/{company_domain}`\n\n"
                 "Returns the public company overview for a single domain, including "
-                "mapping status, company types, key metrics, and dataset availability."
+                "mapping status, company types, key metrics, a latest-trends summary, "
+                "and dataset availability."
             ),
         }
     },
@@ -182,6 +228,34 @@ _SCALAR_PLUGIN = V1ScalarRenderPlugin(
     options=SCALAR_OPTIONS,
     css_url=SCALAR_CSS_URL,
 )
+
+
+def _set_companies_index_example(schema: dict[str, Any]) -> None:
+    """Attach a concrete example to the public companies index endpoint."""
+    path_item = schema.get("paths", {}).get("/api/v1/companies")
+    if not isinstance(path_item, dict):
+        return
+
+    get_operation = path_item.get("get")
+    if not isinstance(get_operation, dict):
+        return
+
+    responses = get_operation.get("responses", {})
+    response_200 = responses.get("200")
+    if not isinstance(response_200, dict):
+        return
+
+    content = response_200.get("content", {})
+    json_content = content.get("application/json")
+    if not isinstance(json_content, dict):
+        return
+
+    json_content["examples"] = {
+        "companies_index": {
+            "summary": "Companies index with latest trend snapshot fields",
+            "value": COMPANIES_INDEX_EXAMPLE_RESPONSE,
+        }
+    }
 
 
 def _set_app_basics_example(schema: dict[str, Any]) -> None:
@@ -320,6 +394,7 @@ def build_v1_openapi_schema(request: Request) -> dict[str, Any]:
     schema["security"] = [{"ApiKeyAuth": []}]
     schema["servers"] = [{"url": PUBLIC_API_SERVER_URL}]
     _set_operation_docs(schema)
+    _set_companies_index_example(schema)
     _set_app_basics_example(schema)
     _set_company_overview_example(schema)
     return schema

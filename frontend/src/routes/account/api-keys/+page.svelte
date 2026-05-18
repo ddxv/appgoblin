@@ -7,6 +7,7 @@
 	import Copy from 'lucide-svelte/icons/copy';
 	import Check from 'lucide-svelte/icons/check';
 	import ExternalLink from 'lucide-svelte/icons/external-link';
+	import { getPlanSummary } from '$lib/account/subscription';
 
 	let { data, form }: { data: PageData; form?: ActionData | null } = $props();
 
@@ -14,6 +15,7 @@
 	let copiedKey = $state(false);
 	let newKeyName = $state('');
 	let revokingId = $state<number | null>(null);
+	let planSummary = $derived(getPlanSummary(data.subscriptionTier));
 
 	function copyKey(key: string) {
 		navigator.clipboard.writeText(key);
@@ -54,14 +56,14 @@
 
 <div class="space-y-6">
 	<!-- Header -->
-	<div class="card preset-tonal p-6 md:p-8 space-y-4">
+	<div class="p-6 md:p-8 space-y-4 border-b border-surface-300-700">
 		<div class="flex items-start justify-between gap-4">
 			<div>
 				<h1 class="text-2xl font-bold flex items-center gap-3">
 					<KeyRound size={28} class="text-primary-500" />
 					API Keys
 				</h1>
-				<p class="text-sm text-surface-600-400 mt-1">
+				<p class="mt-1 text-sm">
 					Generate API keys to access the AppGoblin public API programmatically.
 				</p>
 			</div>
@@ -72,37 +74,32 @@
 		</div>
 
 		<!-- Rate limit info -->
-		{#if data.subscription}
-			<div class="p-4 rounded-lg bg-surface-100-900 border border-surface-200-800">
-				<p class="text-sm">
-					<span class="font-semibold">Current Plan:</span>
-					<span class="text-primary-500">{data.subscriptionTier ?? 'Free'}</span>
-					<span class="text-surface-500 ml-2">|</span>
-					<span class="ml-2 font-semibold">Limits:</span>
-					<span class="text-surface-600-400">
-						{#if data.subscriptionTier === 'Premium B2B'}
-							10,000 req/min, 500,000 req/day
-						{:else if data.subscriptionTier === 'Business SDK' || data.subscriptionTier === 'App-Ads.txt'}
-							2,000 req/min, 100,000 req/day
-						{:else if data.subscriptionTier === 'Premium Access'}
-							200 req/min, 10,000 req/day
-						{:else}
-							30 req/min, 1,000 req/day
-						{/if}
-					</span>
-				</p>
+		<div class="rounded-lg border border-surface-300-700 p-4">
+			<div class="grid gap-3 md:grid-cols-3">
+				<div>
+					<p class="text-xs font-semibold uppercase tracking-wide">Current plan</p>
+					<p class="mt-1 font-semibold">{data.subscriptionTier ?? planSummary.name}</p>
+				</div>
+				<div>
+					<p class="text-xs font-semibold uppercase tracking-wide">API limits</p>
+					<p class="mt-1 font-semibold">{planSummary.limits}</p>
+				</div>
+				<div>
+					<p class="text-xs font-semibold uppercase tracking-wide">
+						{data.subscription
+							? data.subscription.cancel_at
+								? 'Access through'
+								: 'Renews on'
+							: 'Upgrade path'}
+					</p>
+					<p class="mt-1 font-semibold">
+						{data.subscription
+							? formatDate(data.subscription.current_period_end)
+							: 'Upgrade on the pricing page'}
+					</p>
+				</div>
 			</div>
-		{:else}
-			<div class="p-4 rounded-lg bg-surface-100-900 border border-surface-200-800">
-				<p class="text-sm">
-					<span class="font-semibold">Current Plan:</span>
-					<span class="text-surface-600-400">Free</span>
-					<span class="text-surface-500 ml-2">|</span>
-					<span class="ml-2 font-semibold">Limits:</span>
-					<span class="text-surface-600-400">30 req/min, 1,000 req/day</span>
-				</p>
-			</div>
-		{/if}
+		</div>
 	</div>
 
 	<!-- Messages -->
@@ -118,13 +115,13 @@
 
 	<!-- New key display (shown once after creation) -->
 	{#if form?.rawKey && form.section === 'create'}
-		<div class="card preset-tonal p-6 space-y-3 border border-warning-500/30">
-			<p class="text-warning-500 font-semibold text-sm">
+		<div class="space-y-3 rounded-lg border border-warning-500/30 p-6">
+			<p class="text-sm font-semibold text-warning-700-300">
 				Save this key now — it will not be shown again.
 			</p>
 			<div class="flex items-center gap-2">
 				<code
-					class="flex-1 p-3 rounded-lg bg-surface-950-50 text-sm font-mono break-all select-all"
+					class="flex-1 rounded-lg border border-surface-300-700 p-3 text-sm font-mono break-all select-all"
 				>
 					{form.rawKey}
 				</code>
@@ -144,8 +141,8 @@
 	{/if}
 
 	<!-- Create new key -->
-	<div class="card preset-tonal p-6 md:p-8 space-y-4">
-		<p class="text-sm text-surface-600-400">
+	<div class="p-6 md:p-8 space-y-4">
+		<p class="text-sm">
 			Authentication, endpoints, and example requests live in the
 			<a href="/api-docs" class="text-primary-500 hover:underline">public API docs</a>.
 		</p>
@@ -169,7 +166,7 @@
 						placeholder="e.g., Production API, CI/CD Pipeline"
 						maxlength="100"
 						required
-						class="input p-3 rounded-lg bg-surface-100-900 border border-surface-300-700 w-full"
+						class="input w-full rounded-lg border border-surface-300-700 p-3"
 					/>
 				</div>
 				<div class="flex gap-3">
@@ -190,9 +187,9 @@
 	</div>
 
 	<!-- Keys list -->
-	<div class="card preset-tonal p-6 md:p-8">
+	<div class="p-6 md:p-8">
 		{#if data.apiKeys.length === 0}
-			<p class="text-surface-500 text-center py-8">No API keys yet. Generate one to get started.</p>
+			<p class="py-8 text-center">No API keys yet. Generate one to get started.</p>
 		{:else}
 			<div class="overflow-x-auto">
 				<table class="w-full text-sm">
@@ -211,15 +208,15 @@
 							<tr class="border-b border-surface-300-700/50">
 								<td class="py-4 font-medium">{key.name}</td>
 								<td class="py-4">
-									<code class="text-xs bg-surface-200-800 px-2 py-1 rounded">
+									<code class="rounded border border-surface-300-700 px-2 py-1 text-xs">
 										{key.key_prefix}•••
 									</code>
 								</td>
-								<td class="py-4 text-surface-500">{formatDate(key.created_at)}</td>
-								<td class="py-4 text-surface-500">{formatLastUsed(key.last_used_at)}</td>
+								<td class="py-4">{formatDate(key.created_at)}</td>
+								<td class="py-4">{formatLastUsed(key.last_used_at)}</td>
 								<td class="py-4">
 									{#if key.is_active}
-										<span class="badge preset-filled-success-900-100 text-xs">Active</span>
+										<span class="badge preset-filled-success-300-700 text-xs">Active</span>
 									{:else}
 										<span class="badge preset-filled-surface-500 text-xs">Revoked</span>
 									{/if}
@@ -240,7 +237,7 @@
 											<input type="hidden" name="id" value={key.id} />
 											<button
 												type="submit"
-												class="btn btn-sm preset-tonal text-error-500 flex items-center gap-1"
+												class="btn btn-sm preset-tonal flex items-center gap-1 text-error-500"
 												disabled={revokingId === key.id}
 											>
 												<Trash2 size={14} />

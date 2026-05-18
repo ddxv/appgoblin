@@ -9,16 +9,27 @@ export async function load(event: LayoutServerLoadEvent) {
 
 	interface Subscription {
 		status: string;
+		provider_name: string;
+		current_period_start: Date | null;
 		current_period_end: Date;
 		cancel_at: Date | null;
+		cancel_requested_at: Date | null;
 		provider_price_id: string;
 	}
 
+	interface SubscriptionHistoryRow extends Subscription {
+		updated_at: Date;
+	}
+
 	const subscription = await db.queryOne<Subscription>(
-		`SELECT status, current_period_end, cancel_at, provider_price_id
+		`SELECT status, provider_name, current_period_start, current_period_end, cancel_at, cancel_requested_at, provider_price_id
          FROM subscriptions 
-         WHERE user_id = $1 
-         ORDER BY created_at DESC LIMIT 1`,
+	         WHERE user_id = $1
+	         AND (
+	         	(cancel_at IS NOT NULL AND cancel_at > NOW())
+	         	OR (cancel_at IS NULL AND status IN ('active', 'trialing'))
+	         )
+	         ORDER BY updated_at DESC LIMIT 1`,
 		[user.id]
 	);
 
@@ -29,9 +40,28 @@ export async function load(event: LayoutServerLoadEvent) {
 		[STRIPE_PRICES.b2b_premium]: 'Premium B2B'
 	};
 
+	const subscriptionHistory = await db.query<SubscriptionHistoryRow>(
+		`SELECT status, current_period_start, current_period_end, cancel_at, cancel_requested_at,
+		        provider_price_id, updated_at
+		 FROM subscriptions
+		 WHERE user_id = $1
+		 AND NOT (
+		 	(cancel_at IS NOT NULL AND cancel_at > NOW())
+		 	OR (cancel_at IS NULL AND status IN ('active', 'trialing'))
+		 )
+		 ORDER BY COALESCE(cancel_at, current_period_end, updated_at) DESC
+		 LIMIT 5`,
+		[user.id]
+	);
+
 	return {
 		user,
 		subscription,
+		showStripePortal: subscription?.provider_name === 'stripe',
+		subscriptionHistory: subscriptionHistory.map((entry) => ({
+			...entry,
+			planName: priceIdToLabel[entry.provider_price_id] ?? entry.provider_price_id
+		})),
 		subscriptionTier:
 			subscription?.provider_price_id && priceIdToLabel[subscription.provider_price_id]
 				? priceIdToLabel[subscription.provider_price_id]

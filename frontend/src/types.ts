@@ -224,17 +224,58 @@ export interface AdsTxtEntriesResult {
 export interface CompaniesOverviewEntries {
 	company_domain: string;
 	company_name: string;
+	company_category?: string | null;
 	parent_company_domain?: string | null;
 	parent_company_name?: string | null;
 	company_logo_url?: string | null;
 	parent_company_logo_url?: string | null;
 	api_ip_resolved_country?: string | null;
 	total_app_count?: number | null;
+	installs_d30?: number | null;
+	google_sdk_app_count?: number | null;
+	apple_sdk_app_count?: number | null;
+	google_api_call_app_count?: number | null;
+	apple_api_call_app_count?: number | null;
+	google_app_ads_direct_app_count?: number | null;
+	apple_app_ads_direct_app_count?: number | null;
+	google_app_ads_reseller_app_count?: number | null;
+	apple_app_ads_reseller_app_count?: number | null;
 	tag_source: string;
 	store: string;
 	app_count: number;
 	percentage: number;
 	percent_open_source: number;
+	apple_app_ads_direct_percentage?: number | null;
+	apple_app_ads_reseller_percentage?: number | null;
+	apple_sdk_percentage?: number | null;
+	google_api_call_percentage?: number | null;
+	google_app_ads_direct_percentage?: number | null;
+	google_app_ads_reseller_percentage?: number | null;
+	google_sdk_percentage?: number | null;
+	apple_app_ads_direct_installs_d30?: number | null;
+	apple_app_ads_reseller_installs_d30?: number | null;
+	apple_sdk_installs_d30?: number | null;
+	google_api_call_installs_d30?: number | null;
+	google_app_ads_direct_installs_d30?: number | null;
+	google_app_ads_reseller_installs_d30?: number | null;
+	google_sdk_installs_d30?: number | null;
+	trends_latest_period?: string | null;
+	google_sdk_latest_pct_market_share_change?: number | null;
+	apple_sdk_latest_pct_market_share_change?: number | null;
+	google_app_ads_direct_latest_pct_market_share_change?: number | null;
+	apple_app_ads_direct_latest_pct_market_share_change?: number | null;
+	google_sdk_latest_total_apps_change_pct?: number | null;
+	apple_sdk_latest_total_apps_change_pct?: number | null;
+	google_app_ads_direct_latest_total_apps_change_pct?: number | null;
+	apple_app_ads_direct_latest_total_apps_change_pct?: number | null;
+	google_sdk_latest_apps_added?: number | null;
+	apple_sdk_latest_apps_added?: number | null;
+	google_app_ads_direct_latest_apps_added?: number | null;
+	apple_app_ads_direct_latest_apps_added?: number | null;
+	google_sdk_latest_apps_lost?: number | null;
+	apple_sdk_latest_apps_lost?: number | null;
+	google_app_ads_direct_latest_apps_lost?: number | null;
+	apple_app_ads_direct_latest_apps_lost?: number | null;
 }
 
 export interface CompaniesSearchEntries {
@@ -472,15 +513,15 @@ export interface CompanyCategoryOverview {
 	adstxt_publishers_overview: AdsTxtPublishersOverview;
 	trends_summary?: CompanyTrendsSummary | null;
 	mediation_adapters:
-	| {
-		adapter_string: string;
-		adapter_company_domain: string;
-		adapter_company_name: string;
-		adapter_logo_url: string;
-		app_category: string;
-		app_count: number;
-	}[]
-	| null;
+		| {
+				adapter_string: string;
+				adapter_company_domain: string;
+				adapter_company_name: string;
+				adapter_logo_url: string;
+				app_category: string;
+				app_count: number;
+		  }[]
+		| null;
 	categories: {
 		[key: string]: CategoryAppStats;
 	};

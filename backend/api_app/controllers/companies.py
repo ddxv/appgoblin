@@ -82,6 +82,8 @@ from dbcon.static import (
     get_company_logos_df,
     get_company_open_source,
     get_company_secondary_domains,
+    get_company_trends_overview,
+    get_company_trends_summary,
     get_mediation_companies,
     get_parent_companies,
 )
@@ -274,8 +276,11 @@ def make_top_companies(top_df: pd.DataFrame) -> TopCompaniesShort:
 def prep_companies_overview_df(
     state: State,
     overview_df: pd.DataFrame,
+    *,
+    include_trends_overview: bool = True,
 ) -> pd.DataFrame:
     """Prep companies overview dataframe."""
+
     overview_df = (
         overview_df.groupby(
             [
@@ -350,10 +355,11 @@ def prep_companies_overview_df(
             "parent_company_name",
         ],
         columns=["store_tag_source"],
-        values=["percentage", "installs_d30"],
+        values=["app_count", "percentage", "installs_d30"],
     )
 
-    # Flatten the multi-level columns
+    # Flatten the multi-level columns so each source has raw app counts alongside
+    # the existing market share and installs aggregates.
     pivoted_df.columns = [f"{col[1]}_{col[0]}" for col in pivoted_df.columns]
     overview_df = pivoted_df.reset_index()
     overview_df = overview_df.merge(
@@ -424,6 +430,53 @@ def prep_companies_overview_df(
         how="left",
         validate="m:1",
     )
+    company_categories_df = (
+        _get_normalized_company_categories(state)
+        .dropna(subset=["company_domain", "company_type"])
+        .drop_duplicates(subset=["company_domain"], keep="first")
+        .rename(columns={"company_type": "company_category"})[
+            ["company_domain", "company_category"]
+        ]
+    )
+    overview_df = overview_df.merge(
+        company_categories_df,
+        on="company_domain",
+        how="left",
+        validate="1:1",
+    )
+
+    if include_trends_overview:
+        company_trends_overview_df = get_company_trends_overview(state)
+        # TODO: The trends can have different values due to parent vs not parent grouping
+        # Trends currently have no parent grouping
+        # companies overview_df does have parent grouping
+        tcols = company_trends_overview_df.columns
+        if not company_trends_overview_df.empty:
+            overview_df = overview_df.merge(
+                company_trends_overview_df,
+                on="company_domain",
+                how="left",
+                validate="1:1",
+            )
+            # base_cols = [
+            #     "company_domain",
+            #     "company_name",
+            #     "company_category",
+            #     "parent_company_domain",
+            #     "parent_company_name",
+            #     "company_logo_url",
+            #     "parent_company_logo_url",
+            # ]
+            # inscols = [x for x in overview_df.columns if "installs_d30" in x]
+            # csv_df = overview_df[
+            #     base_cols + inscols + [tcol for tcol in tcols if tcol not in base_cols]
+            # ]
+            # csv_df.rename(
+            #     columns={tcol: tcol.replace("_latest_", "_") for tcol in tcols},
+            #     inplace=True,
+            # )
+            # logger.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX NEW CSV")
+            # csv_df.to_csv("AppGoblin Mobile Ecosystem 2026 Q1.csv", index=False)
 
     return overview_df
 
@@ -482,7 +535,11 @@ def get_overviews(
         tag_source_category_app_counts=tag_source_category_app_counts,
     )
 
-    companies_df = prep_companies_overview_df(state, companies_df)
+    companies_df = prep_companies_overview_df(
+        state,
+        companies_df,
+        include_trends_overview=category is None,
+    )
 
     results = CompaniesOverview(
         companies_overview=companies_df.to_dict(orient="records"),
@@ -687,10 +744,12 @@ def make_company_stats(df: pd.DataFrame) -> CompanyCategoryOverview:
     )
 
     (
+        sdk_ios_installs_d30,
         sdk_android_installs_d30,
         adstxt_direct_android_installs_d30,
         adstxt_reseller_android_installs_d30,
     ) = (
+        res_installs_d30["sdk_ios"],
         res_installs_d30["sdk_android"],
         res_installs_d30["adstxt_direct_android"],
         res_installs_d30["adstxt_reseller_android"],
@@ -718,6 +777,7 @@ def make_company_stats(df: pd.DataFrame) -> CompanyCategoryOverview:
         sdk_android_total_apps=int(sdk_android_total_apps),
         sdk_total_apps=int(sdk_total_apps),
         sdk_android_installs_d30=int(sdk_android_installs_d30),
+        sdk_ios_installs_d30=int(sdk_ios_installs_d30),
         api_ios_total_apps=int(api_ios_total_apps),
         api_android_total_apps=int(api_android_total_apps),
         api_total_apps=int(api_total_apps),
@@ -830,6 +890,14 @@ def get_count(df: pd.DataFrame, condition: pd.Series, column: str) -> int:
     """Safely get count from filtered DataFrame."""
     filtered = df[condition][column]
     return int(filtered.iloc[0]) if not filtered.empty else 0
+
+
+def _get_normalized_company_categories(state: State) -> pd.DataFrame:
+    """Return company categories with mediation rows removed."""
+    company_categories = get_company_categories(state)
+    return company_categories.loc[
+        company_categories["company_type_slug"] != "mediation"
+    ].copy()
 
 
 def get_company_types_for_domain(state: State, company_domain: str) -> list[str]:
@@ -1065,10 +1133,8 @@ def make_company_trends_summary(df: pd.DataFrame) -> CompanyTrendsSummary | None
 
 def build_company_trends_payload(state: State, company_domain: str) -> CompanyTrends:
     """Build the full quarterly company trends payload."""
-    trends_df = get_combined_companies_history(
-        state=state, company_domain=company_domain
-    )
-    trends = make_company_trends(trends_df)
+    df = get_combined_companies_history(state=state, company_domain=company_domain)
+    trends = make_company_trends(df)
     if trends is None:
         return CompanyTrends()
     return trends
@@ -1080,9 +1146,6 @@ def build_company_overview_base(
     """Compute company overview data shared by private and public endpoints."""
     df = get_company_stats(
         state=state, company_domain=company_domain, app_category=category
-    )
-    trends_df = get_combined_companies_history(
-        state=state, company_domain=company_domain
     )
 
     if df["tag_source"].str.contains("app_ads").any():
@@ -1146,7 +1209,10 @@ def build_company_overview_base(
     overview.adstxt_ad_domain_overview = final_ad_domain_overview
     overview.adstxt_publishers_overview = final_publishers_overview
     overview.mediation_adapters = mediation_adapters
-    overview.trends_summary = make_company_trends_summary(trends_df)
+    overview.trends_summary = get_company_trends_summary(
+        state=state,
+        company_domain=company_domain,
+    )
     return overview
 
 
@@ -1157,6 +1223,23 @@ def build_private_company_overview_payload(
     return build_company_overview_base(
         state=state, company_domain=company_domain, category=category
     )
+
+
+def _strip_private_companies_overview_metrics(
+    overview: CompaniesOverview,
+) -> CompaniesOverview:
+    """Remove unstable QoQ app-scan metrics from private companies overview rows."""
+    dropped_keys = {
+        "google_sdk_latest_apps_added",
+        "apple_sdk_latest_apps_added",
+        "google_app_ads_direct_latest_apps_added",
+        "apple_app_ads_direct_latest_apps_added",
+    }
+    overview.companies_overview = [
+        {key: value for key, value in company.items() if key not in dropped_keys}
+        for company in overview.companies_overview
+    ]
+    return overview
 
 
 class CompaniesController(Controller):
@@ -1176,7 +1259,7 @@ class CompaniesController(Controller):
         """
         start = time.perf_counter() * 1000
 
-        overview = get_overviews(state=state)
+        overview = _strip_private_companies_overview_metrics(get_overviews(state=state))
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(f"GET /api/companies took {duration}ms")
         return overview
@@ -1195,7 +1278,9 @@ class CompaniesController(Controller):
         """
         start = time.perf_counter() * 1000
 
-        overview = get_overviews(state=state, category=category)
+        overview = _strip_private_companies_overview_metrics(
+            get_overviews(state=state, category=category)
+        )
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(f"GET /api/companies/categories/{category} took {duration}ms")
         return overview

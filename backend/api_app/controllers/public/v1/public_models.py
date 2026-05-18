@@ -23,6 +23,35 @@ class PublicCompanyListItem:
     api_ip_resolved_country: str | None = None
     total_app_count: int | None = None
     installs_d30: int | None = None
+    google_sdk_app_count: int | None = None
+    apple_sdk_app_count: int | None = None
+    google_api_call_app_count: int | None = None
+    apple_api_call_app_count: int | None = None
+    google_app_ads_direct_app_count: int | None = None
+    apple_app_ads_direct_app_count: int | None = None
+    google_app_ads_reseller_app_count: int | None = None
+    apple_app_ads_reseller_app_count: int | None = None
+    trends_latest_period: str | None = None
+    google_sdk_latest_pct_market_share: float | None = None
+    apple_sdk_latest_pct_market_share: float | None = None
+    google_app_ads_direct_latest_pct_market_share: float | None = None
+    apple_app_ads_direct_latest_pct_market_share: float | None = None
+    google_sdk_latest_pct_market_share_change: float | None = None
+    apple_sdk_latest_pct_market_share_change: float | None = None
+    google_app_ads_direct_latest_pct_market_share_change: float | None = None
+    apple_app_ads_direct_latest_pct_market_share_change: float | None = None
+    google_sdk_latest_total_apps: int | None = None
+    apple_sdk_latest_total_apps: int | None = None
+    google_app_ads_direct_latest_total_apps: int | None = None
+    apple_app_ads_direct_latest_total_apps: int | None = None
+    google_sdk_latest_apps_added: int | None = None
+    apple_sdk_latest_apps_added: int | None = None
+    google_app_ads_direct_latest_apps_added: int | None = None
+    apple_app_ads_direct_latest_apps_added: int | None = None
+    google_sdk_latest_apps_lost: int | None = None
+    apple_sdk_latest_apps_lost: int | None = None
+    google_app_ads_direct_latest_apps_lost: int | None = None
+    apple_app_ads_direct_latest_apps_lost: int | None = None
 
 
 @dataclass
@@ -38,11 +67,26 @@ class PublicCategoryCompanyStats:
     sdk_ios_total_apps: int = 0
     sdk_total_apps: int = 0
     api_android_total_apps: int = 0
-    api_ios_total_apps: int = 0
     api_total_apps: int = 0
     sdk_android_installs_d30: int = 0
+    sdk_ios_installs_d30: int = 0
     adstxt_direct_android_installs_d30: int = 0
     adstxt_reseller_android_installs_d30: int = 0
+
+
+@dataclass
+class PublicCompanyTrends:
+    """Public quarterly trend summary flattened by platform and signal source."""
+
+    latest_period: str | None = None
+    android_app_ads_direct_market_share_change_pct: float | None = None
+    android_app_ads_direct_apps_lost: int | None = None
+    android_sdk_api_market_share_change_pct: float | None = None
+    android_sdk_api_apps_lost: int | None = None
+    ios_app_ads_direct_market_share_change_pct: float | None = None
+    ios_app_ads_direct_apps_lost: int | None = None
+    ios_sdk_api_market_share_change_pct: float | None = None
+    ios_sdk_api_apps_lost: int | None = None
 
 
 @dataclass
@@ -71,6 +115,7 @@ class PublicCompanyOverview:
     metrics: PublicCategoryCompanyStats = field(
         default_factory=PublicCategoryCompanyStats
     )
+    trends: PublicCompanyTrends | None = None
     mapping_notice: str | None = None
     datasets: CompanyDatasets | None = None
 

@@ -5,6 +5,7 @@ import type { RequestHandler } from './$types';
 import { STRIPE_WEBHOOK_SECRET } from '$env/static/private';
 
 export const POST: RequestHandler = async ({ request }) => {
+	console.log('Stripe webhook request received');
 	const body = await request.text();
 	const sig = request.headers.get('stripe-signature');
 
@@ -22,16 +23,18 @@ export const POST: RequestHandler = async ({ request }) => {
 	}
 
 	try {
+		console.log('Stripe webhook event verified', event.id, event.type);
 		switch (event.type) {
 			case 'checkout.session.completed': {
 				const session = event.data.object;
 				await handleCheckoutSessionCompleted(session);
 				break;
 			}
+			case 'customer.subscription.created':
 			case 'customer.subscription.updated':
 			case 'customer.subscription.deleted': {
 				const subscription = event.data.object;
-				await handleSubscriptionUpdated(subscription);
+				await handleSubscriptionUpdated(subscription, event.created);
 				break;
 			}
 			default:
@@ -63,11 +66,12 @@ async function handleCheckoutSessionCompleted(session: any) {
 	}
 }
 
-async function handleSubscriptionUpdated(subscription: any) {
+async function handleSubscriptionUpdated(subscription: any, eventCreatedAt?: number) {
 	console.log('Handling subscription updated', subscription.id);
 
 	const customerId = subscription.customer as string;
 	const status = subscription.status;
+	const cancelAtPeriodEnd = Boolean(subscription.cancel_at_period_end);
 	const lineItem = subscription.items?.data?.[0];
 	const priceId = lineItem?.price?.id;
 	const productField = lineItem?.price?.product;
@@ -98,10 +102,19 @@ async function handleSubscriptionUpdated(subscription: any) {
 		: new Date();
 	const currentPeriodEnd = currentPeriodEndVal ? new Date(currentPeriodEndVal * 1000) : new Date();
 
-	const cancelAt = subscription.cancel_at ? new Date(subscription.cancel_at * 1000) : null;
-	const cancelRequestedAt = subscription.canceled_at
-		? new Date(subscription.canceled_at * 1000)
-		: null;
+	const cancelAtUnix = cancelAtPeriodEnd
+		? (currentPeriodEndVal ?? null)
+		: (subscription.cancel_at ??
+			subscription.ended_at ??
+			subscription.canceled_at ??
+			(status === 'canceled' ? currentPeriodEndVal : null));
+	const cancelRequestedAtUnix = cancelAtPeriodEnd
+		? (subscription.canceled_at ?? eventCreatedAt ?? null)
+		: status === 'canceled'
+			? (subscription.canceled_at ?? eventCreatedAt ?? null)
+			: null;
+	const cancelAt = cancelAtUnix ? new Date(cancelAtUnix * 1000) : null;
+	const cancelRequestedAt = cancelRequestedAtUnix ? new Date(cancelRequestedAtUnix * 1000) : null;
 	const trialEnd = subscription.trial_end ? new Date(subscription.trial_end * 1000) : null;
 
 	console.log('Looking up user for customer', customerId);

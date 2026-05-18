@@ -29,7 +29,9 @@ export const load: PageServerLoad = async ({ locals, params, parent }) => {
 	if (user) {
 		const row = await db.queryOne<{ status: string }>(
 			`SELECT status FROM subscriptions
-			 WHERE user_id = $1 AND status IN ('active', 'trialing')
+			 WHERE user_id = $1
+			 AND status IN ('active', 'trialing')
+			 AND (cancel_at IS NULL OR cancel_at > NOW())
 			 ORDER BY created_at DESC LIMIT 1`,
 			[user.id]
 		);

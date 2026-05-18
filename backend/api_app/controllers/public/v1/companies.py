@@ -22,10 +22,12 @@ from api_app.controllers.public.v1.public_models import (
     PublicCategoryCompanyStats,
     PublicCompanyListItem,
     PublicCompanyOverview,
+    PublicCompanyTrends,
 )
 from api_app.guards import validate_api_key
 from api_app.models import (
     CategoryCompanyStats,
+    CompanyTrendsSummary,
 )
 from api_app.models import (
     CompanyCategoryOverview as PrivateCompanyCategoryOverview,
@@ -70,6 +72,13 @@ def _optional_int(value: object) -> int | None:
     if _is_missing_value(value):
         return None
     return int(value)
+
+
+def _optional_float(value: object) -> float | None:
+    """Normalize optional floats from serialized pandas rows."""
+    if _is_missing_value(value):
+        return None
+    return float(value)
 
 
 def _api_key_guard(request: ASGIConnection, route_handler: BaseRouteHandler) -> None:
@@ -149,6 +158,85 @@ def _to_public_company_list_item(
         ),
         total_app_count=_optional_int(company.get("total_app_count")),
         installs_d30=_optional_int(company.get("installs_d30")),
+        google_sdk_app_count=_optional_int(company.get("google_sdk_app_count")),
+        apple_sdk_app_count=_optional_int(company.get("apple_sdk_app_count")),
+        google_api_call_app_count=_optional_int(
+            company.get("google_api_call_app_count")
+        ),
+        apple_api_call_app_count=_optional_int(company.get("apple_api_call_app_count")),
+        google_app_ads_direct_app_count=_optional_int(
+            company.get("google_app_ads_direct_app_count")
+        ),
+        apple_app_ads_direct_app_count=_optional_int(
+            company.get("apple_app_ads_direct_app_count")
+        ),
+        google_app_ads_reseller_app_count=_optional_int(
+            company.get("google_app_ads_reseller_app_count")
+        ),
+        apple_app_ads_reseller_app_count=_optional_int(
+            company.get("apple_app_ads_reseller_app_count")
+        ),
+        trends_latest_period=_optional_string(company.get("trends_latest_period")),
+        google_sdk_latest_pct_market_share=_optional_float(
+            company.get("google_sdk_latest_pct_market_share")
+        ),
+        apple_sdk_latest_pct_market_share=_optional_float(
+            company.get("apple_sdk_latest_pct_market_share")
+        ),
+        google_app_ads_direct_latest_pct_market_share=_optional_float(
+            company.get("google_app_ads_direct_latest_pct_market_share")
+        ),
+        apple_app_ads_direct_latest_pct_market_share=_optional_float(
+            company.get("apple_app_ads_direct_latest_pct_market_share")
+        ),
+        google_sdk_latest_pct_market_share_change=_optional_float(
+            company.get("google_sdk_latest_pct_market_share_change")
+        ),
+        apple_sdk_latest_pct_market_share_change=_optional_float(
+            company.get("apple_sdk_latest_pct_market_share_change")
+        ),
+        google_app_ads_direct_latest_pct_market_share_change=_optional_float(
+            company.get("google_app_ads_direct_latest_pct_market_share_change")
+        ),
+        apple_app_ads_direct_latest_pct_market_share_change=_optional_float(
+            company.get("apple_app_ads_direct_latest_pct_market_share_change")
+        ),
+        google_sdk_latest_total_apps=_optional_int(
+            company.get("google_sdk_latest_total_apps")
+        ),
+        apple_sdk_latest_total_apps=_optional_int(
+            company.get("apple_sdk_latest_total_apps")
+        ),
+        google_app_ads_direct_latest_total_apps=_optional_int(
+            company.get("google_app_ads_direct_latest_total_apps")
+        ),
+        apple_app_ads_direct_latest_total_apps=_optional_int(
+            company.get("apple_app_ads_direct_latest_total_apps")
+        ),
+        google_sdk_latest_apps_added=_optional_int(
+            company.get("google_sdk_latest_apps_added")
+        ),
+        apple_sdk_latest_apps_added=_optional_int(
+            company.get("apple_sdk_latest_apps_added")
+        ),
+        google_app_ads_direct_latest_apps_added=_optional_int(
+            company.get("google_app_ads_direct_latest_apps_added")
+        ),
+        apple_app_ads_direct_latest_apps_added=_optional_int(
+            company.get("apple_app_ads_direct_latest_apps_added")
+        ),
+        google_sdk_latest_apps_lost=_optional_int(
+            company.get("google_sdk_latest_apps_lost")
+        ),
+        apple_sdk_latest_apps_lost=_optional_int(
+            company.get("apple_sdk_latest_apps_lost")
+        ),
+        google_app_ads_direct_latest_apps_lost=_optional_int(
+            company.get("google_app_ads_direct_latest_apps_lost")
+        ),
+        apple_app_ads_direct_latest_apps_lost=_optional_int(
+            company.get("apple_app_ads_direct_latest_apps_lost")
+        ),
     )
 
 
@@ -178,14 +266,38 @@ def _to_public_category_company_stats(
         sdk_ios_total_apps=metrics.sdk_ios_total_apps,
         sdk_total_apps=metrics.sdk_total_apps,
         api_android_total_apps=metrics.api_android_total_apps,
-        api_ios_total_apps=metrics.api_ios_total_apps,
         api_total_apps=metrics.api_total_apps,
         sdk_android_installs_d30=metrics.sdk_android_installs_d30,
+        sdk_ios_installs_d30=metrics.sdk_ios_installs_d30,
         adstxt_direct_android_installs_d30=metrics.adstxt_direct_android_installs_d30,
         adstxt_reseller_android_installs_d30=(
             metrics.adstxt_reseller_android_installs_d30
         ),
     )
+
+
+def _to_public_company_trends(
+    trends: CompanyTrendsSummary | None,
+) -> PublicCompanyTrends | None:
+    """Project private company trend summaries into the public contract."""
+    if trends is None:
+        return None
+
+    public_trends = PublicCompanyTrends(latest_period=trends.latest_period)
+    for source_key, source_summary in trends.sources.items():
+        market_share_field = f"{source_key}_market_share_change_pct"
+        apps_lost_field = f"{source_key}_apps_lost"
+
+        if hasattr(public_trends, market_share_field):
+            setattr(
+                public_trends,
+                market_share_field,
+                source_summary.latest_pct_market_share_change_pct,
+            )
+        if hasattr(public_trends, apps_lost_field):
+            setattr(public_trends, apps_lost_field, source_summary.latest_apps_lost)
+
+    return public_trends
 
 
 def _build_public_company_overview_payload(
@@ -207,6 +319,7 @@ def _build_public_company_overview_payload(
 
     return PublicCompanyOverview(
         metrics=metrics_overview,
+        trends=_to_public_company_trends(overview.trends_summary),
         company_types=overview.company_types,
         domain_is_mapped=domain_is_mapped,
         mapping_notice=mapping_notice,
@@ -225,8 +338,8 @@ class V1CompaniesController(Controller):
         """Return a list of all queryable company domains.
 
         Each entry contains the exact ``company_domain``, display ``name``,
-        parent company mapping fields, and lightweight summary fields already
-        present in the overview data.
+        parent company mapping fields, and the latest overview trend snapshot
+        fields already present in the shared companies index.
         """
         start = time.perf_counter() * 1000
         overview = get_overviews(state=state)

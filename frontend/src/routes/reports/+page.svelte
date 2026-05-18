@@ -3,8 +3,22 @@
 		slug: string;
 		url: string;
 		title: string;
+		displayTitle: string;
 		period: string | null;
 		sortValue: number;
+		publishedDate: string | null;
+		seriesKey: string;
+		seriesLabel: string;
+		seriesDescription: string;
+		highlights: string[];
+	};
+
+	type ReportGroup = {
+		key: string;
+		label: string;
+		description: string;
+		highlights: string[];
+		reports: ReportEntry[];
 	};
 
 	const monthNames = [
@@ -27,40 +41,159 @@
 	const reportsPageDescription =
 		'Browse AppGoblin mobile app marketing reports for ad buyers and mobile app publishers. Compare ad network reach, creatives, UA trends, and advertiser strategies.';
 
-	// Class constants
-	const tagClass =
-		'inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-surface-200 dark:bg-surface-700 text-surface-900 dark:text-surface-50';
-	const reportCardClass =
-		'group block h-full rounded-lg border border-surface-200 dark:border-surface-700 bg-white dark:bg-surface-900 p-6 shadow-sm hover:shadow-lg transition-all hover:-translate-y-1 hover:border-purple-400 dark:hover:border-purple-500';
-	const reportTitleClass =
-		'text-2xl font-bold text-surface-900 dark:text-surface-100 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition';
-	const reportPeriodClass = 'text-xl font-semibold  mt-2';
-	const ctaLinkClass =
-		'flex items-center gap-2 text-sm font-semibold text-purple-600 dark:text-purple-400 group-hover:gap-3 transition-all';
+	const titleCaseOverrides: Record<string, string> = {
+		q1: 'Q1',
+		q2: 'Q2',
+		q3: 'Q3',
+		q4: 'Q4',
+		sdk: 'SDK',
+		sdks: 'SDKs',
+		ua: 'UA'
+	};
 
-	function toTitleCase(value: string): string {
-		return value
-			.split('-')
-			.filter(Boolean)
-			.map((segment) => segment.charAt(0).toUpperCase() + segment.slice(1))
-			.join(' ');
+	const reportSeriesCatalog = [
+		{
+			key: 'ad-user-acquisition',
+			match: (slug: string) => slug.startsWith('ad-user-acquisition-'),
+			label: 'Ad User Acquisition',
+			description:
+				'Monthly reads on advertiser activity, creative rotation, and network share changes across the mobile ad market.',
+			highlights: ['Creatives', 'Top advertisers', 'Network share']
+		},
+		{
+			key: 'app-ecosystem-report',
+			match: (slug: string) =>
+				slug.startsWith('app-ecosystem-report-') || slug.startsWith('mobile-apps-growth-sdks-'),
+			label: 'App Ecosystem Report',
+			description:
+				'Longer-range reports on SDK adoption, app infrastructure, and market shifts across the mobile app ecosystem.',
+			highlights: ['SDK footprint', 'Infrastructure shifts', 'App ecosystem trends']
+		}
+	] as const;
+
+	function formatSegment(segment: string): string {
+		const normalized = segment.toLowerCase();
+
+		if (titleCaseOverrides[normalized]) {
+			return titleCaseOverrides[normalized];
+		}
+
+		return normalized.charAt(0).toUpperCase() + normalized.slice(1);
 	}
 
-	function getDateFromSlug(slug: string): string | null {
+	function toTitleCase(value: string): string {
+		return value.split('-').filter(Boolean).map(formatSegment).join(' ');
+	}
+
+	function getDateSortValue(date: string | null): number {
+		if (!date) {
+			return 0;
+		}
+
+		return Number(date.replaceAll('-', ''));
+	}
+
+	function getPublishedDateFromSource(source: string | undefined): string | null {
+		if (!source) {
+			return null;
+		}
+
+		const reportPublishedDateMatch = source.match(/const\s+reportPublishedDate\s*=\s*'([^']+)'/);
+
+		if (reportPublishedDateMatch) {
+			return reportPublishedDateMatch[1];
+		}
+
+		const inlineDatePublishedMatch = source.match(/datePublished:\s*'([^']+)'/);
+
+		if (inlineDatePublishedMatch) {
+			return inlineDatePublishedMatch[1];
+		}
+
+		return null;
+	}
+
+	function parseReportSlug(slug: string): {
+		title: string;
+		period: string | null;
+	} {
 		const segments = slug.split('-');
 		const yearIndex = segments.findIndex((segment) => /^\d{4}$/.test(segment));
+		let title = toTitleCase(slug);
+		let period: string | null = null;
 
 		if (yearIndex !== -1) {
-			const year = segments[yearIndex];
-			const monthSegment = segments[yearIndex + 1];
-			const monthIndex = monthNames.indexOf(monthSegment?.toLowerCase() ?? '');
+			const year = Number(segments[yearIndex]);
+			const previousSegment = segments[yearIndex - 1]?.toLowerCase() ?? '';
+			const nextSegment = segments[yearIndex + 1]?.toLowerCase() ?? '';
+			const quarterBefore = /^q[1-4]$/.test(previousSegment) ? previousSegment.toUpperCase() : null;
+			const quarterAfter = /^q[1-4]$/.test(nextSegment) ? nextSegment.toUpperCase() : null;
+			const quarter = quarterBefore ?? quarterAfter;
+			const monthIndex = monthNames.indexOf(nextSegment);
+			const titleEndIndex = quarterBefore ? yearIndex - 1 : yearIndex;
+			const nameParts = segments.slice(0, Math.max(titleEndIndex, 0));
 
-			if (monthIndex >= 0) {
-				const monthNum = String(monthIndex + 1).padStart(2, '0');
-				return `${year}-${monthNum}-01`;
+			title = nameParts.length > 0 ? toTitleCase(nameParts.join('-')) : toTitleCase(slug);
+
+			if (!Number.isNaN(year)) {
+				if (monthIndex >= 0) {
+					period = `${formatSegment(nextSegment)} ${year}`;
+				} else if (quarter) {
+					period = `${quarter} ${year}`;
+				} else {
+					const trailingParts = segments
+						.slice(yearIndex + 1)
+						.map(formatSegment)
+						.join(' ');
+					period = [trailingParts, year].filter(Boolean).join(' ').trim() || `${year}`;
+				}
 			}
 		}
-		return null;
+
+		return {
+			title,
+			period
+		};
+	}
+
+	function getReportSeries(slug: string, fallbackTitle: string) {
+		const series = reportSeriesCatalog.find((entry) => entry.match(slug));
+
+		if (series) {
+			return series;
+		}
+
+		return {
+			key: slug,
+			label: fallbackTitle,
+			description:
+				'Archive report covering mobile app marketing trends, advertiser behavior, and publisher-relevant market changes.',
+			highlights: ['Market analysis']
+		};
+	}
+
+	function getReportDisplayTitle(
+		slug: string,
+		title: string,
+		period: string | null,
+		seriesLabel: string
+	): string {
+		if (slug.startsWith('ad-user-acquisition-') && period) {
+			return `${period} ${seriesLabel}`;
+		}
+
+		const ecosystemQuarterMatch = slug.match(/^app-ecosystem-report-(q[1-4])-(\d{4})$/i);
+
+		if (ecosystemQuarterMatch) {
+			const [, quarter, year] = ecosystemQuarterMatch;
+			return `${year} ${quarter.toUpperCase()} ${seriesLabel}`;
+		}
+
+		if (slug.startsWith('mobile-apps-growth-sdks-') && period) {
+			return `${period} ${seriesLabel}`;
+		}
+
+		return title;
 	}
 
 	function generateJsonLdArticles(): Array<{
@@ -80,7 +213,6 @@
 		};
 	}> {
 		return reports.map((report, index) => {
-			const datePublished = getDateFromSlug(report.slug);
 			const absoluteReportUrl = `https://appgoblin.info${report.url}`;
 			return {
 				'@type': 'ListItem',
@@ -88,12 +220,11 @@
 				item: {
 					'@type': ['Report', 'NewsArticle'],
 					'@id': `${absoluteReportUrl}#report`,
-					name: report.title,
-					headline: report.title,
-					description:
-						'Mobile app marketing report covering user acquisition trends, ad network distribution, creative performance, and publisher-relevant insights.',
+					name: report.displayTitle,
+					headline: report.displayTitle,
+					description: report.seriesDescription,
 					url: absoluteReportUrl,
-					...(datePublished && { datePublished }),
+					...(report.publishedDate && { datePublished: report.publishedDate }),
 					inLanguage: 'en',
 					audience: [
 						{ '@type': 'Audience', audienceType: 'Mobile ad buyers' },
@@ -112,51 +243,72 @@
 	}
 
 	const reportModules = import.meta.glob('./*/+page.svelte');
+	const reportSourceModules = import.meta.glob('./*/+page.svelte', {
+		eager: true,
+		query: '?raw',
+		import: 'default'
+	}) as Record<string, string>;
 
 	const reports: ReportEntry[] = Object.keys(reportModules)
 		.map((path) => {
 			const match = path.match(/\.\/([^/]+)\/\+page\.svelte$/);
 			const slug = match ? match[1] : path;
-			const segments = slug.split('-');
-			const yearIndex = segments.findIndex((segment) => /^\d{4}$/.test(segment));
-
-			let title = toTitleCase(slug);
-			let period: string | null = null;
-			let sortValue = 0;
-
-			if (yearIndex !== -1) {
-				const nameParts = segments.slice(0, yearIndex);
-				const periodParts = segments.slice(yearIndex);
-				const year = Number(periodParts[0]);
-				const monthSegment = periodParts[1] ?? '';
-				const monthIndex = monthNames.indexOf(monthSegment.toLowerCase());
-
-				title = nameParts.length > 0 ? toTitleCase(nameParts.join('-')) : toTitleCase(slug);
-
-				if (!Number.isNaN(year)) {
-					sortValue = year * 100 + (monthIndex >= 0 ? monthIndex + 1 : 0);
-					if (monthIndex >= 0) {
-						const monthName = monthSegment.charAt(0).toUpperCase() + monthSegment.slice(1);
-						period = `${monthName} ${year}`;
-					} else {
-						const additional = periodParts.slice(1).map(toTitleCase).join(' ');
-						period = [additional, year].filter(Boolean).join(' ').trim() || `${year}`;
-					}
-				}
-			}
+			const parsed = parseReportSlug(slug);
+			const series = getReportSeries(slug, parsed.title);
+			const publishedDate = getPublishedDateFromSource(reportSourceModules[path]);
+			const displayTitle = getReportDisplayTitle(slug, parsed.title, parsed.period, series.label);
 
 			return {
 				slug,
 				url: `/reports/${slug}`,
-				title,
-				period,
-				sortValue
+				title: parsed.title,
+				displayTitle,
+				period: parsed.period,
+				sortValue: getDateSortValue(publishedDate),
+				publishedDate,
+				seriesKey: series.key,
+				seriesLabel: series.label,
+				seriesDescription: series.description,
+				highlights: [...series.highlights]
 			};
 		})
 		.sort((a, b) => {
 			if (b.sortValue !== a.sortValue) return b.sortValue - a.sortValue;
 			return a.title.localeCompare(b.title);
 		});
+
+	const latestReports = reports.slice(0, 3);
+	const latestReportSlugs = new Set(latestReports.map((report) => report.slug));
+	const newestReportPeriod = latestReports[0]?.period ?? null;
+
+	const reportGroups: ReportGroup[] = Array.from(
+		reports
+			.reduce((groups, report) => {
+				const existingGroup = groups.get(report.seriesKey);
+
+				if (existingGroup) {
+					existingGroup.reports.push(report);
+					return groups;
+				}
+
+				groups.set(report.seriesKey, {
+					key: report.seriesKey,
+					label: report.seriesLabel,
+					description: report.seriesDescription,
+					highlights: [...report.highlights],
+					reports: [report]
+				});
+
+				return groups;
+			}, new Map<string, ReportGroup>())
+			.values()
+	).sort((a, b) => {
+		const leftSort = a.reports[0]?.sortValue ?? 0;
+		const rightSort = b.reports[0]?.sortValue ?? 0;
+
+		if (rightSort !== leftSort) return rightSort - leftSort;
+		return a.label.localeCompare(b.label);
+	});
 </script>
 
 <svelte:head>
@@ -257,53 +409,127 @@
 	})}<\/script>`}
 </svelte:head>
 
-<div class="container mx-auto max-w-6xl px-4 py-12">
-	<!-- Enhanced Header Section -->
-	<header class="mb-16">
-		<div class="text-center mb-12">
-			<h1 class="mt-6 text-5xl md:text-6xl font-bold text-surface-900 dark:text-surface-50">
-				Mobile App Marketing Reports
-			</h1>
-			<p class="mt-4 text-xl text-surface-600 dark:text-surface-400 max-w-3xl mx-auto">
-				Research-grade report library for mobile ad buyers and app publishers. Compare UA trends, ad
-				network coverage, creative distribution, and advertiser strategy shifts.
+<div class="mx-auto max-w-6xl space-y-12 p-6 md:space-y-16 md:p-8">
+	<header class="space-y-4">
+		<div>
+			<h1 class="text-3xl font-bold md:text-4xl">Mobile App Marketing Reports</h1>
+			<p class="mt-2 max-w-3xl text-sm md:text-base">
+				Research-grade report library for mobile ad buyers and app publishers. Start with the newest
+				releases, then browse each report series to compare recurring coverage areas.
 			</p>
 		</div>
 	</header>
 
-	<section>
-		<h2 class="text-2xl font-bold text-surface-900 dark:text-surface-50 mb-8">Available Reports</h2>
-		<div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-			{#each reports as report}
-				<a href={report.url} class={reportCardClass}>
-					<!-- Report Header -->
-					<div class="flex items-start justify-between mb-4">
-						<div class="flex-1">
-							<h3 class={reportTitleClass}>{report.title}</h3>
+	{#if latestReports.length > 0}
+		<section class="space-y-6 py-2">
+			<div class="flex flex-col gap-2 lg:flex-row lg:items-start lg:justify-between">
+				<div>
+					<h2 class="text-2xl font-bold tracking-tight md:text-3xl">Latest Reports</h2>
+					<p class="mt-2 text-sm md:text-base">
+						The newest releases across all report types, ordered by publication period.
+					</p>
+				</div>
+				{#if newestReportPeriod}
+					<span class="badge preset-filled-success-300-700 text-xs"
+						>Newest: {newestReportPeriod}</span
+					>
+				{/if}
+			</div>
+
+			<div class="grid gap-4 lg:grid-cols-3">
+				{#each latestReports as report}
+					<a
+						href={report.url}
+						class="block rounded-lg border border-surface-300-700 p-5 no-underline hover:no-underline"
+					>
+						<div class="flex flex-wrap gap-2">
+							<span class="badge preset-filled-primary-500 text-xs">{report.seriesLabel}</span>
 							{#if report.period}
-								<p class={reportPeriodClass}>{report.period}</p>
+								<span class="badge preset-filled-surface-700-300 text-xs">{report.period}</span>
 							{/if}
 						</div>
-					</div>
+						<h3 class="mt-4 text-lg font-bold">{report.displayTitle}</h3>
+						<p class="mt-2 text-sm">
+							{report.period && report.displayTitle !== report.title
+								? report.seriesDescription
+								: report.period
+									? report.title
+									: report.seriesDescription}
+						</p>
+						<div class="mt-4 flex flex-wrap gap-2">
+							{#each report.highlights as highlight}
+								<span class="badge preset-filled-surface-700-300 text-xs">{highlight}</span>
+							{/each}
+						</div>
+						<p class="mt-4 text-sm font-semibold">Open report</p>
+					</a>
+				{/each}
+			</div>
+		</section>
+	{/if}
 
-					<!-- Report Features -->
-					<div class="flex flex-wrap gap-2 mb-6">
-						<span class={tagClass}>Creatives</span>
-						<span class={tagClass}>Top Advertisers</span>
-						<span class={tagClass}>Ad Network Analytics</span>
-					</div>
-
-					<!-- CTA -->
-					<div class={ctaLinkClass}>
-						<span>View Report</span>
-						<svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-							<path
-								d="M12.293 3.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 11-1.414-1.414L14.586 9H4a1 1 0 110-2h10.586l-2.293-2.293a1 1 0 010-1.414z"
-							/>
-						</svg>
-					</div>
-				</a>
-			{/each}
+	<section class="space-y-6 pt-2 md:space-y-8 md:pt-4">
+		<div>
+			<h2 class="text-2xl font-bold tracking-tight md:text-3xl">Browse By Report Type</h2>
+			<p class="mt-2 text-sm md:text-base">
+				Each series keeps its own archive, making it easier to find the latest installment for a
+				specific coverage area.
+			</p>
 		</div>
+
+		{#each reportGroups as group}
+			<section class="space-y-4 py-3 md:space-y-5">
+				<div class="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+					<div>
+						<div class="flex flex-wrap items-center gap-2">
+							<h3 class="text-xl font-bold">{group.label}</h3>
+							<span class="badge preset-filled-surface-700-300 text-xs">
+								{group.reports.length}
+								{group.reports.length === 1 ? 'report' : 'reports'}
+							</span>
+						</div>
+						<p class="mt-1 max-w-3xl text-sm">{group.description}</p>
+					</div>
+
+					<div class="flex flex-wrap gap-2">
+						{#each group.highlights as highlight}
+							<span class="badge preset-filled-surface-700-300 text-xs">{highlight}</span>
+						{/each}
+					</div>
+				</div>
+
+				<div class="grid gap-3 lg:grid-cols-2">
+					{#each group.reports as report}
+						<a
+							href={report.url}
+							class="block rounded-lg border border-surface-300-700 p-4 no-underline hover:no-underline"
+						>
+							<div class="flex flex-wrap gap-2">
+								{#if report.period}
+									<span class="badge preset-filled-surface-700-300 text-xs">{report.period}</span>
+								{/if}
+								{#if latestReportSlugs.has(report.slug)}
+									<span class="badge preset-filled-success-300-700 text-xs">Latest release</span>
+								{/if}
+							</div>
+
+							<div class="mt-3 flex items-start justify-between gap-3">
+								<div>
+									<h4 class="text-lg font-bold">{report.displayTitle}</h4>
+									<p class="mt-1 text-sm">
+										{report.period && report.displayTitle !== report.title
+											? report.seriesDescription
+											: report.period
+												? report.title
+												: report.seriesDescription}
+									</p>
+								</div>
+								<span class="text-sm font-semibold">View</span>
+							</div>
+						</a>
+					{/each}
+				</div>
+			</section>
+		{/each}
 	</section>
 </div>
