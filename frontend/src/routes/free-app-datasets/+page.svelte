@@ -16,17 +16,31 @@
 		description: string;
 	}
 
+	interface DatasetMeta {
+		name: string;
+		description: string;
+		rows: string;
+		icon: any;
+		columns: ColumnDef[];
+		fileFormat: string;
+		section: 'raw' | 'overview';
+	}
+
+	interface DatasetCard {
+		dataset: Dataset;
+		meta: DatasetMeta;
+	}
+
 	// Static metadata keyed by substring match on S3 object key
-	const datasetMeta: Record<
-		string,
-		{ name: string; description: string; rows: string; icon: any; columns: ColumnDef[] }
-	> = {
+	const datasetMeta: Record<string, DatasetMeta> = {
 		'store-apps-metrics': {
 			name: 'App Metrics',
 			description:
 				'All apps in our database with their store metrics and metadata. Covers both Google Play and Apple App Store.',
 			rows: '~5 million rows',
 			icon: Database,
+			fileFormat: '.tsv.xz',
+			section: 'raw',
 			columns: [
 				{ name: 'store', description: 'App store — "Android" (Google Play) or "iOS" (Apple).' },
 				{
@@ -60,6 +74,8 @@
 				'English-language app store descriptions for apps in our database. Useful for NLP, topic modelling, keyword extraction, and market research.',
 			rows: 'Millions of apps',
 			icon: FileText,
+			fileFormat: '.tsv.xz',
+			section: 'raw',
 			columns: [
 				{ name: 'appstore', description: 'App store — "Android" (Google Play) or "iOS" (Apple).' },
 				{
@@ -87,6 +103,8 @@
 				'English-language app store descriptions for apps in our database. Useful for NLP, topic modelling, keyword extraction, and market research.',
 			rows: 'Millions of apps',
 			icon: FileText,
+			fileFormat: '.tsv.xz',
+			section: 'raw',
 			columns: [
 				{ name: 'appstore', description: 'App store - "Android" (Google Play) or "iOS" (Apple).' },
 				{
@@ -107,6 +125,77 @@
 					description: 'When the description was last updated in the AppGoblin database.'
 				}
 			]
+		},
+		'appgoblin app sdks growth q4 2025': {
+			name: 'App SDK Growth Q4 2025',
+			description:
+				'Raw CSV export behind the AppGoblin SDK growth report. Compares SDK app counts across two periods so you can spot providers gaining or losing app integrations.',
+			rows: 'Report snapshot CSV',
+			icon: FlaskConical,
+			fileFormat: '.csv',
+			section: 'overview',
+			columns: [
+				{
+					name: 'Company',
+					description: 'Company domain or primary identifier for the SDK provider.'
+				},
+				{ name: 'Company Name', description: 'Human-readable company name.' },
+				{ name: 'Company Category', description: 'AppGoblin company category for the provider.' },
+				{ name: 'Apps Analyzed', description: 'Number of apps included in the comparison set.' },
+				{ name: 'H1 Apps', description: 'Apps using the SDK in the first comparison period.' },
+				{ name: 'H2 Apps', description: 'Apps using the SDK in the second comparison period.' },
+				{ name: 'Net', description: 'Net change in app count between the two periods.' },
+				{
+					name: 'Change Percent',
+					description: 'Relative change in SDK footprint between the two periods.'
+				},
+				{ name: 'Logo URL', description: 'Path to the company logo asset when available.' }
+			]
+		},
+		'appgoblin mobile ecosystem 2026 q1': {
+			name: 'Mobile App Ecosystem 2026 Q1',
+			description:
+				'Raw CSV export from the AppGoblin mobile ecosystem report. Summarizes company footprint across ad-tech and SDK surfaces, including installs, market share, and app adds or losses.',
+			rows: 'Report snapshot CSV',
+			icon: FlaskConical,
+			fileFormat: '.csv',
+			section: 'overview',
+			columns: [
+				{ name: 'company_domain', description: 'Primary domain used to identify the company.' },
+				{ name: 'company_name', description: 'Human-readable company name.' },
+				{ name: 'company_category', description: 'AppGoblin company category assignment.' },
+				{
+					name: 'parent_company_domain',
+					description: 'Parent company domain when the company rolls up to another entity.'
+				},
+				{ name: 'parent_company_name', description: 'Parent company name when available.' },
+				{
+					name: 'installs_d30',
+					description: 'Combined trailing-30-day installs represented by the company footprint.'
+				},
+				{ name: 'trends_period', description: 'Reporting period for the ecosystem snapshot.' },
+				{
+					name: 'apple_app_ads_direct_pct_market_share',
+					description: 'Apple app-ads.txt direct market share percentage.'
+				},
+				{ name: 'apple_sdk_pct_market_share', description: 'Apple SDK market share percentage.' },
+				{
+					name: 'google_app_ads_direct_pct_market_share',
+					description: 'Google Play app-ads.txt direct market share percentage.'
+				},
+				{
+					name: 'google_sdk_pct_market_share',
+					description: 'Google Play SDK market share percentage.'
+				},
+				{
+					name: 'apple_app_ads_direct_apps_added',
+					description: 'Apps added on Apple app-ads.txt direct coverage in the latest period.'
+				},
+				{
+					name: 'google_sdk_apps_lost',
+					description: 'Apps lost on Google Play SDK coverage in the latest period.'
+				}
+			]
 		}
 	};
 
@@ -115,12 +204,15 @@
 		for (const [pattern, meta] of Object.entries(datasetMeta)) {
 			if (lowerKey.includes(pattern)) return meta;
 		}
+		const section: DatasetMeta['section'] = key.toLowerCase().endsWith('.csv') ? 'overview' : 'raw';
 		return {
 			name: key,
 			description: 'App dataset export.',
 			rows: '',
 			icon: Database,
-			columns: [] as ColumnDef[]
+			columns: [] as ColumnDef[],
+			fileFormat: key.toLowerCase().endsWith('.csv') ? '.csv' : '.tsv.xz',
+			section
 		};
 	}
 
@@ -155,7 +247,18 @@
 		}, 2000);
 	}
 
-	const datasets: Dataset[] = $derived(data.datasets ?? []);
+	const datasets: Dataset[] = $derived(
+		(data.datasets ?? []).filter((dataset: Dataset) => !dataset.key.endsWith('/'))
+	);
+	const datasetCards: DatasetCard[] = $derived(
+		datasets.map((dataset) => ({ dataset, meta: getMetaForKey(dataset.key) }))
+	);
+	const rawDatasets: DatasetCard[] = $derived(
+		datasetCards.filter(({ meta }) => meta.section === 'raw')
+	);
+	const overviewDatasets: DatasetCard[] = $derived(
+		datasetCards.filter(({ meta }) => meta.section === 'overview')
+	);
 	const isLoggedIn = $derived(Boolean(page.data.user));
 	const signupTooltip = 'Create a free account to download and copy dataset URLs.';
 </script>
@@ -239,9 +342,11 @@
 
 	<!-- Format callout -->
 	<div class="text-base">
-		<strong class="">File format:</strong> All files are
-		<code class="font-mono text-primary-800-200">.tsv.xz</code> tab-separated values compressed with XZ.
-		Files uncompressed are a few gigabytes. Use appropriate tools when opening.
+		<strong class="">File formats:</strong> Core catalog exports are
+		<code class="font-mono text-primary-800-200">.tsv.xz</code> files for large-scale datasets,
+		while report-based snapshots are smaller raw
+		<code class="font-mono text-primary-800-200">.csv</code>
+		files.
 	</div>
 
 	<!-- Dataset cards -->
@@ -250,121 +355,262 @@
 			No datasets available at this time. Please check back soon.
 		</div>
 	{:else}
-		<div class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
-			{#each datasets as dataset (dataset.key)}
-				{@const meta = getMetaForKey(dataset.key)}
-				{@const Icon = meta.icon}
-				{@const isCopied = copiedKey === dataset.key}
-				<div class="preset-outlined-surface-100-900 p-5 flex flex-col gap-4">
-					<!-- Card header -->
-					<div class="flex items-start gap-3">
-						<div class="p-2 rounded-lg bg-primary-500/10 shrink-0">
-							<Icon class="h-6 w-6 text-primary-500" />
-						</div>
-						<div class="flex-1 min-w-0">
-							<h2 class="text-xl font-bold">{meta.name}</h2>
-							{#if meta.rows}
-								<p class="text-xs mt-0.5">{meta.rows}</p>
-							{/if}
-						</div>
+		<div class="grid gap-8">
+			{#if rawDatasets.length > 0}
+				<section class="grid gap-3">
+					<div class="grid gap-1">
+						<h2 class="text-2xl font-bold">Raw Datasets</h2>
+						<p class="text-sm max-w-3xl">
+							Large-scale exports for full-database analysis. These are the heavier source files,
+							typically compressed TSV datasets.
+						</p>
 					</div>
+					<div class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
+						{#each rawDatasets as card (card.dataset.key)}
+							{@const dataset = card.dataset}
+							{@const meta = card.meta}
+							{@const Icon = meta.icon}
+							{@const isCopied = copiedKey === dataset.key}
+							<div class="preset-outlined-surface-100-900 p-5 flex flex-col gap-4">
+								<div class="flex items-start gap-3">
+									<div class="p-2 rounded-lg bg-primary-500/10 shrink-0">
+										<Icon class="h-6 w-6 text-primary-500" />
+									</div>
+									<div class="flex-1 min-w-0">
+										<h3 class="text-xl font-bold">{meta.name}</h3>
+										{#if meta.rows}
+											<p class="text-xs mt-0.5">{meta.rows}</p>
+										{/if}
+									</div>
+								</div>
 
-					<!-- Description -->
-					<p class="text-sm">{meta.description}</p>
+								<p class="text-sm">{meta.description}</p>
 
-					<!-- Column definitions -->
-					{#if meta.columns.length > 0}
-						<details class="group">
-							<summary
-								class="cursor-pointer text-xs font-semibold select-none list-none flex items-center gap-1"
-							>
-								<span class="transition-transform group-open:rotate-90 inline-block">▶</span>
-								Column definitions ({meta.columns.length})
-							</summary>
-							<div class="mt-2 overflow-x-auto">
-								<table class="w-full text-xs border-collapse">
-									<thead>
-										<tr class="border-b border-surface-300-700">
-											<th class="text-left py-1 pr-4 font-semibold w-40">Column</th>
-											<th class="text-left py-1 font-semibold">Description</th>
-										</tr>
-									</thead>
-									<tbody>
-										{#each meta.columns as col}
-											<tr class="border-b border-surface-200-800 last:border-0">
-												<td class="py-1.5 pr-4 align-top">
-													<code class="font-mono">{col.name}</code>
-												</td>
-												<td class="py-1.5 text-align-top">{col.description}</td>
-											</tr>
-										{/each}
-									</tbody>
-								</table>
-							</div>
-						</details>
-					{/if}
-
-					<!-- File info -->
-					<div class="flex flex-wrap gap-3 text-xs text-gray-500">
-						<span>
-							<strong class="text-gray-400">File:</strong>
-							<code class="font-mono">{getFileName(dataset.key)}</code>
-						</span>
-						<span>
-							<strong class="text-gray-400">Size:</strong>
-							{formatBytes(dataset.size_bytes)}
-						</span>
-						<span>
-							<strong class="text-gray-400">Updated:</strong>
-							{formatDate(dataset.last_modified)}
-						</span>
-					</div>
-
-					<!-- Actions -->
-					<div class="flex flex-wrap gap-2 mt-auto pt-1">
-						{#if isLoggedIn}
-							<a
-								href={dataset.download_url}
-								download
-								class="btn preset-filled-primary-500 flex items-center gap-2 text-sm"
-							>
-								<Download class="h-4 w-4" />
-								Download
-							</a>
-							<button
-								onclick={() => copyUrl(dataset.download_url, dataset.key)}
-								class="btn preset-tonal flex items-center gap-2 text-sm"
-								aria-label="Copy download URL"
-							>
-								{#if isCopied}
-									<Check class="h-4 w-4 text-green-500" />
-									<span class="text-green-500">Copied!</span>
-								{:else}
-									<Copy class="h-4 w-4" />
-									Copy URL
+								{#if meta.columns.length > 0}
+									<details class="group">
+										<summary
+											class="cursor-pointer text-xs font-semibold select-none list-none flex items-center gap-1"
+										>
+											<span class="transition-transform group-open:rotate-90 inline-block">▶</span>
+											Column definitions ({meta.columns.length})
+										</summary>
+										<div class="mt-2 overflow-x-auto">
+											<table class="w-full text-xs border-collapse">
+												<thead>
+													<tr class="border-b border-surface-300-700">
+														<th class="text-left py-1 pr-4 font-semibold w-40">Column</th>
+														<th class="text-left py-1 font-semibold">Description</th>
+													</tr>
+												</thead>
+												<tbody>
+													{#each meta.columns as col}
+														<tr class="border-b border-surface-200-800 last:border-0">
+															<td class="py-1.5 pr-4 align-top">
+																<code class="font-mono">{col.name}</code>
+															</td>
+															<td class="py-1.5 text-align-top">{col.description}</td>
+														</tr>
+													{/each}
+												</tbody>
+											</table>
+										</div>
+									</details>
 								{/if}
-							</button>
-						{:else}
-							<a
-								href="/auth/signup"
-								title={signupTooltip}
-								class="btn preset-filled-primary-500 flex items-center gap-2 text-sm"
-							>
-								<Download class="h-4 w-4" />
-								Create Free Account
-							</a>
-							<a
-								href="/auth/signup"
-								title={signupTooltip}
-								class="btn preset-tonal flex items-center gap-2 text-sm"
-							>
-								<Copy class="h-4 w-4" />
-								Login To Copy URL
-							</a>
-						{/if}
+
+								<div class="flex flex-wrap gap-3 text-xs text-gray-500">
+									<span>
+										<strong class="text-gray-400">File:</strong>
+										<code class="font-mono">{getFileName(dataset.key)}</code>
+									</span>
+									<span>
+										<strong class="text-gray-400">Format:</strong>
+										{meta.fileFormat}
+									</span>
+									<span>
+										<strong class="text-gray-400">Size:</strong>
+										{formatBytes(dataset.size_bytes)}
+									</span>
+									<span>
+										<strong class="text-gray-400">Updated:</strong>
+										{formatDate(dataset.last_modified)}
+									</span>
+								</div>
+
+								<div class="flex flex-wrap gap-2 mt-auto pt-1">
+									{#if isLoggedIn}
+										<a
+											href={dataset.download_url}
+											download
+											class="btn preset-filled-primary-500 flex items-center gap-2 text-sm"
+										>
+											<Download class="h-4 w-4" />
+											Download
+										</a>
+										<button
+											onclick={() => copyUrl(dataset.download_url, dataset.key)}
+											class="btn preset-tonal flex items-center gap-2 text-sm"
+											aria-label="Copy download URL"
+										>
+											{#if isCopied}
+												<Check class="h-4 w-4 text-green-500" />
+												<span class="text-green-500">Copied!</span>
+											{:else}
+												<Copy class="h-4 w-4" />
+												Copy URL
+											{/if}
+										</button>
+									{:else}
+										<a
+											href="/auth/signup"
+											title={signupTooltip}
+											class="btn preset-filled-primary-500 flex items-center gap-2 text-sm"
+										>
+											<Download class="h-4 w-4" />
+											Create Free Account
+										</a>
+										<a
+											href="/auth/signup"
+											title={signupTooltip}
+											class="btn preset-tonal flex items-center gap-2 text-sm"
+										>
+											<Copy class="h-4 w-4" />
+											Login To Copy URL
+										</a>
+									{/if}
+								</div>
+							</div>
+						{/each}
 					</div>
-				</div>
-			{/each}
+				</section>
+			{/if}
+
+			{#if overviewDatasets.length > 0}
+				<section class="grid gap-3">
+					<div class="grid gap-1">
+						<h2 class="text-2xl font-bold">High-Level Overview Datasets</h2>
+						<p class="text-sm max-w-3xl">
+							Smaller report-derived CSV snapshots that summarize trends and ecosystem structure
+							without requiring the full raw exports.
+						</p>
+					</div>
+					<div class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
+						{#each overviewDatasets as card (card.dataset.key)}
+							{@const dataset = card.dataset}
+							{@const meta = card.meta}
+							{@const Icon = meta.icon}
+							{@const isCopied = copiedKey === dataset.key}
+							<div class="preset-outlined-surface-100-900 p-5 flex flex-col gap-4">
+								<div class="flex items-start gap-3">
+									<div class="p-2 rounded-lg bg-primary-500/10 shrink-0">
+										<Icon class="h-6 w-6 text-primary-500" />
+									</div>
+									<div class="flex-1 min-w-0">
+										<h3 class="text-xl font-bold">{meta.name}</h3>
+										{#if meta.rows}
+											<p class="text-xs mt-0.5">{meta.rows}</p>
+										{/if}
+									</div>
+								</div>
+
+								<p class="text-sm">{meta.description}</p>
+
+								{#if meta.columns.length > 0}
+									<details class="group">
+										<summary
+											class="cursor-pointer text-xs font-semibold select-none list-none flex items-center gap-1"
+										>
+											<span class="transition-transform group-open:rotate-90 inline-block">▶</span>
+											Column definitions ({meta.columns.length})
+										</summary>
+										<div class="mt-2 overflow-x-auto">
+											<table class="w-full text-xs border-collapse">
+												<thead>
+													<tr class="border-b border-surface-300-700">
+														<th class="text-left py-1 pr-4 font-semibold w-40">Column</th>
+														<th class="text-left py-1 font-semibold">Description</th>
+													</tr>
+												</thead>
+												<tbody>
+													{#each meta.columns as col}
+														<tr class="border-b border-surface-200-800 last:border-0">
+															<td class="py-1.5 pr-4 align-top">
+																<code class="font-mono">{col.name}</code>
+															</td>
+															<td class="py-1.5 text-align-top">{col.description}</td>
+														</tr>
+													{/each}
+												</tbody>
+											</table>
+										</div>
+									</details>
+								{/if}
+
+								<div class="flex flex-wrap gap-3 text-xs text-gray-500">
+									<span>
+										<strong class="text-gray-400">File:</strong>
+										<code class="font-mono">{getFileName(dataset.key)}</code>
+									</span>
+									<span>
+										<strong class="text-gray-400">Format:</strong>
+										{meta.fileFormat}
+									</span>
+									<span>
+										<strong class="text-gray-400">Size:</strong>
+										{formatBytes(dataset.size_bytes)}
+									</span>
+									<span>
+										<strong class="text-gray-400">Updated:</strong>
+										{formatDate(dataset.last_modified)}
+									</span>
+								</div>
+
+								<div class="flex flex-wrap gap-2 mt-auto pt-1">
+									{#if isLoggedIn}
+										<a
+											href={dataset.download_url}
+											download
+											class="btn preset-filled-primary-500 flex items-center gap-2 text-sm"
+										>
+											<Download class="h-4 w-4" />
+											Download
+										</a>
+										<button
+											onclick={() => copyUrl(dataset.download_url, dataset.key)}
+											class="btn preset-tonal flex items-center gap-2 text-sm"
+											aria-label="Copy download URL"
+										>
+											{#if isCopied}
+												<Check class="h-4 w-4 text-green-500" />
+												<span class="text-green-500">Copied!</span>
+											{:else}
+												<Copy class="h-4 w-4" />
+												Copy URL
+											{/if}
+										</button>
+									{:else}
+										<a
+											href="/auth/signup"
+											title={signupTooltip}
+											class="btn preset-filled-primary-500 flex items-center gap-2 text-sm"
+										>
+											<Download class="h-4 w-4" />
+											Create Free Account
+										</a>
+										<a
+											href="/auth/signup"
+											title={signupTooltip}
+											class="btn preset-tonal flex items-center gap-2 text-sm"
+										>
+											<Copy class="h-4 w-4" />
+											Login To Copy URL
+										</a>
+									{/if}
+								</div>
+							</div>
+						{/each}
+					</div>
+				</section>
+			{/if}
 		</div>
 	{/if}
 

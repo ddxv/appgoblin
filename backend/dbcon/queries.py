@@ -341,9 +341,7 @@ def get_companies_parent_category_stats(
             params={"app_category": app_category},
         )
         all_company_domains_df = all_company_domains_df[
-            ~all_company_domains_df["company_domain"].isin(
-                parent_company_domains + child_company_domains
-            )
+            ~all_company_domains_df["company_domain"].isin(parent_company_domains)
         ]
         df = pd.concat([parents_df, all_company_domains_df], axis=0)
         if app_category == "game%":
@@ -366,24 +364,15 @@ def get_companies_parent_category_stats(
         all_company_domains_df = pd.read_sql(
             sql.companies_tag_stats, state.dbcon.engine
         )
+        # This table has two types of potential rows that are merged
+        # For example, example.com is a company that has it's own data
+        # but if example.com is also a parent
+        # Then it makes more sense to show the parent company data, and exclude the example.com only data
+        # This make sense here where we are exporting a single flat overview DF data
         all_company_domains_df = all_company_domains_df[
-            ~all_company_domains_df["company_domain"].isin(
-                parent_company_domains
-                # parent_company_domains + child_company_domains
-            )
+            ~all_company_domains_df["company_domain"].isin(parent_company_domains)
         ]
         df = pd.concat([parents_df, all_company_domains_df], axis=0)
-        df[
-            df["company_domain"].isin(
-                [
-                    "applovin.com",
-                    "adjust.com",
-                    "rubiconproject.com",
-                    "magnite.com",
-                    "ignitemediatech.com",
-                ]
-            )
-        ]
     df["store"] = df["store"].replace({1: "Google Play", 2: "Apple App Store"})
     df.loc[df["app_category"].isna(), "app_category"] = "None"
     # NULL domains come from IP addresses called directly in api calls

@@ -7,8 +7,6 @@ import pandas as pd
 from litestar.datastructures import State
 
 from api_app.models import (
-    CompanyTrendPoint,
-    CompanyTrends,
     CompanyTrendsSummary,
     CompanyTrendSummary,
 )
@@ -54,11 +52,6 @@ def _normalize_trend_platform(store: object) -> str:
     return normalized or "unknown"
 
 
-def _make_trend_source_key(platform: str, tag_source: str) -> str:
-    """Build a stable key for a platform + tag source trend series."""
-    return f"{platform}_{tag_source}"
-
-
 def _cap_overview_share_change_pct(value: pd.Series) -> pd.Series:
     """Limit overview QoQ share growth to a readable percentage ceiling."""
     return value.clip(upper=TREND_OVERVIEW_MAX_SHARE_CHANGE_PCT)
@@ -76,42 +69,6 @@ def _optional_float(value: object, digits: int = 4) -> float | None:
     if pd.isna(value):
         return None
     return round(float(value), digits)
-
-
-def _make_company_trend_points(df: pd.DataFrame) -> list[CompanyTrendPoint]:
-    """Convert aggregated quarterly rows into typed trend records."""
-    points: list[CompanyTrendPoint] = []
-    for row in df.to_dict(orient="records"):
-        points.append(
-            CompanyTrendPoint(
-                source_key=str(row["source_key"]),
-                platform=str(row["platform"]),
-                tag_source=str(row["tag_source"]),
-                period=str(row["period"]),
-                year=int(row["year"]),
-                quarter=int(row["quarter"]),
-                total_apps=int(row["total_apps"]),
-                total_apps_in_quarter=int(row["total_apps_in_quarter"]),
-                apps_added=int(row["apps_added"]),
-                apps_lost=int(row["apps_lost"]),
-                net_apps_change=int(row["net_apps_change"]),
-                pct_market_share=_optional_float(row.get("pct_market_share"), digits=6),
-                previous_pct_market_share=_optional_float(
-                    row.get("previous_pct_market_share"), digits=6
-                ),
-                pct_market_share_change=_optional_float(
-                    row.get("pct_market_share_change"), digits=6
-                ),
-                pct_market_share_change_pct=_optional_float(
-                    row.get("pct_market_share_change_pct")
-                ),
-                pct_apps_added=_optional_float(row.get("pct_apps_added")),
-                pct_apps_lost=_optional_float(row.get("pct_apps_lost")),
-                total_apps_change=_optional_int(row.get("total_apps_change")),
-                total_apps_change_pct=_optional_float(row.get("total_apps_change_pct")),
-            )
-        )
-    return points
 
 
 def _aggregate_company_trends(
@@ -200,77 +157,6 @@ def _aggregate_company_trends(
         np.nan,
     )
     return aggregated_df.drop(columns=["tag_source_order"])
-
-
-def make_company_trends(df: pd.DataFrame) -> CompanyTrends | None:
-    """Aggregate quarterly company history into dashboard-friendly trend slices."""
-    aggregated_df = _aggregate_company_trends(df)
-    if aggregated_df.empty:
-        return None
-
-    latest_period = str(aggregated_df.iloc[-1]["period"])
-    history: dict[str, list[CompanyTrendPoint]] = {}
-    past_year: dict[str, list[CompanyTrendPoint]] = {}
-    summaries: dict[str, CompanyTrendSummary] = {}
-
-    for source_key, source_df in aggregated_df.groupby("source_key", sort=False):
-        source_df = source_df.sort_values(["year", "quarter"]).reset_index(drop=True)
-        recent_df = source_df.tail(TREND_HISTORY_WINDOW_QUARTERS).reset_index(drop=True)
-        latest = source_df.iloc[-1]
-
-        history[str(source_key)] = _make_company_trend_points(source_df)
-        past_year[str(source_key)] = _make_company_trend_points(recent_df)
-        summaries[str(source_key)] = CompanyTrendSummary(
-            source_key=str(source_key),
-            platform=str(latest["platform"]),
-            tag_source=str(latest["tag_source"]),
-            latest_period=str(latest["period"]),
-            latest_total_apps=int(latest["total_apps"]),
-            previous_total_apps=_optional_int(latest["previous_total_apps"]),
-            latest_apps_added=int(latest["apps_added"]),
-            latest_apps_lost=int(latest["apps_lost"]),
-            latest_net_apps_change=int(latest["net_apps_change"]),
-            latest_pct_market_share=_optional_float(
-                latest["pct_market_share"], digits=6
-            ),
-            previous_pct_market_share=_optional_float(
-                latest["previous_pct_market_share"], digits=6
-            ),
-            latest_pct_market_share_change=_optional_float(
-                latest["pct_market_share_change"], digits=6
-            ),
-            latest_pct_market_share_change_pct=_optional_float(
-                latest["pct_market_share_change_pct"]
-            ),
-            latest_pct_apps_added=_optional_float(latest["pct_apps_added"]),
-            latest_pct_apps_lost=_optional_float(latest["pct_apps_lost"]),
-            qoq_total_apps_change=_optional_int(latest["total_apps_change"]),
-            qoq_total_apps_change_pct=_optional_float(latest["total_apps_change_pct"]),
-            trailing_year_apps_added=int(recent_df["apps_added"].sum()),
-            trailing_year_apps_lost=int(recent_df["apps_lost"].sum()),
-            trailing_year_net_apps_change=int(recent_df["net_apps_change"].sum()),
-            trailing_year_start_total_apps=int(recent_df.iloc[0]["total_apps"]),
-            trailing_year_end_total_apps=int(recent_df.iloc[-1]["total_apps"]),
-        )
-
-    return CompanyTrends(
-        latest_period=latest_period,
-        sources=summaries,
-        past_year=past_year,
-        history=history,
-    )
-
-
-def make_company_trends_summary(df: pd.DataFrame) -> CompanyTrendsSummary | None:
-    """Return only trend summary metrics for lightweight overview payloads."""
-    trends = make_company_trends(df)
-    if trends is None:
-        return None
-
-    return CompanyTrendsSummary(
-        latest_period=trends.latest_period,
-        sources=trends.sources,
-    )
 
 
 def _build_company_trends_summary_rows(
@@ -403,8 +289,9 @@ def _build_company_trends_overview_df(
         valid_prefix_mask,
         [
             "company_domain",
+            "pct_market_share",
             "pct_market_share_change_pct",
-            "total_apps_change_pct",
+            "total_apps",
             "apps_added",
             "apps_lost",
         ],
@@ -419,8 +306,9 @@ def _build_company_trends_overview_df(
     )
 
     metric_suffixes = {
+        "pct_market_share": "latest_pct_market_share",
         "pct_market_share_change_pct": "latest_pct_market_share_change",
-        "total_apps_change_pct": "latest_total_apps_change_pct",
+        "total_apps": "latest_total_apps",
         "apps_added": "latest_apps_added",
         "apps_lost": "latest_apps_lost",
     }
@@ -437,19 +325,6 @@ def _build_company_trends_overview_df(
             how="left",
         )
     return overview_df
-
-
-def _make_trend_overview_prefix(
-    platform: str | None, tag_source: str | None
-) -> str | None:
-    """Map trend series keys to companies overview row prefixes."""
-    platform_prefix = {"android": "google", "ios": "apple"}.get(platform or "")
-    tag_prefix = {"sdk_api": "sdk", "app_ads_direct": "app_ads_direct"}.get(
-        tag_source or ""
-    )
-    if platform_prefix is None or tag_prefix is None:
-        return None
-    return f"{platform_prefix}_{tag_prefix}"
 
 
 def build_company_trends_static_data(

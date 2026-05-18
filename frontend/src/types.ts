@@ -232,6 +232,14 @@ export interface CompaniesOverviewEntries {
 	api_ip_resolved_country?: string | null;
 	total_app_count?: number | null;
 	installs_d30?: number | null;
+	google_sdk_app_count?: number | null;
+	apple_sdk_app_count?: number | null;
+	google_api_call_app_count?: number | null;
+	apple_api_call_app_count?: number | null;
+	google_app_ads_direct_app_count?: number | null;
+	apple_app_ads_direct_app_count?: number | null;
+	google_app_ads_reseller_app_count?: number | null;
+	apple_app_ads_reseller_app_count?: number | null;
 	tag_source: string;
 	store: string;
 	app_count: number;
@@ -505,15 +513,15 @@ export interface CompanyCategoryOverview {
 	adstxt_publishers_overview: AdsTxtPublishersOverview;
 	trends_summary?: CompanyTrendsSummary | null;
 	mediation_adapters:
-		| {
-				adapter_string: string;
-				adapter_company_domain: string;
-				adapter_company_name: string;
-				adapter_logo_url: string;
-				app_category: string;
-				app_count: number;
-		  }[]
-		| null;
+	| {
+		adapter_string: string;
+		adapter_company_domain: string;
+		adapter_company_name: string;
+		adapter_logo_url: string;
+		app_category: string;
+		app_count: number;
+	}[]
+	| null;
 	categories: {
 		[key: string]: CategoryAppStats;
 	};

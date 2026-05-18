@@ -17,4 +17,6 @@ FROM adtech.combined_companies_history
 WHERE
     ad_domain = :company_domain
     AND (year > 2025 OR (year = 2025 AND quarter >= 2))
+    -- TEMP
+AND NOT (year = 2026 and quarter = 2)
 ORDER BY year ASC, quarter ASC, store ASC, tag_source ASC;

@@ -3,7 +3,7 @@
 		companyDomain: string;
 		companyName?: string;
 		companyLogoUrl?: string;
-		size?: 'sm' | 'md' | 'lg' | 'logo-only';
+		size?: 'sm' | 'md' | 'lg' | 'xl' | 'logo-only';
 	}
 
 	let { companyName, companyDomain, companyLogoUrl, size = 'md' }: Props = $props();
@@ -40,6 +40,20 @@
 					src={`https://media.appgoblin.info/${companyLogoUrl}`}
 					alt={companyLogoUrl}
 					class="w-20 h-20 rounded-sm"
+					loading="lazy"
+				/>
+			{/if}
+			{companyName ?? companyDomain}
+		</div>
+	</a>
+{:else if size === 'xl'}
+	<a href={`${baseUrl}/${companyDomain}`}>
+		<div class="btn preset-tonal hover:preset-tonal-primary text-lg md:text-xl gap-5">
+			{#if companyLogoUrl}
+				<img
+					src={`https://media.appgoblin.info/${companyLogoUrl}`}
+					alt={companyLogoUrl}
+					class="w-24 h-24 rounded-sm"
 					loading="lazy"
 				/>
 			{/if}

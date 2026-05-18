@@ -111,15 +111,27 @@ FAKE_OVERVIEW = FakeCompaniesOverview(
             "api_ip_resolved_country": "US",
             "total_app_count": 50000,
             "installs_d30": 123456789,
+            "google_sdk_app_count": 30000,
+            "apple_sdk_app_count": 12000,
+            "google_api_call_app_count": 4000,
+            "apple_api_call_app_count": 1000,
+            "google_app_ads_direct_app_count": 2000,
+            "apple_app_ads_direct_app_count": 500,
+            "google_app_ads_reseller_app_count": 300,
+            "apple_app_ads_reseller_app_count": 200,
             "trends_latest_period": "2026Q1",
+            "google_sdk_latest_pct_market_share": 18.5,
+            "apple_sdk_latest_pct_market_share": 4.25,
+            "google_app_ads_direct_latest_pct_market_share": 2.75,
+            "apple_app_ads_direct_latest_pct_market_share": None,
             "google_sdk_latest_pct_market_share_change": 20.0,
             "apple_sdk_latest_pct_market_share_change": 100.0,
             "google_app_ads_direct_latest_pct_market_share_change": 75.0,
             "apple_app_ads_direct_latest_pct_market_share_change": None,
-            "google_sdk_latest_total_apps_change_pct": 12.5,
-            "apple_sdk_latest_total_apps_change_pct": 4.0,
-            "google_app_ads_direct_latest_total_apps_change_pct": 9.25,
-            "apple_app_ads_direct_latest_total_apps_change_pct": None,
+            "google_sdk_latest_total_apps": 240,
+            "apple_sdk_latest_total_apps": 40,
+            "google_app_ads_direct_latest_total_apps": 35,
+            "apple_app_ads_direct_latest_total_apps": None,
             "google_sdk_latest_apps_added": 40,
             "apple_sdk_latest_apps_added": 10,
             "google_app_ads_direct_latest_apps_added": 20,
@@ -137,6 +149,7 @@ FAKE_OVERVIEW = FakeCompaniesOverview(
             "api_ip_resolved_country": None,
             "total_app_count": 30000,
             "installs_d30": 450000,
+            "google_sdk_app_count": None,
         },
     ]
 )
@@ -284,15 +297,31 @@ class TestV1CompaniesAuth:
         assert data[0]["api_ip_resolved_country"] == "US"
         assert data[0]["total_app_count"] == 50000
         assert data[0]["installs_d30"] == 123456789
+        assert data[0]["google_sdk_app_count"] == 30000
+        assert data[0]["apple_sdk_app_count"] == 12000
+        assert data[0]["google_api_call_app_count"] == 4000
+        assert data[0]["apple_api_call_app_count"] == 1000
+        assert data[0]["google_app_ads_direct_app_count"] == 2000
+        assert data[0]["apple_app_ads_direct_app_count"] == 500
+        assert data[0]["google_app_ads_reseller_app_count"] == 300
+        assert data[0]["apple_app_ads_reseller_app_count"] == 200
         assert data[0]["trends_latest_period"] == "2026Q1"
+        assert data[0]["google_sdk_latest_pct_market_share"] == 18.5
+        assert data[0]["apple_sdk_latest_pct_market_share"] == 4.25
+        assert data[0]["google_app_ads_direct_latest_pct_market_share"] == 2.75
+        assert data[0]["apple_app_ads_direct_latest_pct_market_share"] is None
         assert data[0]["google_sdk_latest_pct_market_share_change"] == 20.0
         assert data[0]["apple_sdk_latest_pct_market_share_change"] == 100.0
         assert data[0]["google_app_ads_direct_latest_pct_market_share_change"] == 75.0
         assert data[0]["apple_app_ads_direct_latest_pct_market_share_change"] is None
-        assert data[0]["google_sdk_latest_total_apps_change_pct"] == 12.5
-        assert data[0]["apple_sdk_latest_total_apps_change_pct"] == 4.0
-        assert data[0]["google_app_ads_direct_latest_total_apps_change_pct"] == 9.25
-        assert data[0]["apple_app_ads_direct_latest_total_apps_change_pct"] is None
+        assert data[0]["google_sdk_latest_total_apps"] == 240
+        assert data[0]["apple_sdk_latest_total_apps"] == 40
+        assert data[0]["google_app_ads_direct_latest_total_apps"] == 35
+        assert data[0]["apple_app_ads_direct_latest_total_apps"] is None
+        assert "google_sdk_latest_total_apps_change_pct" not in data[0]
+        assert "apple_sdk_latest_total_apps_change_pct" not in data[0]
+        assert "google_app_ads_direct_latest_total_apps_change_pct" not in data[0]
+        assert "apple_app_ads_direct_latest_total_apps_change_pct" not in data[0]
         assert data[0]["google_sdk_latest_apps_added"] == 40
         assert data[0]["apple_sdk_latest_apps_added"] == 10
         assert data[0]["google_app_ads_direct_latest_apps_added"] == 20
@@ -308,15 +337,31 @@ class TestV1CompaniesAuth:
         assert data[1]["api_ip_resolved_country"] is None
         assert data[1]["total_app_count"] == 30000
         assert data[1]["installs_d30"] == 450000
+        assert data[1]["google_sdk_app_count"] is None
+        assert data[1]["apple_sdk_app_count"] is None
+        assert data[1]["google_api_call_app_count"] is None
+        assert data[1]["apple_api_call_app_count"] is None
+        assert data[1]["google_app_ads_direct_app_count"] is None
+        assert data[1]["apple_app_ads_direct_app_count"] is None
+        assert data[1]["google_app_ads_reseller_app_count"] is None
+        assert data[1]["apple_app_ads_reseller_app_count"] is None
         assert data[1]["trends_latest_period"] is None
+        assert data[1]["google_sdk_latest_pct_market_share"] is None
+        assert data[1]["apple_sdk_latest_pct_market_share"] is None
+        assert data[1]["google_app_ads_direct_latest_pct_market_share"] is None
+        assert data[1]["apple_app_ads_direct_latest_pct_market_share"] is None
         assert data[1]["google_sdk_latest_pct_market_share_change"] is None
         assert data[1]["apple_sdk_latest_pct_market_share_change"] is None
         assert data[1]["google_app_ads_direct_latest_pct_market_share_change"] is None
         assert data[1]["apple_app_ads_direct_latest_pct_market_share_change"] is None
-        assert data[1]["google_sdk_latest_total_apps_change_pct"] is None
-        assert data[1]["apple_sdk_latest_total_apps_change_pct"] is None
-        assert data[1]["google_app_ads_direct_latest_total_apps_change_pct"] is None
-        assert data[1]["apple_app_ads_direct_latest_total_apps_change_pct"] is None
+        assert data[1]["google_sdk_latest_total_apps"] is None
+        assert data[1]["apple_sdk_latest_total_apps"] is None
+        assert data[1]["google_app_ads_direct_latest_total_apps"] is None
+        assert data[1]["apple_app_ads_direct_latest_total_apps"] is None
+        assert "google_sdk_latest_total_apps_change_pct" not in data[1]
+        assert "apple_sdk_latest_total_apps_change_pct" not in data[1]
+        assert "google_app_ads_direct_latest_total_apps_change_pct" not in data[1]
+        assert "apple_app_ads_direct_latest_total_apps_change_pct" not in data[1]
         assert data[1]["google_sdk_latest_apps_added"] is None
         assert data[1]["apple_sdk_latest_apps_added"] is None
         assert data[1]["google_app_ads_direct_latest_apps_added"] is None
@@ -958,8 +1003,8 @@ class TestV1Docs:
             == "Endpoint: `GET /api/v1/companies`\n\n"
             "Returns the public company index with queryable company domains, "
             "display names, parent mappings, installs, and the latest trend "
-            "snapshot fields for market-share change, total-app change, apps "
-            "added, and apps lost."
+            "snapshot fields for market share, market-share change, total apps, "
+            "apps added, and apps lost."
         )
         companies_examples = companies_operation["responses"]["200"]["content"][
             "application/json"
@@ -973,9 +1018,19 @@ class TestV1Docs:
         )
         assert (
             companies_examples["companies_index"]["value"][0][
-                "google_sdk_latest_total_apps_change_pct"
+                "google_sdk_latest_pct_market_share"
             ]
-            == 3.91
+            == 18.34
+        )
+        assert (
+            companies_examples["companies_index"]["value"][0][
+                "google_sdk_latest_total_apps"
+            ]
+            == 51_202
+        )
+        assert (
+            "google_sdk_latest_total_apps_change_pct"
+            not in companies_examples["companies_index"]["value"][0]
         )
         company_domain_parameter = next(
             parameter
@@ -988,7 +1043,8 @@ class TestV1Docs:
             company_overview_operation["description"]
             == "Endpoint: `GET /api/v1/companies/{company_domain}`\n\n"
             "Returns the public company overview for a single domain, including "
-            "mapping status, company types, key metrics, and dataset availability."
+            "mapping status, company types, key metrics, a latest-trends summary, "
+            "and dataset availability."
         )
         company_examples = company_overview_operation["responses"]["200"]["content"][
             "application/json"

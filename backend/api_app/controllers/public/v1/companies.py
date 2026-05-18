@@ -158,7 +158,37 @@ def _to_public_company_list_item(
         ),
         total_app_count=_optional_int(company.get("total_app_count")),
         installs_d30=_optional_int(company.get("installs_d30")),
+        google_sdk_app_count=_optional_int(company.get("google_sdk_app_count")),
+        apple_sdk_app_count=_optional_int(company.get("apple_sdk_app_count")),
+        google_api_call_app_count=_optional_int(
+            company.get("google_api_call_app_count")
+        ),
+        apple_api_call_app_count=_optional_int(company.get("apple_api_call_app_count")),
+        google_app_ads_direct_app_count=_optional_int(
+            company.get("google_app_ads_direct_app_count")
+        ),
+        apple_app_ads_direct_app_count=_optional_int(
+            company.get("apple_app_ads_direct_app_count")
+        ),
+        google_app_ads_reseller_app_count=_optional_int(
+            company.get("google_app_ads_reseller_app_count")
+        ),
+        apple_app_ads_reseller_app_count=_optional_int(
+            company.get("apple_app_ads_reseller_app_count")
+        ),
         trends_latest_period=_optional_string(company.get("trends_latest_period")),
+        google_sdk_latest_pct_market_share=_optional_float(
+            company.get("google_sdk_latest_pct_market_share")
+        ),
+        apple_sdk_latest_pct_market_share=_optional_float(
+            company.get("apple_sdk_latest_pct_market_share")
+        ),
+        google_app_ads_direct_latest_pct_market_share=_optional_float(
+            company.get("google_app_ads_direct_latest_pct_market_share")
+        ),
+        apple_app_ads_direct_latest_pct_market_share=_optional_float(
+            company.get("apple_app_ads_direct_latest_pct_market_share")
+        ),
         google_sdk_latest_pct_market_share_change=_optional_float(
             company.get("google_sdk_latest_pct_market_share_change")
         ),
@@ -171,17 +201,17 @@ def _to_public_company_list_item(
         apple_app_ads_direct_latest_pct_market_share_change=_optional_float(
             company.get("apple_app_ads_direct_latest_pct_market_share_change")
         ),
-        google_sdk_latest_total_apps_change_pct=_optional_float(
-            company.get("google_sdk_latest_total_apps_change_pct")
+        google_sdk_latest_total_apps=_optional_int(
+            company.get("google_sdk_latest_total_apps")
         ),
-        apple_sdk_latest_total_apps_change_pct=_optional_float(
-            company.get("apple_sdk_latest_total_apps_change_pct")
+        apple_sdk_latest_total_apps=_optional_int(
+            company.get("apple_sdk_latest_total_apps")
         ),
-        google_app_ads_direct_latest_total_apps_change_pct=_optional_float(
-            company.get("google_app_ads_direct_latest_total_apps_change_pct")
+        google_app_ads_direct_latest_total_apps=_optional_int(
+            company.get("google_app_ads_direct_latest_total_apps")
         ),
-        apple_app_ads_direct_latest_total_apps_change_pct=_optional_float(
-            company.get("apple_app_ads_direct_latest_total_apps_change_pct")
+        apple_app_ads_direct_latest_total_apps=_optional_int(
+            company.get("apple_app_ads_direct_latest_total_apps")
         ),
         google_sdk_latest_apps_added=_optional_int(
             company.get("google_sdk_latest_apps_added")

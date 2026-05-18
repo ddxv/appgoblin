@@ -49,14 +49,18 @@ COMPANIES_INDEX_EXAMPLE_RESPONSE = [
         "total_app_count": 145_516,
         "installs_d30": 96_783_797_489,
         "trends_latest_period": "2026Q1",
+        "google_sdk_latest_pct_market_share": 18.34,
+        "apple_sdk_latest_pct_market_share": 7.91,
+        "google_app_ads_direct_latest_pct_market_share": 2.06,
+        "apple_app_ads_direct_latest_pct_market_share": 0.73,
         "google_sdk_latest_pct_market_share_change": 4.63,
         "apple_sdk_latest_pct_market_share_change": 1.82,
         "google_app_ads_direct_latest_pct_market_share_change": -0.57,
         "apple_app_ads_direct_latest_pct_market_share_change": 0.14,
-        "google_sdk_latest_total_apps_change_pct": 3.91,
-        "apple_sdk_latest_total_apps_change_pct": 2.18,
-        "google_app_ads_direct_latest_total_apps_change_pct": -1.24,
-        "apple_app_ads_direct_latest_total_apps_change_pct": 0.43,
+        "google_sdk_latest_total_apps": 51_202,
+        "apple_sdk_latest_total_apps": 16_887,
+        "google_app_ads_direct_latest_total_apps": 1_904,
+        "apple_app_ads_direct_latest_total_apps": 612,
         "google_sdk_latest_apps_added": 1487,
         "apple_sdk_latest_apps_added": 311,
         "google_app_ads_direct_latest_apps_added": 127,
@@ -124,8 +128,8 @@ V1_OPERATION_DOCS = {
                 "Endpoint: `GET /api/v1/companies`\n\n"
                 "Returns the public company index with queryable company domains, "
                 "display names, parent mappings, installs, and the latest trend "
-                "snapshot fields for market-share change, total-app change, apps "
-                "added, and apps lost."
+                "snapshot fields for market share, market-share change, total "
+                "apps, apps added, and apps lost."
             ),
         }
     },

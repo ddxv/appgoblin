@@ -280,6 +280,7 @@ def prep_companies_overview_df(
     include_trends_overview: bool = True,
 ) -> pd.DataFrame:
     """Prep companies overview dataframe."""
+
     overview_df = (
         overview_df.groupby(
             [
@@ -354,10 +355,11 @@ def prep_companies_overview_df(
             "parent_company_name",
         ],
         columns=["store_tag_source"],
-        values=["percentage", "installs_d30"],
+        values=["app_count", "percentage", "installs_d30"],
     )
 
-    # Flatten the multi-level columns
+    # Flatten the multi-level columns so each source has raw app counts alongside
+    # the existing market share and installs aggregates.
     pivoted_df.columns = [f"{col[1]}_{col[0]}" for col in pivoted_df.columns]
     overview_df = pivoted_df.reset_index()
     overview_df = overview_df.merge(
@@ -445,6 +447,7 @@ def prep_companies_overview_df(
 
     if include_trends_overview:
         company_trends_overview_df = get_company_trends_overview(state)
+        tcols = company_trends_overview_df.columns
         if not company_trends_overview_df.empty:
             overview_df = overview_df.merge(
                 company_trends_overview_df,
@@ -452,6 +455,25 @@ def prep_companies_overview_df(
                 how="left",
                 validate="1:1",
             )
+            base_cols = [
+                "company_domain",
+                "company_name",
+                "company_category",
+                "parent_company_domain",
+                "parent_company_name",
+                "company_logo_url",
+                "parent_company_logo_url",
+            ]
+            inscols = [x for x in overview_df.columns if "installs_d30" in x]
+            csv_df = overview_df[
+                base_cols + inscols + [tcol for tcol in tcols if tcol not in base_cols]
+            ]
+            csv_df.rename(
+                columns={tcol: tcol.replace("_latest_", "_") for tcol in tcols},
+                inplace=True,
+            )
+            logger.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX NEW CSV")
+            csv_df.to_csv("AppGoblin Mobile Ecosystem 2026 Q1.csv", index=False)
 
     return overview_df
 
@@ -1205,10 +1227,6 @@ def _strip_private_companies_overview_metrics(
 ) -> CompaniesOverview:
     """Remove unstable QoQ app-scan metrics from private companies overview rows."""
     dropped_keys = {
-        "google_sdk_latest_total_apps_change_pct",
-        "apple_sdk_latest_total_apps_change_pct",
-        "google_app_ads_direct_latest_total_apps_change_pct",
-        "apple_app_ads_direct_latest_total_apps_change_pct",
         "google_sdk_latest_apps_added",
         "apple_sdk_latest_apps_added",
         "google_app_ads_direct_latest_apps_added",
