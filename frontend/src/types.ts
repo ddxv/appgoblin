@@ -354,6 +354,7 @@ export interface CompanyOverviewApps {
 	app_name: string;
 	app_icon_url: string;
 	api_call: boolean;
+	publisher: boolean;
 	app_ads_direct: boolean;
 	app_ads_reseller: boolean;
 	app_sdk: boolean;

@@ -480,7 +480,7 @@
 		name: data.title,
 		headline: 'AppGoblin Mobile Ecosystem Report Q1 2026',
 		description: data.description,
-		url: 'https://appgoblin.info/reports/mobile-apps-growth-sdks-Q1-2026',
+		url: 'https://appgoblin.info/reports/app-ecosystem-report-Q1-2026',
 		datePublished: '2026-05-17',
 		dateModified: new Date().toISOString().split('T')[0],
 		publisher: {
@@ -510,7 +510,7 @@
 	<title>{data.title}</title>
 	<meta name="description" content={data.description} />
 	<meta name="keywords" content={data.keywords} />
-	<link rel="canonical" href="https://appgoblin.info/reports/mobile-apps-growth-sdks-Q1-2026" />
+	<link rel="canonical" href="https://appgoblin.info/reports/app-ecosystem-report-Q1-2026" />
 	{@html `<script type="application/ld+json">${JSON.stringify(structuredData)}<\/script>`}
 </svelte:head>
 
@@ -562,7 +562,7 @@
 
 			<div class="flex flex-col gap-3 lg:min-w-72">
 				<a
-					href="/reports/mobile-apps-growth-sdks-Q1-2026/download"
+					href="/reports/app-ecosystem-report-Q1-2026/download"
 					class="btn preset-filled-primary-500 inline-flex items-center justify-center gap-2 rounded-2xl p-3 shadow-sm"
 				>
 					<span class="text-black">Download CSV</span>
