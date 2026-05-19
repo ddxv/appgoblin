@@ -26,12 +26,16 @@
 		return !table.every((row) => row.app_ads_direct == false);
 	}
 
+	function tableHasPublisher(table: CompanyOverviewApps[]) {
+		return !table.every((row) => row.publisher == false);
+	}
+
 	const checkIconClass = 'w-4 h-4 text-success-700-300';
 	const xIconClass = 'w-4 h-4 text-error-200';
 
 	let { data, isiOS, companyName = '' }: DataTableProps<CompanyOverviewApps, TValue> = $props();
 
-	const columns = genericColumns([
+	const baseColumns = [
 		{
 			title: 'App',
 			accessorKey: 'name',
@@ -48,6 +52,11 @@
 			isSortable: true
 		},
 		{
+			title: 'Publisher',
+			accessorKey: 'publisher',
+			isSortable: true
+		},
+		{
 			title: 'API Calls',
 			accessorKey: 'api_call',
 			isSortable: true
@@ -57,13 +66,22 @@
 			accessorKey: 'app_ads_direct',
 			isSortable: true
 		}
-	]);
+	];
 
 	const table = createSvelteTable({
 		get data() {
 			return data;
 		},
-		columns,
+		get columns() {
+			return genericColumns(
+				baseColumns.filter((column) => {
+					if (column.accessorKey === 'publisher') {
+						return tableHasPublisher(data);
+					}
+					return true;
+				})
+			);
+		},
 
 		getSortedRowModel: getSortedRowModel(),
 
@@ -88,6 +106,9 @@
 						{/if}
 					</th>
 					<th class="table-cell-fit">SDK</th>
+					{#if tableHasPublisher(data)}
+						<th class="table-cell-fit">Publisher</th>
+					{/if}
 					{#if !isiOS}
 						<th class="table-cell-fit">API Calls</th>
 					{/if}
@@ -130,6 +151,17 @@
 								-
 							{/if}
 						</td>
+						{#if tableHasPublisher(data)}
+							<td class="table-cell-fit">
+								{#if row.original.publisher == true}
+									<Check class={checkIconClass} />
+								{:else if row.original.publisher == false}
+									<X class={xIconClass} />
+								{:else}
+									-
+								{/if}
+							</td>
+						{/if}
 						{#if !isiOS}
 							<td class="table-cell-fit">
 								{#if row.original.api_call == true}

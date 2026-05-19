@@ -17,5 +17,6 @@ SELECT
     ra.installs_d30,
     ra.sdk,
     ra.api_call,
+    false AS publisher,
     ra.app_ads_direct
 FROM ranked_apps AS ra;

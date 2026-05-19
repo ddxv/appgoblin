@@ -1,6 +1,54 @@
-import { redirect } from '@sveltejs/kit';
-import type { PageServerLoad } from './';
+import type { PageServerLoad } from './$types';
 
-export const load: PageServerLoad = () => {
-	redirect(308, '/apps/comparison');
+import { createApiClient } from '$lib/server/api';
+import { getCachedData } from '../../../../../hooks.server';
+
+export const load: PageServerLoad = async ({ fetch, params, url, locals }) => {
+	const api = createApiClient(fetch);
+	const { companyTypes } = await getCachedData();
+	const userId = locals.user?.id;
+	const search1 = url.searchParams.get('search1')?.trim();
+	const search2 = url.searchParams.get('search2')?.trim();
+
+	const [
+		app1,
+		app2,
+		history1,
+		history2,
+		histogram1,
+		histogram2,
+		sdks1,
+		sdks2,
+		searchResult1,
+		searchResult2
+	] = await Promise.all([
+		api.get(`/apps/${params.id1}`, 'App Details'),
+		api.get(`/apps/${params.id2}`, 'App Details'),
+		api.get(`/apps/${params.id1}/global-metrics-history`, 'App Global Metrics History'),
+		api.get(`/apps/${params.id2}/global-metrics-history`, 'App Global Metrics History'),
+		api.get(`/apps/${params.id1}/ratingHistogram`, 'Rating Histogram'),
+		api.get(`/apps/${params.id2}/ratingHistogram`, 'Rating Histogram'),
+		api.get(`/apps/${params.id1}/sdksoverview`, 'App SDKs Overview'),
+		api.get(`/apps/${params.id2}/sdksoverview`, 'App SDKs Overview'),
+		search1 && search1.length >= 3
+			? api.get(`/apps/search/${encodeURIComponent(search1)}`, 'Apps Search', 30000, userId)
+			: null,
+		search2 && search2.length >= 3
+			? api.get(`/apps/search/${encodeURIComponent(search2)}`, 'Apps Search', 30000, userId)
+			: null
+	]);
+
+	return {
+		app1,
+		app2,
+		history1,
+		history2,
+		histogram1,
+		histogram2,
+		sdks1,
+		sdks2,
+		companyTypes,
+		searchResult1,
+		searchResult2
+	};
 };
