@@ -532,7 +532,6 @@ def get_company_adstxt_ad_domain_overview(
     state: State, ad_domain_url: str
 ) -> pd.DataFrame:
     """Get ad domain overview."""
-
     if ad_domain_url in get_parent_companies(state):
         sql_query = sql.company_adstxt_ad_domain_parent_overview
     else:
