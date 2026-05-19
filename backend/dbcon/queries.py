@@ -509,8 +509,13 @@ def get_company_adstxt_publishers_overview(
     state: State, ad_domain_url: str, publisher_id: str | None = None, limit: int = 5
 ) -> pd.DataFrame:
     """Get ad domain publishers overview."""
+    if ad_domain_url in get_parent_companies(state):
+        sql_query = sql.company_adstxt_publishers_parent_overview
+    else:
+        sql_query = sql.company_adstxt_publishers_overview
+
     df = pd.read_sql(
-        sql.company_adstxt_publishers_overview,
+        sql_query,
         state.dbcon.engine,
         params={
             "ad_domain_url": ad_domain_url,
@@ -527,8 +532,14 @@ def get_company_adstxt_ad_domain_overview(
     state: State, ad_domain_url: str
 ) -> pd.DataFrame:
     """Get ad domain overview."""
+
+    if ad_domain_url in get_parent_companies(state):
+        sql_query = sql.company_adstxt_ad_domain_parent_overview
+    else:
+        sql_query = sql.company_adstxt_ad_domain_overview
+
     df = pd.read_sql(
-        sql.company_adstxt_ad_domain_overview,
+        sql_query,
         state.dbcon.engine,
         params={"ad_domain_url": ad_domain_url},
     )

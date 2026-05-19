@@ -280,7 +280,6 @@ def prep_companies_overview_df(
     include_trends_overview: bool = True,
 ) -> pd.DataFrame:
     """Prep companies overview dataframe."""
-
     overview_df = (
         overview_df.groupby(
             [
