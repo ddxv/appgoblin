@@ -1,10 +1,11 @@
 WITH
 include_apps AS (
     SELECT c.store_app
-    FROM adtech.combined_store_apps_companies AS c
+    FROM adtech.combined_app_companies AS c
+    LEFT JOIN domains d ON c.domain_id = d.id
     WHERE
         cardinality(cast(:include_domains AS text [])) > 0
-        AND c.ad_domain = any(cast(:include_domains AS text []))
+        AND d.domain_name = any(cast(:include_domains AS text []))
         AND (
             NOT cast(:require_sdk_api AS boolean)
             OR c.sdk = TRUE
@@ -12,16 +13,17 @@ include_apps AS (
         )
     GROUP BY c.store_app
     HAVING
-        count(DISTINCT c.ad_domain)
+        count(DISTINCT d.domain_name)
         = cardinality(cast(:include_domains AS text []))
 ),
 
 exclude_apps AS (
     SELECT DISTINCT c.store_app
-    FROM adtech.combined_store_apps_companies AS c
+    FROM adtech.combined_app_companies AS c
+    LEFT JOIN domains d ON c.domain_id = d.id
     WHERE
         cardinality(cast(:exclude_domains AS text [])) > 0
-        AND c.ad_domain = any(cast(:exclude_domains AS text []))
+        AND d.domain_name = any(cast(:exclude_domains AS text []))
 )
 
 SELECT
