@@ -33,6 +33,7 @@ from api_app.models import (
     CompanyDetail,
     CompanyDomain,
     CompanyFollowLookup,
+    CompanyOverviewScope,
     CompanyPatternsDict,
     CompanyPlatformOverview,
     CompanyPubIDApps,
@@ -1130,38 +1131,106 @@ def build_company_trends_payload(state: State, company_domain: str) -> CompanyTr
     return trends
 
 
+def _shape_company_ad_domain_overview(df: pd.DataFrame) -> dict | None:
+    """Convert ad-domain overview rows into the nested API response shape."""
+    if df.empty:
+        return None
+    return (
+        df.set_index(["store", "relationship"])
+        .groupby(level=[0, 1])
+        .apply(lambda rows: rows.iloc[0].dropna().to_dict())
+        .unstack(level=0)
+        .to_dict()
+    )
+
+
+def _shape_company_publishers_overview(df: pd.DataFrame) -> dict | None:
+    """Convert publishers overview rows into the nested API response shape."""
+    if df.empty:
+        return None
+    return (
+        df.set_index(["store", "relationship"])
+        .groupby(level=[0, 1])
+        .apply(lambda rows: rows.to_dict(orient="records"))
+        .unstack(level=0)
+        .to_dict()
+    )
+
+
+def _build_company_overview_scope(
+    state: State,
+    company_domain: str,
+    category: str | None = None,
+    include_parent_rollup: bool = True,
+    include_trends: bool = True,
+) -> CompanyOverviewScope:
+    """Build a single scoped company overview for a direct domain or parent rollup."""
+    df = get_company_stats(
+        state=state,
+        company_domain=company_domain,
+        app_category=category,
+        include_parent_rollup=include_parent_rollup,
+    )
+    stats_overview = make_company_stats(df=df)
+
+    if df.empty or not df["tag_source"].str.contains("app_ads").any():
+        ad_domain_overview = None
+        publishers_overview = None
+    else:
+        ad_domain_overview = _shape_company_ad_domain_overview(
+            get_company_adstxt_ad_domain_overview(
+                state=state,
+                ad_domain_url=company_domain,
+                include_parent_rollup=include_parent_rollup,
+            )
+        )
+        publishers_overview = _shape_company_publishers_overview(
+            get_company_adstxt_publishers_overview(
+                state=state,
+                ad_domain_url=company_domain,
+                include_parent_rollup=include_parent_rollup,
+            )
+        )
+
+    return CompanyOverviewScope(
+        categories=stats_overview.categories,
+        adstxt_ad_domain_overview=ad_domain_overview,
+        adstxt_publishers_overview=publishers_overview,
+        trends_summary=(
+            get_company_trends_summary(
+                state=state,
+                company_domain=company_domain,
+            )
+            if include_trends
+            else None
+        ),
+    )
+
+
 def build_company_overview_base(
     state: State, company_domain: str, category: str | None = None
 ) -> CompanyCategoryOverview:
     """Compute company overview data shared by private and public endpoints."""
-    df = get_company_stats(
-        state=state, company_domain=company_domain, app_category=category
+    is_parent_company = company_domain in get_parent_companies(state)
+    domain_overview = _build_company_overview_scope(
+        state=state,
+        company_domain=company_domain,
+        category=category,
+        include_parent_rollup=False,
+        include_trends=True,
     )
-
-    if df["tag_source"].str.contains("app_ads").any():
-        ad_domain_overview = get_company_adstxt_ad_domain_overview(
-            state=state, ad_domain_url=company_domain
+    parent_overview = (
+        _build_company_overview_scope(
+            state=state,
+            company_domain=company_domain,
+            category=category,
+            include_parent_rollup=True,
+            include_trends=False,
         )
-        final_ad_domain_overview = (
-            ad_domain_overview.set_index(["store", "relationship"])
-            .groupby(level=[0, 1])
-            .apply(lambda x: x.iloc[0].dropna().to_dict())
-            .unstack(level=0)
-            .to_dict()
-        )
-        publishers_overview = get_company_adstxt_publishers_overview(
-            state=state, ad_domain_url=company_domain
-        )
-        final_publishers_overview = (
-            publishers_overview.set_index(["store", "relationship"])
-            .groupby(level=[0, 1])
-            .apply(lambda x: x.to_dict(orient="records"))
-            .unstack(level=0)
-            .to_dict()
-        )
-    else:
-        final_ad_domain_overview = None
-        final_publishers_overview = None
+        if is_parent_company
+        else None
+    )
+    active_overview = parent_overview or domain_overview
 
     mediation_companies = get_mediation_companies(state)
 
@@ -1192,17 +1261,18 @@ def build_company_overview_base(
     else:
         mediation_adapters = None
 
-    overview = make_company_stats(df=df)
+    overview = CompanyCategoryOverview(
+        categories=active_overview.categories,
+        adstxt_ad_domain_overview=active_overview.adstxt_ad_domain_overview,
+        adstxt_publishers_overview=active_overview.adstxt_publishers_overview,
+        trends_summary=domain_overview.trends_summary,
+        domain_overview=domain_overview,
+        parent_overview=parent_overview,
+    )
     overview.company_types = get_company_types_for_domain(
         state=state, company_domain=company_domain
     )
-    overview.adstxt_ad_domain_overview = final_ad_domain_overview
-    overview.adstxt_publishers_overview = final_publishers_overview
     overview.mediation_adapters = mediation_adapters
-    overview.trends_summary = get_company_trends_summary(
-        state=state,
-        company_domain=company_domain,
-    )
     return overview
 
 

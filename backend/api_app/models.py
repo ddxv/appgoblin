@@ -384,6 +384,8 @@ class CompanyCategoryOverview:
     adstxt_publishers_overview: dict | None = None
     mediation_adapters: dict | None = None
     trends_summary: "CompanyTrendsSummary | None" = None
+    domain_overview: "CompanyOverviewScope | None" = None
+    parent_overview: "CompanyOverviewScope | None" = None
 
     def add_category(self, category: str) -> None:
         """Add a category to the overview."""
@@ -397,6 +399,16 @@ class CompanyCategoryOverview:
         for key, value in kwargs.items():
             if hasattr(self.categories[category], key):
                 setattr(self.categories[category], key, value)
+
+
+@dataclass
+class CompanyOverviewScope:
+    """Scoped company overview metrics for a direct domain or parent rollup."""
+
+    categories: dict[str, CategoryCompanyStats] = field(default_factory=dict)
+    adstxt_ad_domain_overview: dict | None = None
+    adstxt_publishers_overview: dict | None = None
+    trends_summary: "CompanyTrendsSummary | None" = None
 
 
 @dataclass

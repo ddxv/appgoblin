@@ -411,7 +411,7 @@
 	<div class="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-8 m-2">
 		<div class="preset-outlined-surface-100-900 flex items-center flex-col p-0 md:p-2">
 			<input
-				placeholder="Filter companies..."
+				placeholder="Filter top companies..."
 				value={globalFilter}
 				oninput={(e) => {
 					const value = e.currentTarget.value;
