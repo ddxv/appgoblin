@@ -12,11 +12,17 @@
 
 	import { AppBar } from '@skeletonlabs/skeleton-svelte';
 
+	import discordIconSvg from '$lib/svg/discord-mark-black.svg?raw';
+	import githubIconSvg from '$lib/svg/github-mark.svg?raw';
 	import LoginAccountButton from '$lib/LoginAccountButton.svelte';
 	import NavTabs from '$lib/NavTabs.svelte';
 	import { initializeTheme, resolvedThemeMode, toggleTheme } from '$lib/stores/theme.svelte';
 
 	let { children } = $props();
+	const discordIcon = discordIconSvg.replace('<svg ', '<svg class="h-full w-full" ');
+	const githubIcon = githubIconSvg
+		.replace('<svg ', '<svg class="h-full w-full" ')
+		.replace('fill="#24292f"', 'fill="currentColor"');
 
 	onMount(() => {
 		initializeTheme();
@@ -49,6 +55,33 @@
 
 				<AppBar.Trail class="overflow-hidden flex justify-end">
 					<div class="flex gap-1 md:gap-2">
+						<div class="hidden lg:flex items-center gap-1">
+							<a
+								href="https://discord.gg/7jpWEhkXRW"
+								target="_blank"
+								rel="noreferrer"
+								class="inline-flex h-11 w-11 items-center justify-center rounded-full text-secondary-800-200 transition-colors hover:bg-secondary-900-100/10 hover:text-primary-900-100"
+								aria-label="Join AppGoblin Discord"
+								title="Discord"
+							>
+								<span class="inline-flex h-5 w-5 items-center justify-center xl:h-6 xl:w-6"
+									>{@html discordIcon}</span
+								>
+							</a>
+							<a
+								href="https://github.com/appgoblin-dev/appgoblin"
+								target="_blank"
+								rel="noreferrer"
+								class="inline-flex h-11 w-11 items-center justify-center rounded-full text-secondary-800-200 transition-colors hover:bg-secondary-900-100/10 hover:text-primary-900-100"
+								aria-label="Open AppGoblin GitHub"
+								title="GitHub"
+							>
+								<span class="inline-flex h-5 w-5 items-center justify-center xl:h-6 xl:w-6"
+									>{@html githubIcon}</span
+								>
+							</a>
+						</div>
+
 						<form
 							class="input-group grid-cols-[1fr_auto]"
 							role="search"
