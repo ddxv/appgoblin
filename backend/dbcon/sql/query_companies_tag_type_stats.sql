@@ -5,11 +5,17 @@ SELECT
     COALESCE(ccts.company_name, ccts.company_domain) AS company_name,
     COALESCE(parent_domain.domain_name, resolved_domain.domain_name)
         AS parent_company_domain,
-    COALESCE(parent_company.name, resolved_company.name) AS parent_company_name,
+    COALESCE(parent_company.name, resolved_company.name)
+        AS parent_company_name,
+    CASE
+        WHEN CAST(:app_category AS text) IS NULL THEN 'all' ELSE
+            ccts.app_category
+    END
+        AS app_category,
+    ccts.type_url_slug,
     SUM(ccts.app_count) AS app_count,
     SUM(ccts.installs_d30) AS installs_d30
-FROM
-    frontend.companies_category_tag_type_stats AS ccts
+FROM frontend.companies_category_tag_type_stats AS ccts
 LEFT JOIN domains AS input_domain
     ON ccts.company_domain = input_domain.domain_name
 LEFT JOIN adtech.company_domain_mapping AS cdm
@@ -24,6 +30,10 @@ LEFT JOIN domains AS parent_domain
     ON parent_company.domain_id = parent_domain.id
 WHERE
     ccts.type_url_slug = :type_slug
+    AND (
+        CAST(:app_category AS text) IS NULL
+        OR ccts.app_category LIKE :app_category
+    )
 GROUP BY
     ccts.store,
     ccts.tag_source,
@@ -32,4 +42,10 @@ GROUP BY
     resolved_domain.domain_name,
     resolved_company.name,
     parent_domain.domain_name,
-    parent_company.name;
+    parent_company.name,
+    CASE
+        WHEN CAST(:app_category AS text) IS NULL THEN 'all' ELSE
+            ccts.app_category
+    END,
+    ccts.type_url_slug
+ORDER BY installs_d30 DESC

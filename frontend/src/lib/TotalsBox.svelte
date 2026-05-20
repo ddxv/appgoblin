@@ -89,7 +89,7 @@
 					</tr>
 					{#if trendsSummary}
 						<tr>
-							<td class="py-2 px-1 {rowTitleFont}">Q/Q Change in Market Share</td>
+							<td class="py-2 px-1 {rowTitleFont}">Latest Change in Market Share</td>
 							<td
 								class={`py-2 px-1 ${toneClass(sdkAndroidTrend?.latest_pct_market_share_change_pct)}`}
 							>
@@ -109,7 +109,7 @@
 {#if myType.url_slug === 'ad-networks' || myType.url_slug === 'all-companies'}
 	{#if myTotals.total_companies}
 		<div class="grid p-4">
-			<div class={titleFont}>Advertising Domains Tracked</div>
+			<div class={titleFont}>Company Domains</div>
 			<div class="stat-container">
 				<div class="text-2xl font-bold">
 					{formatNumberLocale(myTotals.total_companies)}

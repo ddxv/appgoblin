@@ -406,12 +406,19 @@ export interface CategoryCompaniesStats {
 export interface CategoryAppStats {
 	sdk_ios_total_apps: number;
 	sdk_android_total_apps: number;
+	sdk_total_apps: number;
+	api_ios_total_apps: number;
+	api_android_total_apps: number;
+	api_total_apps: number;
 	adstxt_direct_ios_total_apps: number;
 	adstxt_direct_android_total_apps: number;
 	adstxt_reseller_ios_total_apps: number;
 	adstxt_reseller_android_total_apps: number;
 	total_apps: number;
 	sdk_android_installs_d30: number;
+	sdk_ios_installs_d30: number;
+	adstxt_direct_android_installs_d30: number;
+	adstxt_reseller_android_installs_d30: number;
 }
 
 export interface CompanyDomain {
@@ -508,11 +515,22 @@ export interface AdsTxtPublishersOverview {
 	};
 }
 
+export interface CompanyOverviewScope {
+	categories: {
+		[key: string]: CategoryAppStats;
+	};
+	adstxt_ad_domain_overview?: AdsTxtAdDomainOverview | null;
+	adstxt_publishers_overview?: AdsTxtPublishersOverview | null;
+	trends_summary?: CompanyTrendsSummary | null;
+}
+
 export interface CompanyCategoryOverview {
 	company_types: string[];
-	adstxt_ad_domain_overview: AdsTxtAdDomainOverview;
-	adstxt_publishers_overview: AdsTxtPublishersOverview;
+	adstxt_ad_domain_overview: AdsTxtAdDomainOverview | null;
+	adstxt_publishers_overview: AdsTxtPublishersOverview | null;
 	trends_summary?: CompanyTrendsSummary | null;
+	domain_overview?: CompanyOverviewScope | null;
+	parent_overview?: CompanyOverviewScope | null;
 	mediation_adapters:
 		| {
 				adapter_string: string;

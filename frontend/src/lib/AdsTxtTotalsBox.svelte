@@ -102,7 +102,7 @@
 			</tr>
 			{#if trendsSummary}
 				<tr>
-					<td class="py-2 px-1 {rowTitleFont}">Q/Q Change in Market Share</td>
+					<td class="py-2 px-1 {rowTitleFont}">Latest Change in Market Share</td>
 					<td
 						class={`py-2 px-1 ${toneClass(directAndroidTrend?.latest_pct_market_share_change_pct)}`}
 					>

@@ -8,7 +8,7 @@ from sqlalchemy import bindparam
 
 from config import get_logger
 from dbcon.connections import PostgresCon
-from dbcon.static import get_child_companies, get_country_map, get_parent_companies
+from dbcon.static import get_country_map, get_parent_companies
 from dbcon.utils import cache_by_params, clean_app_df, sql
 
 logger = get_logger(__name__)
@@ -90,57 +90,27 @@ def get_growth_apps(
     return df
 
 
-def get_companies_tag_type_stats(
+def get_companies_type_stats(
     state: State,
     type_slug: str,
+    category: str | None = None,
 ) -> pd.DataFrame:
-    """Get top companies for a category type."""
+    """Get top companies for a company type, optionally filtered by app category."""
+    if category == "games":
+        category = "game%"
+
     df = pd.read_sql(
         sql.companies_tag_type_stats,
         con=state.dbcon.engine,
-        params={"type_slug": type_slug},
+        params={"type_slug": type_slug, "app_category": category},
     )
-    df["app_category"] = "all"
-    df["type_url_slug"] = type_slug
-    df["store"] = df["store"].replace({1: "Google Play", 2: "Apple App Store"})
-    return df
 
+    # game% -> games label normalization handled in SQL via CASE,
+    # but LIKE 'game%' returns multiple subcategories when filtering,
+    # so normalize the label here if needed
+    if category == "game%":
+        df.loc[df["app_category"].str.startswith("game"), "app_category"] = "games"
 
-def get_companies_category_tag_type_stats(
-    state: State,
-    type_slug: str,
-    app_category: str,
-) -> pd.DataFrame:
-    """Get top companies for a category type."""
-    if app_category == "games":
-        app_category = "game%"
-    df = pd.read_sql(
-        sql.companies_category_tag_type_stats,
-        con=state.dbcon.engine,
-        params={"type_slug": type_slug, "app_category": app_category},
-    )
-    df.loc[df["app_category"].isna(), "app_category"] = "None"
-    if app_category == "game%":
-        df.loc[
-            df["app_category"].str.contains("game"),
-            "app_category",
-        ] = "games"
-    df = (
-        df.groupby(
-            [
-                "store",
-                "tag_source",
-                "company_domain",
-                "company_name",
-                "parent_company_domain",
-                "parent_company_name",
-                "app_category",
-                "type_url_slug",
-            ]
-        )[["app_count", "installs_d30"]]
-        .sum()
-        .reset_index()
-    )
     df["store"] = df["store"].replace({1: "Google Play", 2: "Apple App Store"})
     return df
 
@@ -320,59 +290,46 @@ def get_app_adstxt_overview(state: State, store_id: str) -> pd.DataFrame:
     return df
 
 
-def get_companies_parent_category_stats(
+def get_companies_stats(
     state: State,
     app_category: str | None = None,
 ) -> pd.DataFrame:
-    """Get overview of companies from multiple types like sdk and app-ads.txt."""
-    parent_company_domains = get_parent_companies(state)
-    child_company_domains = get_child_companies(state)
+    """Get overview of companies from multiple tag sources like sdk and app-ads.txt.
+    # This table has two types of potential rows that are merged
+    # For example, example.com is a company that has it's own data
+    # but if example.com is also a parent
+    # Then it makes more sense to show the parent company data, and exclude the example.com only data
+    # This make sense here where we are exporting a single flat overview DF data
+    """
+    # parent_company_domains = get_parent_companies(state)
     if app_category:
         if app_category == "games":
             app_category = "game%"
-        parents_df = pd.read_sql(
-            sql.companies_parent_category_tag_stats,
-            state.dbcon.engine,
-            params={"app_category": app_category},
+
+    df = pd.read_sql(
+        sql.companies_tag_stats,
+        state.dbcon.engine,
+        params={"limitcompanies": 1000, "app_category": app_category},
+    )
+
+    if app_category == "game%":
+        df["app_category"] = "games"
+        df = (
+            df.groupby(
+                [
+                    "company_domain",
+                    "company_name",
+                    "parent_company_domain",
+                    "parent_company_name",
+                    "store",
+                    "app_category",
+                    "tag_source",
+                ]
+            )[["app_count", "installs_d30"]]
+            .sum()
+            .reset_index()
         )
-        all_company_domains_df = pd.read_sql(
-            sql.companies_category_tag_stats,
-            state.dbcon.engine,
-            params={"app_category": app_category},
-        )
-        all_company_domains_df = all_company_domains_df[
-            ~all_company_domains_df["company_domain"].isin(parent_company_domains)
-        ]
-        df = pd.concat([parents_df, all_company_domains_df], axis=0)
-        if app_category == "game%":
-            df["app_category"] = "games"
-            df = (
-                df.groupby(
-                    [
-                        "company_domain",
-                        "company_name",
-                        "store",
-                        "app_category",
-                        "tag_source",
-                    ]
-                )[["app_count", "installs_d30"]]
-                .sum()
-                .reset_index()
-            )
-    else:
-        parents_df = pd.read_sql(sql.companies_parent_tag_stats, state.dbcon.engine)
-        all_company_domains_df = pd.read_sql(
-            sql.companies_tag_stats, state.dbcon.engine
-        )
-        # This table has two types of potential rows that are merged
-        # For example, example.com is a company that has it's own data
-        # but if example.com is also a parent
-        # Then it makes more sense to show the parent company data, and exclude the example.com only data
-        # This make sense here where we are exporting a single flat overview DF data
-        all_company_domains_df = all_company_domains_df[
-            ~all_company_domains_df["company_domain"].isin(parent_company_domains)
-        ]
-        df = pd.concat([parents_df, all_company_domains_df], axis=0)
+
     df["store"] = df["store"].replace({1: "Google Play", 2: "Apple App Store"})
     df.loc[df["app_category"].isna(), "app_category"] = "None"
     # NULL domains come from IP addresses called directly in api calls
@@ -385,19 +342,19 @@ def get_companies_parent_category_stats(
 def get_companies_top(
     state: State,
     type_slug: str | None = None,
-    app_category: str | None = None,
+    category: str | None = None,
     limit: int = 10,
 ) -> pd.DataFrame:
     """Get overview of companies from multiple types like sdk and app-ads.txt."""
-    if app_category == "games":
-        app_category = "game%"
+    if category == "games":
+        category = "game%"
     if type_slug:
         df = pd.read_sql(
             sql.companies_category_type_top,
             state.dbcon.engine,
             params={
                 "type_slug": type_slug,
-                "app_category": app_category,
+                "app_category": category,
                 "mylimit": limit,
             },
         )
@@ -405,19 +362,22 @@ def get_companies_top(
         df = pd.read_sql(
             sql.companies_parent_top,
             state.dbcon.engine,
-            params={"app_category": app_category, "mylimit": limit},
+            params={"app_category": category, "mylimit": limit},
         )
     df["store"] = df["store"].replace({1: "Google Play", 2: "Apple App Store"})
     return df
 
 
 def get_company_stats(
-    state: State, company_domain: str, app_category: str | None = None
+    state: State,
+    company_domain: str,
+    app_category: str | None = None,
+    include_parent_rollup: bool = True,
 ) -> pd.DataFrame:
     """Get overview of companies from multiple types like sdk and app-ads.txt."""
     logger.info(f"query company overview: {company_domain=}")
     parent_companies = get_parent_companies(state)
-    is_parent_company = company_domain in parent_companies
+    is_parent_company = company_domain in parent_companies and include_parent_rollup
     query = (
         sql.company_parent_category_tag_stats
         if is_parent_company
@@ -506,10 +466,14 @@ def get_company_adstxt_publisher_id_apps_raw(
 
 
 def get_company_adstxt_publishers_overview(
-    state: State, ad_domain_url: str, publisher_id: str | None = None, limit: int = 5
+    state: State,
+    ad_domain_url: str,
+    publisher_id: str | None = None,
+    limit: int = 5,
+    include_parent_rollup: bool = True,
 ) -> pd.DataFrame:
     """Get ad domain publishers overview."""
-    if ad_domain_url in get_parent_companies(state):
+    if include_parent_rollup and ad_domain_url in get_parent_companies(state):
         sql_query = sql.company_adstxt_publishers_parent_overview
     else:
         sql_query = sql.company_adstxt_publishers_overview
@@ -529,10 +493,10 @@ def get_company_adstxt_publishers_overview(
 
 
 def get_company_adstxt_ad_domain_overview(
-    state: State, ad_domain_url: str
+    state: State, ad_domain_url: str, include_parent_rollup: bool = True
 ) -> pd.DataFrame:
     """Get ad domain overview."""
-    if ad_domain_url in get_parent_companies(state):
+    if include_parent_rollup and ad_domain_url in get_parent_companies(state):
         sql_query = sql.company_adstxt_ad_domain_parent_overview
     else:
         sql_query = sql.company_adstxt_ad_domain_overview
@@ -642,10 +606,10 @@ def get_company_categories_topn(
 
 
 @cache_by_params
-def get_category_tag_type_stats(
+def get_category_type_stats(
     state: State, type_slug: str, category: str | None = None
 ) -> pd.DataFrame:
-    """Get category tag type stats."""
+    """Get category type stats."""
     df = pd.read_sql(
         sql.category_tag_type_stats,
         state.dbcon.engine,

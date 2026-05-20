@@ -105,8 +105,8 @@ export async function load(event: PageServerLoadEvent) {
 				ufc.id,
 				ufc.company_id,
 				ufc.created_at,
-				NULL::text AS company_name,
-				NULL::text AS company_domain
+				NULL ::text AS company_name,
+				NULL ::text AS company_domain
 			FROM public.user_followed_companies AS ufc
 			WHERE ufc.user_id = $1
 			ORDER BY ufc.created_at DESC

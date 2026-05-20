@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { CompanyFullDetails } from '../../../../types';
+	import type { CompanyFullDetails, CompanyOverviewScope } from '../../../../types';
 	import { Dialog, Portal } from '@skeletonlabs/skeleton-svelte';
 
 	import SideBarCompanies from '$lib/SideBarCompanies.svelte';
@@ -36,6 +36,21 @@
 		data.companyTree.queried_domain === data.companyTree.company_domain
 	);
 	let associatedDomains = $derived(data.companyTree?.domains ?? []);
+	type OverviewTab = 'domain' | 'parent';
+	let selectedOverview: OverviewTab = $state(
+		data.companyDetails.parent_overview ? 'parent' : 'domain'
+	);
+	let fallbackOverview = $derived({
+		categories: data.companyDetails.categories,
+		adstxt_ad_domain_overview: data.companyDetails.adstxt_ad_domain_overview,
+		adstxt_publishers_overview: data.companyDetails.adstxt_publishers_overview,
+		trends_summary: data.companyDetails.trends_summary ?? null
+	} as CompanyOverviewScope);
+	let domainOverview = $derived(data.companyDetails.domain_overview ?? fallbackOverview);
+	let parentOverview = $derived(data.companyDetails.parent_overview ?? null);
+	let activeOverview = $derived(
+		selectedOverview === 'parent' ? (parentOverview ?? domainOverview) : domainOverview
+	);
 </script>
 
 <p class="text-sm mb-4">
@@ -55,19 +70,39 @@
 						{#snippet title()}
 							<span>{companyName}'s Company Apps</span>
 						{/snippet}
+						{#if parentOverview}
+							<div class="px-4 pt-4">
+								<div class="inline-flex rounded-full border border-surface-200-800 p-1 text-sm">
+									<button
+										type="button"
+										class={`rounded-full px-3 py-1 ${selectedOverview === 'parent' ? 'bg-surface-200-800 font-semibold' : 'text-surface-500'}`}
+										onclick={() => (selectedOverview = 'parent')}
+									>
+										Parent
+									</button>
+									<button
+										type="button"
+										class={`rounded-full px-3 py-1 ${selectedOverview === 'domain' ? 'bg-surface-200-800 font-semibold' : 'text-surface-500'}`}
+										onclick={() => (selectedOverview = 'domain')}
+									>
+										Domain
+									</button>
+								</div>
+							</div>
+						{/if}
 
 						<TotalsBox
 							{companyName}
-							myTotals={data.companyDetails.categories.all}
+							myTotals={activeOverview.categories.all}
 							myType={{ name: 'All Companies & Domains', url_slug: 'all-companies' }}
 							hideAdstxtApps={true}
 							isSecondaryDomain={data.companyTree.is_secondary_domain}
-							trendsSummary={data.companyDetails.trends_summary}
+							trendsSummary={activeOverview.trends_summary}
 						/>
-						{#if data.companyDetails && data.companyDetails.adstxt_ad_domain_overview && data.companyDetails.adstxt_ad_domain_overview.google}
+						{#if activeOverview.adstxt_ad_domain_overview && activeOverview.adstxt_ad_domain_overview.google}
 							<AdsTxtTotalsBox
-								myTotals={data.companyDetails.adstxt_ad_domain_overview}
-								trendsSummary={data.companyDetails.trends_summary}
+								myTotals={activeOverview.adstxt_ad_domain_overview}
+								trendsSummary={activeOverview.trends_summary}
 							/>
 						{/if}
 					</WhiteCard>
@@ -91,16 +126,16 @@
 
 				<TotalsBox
 					{companyName}
-					myTotals={data.companyDetails.categories.all}
+					myTotals={activeOverview.categories.all}
 					myType={{ name: 'All Companies & Domains', url_slug: 'all-companies' }}
 					hideAdstxtApps={true}
 					isSecondaryDomain={data.companyTree.is_secondary_domain}
-					trendsSummary={data.companyDetails.trends_summary}
+					trendsSummary={activeOverview.trends_summary}
 				/>
-				{#if data.companyDetails && data.companyDetails.adstxt_ad_domain_overview && data.companyDetails.adstxt_ad_domain_overview.google}
+				{#if activeOverview.adstxt_ad_domain_overview && activeOverview.adstxt_ad_domain_overview.google}
 					<AdsTxtTotalsBox
-						myTotals={data.companyDetails.adstxt_ad_domain_overview}
-						trendsSummary={data.companyDetails.trends_summary}
+						myTotals={activeOverview.adstxt_ad_domain_overview}
+						trendsSummary={activeOverview.trends_summary}
 					/>
 				{/if}
 			</WhiteCard>

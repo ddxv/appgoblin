@@ -32,7 +32,9 @@ STATIC_URLS = [
     "https://appgoblin.info/reports/ad-user-acquisition-2025-september",
     "https://appgoblin.info/reports/ad-user-acquisition-2026-february",
     "https://appgoblin.info/reports/ad-user-acquisition-2026-january",
+    "https://appgoblin.info/reports/ad-user-acquisition-2026-march",
     "https://appgoblin.info/reports/mobile-apps-growth-sdks-2025",
+    "https://appgoblin.info/reports/app-ecosystem-report-Q1-2026",
     "https://appgoblin.info/fastest-growing-apps/google/overall",
     "https://appgoblin.info/fastest-growing-apps/ios/overall",
     "https://appgoblin.info/collections/new_monthly/google/overall",
@@ -221,7 +223,7 @@ company_type_categories["url"] = (
 company_type_categories = set_df_sitemap_columns(company_type_categories, 0.7)
 
 
-# about 1700
+# about 700
 companies = (
     cdf.groupby("company_domain")["app_count"]
     .sum()
