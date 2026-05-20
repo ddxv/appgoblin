@@ -165,6 +165,60 @@ def _make_company_categories_df() -> pd.DataFrame:
     )
 
 
+def _make_parent_company_stats_df(total_apps: int) -> pd.DataFrame:
+    return pd.DataFrame(
+        [
+            {
+                "company_domain": "google.com",
+                "company_name": "Google",
+                "store": "Google Play",
+                "tag_source": "sdk",
+                "app_category": "all",
+                "app_count": total_apps,
+                "installs_total": 1000,
+                "installs_d30": 100,
+            },
+            {
+                "company_domain": "google.com",
+                "company_name": "Google",
+                "store": "Google Play",
+                "tag_source": "app_ads_direct",
+                "app_category": "all",
+                "app_count": max(total_apps // 2, 1),
+                "installs_total": 1000,
+                "installs_d30": 100,
+            },
+        ]
+    )
+
+
+def _make_ad_domain_overview_df(app_count: int) -> pd.DataFrame:
+    return pd.DataFrame(
+        [
+            {
+                "store": "google",
+                "relationship": "direct",
+                "publisher_id_count": app_count,
+                "developer_count": app_count,
+                "app_count": app_count,
+            }
+        ]
+    )
+
+
+def _make_publishers_overview_df(app_count: int) -> pd.DataFrame:
+    return pd.DataFrame(
+        [
+            {
+                "store": "google",
+                "relationship": "direct",
+                "publisher_id": "pub-1",
+                "app_count": app_count,
+            }
+        ]
+    )
+
+
 def test_build_company_overview_base_adds_aggregated_trends():
     """Company detail payload should expose aggregated quarterly trend summaries."""
     state = MagicMock()
@@ -230,6 +284,96 @@ def test_build_company_overview_base_adds_aggregated_trends():
     assert overview.trends_summary.sources[
         "android_app_ads_direct"
     ].latest_pct_market_share_change == pytest.approx(1.5, abs=0.000001)
+
+
+def test_build_company_overview_base_exposes_domain_and_parent_scopes():
+    """Parent-company domains should expose both direct-domain and parent rollup totals."""
+    state = MagicMock()
+    trend_summary = MagicMock(latest_period="2025-Q1", sources={})
+    company_categories_df = _make_company_categories_df()
+    mediation_companies_df = pd.DataFrame(columns=["company_domain"])
+    domain_stats_df = _make_parent_company_stats_df(total_apps=12)
+    parent_stats_df = _make_parent_company_stats_df(total_apps=120)
+    domain_adstxt_df = _make_ad_domain_overview_df(app_count=6)
+    parent_adstxt_df = _make_ad_domain_overview_df(app_count=60)
+    domain_publishers_df = _make_publishers_overview_df(app_count=6)
+    parent_publishers_df = _make_publishers_overview_df(app_count=60)
+
+    def _stats_side_effect(*args, **kwargs):
+        return (
+            parent_stats_df if kwargs.get("include_parent_rollup") else domain_stats_df
+        )
+
+    def _adstxt_side_effect(*args, **kwargs):
+        return (
+            parent_adstxt_df
+            if kwargs.get("include_parent_rollup")
+            else domain_adstxt_df
+        )
+
+    def _publishers_side_effect(*args, **kwargs):
+        return (
+            parent_publishers_df
+            if kwargs.get("include_parent_rollup")
+            else domain_publishers_df
+        )
+
+    with (
+        patch(
+            "api_app.controllers.companies.get_parent_companies",
+            return_value=["google.com"],
+        ),
+        patch(
+            "api_app.controllers.companies.get_company_stats",
+            side_effect=_stats_side_effect,
+        ),
+        patch(
+            "api_app.controllers.companies.get_company_adstxt_ad_domain_overview",
+            side_effect=_adstxt_side_effect,
+        ),
+        patch(
+            "api_app.controllers.companies.get_company_adstxt_publishers_overview",
+            side_effect=_publishers_side_effect,
+        ),
+        patch(
+            "api_app.controllers.companies.get_company_trends_summary",
+            return_value=trend_summary,
+        ),
+        patch(
+            "api_app.controllers.companies.get_company_categories",
+            return_value=company_categories_df,
+        ),
+        patch(
+            "api_app.controllers.companies.get_mediation_companies",
+            return_value=mediation_companies_df,
+        ),
+    ):
+        overview = build_company_overview_base(state=state, company_domain="google.com")
+
+    assert overview.parent_overview is not None
+    assert overview.domain_overview is not None
+    assert overview.categories["all"].sdk_android_total_apps == 120
+    assert overview.parent_overview.categories["all"].sdk_android_total_apps == 120
+    assert overview.domain_overview.categories["all"].sdk_android_total_apps == 12
+    assert (
+        overview.adstxt_ad_domain_overview
+        == overview.parent_overview.adstxt_ad_domain_overview
+    )
+    assert (
+        overview.parent_overview.adstxt_ad_domain_overview["google"]["direct"][
+            "app_count"
+        ]
+        == 60
+    )
+    assert (
+        overview.domain_overview.adstxt_ad_domain_overview["google"]["direct"][
+            "app_count"
+        ]
+        == 6
+    )
+    assert overview.trends_summary is trend_summary
+    assert overview.parent_overview.trends_summary is None
+    assert overview.domain_overview.trends_summary is trend_summary
 
 
 def test_build_company_trends_payload_splits_history_by_platform():

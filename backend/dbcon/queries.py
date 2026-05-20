@@ -369,12 +369,15 @@ def get_companies_top(
 
 
 def get_company_stats(
-    state: State, company_domain: str, app_category: str | None = None
+    state: State,
+    company_domain: str,
+    app_category: str | None = None,
+    include_parent_rollup: bool = True,
 ) -> pd.DataFrame:
     """Get overview of companies from multiple types like sdk and app-ads.txt."""
     logger.info(f"query company overview: {company_domain=}")
     parent_companies = get_parent_companies(state)
-    is_parent_company = company_domain in parent_companies
+    is_parent_company = company_domain in parent_companies and include_parent_rollup
     query = (
         sql.company_parent_category_tag_stats
         if is_parent_company
@@ -463,10 +466,14 @@ def get_company_adstxt_publisher_id_apps_raw(
 
 
 def get_company_adstxt_publishers_overview(
-    state: State, ad_domain_url: str, publisher_id: str | None = None, limit: int = 5
+    state: State,
+    ad_domain_url: str,
+    publisher_id: str | None = None,
+    limit: int = 5,
+    include_parent_rollup: bool = True,
 ) -> pd.DataFrame:
     """Get ad domain publishers overview."""
-    if ad_domain_url in get_parent_companies(state):
+    if include_parent_rollup and ad_domain_url in get_parent_companies(state):
         sql_query = sql.company_adstxt_publishers_parent_overview
     else:
         sql_query = sql.company_adstxt_publishers_overview
@@ -486,10 +493,10 @@ def get_company_adstxt_publishers_overview(
 
 
 def get_company_adstxt_ad_domain_overview(
-    state: State, ad_domain_url: str
+    state: State, ad_domain_url: str, include_parent_rollup: bool = True
 ) -> pd.DataFrame:
     """Get ad domain overview."""
-    if ad_domain_url in get_parent_companies(state):
+    if include_parent_rollup and ad_domain_url in get_parent_companies(state):
         sql_query = sql.company_adstxt_ad_domain_parent_overview
     else:
         sql_query = sql.company_adstxt_ad_domain_overview
