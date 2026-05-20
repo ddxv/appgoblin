@@ -54,8 +54,8 @@ from dbcon.queries import (
     get_category_type_stats,
     get_combined_companies_history,
     get_companies_stats,
-    get_companies_type_stats,
     get_companies_top,
+    get_companies_type_stats,
     get_company_adstxt_ad_domain_overview,
     get_company_adstxt_publisher_id_apps_overview,
     get_company_adstxt_publisher_id_apps_raw,
@@ -241,7 +241,7 @@ def get_company_apps(
     return results
 
 
-def top_companie_by_tag_source(top_df: pd.DataFrame) -> TopCompaniesShort:
+def top_companies_by_tag_source(top_df: pd.DataFrame) -> TopCompaniesShort:
     """Make top companies short."""
 
     def process_top_df(
@@ -499,7 +499,7 @@ def get_overviews(
         how="left",
         validate="m:1",
     )
-    top_companies_short = top_companie_by_tag_source(top_df)
+    top_companies_short = top_companies_by_tag_source(top_df)
 
     if type_slug:
         companies_df = get_companies_type_stats(
@@ -1685,9 +1685,9 @@ class CompaniesController(Controller):
             how="left",
             validate="m:1",
         )
-        top_ad_networks = top_companie_by_tag_source(adnetworks)
-        top_mmps = top_companie_by_tag_source(mmps)
-        top_analytics = top_companie_by_tag_source(analytics)
+        top_ad_networks = top_companies_by_tag_source(adnetworks)
+        top_mmps = top_companies_by_tag_source(mmps)
+        top_analytics = top_companies_by_tag_source(analytics)
 
         top_companies = TopCompaniesOverviewShort(
             adnetworks=top_ad_networks,
