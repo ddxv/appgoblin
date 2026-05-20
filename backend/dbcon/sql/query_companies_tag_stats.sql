@@ -6,16 +6,16 @@
 WITH all_company_stats AS (
     SELECT
         ccts.company_domain,
-        COALESCE(ccts.company_name, ccts.company_domain) AS company_name,
         ccts.store,
         ccts.app_category,
         ccts.tag_source,
+        COALESCE(ccts.company_name, ccts.company_domain) AS company_name,
         COALESCE(parent_domain.domain_name, resolved_domain.domain_name)
             AS parent_company_domain,
         COALESCE(parent_company.name, resolved_company.name)
             AS parent_company_name,
-        COALESCE(SUM(ccts.app_count), 0)     AS app_count,
-        COALESCE(SUM(ccts.installs_d30), 0)  AS installs_d30
+        COALESCE(SUM(ccts.app_count), 0) AS app_count,
+        COALESCE(SUM(ccts.installs_d30), 0) AS installs_d30
     FROM frontend.companies_category_tag_stats AS ccts
     LEFT JOIN domains AS input_domain
         ON ccts.company_domain = input_domain.domain_name
@@ -32,7 +32,10 @@ WITH all_company_stats AS (
     WHERE
         ccts.store IN (1, 2)
         -- Pass NULL to get all categories, or 'game%' etc for filtered view
-        AND (:app_category :: text IS NULL OR ccts.app_category LIKE :app_category)
+        AND (
+            CAST(:app_category AS text) IS NULL
+            OR ccts.app_category LIKE :app_category
+        )
     GROUP BY
         ccts.company_domain,
         ccts.company_name,
@@ -54,12 +57,15 @@ parent_stats AS (
         store,
         app_category,
         tag_source,
-        COALESCE(SUM(app_count), 0)     AS app_count,
-        COALESCE(SUM(installs_d30), 0)  AS installs_d30
+        COALESCE(SUM(app_count), 0) AS app_count,
+        COALESCE(SUM(installs_d30), 0) AS installs_d30
     FROM frontend.companies_parent_category_tag_stats
     WHERE
         store IN (1, 2)
-        AND (:app_category :: text IS NULL OR app_category LIKE :app_category)
+        AND (
+            CAST(:app_category AS text) IS NULL
+            OR app_category LIKE :app_category
+        )
     GROUP BY company_domain, company_name, store, app_category, tag_source
 ),
 
@@ -86,6 +92,7 @@ unioned AS (
     FROM all_company_stats
     WHERE company_domain NOT IN (SELECT company_domain FROM parent_domains)
 ),
+
 company_totals AS (
     SELECT
         company_domain,
@@ -97,16 +104,20 @@ company_totals AS (
         AND company_domain NOT LIKE 'no-%'
     GROUP BY company_domain
 )
+
 SELECT
     u.company_domain,
     u.company_name,
     u.store,
     -- When no category filter, collapse all categories into 'all'
-    CASE WHEN :app_category :: text IS NULL THEN 'all' ELSE u.app_category END AS app_category,
+    CASE
+        WHEN CAST(:app_category AS text) IS NULL THEN 'all' ELSE u.app_category
+    END
+        AS app_category,
     u.tag_source,
     u.parent_company_domain,
     u.parent_company_name,
-    SUM(u.app_count)    AS app_count,
+    SUM(u.app_count) AS app_count,
     SUM(u.installs_d30) AS installs_d30,
     ct.company_rank
 FROM unioned AS u
@@ -120,10 +131,11 @@ GROUP BY
     u.company_domain,
     u.company_name,
     u.store,
-    CASE WHEN :app_category :: text IS NULL THEN 'all' ELSE u.app_category END,
+    CASE
+        WHEN CAST(:app_category AS text) IS NULL THEN 'all' ELSE u.app_category
+    END,
     u.tag_source,
     u.parent_company_domain,
     u.parent_company_name,
     ct.company_rank
-ORDER BY ct.company_rank ASC, u.store, u.tag_source
-;
+ORDER BY ct.company_rank ASC, u.store ASC, u.tag_source ASC;
