@@ -51,11 +51,10 @@ from api_app.models import (
 )
 from config import get_logger
 from dbcon.queries import (
-    get_category_tag_type_stats,
+    get_category_type_stats,
     get_combined_companies_history,
-    get_companies_category_tag_type_stats,
-    get_companies_parent_category_stats,
-    get_companies_tag_type_stats,
+    get_companies_stats,
+    get_companies_type_stats,
     get_companies_top,
     get_company_adstxt_ad_domain_overview,
     get_company_adstxt_publisher_id_apps_overview,
@@ -242,7 +241,7 @@ def get_company_apps(
     return results
 
 
-def make_top_companies(top_df: pd.DataFrame) -> TopCompaniesShort:
+def top_companie_by_tag_source(top_df: pd.DataFrame) -> TopCompaniesShort:
     """Make top companies short."""
 
     def process_top_df(
@@ -492,7 +491,7 @@ def get_overviews(
 
     # Get Top 5 Companies for Plots
     top_df = get_companies_top(
-        state=state, type_slug=type_slug, app_category=category, limit=5
+        state=state, type_slug=type_slug, category=category, limit=5
     )
     top_df = top_df.merge(
         company_logos_df,
@@ -500,38 +499,30 @@ def get_overviews(
         how="left",
         validate="m:1",
     )
-    top_companies_short = make_top_companies(top_df)
+    top_companies_short = top_companie_by_tag_source(top_df)
 
     if type_slug:
-        if category:
-            companies_df = get_companies_category_tag_type_stats(
-                state=state, type_slug=type_slug, app_category=category
-            )
-        else:
-            companies_df = get_companies_tag_type_stats(
-                state=state, type_slug=type_slug
-            )
-    else:
-        companies_df = get_companies_parent_category_stats(state, app_category=category)
-
-    if type_slug:
-        tag_source_category_app_counts = get_category_tag_type_stats(
+        companies_df = get_companies_type_stats(
+            state=state, type_slug=type_slug, category=category
+        )
+        category_app_counts = get_category_type_stats(
             state, type_slug=type_slug, category=category
         )
     else:
-        tag_source_category_app_counts = get_tag_source_category_totals(
+        companies_df = get_companies_stats(state, app_category=category)
+        category_app_counts = get_tag_source_category_totals(
             state, app_category=category
         )
 
     companies_df = companies_df.merge(
-        tag_source_category_app_counts,
+        category_app_counts,
         on=["app_category", "store", "tag_source"],
         validate="m:1",
     )
 
     category_overview_stats = make_companies_stats(
         df=companies_df.copy(),
-        tag_source_category_app_counts=tag_source_category_app_counts,
+        tag_source_category_app_counts=category_app_counts,
     )
 
     companies_df = prep_companies_overview_df(
@@ -1668,7 +1659,7 @@ class CompaniesController(Controller):
         )
 
         adnetworks = get_companies_top(
-            state=state, type_slug="ad-networks", app_category=None, limit=5
+            state=state, type_slug="ad-networks", category=None, limit=5
         )
         adnetworks = adnetworks.merge(
             company_logos_df,
@@ -1677,7 +1668,7 @@ class CompaniesController(Controller):
             validate="m:1",
         )
         mmps = get_companies_top(
-            state=state, type_slug="ad-attribution", app_category=None, limit=5
+            state=state, type_slug="ad-attribution", category=None, limit=5
         )
         mmps = mmps.merge(
             company_logos_df,
@@ -1686,7 +1677,7 @@ class CompaniesController(Controller):
             validate="m:1",
         )
         analytics = get_companies_top(
-            state=state, type_slug="product-analytics", app_category=None, limit=5
+            state=state, type_slug="product-analytics", category=None, limit=5
         )
         analytics = analytics.merge(
             company_logos_df,
@@ -1694,9 +1685,9 @@ class CompaniesController(Controller):
             how="left",
             validate="m:1",
         )
-        top_ad_networks = make_top_companies(adnetworks)
-        top_mmps = make_top_companies(mmps)
-        top_analytics = make_top_companies(analytics)
+        top_ad_networks = top_companie_by_tag_source(adnetworks)
+        top_mmps = top_companie_by_tag_source(mmps)
+        top_analytics = top_companie_by_tag_source(analytics)
 
         top_companies = TopCompaniesOverviewShort(
             adnetworks=top_ad_networks,
