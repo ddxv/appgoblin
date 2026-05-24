@@ -369,7 +369,7 @@
 		</div>
 
 		<p class={sectionDescriptionClass}>
-			Free tools to analyze app performance, competitive landscape, and ad-tech activity across 4M+
+			Free tools to analyze app performance, competitive landscape, and ad-tech activity across 6M+
 			Android and iOS apps.
 		</p>
 
@@ -381,7 +381,7 @@
 						>App Intelligence (Free)</a
 					>
 				</h4>
-				<p class="text-sm mb-3">Daily intelligence on 4M+ Android and iOS apps.</p>
+				<p class="text-sm mb-3">Daily intelligence on 6M+ Android and iOS apps.</p>
 				<ul class="text-sm space-y-1.5">
 					<li>
 						<span class={coreFeatureBulletSpanClass}>Keyword Tracking</span> — Monitor target terms and

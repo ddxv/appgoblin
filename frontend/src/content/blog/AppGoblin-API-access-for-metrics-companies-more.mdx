@@ -1,0 +1,76 @@
+---
+title: "AppGoblin Public API now has free and paid access tiers"
+description: "You can now generate AppGoblin API keys on any account, use free app endpoints immediately, and unlock company endpoints plus higher quotas on paid plans."
+pubDate: "May 24 2026"
+heroImage: "/blog-images/blog-placeholder-about.jpg"
+---
+
+
+## The AppGoblin Public API is now available on free and paid plans
+
+AppGoblin now gives every user account access to the new public API. You can generate an API key from your account dashboard, open the API docs, and start querying AppGoblin data programmatically instead of relying only on the web UI.
+
+This is useful for analysts, app marketers, data teams, and developers who want to move AppGoblin data into scripts, notebooks, dashboards, or internal tools.
+
+## What free API access includes
+
+Free API keys can be used immediately for the main app-level endpoints:
+
+* `GET /api/v1/apps/{store_id}` for stable app metadata plus MAU, recent install, and estimated revenue signals
+* `GET /api/v1/apps/{store_id}/ranks` for best-rank snapshots across countries, collections, and categories over the last 90 days
+* `GET /api/v1/apps/{store_id}/sdks` for SDK findings, permissions, package queries, SKAdNetwork entries, and unmapped evidence
+
+Free keys currently include a baseline quota of 30 requests per minute and 1,000 requests per day. API responses also include rate-limit headers so you can see your current limit, remaining requests, and remaining daily quota while building against the API.
+
+That makes the free tier a practical way to test workflows, enrich app research pipelines, or prototype internal tooling without committing to a larger plan first.
+
+## What paid API tiers unlock
+
+Paid API access is for teams that need more throughput and more company-level data.
+
+Paid tiers unlock the company endpoints:
+
+* `GET /api/v1/companies`
+* `GET /api/v1/companies/{company_domain}`
+
+These endpoints expose public company index and overview data including company domains, display names, parent mappings, install metrics, trend snapshot fields, and dataset availability for company exports.
+
+Paid plans also increase API quotas substantially depending on the subscription tier. AppGoblin's current business API tiers range from high-volume limits of 2,000 requests per minute and 100,000 requests per day up to 10,000 requests per minute and 500,000 requests per day.
+
+If you need to monitor company footprints, build repeatable competitor tracking, or join AppGoblin company data into your own reporting stack, the paid tiers are the right fit.
+
+## Why this matters
+
+The main benefit is speed. Instead of clicking through individual pages, you can now pull AppGoblin data directly into the tools you already use.
+
+Some practical examples:
+
+* pull app basics into a warehouse or notebook for portfolio analysis
+* monitor rank changes for a tracked set of apps across stores and countries
+* review SDK and permission footprints automatically during app research
+* use paid company endpoints to build internal dashboards around company trends and verified datasets
+
+This also creates a cleaner path from lightweight exploration to production use: start on the free tier, validate your workflow, and move up only if you need company coverage or much higher volume.
+
+## How to get started
+
+You can create an API key here:
+
+* [AppGoblin API Keys](https://appgoblin.info/account/api-keys)
+
+And you can browse the live API reference here:
+
+* [AppGoblin API Docs](https://appgoblin.info/api-docs)
+
+If you need the company endpoints or higher request limits, upgrade from the pricing page:
+
+* [AppGoblin Pricing](https://appgoblin.info/pricing)
+
+Here is a minimal example request:
+
+```bash
+curl -H "X-API-Key: <your-api-token>" \
+  https://appgoblin.info/api/v1/apps/com.spotify.music
+```
+
+This is the first public version of the API, and we will keep expanding it over time. If there are endpoints or export patterns you want next, send them over.
