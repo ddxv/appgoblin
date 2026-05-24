@@ -114,7 +114,9 @@
 				class={isHighlighted('/app-explorer') ? topBarHighlightedFont : topBarFont}>APP EXPLORER</a
 			>
 			<div class={myDivider}></div>
-			<a href="/sdks" class={isHighlighted('/sdks') ? topBarHighlightedFont : topBarFont}>SDKS</a>
+			<a href="/sdks" class={isHighlighted('/sdks') ? topBarHighlightedFont : topBarFont}
+				>Free SDK Scans</a
+			>
 			<div class={myDivider}></div>
 			<!-- RESOURCES group -->
 			<p class={sectionLabel}>Resources</p>
@@ -266,7 +268,7 @@
 						>App Explorer</a
 					>
 					<a href="/sdks" class={isHighlighted('/sdks') ? dropdownHighlightedItem : dropdownItem}
-						>SDKs</a
+						>Free SDK Scans</a
 					>
 				</div>
 			</div>

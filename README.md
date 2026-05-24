@@ -6,14 +6,14 @@
 
 ## Features
 
-- **[App Intelligence](https://appgoblin.info/)** — Data on 4M+ iOS and Android apps (updated daily), including:
+- **[App Intelligence](https://appgoblin.info/)** — Data on 6M+ iOS and Android apps (updated daily), including:
   - **Keywords** — Track your own or competitors' keywords and the top apps associated with them
   - **Trends** — Track installs and ratings over time
   - **Rankings** — Daily tracking of top apps from Google Play and Apple App Store
   - **New Apps Discovery** — Surfaces newly released apps often buried by official store algorithms
   - **Growth Metrics** — Daily install estimates and rating change tracking
 
-- **[SDK Analysis](https://appgoblin.info/sdks)** — Detailed breakdown of SDKs found in decompiled Android and iOS apps, including advertising, analytics, and open-source libraries
+- **[SDK Analysis](https://appgoblin.info/sdks)** — Detailed breakdown of SDKs found in decompiled 200k+ Android and iOS apps, including advertising, analytics, and open-source libraries
 
 - **[Companies Directory](https://appgoblin.info/companies)** — Rankings of mobile app companies based on SDK integration frequency, filterable by category
   - Example: [Most popular Ad Networks for Casino Games](https://appgoblin.info/companies/types/ad-networks/game_casino)

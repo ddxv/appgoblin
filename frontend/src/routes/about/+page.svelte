@@ -94,7 +94,7 @@
 		<div class={contentPadding}>
 			<ul class="space-y-4">
 				<li>
-					<strong>App Intelligence</strong> — Data on 4M+ iOS and Android apps (updated daily): keywords,
+					<strong>App Intelligence</strong> — Data on 6M+ iOS and Android apps (updated daily): keywords,
 					trends, rankings, new apps discovery, and growth metrics
 				</li>
 				<li>

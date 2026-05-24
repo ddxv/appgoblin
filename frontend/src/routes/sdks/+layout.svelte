@@ -34,11 +34,17 @@
 		content="Uncover insights on {sdk_title}'s mobile adtech operations. Explore data on their apps, industry connections, and market influence in mobile advertising and data tracking."
 	/>
 
-	<meta property="og:image" content="https://appgoblin.info/goblin_purple_hat_250.png" />
+	<meta
+		property="og:image"
+		content="https://appgoblin.info/previews/appgoblin_companies_smaller.png"
+	/>
 	<meta property="og:url" content={page.url.href} />
 	<meta property="og:type" content="website" />
 	<meta name="twitter:card" content="summary_large_image" />
-	<meta name="twitter:image" content="https://appgoblin.info/goblin_purple_hat_250.png" />
+	<meta
+		name="twitter:image"
+		content="https://appgoblin.info/previews/appgoblin_companies_smaller.png"
+	/>
 	<meta name="robots" content="noindex, nofollow" />
 </svelte:head>
 

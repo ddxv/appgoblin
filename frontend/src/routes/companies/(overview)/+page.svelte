@@ -58,11 +58,17 @@
 	<meta property="og:description" content={description} />
 	<meta name="twitter:title" content={title} />
 	<meta name="twitter:description" content={description} />
-	<meta property="og:image" content="https://appgoblin.info/adtech-companies-banner.png" />
+	<meta
+		property="og:image"
+		content="https://appgoblin.info/previews/appgoblin_companies_smaller.png"
+	/>
 	<meta property="og:url" content={canonicalUrl} />
 	<meta property="og:type" content="website" />
 	<meta name="twitter:card" content="summary_large_image" />
-	<meta name="twitter:image" content="https://appgoblin.info/adtech-companies-banner.png" />
+	<meta
+		name="twitter:image"
+		content="https://appgoblin.info/previews/appgoblin_companies_smaller.png"
+	/>
 	<link rel="canonical" href={canonicalUrl} />
 	<meta name="robots" content="index, follow" />
 	{@html `<script type="application/ld+json">${JSON.stringify(structuredData)}</script>`}

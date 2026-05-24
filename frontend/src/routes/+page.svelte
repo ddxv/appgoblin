@@ -160,7 +160,10 @@
 	<!-- Open Graph meta tags -->
 	<meta property="og:title" content={title} />
 	<meta property="og:description" content={description} />
-	<meta property="og:image" content="https://appgoblin.info/goblin_purple_hat_250.png" />
+	<meta
+		property="og:image"
+		content="https://appgoblin.info/previews/appgoblin_companies_smaller.png"
+	/>
 	<meta property="og:url" content="https://appgoblin.info" />
 	<meta property="og:type" content="website" />
 
@@ -168,7 +171,10 @@
 	<meta name="twitter:card" content="summary_large_image" />
 	<meta name="twitter:title" content={title} />
 	<meta name="twitter:description" content={description} />
-	<meta name="twitter:image" content="https://appgoblin.info/goblin_purple_hat_250.png" />
+	<meta
+		name="twitter:image"
+		content="https://appgoblin.info/previews/appgoblin_companies_smaller.png"
+	/>
 
 	<!-- Additional meta tags -->
 	<meta name="robots" content="index, follow" />
@@ -369,7 +375,7 @@
 		</div>
 
 		<p class={sectionDescriptionClass}>
-			Free tools to analyze app performance, competitive landscape, and ad-tech activity across 4M+
+			Free tools to analyze app performance, competitive landscape, and ad-tech activity across 6M+
 			Android and iOS apps.
 		</p>
 
@@ -381,7 +387,7 @@
 						>App Intelligence (Free)</a
 					>
 				</h4>
-				<p class="text-sm mb-3">Daily intelligence on 4M+ Android and iOS apps.</p>
+				<p class="text-sm mb-3">Daily intelligence on 6M+ Android and iOS apps.</p>
 				<ul class="text-sm space-y-1.5">
 					<li>
 						<span class={coreFeatureBulletSpanClass}>Keyword Tracking</span> — Monitor target terms and

@@ -9,8 +9,8 @@
 		{
 			label: 'GitHub',
 			description: 'Report technical issues or request features',
-			href: 'https://github.com/appgoblin-dev/appgoblin/issues',
-			url: 'https://github.com/appgoblin-dev/appgoblin/issues'
+			href: 'https://github.com/appgoblin-dev/appgoblin',
+			url: 'https://github.com/appgoblin-dev/appgoblin'
 		},
 		{
 			label: 'LinkedIn',
