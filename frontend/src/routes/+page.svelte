@@ -160,7 +160,10 @@
 	<!-- Open Graph meta tags -->
 	<meta property="og:title" content={title} />
 	<meta property="og:description" content={description} />
-	<meta property="og:image" content="https://appgoblin.info/goblin_purple_hat_250.png" />
+	<meta
+		property="og:image"
+		content="https://appgoblin.info/previews/appgoblin_companies_smaller.png"
+	/>
 	<meta property="og:url" content="https://appgoblin.info" />
 	<meta property="og:type" content="website" />
 
@@ -168,7 +171,10 @@
 	<meta name="twitter:card" content="summary_large_image" />
 	<meta name="twitter:title" content={title} />
 	<meta name="twitter:description" content={description} />
-	<meta name="twitter:image" content="https://appgoblin.info/goblin_purple_hat_250.png" />
+	<meta
+		name="twitter:image"
+		content="https://appgoblin.info/previews/appgoblin_companies_smaller.png"
+	/>
 
 	<!-- Additional meta tags -->
 	<meta name="robots" content="index, follow" />
