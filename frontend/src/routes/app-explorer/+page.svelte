@@ -20,15 +20,18 @@
 	// TanStack Table Imports
 	import { type SortingState } from '@tanstack/table-core';
 
-	interface Company {
-		company_name: string;
-		company_domain: string;
-		total_apps: number;
-	}
-
 	interface CompanyOption {
 		label: string;
 		value: string;
+	}
+
+	interface CompanyDirectoryEntry {
+		name: string;
+		company_domain: string;
+		parent_company_domain: string | null;
+		parent_company_name: string | null;
+		company_logo_url: string | null;
+		parent_company_logo_url: string | null;
 	}
 
 	let { data, form } = $props();
@@ -36,9 +39,7 @@
 	const hasPaidAccess = $derived(data.hasPaidAccess ?? false);
 	const hasB2BSdkAccess = $derived(data.hasB2BSdkAccess ?? false);
 
-	// Safely access companies with fallback to empty array
-	let companies = $derived<Company[]>(data.companies ?? []);
-	let categories = $derived<CatData>(data.categories ?? []);
+	let categories = $derived<CatData>(data.categories ?? { categories: [] });
 	let rankingCountries = $derived<{ code: string; name: string }[]>(
 		(() => {
 			const countriesData = data.countries;
@@ -89,6 +90,13 @@
 	// Company combobox state
 	let includeItems = $state<CompanyOption[]>([]);
 	let excludeItems = $state<CompanyOption[]>([]);
+	let companyLabelsByDomain = $state<Record<string, string>>({});
+	let companyDirectory = $state<CompanyDirectoryEntry[] | null>(null);
+	let isLoadingIncludeOptions = $state(false);
+	let isLoadingExcludeOptions = $state(false);
+	let includeRequestId = 0;
+	let excludeRequestId = 0;
+	let companyDirectoryRequest: Promise<CompanyDirectoryEntry[]> | null = null;
 
 	// Results state
 	let isLoading = $state(false);
@@ -173,20 +181,157 @@
 		return typeof value === 'string' ? value : '';
 	}
 
-	const companyOptions = $derived.by<CompanyOption[]>(() => {
-		if (!companies || companies.length === 0) return [];
-		return companies
-			.filter((company) => company?.company_name && company?.company_domain)
-			.map((company) => ({
-				label: company.company_name,
-				value: company.company_domain
-			}));
-	});
+	function updateCompanyLabels(options: CompanyOption[]) {
+		if (options.length === 0) return;
 
-	function getAvailableCompanyOptions(selectedDomains: string[]): CompanyOption[] {
-		return companyOptions
-			.filter((company) => !selectedDomains.includes(company.value))
-			.slice(0, 25);
+		companyLabelsByDomain = {
+			...companyLabelsByDomain,
+			...Object.fromEntries(options.map((option) => [option.value, option.label]))
+		};
+	}
+
+	function setCompanyItems(target: 'include' | 'exclude', options: CompanyOption[]) {
+		updateCompanyLabels(options);
+
+		if (target === 'include') {
+			includeItems = options;
+			return;
+		}
+
+		excludeItems = options;
+	}
+
+	function normalizeCompanyDirectoryEntry(
+		entry: Record<string, unknown> | null | undefined
+	): CompanyDirectoryEntry | null {
+		const companyDomain =
+			typeof entry?.company_domain === 'string' ? entry.company_domain.trim() : '';
+		if (companyDomain === '') return null;
+
+		const name = typeof entry?.name === 'string' ? entry.name.trim() : companyDomain;
+		return {
+			name: name || companyDomain,
+			company_domain: companyDomain,
+			parent_company_domain:
+				typeof entry?.parent_company_domain === 'string' &&
+				entry.parent_company_domain.trim() !== ''
+					? entry.parent_company_domain.trim()
+					: null,
+			parent_company_name:
+				typeof entry?.parent_company_name === 'string' && entry.parent_company_name.trim() !== ''
+					? entry.parent_company_name.trim()
+					: null,
+			company_logo_url:
+				typeof entry?.company_logo_url === 'string' && entry.company_logo_url.trim() !== ''
+					? entry.company_logo_url.trim()
+					: null,
+			parent_company_logo_url:
+				typeof entry?.parent_company_logo_url === 'string' &&
+				entry.parent_company_logo_url.trim() !== ''
+					? entry.parent_company_logo_url.trim()
+					: null
+		};
+	}
+
+	async function ensureCompanyDirectoryLoaded(): Promise<CompanyDirectoryEntry[]> {
+		if (companyDirectory) {
+			return companyDirectory;
+		}
+
+		if (!companyDirectoryRequest) {
+			companyDirectoryRequest = (async () => {
+				const response = await fetch('/api/companies/list');
+				if (!response.ok) {
+					throw new Error(`Failed to load company directory: ${response.status}`);
+				}
+
+				const payload = (await response.json()) as unknown;
+				const entries = Array.isArray(payload)
+					? payload
+							.map((entry) => normalizeCompanyDirectoryEntry(entry as Record<string, unknown>))
+							.filter((entry): entry is CompanyDirectoryEntry => entry != null)
+					: [];
+
+				companyDirectory = entries;
+				updateCompanyLabels(
+					entries.map((entry) => ({ label: entry.name, value: entry.company_domain }))
+				);
+				return entries;
+			})();
+		}
+
+		try {
+			return await companyDirectoryRequest;
+		} finally {
+			companyDirectoryRequest = null;
+		}
+	}
+
+	function filterCompanyOptions(
+		entries: CompanyDirectoryEntry[],
+		searchValue: string,
+		selectedDomains: string[]
+	): CompanyOption[] {
+		const trimmedSearchValue = searchValue.trim().toLowerCase();
+
+		return entries
+			.filter((entry) => !selectedDomains.includes(entry.company_domain))
+			.filter((entry) => {
+				if (trimmedSearchValue === '') {
+					return true;
+				}
+
+				return (
+					entry.name.toLowerCase().includes(trimmedSearchValue) ||
+					entry.company_domain.toLowerCase().includes(trimmedSearchValue)
+				);
+			})
+			.slice(0, 50)
+			.map((entry) => ({
+				label: entry.name,
+				value: entry.company_domain
+			}));
+	}
+
+	async function loadCompanyOptions(
+		target: 'include' | 'exclude',
+		searchValue: string,
+		selectedDomains: string[]
+	) {
+		const requestId = target === 'include' ? ++includeRequestId : ++excludeRequestId;
+		if (target === 'include') {
+			isLoadingIncludeOptions = true;
+		} else {
+			isLoadingExcludeOptions = true;
+		}
+
+		try {
+			const entries = await ensureCompanyDirectoryLoaded();
+			const options = filterCompanyOptions(entries, searchValue, selectedDomains);
+
+			if (target === 'include') {
+				if (requestId !== includeRequestId) return;
+			} else if (requestId !== excludeRequestId) {
+				return;
+			}
+
+			setCompanyItems(target, options);
+		} catch (error) {
+			console.error('Failed to load App Explorer company options', error);
+			if (target === 'include') {
+				if (requestId !== includeRequestId) return;
+				includeItems = [];
+			} else {
+				if (requestId !== excludeRequestId) return;
+				excludeItems = [];
+			}
+		} finally {
+			if (target === 'include') {
+				if (requestId === includeRequestId) isLoadingIncludeOptions = false;
+			} else if (requestId === excludeRequestId) {
+				isLoadingExcludeOptions = false;
+			}
+		}
 	}
 
 	const includeCollection = $derived(
@@ -206,67 +351,39 @@
 	);
 
 	const onIncludeOpenChange = () => {
-		includeItems = getAvailableCompanyOptions(includeDomains);
+		void loadCompanyOptions('include', '', includeDomains);
 	};
 
 	const onExcludeOpenChange = () => {
-		excludeItems = getAvailableCompanyOptions(excludeDomains);
+		void loadCompanyOptions('exclude', '', excludeDomains);
 	};
 
 	const onIncludeInputValueChange: ComboboxRootProps['onInputValueChange'] = (event) => {
-		const searchValue = event.inputValue.toLowerCase();
-		const options = getAvailableCompanyOptions(includeDomains);
-		const filtered = options.filter(
-			(item) =>
-				item.label.toLowerCase().includes(searchValue) ||
-				item.value.toLowerCase().includes(searchValue)
-		);
-		includeItems = filtered.length > 0 ? filtered : options;
+		void loadCompanyOptions('include', event.inputValue ?? '', includeDomains);
 	};
 
 	const onExcludeInputValueChange: ComboboxRootProps['onInputValueChange'] = (event) => {
-		const searchValue = event.inputValue.toLowerCase();
-		const options = getAvailableCompanyOptions(excludeDomains);
-		const filtered = options.filter(
-			(item) =>
-				item.label.toLowerCase().includes(searchValue) ||
-				item.value.toLowerCase().includes(searchValue)
-		);
-		excludeItems = filtered.length > 0 ? filtered : options;
+		void loadCompanyOptions('exclude', event.inputValue ?? '', excludeDomains);
 	};
 
 	const onIncludeValueChange: ComboboxRootProps['onValueChange'] = (event) => {
 		includeDomains = event.value as string[];
-		includeItems = getAvailableCompanyOptions(includeDomains);
+		void loadCompanyOptions('include', '', includeDomains);
 	};
 
 	const onExcludeValueChange: ComboboxRootProps['onValueChange'] = (event) => {
 		excludeDomains = event.value as string[];
-		excludeItems = getAvailableCompanyOptions(excludeDomains);
+		void loadCompanyOptions('exclude', '', excludeDomains);
 	};
-
-	function addIncludeDomain(domain: string) {
-		if (domain && !includeDomains.includes(domain)) {
-			includeDomains = [...includeDomains, domain];
-		}
-		includeItems = getAvailableCompanyOptions(includeDomains);
-	}
 
 	function removeIncludeDomain(domain: string) {
 		includeDomains = includeDomains.filter((d) => d !== domain);
-		includeItems = getAvailableCompanyOptions(includeDomains);
-	}
-
-	function addExcludeDomain(domain: string) {
-		if (domain && !excludeDomains.includes(domain)) {
-			excludeDomains = [...excludeDomains, domain];
-		}
-		excludeItems = getAvailableCompanyOptions(excludeDomains);
+		void loadCompanyOptions('include', '', includeDomains);
 	}
 
 	function removeExcludeDomain(domain: string) {
 		excludeDomains = excludeDomains.filter((d) => d !== domain);
-		excludeItems = getAvailableCompanyOptions(excludeDomains);
+		void loadCompanyOptions('exclude', '', excludeDomains);
 	}
 
 	function resetFilters() {
@@ -291,23 +408,18 @@
 		isExporting = false;
 		exportFeedback = '';
 		exportError = '';
-		includeItems = getAvailableCompanyOptions([]);
-		excludeItems = getAvailableCompanyOptions([]);
+		includeRequestId += 1;
+		excludeRequestId += 1;
+		isLoadingIncludeOptions = false;
+		isLoadingExcludeOptions = false;
+		includeItems = [];
+		excludeItems = [];
 	}
 
 	function getCompanyName(domain: string): string {
 		if (!domain) return 'Unknown';
-		const company = companies.find((c) => c?.company_domain === domain);
-		return company?.company_name || domain;
+		return companyLabelsByDomain[domain] || domain;
 	}
-
-	$effect(() => {
-		includeItems = getAvailableCompanyOptions(includeDomains);
-	});
-
-	$effect(() => {
-		excludeItems = getAvailableCompanyOptions(excludeDomains);
-	});
 </script>
 
 <svelte:head>
@@ -557,11 +669,8 @@
 							onInputValueChange={onIncludeInputValueChange}
 							value={includeDomains}
 							onValueChange={onIncludeValueChange}
-							class="w-full {!hasPaidAccess || !hasB2BSdkAccess
-								? 'opacity-50 cursor-not-allowed'
-								: ''}"
+							class="w-full"
 							multiple
-							disabled={!hasPaidAccess || !hasB2BSdkAccess}
 						>
 							<Combobox.Control>
 								<Combobox.Input id="include-search" />
@@ -572,7 +681,9 @@
 									<Combobox.Content
 										class="bg-surface-100-900 border border-surface-300-700 rounded-lg shadow-lg p-1 w-[min(22rem,calc(100vw-2rem))] max-h-48 lg:max-h-92 overflow-y-auto"
 									>
-										{#if includeItems.length > 0}
+										{#if isLoadingIncludeOptions && includeItems.length === 0}
+											<p class="px-3 py-2 text-sm opacity-70">Loading companies...</p>
+										{:else if includeItems.length > 0}
 											{#each includeItems as item (item.value)}
 												<Combobox.Item
 													{item}
@@ -619,11 +730,8 @@
 							onInputValueChange={onExcludeInputValueChange}
 							value={excludeDomains}
 							onValueChange={onExcludeValueChange}
-							class="w-full {!hasPaidAccess || !hasB2BSdkAccess
-								? 'opacity-50 cursor-not-allowed'
-								: ''}"
+							class="w-full"
 							multiple
-							disabled={!hasPaidAccess || !hasB2BSdkAccess}
 						>
 							<Combobox.Control>
 								<Combobox.Input id="exclude-search" />
@@ -634,7 +742,9 @@
 									<Combobox.Content
 										class="bg-surface-100-900 border border-surface-300-700 rounded-lg shadow-lg p-1 w-[min(22rem,calc(100vw-2rem))] max-h-48 overflow-y-auto"
 									>
-										{#if excludeItems.length > 0}
+										{#if isLoadingExcludeOptions && excludeItems.length === 0}
+											<p class="px-3 py-2 text-sm opacity-70">Loading companies...</p>
+										{:else if excludeItems.length > 0}
 											{#each excludeItems as item (item.value)}
 												<Combobox.Item
 													{item}

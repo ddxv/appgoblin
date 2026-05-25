@@ -4,10 +4,11 @@ import time
 from dataclasses import fields as dataclass_fields
 from typing import Self
 
-from litestar import Controller, get
+from litestar import Controller, Request, Response, get
 from litestar.datastructures import State
 from litestar.exceptions import NotFoundException
 
+from api_app.analytics import PUBLIC_API_HOSTNAME, build_request_page_view_task
 from api_app.controllers.public.v1.public_models import (
     PublicAppBasics,
     PublicAppBestRank,
@@ -169,32 +170,55 @@ class V1AppsController(Controller):
     guards = [_api_key_guard]
 
     @get(path="/apps/{store_id:str}", cache=3600)
-    async def app_basics(self: Self, state: State, store_id: str) -> PublicAppBasics:
+    async def app_basics(
+        self: Self, state: State, request: Request, store_id: str
+    ) -> PublicAppBasics:
         """Return basic app metadata for a store identifier."""
         start = time.perf_counter() * 1000
         payload = _build_app_basics_payload(state=state, store_id=store_id)
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(f"GET /api/v1/apps/{store_id} took {duration}ms")
-        return payload
+        return Response(
+            payload,
+            background=build_request_page_view_task(
+                request,
+                url=f"/api/v1/apps/{store_id}",
+                hostname=PUBLIC_API_HOSTNAME,
+            ),
+        )
 
     @get(path="/apps/{store_id:str}/ranks", cache=3600)
     async def app_ranks(
-        self: Self, state: State, store_id: str
+        self: Self, state: State, request: Request, store_id: str
     ) -> list[PublicAppBestRank]:
         """Return best-rank records for a store identifier across countries."""
         start = time.perf_counter() * 1000
         payload = _build_app_ranks_payload(state=state, store_id=store_id)
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(f"GET /api/v1/apps/{store_id}/ranks took {duration}ms")
-        return payload
+        return Response(
+            payload,
+            background=build_request_page_view_task(
+                request,
+                url=f"/api/v1/apps/{store_id}/ranks",
+                hostname=PUBLIC_API_HOSTNAME,
+            ),
+        )
 
     @get(path="/apps/{store_id:str}/sdks", cache=3600)
     async def app_sdk_details(
-        self: Self, state: State, store_id: str
+        self: Self, state: State, request: Request, store_id: str
     ) -> PublicAppSdkDetails:
         """Return SDK details for a store identifier."""
         start = time.perf_counter() * 1000
         payload = _build_app_sdk_details_payload(state=state, store_id=store_id)
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(f"GET /api/v1/apps/{store_id}/sdks took {duration}ms")
-        return payload
+        return Response(
+            payload,
+            background=build_request_page_view_task(
+                request,
+                url=f"/api/v1/apps/{store_id}/sdks",
+                hostname=PUBLIC_API_HOSTNAME,
+            ),
+        )

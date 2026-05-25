@@ -12,6 +12,7 @@ from litestar.middleware import DefineMiddleware
 from litestar.openapi.config import OpenAPIConfig
 from litestar.testing import TestClient
 
+from api_app.analytics import PUBLIC_API_HOSTNAME
 from api_app.controllers.health import HealthController
 from api_app.controllers.public.v1.apps import V1AppsController
 from api_app.controllers.public.v1.companies import (
@@ -704,6 +705,57 @@ class TestV1CompanyDetail:
 
 
 class TestV1Apps:
+    def test_app_basics_logs_umami_page_view_with_user_id(self):
+        app = _make_test_app()
+        app_row = {
+            "name": "Example App",
+            "store_id": "com.example.app",
+            "store": "Google Play",
+            "category": "tools",
+            "rating": 4.5,
+            "rating_count": 100,
+            "installs": 50000,
+            "weekly_active_users": 3200,
+            "monthly_active_users": 12800,
+            "monthly_ad_revenue": 1200.5,
+            "monthly_iap_revenue": 875.25,
+            "installs_sum_1w": 1400,
+            "installs_sum_4w": 5300,
+            "ratings_sum_1w": 43,
+            "store_last_updated": "2026-05-01",
+            "developer_id": "dev123",
+            "developer_name": "Example Dev",
+            "developer_url": "https://example.com/dev",
+            "release_date": "2024-01-01",
+            "ad_supported": True,
+            "in_app_purchases": False,
+            "store_link": "https://play.google.com/store/apps/details?id=com.example.app",
+        }
+
+        with (
+            _patch_key_found("free"),
+            _patch_single_app(app_row),
+            patch("api_app.analytics.log_umami_page") as log_umami_page,
+            TestClient(app=app, raise_server_exceptions=False) as client,
+        ):
+            resp = client.get(
+                "/api/v1/apps/com.example.app",
+                headers={
+                    "X-API-Key": "ag_appkey",
+                    "X-Forwarded-For": "203.0.113.10",
+                },
+            )
+
+        assert resp.status_code == 200
+        log_umami_page.assert_called_once_with(
+            url="/api/v1/apps/com.example.app",
+            ip="203.0.113.10",
+            user_id=1,
+            page_title=None,
+            hostname=PUBLIC_API_HOSTNAME,
+            referrer=None,
+        )
+
     def test_app_basics_returns_expected_fields(self):
         app = _make_test_app()
         app_row = {
@@ -833,6 +885,33 @@ class TestV1Apps:
 
         assert resp.status_code == 200
         assert resp.json() == []
+
+    def test_company_list_logs_umami_page_view_with_user_id(self):
+        app = _make_test_app()
+
+        with (
+            _patch_key_found("b2b_sdk"),
+            _patch_overview(),
+            patch("api_app.analytics.log_umami_page") as log_umami_page,
+            TestClient(app=app, raise_server_exceptions=False) as client,
+        ):
+            resp = client.get(
+                "/api/v1/companies",
+                headers={
+                    "X-API-Key": "ag_companylist",
+                    "X-Forwarded-For": "198.51.100.7",
+                },
+            )
+
+        assert resp.status_code == 200
+        log_umami_page.assert_called_once_with(
+            url="/api/v1/companies",
+            ip="198.51.100.7",
+            user_id=1,
+            page_title=None,
+            hostname=PUBLIC_API_HOSTNAME,
+            referrer=None,
+        )
 
     def test_app_sdks_returns_expected_shape(self):
         app = _make_test_app()

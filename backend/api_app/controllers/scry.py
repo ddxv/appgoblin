@@ -9,10 +9,11 @@ from typing import Self
 
 import pandas as pd
 from litestar import Controller, Response, post
-from litestar.background_tasks import BackgroundTask
+from litestar.background_tasks import BackgroundTask, BackgroundTasks
 from litestar.datastructures import State
 
-from config import CONFIG, get_logger
+from api_app.analytics import get_forwarded_ip, log_umami_page
+from config import get_logger
 from dbcon.queries import (
     get_apps_sdk_overview,
     insert_sdk_scan_request,
@@ -22,39 +23,18 @@ from dbcon.static import get_company_logos_df
 logger = get_logger(__name__)
 
 
-def log_umami_event(ip: str | None, url: str) -> None:
-    """Log an umami event.
-
-    This function is called when a user requests SDKs.
-    This is only for seeing how often the backend is calleda
-    and not needed if you are recreating for other reasons.
-
-    """
-    import umami
-
-    umami_base_url = CONFIG["umami"].get("base_url")
-    umami_site_id = CONFIG["umami"].get("site_id")
-    umami.set_url_base(umami_base_url)
-    umami.set_website_id(umami_site_id)
-    umami.set_hostname("dev.thirdgate.appgoblin")
-    umami.new_page_view(
-        page_title="User Requested SDKs",
-        url=url,
-        referrer="dev.thirdgate.appgoblin",
-        ip_address=ip,
-    )
-
-
 def process_sdk_scan_request(
     state: State, store_ids: list[str], ip: str | None, user_id: int | None
 ) -> None:
     """Process a sdk scan request."""
-    url = "/api/public/sdks/apps/requestSDKScan"
-    try:
-        log_umami_event(ip, url)
-        logger.info("logged umami event")
-    except Exception:
-        logger.exception("Error logging umami event")
+    log_umami_page(
+        url="/api/public/sdks/apps/requestSDKScan",
+        ip=ip,
+        user_id=user_id,
+        page_title="User Requested SDK Scan",
+        hostname="dev.thirdgate.appgoblin",
+        referrer="dev.thirdgate.appgoblin",
+    )
     try:
         insert_sdk_scan_request(state, store_ids, user_id)
         logger.info(f"inserted sdk scan request for {len(store_ids)} store_ids")
@@ -64,12 +44,13 @@ def process_sdk_scan_request(
 
 def process_get_sdks(ip: str | None) -> None:
     """Process a sdk request."""
-    url = "/api/public/sdks/apps"
-    try:
-        log_umami_event(ip, url)
-        logger.info("logged umami event")
-    except Exception:
-        logger.exception("Error logging umami event")
+    log_umami_page(
+        url="/api/public/sdks/apps",
+        ip=ip,
+        page_title="User Requested SDKs",
+        hostname="dev.thirdgate.appgoblin",
+        referrer="dev.thirdgate.appgoblin",
+    )
 
 
 class ScryController(Controller):
@@ -166,12 +147,7 @@ class ScryController(Controller):
             "success_store_ids": success_store_ids,
         }
 
-        if headers and "X-Forwarded-For" in headers:
-            ip = headers["X-Forwarded-For"]
-        elif headers and "x-forwarded-for" in headers:
-            ip = headers["x-forwarded-for"]
-        else:
-            ip = None
+        ip = get_forwarded_ip(headers)
 
         logger.info(
             f"{log_info} success_store_ids={len(success_store_ids)} SDKs={df.shape[0]}"
@@ -190,18 +166,21 @@ class ScryController(Controller):
         """Lookup apps' SDKs by store_ids."""
         store_ids = data.get("store_ids", [])
 
-        if headers and "X-Forwarded-For" in headers:
-            ip = headers["X-Forwarded-For"]
-        elif headers and "x-forwarded-for" in headers:
-            ip = headers["x-forwarded-for"]
-        else:
-            ip = None
+        ip = get_forwarded_ip(headers)
 
         log_info = f"Single app request store_ids={len(store_ids)}"
         logger.info(f"{log_info} request SDK Scan")
         return Response(
             {"status": "ok"},
-            background=BackgroundTask(
-                process_sdk_scan_request, state, store_ids, ip, user_id=None
+            background=BackgroundTasks(
+                tasks=[
+                    BackgroundTask(
+                        process_sdk_scan_request,
+                        state,
+                        store_ids,
+                        ip,
+                        user_id=None,
+                    )
+                ]
             ),
         )

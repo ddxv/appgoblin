@@ -148,10 +148,18 @@ const cacheAndRoutingHandle: Handle = async ({ event, resolve }) => {
 	const cacheablePaths = ['/companies', '/about', '/apps', '/top-mobile-advertisers'];
 	const pathIsCacheable = cacheablePaths.some((path) => event.url.pathname.startsWith(path));
 	const isAuthenticated = event.locals.user !== null;
+	const isStaticAssetRequest = route.startsWith('/_app') || route.startsWith('/favicon');
+
+	if (!isStaticAssetRequest) {
+		appendVaryHeader(response, 'Cookie');
+	}
 
 	if (pathIsCacheable && !isAuthenticated) {
 		response.headers.set('cache-control', 'public, max-age=86400, stale-while-revalidate=3600');
-		response.headers.set('Vary', 'Cookie');
+	}
+
+	if (isAuthenticated && !isStaticAssetRequest) {
+		response.headers.set('cache-control', 'private, no-store');
 	}
 
 	if (route === '/check') {
@@ -171,6 +179,14 @@ interface CachedData {
 	appsOverview: any;
 	companyTypes: CompanyTypes;
 	countries: Countries;
+	companyDirectory: Array<{
+		name: string;
+		company_domain: string;
+		parent_company_domain: string | null;
+		parent_company_name: string | null;
+		company_logo_url: string | null;
+		parent_company_logo_url: string | null;
+	}>;
 	myRankingsMap?: any;
 	storeIDLookup: Record<number, AppStore>;
 	collectionIDLookup: Record<number, Record<number, CollectionRanks>>;
@@ -182,6 +198,7 @@ let cachedData: CachedData = {
 	appsOverview: {},
 	companyTypes: { types: [] },
 	countries: { ['US']: { langen: 'United States', app_ranks: true, app_details: true } },
+	companyDirectory: [],
 	storeIDLookup: {},
 	collectionIDLookup: {},
 	categoryIDLookup: {}
@@ -192,6 +209,24 @@ let initializationPromise: Promise<void> | null = null;
 let initStartTime: number | null = null;
 
 const API_BASE_URL = 'http://localhost:8000/api';
+
+function appendVaryHeader(response: Response, value: string) {
+	const existing = response.headers.get('Vary');
+	if (existing == null || existing.trim() === '') {
+		response.headers.set('Vary', value);
+		return;
+	}
+
+	const values = existing
+		.split(',')
+		.map((entry) => entry.trim())
+		.filter((entry) => entry.length > 0);
+
+	if (!values.includes(value)) {
+		values.push(value);
+		response.headers.set('Vary', values.join(', '));
+	}
+}
 
 async function fetchWithRetry(url: string, retries = 10): Promise<any> {
 	for (let i = 0; i < retries; i++) {
@@ -237,13 +272,15 @@ async function initializeCache(): Promise<void> {
 	console.log('[Cache] Initializing cache on server start...');
 
 	try {
-		const [appCats, appsOverview, companyTypes, countries, myStoreRankingsMap] = await Promise.all([
-			fetchWithRetry(`${API_BASE_URL}/categories`),
-			fetchWithRetry(`${API_BASE_URL}/apps/overview`),
-			fetchWithRetry(`${API_BASE_URL}/companies/types`),
-			fetchWithRetry(`${API_BASE_URL}/categories/countries`),
-			fetchWithRetry(`${API_BASE_URL}/rankings`)
-		]);
+		const [appCats, appsOverview, companyTypes, countries, companyDirectory, myStoreRankingsMap] =
+			await Promise.all([
+				fetchWithRetry(`${API_BASE_URL}/categories`),
+				fetchWithRetry(`${API_BASE_URL}/apps/overview`),
+				fetchWithRetry(`${API_BASE_URL}/companies/types`),
+				fetchWithRetry(`${API_BASE_URL}/categories/countries`),
+				fetchWithRetry(`${API_BASE_URL}/companies/list`),
+				fetchWithRetry(`${API_BASE_URL}/rankings`)
+			]);
 
 		const { storeIDLookup, collectionIDLookup, categoryIDLookup } =
 			buildRankingsLookups(myStoreRankingsMap);
@@ -253,6 +290,7 @@ async function initializeCache(): Promise<void> {
 			appsOverview,
 			companyTypes,
 			countries,
+			companyDirectory,
 			storeIDLookup,
 			collectionIDLookup,
 			categoryIDLookup

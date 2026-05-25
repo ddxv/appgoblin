@@ -9,6 +9,7 @@ from litestar import Request
 from litestar.exceptions import NotAuthorizedException, TooManyRequestsException
 from sqlalchemy import Engine, text
 
+from api_app.analytics import set_request_analytics_context
 from config import get_logger
 
 logger = get_logger(__name__)
@@ -407,9 +408,11 @@ def validate_api_key(request: Request, state) -> ApiKeyContext:
     if state.dbconwrite:
         _update_last_used(state.dbconwrite.engine, key_hash)
 
-    return ApiKeyContext(
+    context = ApiKeyContext(
         user_id=user_id,
         tier=tier,
         key_hash=key_hash,
         limits=limits,
     )
+    set_request_analytics_context(request, user_id=context.user_id)
+    return context

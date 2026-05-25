@@ -6,12 +6,13 @@ from collections.abc import Mapping
 from typing import Self, cast
 from urllib.parse import quote
 
-from litestar import Controller, Request, get
+from litestar import Controller, Request, Response, get
 from litestar.connection import ASGIConnection
 from litestar.datastructures import State
 from litestar.exceptions import NotFoundException, PermissionDeniedException
 from litestar.handlers import BaseRouteHandler
 
+from api_app.analytics import PUBLIC_API_HOSTNAME, build_request_page_view_task
 from api_app.controllers.companies import (
     build_company_overview_base,
     get_overviews,
@@ -334,7 +335,9 @@ class V1CompaniesController(Controller):
     guards = [_api_key_guard]
 
     @get(path="/companies", cache=86400)
-    async def companies(self: Self, state: State) -> list[PublicCompanyListItem]:
+    async def companies(
+        self: Self, state: State, request: Request
+    ) -> list[PublicCompanyListItem]:
         """Return a list of all queryable company domains.
 
         Each entry contains the exact ``company_domain``, display ``name``,
@@ -346,15 +349,23 @@ class V1CompaniesController(Controller):
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(f"GET /api/v1/companies took {duration}ms")
 
-        return [
-            _to_public_company_list_item(company)
-            for company in overview.companies_overview
-        ]
+        return Response(
+            [
+                _to_public_company_list_item(company)
+                for company in overview.companies_overview
+            ],
+            background=build_request_page_view_task(
+                request,
+                url="/api/v1/companies",
+                hostname=PUBLIC_API_HOSTNAME,
+            ),
+        )
 
     @get(path="/companies/{company_domain:str}", cache=86400)
     async def company_overview(
         self: Self,
         state: State,
+        request: Request,
         company_domain: str,
         category: str | None = None,
     ) -> PublicCompanyOverview:
@@ -365,4 +376,11 @@ class V1CompaniesController(Controller):
         )
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(f"GET /api/v1/companies/{company_domain} took {duration}ms")
-        return payload
+        return Response(
+            payload,
+            background=build_request_page_view_task(
+                request,
+                url=f"/api/v1/companies/{company_domain}",
+                hostname=PUBLIC_API_HOSTNAME,
+            ),
+        )

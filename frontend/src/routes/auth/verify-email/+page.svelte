@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import LogOut from 'lucide-svelte/icons/log-out';
 
 	import type { ActionData, PageData } from './$types';
 
@@ -15,16 +16,17 @@
 			form?.verify?.highlightSpamNotice ??
 			data.highlightSpamNotice
 	);
+	const showExpandedSpamNotice = $derived(highlightSpamNotice || !!form?.resend);
 </script>
 
 <h2 class="text-2xl font-bold">Verify your email address</h2>
 <p>We sent an 8-digit code to {data.email}.</p>
-{#if highlightSpamNotice}
+{#if showExpandedSpamNotice}
 	<div
 		class="mt-4 rounded border border-warning-500/40 bg-warning-500/10 p-4 text-base font-semibold leading-6"
 	>
 		AppGoblin sends verification emails through an independent provider. Please check spam or junk
-		for the latest message before requesting another email.
+		for the latest message.
 	</div>
 {:else}
 	<p class="mt-2 text-sm text-surface-600-400">
@@ -46,6 +48,10 @@
 	<p>{form?.verify?.message ?? ''}</p>
 </form>
 <form method="post" use:enhance action="?/resend">
+	<p class="mt-4">
+		AppGoblin uses an independent email provider, so please check spam if you do not see the latest
+		code.
+	</p>
 	<button class="btn preset-tonal" disabled={verificationEmailsRemaining === 0}>Resend code</button>
 	<p class="mt-2 text-sm text-surface-600-400">
 		You can request {verificationEmailsRemaining} more verification email{verificationEmailsRemaining ===
@@ -56,3 +62,9 @@
 	<p>{form?.resend?.message ?? ''}</p>
 </form>
 <a class="btn preset-tonal" href="/auth/settings">Change email</a>
+<form method="post" use:enhance action="?/logout">
+	<button class="btn preset-tonal w-full sm:w-auto flex items-center justify-center gap-2">
+		<LogOut size={18} />
+		Log out
+	</button>
+</form>

@@ -5,12 +5,6 @@ import { db } from '$lib/server/auth/db';
 import { STRIPE_PRICES } from '$lib/server/stripe';
 import { getCachedData } from '../../hooks.server';
 
-interface CompanyRaw {
-	company_name: string | null;
-	company_domain: string | null;
-	total_apps: number;
-}
-
 interface ActiveSubscriptionRow {
 	provider_price_id: string;
 }
@@ -125,28 +119,11 @@ export const load: PageServerLoad = async ({ fetch, locals }) => {
 		hasB2BSdkAccess = access.hasB2BSdkAccess;
 	}
 
-	const api = createApiClient(fetch);
-
-	// Load companies for the dropdown filters
-	const companiesOverview = await api.get('/companies', 'Companies Overview');
-
-	// Filter out companies with null names or domains, and sort by app count
-	const companies = (companiesOverview.companies_overview || [])
-		.filter(
-			(c: CompanyRaw) =>
-				c.company_name != null &&
-				c.company_domain != null &&
-				c.company_name.trim() !== '' &&
-				c.company_domain.trim() !== ''
-		)
-		.sort((a: CompanyRaw, b: CompanyRaw) => (b.total_apps || 0) - (a.total_apps || 0));
-
 	// Load categories
 	const { countries, appCats } = await getCachedData();
 	const categories = appCats || [];
 
 	return {
-		companies,
 		categories,
 		countries,
 		hasPaidAccess,
