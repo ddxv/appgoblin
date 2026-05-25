@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import LogOut from 'lucide-svelte/icons/log-out';
 
 	import type { ActionData, PageData } from './$types';
 
@@ -61,3 +62,9 @@
 	<p>{form?.resend?.message ?? ''}</p>
 </form>
 <a class="btn preset-tonal" href="/auth/settings">Change email</a>
+<form method="post" use:enhance action="?/logout">
+	<button class="btn preset-tonal w-full sm:w-auto flex items-center justify-center gap-2">
+		<LogOut size={18} />
+		Log out
+	</button>
+</form>

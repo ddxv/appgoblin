@@ -12,14 +12,17 @@ from api_app.controllers.companies import (
     CompaniesController,
     build_company_overview_base,
     build_company_trends_payload,
+    get_company_directory,
     prep_companies_overview_df,
 )
 from api_app.models import (
+    CompanyDirectoryEntry,
     CompaniesCategoryOverview,
     CompaniesOverview,
     PlatformCompanies,
     TopCompaniesShort,
 )
+from dbcon.queries import get_companies_stats
 from dbcon.static import build_company_trends_static_data
 
 
@@ -54,6 +57,34 @@ def _make_company_stats_df() -> pd.DataFrame:
             }
         ]
     )
+
+
+def test_get_companies_stats_caches_by_params_across_state_instances():
+    state_one = MagicMock()
+    state_two = MagicMock()
+    cached_df = pd.DataFrame(
+        [
+            {
+                "company_domain": "google.com",
+                "company_name": "Google",
+                "parent_company_domain": "alphabet.com",
+                "parent_company_name": "Alphabet",
+                "store": 1,
+                "app_category": "cache-share-test",
+                "tag_source": "sdk",
+                "app_count": 12,
+                "installs_d30": 5,
+            }
+        ]
+    )
+
+    with patch("dbcon.queries.pd.read_sql", return_value=cached_df) as mock_read_sql:
+        first = get_companies_stats(state_one, app_category="cache-share-test")
+        second = get_companies_stats(state_two, app_category="cache-share-test")
+
+    assert mock_read_sql.call_count == 1
+    assert list(first["store"]) == ["Google Play"]
+    assert list(second["store"]) == ["Google Play"]
 
 
 def _make_history_df() -> pd.DataFrame:
@@ -688,3 +719,117 @@ def test_companies_endpoint_returns_company_category_field():
     assert payload["companies_overview"][0]["company_category"] == "Ad Network"
     assert "google_sdk_latest_apps_added" not in payload["companies_overview"][0]
     assert payload["companies_overview"][0]["google_sdk_latest_apps_lost"] == 10
+
+
+def test_get_company_directory_builds_unique_rows_with_logo_context():
+    state = MagicMock()
+    companies_df = pd.DataFrame(
+        [
+            {
+                "company_domain": "google.com",
+                "company_name": "Google",
+                "parent_company_domain": "alphabet.com",
+                "parent_company_name": "Alphabet",
+                "store": "Google Play",
+                "tag_source": "sdk",
+                "app_category": "all",
+                "app_count": 100,
+                "installs_d30": 10,
+            },
+            {
+                "company_domain": "google.com",
+                "company_name": "Google",
+                "parent_company_domain": "alphabet.com",
+                "parent_company_name": "Alphabet",
+                "store": "Apple App Store",
+                "tag_source": "sdk",
+                "app_category": "all",
+                "app_count": 50,
+                "installs_d30": 5,
+            },
+            {
+                "company_domain": "adte.com",
+                "company_name": None,
+                "parent_company_domain": None,
+                "parent_company_name": None,
+                "store": "Google Play",
+                "tag_source": "sdk",
+                "app_category": "all",
+                "app_count": 25,
+                "installs_d30": 2,
+            },
+        ]
+    )
+    logos_df = pd.DataFrame(
+        [
+            {"company_domain": "google.com", "company_logo_url": "google-logo.png"},
+            {"company_domain": "alphabet.com", "company_logo_url": "alphabet-logo.png"},
+            {"company_domain": "adte.com", "company_logo_url": None},
+        ]
+    )
+
+    with (
+        patch(
+            "api_app.controllers.companies.get_companies_stats",
+            return_value=companies_df,
+        ),
+        patch(
+            "api_app.controllers.companies.get_company_logos_df",
+            return_value=logos_df,
+        ),
+    ):
+        directory = get_company_directory(state)
+
+    assert directory == [
+        CompanyDirectoryEntry(
+            name="Google",
+            company_domain="google.com",
+            parent_company_domain="alphabet.com",
+            parent_company_name="Alphabet",
+            company_logo_url="google-logo.png",
+            parent_company_logo_url="alphabet-logo.png",
+        ),
+        CompanyDirectoryEntry(
+            name="adte.com",
+            company_domain="adte.com",
+            parent_company_domain=None,
+            parent_company_name=None,
+            company_logo_url=None,
+            parent_company_logo_url=None,
+        ),
+    ]
+
+
+def test_companies_list_endpoint_returns_slim_directory_payload():
+    directory = [
+        CompanyDirectoryEntry(
+            name="Google",
+            company_domain="google.com",
+            parent_company_domain="alphabet.com",
+            parent_company_name="Alphabet",
+            company_logo_url="google-logo.png",
+            parent_company_logo_url="alphabet-logo.png",
+        )
+    ]
+    app = Litestar(route_handlers=[CompaniesController])
+
+    with (
+        patch(
+            "api_app.controllers.companies.get_company_directory",
+            return_value=directory,
+        ),
+        TestClient(app=app, raise_server_exceptions=False) as client,
+    ):
+        response = client.get("/api/companies/list")
+
+    assert response.status_code == 200
+    assert response.json() == [
+        {
+            "name": "Google",
+            "company_domain": "google.com",
+            "parent_company_domain": "alphabet.com",
+            "parent_company_name": "Alphabet",
+            "company_logo_url": "google-logo.png",
+            "parent_company_logo_url": "alphabet-logo.png",
+        }
+    ]

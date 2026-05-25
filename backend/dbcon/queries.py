@@ -290,6 +290,7 @@ def get_app_adstxt_overview(state: State, store_id: str) -> pd.DataFrame:
     return df
 
 
+@cache_by_params
 def get_companies_stats(
     state: State,
     app_category: str | None = None,

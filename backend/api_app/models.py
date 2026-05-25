@@ -244,6 +244,18 @@ class CompanyFollowLookup:
 
 
 @dataclass
+class CompanyDirectoryEntry:
+    """Slim company directory row for frontend selectors and lookups."""
+
+    name: str
+    company_domain: str
+    parent_company_domain: str | None = None
+    parent_company_name: str | None = None
+    company_logo_url: str | None = None
+    parent_company_logo_url: str | None = None
+
+
+@dataclass
 class CompanyPubIDTotals:
     """Totals for a publisher ID."""
 

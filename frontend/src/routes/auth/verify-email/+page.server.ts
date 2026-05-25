@@ -1,4 +1,5 @@
 import { fail, redirect } from '@sveltejs/kit';
+import { loginUrl } from '$lib/server/auth/auth';
 import {
 	EMAIL_VERIFICATION_LIMIT_MESSAGE,
 	createEmailVerificationRequest,
@@ -10,6 +11,7 @@ import {
 	sendVerificationEmailBucket,
 	setEmailVerificationRequestCookie
 } from '$lib/server/auth/email-verification';
+import { deleteSessionTokenCookie, invalidateSession } from '$lib/server/auth/session';
 import { invalidateUserPasswordResetSessions } from '$lib/server/auth/password-reset';
 import { updateUserEmailAndSetEmailAsVerified } from '$lib/server/auth/user';
 import { ExpiringTokenBucket } from '$lib/server/auth/rate-limit';
@@ -58,8 +60,22 @@ const bucket = new ExpiringTokenBucket<number>(5, 60 * 30);
 
 export const actions: Actions = {
 	verify: verifyCode,
-	resend: resendEmail
+	resend: resendEmail,
+	logout: logout
 };
+
+async function logout(event: RequestEvent) {
+	if (event.locals.session === null) {
+		return fail(401, {
+			message: 'Not authenticated'
+		});
+	}
+
+	await invalidateSession(event.locals.session.id);
+	deleteSessionTokenCookie(event);
+	deleteEmailVerificationRequestCookie(event);
+	return redirect(302, loginUrl('/auth/verify-email'));
+}
 
 async function verifyCode(event: RequestEvent) {
 	if (event.locals.session === null || event.locals.user === null) {
