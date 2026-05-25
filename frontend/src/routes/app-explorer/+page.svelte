@@ -184,9 +184,7 @@
 	});
 
 	function getAvailableCompanyOptions(selectedDomains: string[]): CompanyOption[] {
-		return companyOptions
-			.filter((company) => !selectedDomains.includes(company.value))
-			.slice(0, 25);
+		return companyOptions.filter((company) => !selectedDomains.includes(company.value));
 	}
 
 	const includeCollection = $derived(
