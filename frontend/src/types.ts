@@ -325,6 +325,10 @@ export interface OverviewAppList {
 	apps: SDKAppsOverview[];
 }
 
+export interface CompanyOverviewAppList {
+	apps: CompanyOverviewApps[];
+}
+
 export interface SDKAppsOverview {
 	name: string;
 	store_id: string;
@@ -346,18 +350,24 @@ export interface SDKAppsOverview {
 export interface CompanyOverviewApps {
 	name: string;
 	store_id: string;
-	store: number;
-	installs: number;
-	rating_count: number;
-	requested_at: string;
-	crawl_result: number;
-	app_name: string;
-	app_icon_url: string;
-	api_call: boolean;
+	store: string | number;
+	rank?: number | null;
+	developer_name: string;
+	icon_url_100: string;
+	installs_d30: number;
+	status?: string;
+	sdk: boolean;
 	publisher: boolean;
+	api_call: boolean;
 	app_ads_direct: boolean;
-	app_ads_reseller: boolean;
-	app_sdk: boolean;
+}
+
+export interface CompanyAppChangesOverview {
+	status: string;
+	year: number;
+	quarter: number;
+	android: CompanyOverviewAppList;
+	ios: CompanyOverviewAppList;
 }
 
 export interface SdksOverview {

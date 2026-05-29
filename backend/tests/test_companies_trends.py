@@ -10,6 +10,7 @@ from litestar.testing import TestClient
 
 from api_app.controllers.companies import (
     CompaniesController,
+    build_company_app_changes_payload,
     build_company_overview_base,
     build_company_trends_payload,
     get_company_directory,
@@ -405,6 +406,81 @@ def test_build_company_overview_base_exposes_domain_and_parent_scopes():
     assert overview.trends_summary is trend_summary
     assert overview.parent_overview.trends_summary is None
     assert overview.domain_overview.trends_summary is trend_summary
+
+
+def test_build_company_app_changes_payload_collapses_sources_and_limits_rows():
+    """Company app changes should collapse multiple sources onto one app row."""
+    state = MagicMock()
+    trends_summary = MagicMock(latest_period="2026-Q1")
+    sdk_df = pd.DataFrame(
+        [
+            {
+                "store": "Google Play",
+                "name": "Example App",
+                "store_id": "com.example.app",
+                "developer_name": "Example Dev",
+                "icon_url_100": "icon.png",
+                "rank": 3,
+                "installs_d30": 1000,
+                "status": "added",
+                "tag_source": "sdk",
+            }
+        ]
+    )
+    api_df = pd.DataFrame(
+        [
+            {
+                "store": "Google Play",
+                "name": "Example App",
+                "store_id": "com.example.app",
+                "developer_name": "Example Dev",
+                "icon_url_100": "icon.png",
+                "rank": 3,
+                "installs_d30": 1000,
+                "status": "added",
+                "tag_source": "api_call",
+            },
+            {
+                "store": "Apple App Store",
+                "name": "Second App",
+                "store_id": "id123",
+                "developer_name": "Second Dev",
+                "icon_url_100": "second.png",
+                "rank": 6,
+                "installs_d30": 500,
+                "status": "added",
+                "tag_source": "app_ads_direct",
+            },
+        ]
+    )
+
+    with (
+        patch(
+            "api_app.controllers.companies.get_company_trends_summary",
+            return_value=trends_summary,
+        ),
+        patch(
+            "api_app.controllers.companies.get_company_app_changes",
+            side_effect=[sdk_df, api_df.iloc[[0]].copy(), api_df.iloc[[1]].copy()],
+        ),
+    ):
+        payload = build_company_app_changes_payload(
+            state=state,
+            company_domain="example.com",
+            status="added",
+            limit=50,
+        )
+
+    assert payload.year == 2026
+    assert payload.quarter == 1
+    assert len(payload.android.apps) == 1
+    assert len(payload.ios.apps) == 1
+    assert payload.android.apps[0]["store_id"] == "com.example.app"
+    assert payload.android.apps[0]["sdk"] is True
+    assert payload.android.apps[0]["api_call"] is True
+    assert payload.android.apps[0]["app_ads_direct"] is False
+    assert payload.ios.apps[0]["store_id"] == "id123"
+    assert payload.ios.apps[0]["app_ads_direct"] is True
 
 
 def test_build_company_trends_payload_splits_history_by_platform():

@@ -28,6 +28,8 @@
 	function getSectionSlug(pathname: string) {
 		if (pathname.includes('/app-adstxt/publisher/')) return 'app-adstxt-publisher';
 		if (pathname.includes('/app-adstxt')) return 'app-adstxt';
+		if (pathname.includes('/apps-added')) return 'apps-added';
+		if (pathname.includes('/apps-lost')) return 'apps-lost';
 		if (pathname.includes('/creatives')) return 'creatives';
 		if (pathname.includes('/data-exports')) return 'data-exports';
 		if (pathname.includes('/mediation')) return 'mediation';
@@ -86,6 +88,10 @@
 
 	let pageTitle = $derived.by(() => {
 		switch (sectionSlug) {
+			case 'apps-added':
+				return `${companyDisplayName} Recently Added Client Apps | AppGoblin`;
+			case 'apps-lost':
+				return `${companyDisplayName} Recently Lost Client Apps | AppGoblin`;
 			case 'trends':
 				return `${companyDisplayName} Quarterly Market Share Trends | AppGoblin`;
 			case 'sdks':
@@ -107,6 +113,10 @@
 
 	let pageDescription = $derived.by(() => {
 		switch (sectionSlug) {
+			case 'apps-added':
+				return `Review the latest Android and iOS apps that recently added ${companyDisplayName} across SDK, API-call, and app-ads.txt signals.`;
+			case 'apps-lost':
+				return `Review the latest Android and iOS apps that recently removed ${companyDisplayName} across SDK, API-call, and app-ads.txt signals.`;
 			case 'trends':
 				return `Analyze quarterly iOS and Android market share trends for ${companyDisplayName}, split by SDK/API and app-ads.txt direct signals.`;
 			case 'sdks':
@@ -245,6 +255,12 @@
 			{companyDisplayName} Trends
 		</a>
 	{/if}
+	<a href={`/companies/${companyDomain}/apps-added`} class={sectionTabClass('apps-added')}>
+		{companyDisplayName} Apps Added
+	</a>
+	<a href={`/companies/${companyDomain}/apps-lost`} class={sectionTabClass('apps-lost')}>
+		{companyDisplayName} Apps Lost
+	</a>
 	<a href={`/companies/${companyDomain}/sdks`} class={sectionTabClass('sdks')}>
 		{companyDisplayName} SDKs
 	</a>

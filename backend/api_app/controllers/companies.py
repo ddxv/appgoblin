@@ -2,6 +2,8 @@
 
 /companies/ returns list of top companies overall.
 /companies/{company_domain} returns detail for a specific company.
+/companies/{company_domain}/apps-added returns recently added apps for a specific company.
+/companies/{company_domain}/apps-lost returns recently lost apps for a specific company.
 /companies/{company_domain}/topapps returns top apps for a specific company.
 /companies/{company_domain}/tree returns parent/child company tree for a specific company.
 /companies/categories/{category} returns list of top companies for a specific category.
@@ -11,6 +13,7 @@
 """
 
 import io
+import re
 import time
 import urllib.parse
 from collections import defaultdict
@@ -29,6 +32,7 @@ from api_app.models import (
     ChildCompany,
     CompaniesCategoryOverview,
     CompaniesOverview,
+    CompanyAppChangesOverview,
     CompanyCategoryOverview,
     CompanyDetail,
     CompanyDirectoryEntry,
@@ -62,6 +66,7 @@ from dbcon.queries import (
     get_company_adstxt_publisher_id_apps_overview,
     get_company_adstxt_publisher_id_apps_raw,
     get_company_adstxt_publishers_overview,
+    get_company_app_changes,
     get_company_categories_topn,
     get_company_follow_lookup,
     get_company_sdks,
@@ -94,6 +99,9 @@ logger = get_logger(__name__)
 TREND_HISTORY_WINDOW_QUARTERS = 4
 TREND_PLATFORM_MAP = {1: "android", 2: "ios"}
 TREND_TAG_SOURCE_ORDER = {"sdk_api": 0, "app_ads_direct": 1}
+COMPANY_APP_CHANGES_LIMIT = 50
+COMPANY_APP_CHANGE_TAG_SOURCES = ("sdk", "api_call", "app_ads_direct")
+COMPANY_APP_CHANGE_PERIOD_RE = re.compile(r"(?P<year>\d{4})-?Q(?P<quarter>[1-4])")
 
 
 def _normalize_trend_platform(store: object) -> str:
@@ -241,6 +249,192 @@ def get_company_apps(
         ),
     )
     return results
+
+
+def _parse_company_trends_period(latest_period: str | None) -> tuple[int, int] | None:
+    """Parse a trends period string like 2026-Q1 or 2026Q1 into integers."""
+    if latest_period is None:
+        return None
+
+    match = COMPANY_APP_CHANGE_PERIOD_RE.search(str(latest_period).strip().upper())
+    if not match:
+        return None
+
+    return int(match.group("year")), int(match.group("quarter"))
+
+
+def _resolve_company_app_changes_period(
+    state: State,
+    company_domain: str,
+    year: int | None = None,
+    quarter: int | None = None,
+) -> tuple[int, int]:
+    """Resolve the target quarter for company app-change lookups."""
+    if year is not None and quarter is not None:
+        return year, quarter
+
+    trends_summary = get_company_trends_summary(
+        state=state, company_domain=company_domain
+    )
+    resolved_period = _parse_company_trends_period(
+        getattr(trends_summary, "latest_period", None)
+    )
+    if resolved_period is None:
+        msg = f"No recent company change period found for {company_domain!r}"
+        raise NotFoundException(msg, status_code=404)
+
+    return resolved_period
+
+
+def _shape_company_app_changes_df(
+    app_changes_df: pd.DataFrame,
+    *,
+    limit: int,
+) -> pd.DataFrame:
+    """Collapse per-tag rows into one app row with source booleans for the frontend."""
+    if app_changes_df.empty:
+        return pd.DataFrame(
+            columns=[
+                "store",
+                "name",
+                "store_id",
+                "developer_name",
+                "icon_url_100",
+                "rank",
+                "installs_d30",
+                "status",
+                "sdk",
+                "publisher",
+                "api_call",
+                "app_ads_direct",
+            ]
+        )
+
+    grouped = (
+        app_changes_df.groupby(
+            [
+                "store",
+                "name",
+                "store_id",
+                "developer_name",
+                "icon_url_100",
+                "status",
+            ],
+            dropna=False,
+        )
+        .agg(
+            rank=pd.NamedAgg(column="rank", aggfunc="min"),
+            installs_d30=pd.NamedAgg(column="installs_d30", aggfunc="max"),
+            tag_sources=pd.NamedAgg(
+                column="tag_source",
+                aggfunc=lambda values: {
+                    str(value) for value in values.tolist() if pd.notna(value)
+                },
+            ),
+        )
+        .reset_index()
+    )
+
+    grouped["sdk"] = grouped["tag_sources"].apply(lambda values: "sdk" in values)
+    grouped["api_call"] = grouped["tag_sources"].apply(
+        lambda values: "api_call" in values
+    )
+    grouped["app_ads_direct"] = grouped["tag_sources"].apply(
+        lambda values: "app_ads_direct" in values
+    )
+    grouped["publisher"] = False
+    grouped = grouped.drop(columns=["tag_sources"])
+    grouped = grouped.sort_values(
+        by=["rank", "installs_d30", "name"],
+        ascending=[True, False, True],
+        na_position="last",
+    ).head(limit)
+    return grouped
+
+
+def build_company_app_changes_payload(
+    state: State,
+    company_domain: str,
+    status: str,
+    *,
+    year: int | None = None,
+    quarter: int | None = None,
+    limit: int = COMPANY_APP_CHANGES_LIMIT,
+) -> CompanyAppChangesOverview:
+    """Build frontend company app-change payloads for the latest or requested quarter."""
+    resolved_year, resolved_quarter = _resolve_company_app_changes_period(
+        state=state,
+        company_domain=company_domain,
+        year=year,
+        quarter=quarter,
+    )
+    raw_frames = [
+        get_company_app_changes(
+            state=state,
+            company_domain=company_domain,
+            tag_source=tag_source,
+            year=resolved_year,
+            quarter=resolved_quarter,
+            status=status,
+        )
+        for tag_source in COMPANY_APP_CHANGE_TAG_SOURCES
+    ]
+    non_empty_frames = [frame for frame in raw_frames if not frame.empty]
+    collapsed_df = _shape_company_app_changes_df(
+        (
+            pd.concat(non_empty_frames, ignore_index=True)
+            if non_empty_frames
+            else pd.DataFrame()
+        ),
+        limit=limit,
+    )
+
+    android_df = collapsed_df[
+        collapsed_df["store"].astype(str).str.startswith("Google")
+    ]
+    ios_df = collapsed_df[~collapsed_df["store"].astype(str).str.startswith("Google")]
+
+    return CompanyAppChangesOverview(
+        status=status,
+        year=resolved_year,
+        quarter=resolved_quarter,
+        android=AppGroup(
+            apps=android_df.to_dict(orient="records"),
+            title=company_domain,
+        ),
+        ios=AppGroup(
+            apps=ios_df.to_dict(orient="records"),
+            title=company_domain,
+        ),
+    )
+
+
+def get_company_app_change_store_ids(
+    state: State,
+    company_domain: str,
+    tag_source: str,
+    year: int,
+    quarter: int,
+    status: str,
+) -> list[str]:
+    """Return ordered store IDs for a single company/tag-source/status quarter slice."""
+    df = get_company_app_changes(
+        state=state,
+        company_domain=company_domain,
+        tag_source=tag_source,
+        year=year,
+        quarter=quarter,
+        status=status,
+    )
+    if df.empty:
+        return []
+
+    df = df.sort_values(
+        by=["rank", "installs_d30", "name"],
+        ascending=[True, False, True],
+        na_position="last",
+    )
+    return df["store_id"].dropna().astype(str).drop_duplicates().tolist()
 
 
 def top_companies_by_tag_source(top_df: pd.DataFrame) -> TopCompaniesShort:
@@ -1478,6 +1672,48 @@ class CompaniesController(Controller):
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(f"GET /api/companies/{company_domain} took {duration}ms")
         return overview
+
+    @get(path="/companies/{company_domain:str}/apps-added", cache=86400)
+    async def company_apps_added(
+        self: Self,
+        state: State,
+        company_domain: str,
+        year: int | None = None,
+        quarter: int | None = None,
+    ) -> CompanyAppChangesOverview:
+        """Return recently added apps for a company, capped for frontend rendering."""
+        start = time.perf_counter() * 1000
+        payload = build_company_app_changes_payload(
+            state=state,
+            company_domain=company_domain,
+            status="added",
+            year=year,
+            quarter=quarter,
+        )
+        duration = round((time.perf_counter() * 1000 - start), 2)
+        logger.info(f"GET /api/companies/{company_domain}/apps-added took {duration}ms")
+        return payload
+
+    @get(path="/companies/{company_domain:str}/apps-lost", cache=86400)
+    async def company_apps_lost(
+        self: Self,
+        state: State,
+        company_domain: str,
+        year: int | None = None,
+        quarter: int | None = None,
+    ) -> CompanyAppChangesOverview:
+        """Return recently lost apps for a company, capped for frontend rendering."""
+        start = time.perf_counter() * 1000
+        payload = build_company_app_changes_payload(
+            state=state,
+            company_domain=company_domain,
+            status="lost",
+            year=year,
+            quarter=quarter,
+        )
+        duration = round((time.perf_counter() * 1000 - start), 2)
+        logger.info(f"GET /api/companies/{company_domain}/apps-lost took {duration}ms")
+        return payload
 
     @get(path="/companies/{company_domain:str}/trends", cache=86400)
     async def company_trends(

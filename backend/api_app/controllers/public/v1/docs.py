@@ -120,6 +120,17 @@ COMPANY_OVERVIEW_EXAMPLE_RESPONSE = {
         },
     },
 }
+COMPANY_APPS_ADDED_EXAMPLE_RESPONSE = {
+    "domain_name": "unity.com",
+    "tag_source": "sdk",
+    "year": 2026,
+    "quarter": 1,
+    "status": "added",
+    "store_ids": [
+        "com.example.first",
+        "id1234567890",
+    ],
+}
 V1_OPERATION_DOCS = {
     "/api/v1/companies": {
         "get": {
@@ -141,6 +152,26 @@ V1_OPERATION_DOCS = {
                 "Returns the public company overview for a single domain, including "
                 "mapping status, company types, key metrics, a latest-trends summary, "
                 "and dataset availability."
+            ),
+        }
+    },
+    "/api/v1/companies/apps-added": {
+        "get": {
+            "summary": "/companies/apps-added",
+            "description": (
+                "Endpoint: `GET /api/v1/companies/apps-added`\n\n"
+                "Returns ordered store IDs for apps added to a company in a specific "
+                "year/quarter slice, filtered by a single tag source."
+            ),
+        }
+    },
+    "/api/v1/companies/apps-lost": {
+        "get": {
+            "summary": "/companies/apps-lost",
+            "description": (
+                "Endpoint: `GET /api/v1/companies/apps-lost`\n\n"
+                "Returns ordered store IDs for apps lost from a company in a specific "
+                "year/quarter slice, filtered by a single tag source."
             ),
         }
     },
@@ -322,6 +353,51 @@ def _set_company_overview_example(schema: dict[str, Any]) -> None:
     }
 
 
+def _set_company_app_changes_examples(schema: dict[str, Any]) -> None:
+    """Attach examples and parameter examples for public company app-change endpoints."""
+    for path, status in (
+        ("/api/v1/companies/apps-added", "added"),
+        ("/api/v1/companies/apps-lost", "lost"),
+    ):
+        path_item = schema.get("paths", {}).get(path)
+        if not isinstance(path_item, dict):
+            continue
+
+        get_operation = path_item.get("get")
+        if not isinstance(get_operation, dict):
+            continue
+
+        for parameter in get_operation.get("parameters", []):
+            if parameter.get("name") == "domain_name":
+                parameter["example"] = "unity.com"
+            elif parameter.get("name") == "tag_source":
+                parameter["example"] = "sdk"
+            elif parameter.get("name") == "year":
+                parameter["example"] = 2026
+            elif parameter.get("name") == "quarter":
+                parameter["example"] = 1
+
+        responses = get_operation.get("responses", {})
+        response_200 = responses.get("200")
+        if not isinstance(response_200, dict):
+            continue
+
+        content = response_200.get("content", {})
+        json_content = content.get("application/json")
+        if not isinstance(json_content, dict):
+            continue
+
+        json_content["examples"] = {
+            f"unity_company_apps_{status}": {
+                "summary": f"Store IDs for Unity apps {status} in 2026 Q1",
+                "value": {
+                    **COMPANY_APPS_ADDED_EXAMPLE_RESPONSE,
+                    "status": status,
+                },
+            }
+        }
+
+
 def _set_operation_docs(schema: dict[str, Any]) -> None:
     """Set stable Scalar-friendly summaries and descriptions for public v1 routes."""
     paths = schema.get("paths", {})
@@ -397,6 +473,7 @@ def build_v1_openapi_schema(request: Request) -> dict[str, Any]:
     _set_companies_index_example(schema)
     _set_app_basics_example(schema)
     _set_company_overview_example(schema)
+    _set_company_app_changes_examples(schema)
     return schema
 
 

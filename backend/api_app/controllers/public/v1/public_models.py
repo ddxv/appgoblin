@@ -121,6 +121,18 @@ class PublicCompanyOverview:
 
 
 @dataclass
+class PublicCompanyAppChangeStoreIds:
+    """Public paid response for a company app-change slice."""
+
+    domain_name: str
+    tag_source: str
+    year: int
+    quarter: int
+    status: str
+    store_ids: list[str] = field(default_factory=list)
+
+
+@dataclass
 class PublicAppBasics:
     """Stable public app metadata plus power-user adoption and revenue estimates."""
 
