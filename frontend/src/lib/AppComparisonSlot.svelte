@@ -2,7 +2,7 @@
 	import AppComparisonColumn from '$lib/AppComparisonColumn.svelte';
 	import ComparisonSearch from '$lib/ComparisonSearch.svelte';
 	import { goto } from '$app/navigation';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 
 	let {
 		app = null,
@@ -29,7 +29,7 @@
 	let manuallyToggledSearch = $state(false);
 
 	// Check if there's a search query in the URL
-	let hasSearchQuery = $derived(!!$page.url.searchParams.get(`search${slotId}`));
+	let hasSearchQuery = $derived(!!page.url.searchParams.get(`search${slotId}`));
 
 	$effect(() => {
 		// Only auto-manage search state if user hasn't manually toggled it
@@ -62,7 +62,7 @@
 
 		// When opening search, clear the search param to start fresh
 		if (isSearching) {
-			const url = new URL($page.url);
+			const url = new URL(page.url);
 			url.searchParams.delete(`search${slotId}`);
 			goto(url.pathname + url.search, { noScroll: true, keepFocus: true, invalidateAll: false });
 		}
