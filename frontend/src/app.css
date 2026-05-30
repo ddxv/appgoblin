@@ -5,7 +5,7 @@
 @import '@skeletonlabs/skeleton-svelte';
 /* @import '@skeletonlabs/skeleton/themes/wintry'; */
 
-@import 'layerchart/skeleton-3.css';
+@import 'layerchart/skeleton-4.css';
 @import '../appgoblin-theme.css';
 
 @custom-variant dark (&:where([data-mode=dark], [data-mode=dark] *));
@@ -78,4 +78,12 @@ a:not(.btn):hover {
 
 .post img {
 	@apply mx-auto rounded-lg my-4;
+}
+
+[data-mode='dark'] .lc-root-container {
+	/* layerchart for dark seems to stroke outline text, overriding that */
+	--color-surface-100: var(--color-gray-800);
+	--color-surface-200: var(--color-gray-700);
+	--color-surface-300: var(--color-gray-600);
+	--color-surface-content: var(--color-surface-950-50);
 }

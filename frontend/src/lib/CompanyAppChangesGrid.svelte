@@ -102,11 +102,6 @@
 				></div>
 			</div>
 		</div>
-		<p class="text-xs md:text-sm text-surface-700-300">
-			Recently changed app lists are available on the
-			<a href="/pricing" class="underline hover:text-primary-600-400">B2B SDK Intelligence</a>
-			tier.
-		</p>
 	</div>
 {/snippet}
 

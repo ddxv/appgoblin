@@ -443,8 +443,8 @@
 		<!-- Sidebar Filters -->
 		<aside class="p-4 space-y-5 lg:sticky lg:top-20 overflow-y-auto">
 			{#if !hasPaidAccess}
-				<div class="mb-4 p-3 bg-warning-50-950/20 rounded-lg border border-warning-500">
-					<p class="text-xs text-warning-900-100 flex items-center gap-2">
+				<div class="mb-4 p-3 bg-warning-50-950/20 rounded-lg border border-warning-800-200">
+					<p class="text-sm text-warning-950-50 flex items-center gap-2">
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
 							width="16"

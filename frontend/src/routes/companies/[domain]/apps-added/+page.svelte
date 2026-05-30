@@ -24,10 +24,26 @@
 </p>
 
 {#if !data.hasB2BSdkAccess}
-	<div class="mb-4 rounded-md border border-primary-200 bg-primary-50/50 p-4 text-sm">
-		Preview only. Recently changed app lists are available on the
-		<a href="/pricing" class="underline hover:text-primary-600-400">B2B SDK Intelligence</a>
-		tier.
+	<div class="mb-4 p-3 bg-warning-50-950/20 rounded-lg border border-warning-800-200">
+		<p class="text-sm text-warning-950-50 flex items-center gap-2">
+			<svg
+				xmlns="http://www.w3.org/2000/svg"
+				width="16"
+				height="16"
+				viewBox="0 0 24 24"
+				fill="none"
+				stroke="currentColor"
+				stroke-width="2"
+				stroke-linecap="round"
+				stroke-linejoin="round"
+			>
+				<rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+				<path d="M7 11V7a5 5 0 0 1 10 0v4" />
+			</svg>
+			Preview only. Recently changed app lists are available on the B2B SDK Intelligence tier.
+			<a href="/pricing" class="underline hover:text-primary-600-400">Upgrade</a>
+			to unlock.
+		</p>
 	</div>
 {/if}
 
