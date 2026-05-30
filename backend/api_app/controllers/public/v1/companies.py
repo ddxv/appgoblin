@@ -3,7 +3,7 @@
 import os
 import time
 from collections.abc import Mapping
-from typing import Self, cast
+from typing import Self, SupportsFloat, SupportsIndex, SupportsInt, cast
 from urllib.parse import quote
 
 from litestar import Controller, Request, Response, get
@@ -91,14 +91,18 @@ def _optional_int(value: object) -> int | None:
     """Normalize optional integers from serialized pandas rows."""
     if _is_missing_value(value):
         return None
-    return int(value)
+    if isinstance(value, (str, bytes, bytearray, SupportsInt, SupportsIndex)):
+        return int(value)
+    raise TypeError(f"Expected integer-compatible scalar, got {type(value).__name__}")
 
 
 def _optional_float(value: object) -> float | None:
     """Normalize optional floats from serialized pandas rows."""
     if _is_missing_value(value):
         return None
-    return float(value)
+    if isinstance(value, (str, bytes, bytearray, SupportsFloat, SupportsIndex)):
+        return float(value)
+    raise TypeError(f"Expected float-compatible scalar, got {type(value).__name__}")
 
 
 def _api_key_guard(request: ASGIConnection, route_handler: BaseRouteHandler) -> None:
