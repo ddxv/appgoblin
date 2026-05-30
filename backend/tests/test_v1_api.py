@@ -20,6 +20,7 @@ from api_app.controllers.public.v1.companies import (
     UNMAPPED_COMPANY_NOTICE,
     V1CompaniesController,
 )
+from api_app.controllers.public.v1.keywords import V1KeywordsController
 from api_app.controllers.public.v1.public_models import (
     CompanyDatasets,
     CompanyDatasetTarget,
@@ -60,7 +61,7 @@ async def _mock_lifespan(app: Litestar) -> AsyncGenerator[None]:
 
 def _make_test_app():
     return Litestar(
-        route_handlers=[V1CompaniesController, V1AppsController],
+        route_handlers=[V1CompaniesController, V1AppsController, V1KeywordsController],
         lifespan=[_mock_lifespan],
         middleware=[DefineMiddleware(RateLimitMiddleware)],
     )
@@ -72,6 +73,7 @@ def _make_docs_test_app():
             HealthController,
             V1CompaniesController,
             V1AppsController,
+            V1KeywordsController,
             V1DocsController,
         ],
         lifespan=[_mock_lifespan],
@@ -210,6 +212,22 @@ def _patch_sdk_details(rows: list[dict]):
     )
 
 
+def _patch_keyword_details(rows: list[dict]):
+    keyword_df = pd.DataFrame(rows)
+    return patch(
+        "api_app.controllers.public.v1.keywords.get_keyword_details",
+        return_value=keyword_df,
+    )
+
+
+def _patch_keyword_apps(rows: list[dict]):
+    keyword_apps_df = pd.DataFrame(rows)
+    return patch(
+        "api_app.controllers.public.v1.keywords.get_keyword_apps",
+        return_value=keyword_apps_df,
+    )
+
+
 class TestV1CompaniesAuth:
     def test_no_api_key_returns_401(self):
         app = _make_test_app()
@@ -242,6 +260,13 @@ class TestV1CompaniesAuth:
         app = _make_test_app()
         with TestClient(app=app, raise_server_exceptions=False) as client:
             resp = client.get("/api/v1/apps/com.example.app/sdks")
+        assert resp.status_code == 401
+        assert "Missing X-API-Key" in resp.json()["detail"]
+
+    def test_keyword_overview_requires_api_key(self):
+        app = _make_test_app()
+        with TestClient(app=app, raise_server_exceptions=False) as client:
+            resp = client.get("/api/v1/keywords/app privacy")
         assert resp.status_code == 401
         assert "Missing X-API-Key" in resp.json()["detail"]
 
@@ -1105,6 +1130,207 @@ class TestV1Apps:
         }
 
 
+class TestV1Keywords:
+    def test_keyword_overview_logs_umami_page_view_with_user_id(self):
+        app = _make_test_app()
+        keyword_rows = [
+            {
+                "store": 1,
+                "app_count": 420,
+                "total_apps": 1960,
+                "median_competitor_installs": 250000,
+                "avg_competitor_rating": 4.3,
+                "major_competitors": 18,
+                "volume_competition_score": 73.1,
+                "keyword_difficulty": 61.2,
+                "opportunity_score": 69.8,
+                "competitiveness_score": 64.5,
+            }
+        ]
+        rank_rows = [
+            {
+                "name": "Example App",
+                "store": 1,
+                "store_id": "com.example.app",
+                "installs": 50000,
+                "rating_count": 100,
+                "icon_url_100": "icon.png",
+                "category": "tools",
+                "latest_app_rank": 4,
+                "d30_best_rank": 2,
+            }
+        ]
+
+        with (
+            _patch_key_found("free"),
+            _patch_keyword_details(keyword_rows),
+            _patch_keyword_apps(rank_rows),
+            patch("api_app.analytics.log_umami_page") as log_umami_page,
+            TestClient(app=app, raise_server_exceptions=False) as client,
+        ):
+            resp = client.get(
+                "/api/v1/keywords/app privacy",
+                headers={
+                    "X-API-Key": "ag_keywordkey",
+                    "X-Forwarded-For": "203.0.113.11",
+                },
+            )
+
+        assert resp.status_code == 200
+        log_umami_page.assert_called_once_with(
+            url="/api/v1/keywords/app privacy",
+            ip="203.0.113.11",
+            user_id=1,
+            page_title=None,
+            hostname=PUBLIC_API_HOSTNAME,
+            referrer=None,
+        )
+
+    def test_keyword_overview_returns_expected_fields(self):
+        app = _make_test_app()
+        keyword_rows = [
+            {
+                "store": 1,
+                "app_count": 420,
+                "total_apps": 1960,
+                "median_competitor_installs": 250000,
+                "avg_competitor_rating": 4.3,
+                "major_competitors": 18,
+                "volume_competition_score": 73.1,
+                "keyword_difficulty": 61.2,
+                "opportunity_score": 69.8,
+                "competitiveness_score": 64.5,
+                "keyword_id": 101,
+            },
+            {
+                "store": 2,
+                "app_count": 215,
+                "total_apps": 910,
+                "median_competitor_installs": 175000,
+                "avg_competitor_rating": 4.6,
+                "major_competitors": 11,
+                "volume_competition_score": 68.4,
+                "keyword_difficulty": 57.9,
+                "opportunity_score": 71.3,
+                "competitiveness_score": 59.4,
+                "keyword_text": "app privacy",
+            },
+        ]
+        rank_rows = [
+            {
+                "name": "Example Android App",
+                "store": 1,
+                "store_id": "com.example.app",
+                "installs": 50000,
+                "rating_count": 100,
+                "icon_url_100": "icon.png",
+                "category": "tools",
+                "latest_app_rank": 4,
+                "d30_best_rank": 2,
+            },
+            {
+                "name": "Example iPhone App",
+                "store": 2,
+                "store_id": "id123456",
+                "installs": 1200,
+                "rating_count": 94,
+                "icon_url_100": "ios-icon.png",
+                "category": "utilities",
+                "latest_app_rank": 6,
+                "d30_best_rank": 3,
+            },
+        ]
+        with (
+            _patch_key_found("free"),
+            _patch_keyword_details(keyword_rows),
+            _patch_keyword_apps(rank_rows),
+            TestClient(app=app, raise_server_exceptions=False) as client,
+        ):
+            resp = client.get(
+                "/api/v1/keywords/app privacy",
+                headers={"X-API-Key": "ag_keywordkey"},
+            )
+
+        assert resp.status_code == 200
+        assert resp.json() == {
+            "keyword": "app privacy",
+            "country": "US",
+            "android": {
+                "metrics": {
+                    "app_count": 420,
+                    "total_apps": 1960,
+                    "median_competitor_installs": 250000,
+                    "avg_competitor_rating": 4.3,
+                    "major_competitors": 18,
+                    "volume_competition_score": 73.1,
+                    "keyword_difficulty": 61.2,
+                    "opportunity_score": 69.8,
+                    "competitiveness_score": 64.5,
+                },
+                "top_apps": [
+                    {
+                        "name": "Example Android App",
+                        "store_id": "com.example.app",
+                        "category": "tools",
+                        "installs": 50000,
+                        "rating_count": 100,
+                        "app_icon_url": (
+                            "https://media.appgoblin.info/app-icons/"
+                            "com.example.app/icon.png"
+                        ),
+                        "latest_rank": 4,
+                        "best_rank_d30": 2,
+                    }
+                ],
+            },
+            "ios": {
+                "metrics": {
+                    "app_count": 215,
+                    "total_apps": 910,
+                    "median_competitor_installs": 175000,
+                    "avg_competitor_rating": 4.6,
+                    "major_competitors": 11,
+                    "volume_competition_score": 68.4,
+                    "keyword_difficulty": 57.9,
+                    "opportunity_score": 71.3,
+                    "competitiveness_score": 59.4,
+                },
+                "top_apps": [
+                    {
+                        "name": "Example iPhone App",
+                        "store_id": "id123456",
+                        "category": "utilities",
+                        "installs": 1200,
+                        "rating_count": 94,
+                        "app_icon_url": (
+                            "https://media.appgoblin.info/app-icons/"
+                            "id123456/ios-icon.png"
+                        ),
+                        "latest_rank": 6,
+                        "best_rank_d30": 3,
+                    }
+                ],
+            },
+        }
+        assert "keyword_id" not in resp.text
+
+    def test_keyword_overview_returns_404_for_unknown_keyword(self):
+        app = _make_test_app()
+        with (
+            _patch_key_found("free"),
+            _patch_keyword_details([]),
+            _patch_keyword_apps([]),
+            TestClient(app=app, raise_server_exceptions=False) as client,
+        ):
+            resp = client.get(
+                "/api/v1/keywords/missing keyword",
+                headers={"X-API-Key": "ag_missingkeyword"},
+            )
+
+        assert resp.status_code == 404
+        assert "Keyword not found" in resp.json()["detail"]
+
+
 class TestV1Docs:
     def test_openapi_json_only_lists_public_v1_paths(self):
         app = _make_docs_test_app()
@@ -1117,10 +1343,14 @@ class TestV1Docs:
         assert data["info"]["version"] == "0.1.0"
         assert "X-API-Key" in data["info"]["description"]
         assert "## Rate Limits" in data["info"]["description"]
+        assert "## Plans & Access" in data["info"]["description"]
+        assert "https://appgoblin.info/pricing" in data["info"]["description"]
         assert "30 requests per minute" in data["info"]["description"]
         assert "1,000 requests per day" in data["info"]["description"]
         assert "X-RateLimit-Limit" in data["info"]["description"]
         assert "429 Too Many Requests" in data["info"]["description"]
+        assert "## AI & Raw Spec" in data["info"]["description"]
+        assert "/api/v1/docs/openapi.json" in data["info"]["description"]
         assert data["servers"] == [{"url": "https://appgoblin.info"}]
         assert (
             data["components"]["securitySchemes"]["ApiKeyAuth"]["name"] == "X-API-Key"
@@ -1128,6 +1358,7 @@ class TestV1Docs:
         assert data["security"] == [{"ApiKeyAuth": []}]
         assert "/health" not in data["paths"]
         assert "/api/v1/apps/{store_id}/sdksoverview" not in data["paths"]
+        assert "/api/v1/keywords/{keyword}" in data["paths"]
         assert data["paths"]
         assert all(path.startswith("/api/v1/") for path in data["paths"])
         assert "PublicAppSdkOverview" not in data["components"]["schemas"]
@@ -1180,10 +1411,11 @@ class TestV1Docs:
         company_app_changes_operation = data["paths"][
             "/api/v1/companies/{company_domain}/app-changes"
         ]["get"]
-        assert companies_operation["summary"] == "/companies"
+        assert companies_operation["summary"] == "[Paid] /companies"
         assert (
             companies_operation["description"]
             == "Endpoint: `GET /api/v1/companies`\n\n"
+            "Access: Paid tiers only.\n\n"
             "Returns the public company index with queryable company domains, "
             "display names, parent mappings, installs, and the latest trend "
             "snapshot fields for market share, market-share change, total apps, "
@@ -1221,10 +1453,14 @@ class TestV1Docs:
             if parameter["name"] == "company_domain"
         )
         assert company_domain_parameter["example"] == "unity.com"
-        assert company_overview_operation["summary"] == "/companies/{company_domain}"
+        assert (
+            company_overview_operation["summary"]
+            == "[Paid] /companies/{company_domain}"
+        )
         assert (
             company_overview_operation["description"]
             == "Endpoint: `GET /api/v1/companies/{company_domain}`\n\n"
+            "Access: Paid tiers only.\n\n"
             "Returns the public company overview for a single domain, including "
             "mapping status, company types, key metrics, a latest-trends summary, "
             "and dataset availability."
@@ -1248,23 +1484,26 @@ class TestV1Docs:
             == 39452
         )
         assert [
-            parameter["name"] for parameter in company_app_changes_operation["parameters"]
+            parameter["name"]
+            for parameter in company_app_changes_operation["parameters"]
         ] == ["company_domain", "status", "tag_source", "year", "quarter"]
-        assert (
-            company_app_changes_operation["summary"]
-            == "/companies/{company_domain}/app-changes"
+        assert company_app_changes_operation["summary"] == (
+            "[Paid] /companies/{company_domain}/app-changes"
         )
         assert (
             company_app_changes_operation["description"]
             == "Endpoint: `GET /api/v1/companies/{company_domain}/app-changes`\n\n"
+            "Access: Paid tiers only.\n\n"
             "Returns ordered Android and iOS app store IDs for apps added to or "
             "lost from a company in a specific year/quarter slice, filtered by "
             "status and a single tag source."
         )
-        company_app_changes_examples = company_app_changes_operation["responses"]["200"][
-            "content"
-        ]["application/json"]["examples"]
-        assert company_app_changes_examples["unity_company_app_changes_added"]["value"] == {
+        company_app_changes_examples = company_app_changes_operation["responses"][
+            "200"
+        ]["content"]["application/json"]["examples"]
+        assert company_app_changes_examples["unity_company_app_changes_added"][
+            "value"
+        ] == {
             "company_domain": "unity.com",
             "tag_source": "sdk",
             "year": 2026,
@@ -1280,6 +1519,32 @@ class TestV1Docs:
             == "Endpoint: `GET /api/v1/apps/{store_id}/sdks`\n\n"
             "Returns public SDK findings, permissions, package queries, SKAdNetwork "
             "entries, and unmapped evidence for a single app."
+        )
+        keyword_operation = data["paths"]["/api/v1/keywords/{keyword}"]["get"]
+        keyword_parameter = next(
+            parameter
+            for parameter in keyword_operation["parameters"]
+            if parameter["name"] == "keyword"
+        )
+        assert keyword_parameter["example"] == "app privacy"
+        assert keyword_operation["summary"] == "/keywords/{keyword}"
+        assert (
+            keyword_operation["description"]
+            == "Endpoint: `GET /api/v1/keywords/{keyword}`\n\n"
+            "Returns per-platform keyword metrics plus grouped top-ranked apps "
+            "for an exact keyword lookup in the US storefront dataset."
+        )
+        keyword_examples = keyword_operation["responses"]["200"]["content"][
+            "application/json"
+        ]["examples"]
+        assert keyword_examples["keyword_overview"]["value"]["keyword"] == (
+            "app privacy"
+        )
+        assert (
+            keyword_examples["keyword_overview"]["value"]["android"]["metrics"][
+                "opportunity_score"
+            ]
+            == 69.8
         )
 
     def test_openapi_page_renders_scalar(self):

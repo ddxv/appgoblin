@@ -186,3 +186,50 @@ class PublicAppSdkDetails:
     app_queries: list[str] = field(default_factory=list)
     skadnetwork: list[str] = field(default_factory=list)
     unmapped_sdks: AppSdkUnmappedEvidence = field(default_factory=dict)
+
+
+@dataclass
+class PublicKeywordPlatformMetrics:
+    """Public keyword metrics for a single mobile platform."""
+
+    app_count: int | None = None
+    total_apps: int | None = None
+    median_competitor_installs: int | None = None
+    avg_competitor_rating: float | None = None
+    major_competitors: int | None = None
+    volume_competition_score: float | None = None
+    keyword_difficulty: float | None = None
+    opportunity_score: float | None = None
+    competitiveness_score: float | None = None
+
+
+@dataclass
+class PublicKeywordRankedApp:
+    """Public app row for a keyword rankings response."""
+
+    name: str | None = None
+    store_id: str | None = None
+    category: str | None = None
+    installs: int | None = None
+    rating_count: int | None = None
+    app_icon_url: str | None = None
+    latest_rank: int | None = None
+    best_rank_d30: int | None = None
+
+
+@dataclass
+class PublicKeywordPlatformOverview:
+    """Keyword metrics and top apps for a single mobile platform."""
+
+    metrics: PublicKeywordPlatformMetrics | None = None
+    top_apps: list[PublicKeywordRankedApp] = field(default_factory=list)
+
+
+@dataclass
+class PublicKeywordOverview:
+    """Public keyword overview payload returned by the v1 API."""
+
+    keyword: str
+    country: str
+    android: PublicKeywordPlatformOverview | None = None
+    ios: PublicKeywordPlatformOverview | None = None

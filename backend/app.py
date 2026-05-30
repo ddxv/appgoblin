@@ -22,6 +22,7 @@ from api_app.controllers.keywords import KeywordsController
 from api_app.controllers.public.v1.apps import V1AppsController
 from api_app.controllers.public.v1.companies import V1CompaniesController
 from api_app.controllers.public.v1.docs import V1DocsController
+from api_app.controllers.public.v1.keywords import V1KeywordsController
 from api_app.controllers.rankings import RankingsController
 from api_app.controllers.scry import ScryController
 from api_app.controllers.sdks import SdksController
@@ -181,10 +182,7 @@ async def db_lifespan(app: Litestar) -> AsyncGenerator[None]:
 
     if tier_prices_raw is None:
         tier_prices = None
-    elif not isinstance(tier_prices_raw, dict):
-        logger.exception("Invalid API tier pricing config")
-        raise RuntimeError("Invalid API tier pricing config in config.toml")
-    elif not all(
+    elif not isinstance(tier_prices_raw, dict) or not all(
         isinstance(key, str) and isinstance(value, str)
         for key, value in tier_prices_raw.items()
     ):
@@ -268,6 +266,7 @@ app = Litestar(
         HealthController,
         V1AppsController,
         V1CompaniesController,
+        V1KeywordsController,
         V1DocsController,
     ],
     cors_config=cors_config,
