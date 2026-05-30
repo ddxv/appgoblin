@@ -167,7 +167,7 @@
 <!-- Header with Summary Cards -->
 <div class="mb-8">
 	<div class="mb-6 flex items-center justify-between">
-		<h1 class="text-2xl font-bold">App Trends</h1>
+		<h2 class="text-2xl font-bold">App Trends</h2>
 
 		<div class="flex items-center gap-3">
 			<label for="region-select" class="text-sm font-medium">Region:</label>

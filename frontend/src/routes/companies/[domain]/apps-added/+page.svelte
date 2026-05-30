@@ -18,10 +18,13 @@
 	let { data }: Props = $props();
 </script>
 
-<p class="text-sm mb-3">
-	This view tracks apps that recently added this company through SDK, API-call, or app-ads.txt
-	direct signals across the latest available quarter and the quarter before it.
-</p>
+<section class="mb-4 space-y-2">
+	<h2 class="text-xl font-semibold">Recently Added Apps</h2>
+	<p class="text-sm mb-3">
+		This view tracks apps that recently added this company through SDK, API-call, or app-ads.txt
+		direct signals across the latest available quarter and the quarter before it.
+	</p>
+</section>
 
 {#if !data.hasB2BSdkAccess}
 	<div class="mb-4 p-3 bg-warning-50-950/20 rounded-lg border border-warning-800-200">
@@ -52,9 +55,9 @@
 		{#each data.quarterlyAppChanges as entry (entry.label)}
 			<section class="space-y-4">
 				<div>
-					<h2 class="text-lg font-semibold">
+					<h3 class="text-lg font-semibold">
 						{entry.label}: {entry.appChanges.year} Q{entry.appChanges.quarter}
-					</h2>
+					</h3>
 				</div>
 				<CompanyAppChangesGrid
 					appChanges={entry.appChanges}

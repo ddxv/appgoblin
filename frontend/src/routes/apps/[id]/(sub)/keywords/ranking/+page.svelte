@@ -55,7 +55,7 @@
 		<AppKeywordsNav storeId={myapp.store_id} />
 
 		<section class={`${cardBase} p-6`}>
-			<h1 class="h4 md:h3 mb-2">Top / Ranking Keywords</h1>
+			<h2 class="h4 md:h3 mb-2">Top / Ranking Keywords</h2>
 			<p class="text-sm -200">
 				Keywords with current-month ranking signals for {myapp.name}.
 			</p>
