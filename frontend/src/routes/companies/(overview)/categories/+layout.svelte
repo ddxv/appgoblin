@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
+	import MainContent from '$lib/MainContent.svelte';
 
 	let { data, children } = $props();
 
@@ -67,6 +68,6 @@
 	{@html `<script type="application/ld+json">${JSON.stringify(structuredData)}</script>`}
 </svelte:head>
 
-<main>
+<MainContent>
 	{@render children()}
-</main>
+</MainContent>

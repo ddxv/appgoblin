@@ -5,6 +5,7 @@
 	import ExternalLink from '$lib/ExternalLink.svelte';
 	import CompanyButton from '$lib/CompanyButton.svelte';
 	import FollowToggleButton from '$lib/components/follows/FollowToggleButton.svelte';
+	import MainContent from '$lib/MainContent.svelte';
 	import CompanyTypesTabs from '$lib/utils/CompanyTypesTabs.svelte';
 
 	let { children, data }: { children: any; data: CompanyLayoutDetails } = $props();
@@ -272,113 +273,116 @@
 	</a>
 </div>
 
-<div class="flex items-center mb-2">
-	{#await data.companyTree}
-		<span class="text-lg">Loading...</span>
-	{:then myTree}
-		{#if typeof myTree == 'string'}
-			<h1 class={titleClass}>{domain}</h1>
-			<p class="text-red-500">Failed to load company tree.</p>
-		{:else if myTree}
-			<div class="flex flex-col md:flex-row items-left md:items-center">
-				{#if page.url.pathname.includes('adstxt/publisher') && myTree.parent}
-					<h1 class={titleClass}>
-						<a href={`/companies/${myTree.parent.company_domain}`}
-							>{myTree.parent.company_name || myTree.parent.company_domain}</a
-						>
-					</h1>
-				{:else if myTree.company_domain || myTree.queried_domain}
-					{#if myTree.company_logo_url}
-						<img
-							src="https://media.appgoblin.info/{myTree.company_logo_url}"
-							alt={myTree.company_logo_url}
-							class="w-20 h-20 rounded-sm mr-2 md:mr-8"
-						/>
-					{:else if myTree.parent?.company_logo_url}
-						<img
-							src="https://media.appgoblin.info/{myTree.parent.company_logo_url}"
-							alt={myTree.parent.company_logo_url}
-							class="w-20 h-20 rounded-sm mr-2 md:mr-8"
-						/>
-					{:else}
-						<img
-							src="/default_company_logo.png"
-							alt="Default Company Logo"
-							class="w-20 h-20 rounded-sm mr-2 md:mr-8"
-						/>
-					{/if}
-
-					{#if !myTree.parent && !myTree.is_secondary_domain && !myTree.is_orphan}
-						<!-- IS PARENT COMPANY -->
+<MainContent>
+	<div class="flex items-center mb-2">
+		{#await data.companyTree}
+			<span class="text-lg">Loading...</span>
+		{:then myTree}
+			{#if typeof myTree == 'string'}
+				<h1 class={titleClass}>{domain}</h1>
+				<p class="text-red-500">Failed to load company tree.</p>
+			{:else if myTree}
+				<div class="flex flex-col md:flex-row items-left md:items-center">
+					{#if page.url.pathname.includes('adstxt/publisher') && myTree.parent}
 						<h1 class={titleClass}>
-							{myTree.company_name || myTree.company_domain || myTree.queried_domain}, App Category:
-							{categoryName}
+							<a href={`/companies/${myTree.parent.company_domain}`}
+								>{myTree.parent.company_name || myTree.parent.company_domain}</a
+							>
 						</h1>
-						<div class={titleDividerClass}></div>
-						<ExternalLink domain={myTree.company_domain || myTree.queried_domain} />
-					{:else if myTree.is_secondary_domain}
-						<!-- IS SUB DOMAIN ONLY -->
-						<h1 class={titleClass}>{myTree.queried_domain} / {categoryName}</h1>
-						<div class={titleDividerClass}></div>
-						<ExternalLink domain={myTree.queried_domain} />
-						<div class={titleDividerClass}></div>
-						<span class="flex row items-center">
-							<h2 class={titleSecondaryClass}>Company:</h2>
-							<CompanyButton
-								companyName={myTree.company_name || undefined}
-								companyDomain={myTree.company_domain || myTree.queried_domain}
-								companyLogoUrl={myTree.company_logo_url || undefined}
+					{:else if myTree.company_domain || myTree.queried_domain}
+						{#if myTree.company_logo_url}
+							<img
+								src="https://media.appgoblin.info/{myTree.company_logo_url}"
+								alt={myTree.company_logo_url}
+								class="w-20 h-20 rounded-sm mr-2 md:mr-8"
 							/>
-						</span>
-						{#if hasHigherLevelParent && myTree.parent}
-							<div class={titleDividerClass}></div>
-							<span class="flex row">
-								<h2 class={titleSecondaryClass}>Parent:</h2>
-								<CompanyButton
-									companyName={myTree.parent.company_name}
-									companyDomain={myTree.parent.company_domain}
-									companyLogoUrl={myTree.parent.company_logo_url || undefined}
-								/>
-							</span>
+						{:else if myTree.parent?.company_logo_url}
+							<img
+								src="https://media.appgoblin.info/{myTree.parent.company_logo_url}"
+								alt={myTree.parent.company_logo_url}
+								class="w-20 h-20 rounded-sm mr-2 md:mr-8"
+							/>
+						{:else}
+							<img
+								src="/default_company_logo.png"
+								alt="Default Company Logo"
+								class="w-20 h-20 rounded-sm mr-2 md:mr-8"
+							/>
 						{/if}
-					{:else}
-						<!-- REGULAR COMPANY  -->
-						<h1 class={titleClass}>
-							{myTree.company_name || myTree.company_domain || myTree.queried_domain} / {categoryName}
-						</h1>
-						<div class={titleDividerClass}></div>
-						<ExternalLink domain={myTree.company_domain || myTree.queried_domain} />
-						{#if myTree.parent}
+
+						{#if !myTree.parent && !myTree.is_secondary_domain && !myTree.is_orphan}
+							<!-- IS PARENT COMPANY -->
+							<h1 class={titleClass}>
+								{myTree.company_name || myTree.company_domain || myTree.queried_domain}, App
+								Category:
+								{categoryName}
+							</h1>
 							<div class={titleDividerClass}></div>
-							<!-- HAS PARENT COMPANY -->
-							<span class="flex row">
-								<h2 class={titleSecondaryClass}>Parent Company:</h2>
+							<ExternalLink domain={myTree.company_domain || myTree.queried_domain} />
+						{:else if myTree.is_secondary_domain}
+							<!-- IS SUB DOMAIN ONLY -->
+							<h1 class={titleClass}>{myTree.queried_domain} / {categoryName}</h1>
+							<div class={titleDividerClass}></div>
+							<ExternalLink domain={myTree.queried_domain} />
+							<div class={titleDividerClass}></div>
+							<span class="flex row items-center">
+								<h2 class={titleSecondaryClass}>Company:</h2>
 								<CompanyButton
-									companyName={myTree.parent.company_name}
-									companyDomain={myTree.parent.company_domain}
-									companyLogoUrl={myTree.parent.company_logo_url || undefined}
+									companyName={myTree.company_name || undefined}
+									companyDomain={myTree.company_domain || myTree.queried_domain}
+									companyLogoUrl={myTree.company_logo_url || undefined}
 								/>
 							</span>
+							{#if hasHigherLevelParent && myTree.parent}
+								<div class={titleDividerClass}></div>
+								<span class="flex row">
+									<h2 class={titleSecondaryClass}>Parent:</h2>
+									<CompanyButton
+										companyName={myTree.parent.company_name}
+										companyDomain={myTree.parent.company_domain}
+										companyLogoUrl={myTree.parent.company_logo_url || undefined}
+									/>
+								</span>
+							{/if}
+						{:else}
+							<!-- REGULAR COMPANY  -->
+							<h1 class={titleClass}>
+								{myTree.company_name || myTree.company_domain || myTree.queried_domain} / {categoryName}
+							</h1>
+							<div class={titleDividerClass}></div>
+							<ExternalLink domain={myTree.company_domain || myTree.queried_domain} />
+							{#if myTree.parent}
+								<div class={titleDividerClass}></div>
+								<!-- HAS PARENT COMPANY -->
+								<span class="flex row">
+									<h2 class={titleSecondaryClass}>Parent Company:</h2>
+									<CompanyButton
+										companyName={myTree.parent.company_name}
+										companyDomain={myTree.parent.company_domain}
+										companyLogoUrl={myTree.parent.company_logo_url || undefined}
+									/>
+								</span>
+							{/if}
 						{/if}
 					{/if}
-				{/if}
-			</div>
-			{#if data.companyLookup?.company_id}
-				<div class="mt-2 md:mt-0 md:ml-4">
-					<FollowToggleButton
-						entity="company"
-						label="Company"
-						companyId={data.companyLookup.company_id}
-						initialFollowing={Boolean(data.isFollowingCompany)}
-					/>
 				</div>
+				{#if data.companyLookup?.company_id}
+					<div class="mt-2 md:mt-0 md:ml-4">
+						<FollowToggleButton
+							entity="company"
+							label="Company"
+							companyId={data.companyLookup.company_id}
+							initialFollowing={Boolean(data.isFollowingCompany)}
+						/>
+					</div>
+				{/if}
 			{/if}
-		{/if}
-	{:catch error}
-		<p class="text-red-500">{error.message}</p>
-	{/await}
-</div>
+		{:catch error}
+			<p class="text-red-500">{error.message}</p>
+		{/await}
+	</div>
 
-<div class="space-y-4 md:space-y-8">
-	{@render children?.()}
-</div>
+	<div class="space-y-4 md:space-y-8">
+		{@render children?.()}
+	</div>
+</MainContent>

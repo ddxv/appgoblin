@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { Tabs } from '@skeletonlabs/skeleton-svelte';
+	import MainContent from '$lib/MainContent.svelte';
 
 	import { page } from '$app/state';
 
@@ -49,20 +50,22 @@
 	{/await}
 </svelte:head>
 
-<div>
-	<h1 class="h2 p-2">
-		Developer: <p class="">{page.params.developer}</p>
-	</h1>
-	<Tabs defaultValue="apps">
-		<Tabs.List>
-			<Tabs.Trigger value="apps"
-				><a href={`/developers/${page.params.developer}`}>Apps</a></Tabs.Trigger
-			>
-			<Tabs.Trigger value="sdks"
-				><a href={`/developers/${page.params.developer}/sdks`}>SDKs</a></Tabs.Trigger
-			>
-		</Tabs.List>
+<MainContent>
+	<div>
+		<h1 class="h2 p-2">
+			Developer: <p class="">{page.params.developer}</p>
+		</h1>
+		<Tabs defaultValue="apps">
+			<Tabs.List>
+				<Tabs.Trigger value="apps"
+					><a href={`/developers/${page.params.developer}`}>Apps</a></Tabs.Trigger
+				>
+				<Tabs.Trigger value="sdks"
+					><a href={`/developers/${page.params.developer}/sdks`}>SDKs</a></Tabs.Trigger
+				>
+			</Tabs.List>
 
-		{@render children?.()}
-	</Tabs>
-</div>
+			{@render children?.()}
+		</Tabs>
+	</div>
+</MainContent>

@@ -4,6 +4,7 @@
 	import CompaniesBarChart from '$lib/CompaniesBarChart.svelte';
 	import TotalsBox from '$lib/TotalsBox.svelte';
 	import { page } from '$app/state';
+	import MainContent from '$lib/MainContent.svelte';
 	import SideBarCompanies from '$lib/SideBarCompanies.svelte';
 	import { Dialog, Portal } from '@skeletonlabs/skeleton-svelte';
 
@@ -32,7 +33,7 @@
 			<SideBarCompanies myCatData={data.appCats} />
 		</div>
 	</aside>
-	<div>
+	<MainContent>
 		<div class="flex items-center mb-2">
 			<h1 class="h1 text-3xl font-bold">
 				<span class="text-secondary-700-300">{currentType ? currentType.name : ''}</span>
@@ -80,10 +81,8 @@
 			{/snippet}
 		</CompaniesLayout>
 
-		<main>
-			{@render children?.()}
-		</main>
-	</div>
+		{@render children?.()}
+	</MainContent>
 
 	<div class="md:hidden sticky bottom-0 bg-surface-50-950 p-2">
 		<!-- Small screen version of the side bar -->
