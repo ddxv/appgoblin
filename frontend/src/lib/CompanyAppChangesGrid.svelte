@@ -22,37 +22,41 @@
 	let { appChanges, companyName = '', previewMode = false, status }: Props = $props();
 	let statusLabel = $derived(status === 'lost' ? 'Lost' : 'Added');
 
-	const placeholderPreviewByPlatform: Record<PreviewPlatform, PlaceholderAppPreview[]> = {
-		android: [
-			{
-				name:
-					status === 'lost' ? 'Premium Android churn example' : 'Premium Android addition example',
-				developer: 'B2B SDK Intelligence Preview',
-				metric: '1.2M',
-				sourceLabel: 'SDK + API Call'
-			},
-			{
-				name: 'More app movement hidden',
-				developer: 'Upgrade to unlock the full list',
-				metric: '640K',
-				sourceLabel: 'App-Ads.txt'
-			}
-		],
-		ios: [
-			{
-				name: status === 'lost' ? 'Premium iOS churn example' : 'Premium iOS addition example',
-				developer: 'B2B SDK Intelligence Preview',
-				metric: '84K',
-				sourceLabel: 'SDK'
-			},
-			{
-				name: 'More app movement hidden',
-				developer: 'Upgrade to unlock the full list',
-				metric: '28K',
-				sourceLabel: 'API Call'
-			}
-		]
-	};
+	const placeholderPreviewByPlatform = $derived.by(
+		(): Record<PreviewPlatform, PlaceholderAppPreview[]> => ({
+			android: [
+				{
+					name:
+						status === 'lost'
+							? 'Premium Android churn example'
+							: 'Premium Android addition example',
+					developer: 'B2B SDK Intelligence Preview',
+					metric: '1.2M',
+					sourceLabel: 'SDK + API Call'
+				},
+				{
+					name: 'More app movement hidden',
+					developer: 'Upgrade to unlock the full list',
+					metric: '640K',
+					sourceLabel: 'App-Ads.txt'
+				}
+			],
+			ios: [
+				{
+					name: status === 'lost' ? 'Premium iOS churn example' : 'Premium iOS addition example',
+					developer: 'B2B SDK Intelligence Preview',
+					metric: '84K',
+					sourceLabel: 'SDK'
+				},
+				{
+					name: 'More app movement hidden',
+					developer: 'Upgrade to unlock the full list',
+					metric: '28K',
+					sourceLabel: 'API Call'
+				}
+			]
+		})
+	);
 </script>
 
 {#snippet lockedPreviewCard(platform: PreviewPlatform)}

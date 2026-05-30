@@ -347,7 +347,6 @@
 					data={chartData}
 					x="crawled_date"
 					series={seriesKeys}
-					layer="svg"
 					props={{
 						xAxis: {
 							format: (d) => format(d, PeriodType.Day, { variant: 'short' }),
