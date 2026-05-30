@@ -178,10 +178,12 @@ def _patch_raw_company_detail(overview: FakeCompanyCategoryOverview):
     )
 
 
-def _patch_company_app_change_store_ids(store_ids: list[str]):
+def _patch_company_app_change_store_ids_by_platform(
+    store_ids_by_platform: dict[str, list[str]],
+):
     return patch(
-        "api_app.controllers.public.v1.companies.get_company_app_change_store_ids",
-        return_value=store_ids,
+        "api_app.controllers.public.v1.companies.get_company_app_change_store_ids_by_platform",
+        return_value=store_ids_by_platform,
     )
 
 
@@ -714,15 +716,16 @@ class TestV1CompanyDetail:
 
 
 class TestV1CompanyAppChanges:
-    def test_apps_added_returns_store_ids(self):
+    def test_apps_added_returns_platform_app_lists(self):
         app = _make_test_app()
         payload = PublicCompanyAppChangeStoreIds(
-            domain_name="google.com",
+            company_domain="google.com",
             tag_source="sdk",
             year=2026,
             quarter=1,
             status="added",
-            store_ids=["com.example.first", "id123456"],
+            android_apps=["com.example.first"],
+            ios_apps=["id123456"],
         )
 
         with (
@@ -734,10 +737,10 @@ class TestV1CompanyAppChanges:
             TestClient(app=app, raise_server_exceptions=False) as client,
         ):
             resp = client.get(
-                "/api/v1/companies/apps-added",
+                "/api/v1/companies/google.com/app-changes",
                 headers={"X-API-Key": "ag_companychanges"},
                 params={
-                    "domain_name": "google.com",
+                    "status": "added",
                     "tag_source": "sdk",
                     "year": 2026,
                     "quarter": 1,
@@ -746,12 +749,13 @@ class TestV1CompanyAppChanges:
 
         assert resp.status_code == 200
         assert resp.json() == {
-            "domain_name": "google.com",
+            "company_domain": "google.com",
             "tag_source": "sdk",
             "year": 2026,
             "quarter": 1,
             "status": "added",
-            "store_ids": ["com.example.first", "id123456"],
+            "android_apps": ["com.example.first"],
+            "ios_apps": ["id123456"],
         }
 
     def test_apps_lost_rejects_invalid_tag_source(self):
@@ -761,10 +765,10 @@ class TestV1CompanyAppChanges:
             TestClient(app=app, raise_server_exceptions=False) as client,
         ):
             resp = client.get(
-                "/api/v1/companies/apps-lost",
+                "/api/v1/companies/google.com/app-changes",
                 headers={"X-API-Key": "ag_companychanges"},
                 params={
-                    "domain_name": "google.com",
+                    "status": "lost",
                     "tag_source": "invalid",
                     "year": 2026,
                     "quarter": 1,
@@ -774,11 +778,16 @@ class TestV1CompanyAppChanges:
         assert resp.status_code == 400
         assert "tag_source must be one of" in resp.json()["detail"]
 
-    def test_build_public_company_app_change_payload_uses_shared_store_ids(self):
-        with _patch_company_app_change_store_ids(["com.example.first"]):
+    def test_build_public_company_app_change_payload_uses_shared_platform_lists(self):
+        with _patch_company_app_change_store_ids_by_platform(
+            {
+                "android_apps": ["com.example.first"],
+                "ios_apps": ["id123456"],
+            }
+        ):
             payload = v1_companies._build_public_company_app_change_payload(
                 state=MagicMock(),
-                domain_name="google.com",
+                company_domain="google.com",
                 tag_source="sdk",
                 year=2026,
                 quarter=1,
@@ -786,12 +795,13 @@ class TestV1CompanyAppChanges:
             )
 
         assert payload == PublicCompanyAppChangeStoreIds(
-            domain_name="google.com",
+            company_domain="google.com",
             tag_source="sdk",
             year=2026,
             quarter=1,
             status="lost",
-            store_ids=["com.example.first"],
+            android_apps=["com.example.first"],
+            ios_apps=["id123456"],
         )
 
 
@@ -1167,12 +1177,9 @@ class TestV1Docs:
             "/api/v1/companies/{company_domain}"
         ]["get"]
         companies_operation = data["paths"]["/api/v1/companies"]["get"]
-        company_apps_added_operation = data["paths"]["/api/v1/companies/apps-added"][
-            "get"
-        ]
-        company_apps_lost_operation = data["paths"]["/api/v1/companies/apps-lost"][
-            "get"
-        ]
+        company_app_changes_operation = data["paths"][
+            "/api/v1/companies/{company_domain}/app-changes"
+        ]["get"]
         assert companies_operation["summary"] == "/companies"
         assert (
             companies_operation["description"]
@@ -1241,33 +1248,30 @@ class TestV1Docs:
             == 39452
         )
         assert [
-            parameter["name"]
-            for parameter in company_apps_added_operation["parameters"]
-        ] == ["domain_name", "tag_source", "year", "quarter"]
-        assert company_apps_added_operation["summary"] == "/companies/apps-added"
+            parameter["name"] for parameter in company_app_changes_operation["parameters"]
+        ] == ["company_domain", "status", "tag_source", "year", "quarter"]
         assert (
-            company_apps_added_operation["description"]
-            == "Endpoint: `GET /api/v1/companies/apps-added`\n\n"
-            "Returns ordered store IDs for apps added to a company in a specific "
-            "year/quarter slice, filtered by a single tag source."
+            company_app_changes_operation["summary"]
+            == "/companies/{company_domain}/app-changes"
         )
-        assert company_apps_lost_operation["summary"] == "/companies/apps-lost"
         assert (
-            company_apps_lost_operation["description"]
-            == "Endpoint: `GET /api/v1/companies/apps-lost`\n\n"
-            "Returns ordered store IDs for apps lost from a company in a specific "
-            "year/quarter slice, filtered by a single tag source."
+            company_app_changes_operation["description"]
+            == "Endpoint: `GET /api/v1/companies/{company_domain}/app-changes`\n\n"
+            "Returns ordered Android and iOS app store IDs for apps added to or "
+            "lost from a company in a specific year/quarter slice, filtered by "
+            "status and a single tag source."
         )
-        company_app_changes_examples = company_apps_added_operation["responses"]["200"][
+        company_app_changes_examples = company_app_changes_operation["responses"]["200"][
             "content"
         ]["application/json"]["examples"]
-        assert company_app_changes_examples["unity_company_apps_added"]["value"] == {
-            "domain_name": "unity.com",
+        assert company_app_changes_examples["unity_company_app_changes_added"]["value"] == {
+            "company_domain": "unity.com",
             "tag_source": "sdk",
             "year": 2026,
             "quarter": 1,
             "status": "added",
-            "store_ids": ["com.example.first", "id1234567890"],
+            "android_apps": ["com.example.first"],
+            "ios_apps": ["id1234567890"],
         }
         app_sdks_operation = data["paths"]["/api/v1/apps/{store_id}/sdks"]["get"]
         assert app_sdks_operation["summary"] == "/apps/{store_id}/sdks"

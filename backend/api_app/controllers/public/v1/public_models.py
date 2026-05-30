@@ -124,12 +124,13 @@ class PublicCompanyOverview:
 class PublicCompanyAppChangeStoreIds:
     """Public paid response for a company app-change slice."""
 
-    domain_name: str
+    company_domain: str
     tag_source: str
     year: int
     quarter: int
     status: str
-    store_ids: list[str] = field(default_factory=list)
+    android_apps: list[str] = field(default_factory=list)
+    ios_apps: list[str] = field(default_factory=list)
 
 
 @dataclass

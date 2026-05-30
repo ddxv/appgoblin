@@ -15,7 +15,7 @@ WHERE
     AND dac.quarter = :myquarter
     AND dac.domain_name = :mydomain
     AND dac.tag_source = :mytagsource
-    AND (:mystatus::text IS NULL OR dac.status = :mystatus)
+    AND (CAST(:mystatus AS text) IS NULL OR dac.status = :mystatus)
     AND sa.store_id IS NOT NULL
 ORDER BY
     sa.installs_sum_4w DESC NULLS LAST,

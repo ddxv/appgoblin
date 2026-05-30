@@ -121,15 +121,13 @@ COMPANY_OVERVIEW_EXAMPLE_RESPONSE = {
     },
 }
 COMPANY_APPS_ADDED_EXAMPLE_RESPONSE = {
-    "domain_name": "unity.com",
+    "company_domain": "unity.com",
     "tag_source": "sdk",
     "year": 2026,
     "quarter": 1,
     "status": "added",
-    "store_ids": [
-        "com.example.first",
-        "id1234567890",
-    ],
+    "android_apps": ["com.example.first"],
+    "ios_apps": ["id1234567890"],
 }
 V1_OPERATION_DOCS = {
     "/api/v1/companies": {
@@ -155,23 +153,14 @@ V1_OPERATION_DOCS = {
             ),
         }
     },
-    "/api/v1/companies/apps-added": {
+    "/api/v1/companies/{company_domain}/app-changes": {
         "get": {
-            "summary": "/companies/apps-added",
+            "summary": "/companies/{company_domain}/app-changes",
             "description": (
-                "Endpoint: `GET /api/v1/companies/apps-added`\n\n"
-                "Returns ordered store IDs for apps added to a company in a specific "
-                "year/quarter slice, filtered by a single tag source."
-            ),
-        }
-    },
-    "/api/v1/companies/apps-lost": {
-        "get": {
-            "summary": "/companies/apps-lost",
-            "description": (
-                "Endpoint: `GET /api/v1/companies/apps-lost`\n\n"
-                "Returns ordered store IDs for apps lost from a company in a specific "
-                "year/quarter slice, filtered by a single tag source."
+                "Endpoint: `GET /api/v1/companies/{company_domain}/app-changes`\n\n"
+                "Returns ordered Android and iOS app store IDs for apps added to or "
+                "lost from a company in a specific year/quarter slice, filtered by "
+                "status and a single tag source."
             ),
         }
     },
@@ -355,47 +344,54 @@ def _set_company_overview_example(schema: dict[str, Any]) -> None:
 
 def _set_company_app_changes_examples(schema: dict[str, Any]) -> None:
     """Attach examples and parameter examples for public company app-change endpoints."""
-    for path, status in (
-        ("/api/v1/companies/apps-added", "added"),
-        ("/api/v1/companies/apps-lost", "lost"),
-    ):
-        path_item = schema.get("paths", {}).get(path)
-        if not isinstance(path_item, dict):
-            continue
+    path_item = schema.get("paths", {}).get(
+        "/api/v1/companies/{company_domain}/app-changes"
+    )
+    if not isinstance(path_item, dict):
+        return
 
-        get_operation = path_item.get("get")
-        if not isinstance(get_operation, dict):
-            continue
+    get_operation = path_item.get("get")
+    if not isinstance(get_operation, dict):
+        return
 
-        for parameter in get_operation.get("parameters", []):
-            if parameter.get("name") == "domain_name":
-                parameter["example"] = "unity.com"
-            elif parameter.get("name") == "tag_source":
-                parameter["example"] = "sdk"
-            elif parameter.get("name") == "year":
-                parameter["example"] = 2026
-            elif parameter.get("name") == "quarter":
-                parameter["example"] = 1
+    for parameter in get_operation.get("parameters", []):
+        if parameter.get("name") == "company_domain":
+            parameter["example"] = "unity.com"
+        elif parameter.get("name") == "status":
+            parameter["example"] = "added"
+        elif parameter.get("name") == "tag_source":
+            parameter["example"] = "sdk"
+        elif parameter.get("name") == "year":
+            parameter["example"] = 2026
+        elif parameter.get("name") == "quarter":
+            parameter["example"] = 1
 
-        responses = get_operation.get("responses", {})
-        response_200 = responses.get("200")
-        if not isinstance(response_200, dict):
-            continue
+    responses = get_operation.get("responses", {})
+    response_200 = responses.get("200")
+    if not isinstance(response_200, dict):
+        return
 
-        content = response_200.get("content", {})
-        json_content = content.get("application/json")
-        if not isinstance(json_content, dict):
-            continue
+    content = response_200.get("content", {})
+    json_content = content.get("application/json")
+    if not isinstance(json_content, dict):
+        return
 
-        json_content["examples"] = {
-            f"unity_company_apps_{status}": {
-                "summary": f"Store IDs for Unity apps {status} in 2026 Q1",
-                "value": {
-                    **COMPANY_APPS_ADDED_EXAMPLE_RESPONSE,
-                    "status": status,
-                },
-            }
-        }
+    json_content["examples"] = {
+        "unity_company_app_changes_added": {
+            "summary": "Store IDs for Unity apps added in 2026 Q1",
+            "value": {
+                **COMPANY_APPS_ADDED_EXAMPLE_RESPONSE,
+                "status": "added",
+            },
+        },
+        "unity_company_app_changes_lost": {
+            "summary": "Store IDs for Unity apps lost in 2026 Q1",
+            "value": {
+                **COMPANY_APPS_ADDED_EXAMPLE_RESPONSE,
+                "status": "lost",
+            },
+        },
+    }
 
 
 def _set_operation_docs(schema: dict[str, Any]) -> None:

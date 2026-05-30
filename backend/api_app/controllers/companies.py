@@ -437,6 +437,41 @@ def get_company_app_change_store_ids(
     return df["store_id"].dropna().astype(str).drop_duplicates().tolist()
 
 
+def get_company_app_change_store_ids_by_platform(
+    state: State,
+    company_domain: str,
+    tag_source: str,
+    year: int,
+    quarter: int,
+    status: str,
+) -> dict[str, list[str]]:
+    """Return ordered store IDs split into Android and iOS lists."""
+    df = get_company_app_changes(
+        state=state,
+        company_domain=company_domain,
+        tag_source=tag_source,
+        year=year,
+        quarter=quarter,
+        status=status,
+    )
+    if df.empty:
+        return {"android_apps": [], "ios_apps": []}
+
+    df = df.sort_values(
+        by=["rank", "installs_d30", "name"],
+        ascending=[True, False, True],
+        na_position="last",
+    )
+    android_df = df[df["store"].astype(str).str.startswith("Google")]
+    ios_df = df[~df["store"].astype(str).str.startswith("Google")]
+    return {
+        "android_apps": (
+            android_df["store_id"].dropna().astype(str).drop_duplicates().tolist()
+        ),
+        "ios_apps": ios_df["store_id"].dropna().astype(str).drop_duplicates().tolist(),
+    }
+
+
 def top_companies_by_tag_source(top_df: pd.DataFrame) -> TopCompaniesShort:
     """Make top companies short."""
 

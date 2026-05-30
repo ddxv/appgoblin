@@ -15,7 +15,7 @@ from litestar.handlers import BaseRouteHandler
 from api_app.analytics import PUBLIC_API_HOSTNAME, build_request_page_view_task
 from api_app.controllers.companies import (
     build_company_overview_base,
-    get_company_app_change_store_ids,
+    get_company_app_change_store_ids_by_platform,
     get_overviews,
 )
 from api_app.controllers.public.v1.public_models import (
@@ -47,10 +47,16 @@ UNMAPPED_COMPANY_NOTICE = (
     "additions are usually completed within 1-2 business days."
 )
 VALID_COMPANY_APP_CHANGE_TAG_SOURCES = {"sdk", "api_call", "app_ads_direct"}
+VALID_COMPANY_APP_CHANGE_STATUSES = {"added", "lost"}
 
 
-def _validate_company_app_changes_query(tag_source: str, quarter: int) -> None:
+def _validate_company_app_changes_query(
+    *, tag_source: str, quarter: int, status: str
+) -> None:
     """Validate public app-change request filters."""
+    if status not in VALID_COMPANY_APP_CHANGE_STATUSES:
+        msg = "status must be one of: added, lost"
+        raise NotFoundException(msg, status_code=400)
     if tag_source not in VALID_COMPANY_APP_CHANGE_TAG_SOURCES:
         msg = "tag_source must be one of: sdk, api_call, app_ads_direct"
         raise NotFoundException(msg, status_code=400)
@@ -344,23 +350,27 @@ def _build_public_company_overview_payload(
 def _build_public_company_app_change_payload(
     state: State,
     *,
-    domain_name: str,
+    company_domain: str,
     tag_source: str,
     year: int,
     quarter: int,
     status: str,
 ) -> PublicCompanyAppChangeStoreIds:
     """Project a single public company app-change slice into the v1 response."""
-    _validate_company_app_changes_query(tag_source=tag_source, quarter=quarter)
+    _validate_company_app_changes_query(
+        tag_source=tag_source,
+        quarter=quarter,
+        status=status,
+    )
     return PublicCompanyAppChangeStoreIds(
-        domain_name=domain_name,
+        company_domain=company_domain,
         tag_source=tag_source,
         year=year,
         quarter=quarter,
         status=status,
-        store_ids=get_company_app_change_store_ids(
+        **get_company_app_change_store_ids_by_platform(
             state=state,
-            company_domain=domain_name,
+            company_domain=company_domain,
             tag_source=tag_source,
             year=year,
             quarter=quarter,
@@ -426,65 +436,38 @@ class V1CompaniesController(Controller):
             ),
         )
 
-    @get(path="/companies/apps-added", cache=86400)
-    async def company_apps_added(
+    @get(path="/companies/{company_domain:str}/app-changes", cache=86400)
+    async def company_app_changes(
         self: Self,
         state: State,
         request: Request,
-        domain_name: str,
+        company_domain: str,
+        status: str,
         tag_source: str,
         year: int,
         quarter: int,
     ) -> PublicCompanyAppChangeStoreIds:
-        """Return store IDs for apps newly added to a company slice in a quarter."""
+        """Return store IDs for a company's app-change slice in a quarter."""
+        start = time.perf_counter() * 1000
         payload = _build_public_company_app_change_payload(
             state=state,
-            domain_name=domain_name,
+            company_domain=company_domain,
             tag_source=tag_source,
             year=year,
             quarter=quarter,
-            status="added",
+            status=status,
+        )
+        duration = round((time.perf_counter() * 1000 - start), 2)
+        logger.info(
+            f"GET /api/v1/companies/{company_domain}/app-changes took {duration}ms"
         )
         return Response(
             payload,
             background=build_request_page_view_task(
                 request,
                 url=(
-                    "/api/v1/companies/apps-added"
-                    f"?domain_name={quote(domain_name)}"
-                    f"&tag_source={quote(tag_source)}"
-                    f"&year={year}&quarter={quarter}"
-                ),
-                hostname=PUBLIC_API_HOSTNAME,
-            ),
-        )
-
-    @get(path="/companies/apps-lost", cache=86400)
-    async def company_apps_lost(
-        self: Self,
-        state: State,
-        request: Request,
-        domain_name: str,
-        tag_source: str,
-        year: int,
-        quarter: int,
-    ) -> PublicCompanyAppChangeStoreIds:
-        """Return store IDs for apps lost from a company slice in a quarter."""
-        payload = _build_public_company_app_change_payload(
-            state=state,
-            domain_name=domain_name,
-            tag_source=tag_source,
-            year=year,
-            quarter=quarter,
-            status="lost",
-        )
-        return Response(
-            payload,
-            background=build_request_page_view_task(
-                request,
-                url=(
-                    "/api/v1/companies/apps-lost"
-                    f"?domain_name={quote(domain_name)}"
+                    f"/api/v1/companies/{quote(company_domain)}/app-changes"
+                    f"?status={quote(status)}"
                     f"&tag_source={quote(tag_source)}"
                     f"&year={year}&quarter={quarter}"
                 ),
