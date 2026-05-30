@@ -1,6 +1,7 @@
 """Static queries - data preloaded at application startup."""
 
 from dataclasses import dataclass, field
+from typing import SupportsFloat, SupportsIndex, SupportsInt
 
 import numpy as np
 import pandas as pd
@@ -61,14 +62,18 @@ def _optional_int(value: object) -> int | None:
     """Convert nullable pandas scalar values to plain ints."""
     if pd.isna(value):
         return None
-    return int(value)
+    if isinstance(value, (str, bytes, bytearray, SupportsInt, SupportsIndex)):
+        return int(value)
+    raise TypeError(f"Expected integer-compatible scalar, got {type(value).__name__}")
 
 
 def _optional_float(value: object, digits: int = 4) -> float | None:
     """Convert nullable pandas scalar values to rounded floats."""
     if pd.isna(value):
         return None
-    return round(float(value), digits)
+    if isinstance(value, (str, bytes, bytearray, SupportsFloat, SupportsIndex)):
+        return round(float(value), digits)
+    raise TypeError(f"Expected float-compatible scalar, got {type(value).__name__}")
 
 
 def _aggregate_company_trends(

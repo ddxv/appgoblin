@@ -1,7 +1,7 @@
 <script lang="ts">
 	import IconSearch from '$lib/svg/IconSearch.svelte';
 	import { goto } from '$app/navigation';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 
 	let {
 		onSelect,
@@ -14,7 +14,7 @@
 	} = $props();
 
 	// Get current search query from URL
-	let currentSearch = $derived($page.url.searchParams.get(`search${slotId}`) || '');
+	let currentSearch = $derived(page.url.searchParams.get(`search${slotId}`) || '');
 
 	// Initialize state - will be set from URL in effect
 	let searchQuery = $state('');
@@ -24,7 +24,7 @@
 
 	// Initialize and sync from URL when URL changes externally (not while user is typing)
 	$effect(() => {
-		const urlSearch = $page.url.searchParams.get(`search${slotId}`) || '';
+		const urlSearch = page.url.searchParams.get(`search${slotId}`) || '';
 
 		// Initialize on first run
 		if (!isInitialized) {
@@ -64,14 +64,14 @@
 	function handleSearch() {
 		if (!searchQuery || searchQuery.length < 3) {
 			// Clear search param if query is too short
-			const url = new URL($page.url);
+			const url = new URL(page.url);
 			url.searchParams.delete(`search${slotId}`);
 			goto(url.pathname + url.search, { noScroll: true, keepFocus: true });
 			return;
 		}
 
 		// Update URL with search param to trigger server-side search
-		const url = new URL($page.url);
+		const url = new URL(page.url);
 		url.searchParams.set(`search${slotId}`, searchQuery);
 		goto(url.pathname + url.search, { noScroll: true, keepFocus: true });
 	}

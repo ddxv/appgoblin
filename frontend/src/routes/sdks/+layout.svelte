@@ -1,4 +1,6 @@
 <script lang="ts">
+	import MainContent from '$lib/MainContent.svelte';
+
 	interface Props {
 		children?: import('svelte').Snippet;
 	}
@@ -48,6 +50,6 @@
 	<meta name="robots" content="noindex, nofollow" />
 </svelte:head>
 
-<div class="p-2 md:p-8">
+<MainContent class="p-2 md:p-8">
 	{@render children?.()}
-</div>
+</MainContent>

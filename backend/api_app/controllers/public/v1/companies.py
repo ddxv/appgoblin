@@ -3,7 +3,7 @@
 import os
 import time
 from collections.abc import Mapping
-from typing import Self, cast
+from typing import Self, SupportsFloat, SupportsIndex, SupportsInt, cast
 from urllib.parse import quote
 
 from litestar import Controller, Request, Response, get
@@ -15,12 +15,14 @@ from litestar.handlers import BaseRouteHandler
 from api_app.analytics import PUBLIC_API_HOSTNAME, build_request_page_view_task
 from api_app.controllers.companies import (
     build_company_overview_base,
+    get_company_app_change_store_ids_by_platform,
     get_overviews,
 )
 from api_app.controllers.public.v1.public_models import (
     CompanyDatasets,
     CompanyDatasetTarget,
     PublicCategoryCompanyStats,
+    PublicCompanyAppChangeStoreIds,
     PublicCompanyListItem,
     PublicCompanyOverview,
     PublicCompanyTrends,
@@ -44,6 +46,23 @@ UNMAPPED_COMPANY_NOTICE = (
     "recorded API calls. Contact contact@appgoblin.info to request mapping; "
     "additions are usually completed within 1-2 business days."
 )
+VALID_COMPANY_APP_CHANGE_TAG_SOURCES = {"sdk", "api_call", "app_ads_direct"}
+VALID_COMPANY_APP_CHANGE_STATUSES = {"added", "lost"}
+
+
+def _validate_company_app_changes_query(
+    *, tag_source: str, quarter: int, status: str
+) -> None:
+    """Validate public app-change request filters."""
+    if status not in VALID_COMPANY_APP_CHANGE_STATUSES:
+        msg = "status must be one of: added, lost"
+        raise NotFoundException(msg, status_code=400)
+    if tag_source not in VALID_COMPANY_APP_CHANGE_TAG_SOURCES:
+        msg = "tag_source must be one of: sdk, api_call, app_ads_direct"
+        raise NotFoundException(msg, status_code=400)
+    if quarter not in {1, 2, 3, 4}:
+        msg = "quarter must be one of: 1, 2, 3, 4"
+        raise NotFoundException(msg, status_code=400)
 
 
 def _is_missing_value(value: object) -> bool:
@@ -72,14 +91,18 @@ def _optional_int(value: object) -> int | None:
     """Normalize optional integers from serialized pandas rows."""
     if _is_missing_value(value):
         return None
-    return int(value)
+    if isinstance(value, (str, bytes, bytearray, SupportsInt, SupportsIndex)):
+        return int(value)
+    raise TypeError(f"Expected integer-compatible scalar, got {type(value).__name__}")
 
 
 def _optional_float(value: object) -> float | None:
     """Normalize optional floats from serialized pandas rows."""
     if _is_missing_value(value):
         return None
-    return float(value)
+    if isinstance(value, (str, bytes, bytearray, SupportsFloat, SupportsIndex)):
+        return float(value)
+    raise TypeError(f"Expected float-compatible scalar, got {type(value).__name__}")
 
 
 def _api_key_guard(request: ASGIConnection, route_handler: BaseRouteHandler) -> None:
@@ -328,6 +351,38 @@ def _build_public_company_overview_payload(
     )
 
 
+def _build_public_company_app_change_payload(
+    state: State,
+    *,
+    company_domain: str,
+    tag_source: str,
+    year: int,
+    quarter: int,
+    status: str,
+) -> PublicCompanyAppChangeStoreIds:
+    """Project a single public company app-change slice into the v1 response."""
+    _validate_company_app_changes_query(
+        tag_source=tag_source,
+        quarter=quarter,
+        status=status,
+    )
+    return PublicCompanyAppChangeStoreIds(
+        company_domain=company_domain,
+        tag_source=tag_source,
+        year=year,
+        quarter=quarter,
+        status=status,
+        **get_company_app_change_store_ids_by_platform(
+            state=state,
+            company_domain=company_domain,
+            tag_source=tag_source,
+            year=year,
+            quarter=quarter,
+            status=status,
+        ),
+    )
+
+
 class V1CompaniesController(Controller):
     """Public API v1 — companies endpoints (API key required)."""
 
@@ -381,6 +436,45 @@ class V1CompaniesController(Controller):
             background=build_request_page_view_task(
                 request,
                 url=f"/api/v1/companies/{company_domain}",
+                hostname=PUBLIC_API_HOSTNAME,
+            ),
+        )
+
+    @get(path="/companies/{company_domain:str}/app-changes", cache=86400)
+    async def company_app_changes(
+        self: Self,
+        state: State,
+        request: Request,
+        company_domain: str,
+        status: str,
+        tag_source: str,
+        year: int,
+        quarter: int,
+    ) -> PublicCompanyAppChangeStoreIds:
+        """Return store IDs for a company's app-change slice in a quarter."""
+        start = time.perf_counter() * 1000
+        payload = _build_public_company_app_change_payload(
+            state=state,
+            company_domain=company_domain,
+            tag_source=tag_source,
+            year=year,
+            quarter=quarter,
+            status=status,
+        )
+        duration = round((time.perf_counter() * 1000 - start), 2)
+        logger.info(
+            f"GET /api/v1/companies/{company_domain}/app-changes took {duration}ms"
+        )
+        return Response(
+            payload,
+            background=build_request_page_view_task(
+                request,
+                url=(
+                    f"/api/v1/companies/{quote(company_domain)}/app-changes"
+                    f"?status={quote(status)}"
+                    f"&tag_source={quote(tag_source)}"
+                    f"&year={year}&quarter={quarter}"
+                ),
                 hostname=PUBLIC_API_HOSTNAME,
             ),
         )

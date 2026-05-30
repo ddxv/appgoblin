@@ -1,4 +1,5 @@
 <script lang="ts">
+	import MainContent from '$lib/MainContent.svelte';
 	import SideBarCompanies from '$lib/SideBarCompanies.svelte';
 
 	let { data, children } = $props();
@@ -11,7 +12,7 @@
 		</div>
 	</aside>
 
-	<div>
+	<MainContent>
 		{@render children?.()}
-	</div>
+	</MainContent>
 </div>

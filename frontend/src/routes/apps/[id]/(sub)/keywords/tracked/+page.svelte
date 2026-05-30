@@ -163,7 +163,7 @@
 		<AppKeywordsNav storeId={myapp.store_id} />
 		<div class="grid grid-cols-2 gap-2 md:gap-8">
 			<section class={`${cardBase} p-6`}>
-				<h1 class="h4 md:h3 mb-3">My Keywords</h1>
+				<h2 class="h4 md:h3 mb-3">My Keywords</h2>
 				<p class="text-sm -200 mb-4">
 					Manage your personal watchlist for {myapp.name}.
 				</p>

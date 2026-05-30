@@ -1,4 +1,4 @@
-import type { PageServerLoad } from '../../../../../../../../../$types';
+import type { PageServerLoad } from './$types';
 import { getCachedData } from '../../../../../../../../../../hooks.server';
 import { createApiClient } from '$lib/server/api';
 

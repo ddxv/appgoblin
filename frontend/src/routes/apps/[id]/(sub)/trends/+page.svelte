@@ -12,7 +12,7 @@
 	let { data }: Props = $props();
 </script>
 
-<div class="mx-auto max-w-7xl space-y-4">
+<section class="mx-auto max-w-7xl space-y-4">
 	{#if data.appMetrics && data.appMetrics.length > 0}
 		<AppTrendsDashboard
 			data={data.appMetrics}
@@ -24,4 +24,4 @@
 			<div class="text-lg text-gray-500">No historical data found.</div>
 		</div>
 	{/if}
-</div>
+</section>

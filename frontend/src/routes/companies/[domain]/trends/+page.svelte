@@ -18,10 +18,13 @@
 	);
 </script>
 
-<p class="mb-4 text-sm">
-	Quarterly market share trends for {companyName}, separated into iOS and Android signal pools so
-	SDK/API and app-ads.txt DIRECT movement can be compared without cross-platform distortion.
-</p>
+<section class="mb-4 space-y-2">
+	<h2 class="text-xl font-semibold">Quarterly Trends</h2>
+	<p class="mb-4 text-sm">
+		Quarterly market share trends for {companyName}, separated into iOS and Android signal pools so
+		SDK/API and app-ads.txt DIRECT movement can be compared without cross-platform distortion.
+	</p>
+</section>
 
 <WhiteCard>
 	{#snippet title()}

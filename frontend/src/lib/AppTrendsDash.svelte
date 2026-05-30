@@ -63,8 +63,6 @@
 	}
 	let { data, selectedCountry, availableCountries }: Props = $props();
 
-	const layer = 'svg';
-
 	// State for toggles
 	let starsExpanded = $state(false);
 	let showNewStars = $state(false);
@@ -167,7 +165,7 @@
 <!-- Header with Summary Cards -->
 <div class="mb-8">
 	<div class="mb-6 flex items-center justify-between">
-		<h1 class="text-2xl font-bold">App Trends</h1>
+		<h2 class="text-2xl font-bold">App Trends</h2>
 
 		<div class="flex items-center gap-3">
 			<label for="region-select" class="text-sm font-medium">Region:</label>
@@ -349,7 +347,6 @@
 							data={filteredData}
 							x={xAxisKey}
 							y="cumulative_installs"
-							{layer}
 							props={{
 								xAxis: { format: (d) => format(d, PeriodType.Day, { variant: 'short' }), ticks: 5 },
 								yAxis: { format: (d) => formatNumber(d) }
@@ -365,7 +362,6 @@
 							data={filteredData}
 							x={xAxisKey}
 							y="weekly_installs"
-							{layer}
 							props={{
 								xAxis: { format: (d) => format(d, PeriodType.Day, { variant: 'short' }), ticks: 5 },
 								yAxis: { format: (d) => formatNumber(d) }
@@ -381,7 +377,6 @@
 							data={filteredData}
 							x={xAxisKey}
 							y="weekly_installs_rate_of_change"
-							{layer}
 							props={{
 								xAxis: { format: (d) => format(d, PeriodType.Day, { variant: 'short' }), ticks: 5 },
 								yAxis: { format: (d) => d.toFixed(2) + '%' }
@@ -404,7 +399,6 @@
 								data={filteredData}
 								x={xAxisKey}
 								y="weekly_active_users"
-								{layer}
 								props={{
 									xAxis: {
 										format: (d) => format(d, PeriodType.Day, { variant: 'short' }),
@@ -423,7 +417,6 @@
 								data={filteredData}
 								x={xAxisKey}
 								y="weekly_ad_revenue"
-								{layer}
 								props={{
 									xAxis: {
 										format: (d) => format(d, PeriodType.Day, { variant: 'short' }),
@@ -442,7 +435,6 @@
 								data={filteredData}
 								x={xAxisKey}
 								y="weekly_iap_revenue"
-								{layer}
 								props={{
 									xAxis: {
 										format: (d) => format(d, PeriodType.Day, { variant: 'short' }),
@@ -469,7 +461,6 @@
 						data={filteredData}
 						x={xAxisKey}
 						y="rating"
-						{layer}
 						props={{
 							xAxis: { format: (d) => format(d, PeriodType.Day, { variant: 'short' }), ticks: 5 },
 							yAxis: { format: (d) => d.toFixed(2) }
@@ -485,7 +476,6 @@
 						data={filteredData}
 						x={xAxisKey}
 						y={ratingCountKey}
-						{layer}
 						props={{
 							xAxis: { format: (d) => format(d, PeriodType.Day, { variant: 'short' }), ticks: 5 },
 							yAxis: { format: (d) => formatNumber(d) }
@@ -501,7 +491,6 @@
 						data={filteredData}
 						x={xAxisKey}
 						y={newRatingCountKey}
-						{layer}
 						props={{
 							xAxis: { format: (d) => format(d, PeriodType.Day, { variant: 'short' }), ticks: 5 },
 							yAxis: { format: (d) => formatNumber(d) }
@@ -556,7 +545,6 @@
 					x={xAxisKey}
 					series={seriesKeysBar}
 					seriesLayout={starsExpanded ? 'stackExpand' : 'stack'}
-					{layer}
 					props={{
 						xAxis: { format: (d) => format(d, PeriodType.Day, { variant: 'short' }), ticks: 5 },
 						yAxis: { format: (d) => (starsExpanded ? d.toFixed(0) + '%' : formatNumber(d)) }
@@ -625,7 +613,6 @@
 							data={filteredData}
 							x={xAxisKey}
 							y="five_star"
-							{layer}
 							props={{
 								xAxis: { format: (d) => format(d, PeriodType.Day, { variant: 'short' }), ticks: 4 },
 								yAxis: { format: (d) => formatNumber(d) }
@@ -640,7 +627,6 @@
 							data={filteredData}
 							x={xAxisKey}
 							y="weekly_five_star"
-							{layer}
 							props={{
 								xAxis: { format: (d) => format(d, PeriodType.Day, { variant: 'short' }), ticks: 4 },
 								yAxis: { format: (d) => formatNumber(d) }
@@ -655,7 +641,6 @@
 							data={filteredData}
 							x={xAxisKey}
 							y="five_star_rate_of_change"
-							{layer}
 							props={{
 								xAxis: { format: (d) => format(d, PeriodType.Day, { variant: 'short' }), ticks: 4 },
 								yAxis: { format: (d) => d.toFixed(2) + '%' }
@@ -677,7 +662,6 @@
 							data={filteredData}
 							x={xAxisKey}
 							y="four_star"
-							{layer}
 							props={{
 								xAxis: { format: (d) => format(d, PeriodType.Day, { variant: 'short' }), ticks: 4 },
 								yAxis: { format: (d) => formatNumber(d) }
@@ -692,7 +676,6 @@
 							data={filteredData}
 							x={xAxisKey}
 							y="weekly_four_star"
-							{layer}
 							props={{
 								xAxis: { format: (d) => format(d, PeriodType.Day, { variant: 'short' }), ticks: 4 },
 								yAxis: { format: (d) => formatNumber(d) }
@@ -707,7 +690,6 @@
 							data={filteredData}
 							x={xAxisKey}
 							y="four_star_rate_of_change"
-							{layer}
 							props={{
 								xAxis: { format: (d) => format(d, PeriodType.Day, { variant: 'short' }), ticks: 4 },
 								yAxis: { format: (d) => d.toFixed(2) + '%' }
@@ -729,7 +711,6 @@
 							data={filteredData}
 							x={xAxisKey}
 							y="three_star"
-							{layer}
 							props={{
 								xAxis: { format: (d) => format(d, PeriodType.Day, { variant: 'short' }), ticks: 4 },
 								yAxis: { format: (d) => formatNumber(d) }
@@ -744,7 +725,6 @@
 							data={filteredData}
 							x={xAxisKey}
 							y="weekly_three_star"
-							{layer}
 							props={{
 								xAxis: { format: (d) => format(d, PeriodType.Day, { variant: 'short' }), ticks: 4 },
 								yAxis: { format: (d) => formatNumber(d) }
@@ -759,7 +739,6 @@
 							data={filteredData}
 							x={xAxisKey}
 							y="three_star_rate_of_change"
-							{layer}
 							props={{
 								xAxis: { format: (d) => format(d, PeriodType.Day, { variant: 'short' }), ticks: 4 },
 								yAxis: { format: (d) => d.toFixed(2) + '%' }
@@ -781,7 +760,6 @@
 							data={filteredData}
 							x={xAxisKey}
 							y="two_star"
-							{layer}
 							props={{
 								xAxis: { format: (d) => format(d, PeriodType.Day, { variant: 'short' }), ticks: 4 },
 								yAxis: { format: (d) => formatNumber(d) }
@@ -796,7 +774,6 @@
 							data={filteredData}
 							x={xAxisKey}
 							y="weekly_two_star"
-							{layer}
 							props={{
 								xAxis: { format: (d) => format(d, PeriodType.Day, { variant: 'short' }), ticks: 4 },
 								yAxis: { format: (d) => formatNumber(d) }
@@ -811,7 +788,6 @@
 							data={filteredData}
 							x={xAxisKey}
 							y="two_star_rate_of_change"
-							{layer}
 							props={{
 								xAxis: { format: (d) => format(d, PeriodType.Day, { variant: 'short' }), ticks: 4 },
 								yAxis: { format: (d) => d.toFixed(2) + '%' }
@@ -833,7 +809,6 @@
 							data={filteredData}
 							x={xAxisKey}
 							y="one_star"
-							{layer}
 							props={{
 								xAxis: { format: (d) => format(d, PeriodType.Day, { variant: 'short' }), ticks: 4 },
 								yAxis: { format: (d) => formatNumber(d) }
@@ -848,7 +823,6 @@
 							data={filteredData}
 							x={xAxisKey}
 							y="weekly_one_star"
-							{layer}
 							props={{
 								xAxis: { format: (d) => format(d, PeriodType.Day, { variant: 'short' }), ticks: 4 },
 								yAxis: { format: (d) => formatNumber(d) }
@@ -863,7 +837,6 @@
 							data={filteredData}
 							x={xAxisKey}
 							y="one_star_rate_of_change"
-							{layer}
 							props={{
 								xAxis: { format: (d) => format(d, PeriodType.Day, { variant: 'short' }), ticks: 4 },
 								yAxis: { format: (d) => d.toFixed(2) + '%' }

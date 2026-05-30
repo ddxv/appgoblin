@@ -15,6 +15,7 @@
 	import discordIconSvg from '$lib/svg/discord-mark-black.svg?raw';
 	import githubIconSvg from '$lib/svg/github-mark.svg?raw';
 	import LoginAccountButton from '$lib/LoginAccountButton.svelte';
+	import MainContent from '$lib/MainContent.svelte';
 	import NavTabs from '$lib/NavTabs.svelte';
 	import { initializeTheme, resolvedThemeMode, toggleTheme } from '$lib/stores/theme.svelte';
 
@@ -110,9 +111,9 @@
 		</AppBar>
 	</header>
 
-	<main>
+	<MainContent>
 		{@render children?.()}
-	</main>
+	</MainContent>
 
 	<footer>
 		<div class="stick bottom-0 z-10 p-2">

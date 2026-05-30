@@ -22,8 +22,6 @@
 		return new Date(dateStr).toLocaleDateString();
 	};
 
-	const layer = 'svg';
-
 	// Star rating colors (1-star to 5-star)
 	const starColors = ['#E53935', '#FB8C00', '#FDD835', '#7CB342', '#2E7D32'];
 
@@ -133,7 +131,6 @@
 					x="label"
 					y="value"
 					c="color"
-					{layer}
 					props={{
 						yAxis: { format: (d: number) => formatNumber(d) }
 					}}
@@ -155,7 +152,6 @@
 					data={history}
 					x="week_start"
 					y="cumulative_installs"
-					{layer}
 					props={{
 						xAxis: {
 							format: (d: any) => format(d, PeriodType.Day, { variant: 'short' }),
@@ -181,7 +177,6 @@
 					data={history}
 					x="week_start"
 					y="weekly_installs_rate_of_change"
-					{layer}
 					props={{
 						xAxis: {
 							format: (d: any) => format(d, PeriodType.Day, { variant: 'short' }),
@@ -207,7 +202,6 @@
 					x="week_start"
 					y="five_star_rate_of_change"
 					series={[{ key: 'five_star_rate_of_change', color: '#2E7D32' }]}
-					{layer}
 					props={{
 						xAxis: {
 							format: (d: any) => format(d, PeriodType.Day, { variant: 'short' }),
@@ -233,7 +227,6 @@
 					x="week_start"
 					y="one_star_rate_of_change"
 					series={[{ key: 'one_star_rate_of_change', color: '#E53935' }]}
-					{layer}
 					props={{
 						xAxis: {
 							format: (d: any) => format(d, PeriodType.Day, { variant: 'short' }),

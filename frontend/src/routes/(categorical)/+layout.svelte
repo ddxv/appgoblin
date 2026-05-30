@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { Dialog, Portal } from '@skeletonlabs/skeleton-svelte';
+	import MainContent from '$lib/MainContent.svelte';
 	import SideBar from '$lib/SideBar.svelte';
 	let { data, children } = $props();
 </script>
@@ -16,9 +17,9 @@
 		</div>
 	</aside>
 
-	<main>
+	<MainContent>
 		{@render children?.()}
-	</main>
+	</MainContent>
 
 	<div class="md:hidden sticky bottom-0 bg-surface-50-950 p-2">
 		<!-- Small screen version of the side bar -->

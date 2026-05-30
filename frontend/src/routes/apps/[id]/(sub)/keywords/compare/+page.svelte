@@ -178,7 +178,7 @@
 
 	<!-- Header -->
 	<section class={cardPadding}>
-		<h1 class="h4 md:h3 mb-1">Keyword Rank Comparison</h1>
+		<h2 class="h4 md:h3 mb-1">Keyword Rank Comparison</h2>
 		<p class={textMuted}>
 			Compare rank history for <strong>{data.myapp.name}</strong> across multiple keywords.
 		</p>
@@ -347,7 +347,6 @@
 					data={chartData}
 					x="crawled_date"
 					series={seriesKeys}
-					layer="svg"
 					props={{
 						xAxis: {
 							format: (d) => format(d, PeriodType.Day, { variant: 'short' }),

@@ -71,8 +71,8 @@
 
 <div class="p-2 md:p-8 mt-2 md:mt-4">
 	<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-		<div>
-			<h4 class="h4 md:h3 p-2">Best App Store Ranks This Month</h4>
+		<section>
+			<h2 class="h4 md:h3 p-2">Best App Store Ranks This Month</h2>
 			{#await data.myranksOverview}
 				Loading app ranks...
 			{:then ranks}
@@ -100,9 +100,9 @@
 			{:catch}
 				<p>The server caught an error.</p>
 			{/await}
-		</div>
-		<div class="">
-			<h4 class="h4 md:h3 p-2 mt-2">App Store Ranks: {countryTitle}</h4>
+		</section>
+		<section class="">
+			<h2 class="h4 md:h3 p-2 mt-2">App Store Ranks: {countryTitle}</h2>
 			{#await data.myranksOverview then ranks}
 				<form
 					method="POST"
@@ -159,6 +159,6 @@
 					{/if}
 				{/await}
 			{/if}
-		</div>
+		</section>
 	</div>
 </div>

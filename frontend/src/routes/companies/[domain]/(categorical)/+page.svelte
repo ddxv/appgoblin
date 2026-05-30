@@ -37,9 +37,11 @@
 	);
 	let associatedDomains = $derived(data.companyTree?.domains ?? []);
 	type OverviewTab = 'domain' | 'parent';
-	let selectedOverview: OverviewTab = $state(
-		data.companyDetails.parent_overview ? 'parent' : 'domain'
-	);
+	let selectedOverview = $state<OverviewTab>('domain');
+	$effect(() => {
+		data.companyTree.queried_domain;
+		selectedOverview = data.companyDetails.parent_overview ? 'parent' : 'domain';
+	});
 	let fallbackOverview = $derived({
 		categories: data.companyDetails.categories,
 		adstxt_ad_domain_overview: data.companyDetails.adstxt_ad_domain_overview,
@@ -53,11 +55,14 @@
 	);
 </script>
 
-<p class="text-sm mb-4">
-	AppGoblin intelligence for {companyName} SDKs, API calls, app-ads.txt records. Browse {companyName}
-	creatives, and mediation relationships tied to real mobile app IDs so you can evaluate technical footprint
-	and competitive position quickly.
-</p>
+<section class="mb-6 space-y-2">
+	<h2 class="text-xl font-semibold">Company Overview</h2>
+	<p class="text-sm mb-4">
+		AppGoblin intelligence for {companyName} SDKs, API calls, app-ads.txt records. Browse {companyName}
+		creatives, and mediation relationships tied to real mobile app IDs so you can evaluate technical footprint
+		and competitive position quickly.
+	</p>
+</section>
 
 <CompaniesLayout>
 	{#snippet card1()}
@@ -204,7 +209,7 @@
 {/if}
 {#if data.companyTree && (associatedDomains.length > 0 || data.companyTree.children.length > 0)}
 	<section class="mt-6">
-		<h2 class="text-xl font-semibold mb-2">Full Hierarchy</h2>
+		<h3 class="text-xl font-semibold mb-2">Full Hierarchy</h3>
 		<p class="text-sm text-gray-600 mb-3">
 			Complete company ownership structure and all associated domains.
 		</p>

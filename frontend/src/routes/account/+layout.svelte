@@ -8,6 +8,7 @@
 	import LayoutDashboard from 'lucide-svelte/icons/layout-dashboard';
 	import ListTodo from 'lucide-svelte/icons/list-todo';
 	import Code from 'lucide-svelte/icons/code';
+	import MainContent from '$lib/MainContent.svelte';
 
 	let { data, children }: { data: LayoutData; children: any } = $props();
 
@@ -56,8 +57,8 @@
 		</aside>
 
 		<!-- Main Content Area -->
-		<main class="flex-1 min-w-0">
+		<MainContent class="flex-1 min-w-0">
 			{@render children()}
-		</main>
+		</MainContent>
 	</div>
 </div>

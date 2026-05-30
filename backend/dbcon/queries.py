@@ -421,6 +421,46 @@ def get_company_stats(
     return df
 
 
+def get_company_app_changes(
+    state: State,
+    company_domain: str,
+    tag_source: str,
+    year: int,
+    quarter: int,
+    status: str | None = None,
+) -> pd.DataFrame:
+    """Get quarter-over-quarter app additions or losses for a company domain."""
+    logger.info(
+        "query company app changes: "
+        f"{company_domain=} {tag_source=} {year=} {quarter=} {status=}"
+    )
+    df = pd.read_sql(
+        sql.company_app_changes,
+        state.dbcon.engine,
+        params={
+            "mydomain": company_domain,
+            "mytagsource": tag_source,
+            "myyear": year,
+            "myquarter": quarter,
+            "mystatus": status,
+        },
+    )
+    if df.empty:
+        return df
+
+    df = df[df["store_id"].notna()].copy()
+    df["store"] = df["store"].replace({1: "Google Play", 2: "Apple App Store"})
+    df["tag_source"] = tag_source
+    df["status"] = df["status"].astype(str).str.strip().str.lower()
+    df["name"] = df["name"].astype(str)
+    df["store_id"] = df["store_id"].astype(str)
+    df["developer_name"] = df["developer_name"].fillna("")
+    df["icon_url_100"] = df["icon_url_100"].fillna("")
+    df["rank"] = pd.to_numeric(df["rank"], errors="coerce")
+    df["installs_d30"] = pd.to_numeric(df["installs_d30"], errors="coerce").fillna(0)
+    return df
+
+
 def get_combined_companies_history(state: State, company_domain: str) -> pd.DataFrame:
     """Get quarterly company trend history for a company domain."""
     logger.info(f"query combined company history: {company_domain=}")

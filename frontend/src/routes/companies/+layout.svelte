@@ -3,6 +3,7 @@
 	import type { Crumb } from '../../types';
 	import Breadcrumbs from '$lib/Breadcrumbs.svelte';
 	import CompanyTypesTabs from '$lib/utils/CompanyTypesTabs.svelte';
+	import MainContent from '$lib/MainContent.svelte';
 	import type { MyCrumbMetadata } from '../../types';
 
 	let { data, children } = $props();
@@ -69,6 +70,8 @@
 	{#if !page.params.domain && !page.url.pathname.includes('adstxt') && data.companyTypes && data.companyTypes.types.length > 0}
 		<CompanyTypesTabs companyTypes={data.companyTypes} />
 	{/if}
-
-	{@render children?.()}
 </div>
+
+<MainContent class="px-1 md:px-4">
+	{@render children?.()}
+</MainContent>

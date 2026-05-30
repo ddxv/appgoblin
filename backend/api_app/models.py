@@ -546,6 +546,17 @@ class CompanyPlatformOverview:
 
 
 @dataclass
+class CompanyAppChangesOverview:
+    """Quarterly added/lost apps for a company split by platform."""
+
+    status: str
+    year: int
+    quarter: int
+    ios: AppGroup
+    android: AppGroup
+
+
+@dataclass
 class CompanyAppsOverview:
     """Overview of a company's apps on different platforms."""
 

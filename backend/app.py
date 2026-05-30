@@ -176,12 +176,31 @@ async def db_lifespan(app: Litestar) -> AsyncGenerator[None]:
     logger.info("Starting database connections...")
 
     # Load Stripe price → tier mapping from config
-    tier_prices = CONFIG.get("tier_prices")
+    tier_prices_raw = CONFIG.get("tier_prices")
+    tier_prices: dict[str, str] | None = None
+
+    if tier_prices_raw is None:
+        tier_prices = None
+    elif not isinstance(tier_prices_raw, dict):
+        logger.exception("Invalid API tier pricing config")
+        raise RuntimeError("Invalid API tier pricing config in config.toml")
+    elif not all(
+        isinstance(key, str) and isinstance(value, str)
+        for key, value in tier_prices_raw.items()
+    ):
+        logger.exception("Invalid API tier pricing config")
+        raise RuntimeError("Invalid API tier pricing config in config.toml")
+    else:
+        tier_prices = {key: value for key, value in tier_prices_raw.items()}
+
     try:
         validate_tier_mapping_config(tier_prices)
     except ValueError as exc:
         logger.exception("Invalid API tier pricing config")
         raise RuntimeError("Invalid API tier pricing config in config.toml") from exc
+
+    if tier_prices is None:
+        raise RuntimeError("Invalid API tier pricing config in config.toml")
 
     configure_tier_mapping(tier_prices)
     logger.info(f"Loaded {len(tier_prices)} tier price mappings")

@@ -207,7 +207,7 @@
 				<p class="text-xs font-semibold uppercase tracking-[0.22em] text-surface-500">
 					Quarterly Trends
 				</p>
-				<h2 class="text-xl font-semibold">{companyName} platform momentum</h2>
+				<h3 class="text-xl font-semibold">{companyName} platform momentum</h3>
 				<p class="text-sm text-surface-500">
 					Latest quarter: {trends?.latest_period}. iOS and Android market share are split into
 					separate source histories so the underlying scan pools stay comparable.
@@ -227,9 +227,9 @@
 						<p class="text-xs font-semibold uppercase tracking-[0.2em] text-surface-500">
 							{section.label}
 						</p>
-						<h3 class="mt-1 text-lg font-semibold">
+						<h4 class="mt-1 text-lg font-semibold">
 							{section.label} quarterly share trends
-						</h3>
+						</h4>
 					</div>
 
 					<div class="grid grid-cols-1 gap-4 2xl:grid-cols-2">
@@ -243,9 +243,9 @@
 										>
 											{card.platformLabel}
 										</p>
-										<h4 class="mt-1 text-lg font-semibold">
+										<h5 class="mt-1 text-lg font-semibold">
 											{formatSharePercent(card.summary.latest_pct_market_share)} market share
-										</h4>
+										</h5>
 										<p class="text-sm text-surface-500">{card.summary.latest_period} snapshot</p>
 									</div>
 									<div

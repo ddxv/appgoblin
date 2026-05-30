@@ -38,81 +38,86 @@
 </script>
 
 <div class="p-2 md:p-16 mt-2 md:mt-4">
-	<h4 class="h4 md:h3 p-2">Data calls made by {data.myapp.name}</h4>
+	<section class="space-y-6">
+		<div>
+			<h2 class="h4 md:h3 p-2">Data calls made by {data.myapp.name}</h2>
+		</div>
 
-	{#await data.apis}
-		Loading API data...
-	{:then apis}
-		{#if typeof apis == 'string' || apis.apis.length == 0}
-			<p>API calls data not yet available for this app.</p>
-			<RequestSDKScanButton />
-		{:else if apis.apis && Object.keys(apis.apis).length > 0}
-			{@const stats = getDataStats(apis.apis)}
-			<p class="mb-4">
-				Overview of network connections made by <strong>{data.myapp.name}</strong> during the first 60
-				seconds after installation.
-			</p>
-
-			<div class={cardClass}>
-				<p class="text-base leading-relaxed">
-					<strong class="">{data.myapp.name}</strong> contacted
-					<strong>{stats.uniqueTldUrls} different domains</strong>
-					within the first minute of opening. This data was collected from
-					<strong>{stats.uniqueRunIds} independent scan{stats.uniqueRunIds !== 1 ? 's' : ''}</strong
-					>
-					We identified
-					<strong>{stats.creativesFound} ad creative{stats.creativesFound !== 1 ? 's' : ''}</strong>
-					being loaded, confirming active ad monetization.
-					{#if stats.countries.length > 0}
-						across servers in {stats.countries.map((c) => countryCodeToEmoji(c)).join(' ')}
-					{/if}, providing transparency into the app's actual network behavior and data sharing
-					practices.
+		{#await data.apis}
+			Loading API data...
+		{:then apis}
+			{#if typeof apis == 'string' || apis.apis.length == 0}
+				<p>API calls data not yet available for this app.</p>
+				<RequestSDKScanButton />
+			{:else if apis.apis && Object.keys(apis.apis).length > 0}
+				{@const stats = getDataStats(apis.apis)}
+				<p class="mb-4">
+					Overview of network connections made by <strong>{data.myapp.name}</strong> during the first
+					60 seconds after installation.
 				</p>
-			</div>
 
-			<!-- Data Statistics Summary -->
-			<div class="grid grid-cols-2 md:grid-cols-4 gap-4 my-6">
-				<div class={cardClass}>
-					<p class="text-sm">Scan Runs</p>
-					<p class="text-2xl font-bold">{stats.uniqueRunIds}</p>
-				</div>
-				<div class={cardClass}>
-					<p class="text-sm">Unique Domains</p>
-					<p class="text-2xl font-bold">{stats.uniqueTldUrls}</p>
-				</div>
-				<div class={cardClass}>
-					<p class="text-sm">Ad Creatives Found</p>
-					<p class="text-2xl font-bold">{stats.creativesFound}</p>
-				</div>
-				<div class={cardClass}>
-					<p class="text-sm">Countries</p>
-					<p class="text-2xl">
-						{#each stats.countries as country}
-							<span class="mr-1">{countryCodeToEmoji(country)}</span>
-						{/each}
+				<section class={cardClass}>
+					<p class="text-base leading-relaxed">
+						<strong class="">{data.myapp.name}</strong> contacted
+						<strong>{stats.uniqueTldUrls} different domains</strong>
+						within the first minute of opening. This data was collected from
+						<strong
+							>{stats.uniqueRunIds} independent scan{stats.uniqueRunIds !== 1 ? 's' : ''}</strong
+						>
+						We identified
+						<strong
+							>{stats.creativesFound} ad creative{stats.creativesFound !== 1 ? 's' : ''}</strong
+						>
+						being loaded, confirming active ad monetization.
+						{#if stats.countries.length > 0}
+							across servers in {stats.countries.map((c) => countryCodeToEmoji(c)).join(' ')}
+						{/if}, providing transparency into the app's actual network behavior and data sharing
+						practices.
 					</p>
-				</div>
-			</div>
+				</section>
 
-			<!-- Unique Domain Companies -->
-			<div class="my-6">
-				<h5 class="text-lg font-semibold mb-3">Contacted Domains ({stats.uniqueTldUrls})</h5>
-				<div class="flex flex-wrap gap-2">
-					{#each stats.uniqueTldUrlsList as tldInfo}
-						<CompanyButton
-							companyName={`${tldInfo.tld_url} (${tldInfo.company_name || 'Unknown'})`}
-							companyDomain={tldInfo.tld_url}
-						/>
-					{/each}
-				</div>
-			</div>
+				<section class="grid grid-cols-2 md:grid-cols-4 gap-4 my-6">
+					<div class={cardClass}>
+						<p class="text-sm">Scan Runs</p>
+						<p class="text-2xl font-bold">{stats.uniqueRunIds}</p>
+					</div>
+					<div class={cardClass}>
+						<p class="text-sm">Unique Domains</p>
+						<p class="text-2xl font-bold">{stats.uniqueTldUrls}</p>
+					</div>
+					<div class={cardClass}>
+						<p class="text-sm">Ad Creatives Found</p>
+						<p class="text-2xl font-bold">{stats.creativesFound}</p>
+					</div>
+					<div class={cardClass}>
+						<p class="text-sm">Countries</p>
+						<p class="text-2xl">
+							{#each stats.countries as country}
+								<span class="mr-1">{countryCodeToEmoji(country)}</span>
+							{/each}
+						</p>
+					</div>
+				</section>
 
-			<WhiteCard>
-				{#snippet title()}
-					APIs
-				{/snippet}
-				<AppAPICallsTable data={apis.apis} />
-			</WhiteCard>
-		{/if}
-	{/await}
+				<section class="my-6">
+					<h3 class="text-lg font-semibold mb-3">Contacted Domains ({stats.uniqueTldUrls})</h3>
+					<div class="flex flex-wrap gap-2">
+						{#each stats.uniqueTldUrlsList as tldInfo}
+							<CompanyButton
+								companyName={`${tldInfo.tld_url} (${tldInfo.company_name || 'Unknown'})`}
+								companyDomain={tldInfo.tld_url}
+							/>
+						{/each}
+					</div>
+				</section>
+
+				<WhiteCard>
+					{#snippet title()}
+						APIs
+					{/snippet}
+					<AppAPICallsTable data={apis.apis} />
+				</WhiteCard>
+			{/if}
+		{/await}
+	</section>
 </div>

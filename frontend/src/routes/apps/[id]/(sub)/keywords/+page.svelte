@@ -157,7 +157,7 @@
 		<AppKeywordsNav storeId={myapp.store_id} />
 
 		<section class={`${cardBase} p-6`}>
-			<h1 class="h4 md:h3">ASO Keywords Overview</h1>
+			<h2 class="h4 md:h3">ASO Keywords Overview</h2>
 			<p class="mt-2 text-sm -200">
 				{myapp.name} has {keywordScores.length.toLocaleString()} unique keywords in this dashboard.
 			</p>

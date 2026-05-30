@@ -20,6 +20,7 @@
 		data: CompanyOverviewApps[];
 		isiOS: boolean;
 		companyName?: string;
+		previewMode?: boolean;
 	};
 
 	function tableHasAdsTxt(table: CompanyOverviewApps[]) {
@@ -33,7 +34,12 @@
 	const checkIconClass = 'w-4 h-4 text-success-700-300';
 	const xIconClass = 'w-4 h-4 text-error-200';
 
-	let { data, isiOS, companyName = '' }: DataTableProps<CompanyOverviewApps, TValue> = $props();
+	let {
+		data,
+		isiOS,
+		companyName = '',
+		previewMode = true
+	}: DataTableProps<CompanyOverviewApps, TValue> = $props();
 
 	const baseColumns = [
 		{
@@ -188,16 +194,18 @@
 				{/each}
 			</tbody>
 		</table>
-		<footer class="flex justify-between">
-			<div class="flex items-center justify-end space-x-2 py-4 gap-2">
-				<ExportAsCSV {table} filename="appgoblin_apps" />
-				<span class="text-xs md:text-sm text-gray-500">
-					Sample only. For a full list of {companyName ? `${companyName}'s` : "your company's"} client
-					apps, see
-					<a href="/pricing">pricing page</a>. AppGoblin B2B users can download the full app exports
-					in the Data Exports tab above.
-				</span>
-			</div>
-		</footer>
+		{#if previewMode}
+			<footer class="flex justify-between">
+				<div class="flex items-center justify-end space-x-2 py-4 gap-2">
+					<ExportAsCSV {table} filename="appgoblin_apps" />
+					<span class="text-xs md:text-sm text-gray-500">
+						Sample only. For a full list of {companyName ? `${companyName}'s` : "your company's"} client
+						apps, see
+						<a href="/pricing">pricing page</a>. AppGoblin B2B users can download the full app
+						exports in the Data Exports tab above.
+					</span>
+				</div>
+			</footer>
+		{/if}
 	</div>
 </div>
