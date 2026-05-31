@@ -7,6 +7,9 @@
 			appMetrics: AppGlobalMetrics[] | AppCountryMetrics[];
 			selectedCountry: string;
 			availableCountries: { code: string; name: string }[];
+			myapp?: {
+				store?: string;
+			};
 		};
 	}
 	let { data }: Props = $props();
@@ -18,6 +21,7 @@
 			data={data.appMetrics}
 			selectedCountry={data.selectedCountry}
 			availableCountries={data.availableCountries}
+			store={data.myapp?.store ?? ''}
 		/>
 	{:else}
 		<div class="flex h-64 items-center justify-center">
