@@ -32,6 +32,23 @@
 <div class="space-y-4 py-4 md:py-6">
 	<div class="px-4 md:px-6">
 		<h1 class="text-2xl font-bold md:text-3xl">API Documentation</h1>
+		<div class="mt-3 max-w-4xl space-y-3 text-sm md:text-base">
+			<p>
+				The AppGoblin public API includes paid company churn tracking through
+				<code>GET /api/v1/companies/{'{'}company_domain{'}'}/app-changes</code>. Query a known
+				company by quarter, then use <code>status=lost</code> to review apps that removed it or
+				<code>status=added</code> to review apps that newly adopted it.
+			</p>
+			<p>
+				This is useful for ad-network prospecting, competitor monitoring, and compliance review. For
+				example, sales teams can pull apps that recently lost a monetization or analytics vendor,
+				while compliance teams can review recent SDK removals for a specific provider.
+			</p>
+			<p class="opacity-80">
+				The current endpoint is scoped to quarterly company deltas for a known domain. It does not
+				directly correlate one vendor's removal with another vendor's addition in the same response.
+			</p>
+		</div>
 	</div>
 
 	<iframe

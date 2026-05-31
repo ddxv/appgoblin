@@ -1,0 +1,64 @@
+---
+title: "AppGoblin's company changes API tracks B2B churn"
+description: "AppGoblin's API lets you track when apps join or leave mobile app B2B companies"
+pubDate: "May 31 2026"
+heroImage: "/blog-images/appgoblin_app_changes_churn_api.png"
+---
+
+# Tracking Vendor Churn and Adoption via API
+
+While many users view the AppGoblin company dataset as a static snapshot, the paid `app-changes` endpoint functions as a highly effective churn-tracking engine for known vendors.
+
+By querying a specific company domain and applying a status filter, you can isolate programmatic shifts in the mobile ecosystem:
+
+*   `GET /api/v1/companies/{company_domain}/app-changes`
+
+### The Core Filters
+*   **`status=lost`**: Reviews the exact apps that *removed* that company's technology during the selected timeframe.
+*   **`status=added`**: Reviews the exact apps that *newly integrated* that company's technology during the selected timeframe.
+
+---
+
+## Why This Matters
+
+Tracking quarterly ecosystem deltas unlocks powerful programmatic workflows for several core B2B teams:
+
+*   **Ad Networks & Mediation Platforms:** Identify apps that recently dropped a direct competitor, instantly generating high-intent lead lists for outbound sales teams.
+*   **Competitor Research & Strategy:** Track the churn and adoption velocity of specific market alternatives quarter-over-quarter.
+*   **Compliance, Privacy, & Security:** Programmatically verify that sunsetted SDKs or deprecated third-party integration partners have been completely removed across a fleet of apps.
+
+> **One Important Boundary:** This endpoint provides a quarterly delta for a *known single domain*. It does not explicitly guarantee or prove that App X removed Vendor A and added Vendor B in a single combined response. However, if your team already targets specific vendors, it provides the exact list of additions and removals you need.
+
+---
+
+## Practical Examples
+
+The endpoint allows you to inspect changes across different relationship layers by modifying the `tag_source` parameter:
+*   `sdk`: For native mobile SDK footprint changes.
+*   `api_call`: For direct server-to-server or app-to-server API integrations.
+*   `app_ads_direct`: For authorized ad seller verification changes via `app-ads.txt`.
+
+### 1. Extracting Competitor Churn (`status=lost`)
+To find apps that dropped a specific vendor (e.g., AppLovin) during a given quarter, isolate the lost SDK signatures:
+
+```bash
+curl -H "X-API-Key: <your-api-token>" \
+  "https://appgoblin.info/api/v1/companies/applovin.com/app-changes?status=lost&tag_source=sdk&year=2026&quarter=1"
+```
+
+### 2. Identifying Market Adoption (`status=added`)
+
+To see which apps are actively onboarding a specific vendor (e.g., ironSource), swap the query to target newly added footprints:
+
+```bash
+curl -H "H-API-Key: <your-api-token>" \
+  "https://appgoblin.info/api/v1/companies/ironsrc.com/app-changes?status=added&tag_source=sdk&year=2026&quarter=1"
+```
+
+## Getting Started
+
+This capability is fully live in the production API environment today. To explore the parameters or upgrade your access tier, visit the resources below:
+
+- Explore the interactive payloads in the AppGoblin API Docs.
+
+- Unlock access to premium company endpoints on the AppGoblin Pricing Page.

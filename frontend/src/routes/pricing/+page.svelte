@@ -94,7 +94,7 @@
 		},
 		{
 			category: 'API Access',
-			name: 'API /companies endpoint',
+			name: 'API /companies + churn endpoints',
 			free: false,
 			sdk: true,
 			appads: true,
@@ -209,6 +209,11 @@
 		<p class="text-sm opacity-80 mt-3 max-w-3xl">
 			Paid plans are billed monthly. You can cancel anytime, and your access will remain active
 			through the end of your current billing period. Payments already made are non-refundable.
+		</p>
+
+		<p class="text-sm opacity-80 mt-3 max-w-3xl">
+			Paid API access also unlocks company churn and adoption tracking, including quarterly
+			app-change lists for apps a known vendor recently added or lost.
 		</p>
 
 		<br />
