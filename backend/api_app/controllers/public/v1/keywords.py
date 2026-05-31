@@ -8,13 +8,13 @@ from litestar.datastructures import State
 from litestar.exceptions import NotFoundException
 
 from api_app.analytics import PUBLIC_API_HOSTNAME, build_request_page_view_task
+from api_app.controllers.public.v1.apps import _api_key_guard
 from api_app.controllers.public.v1.public_models import (
     PublicKeywordMetrics,
     PublicKeywordPlatformMetrics,
-    PublicKeywordRanks,
     PublicKeywordRankedApp,
+    PublicKeywordRanks,
 )
-from api_app.controllers.public.v1.apps import _api_key_guard
 from api_app.utils import extend_app_icon_url
 from config import get_logger
 from dbcon.queries import get_keyword_apps, get_keyword_details
@@ -74,7 +74,7 @@ def _build_keyword_metrics_by_platform(
         msg = f"Keyword not found: {keyword!r}"
         raise NotFoundException(msg, status_code=404)
 
-    metrics_by_platform = {platform: None for platform in _PLATFORM_ORDER}
+    metrics_by_platform = dict.fromkeys(_PLATFORM_ORDER)
     for row in keyword_df.to_dict(orient="records"):
         platform = _STORE_TO_PLATFORM.get(_optional_int(row.get("store")))
         if platform is None:
