@@ -132,59 +132,59 @@ COMPANY_APPS_ADDED_EXAMPLE_RESPONSE = {
     "android_apps": ["com.example.first"],
     "ios_apps": ["id1234567890"],
 }
-KEYWORD_OVERVIEW_EXAMPLE_RESPONSE = {
+KEYWORD_METRICS_EXAMPLE_RESPONSE = {
     "keyword": KEYWORD_OVERVIEW_EXAMPLE_KEYWORD,
     "country": "US",
     "android": {
-        "metrics": {
-            "app_count": 420,
-            "total_apps": 1960,
-            "median_competitor_installs": 250000,
-            "avg_competitor_rating": 4.3,
-            "major_competitors": 18,
-            "volume_competition_score": 73.1,
-            "keyword_difficulty": 61.2,
-            "opportunity_score": 69.8,
-            "competitiveness_score": 64.5,
-        },
-        "top_apps": [
-            {
-                "name": "AppGoblin: Scan Trackers & SDK",
-                "store_id": "dev.thirdgate.appgoblin",
-                "category": "tools",
-                "installs": 37,
-                "rating_count": 0,
-                "app_icon_url": "https://media.appgoblin.info/app-icons/dev.thirdgate.appgoblin/icon.png",
-                "latest_rank": 4,
-                "best_rank_d30": 2,
-            }
-        ],
+        "app_count": 420,
+        "total_apps": 1960,
+        "median_competitor_installs": 250000,
+        "avg_competitor_rating": 4.3,
+        "major_competitors": 18,
+        "volume_competition_score": 73.1,
+        "keyword_difficulty": 61.2,
+        "opportunity_score": 69.8,
+        "competitiveness_score": 64.5,
     },
     "ios": {
-        "metrics": {
-            "app_count": 215,
-            "total_apps": 910,
-            "median_competitor_installs": 175000,
-            "avg_competitor_rating": 4.6,
-            "major_competitors": 11,
-            "volume_competition_score": 68.4,
-            "keyword_difficulty": 57.9,
-            "opportunity_score": 71.3,
-            "competitiveness_score": 59.4,
-        },
-        "top_apps": [
-            {
-                "name": "AppGoblin for iPhone",
-                "store_id": "id1234567890",
-                "category": "utilities",
-                "installs": 1200,
-                "rating_count": 94,
-                "app_icon_url": "https://media.appgoblin.info/app-icons/id1234567890/icon.png",
-                "latest_rank": 6,
-                "best_rank_d30": 3,
-            }
-        ],
+        "app_count": 215,
+        "total_apps": 910,
+        "median_competitor_installs": 175000,
+        "avg_competitor_rating": 4.6,
+        "major_competitors": 11,
+        "volume_competition_score": 68.4,
+        "keyword_difficulty": 57.9,
+        "opportunity_score": 71.3,
+        "competitiveness_score": 59.4,
     },
+}
+KEYWORD_RANKS_EXAMPLE_RESPONSE = {
+    "keyword": KEYWORD_OVERVIEW_EXAMPLE_KEYWORD,
+    "country": "US",
+    "android": [
+        {
+            "name": "AppGoblin: Scan Trackers & SDK",
+            "store_id": "dev.thirdgate.appgoblin",
+            "category": "tools",
+            "installs": 37,
+            "rating_count": 0,
+            "app_icon_url": "https://media.appgoblin.info/app-icons/dev.thirdgate.appgoblin/icon.png",
+            "latest_rank": 4,
+            "best_rank_d30": 2,
+        }
+    ],
+    "ios": [
+        {
+            "name": "AppGoblin for iPhone",
+            "store_id": "id1234567890",
+            "category": "utilities",
+            "installs": 1200,
+            "rating_count": 94,
+            "app_icon_url": "https://media.appgoblin.info/app-icons/id1234567890/icon.png",
+            "latest_rank": 6,
+            "best_rank_d30": 3,
+        }
+    ],
 }
 V1_OPERATION_DOCS = {
     "/api/v1/companies": {
@@ -259,8 +259,18 @@ V1_OPERATION_DOCS = {
             "summary": "/keywords/{keyword}",
             "description": (
                 "Endpoint: `GET /api/v1/keywords/{keyword}`\n\n"
-                "Returns per-platform keyword metrics plus grouped top-ranked apps "
-                "for an exact keyword lookup in the US storefront dataset."
+                "Returns per-platform keyword difficulty, competition, and "
+                "opportunity metrics for an exact keyword lookup in the US storefront dataset."
+            ),
+        }
+    },
+    "/api/v1/keywords/{keyword}/ranks": {
+        "get": {
+            "summary": "/keywords/{keyword}/ranks",
+            "description": (
+                "Endpoint: `GET /api/v1/keywords/{keyword}/ranks`\n\n"
+                "Returns grouped latest top-ranked Android and iOS apps for an exact "
+                "keyword lookup in the US storefront dataset."
             ),
         }
     },
@@ -464,8 +474,8 @@ def _set_company_app_changes_examples(schema: dict[str, Any]) -> None:
     }
 
 
-def _set_keyword_overview_example(schema: dict[str, Any]) -> None:
-    """Attach a concrete example to the public keyword overview endpoint."""
+def _set_keyword_metrics_example(schema: dict[str, Any]) -> None:
+    """Attach a concrete example to the public keyword metrics endpoint."""
     path_item = schema.get("paths", {}).get("/api/v1/keywords/{keyword}")
     if not isinstance(path_item, dict):
         return
@@ -489,9 +499,43 @@ def _set_keyword_overview_example(schema: dict[str, Any]) -> None:
         return
 
     json_content["examples"] = {
-        "keyword_overview": {
-            "summary": "Keyword overview for a tracked ASO keyword",
-            "value": KEYWORD_OVERVIEW_EXAMPLE_RESPONSE,
+        "keyword_metrics": {
+            "summary": "Keyword metrics for a tracked ASO keyword",
+            "value": KEYWORD_METRICS_EXAMPLE_RESPONSE,
+        }
+    }
+
+
+def _set_keyword_ranks_example(schema: dict[str, Any]) -> None:
+    """Attach a concrete example to the public keyword ranks endpoint."""
+    path_item = schema.get("paths", {}).get("/api/v1/keywords/{keyword}/ranks")
+    if not isinstance(path_item, dict):
+        return
+
+    get_operation = path_item.get("get")
+    if not isinstance(get_operation, dict):
+        return
+
+    for parameter in get_operation.get("parameters", []):
+        if parameter.get("name") == "keyword":
+            parameter["example"] = KEYWORD_OVERVIEW_EXAMPLE_KEYWORD
+        elif parameter.get("name") == "limit":
+            parameter["example"] = 20
+
+    responses = get_operation.get("responses", {})
+    response_200 = responses.get("200")
+    if not isinstance(response_200, dict):
+        return
+
+    content = response_200.get("content", {})
+    json_content = content.get("application/json")
+    if not isinstance(json_content, dict):
+        return
+
+    json_content["examples"] = {
+        "keyword_ranks": {
+            "summary": "Latest top-ranked apps for a tracked ASO keyword",
+            "value": KEYWORD_RANKS_EXAMPLE_RESPONSE,
         }
     }
 
@@ -578,7 +622,8 @@ def build_v1_openapi_schema(request: Request) -> dict[str, Any]:
     _set_app_basics_example(schema)
     _set_company_overview_example(schema)
     _set_company_app_changes_examples(schema)
-    _set_keyword_overview_example(schema)
+    _set_keyword_metrics_example(schema)
+    _set_keyword_ranks_example(schema)
     return schema
 
 

@@ -218,18 +218,20 @@ class PublicKeywordRankedApp:
 
 
 @dataclass
-class PublicKeywordPlatformOverview:
-    """Keyword metrics and top apps for a single mobile platform."""
-
-    metrics: PublicKeywordPlatformMetrics | None = None
-    top_apps: list[PublicKeywordRankedApp] = field(default_factory=list)
-
-
-@dataclass
-class PublicKeywordOverview:
-    """Public keyword overview payload returned by the v1 API."""
+class PublicKeywordMetrics:
+    """Public keyword metrics payload returned by the v1 API."""
 
     keyword: str
     country: str
-    android: PublicKeywordPlatformOverview | None = None
-    ios: PublicKeywordPlatformOverview | None = None
+    android: PublicKeywordPlatformMetrics | None = None
+    ios: PublicKeywordPlatformMetrics | None = None
+
+
+@dataclass
+class PublicKeywordRanks:
+    """Public latest keyword ranks payload returned by the v1 API."""
+
+    keyword: str
+    country: str
+    android: list[PublicKeywordRankedApp] = field(default_factory=list)
+    ios: list[PublicKeywordRankedApp] = field(default_factory=list)
