@@ -22,6 +22,7 @@
 - **Company Intelligence** — See the top client apps for any mobile SDK or services company
   - Example: [Salesforce Clients](https://appgoblin.info/companies/salesforce.com)
   - Example: [AppsFlyer Top Apps](https://appgoblin.info/companies/appsflyer.com)
+  - Track quarterly app adoption and churn for a known company through added and lost app-change views
 
 - **Ad Tech Insights** — Tracks live ad campaigns and the ad tech domains apps communicate with
 
@@ -36,10 +37,10 @@
 - **App & game developers** looking to grow using free ASO tools
 - **Researchers & journalists** needing deep technical analysis across millions of apps
 - **Data scientists & marketers** needing reproducible app datasets for modeling, market mapping, and analysis
-- **Ad sales teams** prospecting clients by analyzing competitor app portfolios
+- **Ad sales teams** prospecting clients by analyzing competitor app portfolios and recent company churn
 - **Ad networks & DSPs** doing fraud detection
 - **DSPs** needing App-Ads.txt tied to real app store IDs (e.g. `com.example.app`) rather than just domain names
-- **Competitor researchers** tracking SDK adoption and growth trends
+- **Competitor researchers** tracking SDK adoption, quarterly app churn, and growth trends
 - **Privacy advocates** identifying hidden trackers and ad-tech domains in popular apps
 
 

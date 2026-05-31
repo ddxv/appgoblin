@@ -1637,9 +1637,10 @@ class TestV1Docs:
             company_app_changes_operation["description"]
             == "Endpoint: `GET /api/v1/companies/{company_domain}/app-changes`\n\n"
             "Access: Paid tiers only.\n\n"
-            "Returns ordered Android and iOS app store IDs for apps added to or "
-            "lost from a company in a specific year/quarter slice, filtered by "
-            "status and a single tag source."
+            "Returns ordered Android and iOS app store IDs for a known company's "
+            "quarterly churn and adoption slice. Use `status=lost` to review apps "
+            "that removed the company in that year/quarter window, or `status=added` "
+            "to review apps that newly added it, filtered by a single tag source."
         )
         company_app_changes_examples = company_app_changes_operation["responses"][
             "200"

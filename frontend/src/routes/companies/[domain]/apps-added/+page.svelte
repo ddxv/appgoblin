@@ -21,8 +21,8 @@
 <section class="mb-4 space-y-2">
 	<h2 class="text-xl font-semibold">Recently Added Apps</h2>
 	<p class="text-sm mb-3">
-		This view tracks apps that recently added this company through SDK, API-call, or app-ads.txt
-		direct signals across the latest available quarter and the quarter before it.
+		This view tracks the quarterly adoption side of this company's churn data through SDK, API-call,
+		or app-ads.txt direct signals across the latest available quarter and the quarter before it.
 	</p>
 </section>
 

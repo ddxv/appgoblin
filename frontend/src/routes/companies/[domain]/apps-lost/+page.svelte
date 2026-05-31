@@ -21,8 +21,9 @@
 <section class="mb-4 space-y-2">
 	<h2 class="text-xl font-semibold">Recently Lost Apps</h2>
 	<p class="text-sm mb-3">
-		This view tracks apps that recently removed this company through SDK, API-call, or app-ads.txt
-		direct signals across the latest available quarter and the quarter before it.
+		This view tracks the quarterly churn side of this company's app-change data through SDK,
+		API-call, or app-ads.txt direct signals across the latest available quarter and the quarter
+		before it.
 	</p>
 </section>
 
