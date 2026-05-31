@@ -85,6 +85,30 @@
 			b2b: true
 		},
 		{
+			category: 'API Access',
+			name: 'API (limited)',
+			free: true,
+			sdk: true,
+			appads: true,
+			b2b: true
+		},
+		{
+			category: 'API Access',
+			name: 'API /companies endpoint',
+			free: false,
+			sdk: true,
+			appads: true,
+			b2b: true
+		},
+		{
+			category: 'API Access',
+			name: 'API higher rate limits',
+			free: false,
+			sdk: true,
+			appads: true,
+			b2b: true
+		},
+		{
 			category: 'Premium Tools',
 			name: 'App Explorer dash + SDK filters',
 			free: false,
