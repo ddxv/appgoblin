@@ -60,8 +60,9 @@
 		data: AppGlobalMetrics[] | AppCountryMetrics[];
 		selectedCountry: string;
 		availableCountries: { code: string; name: string }[];
+		store?: string;
 	}
-	let { data, selectedCountry, availableCountries }: Props = $props();
+	let { data, selectedCountry, availableCountries, store = '' }: Props = $props();
 
 	// State for toggles
 	let starsExpanded = $state(false);
@@ -123,10 +124,64 @@
 		return num.toFixed(2) + '%';
 	};
 
+	const isAprilInstallAnomalyWindow = (row: AppGlobalMetrics | AppCountryMetrics): boolean => {
+		const rawDate = getDate(row);
+		const isoDateMatch = rawDate.match(/^(\d{4})-(\d{2})-(\d{2})/);
+		if (!isoDateMatch) return false;
+
+		const [, , month, day] = isoDateMatch;
+		const monthDay = `${month}-${day}`;
+		return monthDay >= '04-13' && monthDay <= '04-27';
+	};
+
 	// Calculate summary stats from filtered data
 	const latestData = $derived(filteredData[filteredData.length - 1]);
 	const earliestData = $derived(filteredData[0]);
 	const hasInstallMetrics = $derived('cumulative_installs' in (latestData ?? {}));
+	const isGoogleStore = $derived(store.includes('Google'));
+	const hasAprilInstallGrowthAnomaly = $derived(
+		isGoogleStore &&
+			filteredData.some((row) => {
+				const growthRate = Number(row.weekly_installs_rate_of_change ?? 0) || 0;
+				return growthRate > 1000 && isAprilInstallAnomalyWindow(row);
+			})
+	);
+	const installAxisReferenceRows = $derived.by(() => {
+		if (!hasAprilInstallGrowthAnomaly) return filteredData;
+
+		const rowsOutsideAnomalyWindow = filteredData.filter(
+			(row) => !isAprilInstallAnomalyWindow(row)
+		);
+
+		return rowsOutsideAnomalyWindow.length > 0 ? rowsOutsideAnomalyWindow : filteredData;
+	});
+	const weeklyInstallsAxisMax = $derived(
+		installAxisReferenceRows.reduce((maximum, row) => {
+			const value = Number(row.weekly_installs ?? 0) || 0;
+			return Math.max(maximum, value);
+		}, 0)
+	);
+	const installGrowthAxisMax = $derived(
+		installAxisReferenceRows.reduce((maximum, row) => {
+			const value = Number(row.weekly_installs_rate_of_change ?? 0) || 0;
+			return Math.max(maximum, value);
+		}, 0)
+	);
+	const weeklyInstallsYDomain = $derived([
+		0,
+		Math.max(1, Math.ceil(weeklyInstallsAxisMax * 1.1))
+	] as [number, number]);
+	const installGrowthMin = $derived(
+		filteredData.reduce((minimum, row) => {
+			const value = Number(row.weekly_installs_rate_of_change ?? 0) || 0;
+			return Math.min(minimum, value);
+		}, 0)
+	);
+	const installGrowthMax = $derived(Math.max(1, Math.ceil(installGrowthAxisMax * 1.1)));
+	const installGrowthYDomain = $derived([
+		Math.min(0, Math.floor(installGrowthMin)),
+		installGrowthMax
+	] as [number, number]);
 
 	// Calculate overall trend from earliest to latest
 	const calculateOverallChange = (latest: number, earliest: number): number => {
@@ -339,6 +394,14 @@
 	{#if hasInstallMetrics}
 		<div class="rounded-lg border p-6">
 			<h2 class="mb-6 text-xl font-bold">Install Analytics</h2>
+			{#if hasAprilInstallGrowthAnomaly}
+				<div
+					class="mb-6 rounded-lg border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-950"
+				>
+					<div class="font-semibold">Google Play installs anomaly detected</div>
+					<div class="mt-1">Google APIs returned a raw data anamoly from April 13-April27</div>
+				</div>
+			{/if}
 			<div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
 				<div>
 					<h3 class="mb-3 text-sm font-semibold">Cumulative Installs</h3>
@@ -362,7 +425,9 @@
 							data={filteredData}
 							x={xAxisKey}
 							y="weekly_installs"
+							yDomain={weeklyInstallsYDomain}
 							props={{
+								svg: { clip: true },
 								xAxis: { format: (d) => format(d, PeriodType.Day, { variant: 'short' }), ticks: 5 },
 								yAxis: { format: (d) => formatNumber(d) }
 							}}
@@ -377,7 +442,9 @@
 							data={filteredData}
 							x={xAxisKey}
 							y="weekly_installs_rate_of_change"
+							yDomain={installGrowthYDomain}
 							props={{
+								svg: { clip: true },
 								xAxis: { format: (d) => format(d, PeriodType.Day, { variant: 'short' }), ticks: 5 },
 								yAxis: { format: (d) => d.toFixed(2) + '%' }
 							}}
