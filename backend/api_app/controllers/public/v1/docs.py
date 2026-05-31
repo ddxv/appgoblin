@@ -11,8 +11,11 @@ V1_PATH_PREFIX = "/api/v1/"
 V1_DOCS_PATH_PREFIX = "/api/v1/docs/"
 V1_OPENAPI_JSON_PATH = "/api/v1/docs/openapi.json"
 PUBLIC_API_SERVER_URL = "https://appgoblin.info"
+PUBLIC_PRICING_URL = f"{PUBLIC_API_SERVER_URL}/pricing"
+PUBLIC_OPENAPI_JSON_URL = f"{PUBLIC_API_SERVER_URL}{V1_OPENAPI_JSON_PATH}"
 SCALAR_CSS_URL = "data:text/css,"
 APP_BASICS_EXAMPLE_STORE_ID = "dev.thirdgate.appgoblin"
+KEYWORD_OVERVIEW_EXAMPLE_KEYWORD = "app privacy"
 APP_BASICS_EXAMPLE_RESPONSE = {
     "name": "AppGoblin: Scan Trackers & SDK",
     "store_id": APP_BASICS_EXAMPLE_STORE_ID,
@@ -129,12 +132,67 @@ COMPANY_APPS_ADDED_EXAMPLE_RESPONSE = {
     "android_apps": ["com.example.first"],
     "ios_apps": ["id1234567890"],
 }
+KEYWORD_METRICS_EXAMPLE_RESPONSE = {
+    "keyword": KEYWORD_OVERVIEW_EXAMPLE_KEYWORD,
+    "country": "US",
+    "android": {
+        "app_count": 420,
+        "total_apps": 1960,
+        "median_competitor_installs": 250000,
+        "avg_competitor_rating": 4.3,
+        "major_competitors": 18,
+        "volume_competition_score": 73.1,
+        "keyword_difficulty": 61.2,
+        "opportunity_score": 69.8,
+        "competitiveness_score": 64.5,
+    },
+    "ios": {
+        "app_count": 215,
+        "total_apps": 910,
+        "median_competitor_installs": 175000,
+        "avg_competitor_rating": 4.6,
+        "major_competitors": 11,
+        "volume_competition_score": 68.4,
+        "keyword_difficulty": 57.9,
+        "opportunity_score": 71.3,
+        "competitiveness_score": 59.4,
+    },
+}
+KEYWORD_RANKS_EXAMPLE_RESPONSE = {
+    "keyword": KEYWORD_OVERVIEW_EXAMPLE_KEYWORD,
+    "country": "US",
+    "android": [
+        {
+            "name": "AppGoblin: Scan Trackers & SDK",
+            "store_id": "dev.thirdgate.appgoblin",
+            "category": "tools",
+            "installs": 37,
+            "rating_count": 0,
+            "app_icon_url": "https://media.appgoblin.info/app-icons/dev.thirdgate.appgoblin/icon.png",
+            "latest_rank": 4,
+            "best_rank_d30": 2,
+        }
+    ],
+    "ios": [
+        {
+            "name": "AppGoblin for iPhone",
+            "store_id": "id1234567890",
+            "category": "utilities",
+            "installs": 1200,
+            "rating_count": 94,
+            "app_icon_url": "https://media.appgoblin.info/app-icons/id1234567890/icon.png",
+            "latest_rank": 6,
+            "best_rank_d30": 3,
+        }
+    ],
+}
 V1_OPERATION_DOCS = {
     "/api/v1/companies": {
         "get": {
-            "summary": "/companies",
+            "summary": "[Paid] /companies",
             "description": (
                 "Endpoint: `GET /api/v1/companies`\n\n"
+                "Access: Paid tiers only.\n\n"
                 "Returns the public company index with queryable company domains, "
                 "display names, parent mappings, installs, and the latest trend "
                 "snapshot fields for market share, market-share change, total "
@@ -144,9 +202,10 @@ V1_OPERATION_DOCS = {
     },
     "/api/v1/companies/{company_domain}": {
         "get": {
-            "summary": "/companies/{company_domain}",
+            "summary": "[Paid] /companies/{company_domain}",
             "description": (
                 "Endpoint: `GET /api/v1/companies/{company_domain}`\n\n"
+                "Access: Paid tiers only.\n\n"
                 "Returns the public company overview for a single domain, including "
                 "mapping status, company types, key metrics, a latest-trends summary, "
                 "and dataset availability."
@@ -155,9 +214,10 @@ V1_OPERATION_DOCS = {
     },
     "/api/v1/companies/{company_domain}/app-changes": {
         "get": {
-            "summary": "/companies/{company_domain}/app-changes",
+            "summary": "[Paid] /companies/{company_domain}/app-changes",
             "description": (
                 "Endpoint: `GET /api/v1/companies/{company_domain}/app-changes`\n\n"
+                "Access: Paid tiers only.\n\n"
                 "Returns ordered Android and iOS app store IDs for apps added to or "
                 "lost from a company in a specific year/quarter slice, filtered by "
                 "status and a single tag source."
@@ -191,6 +251,26 @@ V1_OPERATION_DOCS = {
                 "Endpoint: `GET /api/v1/apps/{store_id}/sdks`\n\n"
                 "Returns public SDK findings, permissions, package queries, SKAdNetwork "
                 "entries, and unmapped evidence for a single app."
+            ),
+        }
+    },
+    "/api/v1/keywords/{keyword}": {
+        "get": {
+            "summary": "/keywords/{keyword}",
+            "description": (
+                "Endpoint: `GET /api/v1/keywords/{keyword}`\n\n"
+                "Returns per-platform keyword difficulty, competition, and "
+                "opportunity metrics for an exact keyword lookup in the US storefront dataset."
+            ),
+        }
+    },
+    "/api/v1/keywords/{keyword}/ranks": {
+        "get": {
+            "summary": "/keywords/{keyword}/ranks",
+            "description": (
+                "Endpoint: `GET /api/v1/keywords/{keyword}/ranks`\n\n"
+                "Returns grouped latest top-ranked Android and iOS apps for an exact "
+                "keyword lookup in the US storefront dataset."
             ),
         }
     },
@@ -394,6 +474,72 @@ def _set_company_app_changes_examples(schema: dict[str, Any]) -> None:
     }
 
 
+def _set_keyword_metrics_example(schema: dict[str, Any]) -> None:
+    """Attach a concrete example to the public keyword metrics endpoint."""
+    path_item = schema.get("paths", {}).get("/api/v1/keywords/{keyword}")
+    if not isinstance(path_item, dict):
+        return
+
+    get_operation = path_item.get("get")
+    if not isinstance(get_operation, dict):
+        return
+
+    for parameter in get_operation.get("parameters", []):
+        if parameter.get("name") == "keyword":
+            parameter["example"] = KEYWORD_OVERVIEW_EXAMPLE_KEYWORD
+
+    responses = get_operation.get("responses", {})
+    response_200 = responses.get("200")
+    if not isinstance(response_200, dict):
+        return
+
+    content = response_200.get("content", {})
+    json_content = content.get("application/json")
+    if not isinstance(json_content, dict):
+        return
+
+    json_content["examples"] = {
+        "keyword_metrics": {
+            "summary": "Keyword metrics for a tracked ASO keyword",
+            "value": KEYWORD_METRICS_EXAMPLE_RESPONSE,
+        }
+    }
+
+
+def _set_keyword_ranks_example(schema: dict[str, Any]) -> None:
+    """Attach a concrete example to the public keyword ranks endpoint."""
+    path_item = schema.get("paths", {}).get("/api/v1/keywords/{keyword}/ranks")
+    if not isinstance(path_item, dict):
+        return
+
+    get_operation = path_item.get("get")
+    if not isinstance(get_operation, dict):
+        return
+
+    for parameter in get_operation.get("parameters", []):
+        if parameter.get("name") == "keyword":
+            parameter["example"] = KEYWORD_OVERVIEW_EXAMPLE_KEYWORD
+        elif parameter.get("name") == "limit":
+            parameter["example"] = 20
+
+    responses = get_operation.get("responses", {})
+    response_200 = responses.get("200")
+    if not isinstance(response_200, dict):
+        return
+
+    content = response_200.get("content", {})
+    json_content = content.get("application/json")
+    if not isinstance(json_content, dict):
+        return
+
+    json_content["examples"] = {
+        "keyword_ranks": {
+            "summary": "Latest top-ranked apps for a tracked ASO keyword",
+            "value": KEYWORD_RANKS_EXAMPLE_RESPONSE,
+        }
+    }
+
+
 def _set_operation_docs(schema: dict[str, Any]) -> None:
     """Set stable Scalar-friendly summaries and descriptions for public v1 routes."""
     paths = schema.get("paths", {})
@@ -434,6 +580,8 @@ def build_v1_openapi_schema(request: Request) -> dict[str, Any]:
             "- Header: `X-API-Key: <your-api-token>`\n"
             f"- Get a token: {PUBLIC_API_SERVER_URL}/account/api-keys\n"
             "\n"
+            "## Plans & Access\n"
+            f"> **Need higher tiers or access to all endpoints?** See [Pricing]({PUBLIC_PRICING_URL}).\n\n"
             "## Rate Limits\n"
             "Rate limits are enforced per API key and vary by subscription tier.\n\n"
             "- Free API keys include a baseline limit of 30 requests per minute and "
@@ -443,6 +591,10 @@ def build_v1_openapi_schema(request: Request) -> dict[str, Any]:
             "`X-RateLimit-Policy`, and `X-RateLimit-Quota-Remaining` headers\n"
             "- Requests that exceed a limit return `429 Too Many Requests`; "
             "minute-limit responses may also include `Retry-After`\n"
+            "\n"
+            "## AI & Raw Spec\n"
+            "Scalar does not expose a built-in copy-all-docs button in this setup. "
+            f"For AI tools or bulk export, use the raw OpenAPI JSON at [{V1_OPENAPI_JSON_PATH}]({PUBLIC_OPENAPI_JSON_URL}) or the download button in the docs UI.\n"
             "\n"
             "- App basics include stable store metadata plus MAU, recent install, and "
             "estimated revenue metrics\n"
@@ -470,6 +622,8 @@ def build_v1_openapi_schema(request: Request) -> dict[str, Any]:
     _set_app_basics_example(schema)
     _set_company_overview_example(schema)
     _set_company_app_changes_examples(schema)
+    _set_keyword_metrics_example(schema)
+    _set_keyword_ranks_example(schema)
     return schema
 
 

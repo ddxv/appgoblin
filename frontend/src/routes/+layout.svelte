@@ -20,10 +20,31 @@
 	import { initializeTheme, resolvedThemeMode, toggleTheme } from '$lib/stores/theme.svelte';
 
 	let { children } = $props();
+	let isSearchStarting = $state(false);
 	const discordIcon = discordIconSvg.replace('<svg ', '<svg class="h-full w-full" ');
 	const githubIcon = githubIconSvg
 		.replace('<svg ', '<svg class="h-full w-full" ')
 		.replace('fill="#24292f"', 'fill="currentColor"');
+
+	async function handleSearchSubmit(event: SubmitEvent) {
+		event.preventDefault();
+
+		if (isSearchStarting) return;
+
+		const form = event.currentTarget as HTMLFormElement;
+		const termValue = new FormData(form).get('term');
+		const term = typeof termValue === 'string' ? termValue.trim() : '';
+
+		if (!term) return;
+
+		isSearchStarting = true;
+
+		try {
+			await goto(`/search/${encodeURIComponent(term)}`);
+		} finally {
+			isSearchStarting = false;
+		}
+	}
 
 	onMount(() => {
 		initializeTheme();
@@ -86,21 +107,32 @@
 						<form
 							class="input-group grid-cols-[1fr_auto]"
 							role="search"
-							onsubmit={(e) => {
-								e.preventDefault();
-								const term = (e.currentTarget as HTMLFormElement).term.value.trim();
-								if (term) goto(`/search/${encodeURIComponent(term)}`);
-							}}
+							aria-busy={isSearchStarting}
+							onsubmit={handleSearchSubmit}
 						>
 							<input
 								class="ig-input"
 								type="search"
 								name="term"
 								placeholder="Search Apps & Companies"
+								disabled={isSearchStarting}
 								required
 							/>
-							<button class="ig-cell preset-tonal p-2 md:p-4" type="submit" aria-label="Search">
-								<IconSearch />
+							<button
+								class="ig-cell preset-tonal inline-flex items-center justify-center p-2 md:p-4"
+								type="submit"
+								disabled={isSearchStarting}
+								aria-label={isSearchStarting ? 'Searching' : 'Search'}
+							>
+								{#if isSearchStarting}
+									<span
+										class="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"
+										aria-hidden="true"
+									></span>
+									<span class="sr-only">Searching...</span>
+								{:else}
+									<IconSearch />
+								{/if}
 							</button>
 						</form>
 
