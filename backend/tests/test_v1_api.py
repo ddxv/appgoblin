@@ -1640,7 +1640,12 @@ class TestV1Docs:
             "Returns ordered Android and iOS app store IDs for a known company's "
             "quarterly churn and adoption slice. Use `status=lost` to review apps "
             "that removed the company in that year/quarter window, or `status=added` "
-            "to review apps that newly added it, filtered by a single tag source."
+            "to review apps that newly added it, filtered by a single tag source. "
+            "This is useful for prospecting, competitor monitoring, and compliance "
+            "review when you already know the company domain you want to inspect. "
+            "The response is scoped to one company's quarterly delta and does not "
+            "directly correlate that company's removal with another company's "
+            "addition in the same payload."
         )
         company_app_changes_examples = company_app_changes_operation["responses"][
             "200"
