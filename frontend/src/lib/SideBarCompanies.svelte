@@ -2,7 +2,6 @@
 	import { page } from '$app/state';
 	import SideBarCatsListBoxItem from './SideBarCatsListBoxItem.svelte';
 	import type { SideBarCategoryData } from '../types';
-	import CardFirst from './CardFirst.svelte';
 
 	function getBaseUrl(url: string, type: string | undefined) {
 		const parts = url.split('/').filter(Boolean);
@@ -51,10 +50,11 @@
 </script>
 
 <div class="p-1 md:p-2">
-	<CardFirst>
-		{#snippet header()}
+	<div class="rounded border border-surface-100-900 bg-surface-100-900/30 p-4 md:p-5">
+		<header>
 			<h4 class="h5 md:h4">App Categories</h4>
-		{/snippet}
+			<hr class="mb-2 border-surface-100-900" />
+		</header>
 		{#if myCatData}
 			{#each Object.entries(myCatData.categories) as [_prop, values] (values.id)}
 				{#if values.id && (values.android || values.name == 'Games')}
@@ -74,5 +74,5 @@
 				{/if}
 			{/each}
 		{/if}
-	</CardFirst>
+	</div>
 </div>

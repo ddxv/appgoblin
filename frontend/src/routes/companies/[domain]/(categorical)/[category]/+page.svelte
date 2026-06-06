@@ -58,37 +58,33 @@
 	</p>
 </section>
 
-<CompanyCategoryControls
-	overview={parentOverview ?? domainOverview}
-	description="Choose a different app category for this company."
-/>
-
 <CompaniesLayout>
 	{#snippet card1()}
 		<WhiteCard>
 			{#snippet title()}
 				{companyName}'s Totals
 			{/snippet}
-			{#if parentOverview}
-				<div class="px-4 pt-4">
-					<div class="inline-flex rounded-full border border-surface-200-800 p-1 text-sm">
+			<div class="px-4 pt-4 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+				{#if parentOverview}
+					<div class="inline-flex rounded border border-surface-200-800 p-1 text-sm">
 						<button
 							type="button"
-							class={`rounded-full px-3 py-1 ${selectedOverview === 'parent' ? 'bg-surface-200-800 font-semibold' : 'text-surface-500'}`}
+							class={`rounded px-3 py-1 ${selectedOverview === 'parent' ? 'bg-surface-200-800 font-semibold' : 'text-surface-500'}`}
 							onclick={() => (selectedOverview = 'parent')}
 						>
 							Parent
 						</button>
 						<button
 							type="button"
-							class={`rounded-full px-3 py-1 ${selectedOverview === 'domain' ? 'bg-surface-200-800 font-semibold' : 'text-surface-500'}`}
+							class={`rounded px-3 py-1 ${selectedOverview === 'domain' ? 'bg-surface-200-800 font-semibold' : 'text-surface-500'}`}
 							onclick={() => (selectedOverview = 'domain')}
 						>
 							Domain
 						</button>
 					</div>
-				</div>
-			{/if}
+				{/if}
+				<CompanyCategoryControls overview={parentOverview ?? domainOverview} compact={true} />
+			</div>
 			{#if activeOverview.categories[company_category]}
 				<TotalsBox
 					{companyName}
@@ -114,7 +110,7 @@
 				{/snippet}
 				<div class="p-2">
 					<p class="text-xs font-semibold uppercase tracking-wide mb-2">Hierarchy</p>
-					<div class="rounded-md border border-surface-200-800 p-3">
+					<div class="rounded border border-surface-200-800 p-3">
 						<HierarchyTree
 							companyTree={data.companyTree}
 							{hasHigherLevelParent}

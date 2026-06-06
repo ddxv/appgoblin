@@ -37,34 +37,36 @@
 	});
 </script>
 
-<div class="px-1 md:px-4 mb-4">
-	<Breadcrumbs
-		url={page.url}
-		routeId={page.route.id}
-		pageData={page.data}
-		crumbs={pageDataCrumbs ?? customCrumbs}
-	>
-		{#snippet children({ crumbs })}
-			<div>
-				<span><a href="/" class="text-surface-900-100 hover:">Home</a></span>
-				{#each crumbs as c}
-					<span>/</span>
-					<span>
-						{#if c.title != 'Types' && c.title != 'Categories' && c.title != 'Publisher' && c.title != 'App-adstxt'}
-							<a href={c.url} class="text-surface-900-100 hover:">
+{#if !page.params.domain}
+	<div class="px-1 md:px-4 mb-4">
+		<Breadcrumbs
+			url={page.url}
+			routeId={page.route.id}
+			pageData={page.data}
+			crumbs={pageDataCrumbs ?? customCrumbs}
+		>
+			{#snippet children({ crumbs })}
+				<div>
+					<span><a href="/" class="text-surface-900-100 hover:">Home</a></span>
+					{#each crumbs as c}
+						<span>/</span>
+						<span>
+							{#if c.title != 'Types' && c.title != 'Categories' && c.title != 'Publisher' && c.title != 'App-adstxt'}
+								<a href={c.url} class="text-surface-900-100 hover:">
+									{c.title}
+									{c.metadata ? `(${c.metadata.extraValue})` : ''}
+								</a>
+							{:else}
 								{c.title}
 								{c.metadata ? `(${c.metadata.extraValue})` : ''}
-							</a>
-						{:else}
-							{c.title}
-							{c.metadata ? `(${c.metadata.extraValue})` : ''}
-						{/if}
-					</span>
-				{/each}
-			</div>
-		{/snippet}
-	</Breadcrumbs>
-</div>
+							{/if}
+						</span>
+					{/each}
+				</div>
+			{/snippet}
+		</Breadcrumbs>
+	</div>
+{/if}
 
 <div class="px-1 md:px-4">
 	{#if !page.params.domain && !page.url.pathname.includes('adstxt') && data.companyTypes && data.companyTypes.types.length > 0}

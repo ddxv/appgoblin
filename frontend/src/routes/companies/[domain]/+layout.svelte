@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import type { CompanyLayoutDetails, CompanyTypes } from '../../../types';
+	import Breadcrumbs from '$lib/Breadcrumbs.svelte';
+	import type { CompanyLayoutDetails, CompanyTypes, Crumb, MyCrumbMetadata } from '../../../types';
 
 	import ExternalLink from '$lib/ExternalLink.svelte';
 	import CompanyButton from '$lib/CompanyButton.svelte';
@@ -12,6 +13,7 @@
 	const domain = page.params.domain ?? '';
 
 	let companyTypesData = $derived((page.data as { companyTypes?: CompanyTypes }).companyTypes);
+	let pageDataCrumbs = $derived(page.data.crumbs as Crumb<MyCrumbMetadata>[] | undefined);
 
 	let categoryName = $derived(getAppCategory(page.params.category || ''));
 
@@ -204,6 +206,19 @@
 	let titleClass = 'h1 text-2xl md:text-3xl font-bold ';
 	let titleSecondaryClass = 'text-xl font-bold  mr-2';
 	let titleDividerClass = 'md:h-8 w-px bg-gray-300 mx-2';
+	let customCrumbs = $derived.by((): Crumb<MyCrumbMetadata>[] => {
+		const primaryType = data.companyDetails?.company_types?.[0];
+		const typeName = primaryType
+			? companyTypesData?.types.find((t) => t.url_slug === primaryType)?.name
+			: undefined;
+
+		const crumbs: Crumb<MyCrumbMetadata>[] = [{ title: 'Companies', url: '/companies' }];
+		if (typeName && primaryType) {
+			crumbs.push({ title: typeName, url: `/companies/types/${primaryType}` });
+		}
+		crumbs.push({ title: companyDisplayName });
+		return crumbs;
+	});
 	let sectionLinks = $derived([
 		{
 			slug: 'overview',
@@ -294,9 +309,9 @@
 	<CompanyTypesTabs companyTypes={companyTypesData} />
 {/if}
 
-<div class="grid grid-cols-1 gap-6 md:grid-cols-[minmax(220px,260px)_1fr]">
+<div class="-ml-1 grid grid-cols-1 gap-6 md:-ml-4 md:grid-cols-[minmax(220px,260px)_1fr]">
 	<aside class="md:sticky md:top-4 md:self-start">
-		<div class="rounded-2xl border border-surface-200-800 p-3 md:p-4">
+		<div class="rounded border border-surface-200-800 bg-surface-100-900/20 p-3 md:p-4">
 			<div class="mb-3">
 				<h2 class="text-sm font-semibold uppercase tracking-[0.14em] opacity-70">Sections</h2>
 				<p class="mt-1 text-xs text-surface-500">Browse company intelligence views.</p>
@@ -305,7 +320,7 @@
 				{#each sectionLinks.filter((link) => link.visible) as link (link.slug)}
 					<a
 						href={link.href}
-						class={`rounded-xl border px-3 py-2.5 text-sm font-medium transition ${sectionTabClass(link.slug)}`}
+						class={`rounded border px-3 py-2.5 text-sm font-medium transition ${sectionTabClass(link.slug)}`}
 						aria-current={isSectionTabActive(link.slug) ? 'page' : undefined}
 					>
 						{link.label}
@@ -315,7 +330,36 @@
 		</div>
 	</aside>
 
-	<MainContent class="min-w-0">
+	<MainContent class="min-w-0 pl-1 md:pl-4">
+		<div class="mb-4">
+			<Breadcrumbs
+				url={page.url}
+				routeId={page.route.id}
+				pageData={page.data}
+				crumbs={pageDataCrumbs ?? customCrumbs}
+			>
+				{#snippet children({ crumbs })}
+					<div>
+						<span><a href="/" class="text-surface-900-100 hover:">Home</a></span>
+						{#each crumbs as c}
+							<span>/</span>
+							<span>
+								{#if c.title != 'Types' && c.title != 'Categories' && c.title != 'Publisher' && c.title != 'App-adstxt'}
+									<a href={c.url} class="text-surface-900-100 hover:">
+										{c.title}
+										{c.metadata ? `(${c.metadata.extraValue})` : ''}
+									</a>
+								{:else}
+									{c.title}
+									{c.metadata ? `(${c.metadata.extraValue})` : ''}
+								{/if}
+							</span>
+						{/each}
+					</div>
+				{/snippet}
+			</Breadcrumbs>
+		</div>
+
 		<div class="flex items-center mb-2">
 			{#await data.companyTree}
 				<span class="text-lg">Loading...</span>
