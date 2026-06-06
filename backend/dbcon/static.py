@@ -1,6 +1,8 @@
 """Static queries - data preloaded at application startup."""
 
+import json
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import SupportsFloat, SupportsIndex, SupportsInt
 
 import numpy as np
@@ -11,7 +13,7 @@ from api_app.models import (
     CompanyTrendsSummary,
     CompanyTrendSummary,
 )
-from config import CONFIG, PUBLIC_DATA_URL, get_logger
+from config import CONFIG, MODULE_DIR, PUBLIC_DATA_URL, get_logger
 from dbcon.connections import PostgresCon
 from dbcon.utils import sql
 
@@ -21,6 +23,9 @@ TREND_HISTORY_WINDOW_QUARTERS = 4
 TREND_PLATFORM_MAP = {1: "android", 2: "ios"}
 TREND_TAG_SOURCE_ORDER = {"sdk_api": 0, "app_ads_direct": 1}
 TREND_OVERVIEW_MAX_SHARE_CHANGE_PCT = 500.0
+APP_CATEGORIES_OUTPUT_PATH = MODULE_DIR.parent / Path(
+    "frontend/static/appCategories.json"
+)
 TREND_INT_COLUMNS = [
     "year",
     "quarter",
@@ -421,12 +426,8 @@ def load_s3_datasets() -> list[dict]:
         return []
 
 
-def load_static_data(engine: PostgresCon) -> StaticData:
-    """Load all static data at startup."""
-    logger.info("Loading static data...")
-
-    # Appstore categories with transformations
-    logger.info("Loading appstore categories...")
+def load_appstore_categories(engine: PostgresCon) -> pd.DataFrame:
+    """Load and normalize app store category counts."""
     df = pd.read_sql(sql.appstore_categories, engine)
     df["store"] = df["store"].replace({1: "android", 2: "ios"})
     appstore_categories = pd.pivot_table(
@@ -435,7 +436,69 @@ def load_static_data(engine: PostgresCon) -> StaticData:
     appstore_categories["total_apps"] = (
         appstore_categories["android"] + appstore_categories["ios"]
     )
-    appstore_categories = appstore_categories.sort_values("total_apps", ascending=False)
+    return appstore_categories.sort_values("total_apps", ascending=False)
+
+
+def build_app_categories_overview(appstore_categories: pd.DataFrame) -> list[dict]:
+    """Convert app store category counts into the frontend category payload."""
+    cats = appstore_categories.copy()
+    cats = cats[cats["total_apps"] > 100]  # noqa: PLR2004 magic number ok
+
+    cats["name"] = cats["category"]
+    cats["name"] = (
+        cats["name"]
+        .str.replace("game_", "Games: ")
+        .str.replace("_and_", " & ")
+        .str.replace("_", " ")
+        .str.title()
+    )
+    cats = cats.rename(columns={"category": "id"})
+
+    summary = cats[["android", "ios", "total_apps"]].sum()
+    summary["name"] = "Overall"
+    summary["id"] = "overall"
+    cats.loc["Overall"] = summary
+
+    cats[["android", "ios", "total_apps"]] = cats[
+        ["android", "ios", "total_apps"]
+    ].astype(int)
+
+    cats = cats.sort_values("total_apps", ascending=False)
+
+    android_games_total = cats[cats.id.str.startswith("game")]["android"].sum()
+    cats.loc[cats["id"] == "games", "android"] = android_games_total
+
+    cats["type"] = np.where(
+        cats.id.str.contains("_game|games", regex=True), "game", "app"
+    )
+
+    cats["sort_priority"] = 2
+    cats.loc[cats["id"] == "overall", "sort_priority"] = 0
+    cats.loc[(cats["id"] == "games") | (cats["name"] == "Games"), "sort_priority"] = 1
+
+    cats = cats.sort_values(["sort_priority", "type", "name"])
+    cats[["android", "ios"]] = cats[["android", "ios"]].gt(0)
+    cats = cats.drop(columns=["sort_priority", "total_apps"])
+
+    return cats.to_dict(orient="records")
+
+
+def write_app_categories_json(
+    category_dicts: list[dict], output_path: Path = APP_CATEGORIES_OUTPUT_PATH
+) -> Path:
+    """Write app categories payload to the frontend static JSON file."""
+    overview = {"categories": category_dicts}
+    output_path.write_text(json.dumps(overview, indent=2), encoding="utf-8")
+    return output_path
+
+
+def load_static_data(engine: PostgresCon) -> StaticData:
+    """Load all static data at startup."""
+    logger.info("Loading static data...")
+
+    # Appstore categories with transformations
+    logger.info("Loading appstore categories...")
+    appstore_categories = load_appstore_categories(engine)
 
     # Adtech categories with sorting
     logger.info("Loading adtech categories...")

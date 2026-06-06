@@ -1,7 +1,6 @@
 import type { PageServerLoad } from './$types';
 import { createApiClient } from '$lib/server/api';
-
-import { getCachedData } from '../../../../../hooks.server';
+import { getAppCategories } from '$lib/server/appCategories';
 
 export const ssr: boolean = true;
 export const csr: boolean = true;
@@ -13,8 +12,7 @@ export const load: PageServerLoad = async ({ fetch, params, parent }) => {
 		'Companies Category Overview'
 	);
 
-	const cachedData = await getCachedData();
-	const { appCats } = cachedData;
+	const appCats = await getAppCategories();
 
 	return { companiesOverview, appCats };
 };

@@ -28,7 +28,7 @@
 		{values.name}
 	</div>
 
-	{#if Number(values.android) > 0 || values.name == 'Games'}
+	{#if values.android || values.name == 'Games'}
 		<div class="justify-end mr-2 md:mr-5">
 			<IconGoogle size="16" />
 		</div>
@@ -37,7 +37,7 @@
 			<IconGoogle size="16" />
 		</div>
 	{/if}
-	{#if Number(values.ios) > 0}
+	{#if values.ios}
 		<div class="justify-end mr-2 md:mr-5">
 			<IconiOS size="16" />
 		</div>

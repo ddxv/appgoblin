@@ -111,12 +111,12 @@ export interface AppleStoreSearchResponse {
 export interface CategoryInfo {
 	id: string;
 	name: string;
-	android: string;
-	ios: string;
+	android: boolean;
+	ios: boolean;
 }
 
 export interface CatData {
-	categories: Array<{ id: string; name: string; android: number; ios: number }>;
+	categories: Array<{ id: string; name: string; android: boolean; ios: boolean }>;
 }
 
 export interface CategoriesInfo {

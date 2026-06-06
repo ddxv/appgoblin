@@ -64,7 +64,7 @@
 		{/snippet}
 		{#if myCatData && myCatData.categories}
 			{#each Object.entries(myCatData.categories) as [_prop, values]}
-				{#if values.id && (Number(values.android) > 0 || values.name == 'Games')}
+				{#if values.id && (values.android || values.name == 'Games')}
 					<a href="{baseUrl}/{store}/{values.id}" class="text-tertiary-900-100 hover:underline">
 						<SideBarCatsListBoxItem {values} {selectedCategory} />
 					</a>

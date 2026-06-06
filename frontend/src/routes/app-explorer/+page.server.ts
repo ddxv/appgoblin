@@ -1,5 +1,6 @@
 import type { PageServerLoad } from './$types';
 import { createApiClient } from '$lib/server/api';
+import { getAppCategories } from '$lib/server/appCategories';
 import { requireFullAuth } from '$lib/server/auth/auth';
 import { db } from '$lib/server/auth/db';
 import { STRIPE_PRICES } from '$lib/server/stripe';
@@ -120,7 +121,8 @@ export const load: PageServerLoad = async ({ fetch, locals }) => {
 	}
 
 	// Load categories
-	const { countries, appCats } = await getCachedData();
+	const { countries } = await getCachedData();
+	const appCats = await getAppCategories();
 	const categories = appCats || [];
 
 	return {

@@ -112,14 +112,14 @@ class DeveloperSDKs:
 class CategoryDetail:
     """Represents detailed information about a category.
 
-    Includes its identifier, name, and app counts for
-    both Android and iOS platforms, along with its type.
+    Includes its identifier, name, platform availability flags,
+    and its type.
     """
 
     id: str
     name: str
-    android: int
-    ios: int
+    android: bool
+    ios: bool
     type: str
 
 

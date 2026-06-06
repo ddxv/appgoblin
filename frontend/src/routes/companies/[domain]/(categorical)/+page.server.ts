@@ -1,8 +1,6 @@
 import type { PageServerLoad } from './$types';
 import { createApiClient } from '$lib/server/api';
 
-import { getCachedData } from '../../../../hooks.server';
-
 export const ssr: boolean = true;
 export const csr: boolean = true;
 

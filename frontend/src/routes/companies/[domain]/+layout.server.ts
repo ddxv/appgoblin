@@ -1,16 +1,15 @@
 import type { LayoutServerLoad } from './$types';
 import { error } from '@sveltejs/kit';
 import { createApiClient } from '$lib/server/api';
+import { getAppCategories } from '$lib/server/appCategories';
 import { db } from '$lib/server/auth/db';
-
-import { getCachedData } from '../../../hooks.server';
 
 export const load: LayoutServerLoad = async ({ fetch, params, parent, locals }) => {
 	const api = createApiClient(fetch);
 	const companyDomain = params.domain;
 	const category = params.category;
 
-	const { appCats } = await getCachedData();
+	const appCats = await getAppCategories();
 
 	if (category && !appCats.categories.find((cat) => cat.id === category)) {
 		error(404, {

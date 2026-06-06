@@ -1,5 +1,6 @@
 import type { LayoutServerLoad } from './$types';
 import { createApiClient } from '$lib/server/api';
+import { getAppCategories } from '$lib/server/appCategories';
 import { db } from '$lib/server/auth/db';
 
 import { getCachedData } from '../../../hooks.server';
@@ -9,7 +10,8 @@ export const load: LayoutServerLoad = async ({ fetch, params, locals }) => {
 
 	const myapp = await api.get(`/apps/${params.id}`, 'App Details');
 	const cachedData = await getCachedData();
-	const { appCats, companyTypes } = cachedData;
+	const appCats = await getAppCategories();
+	const { companyTypes } = cachedData;
 
 	let isFollowingApp = false;
 	if (locals.user) {
