@@ -17,15 +17,7 @@ export const load: LayoutServerLoad = async ({ fetch, params, parent, locals }) 
 		});
 	}
 
-	let url;
-
-	if (category) {
-		url = `/companies/${companyDomain}?category=${category}`;
-	} else {
-		url = `/companies/${companyDomain}`;
-	}
-
-	const companyDetails = await api.get(url, 'Company Details');
+	const companyDetails = await api.get(`/companies/${companyDomain}`, 'Company Details');
 
 	const companyTree = await api.get(`/companies/${companyDomain}/tree`, 'Company Tree');
 

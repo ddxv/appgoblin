@@ -1,9 +1,7 @@
 <script lang="ts">
 	import type { CompanyFullDetails, CompanyOverviewScope } from '../../../../types';
-	import { Dialog, Portal } from '@skeletonlabs/skeleton-svelte';
 
-	import SideBarCompanies from '$lib/SideBarCompanies.svelte';
-
+	import CompanyCategoryControls from '$lib/CompanyCategoryControls.svelte';
 	import TotalsBox from '$lib/TotalsBox.svelte';
 	import CompanyCategoryPie from '$lib/CompanyCategoryPie.svelte';
 	import AdsTxtTotalsBox from '$lib/AdsTxtTotalsBox.svelte';
@@ -64,16 +62,21 @@
 	</p>
 </section>
 
+<CompanyCategoryControls
+	overview={parentOverview ?? domainOverview}
+	description="Choose an app category to filter this company view."
+/>
+
 <CompaniesLayout>
 	{#snippet card1()}
 		{#if !data.companyTree.is_secondary_domain}
 			<WhiteCard>
-				{#if typeof data.companyParentCategories == 'string'}
+				{#if typeof data.companyAppCategories == 'string'}
 					<p class="text-red-500 text-center">Failed to load company details.</p>
-				{:else if data.companyParentCategories && data.companyParentCategories.length > 0}
+				{:else if data.companyAppCategories && data.companyAppCategories.length > 0}
 					<WhiteCard>
 						{#snippet title()}
-							<span>{companyName}'s Company Apps</span>
+							<span>{companyName} Apps</span>
 						{/snippet}
 						{#if parentOverview}
 							<div class="px-4 pt-4">
@@ -113,9 +116,9 @@
 					</WhiteCard>
 				{/if}
 			</WhiteCard>
-		{:else if typeof data.companyParentCategories == 'string'}
+		{:else if typeof data.companyAppCategories == 'string'}
 			<p class="text-red-500 text-center">Failed to load company details.</p>
-		{:else if data.companyParentCategories && data.companyParentCategories.length > 0}
+		{:else if data.companyAppCategories && data.companyAppCategories.length > 0}
 			<WhiteCard>
 				{#snippet title()}
 					<span>{companyName} Apps</span>
@@ -154,7 +157,7 @@
 					<span>{companyName}'s Apps by Category</span>
 				{/snippet}
 				<div>
-					{#await data.companyParentCategories}
+					{#await data.companyAppCategories}
 						<span class="text-lg">Loading...</span>
 					{:then myPieData}
 						{#if typeof myPieData == 'string'}
@@ -222,17 +225,3 @@
 		/>
 	</section>
 {/if}
-
-<div class="md:hidden sticky bottom-0 bg-surface-50-950 p-2">
-	<!-- Small screen version of the side bar -->
-	<Dialog>
-		<Dialog.Trigger class="btn preset-filled">APP FILTERS</Dialog.Trigger>
-		<Portal>
-			<Dialog.Positioner class="fixed inset-0 z-50 flex justify-start">
-				<Dialog.Content class="h-screen card w-sm p-4 space-y-4 shadow-xl max-w-[320px]">
-					<SideBarCompanies myCatData={data.appCats} />
-				</Dialog.Content>
-			</Dialog.Positioner>
-		</Portal>
-	</Dialog>
-</div>

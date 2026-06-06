@@ -2,6 +2,7 @@
 	import type { CompanyCategoryDetails, CompanyOverviewScope } from '../../../../../types';
 	import { page } from '$app/state';
 
+	import CompanyCategoryControls from '$lib/CompanyCategoryControls.svelte';
 	import TotalsBox from '$lib/TotalsBox.svelte';
 	import CompaniesLayout from '$lib/CompaniesLayout.svelte';
 	import WhiteCard from '$lib/WhiteCard.svelte';
@@ -56,6 +57,11 @@
 		Review totals, related entities, and app-level records for the selected company category.
 	</p>
 </section>
+
+<CompanyCategoryControls
+	overview={parentOverview ?? domainOverview}
+	description="Choose a different app category for this company."
+/>
 
 <CompaniesLayout>
 	{#snippet card1()}

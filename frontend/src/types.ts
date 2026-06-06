@@ -119,6 +119,17 @@ export interface CatData {
 	categories: Array<{ id: string; name: string; android: boolean; ios: boolean }>;
 }
 
+export interface SideBarCategoryItem {
+	id: string;
+	name: string;
+	android: boolean | number;
+	ios: boolean | number;
+}
+
+export interface SideBarCategoryData {
+	categories: SideBarCategoryItem[];
+}
+
 export interface CategoriesInfo {
 	appCats: Promise<CatData>;
 	status?: number;
@@ -661,7 +672,7 @@ export interface CompanyFullDetails {
 
 	companyTree: CompanyTree;
 	companySdks: CompanySDKsDict;
-	companyParentCategories: TabularData;
+	companyAppCategories: TabularData;
 	companyCreatives: CompanyCreative[];
 }
 

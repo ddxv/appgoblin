@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import SideBarCatsListBoxItem from './SideBarCatsListBoxItem.svelte';
-	import type { CatData } from '../types';
+	import type { SideBarCategoryData } from '../types';
 	import CardFirst from './CardFirst.svelte';
 
 	function getBaseUrl(url: string, type: string | undefined) {
@@ -42,7 +42,7 @@
 	let baseUrl = $derived(getBaseUrl(page.url.pathname.toString(), page.params.type));
 
 	interface Props {
-		myCatData: CatData;
+		myCatData: SideBarCategoryData;
 	}
 
 	let { myCatData }: Props = $props();
