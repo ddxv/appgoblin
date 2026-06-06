@@ -66,21 +66,35 @@
 			{/snippet}
 			<div class="px-4 pt-4 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
 				{#if parentOverview}
-					<div class="inline-flex rounded border border-surface-200-800 p-1 text-sm">
-						<button
-							type="button"
-							class={`rounded px-3 py-1 ${selectedOverview === 'parent' ? 'bg-surface-200-800 font-semibold' : 'text-surface-500'}`}
-							onclick={() => (selectedOverview = 'parent')}
+					<div>
+						<span
+							class="mb-1 flex items-center gap-1.5 text-[11px] uppercase tracking-[0.14em] opacity-60"
+							>Scope</span
 						>
-							Parent
-						</button>
-						<button
-							type="button"
-							class={`rounded px-3 py-1 ${selectedOverview === 'domain' ? 'bg-surface-200-800 font-semibold' : 'text-surface-500'}`}
-							onclick={() => (selectedOverview = 'domain')}
+						<div
+							class="inline-flex rounded-lg border border-surface-300-700 p-1"
+							role="radiogroup"
+							aria-label="Overview scope"
 						>
-							Domain
-						</button>
+							<button
+								type="button"
+								class={`flex items-center justify-center gap-1 rounded-md px-2.5 py-1 text-sm transition ${selectedOverview === 'parent' ? 'border border-secondary-700-300 text-secondary-700-300' : 'border border-transparent hover:border-secondary-800-200 hover:text-secondary-800-200'}`}
+								role="radio"
+								aria-checked={selectedOverview === 'parent'}
+								onclick={() => (selectedOverview = 'parent')}
+							>
+								Parent
+							</button>
+							<button
+								type="button"
+								class={`flex items-center justify-center gap-1 rounded-md px-2.5 py-1 text-sm transition ${selectedOverview === 'domain' ? 'border border-secondary-700-300 text-secondary-700-300' : 'border border-transparent hover:border-secondary-800-200 hover:text-secondary-800-200'}`}
+								role="radio"
+								aria-checked={selectedOverview === 'domain'}
+								onclick={() => (selectedOverview = 'domain')}
+							>
+								Domain
+							</button>
+						</div>
 					</div>
 				{/if}
 				<CompanyCategoryControls overview={parentOverview ?? domainOverview} compact={true} />

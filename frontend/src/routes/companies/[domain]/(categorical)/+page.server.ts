@@ -7,18 +7,30 @@ export const csr: boolean = true;
 export const load: PageServerLoad = async ({ fetch, parent, params }) => {
 	const api = createApiClient(fetch);
 	const companyDomain = params.domain;
-	const companyAppCategories = await api.get(
-		`/companies/${companyDomain}/parentcategories`,
-		'Company App Categories'
-	);
-	const companyTopApps = await api.get(`/companies/${companyDomain}/topapps`, 'Company Top Apps');
 
-	const { companyDetails, companyTree } = await parent();
+	const [companyAppCategories, companyTopApps, { companyDetails, companyTree }] = await Promise.all(
+		[
+			api.get(
+				`/companies/${companyDomain}/parentcategories?rollup=false`,
+				'Company App Categories'
+			),
+			api.get(`/companies/${companyDomain}/topapps`, 'Company Top Apps'),
+			parent()
+		]
+	);
+
+	const parentAppCategories = companyDetails.parent_overview
+		? await api.get(
+				`/companies/${companyDomain}/parentcategories?rollup=true`,
+				'Parent Company App Categories'
+			)
+		: null;
 
 	return {
 		companyDetails,
 		companyTree,
-		companyAppCategories: companyAppCategories,
+		companyAppCategories,
+		parentAppCategories,
 		companyTopApps,
 		companySdks: { companies: {} },
 		companyCreatives: []

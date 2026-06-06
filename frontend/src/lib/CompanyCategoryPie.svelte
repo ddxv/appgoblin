@@ -8,7 +8,7 @@
 		value?: number;
 	};
 
-	let { plotData, plotHeightPx = 250 } = $props();
+	let { plotData, plotHeightPx = 250, storeLabel = 'Apps (all sources)' } = $props();
 
 	const palette = ['#6929C4', '#1192E8', '#005D5D', '#9F1853', '#FA4D56', '#FF832B', '#198038'];
 
@@ -81,7 +81,7 @@
 				dy={-4}
 			/>
 			<Text
-				value="Apps (all sources)"
+				value={storeLabel}
 				textAnchor="middle"
 				verticalAnchor="middle"
 				class="text-base"

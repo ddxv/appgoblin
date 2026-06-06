@@ -227,12 +227,6 @@
 			visible: true
 		},
 		{
-			slug: 'mediation',
-			label: `${companyDisplayName} Mediation Adapters`,
-			href: `/companies/${companyDomain}/mediation`,
-			visible: showMediationTab
-		},
-		{
 			slug: 'creatives',
 			label: `${companyDisplayName} Creatives`,
 			href: `/companies/${companyDomain}/creatives`,
@@ -261,6 +255,12 @@
 			label: `${companyDisplayName} SDKs`,
 			href: `/companies/${companyDomain}/sdks`,
 			visible: true
+		},
+		{
+			slug: 'mediation',
+			label: `${companyDisplayName} Mediation Adapters`,
+			href: `/companies/${companyDomain}/mediation`,
+			visible: showMediationTab
 		},
 		{
 			slug: 'app-adstxt',
@@ -399,9 +399,10 @@
 							{#if !myTree.parent && !myTree.is_secondary_domain && !myTree.is_orphan}
 								<!-- IS PARENT COMPANY -->
 								<h1 class={titleClass}>
-									{myTree.company_name || myTree.company_domain || myTree.queried_domain}, App
-									Category:
-									{categoryName}
+									{myTree.company_name ||
+										myTree.company_domain ||
+										myTree.queried_domain}{#if page.params.category}, App Category:
+										{categoryName}{/if}
 								</h1>
 								<div class={titleDividerClass}></div>
 								<ExternalLink domain={myTree.company_domain || myTree.queried_domain} />

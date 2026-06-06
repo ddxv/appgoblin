@@ -588,12 +588,15 @@ def get_company_sdks(state: State, company_domain: str) -> pd.DataFrame:
 
 
 def get_company_categories_topn(
-    state: State, company_domain: str, num_categories: int = 9
-) -> pd.DataFrame:
-    """Get a company parent categories."""
+    state: State,
+    company_domain: str,
+    num_categories: int = 9,
+    include_parent_rollup: bool = True,
+) -> dict[str, pd.DataFrame]:
+    """Get a company parent categories, split by store (1=Android, 2=iOS)."""
     logger.info(f"query company parent categories: {company_domain=}")
     parent_companies = get_parent_companies(state)
-    is_parent_company = company_domain in parent_companies
+    is_parent_company = company_domain in parent_companies and include_parent_rollup
     query = (
         sql.company_parent_category_stats
         if is_parent_company
@@ -606,44 +609,58 @@ def get_company_categories_topn(
     )
     df.loc[df["app_category"].isna(), "app_category"] = "None"
 
-    top_cats = (
-        df.sort_values(by="app_count", ascending=False)
-        .head(num_categories)
-        .app_category.tolist()
-    )
-    game_cat_count = sum(["game" in x for x in top_cats])
-    is_mostly_games = game_cat_count > num_categories / 2
-    is_mostly_non_games = game_cat_count <= 1
+    def _process_store(store_df: pd.DataFrame) -> pd.DataFrame:
+        if store_df.empty:
+            return pd.DataFrame()
 
-    if is_mostly_games:
-        df.loc[~df["app_category"].str.contains("game"), "app_category"] = "apps"
+        store_df = store_df.copy()
         top_cats = (
-            df.sort_values(by="app_count", ascending=False)
+            store_df.sort_values(by="app_count", ascending=False)
             .head(num_categories)
             .app_category.tolist()
         )
-    if is_mostly_non_games:
-        df.loc[df["app_category"].str.contains("game"), "app_category"] = "games"
-        top_cats = (
-            df.sort_values(by="app_count", ascending=False)
-            .head(num_categories)
-            .app_category.tolist()
+        game_cat_count = sum(["game" in x for x in top_cats])
+        is_mostly_games = game_cat_count > num_categories / 2
+        is_mostly_non_games = game_cat_count <= 1
+
+        if is_mostly_games:
+            store_df.loc[
+                ~store_df["app_category"].str.contains("game", na=False), "app_category"
+            ] = "apps"
+            top_cats = (
+                store_df.sort_values(by="app_count", ascending=False)
+                .head(num_categories)
+                .app_category.tolist()
+            )
+        if is_mostly_non_games:
+            store_df.loc[
+                store_df["app_category"].str.contains("game", na=False), "app_category"
+            ] = "games"
+            top_cats = (
+                store_df.sort_values(by="app_count", ascending=False)
+                .head(num_categories)
+                .app_category.tolist()
+            )
+
+        store_df.loc[~store_df["app_category"].isin(top_cats), "app_category"] = (
+            "others"
+        )
+        store_df = store_df.groupby(["app_category"])["app_count"].sum().reset_index()
+        store_df["name"] = store_df["app_category"]
+        store_df["name"] = (
+            store_df["name"]
+            .str.replace("game_", "Games: ")
+            .str.replace("_and_", " & ")
+            .str.replace("_", " ")
+            .str.title()
         )
 
-    df.loc[~df["app_category"].isin(top_cats), "app_category"] = "others"
-    df = df.groupby(["app_category"])["app_count"].sum().reset_index()
-    df["name"] = df["app_category"]
-    df["name"] = (
-        df["name"]
-        .str.replace("game_", "Games: ")
-        .str.replace("_and_", " & ")
-        .str.replace("_", " ")
-        .str.title()
-    )
+        return store_df.rename(columns={"name": "group", "app_count": "value"})
 
-    df = df.rename(columns={"name": "group", "app_count": "value"})
-
-    return df
+    return {
+        "android": _process_store(df[df["store"] == 1]),
+        "ios": _process_store(df[df["store"] == 2]),
+    }
 
 
 @cache_by_params

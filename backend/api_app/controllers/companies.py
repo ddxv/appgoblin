@@ -1835,6 +1835,7 @@ class CompaniesController(Controller):
         self: Self,
         state: State,
         company_domain: str,
+        rollup: bool = True,
     ) -> dict:
         """Handle GET request for a specific company parent categories.
 
@@ -1842,22 +1843,29 @@ class CompaniesController(Controller):
         ----
         company_domain : str
             The domain of the company to retrieve apps for.
+        rollup : bool
+            Whether to include parent company rollup data.
 
         Returns:
         -------
         dict
-            A dictionary of parent categories for the specified company.
+            A dictionary with 'android' and 'ios' keys containing category data.
 
         """
         start = time.perf_counter() * 1000
 
-        df = get_company_categories_topn(state=state, company_domain=company_domain)
+        dfs = get_company_categories_topn(
+            state=state, company_domain=company_domain, include_parent_rollup=rollup
+        )
 
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(
             f"GET /api/companies/{company_domain}/parentcategories took {duration}ms"
         )
-        return df.to_dict(orient="records")
+        return {
+            store: df.to_dict(orient="records") if not df.empty else []
+            for store, df in dfs.items()
+        }
 
     @get(
         path="/companies/{queried_domain:str}/tree",

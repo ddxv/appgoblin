@@ -663,6 +663,11 @@ export interface CompanyCreative {
 	store_link?: string;
 }
 
+type AppCategoriesByStore = {
+	android: TabularData;
+	ios: TabularData;
+};
+
 export interface CompanyFullDetails {
 	status?: number;
 	error?: string;
@@ -672,7 +677,8 @@ export interface CompanyFullDetails {
 
 	companyTree: CompanyTree;
 	companySdks: CompanySDKsDict;
-	companyAppCategories: TabularData;
+	companyAppCategories: AppCategoriesByStore;
+	parentAppCategories: AppCategoriesByStore | null;
 	companyCreatives: CompanyCreative[];
 }
 
