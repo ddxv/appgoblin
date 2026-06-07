@@ -428,12 +428,33 @@
 		name="description"
 		content="Powerful app discovery tool for sales teams. Find apps using specific SDKs, ad networks, and monetization strategies."
 	/>
+	<meta
+		name="keywords"
+		content="app discovery, sdk search, app explorer, mobile app sales, lead generation, ad network app finder, appgoblin"
+	/>
+	<meta property="og:title" content="App Explorer - AppGoblin" />
+	<meta
+		property="og:description"
+		content="Discover and filter mobile apps by SDKs, ad networks, IAP, and monetization signals for sales prospecting and competitive research."
+	/>
+	<meta property="og:image" content="https://appgoblin.info/goblin_purple_hat_250.png" />
+	<meta property="og:url" content="https://appgoblin.info/app-explorer" />
+	<meta property="og:type" content="website" />
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:title" content="App Explorer - AppGoblin" />
+	<meta
+		name="twitter:description"
+		content="Discover and filter mobile apps by SDKs, ad networks, IAP, and monetization signals."
+	/>
+	<meta name="twitter:image" content="https://appgoblin.info/goblin_purple_hat_250.png" />
+	<meta name="robots" content="index, follow" />
+	<link rel="canonical" href="https://appgoblin.info/app-explorer" />
 </svelte:head>
 
 <div class="container mx-auto px-2 md:px-4 py-4 md:py-8">
 	<div class="mb-6">
 		<h1 class="text-2xl md:text-3xl font-bold">App Explorer</h1>
-		<p class="text-sm md:text-base mt-2">
+		<p class="text-sm mt-2">
 			Powerful app discovery and filtering tool for sales teams, market researchers, and app
 			developers.
 		</p>

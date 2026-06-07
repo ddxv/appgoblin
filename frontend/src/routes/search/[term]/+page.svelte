@@ -47,6 +47,12 @@
 	});
 </script>
 
+<svelte:head>
+	<title>Search results for "{searchTerm}" - AppGoblin</title>
+	<meta name="robots" content="noindex, follow" />
+	<link rel="canonical" href={page.url.href} />
+</svelte:head>
+
 <div class="space-y-6 p-4 md:px-32">
 	<!-- Header -->
 	<div class="card p-4 md:p-6">

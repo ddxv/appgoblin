@@ -195,6 +195,31 @@
 
 <svelte:head>
 	<title>Pricing - AppGoblin</title>
+	<meta
+		name="description"
+		content="Choose the right AppGoblin plan — free ASO tools, B2B SDK intelligence, app-ads.txt data, or premium mobile market analytics for teams."
+	/>
+	<meta
+		name="keywords"
+		content="pricing, appgoblin pricing, b2b sdk intelligence, app-ads txt, mobile analytics pricing, app market data, aso tools free"
+	/>
+	<meta property="og:title" content="Pricing - AppGoblin" />
+	<meta
+		property="og:description"
+		content="Free and paid plans for mobile app intelligence — SDK data, app-ads.txt, and premium B2B analytics."
+	/>
+	<meta property="og:image" content="https://appgoblin.info/goblin_purple_hat_250.png" />
+	<meta property="og:url" content="https://appgoblin.info/pricing" />
+	<meta property="og:type" content="website" />
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:title" content="Pricing - AppGoblin" />
+	<meta
+		name="twitter:description"
+		content="Free and paid plans for mobile app intelligence — SDK data, app-ads.txt, and premium B2B analytics."
+	/>
+	<meta name="twitter:image" content="https://appgoblin.info/goblin_purple_hat_250.png" />
+	<meta name="robots" content="index, follow" />
+	<link rel="canonical" href="https://appgoblin.info/pricing" />
 </svelte:head>
 
 <div class="px-2 lg:px-4 xl:px-16 grid grid-cols-1 gap-4 md:gap-4 lg:gap-8">

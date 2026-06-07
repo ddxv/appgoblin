@@ -179,6 +179,48 @@
 	<!-- Additional meta tags -->
 	<meta name="robots" content="index, follow" />
 	<link rel="canonical" href="https://appgoblin.info" />
+
+	<!-- WebSite + Organization structured data -->
+	{@html `<script type="application/ld+json">${JSON.stringify({
+		'@context': 'https://schema.org',
+		'@graph': [
+			{
+				'@type': 'WebSite',
+				'@id': 'https://appgoblin.info/#website',
+				url: 'https://appgoblin.info',
+				name: 'AppGoblin',
+				description:
+					'Mobile app and ad intelligence platform with free ASO tools, SDK and API analysis, and app-ads.txt intelligence.',
+				inLanguage: 'en',
+				publisher: {
+					'@id': 'https://appgoblin.info/#organization'
+				},
+				potentialAction: {
+					'@type': 'SearchAction',
+					target: {
+						'@type': 'EntryPoint',
+						urlTemplate: 'https://appgoblin.info/search/{term}'
+					},
+					'query-input': 'required name=term'
+				}
+			},
+			{
+				'@type': 'Organization',
+				'@id': 'https://appgoblin.info/#organization',
+				name: 'AppGoblin',
+				url: 'https://appgoblin.info',
+				logo: {
+					'@type': 'ImageObject',
+					url: 'https://appgoblin.info/goblin_purple_hat_250.png'
+				},
+				sameAs: [
+					'https://github.com/appgoblin-dev/appgoblin',
+					'https://discord.gg/7jpWEhkXRW',
+					'https://linkedin.com/company/AppGoblin'
+				]
+			}
+		]
+	})}<\/script>`}
 </svelte:head>
 
 <div class="flex flex-col gap-8 px-2 md:px-20 lg:px-48">

@@ -24,6 +24,10 @@
 	];
 </script>
 
+<svelte:head>
+	<meta name="robots" content="noindex, nofollow" />
+</svelte:head>
+
 <div class="container mx-auto max-w-6xl px-4 py-8">
 	<div class="flex flex-col gap-6 md:flex-row md:items-start">
 		<!-- Sidebar Navigation -->

@@ -332,6 +332,41 @@
 	const tagPillClass = 'rounded-full bg-primary-900-100/10 px-3 py-1 text-xs font-medium ';
 </script>
 
+<svelte:head>
+	<title>ASO Keyword: &ldquo;{keywordDisplay}&rdquo; Scores &amp; Rankings | AppGoblin</title>
+	<meta
+		name="description"
+		content="ASO analysis for {keywordDisplay} keyword — opportunity score, keyword difficulty, competitiveness, and top-ranked Android & iOS apps. Free app store keyword research by AppGoblin."
+	/>
+	<meta
+		name="keywords"
+		content="{keywordDisplay}, aso keyword, app store optimization, keyword research, keyword difficulty, app store ranking, mobile seo, appgoblin"
+	/>
+	<meta
+		property="og:title"
+		content="ASO Keyword: &ldquo;{keywordDisplay}&rdquo; Scores &amp; Rankings | AppGoblin"
+	/>
+	<meta
+		property="og:description"
+		content="Free ASO keyword analysis for {keywordDisplay} — difficulty, opportunity, competitiveness, and top-ranking apps on Google Play and the App Store."
+	/>
+	<meta property="og:image" content="https://appgoblin.info/goblin_purple_hat_250.png" />
+	<meta property="og:url" content={page.url.href} />
+	<meta property="og:type" content="website" />
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta
+		name="twitter:title"
+		content="ASO Keyword: &ldquo;{keywordDisplay}&rdquo; Scores &amp; Rankings | AppGoblin"
+	/>
+	<meta
+		name="twitter:description"
+		content="Free ASO keyword analysis for {keywordDisplay} — difficulty, opportunity, competitiveness, and top-ranking apps."
+	/>
+	<meta name="twitter:image" content="https://appgoblin.info/goblin_purple_hat_250.png" />
+	<link rel="canonical" href={page.url.href} />
+	<meta name="robots" content="index, follow" />
+</svelte:head>
+
 <div class="space-y-6">
 	<section class={cardPaddingLg}>
 		<div class="flex flex-col gap-2">

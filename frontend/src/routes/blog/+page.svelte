@@ -22,6 +22,11 @@
 	<meta name="keywords" content={keywords} />
 	<meta property="og:description" content={description} />
 	<meta name="twitter:description" content={description} />
+	<meta property="og:image" content="https://appgoblin.info/goblin_purple_hat_250.png" />
+	<meta property="og:url" content="https://appgoblin.info/blog" />
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:image" content="https://appgoblin.info/goblin_purple_hat_250.png" />
+	<meta name="robots" content="index, follow" />
 	{@html `<script type="application/ld+json">${data.structuredData}</script>`}
 </svelte:head>
 

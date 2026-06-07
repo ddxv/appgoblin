@@ -2,6 +2,11 @@
 	import { page } from '$app/state';
 </script>
 
+<svelte:head>
+	<title>Error {page.status} - AppGoblin</title>
+	<meta name="robots" content="noindex, nofollow" />
+</svelte:head>
+
 <div class="min-h-screen flex items-center justify-center p-6">
 	<div class="max-w-2xl w-full text-center">
 		<h1 class="text-4xl font-bold text-error-800-200 mb-4">
