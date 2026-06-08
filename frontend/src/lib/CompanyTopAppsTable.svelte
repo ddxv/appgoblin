@@ -104,13 +104,7 @@
 				<tr>
 					<th class="table-cell-fit"></th>
 					<th class="table-cell-fit">App</th>
-					<th class="table-cell-fit">
-						{#if !isiOS}
-							Monthly Installs
-						{:else}
-							Monthly iOS Ratings
-						{/if}
-					</th>
+					<th class="table-cell-fit">Monthly Installs</th>
 					<th class="table-cell-fit">SDK</th>
 					{#if tableHasPublisher(data)}
 						<th class="table-cell-fit">Publisher</th>

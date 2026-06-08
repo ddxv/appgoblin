@@ -2,7 +2,7 @@ import type { PageServerLoad } from './$types';
 import { createApiClient } from '$lib/server/api';
 import { db } from '$lib/server/auth/db';
 import { STRIPE_PRICES } from '$lib/server/stripe';
-import type { CompanyAppChangesOverview } from '../../../../types';
+import type { CompanyAppChangesOverview, CompanyOverviewApps } from '../../../../types';
 
 type ActiveSubscriptionRow = {
 	provider_price_id: string;
@@ -14,9 +14,9 @@ type CompanyDetailsWithTrends = {
 	} | null;
 };
 
-type QuarterAppChangesEntry = {
-	label: string;
-	appChanges: CompanyAppChangesOverview;
+type MergedAppChanges = {
+	android: CompanyOverviewApps[];
+	ios: CompanyOverviewApps[];
 };
 
 function isNotFoundError(errorValue: unknown): errorValue is { status: number } {
@@ -60,32 +60,8 @@ function parseLatestPeriod(latestPeriod: string | null | undefined) {
 	};
 }
 
-function buildPreviewQuarterlyEntries(
-	latestPeriod: string | null | undefined
-): QuarterAppChangesEntry[] {
-	const currentQuarter = parseLatestPeriod(latestPeriod);
-	const previousQuarter = getPreviousQuarter(currentQuarter.year, currentQuarter.quarter);
-
-	function makeEmptyOverview(year: number, quarter: number): CompanyAppChangesOverview {
-		return {
-			status: 'preview',
-			year,
-			quarter,
-			android: { apps: [] },
-			ios: { apps: [] }
-		};
-	}
-
-	return [
-		{
-			label: 'Latest quarter',
-			appChanges: makeEmptyOverview(currentQuarter.year, currentQuarter.quarter)
-		},
-		{
-			label: 'Previous quarter',
-			appChanges: makeEmptyOverview(previousQuarter.year, previousQuarter.quarter)
-		}
-	];
+function buildPreviewMerged(latestPeriod: string | null | undefined): MergedAppChanges {
+	return { android: [], ios: [] };
 }
 
 async function getSubscriptionAccess(userId: number) {
@@ -120,6 +96,39 @@ async function loadCompanyAppChanges(
 	}
 }
 
+function mergeQuadrantAppChanges(
+	current: CompanyAppChangesOverview | null,
+	previous: CompanyAppChangesOverview | null
+): MergedAppChanges {
+	const addQuarter = (apps: CompanyOverviewApps[], year: number, quarter: number) =>
+		apps.map((app) => ({ ...app, year, quarter }));
+
+	const allAndroid: CompanyOverviewApps[] = [];
+	const allIos: CompanyOverviewApps[] = [];
+
+	if (current) {
+		allAndroid.push(...addQuarter(current.android.apps ?? [], current.year, current.quarter));
+		allIos.push(...addQuarter(current.ios.apps ?? [], current.year, current.quarter));
+	}
+	if (previous) {
+		allAndroid.push(...addQuarter(previous.android.apps ?? [], previous.year, previous.quarter));
+		allIos.push(...addQuarter(previous.ios.apps ?? [], previous.year, previous.quarter));
+	}
+
+	const sortFn = (a: CompanyOverviewApps, b: CompanyOverviewApps) => {
+		const yearDiff = (b.year ?? 0) - (a.year ?? 0);
+		if (yearDiff !== 0) return yearDiff;
+		const quarterDiff = (b.quarter ?? 0) - (a.quarter ?? 0);
+		if (quarterDiff !== 0) return quarterDiff;
+		return (b.installs_d30 ?? 0) - (a.installs_d30 ?? 0);
+	};
+
+	return {
+		android: allAndroid.sort(sortFn).slice(0, 50),
+		ios: allIos.sort(sortFn).slice(0, 50)
+	};
+}
+
 export const load: PageServerLoad = async ({ fetch, locals, params, parent }) => {
 	const api = createApiClient(fetch);
 	const parentData = await parent();
@@ -130,65 +139,6 @@ export const load: PageServerLoad = async ({ fetch, locals, params, parent }) =>
 		const access = await getSubscriptionAccess(locals.user.id);
 		hasB2BSdkAccess = access.hasB2BSdkAccess;
 	}
-	const quarterlyAppChanges: QuarterAppChangesEntry[] = [];
-
-	if (!hasB2BSdkAccess) {
-		return {
-			quarterlyAppChanges: buildPreviewQuarterlyEntries(
-				companyDetails?.trends_summary?.latest_period
-			),
-			companyName:
-				(
-					parentData.companyTree as
-						| {
-								queried_domain?: string;
-								company_name?: string;
-								company_domain?: string;
-						  }
-						| undefined
-				)?.company_name ??
-				(
-					parentData.companyTree as
-						| {
-								queried_domain?: string;
-								company_name?: string;
-								company_domain?: string;
-						  }
-						| undefined
-				)?.company_domain ??
-				(
-					parentData.companyTree as
-						| {
-								queried_domain?: string;
-								company_name?: string;
-								company_domain?: string;
-						  }
-						| undefined
-				)?.queried_domain ??
-				params.domain ??
-				'',
-			hasB2BSdkAccess
-		};
-	}
-
-	const currentQuarterAppChanges = await loadCompanyAppChanges(
-		api,
-		`/companies/${params.domain}/apps-lost`,
-		'Company apps lost'
-	);
-
-	let previousQuarterAppChanges: CompanyAppChangesOverview | null = null;
-	if (currentQuarterAppChanges) {
-		const previousQuarter = getPreviousQuarter(
-			currentQuarterAppChanges.year,
-			currentQuarterAppChanges.quarter
-		);
-		previousQuarterAppChanges = await loadCompanyAppChanges(
-			api,
-			`/companies/${params.domain}/apps-lost?year=${previousQuarter.year}&quarter=${previousQuarter.quarter}`,
-			'Company apps lost previous quarter'
-		);
-	}
 
 	const tree = parentData.companyTree as
 		| { queried_domain?: string; company_name?: string; company_domain?: string }
@@ -196,22 +146,35 @@ export const load: PageServerLoad = async ({ fetch, locals, params, parent }) =>
 	const companyName =
 		tree?.company_name ?? tree?.company_domain ?? tree?.queried_domain ?? params.domain ?? '';
 
-	if (currentQuarterAppChanges) {
-		quarterlyAppChanges.push({
-			label: 'Latest quarter',
-			appChanges: currentQuarterAppChanges
-		});
-	}
+	let appChanges: MergedAppChanges;
 
-	if (previousQuarterAppChanges) {
-		quarterlyAppChanges.push({
-			label: 'Previous quarter',
-			appChanges: previousQuarterAppChanges
-		});
+	if (!hasB2BSdkAccess) {
+		appChanges = buildPreviewMerged(companyDetails?.trends_summary?.latest_period);
+	} else {
+		const currentQuarterAppChanges = await loadCompanyAppChanges(
+			api,
+			`/companies/${params.domain}/apps-lost`,
+			'Company apps lost'
+		);
+
+		let previousQuarterAppChanges: CompanyAppChangesOverview | null = null;
+		if (currentQuarterAppChanges) {
+			const previousQuarter = getPreviousQuarter(
+				currentQuarterAppChanges.year,
+				currentQuarterAppChanges.quarter
+			);
+			previousQuarterAppChanges = await loadCompanyAppChanges(
+				api,
+				`/companies/${params.domain}/apps-lost?year=${previousQuarter.year}&quarter=${previousQuarter.quarter}`,
+				'Company apps lost previous quarter'
+			);
+		}
+
+		appChanges = mergeQuadrantAppChanges(currentQuarterAppChanges, previousQuarterAppChanges);
 	}
 
 	return {
-		quarterlyAppChanges,
+		appChanges,
 		companyName,
 		hasB2BSdkAccess
 	};

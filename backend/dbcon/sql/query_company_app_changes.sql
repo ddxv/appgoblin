@@ -15,7 +15,16 @@ WHERE
     AND dac.quarter = :myquarter
     AND dac.domain_name = :mydomain
     AND dac.tag_source = :mytagsource
-    AND (CAST(:mystatus AS text) IS NULL OR dac.status = :mystatus)
+    AND (
+        CAST(:mystatus AS text) IS NULL
+        OR (
+            CAST(:mystatus AS text) = 'added'
+            AND dac.status IN ('added', 'added_initial')
+        )
+        OR (CAST(:mystatus AS text) = 'lost' AND dac.status = 'removed')
+        OR (CAST(:mystatus AS text) = 'removed' AND dac.status = 'removed')
+        OR dac.status = CAST(:mystatus AS text)
+    )
     AND sa.store_id IS NOT NULL
 ORDER BY
     sa.installs_sum_4w DESC NULLS LAST,

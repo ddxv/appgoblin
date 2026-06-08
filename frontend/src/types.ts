@@ -371,6 +371,8 @@ export interface CompanyOverviewApps {
 	publisher: boolean;
 	api_call: boolean;
 	app_ads_direct: boolean;
+	year?: number;
+	quarter?: number;
 }
 
 export interface CompanyAppChangesOverview {

@@ -455,7 +455,13 @@ def get_company_app_changes(
     df = df[df["store_id"].notna()].copy()
     df["store"] = df["store"].replace({1: "Google Play", 2: "Apple App Store"})
     df["tag_source"] = tag_source
-    df["status"] = df["status"].astype(str).str.strip().str.lower()
+    df["status"] = (
+        df["status"]
+        .astype(str)
+        .str.strip()
+        .str.lower()
+        .replace({"added_initial": "added", "removed": "lost"})
+    )
     df["name"] = df["name"].astype(str)
     df["store_id"] = df["store_id"].astype(str)
     df["developer_name"] = df["developer_name"].fillna("")

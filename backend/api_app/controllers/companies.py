@@ -103,6 +103,7 @@ TREND_PLATFORM_MAP = {1: "android", 2: "ios"}
 TREND_TAG_SOURCE_ORDER = {"sdk": 0, "api_call": 1, "app_ads_direct": 2}
 COMPANY_APP_CHANGES_LIMIT = 50
 COMPANY_APP_CHANGE_TAG_SOURCES = ("sdk", "api_call", "app_ads_direct")
+COMPANY_APP_CHANGE_TAG_SOURCES_LOST = ("sdk", "api_call")
 COMPANY_APP_CHANGE_PERIOD_RE = re.compile(r"(?P<year>\d{4})-?Q(?P<quarter>[1-4])")
 
 
@@ -347,8 +348,8 @@ def _shape_company_app_changes_df(
     grouped["publisher"] = False
     grouped = grouped.drop(columns=["tag_sources"])
     grouped = grouped.sort_values(
-        by=["rank", "installs_d30", "name"],
-        ascending=[True, False, True],
+        by=["installs_d30", "name"],
+        ascending=[False, True],
         na_position="last",
     ).head(limit)
     return grouped
@@ -362,6 +363,7 @@ def build_company_app_changes_payload(
     year: int | None = None,
     quarter: int | None = None,
     limit: int = COMPANY_APP_CHANGES_LIMIT,
+    tag_sources: tuple[str, ...] | None = None,
 ) -> CompanyAppChangesOverview:
     """Build frontend company app-change payloads for the latest or requested quarter."""
     resolved_year, resolved_quarter = _resolve_company_app_changes_period(
@@ -370,6 +372,7 @@ def build_company_app_changes_payload(
         year=year,
         quarter=quarter,
     )
+    sources = tag_sources if tag_sources is not None else COMPANY_APP_CHANGE_TAG_SOURCES
     raw_frames = [
         get_company_app_changes(
             state=state,
@@ -379,7 +382,7 @@ def build_company_app_changes_payload(
             quarter=resolved_quarter,
             status=status,
         )
-        for tag_source in COMPANY_APP_CHANGE_TAG_SOURCES
+        for tag_source in sources
     ]
     non_empty_frames = [frame for frame in raw_frames if not frame.empty]
     collapsed_df = _shape_company_app_changes_df(
@@ -432,8 +435,8 @@ def get_company_app_change_store_ids(
         return []
 
     df = df.sort_values(
-        by=["rank", "installs_d30", "name"],
-        ascending=[True, False, True],
+        by=["installs_d30", "name"],
+        ascending=[False, True],
         na_position="last",
     )
     return df["store_id"].dropna().astype(str).drop_duplicates().tolist()
@@ -460,8 +463,8 @@ def get_company_app_change_store_ids_by_platform(
         return {"android_apps": [], "ios_apps": []}
 
     df = df.sort_values(
-        by=["rank", "installs_d30", "name"],
-        ascending=[True, False, True],
+        by=["installs_d30", "name"],
+        ascending=[False, True],
         na_position="last",
     )
     android_df = df[df["store"].astype(str).str.startswith("Google")]
@@ -1817,7 +1820,11 @@ class CompaniesController(Controller):
         year: int | None = None,
         quarter: int | None = None,
     ) -> CompanyAppChangesOverview:
-        """Return recently lost apps for a company, capped for frontend rendering."""
+        """Return recently lost apps for a company, capped for frontend rendering.
+
+        Only SDK and API-call signals are used for churn data since app-ads.txt
+        DIRECT removals are more often publisher reorganisation than true churn.
+        """
         start = time.perf_counter() * 1000
         payload = build_company_app_changes_payload(
             state=state,
@@ -1825,6 +1832,7 @@ class CompaniesController(Controller):
             status="lost",
             year=year,
             quarter=quarter,
+            tag_sources=COMPANY_APP_CHANGE_TAG_SOURCES_LOST,
         )
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(f"GET /api/companies/{company_domain}/apps-lost took {duration}ms")

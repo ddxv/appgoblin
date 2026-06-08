@@ -1,15 +1,15 @@
 <script lang="ts">
-	import CompanyAppChangesGrid from '$lib/CompanyAppChangesGrid.svelte';
-	import type { CompanyAppChangesOverview } from '../../../../types';
+	import CompanyAppChangesTable from '$lib/CompanyAppChangesTable.svelte';
+	import type { CompanyOverviewApps } from '../../../../types';
 
-	type QuarterAppChangesEntry = {
-		label: string;
-		appChanges: CompanyAppChangesOverview;
+	type MergedAppChanges = {
+		android: CompanyOverviewApps[];
+		ios: CompanyOverviewApps[];
 	};
 
 	interface Props {
 		data: {
-			quarterlyAppChanges: QuarterAppChangesEntry[];
+			appChanges: MergedAppChanges;
 			companyName: string;
 			hasB2BSdkAccess: boolean;
 		};
@@ -50,24 +50,14 @@
 	</div>
 {/if}
 
-{#if data.quarterlyAppChanges.length > 0}
-	<div class="space-y-6">
-		{#each data.quarterlyAppChanges as entry (entry.label)}
-			<section class="space-y-4">
-				<div>
-					<h3 class="text-lg font-semibold">
-						{entry.label}: {entry.appChanges.year} Q{entry.appChanges.quarter}
-					</h3>
-				</div>
-				<CompanyAppChangesGrid
-					appChanges={entry.appChanges}
-					companyName={data.companyName}
-					previewMode={!data.hasB2BSdkAccess}
-					status="added"
-				/>
-			</section>
-		{/each}
-	</div>
+{#if data.appChanges.android.length > 0 || data.appChanges.ios.length > 0}
+	<CompanyAppChangesTable
+		android={data.appChanges.android}
+		ios={data.appChanges.ios}
+		companyName={data.companyName}
+		previewMode={!data.hasB2BSdkAccess}
+		statusLabel="Added"
+	/>
 {:else}
 	<p class="text-center p-4">
 		No recently added apps found for this company in the latest two quarters.
