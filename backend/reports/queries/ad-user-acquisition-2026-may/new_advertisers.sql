@@ -23,6 +23,7 @@ WITH new_apps AS (
         sao.release_date >= :start_date - INTERVAL '30 days'
         AND sao.release_date < :next_month_start_date
 ),
+
 new_apps_with_ads AS (
     SELECT DISTINCT
         na.id,
@@ -55,6 +56,7 @@ new_apps_with_ads AS (
         vcasr.run_at >= :start_date
         AND vcasr.run_at < :next_month_start_date
 ),
+
 new_app_ad_networks AS (
     SELECT DISTINCT
         naw.id,
@@ -104,6 +106,7 @@ new_app_ad_networks AS (
         cc.category_id = 1
         AND ic.id != 48
 ),
+
 new_app_mmps AS (
     SELECT DISTINCT
         naw.id,
@@ -129,6 +132,7 @@ new_app_mmps AS (
         ON csac.store_app = naw.id
     WHERE cc.category_id = 2 AND csac.company_id > 0
 ),
+
 new_app_creatives AS (
     SELECT
         naw.id,
@@ -169,41 +173,41 @@ SELECT
     naw.ad_supported,
     naw.in_app_purchases,
     nullif(
-        array_agg(DISTINCT nana.ad_network_name::text) FILTER (
+        array_agg(DISTINCT nana.ad_network_name::TEXT) FILTER (
             WHERE nana.ad_network_name IS NOT NULL
         ),
-        '{}'::text[]
+        '{}'::TEXT []
     ) AS ad_network_names,
     nullif(
-        array_agg(DISTINCT nana.ad_network_domain::text) FILTER (
+        array_agg(DISTINCT nana.ad_network_domain::TEXT) FILTER (
             WHERE nana.ad_network_domain IS NOT NULL
         ),
-        '{}'::text[]
+        '{}'::TEXT []
     ) AS ad_network_domains,
     nullif(
-        array_agg(DISTINCT nana.ad_network_logo_url::text) FILTER (
+        array_agg(DISTINCT nana.ad_network_logo_url::TEXT) FILTER (
             WHERE nana.ad_network_logo_url IS NOT NULL
         ),
-        '{}'::text[]
+        '{}'::TEXT []
     ) AS ad_network_logo_urls,
     nullif(
-        array_agg(DISTINCT nam.mmp_domain::text) FILTER (
+        array_agg(DISTINCT nam.mmp_domain::TEXT) FILTER (
             WHERE nam.mmp_domain IS NOT NULL
         ),
-        '{}'::text[]
+        '{}'::TEXT []
     ) AS mmp_domains,
     count(DISTINCT nac.phash) AS creative_count,
     nullif(
-        array_agg(DISTINCT nac.md5_hash::text) FILTER (
+        array_agg(DISTINCT nac.md5_hash::TEXT) FILTER (
             WHERE nac.md5_hash IS NOT NULL
         ),
-        '{}'::text[]
+        '{}'::TEXT []
     ) AS md5_hashes,
     nullif(
-        array_agg(DISTINCT nac.file_extension::text) FILTER (
+        array_agg(DISTINCT nac.file_extension::TEXT) FILTER (
             WHERE nac.file_extension IS NOT NULL
         ),
-        '{}'::text[]
+        '{}'::TEXT []
     ) AS md5_file_extensions
 FROM new_apps_with_ads AS naw
 LEFT JOIN new_app_ad_networks AS nana ON naw.id = nana.id

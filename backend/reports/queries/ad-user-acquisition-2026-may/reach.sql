@@ -19,11 +19,12 @@ WITH adv_mmp AS (
         ON csac.company_id = cc.company_id
     LEFT JOIN adtech.companies AS c
         ON csac.company_id = c.id
-    LEFT JOIN domains d ON c.domain_id = d.id
+    LEFT JOIN domains AS d ON c.domain_id = d.id
     WHERE
         cc.category_id = 2
         AND csac.company_id > 0
 ),
+
 ad_network_domain_ids AS (
     SELECT
         cr_1.advertiser_store_app_id,
@@ -61,6 +62,7 @@ ad_network_domain_ids AS (
         vcasr_1.run_at >= :start_date
         AND vcasr_1.run_at < :next_month_start_date
 ),
+
 ad_network_domains AS (
     SELECT
         adi.advertiser_store_app_id,
@@ -68,6 +70,7 @@ ad_network_domains AS (
     FROM ad_network_domain_ids AS adi
     LEFT JOIN domains AS ad ON adi.domain_id = ad.id
 ),
+
 creative_rankings AS (
     SELECT
         ca_1.md5_hash,
@@ -89,6 +92,7 @@ creative_rankings AS (
         vcasr_1.run_at >= :start_date
         AND vcasr_1.run_at < :next_month_start_date
 )
+
 SELECT
     saa.name AS advertiser_name,
     saa.store_id AS advertiser_store_id,

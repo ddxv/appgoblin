@@ -1113,17 +1113,18 @@
 		</div>
 		<div class={sectionDescriptionClass}>
 			<p>
-				These apps were released between April and May 2026 and were already running ad campaigns tracked by
-				AppGoblin in May. {data.newAdvertisers[0].name} led by installs with
+				These apps were released between April and May 2026 and were already running ad campaigns
+				tracked by AppGoblin in May. {data.newAdvertisers[0].name} led by installs with
 				{formatNumber(data.newAdvertisers[0].installs ?? 0)} total downloads, using
 				{data.newAdvertisers[0].ad_networks[0]?.name ?? 'ad networks'} for acquisition.
 			</p>
 			<p>
 				{data.newAdvertisers[3].name} stood out with
-				{#each data.newAdvertisers[3].ad_networks as net, i}{i > 0 ? ', ' : ''}{net.name}{/each} ad
-				networks and {data.newAdvertisers[3].mmps.length} MMPs
-				({data.newAdvertisers[3].mmps.map((m) => m.domain.replace(/\..+$/, '')).join(', ')}),
-				suggesting a sophisticated UA setup from day one. Its {data.newAdvertisers[3].creative_count}
+				{#each data.newAdvertisers[3].ad_networks as net, i}{i > 0 ? ', ' : ''}{net.name}{/each} ad networks
+				and {data.newAdvertisers[3].mmps.length} MMPs ({data.newAdvertisers[3].mmps
+					.map((m) => m.domain.replace(/\..+$/, ''))
+					.join(', ')}), suggesting a sophisticated UA setup from day one. Its {data
+					.newAdvertisers[3].creative_count}
 				creatives and strong install trajectory make it one to watch.
 			</p>
 		</div>

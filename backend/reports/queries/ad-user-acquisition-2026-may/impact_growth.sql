@@ -43,6 +43,7 @@ WITH advertiser_z_scores AS (
     ) AS ranked
     WHERE rn <= 5
 ),
+
 adv_mmp AS (
     SELECT DISTINCT
         cr_1.advertiser_store_app_id,
@@ -61,9 +62,10 @@ adv_mmp AS (
     FROM adtech.combined_app_companies AS csac
     LEFT JOIN adtech.company_categories AS cc ON csac.company_id = cc.company_id
     LEFT JOIN adtech.companies AS c ON csac.company_id = c.id
-    LEFT JOIN domains d ON c.domain_id = d.id
+    LEFT JOIN domains AS d ON c.domain_id = d.id
     WHERE cc.category_id = 2 AND csac.company_id > 0
 ),
+
 main_results AS (
     SELECT
         adv.target_week AS best_week,
@@ -155,6 +157,7 @@ main_results AS (
         iad.domain_name,
         ic.logo_url
 ),
+
 best_week_results AS (
     SELECT DISTINCT ON (store_app)
         best_week,
@@ -187,6 +190,7 @@ best_week_results AS (
     FROM main_results
     ORDER BY store_app ASC, composite_score DESC
 )
+
 SELECT
     best_week,
     app_name,
