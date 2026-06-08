@@ -56,44 +56,51 @@
 
 	const dashboardHighlights: DashboardHighlight[] = [
 		{
-			kicker: 'Competitor app intelligence',
-			title: 'Analyze Competitor Apps',
-			description: 'See growth, monetization, creatives, and store performance in one place.',
+			kicker: 'For ASO & competitor research',
+			title: 'See Competitor Growth Strategies',
+			description:
+				'See exactly how rival apps acquire users, which keywords they rank for, what SDKs they depend on, and how their install and rating trajectory is trending — all in one dashboard.',
 			points: [
-				'Track installs and ratings',
-				'Review monetization signals',
-				'Scan creatives and rankings'
+				'Track install estimates and rating changes week over week',
+				'Discover which keywords drive their store traffic',
+				'Inspect their SDK stack and monetization setup'
 			],
 			href: '/apps/com.rovio.baba',
-			cta: 'View App Intelligence',
+			cta: 'Analyze a Competitor App',
 			imageLight: '/frontpage/app_page_light.png',
 			imageDark: '/frontpage/app_page_dark.png',
 			imageAlt:
 				'App intelligence dashboard preview showing app overview, installs, ratings, and monetization data.'
 		},
 		{
-			kicker: 'Creative market visibility',
-			title: 'Browse the Creatives Top Advertisers Use',
-			description: 'Browse live creative libraries to see what advertisers are running right now.',
+			kicker: 'For ad sales & intelligence',
+			title: 'See Which Creatives Apps Are Running',
+			description:
+				'Monitor live ad creatives from thousands of mobile advertisers. Filter by ad network, creative format, and campaign activity to spot new market entrants and competitive campaigns.',
 			points: [
-				'Browse live creative feeds',
-				'Filter by network and format',
-				'Spot active campaign patterns'
+				'Browse live creative feeds updated in real time',
+				'Filter by ad network and creative format',
+				'Spot new campaign launches and shifting ad strategies'
 			],
 			href: '/ad-creatives',
-			cta: 'Browse Creatives',
+			cta: 'Browse Live Creatives',
 			imageLight: '/frontpage/creative_explorer_light.png',
 			imageDark: '/frontpage/creative_explorer_dark.png',
 			imageAlt:
 				'Ad creative explorer preview showing network filters and a feed of advertiser creatives.'
 		},
 		{
-			kicker: 'Company and SDK intelligence',
-			title: "See Who's Actually Using Mobile Adtech Products",
-			description: 'See which apps, categories, and related entities are tied to each company.',
-			points: ['Find top apps by company', 'Compare category adoption', 'Follow related entities'],
+			kicker: 'For market & partner research',
+			title: 'Research the Mobile SDK Ecosystem by Category',
+			description:
+				'Rank and filter every ad network, MMP, analytics provider, and developer tool by real SDK adoption across 6M+ apps. Drill into category-level trends and see which apps drive each company’s footprint.',
+			points: [
+				'Find top SDK clients by company and category',
+				'Compare adoption across app verticals like games, finance, health',
+				'Track related entities and supply-chain relationships'
+			],
 			href: '/companies/google.com',
-			cta: 'View Companies',
+			cta: 'Explore SDK Market Share',
 			imageLight: '/frontpage/app_intelligence_company_overview_light.png',
 			imageDark: '/frontpage/app_intelligence_company_overview_dark.png',
 			imageAlt:
@@ -154,7 +161,7 @@
 	<meta name="description" content={description} />
 	<meta
 		name="keywords"
-		content="app, aso, app competitor analysis, ad creatives, ios, android, marketing, advertising, analytics, keyword analytics,  Google Play data, app data, app rankings, download statistics, competitor analysis, mobile app insights, app store intelligence"
+		content="free app intelligence, ASO tools, mobile ad tracking, SDK analysis, app-ads.txt, competitor app research, app store optimization, mobile app analytics, keyword tracking, ad creative monitoring, Google Play data, App Store rankings"
 	/>
 
 	<!-- Open Graph meta tags -->
@@ -180,7 +187,7 @@
 	<meta name="robots" content="index, follow" />
 	<link rel="canonical" href="https://appgoblin.info" />
 
-	<!-- WebSite + Organization structured data -->
+	<!-- WebSite + Organization + FAQ structured data -->
 	{@html `<script type="application/ld+json">${JSON.stringify({
 		'@context': 'https://schema.org',
 		'@graph': [
@@ -190,7 +197,7 @@
 				url: 'https://appgoblin.info',
 				name: 'AppGoblin',
 				description:
-					'Mobile app and ad intelligence platform with free ASO tools, SDK and API analysis, and app-ads.txt intelligence.',
+					'Free mobile app intelligence platform with ASO keyword tools, SDK analysis, ad creative tracking, and app-ads.txt validation. Research 6M+ Android and iOS apps daily.',
 				inLanguage: 'en',
 				publisher: {
 					'@id': 'https://appgoblin.info/#organization'
@@ -218,6 +225,44 @@
 					'https://discord.gg/7jpWEhkXRW',
 					'https://linkedin.com/company/AppGoblin'
 				]
+			},
+			{
+				'@type': 'FAQPage',
+				'@id': 'https://appgoblin.info/#faq',
+				mainEntity: [
+					{
+						'@type': 'Question',
+						name: 'What is AppGoblin?',
+						acceptedAnswer: {
+							'@type': 'Answer',
+							text: 'AppGoblin is a free mobile app intelligence and ad tracking platform. It provides ASO keyword tools, SDK footprint analysis, live ad creative monitoring, app-ads.txt validation, and competitive research across 6M+ Android and iOS apps.'
+						}
+					},
+					{
+						'@type': 'Question',
+						name: 'Is AppGoblin free to use?',
+						acceptedAnswer: {
+							'@type': 'Answer',
+							text: 'Yes. AppGoblin offers free app intelligence including keyword tracking, store rankings, SDK analysis, and ad creative browsing. Paid B2B plans add API access, company churn reports, and bulk data exports for sales and ad intelligence teams.'
+						}
+					},
+					{
+						'@type': 'Question',
+						name: 'Who uses AppGoblin?',
+						acceptedAnswer: {
+							'@type': 'Answer',
+							text: 'App marketers and ASO teams use AppGoblin for competitor keyword and ranking analysis. Ad sales teams use it for prospect research and SDK adoption intelligence. Developers and security analysts use it for SDK footprint detection and supply path validation.'
+						}
+					},
+					{
+						'@type': 'Question',
+						name: 'How does AppGoblin track mobile ad creatives?',
+						acceptedAnswer: {
+							'@type': 'Answer',
+							text: 'AppGoblin monitors live ad requests sent from mobile apps to track active advertising campaigns. This includes creative assets, ad networks used, and advertiser identity across both Android and iOS platforms.'
+						}
+					}
+				]
 			}
 		]
 	})}<\/script>`}
@@ -237,7 +282,8 @@
 			>
 		</div>
 		<p class="text-base md:text-lg max-w-2xl mx-auto">
-			Analyze your competitors' growth and marketing tools.
+			Track competitor app growth, analyze SDK footprints, monitor live ad creatives — all from one
+			platform.
 		</p>
 		<p>
 			Browse
@@ -282,13 +328,14 @@
 		<div class="relative">
 			<div class="mb-8 max-w-3xl">
 				<p class="mb-3 text-xs font-bold uppercase tracking-[0.32em] text-secondary-700-300">
-					See how the dashboards work
+					Three ways to use AppGoblin
 				</p>
 				<h2 class="mb-3 text-3xl font-bold leading-tight md:text-4xl">
-					See the workflows teams use most
+					Research competitors, ad creatives, and map the mobile adtech ecosystem
 				</h2>
 				<p class="text-base md:text-lg">
-					Research apps, monitor creatives, and find the companies behind the mobile stack.
+					Whether you're optimizing app store keywords, prospecting ad sales clients, or
+					investigating SDK supply chains — AppGoblin gives you the data.
 				</p>
 			</div>
 
@@ -411,8 +458,10 @@
 				<ClipboardList class="h-8 w-8 text-white" />
 			</div>
 			<div>
-				<h2 class={sectionTitleClass}>Core App Growth Intelligence</h2>
-				<p class={sectionSubtitleClass}>Free tools with export-ready datasets</p>
+				<h2 class={sectionTitleClass}>Free ASO and App Intel Tools</h2>
+				<p class={sectionSubtitleClass}>
+					App intelligence, SDK analysis, company data, and ad tech
+				</p>
 			</div>
 		</div>
 
@@ -460,7 +509,7 @@
 						<a href="/apps/com.rovio.baba" class={exampleAnchorClass}>Angry Birds 2 App</a>
 					</div>
 					<a href="/rankings/store/1/collection/1/category/1/US" class={featureCtaClass}
-						>Track Rankings →</a
+						>Track Your Competitors' Rankings →</a
 					>
 				</div>
 			</div>
@@ -491,7 +540,7 @@
 					<div class="flex flex-wrap gap-2">
 						<a href="/sdks" class={exampleAnchorClass}>Recently Requested SDK Scans</a>
 					</div>
-					<a href="/sdks" class={featureCtaClass}>Request Scan →</a>
+					<a href="/sdks" class={featureCtaClass}>Request a Free SDK Scan →</a>
 				</div>
 			</div>
 
@@ -527,7 +576,7 @@
 						<a href="/companies/salesforce.com" class={exampleAnchorClass}>Salesforce Clients →</a>
 						<a href="/companies/appsflyer.com" class={exampleAnchorClass}>AppsFlyer Top Apps →</a>
 					</div>
-					<a href="/companies" class={featureCtaClass}>Browse Companies →</a>
+					<a href="/companies" class={featureCtaClass}>Browse Companies by Category →</a>
 				</div>
 			</div>
 
@@ -561,7 +610,7 @@
 							>Angry Birds 2 App Example</a
 						>
 					</div>
-					<a href="/top-mobile-advertisers" class={featureCtaClass}>View Campaigns →</a>
+					<a href="/top-mobile-advertisers" class={featureCtaClass}>View Live Campaigns →</a>
 				</div>
 			</div>
 		</div>
@@ -576,8 +625,8 @@
 				<TrendingUp class="h-8 w-8 text-white" />
 			</div>
 			<div>
-				<h2 class={sectionTitleClass}>{monthYear} Top Android Advertiser</h2>
-				<p class={sectionSubtitleClass}>Live advertising intelligence</p>
+				<h2 class={sectionTitleClass}>Live Mobile Ad Intelligence — Who's Buying Ads Right Now</h2>
+				<p class={sectionSubtitleClass}>{monthYear} top advertisers &amp; creatives</p>
 			</div>
 		</div>
 
@@ -600,7 +649,7 @@
 				<span class={featureBulletClass}>📊 Network insights</span>
 			</div>
 			<a href="/top-mobile-advertisers" class="btn preset-filled-success-200-800">
-				Browse All Ad Buyers
+				See Who's Advertising Now →
 			</a>
 		</div>
 	</section>
@@ -614,8 +663,10 @@
 				<Layers class="h-8 w-8 text-white" />
 			</div>
 			<div>
-				<h2 class={sectionTitleClass}>Most Popular SDKs & Analytics</h2>
-				<p class={sectionSubtitleClass}>Mobile SDK intelligence</p>
+				<h2 class={sectionTitleClass}>
+					Mobile SDK Market Share — Top Ad Networks, MMPs &amp; Analytics
+				</h2>
+				<p class={sectionSubtitleClass}>See which SDKs power the app ecosystem</p>
 			</div>
 		</div>
 
@@ -661,7 +712,9 @@
 				<span class={featureBulletClass}>📈 Market share analytics</span>
 				<span class={featureBulletClass}>🏢 Company profiles</span>
 			</div>
-			<a href="/companies" class="btn preset-filled-primary-200-800"> Browse 500+ Companies</a>
+			<a href="/companies" class="btn preset-filled-primary-200-800">
+				Find SDK Clients by Category →</a
+			>
 		</div>
 	</section>
 
@@ -674,8 +727,10 @@
 				<ChartNoAxesColumnIncreasing class="h-8 w-8 text-white" />
 			</div>
 			<div>
-				<h2 class={sectionTitleClass}>Today's App Store Rankings</h2>
-				<p class={sectionSubtitleClass}>Live app store data</p>
+				<h2 class={sectionTitleClass}>
+					Live App Store Rankings — Google Play &amp; iOS Top Charts
+				</h2>
+				<p class={sectionSubtitleClass}>Updated daily — free to browse</p>
 			</div>
 		</div>
 
@@ -749,7 +804,7 @@
 				href="/rankings/store/1/collection/1/category/1/US"
 				class="btn preset-filled-secondary-200-800"
 			>
-				See All Rankings
+				View Full Top Charts →
 			</a>
 		</div>
 	</section>
@@ -761,8 +816,10 @@
 				<Sparkles class="h-8 w-8 text-white" />
 			</div>
 			<div>
-				<h2 class={sectionTitleClass}>Discover New Apps</h2>
-				<p class={sectionSubtitleClass}>Latest releases & trending apps</p>
+				<h2 class={sectionTitleClass}>
+					New App Discovery — Find Emerging Apps Before They Blow Up
+				</h2>
+				<p class={sectionSubtitleClass}>Weekly, monthly, and yearly new releases</p>
 			</div>
 		</div>
 
@@ -836,7 +893,7 @@
 				<span class={featureBulletClass}>🎯 Category insights</span>
 			</div>
 			<a href="/collections/new_monthly/google/overall" class="btn preset-filled-primary-200-800">
-				Explore New Apps
+				Discover New Releases →
 			</a>
 		</div>
 	</section>
