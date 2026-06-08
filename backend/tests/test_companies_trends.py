@@ -32,14 +32,16 @@ def test_company_trend_queries_filter_to_2025_q2_and_later_history():
     sql_dir = Path(__file__).resolve().parents[1] / "dbcon" / "sql"
     expected_filter = "year > 2025 OR (year = 2025 AND quarter >= 2)"
 
-    runtime_query = (sql_dir / "query_combined_companies_history.sql").read_text(
-        encoding="utf-8"
-    )
-    static_query = (sql_dir / "query_combined_companies_history_static.sql").read_text(
-        encoding="utf-8"
-    )
+    runtime_files = [
+        "query_trend_domains.sql",
+        "query_trend_companies.sql",
+        "query_trend_parent_companies.sql",
+    ]
+    for filename in runtime_files:
+        query = (sql_dir / filename).read_text(encoding="utf-8")
+        assert expected_filter in query, f"{filename} missing filter"
 
-    assert expected_filter in runtime_query
+    static_query = (sql_dir / "query_trends_static.sql").read_text(encoding="utf-8")
     assert expected_filter in static_query
 
 
@@ -98,12 +100,12 @@ def _make_history_df() -> pd.DataFrame:
                 "year": 2024,
                 "quarter": 4,
                 "store": 1,
-                "tag_source": "sdk_api",
-                "total_apps": 150,
+                "tag_source": "sdk",
+                "total_apps": 120,
                 "total_apps_in_quarter": 1000,
                 "apps_lost": 5,
-                "apps_added": 35,
-                "pct_market_share": 15.0,
+                "apps_added": 30,
+                "pct_market_share": 12.0,
                 "pct_apps_added": None,
                 "pct_apps_lost": None,
             },
@@ -114,12 +116,12 @@ def _make_history_df() -> pd.DataFrame:
                 "year": 2024,
                 "quarter": 4,
                 "store": 2,
-                "tag_source": "sdk_api",
-                "total_apps": 10,
+                "tag_source": "sdk",
+                "total_apps": 8,
                 "total_apps_in_quarter": 500,
                 "apps_lost": 0,
-                "apps_added": 5,
-                "pct_market_share": 2.0,
+                "apps_added": 4,
+                "pct_market_share": 1.6,
                 "pct_apps_added": None,
                 "pct_apps_lost": None,
             },
@@ -130,12 +132,12 @@ def _make_history_df() -> pd.DataFrame:
                 "year": 2025,
                 "quarter": 1,
                 "store": 1,
-                "tag_source": "sdk_api",
-                "total_apps": 180,
+                "tag_source": "sdk",
+                "total_apps": 140,
                 "total_apps_in_quarter": 1000,
-                "apps_lost": 10,
-                "apps_added": 40,
-                "pct_market_share": 18.0,
+                "apps_lost": 8,
+                "apps_added": 35,
+                "pct_market_share": 14.0,
                 "pct_apps_added": None,
                 "pct_apps_lost": None,
             },
@@ -146,12 +148,76 @@ def _make_history_df() -> pd.DataFrame:
                 "year": 2025,
                 "quarter": 1,
                 "store": 2,
-                "tag_source": "sdk_api",
-                "total_apps": 20,
+                "tag_source": "sdk",
+                "total_apps": 15,
                 "total_apps_in_quarter": 500,
                 "apps_lost": 0,
-                "apps_added": 10,
+                "apps_added": 8,
+                "pct_market_share": 3.0,
+                "pct_apps_added": None,
+                "pct_apps_lost": None,
+            },
+            {
+                "company_domain": "google.com",
+                "company_id": 1,
+                "parent_id": 1,
+                "year": 2024,
+                "quarter": 4,
+                "store": 1,
+                "tag_source": "api_call",
+                "total_apps": 30,
+                "total_apps_in_quarter": 1000,
+                "apps_lost": 0,
+                "apps_added": 5,
+                "pct_market_share": 3.0,
+                "pct_apps_added": None,
+                "pct_apps_lost": None,
+            },
+            {
+                "company_domain": "google.com",
+                "company_id": 1,
+                "parent_id": 1,
+                "year": 2024,
+                "quarter": 4,
+                "store": 2,
+                "tag_source": "api_call",
+                "total_apps": 2,
+                "total_apps_in_quarter": 500,
+                "apps_lost": 0,
+                "apps_added": 1,
+                "pct_market_share": 0.4,
+                "pct_apps_added": None,
+                "pct_apps_lost": None,
+            },
+            {
+                "company_domain": "google.com",
+                "company_id": 1,
+                "parent_id": 1,
+                "year": 2025,
+                "quarter": 1,
+                "store": 1,
+                "tag_source": "api_call",
+                "total_apps": 40,
+                "total_apps_in_quarter": 1000,
+                "apps_lost": 2,
+                "apps_added": 5,
                 "pct_market_share": 4.0,
+                "pct_apps_added": None,
+                "pct_apps_lost": None,
+            },
+            {
+                "company_domain": "google.com",
+                "company_id": 1,
+                "parent_id": 1,
+                "year": 2025,
+                "quarter": 1,
+                "store": 2,
+                "tag_source": "api_call",
+                "total_apps": 5,
+                "total_apps_in_quarter": 500,
+                "apps_lost": 0,
+                "apps_added": 2,
+                "pct_market_share": 1.0,
                 "pct_apps_added": None,
                 "pct_apps_lost": None,
             },
@@ -283,33 +349,50 @@ def test_build_company_overview_base_adds_aggregated_trends():
     assert overview.company_types == ["ad-network"]
     assert overview.trends_summary is not None
     assert overview.trends_summary.latest_period == "2025-Q1"
-    assert overview.trends_summary.sources["android_sdk_api"].platform == "android"
-    assert overview.trends_summary.sources["android_sdk_api"].tag_source == "sdk_api"
-    assert overview.trends_summary.sources["android_sdk_api"].latest_total_apps == 180
-    assert overview.trends_summary.sources["android_sdk_api"].previous_total_apps == 150
-    assert overview.trends_summary.sources["android_sdk_api"].latest_apps_added == 40
-    assert overview.trends_summary.sources["android_sdk_api"].latest_apps_lost == 10
+    assert overview.trends_summary.sources["android_sdk"].platform == "android"
+    assert overview.trends_summary.sources["android_sdk"].tag_source == "sdk"
+    assert overview.trends_summary.sources["android_sdk"].latest_total_apps == 140
+    assert overview.trends_summary.sources["android_sdk"].previous_total_apps == 120
+    assert overview.trends_summary.sources["android_sdk"].latest_apps_added == 35
+    assert overview.trends_summary.sources["android_sdk"].latest_apps_lost == 8
+    assert overview.trends_summary.sources["android_sdk"].qoq_total_apps_change == 20
     assert (
-        overview.trends_summary.sources["android_sdk_api"].qoq_total_apps_change == 30
+        overview.trends_summary.sources["android_sdk"].trailing_year_apps_added == 65
     )
     assert (
-        overview.trends_summary.sources["android_sdk_api"].trailing_year_apps_added
-        == 75
+        overview.trends_summary.sources["android_sdk"].trailing_year_apps_lost == 13
+    )
+    assert overview.trends_summary.sources[
+        "android_sdk"
+    ].latest_pct_market_share == pytest.approx(14.0, abs=0.0001)
+    assert overview.trends_summary.sources["ios_sdk"].latest_total_apps == 15
+    assert overview.trends_summary.sources["ios_sdk"].previous_total_apps == 8
+    assert overview.trends_summary.sources["ios_sdk"].tag_source == "sdk"
+    assert overview.trends_summary.sources["android_api_call"].platform == "android"
+    assert overview.trends_summary.sources["android_api_call"].tag_source == "api_call"
+    assert overview.trends_summary.sources["android_api_call"].latest_total_apps == 40
+    assert overview.trends_summary.sources["android_api_call"].previous_total_apps == 30
+    assert overview.trends_summary.sources["android_api_call"].latest_apps_added == 5
+    assert overview.trends_summary.sources["android_api_call"].latest_apps_lost == 2
+    assert overview.trends_summary.sources["android_api_call"].qoq_total_apps_change == 10
+    assert (
+        overview.trends_summary.sources["android_api_call"].trailing_year_apps_added
+        == 10
     )
     assert (
-        overview.trends_summary.sources["android_sdk_api"].trailing_year_apps_lost == 15
+        overview.trends_summary.sources["android_api_call"].trailing_year_apps_lost == 2
     )
+    assert overview.trends_summary.sources["ios_api_call"].latest_total_apps == 5
+    assert overview.trends_summary.sources["ios_api_call"].previous_total_apps == 2
     assert overview.trends_summary.sources[
-        "android_sdk_api"
-    ].latest_pct_market_share == pytest.approx(18.0, abs=0.0001)
-    assert overview.trends_summary.sources["ios_sdk_api"].latest_total_apps == 20
-    assert overview.trends_summary.sources["ios_sdk_api"].previous_total_apps == 10
+        "ios_api_call"
+    ].latest_pct_market_share == pytest.approx(1.0, abs=0.0001)
     assert overview.trends_summary.sources[
-        "ios_sdk_api"
-    ].latest_pct_market_share == pytest.approx(4.0, abs=0.0001)
+        "ios_sdk"
+    ].latest_pct_market_share == pytest.approx(3.0, abs=0.0001)
     assert overview.trends_summary.sources[
-        "ios_sdk_api"
-    ].latest_pct_market_share_change == pytest.approx(2.0, abs=0.000001)
+        "ios_sdk"
+    ].latest_pct_market_share_change == pytest.approx(1.4, abs=0.000001)
     assert overview.trends_summary.sources[
         "android_app_ads_direct"
     ].latest_pct_market_share == pytest.approx(3.5, abs=0.0001)
@@ -495,26 +578,30 @@ def test_build_company_trends_payload_splits_history_by_platform():
         trends = build_company_trends_payload(state=state, company_domain="google.com")
 
     assert trends.latest_period == "2025-Q1"
-    assert [point.source_key for point in trends.history["android_sdk_api"]] == [
-        "android_sdk_api",
-        "android_sdk_api",
+    assert [point.source_key for point in trends.history["android_sdk"]] == [
+        "android_sdk",
+        "android_sdk",
     ]
-    assert [point.period for point in trends.history["android_sdk_api"]] == [
+    assert [point.period for point in trends.history["android_sdk"]] == [
         "2024-Q4",
         "2025-Q1",
     ]
-    assert trends.history["android_sdk_api"][1].pct_market_share == pytest.approx(
-        18.0, abs=0.0001
+    assert trends.history["android_sdk"][1].pct_market_share == pytest.approx(
+        14.0, abs=0.0001
     )
-    assert trends.history["android_sdk_api"][
+    assert trends.history["android_sdk"][
         1
-    ].pct_market_share_change == pytest.approx(3.0, abs=0.000001)
-    assert trends.history["ios_sdk_api"][1].pct_market_share == pytest.approx(
+    ].pct_market_share_change == pytest.approx(2.0, abs=0.000001)
+    assert trends.history["ios_sdk"][1].pct_market_share == pytest.approx(
+        3.0, abs=0.0001
+    )
+    assert trends.history["ios_sdk"][
+        1
+    ].pct_market_share_change_pct == pytest.approx(87.5, abs=0.0001)
+    assert trends.history["android_api_call"][1].tag_source == "api_call"
+    assert trends.history["android_api_call"][1].pct_market_share == pytest.approx(
         4.0, abs=0.0001
     )
-    assert trends.history["ios_sdk_api"][
-        1
-    ].pct_market_share_change_pct == pytest.approx(100.0, abs=0.0001)
     assert trends.history["android_app_ads_direct"][1].platform == "android"
     assert trends.history["android_app_ads_direct"][1].tag_source == "app_ads_direct"
     assert trends.history["android_app_ads_direct"][
@@ -530,32 +617,50 @@ def test_build_company_trends_static_data_flattens_overview_metrics():
 
     row = trends_overview_df.set_index("company_domain").loc["google.com"]
     assert row["google_sdk_latest_pct_market_share"] == pytest.approx(
-        18.0, abs=0.000001
+        14.0, abs=0.000001
     )
-    assert row["apple_sdk_latest_pct_market_share"] == pytest.approx(4.0, abs=0.000001)
+    assert row["apple_sdk_latest_pct_market_share"] == pytest.approx(3.0, abs=0.000001)
+    assert row["google_api_call_latest_pct_market_share"] == pytest.approx(
+        4.0, abs=0.000001
+    )
+    assert row["apple_api_call_latest_pct_market_share"] == pytest.approx(
+        1.0, abs=0.000001
+    )
     assert row["google_app_ads_direct_latest_pct_market_share"] == pytest.approx(
         3.5, abs=0.000001
     )
     assert row["google_sdk_latest_pct_market_share_change"] == pytest.approx(
-        20.0, abs=0.000001
+        16.666666, abs=0.000001
     )
     assert row["apple_sdk_latest_pct_market_share_change"] == pytest.approx(
-        100.0, abs=0.000001
+        87.5, abs=0.000001
+    )
+    assert row["google_api_call_latest_pct_market_share_change"] == pytest.approx(
+        33.333333, abs=0.000001
+    )
+    assert row["apple_api_call_latest_pct_market_share_change"] == pytest.approx(
+        150.0, abs=0.000001
     )
     assert row["google_app_ads_direct_latest_pct_market_share_change"] == pytest.approx(
         75.0, abs=0.000001
     )
-    assert row["google_sdk_latest_total_apps"] == 180
-    assert row["apple_sdk_latest_total_apps"] == 20
+    assert row["google_sdk_latest_total_apps"] == 140
+    assert row["apple_sdk_latest_total_apps"] == 15
+    assert row["google_api_call_latest_total_apps"] == 40
+    assert row["apple_api_call_latest_total_apps"] == 5
     assert row["google_app_ads_direct_latest_total_apps"] == 35
     assert "google_sdk_latest_total_apps_change_pct" not in row.index
     assert "apple_sdk_latest_total_apps_change_pct" not in row.index
     assert "google_app_ads_direct_latest_total_apps_change_pct" not in row.index
-    assert row["google_sdk_latest_apps_added"] == 40
-    assert row["apple_sdk_latest_apps_added"] == 10
+    assert row["google_sdk_latest_apps_added"] == 35
+    assert row["apple_sdk_latest_apps_added"] == 8
+    assert row["google_api_call_latest_apps_added"] == 5
+    assert row["apple_api_call_latest_apps_added"] == 2
     assert row["google_app_ads_direct_latest_apps_added"] == 20
-    assert row["google_sdk_latest_apps_lost"] == 10
+    assert row["google_sdk_latest_apps_lost"] == 8
     assert row["apple_sdk_latest_apps_lost"] == 0
+    assert row["google_api_call_latest_apps_lost"] == 2
+    assert row["apple_api_call_latest_apps_lost"] == 0
     assert row["google_app_ads_direct_latest_apps_lost"] == 5
 
 
@@ -568,7 +673,7 @@ def test_build_company_trends_static_data_caps_overview_qoq_share_change_pct():
                 "year": 2024,
                 "quarter": 4,
                 "store": 1,
-                "tag_source": "sdk_api",
+                "tag_source": "sdk",
                 "total_apps": 1,
                 "total_apps_in_quarter": 1000,
                 "apps_lost": 0,
@@ -579,7 +684,7 @@ def test_build_company_trends_static_data_caps_overview_qoq_share_change_pct():
                 "year": 2025,
                 "quarter": 1,
                 "store": 1,
-                "tag_source": "sdk_api",
+                "tag_source": "sdk",
                 "total_apps": 100,
                 "total_apps_in_quarter": 1000,
                 "apps_lost": 0,
@@ -608,7 +713,7 @@ def test_build_company_trends_static_data_omits_overview_total_apps_change_pct()
                 "year": 2024,
                 "quarter": 4,
                 "store": 1,
-                "tag_source": "sdk_api",
+                "tag_source": "sdk",
                 "total_apps": 10,
                 "total_apps_in_quarter": 100,
                 "apps_lost": 0,
@@ -619,7 +724,7 @@ def test_build_company_trends_static_data_omits_overview_total_apps_change_pct()
                 "year": 2025,
                 "quarter": 1,
                 "store": 1,
-                "tag_source": "sdk_api",
+                "tag_source": "sdk",
                 "total_apps": 20,
                 "total_apps_in_quarter": 1000,
                 "apps_lost": 2,

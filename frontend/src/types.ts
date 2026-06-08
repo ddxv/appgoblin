@@ -481,11 +481,44 @@ export interface CompanyLookup {
 	company_domain: string;
 }
 
+export interface CompanyTabIndicators {
+	company_domain: string;
+	domain_id: number | null;
+	company_id: number | null;
+	company_name: string | null;
+	logo_url: string | null;
+	parent_company_id: number | null;
+	parent_domain: string | null;
+	has_sdk_signal: boolean;
+	has_api_signal: boolean;
+	has_publisher_signal: boolean;
+	has_app_ads_direct: boolean;
+	has_app_ads_reseller: boolean;
+	creatives_app_count: number;
+	has_trends: number;
+	apps_added_count: number;
+	apps_lost_count: number;
+	sdk_count: number;
+	mediation_adapter_count: number;
+	adstxt_publisher_count: number;
+	adstxt_ad_domain_count: number;
+	creatives_app_count_direct: number;
+	has_trends_direct: number;
+	apps_added_count_direct: number;
+	apps_lost_count_direct: number;
+	sdk_count_direct: number;
+	mediation_adapter_count_direct: number;
+	adstxt_publisher_count_direct: number;
+	adstxt_ad_domain_count_direct: number;
+	is_parent_domain: boolean;
+}
+
 export interface CompanyLayoutDetails {
 	companyDetails: CompanyCategoryOverview;
 	companyTree: CompanyTree;
 	companyLookup: CompanyLookup | null;
 	isFollowingCompany: boolean;
+	tabIndicators: CompanyTabIndicators;
 }
 
 export interface CompanyPatterns {

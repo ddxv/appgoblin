@@ -8,7 +8,11 @@ from sqlalchemy import bindparam
 
 from config import get_logger
 from dbcon.connections import PostgresCon
-from dbcon.static import get_country_map, get_parent_companies
+from dbcon.static import (
+    get_company_secondary_domains,
+    get_country_map,
+    get_parent_companies,
+)
 from dbcon.utils import cache_by_params, clean_app_df, sql
 
 logger = get_logger(__name__)
@@ -462,10 +466,26 @@ def get_company_app_changes(
 
 
 def get_combined_companies_history(state: State, company_domain: str) -> pd.DataFrame:
-    """Get quarterly company trend history for a company domain."""
+    """Get quarterly company trend history for a company domain.
+
+    Routes to the appropriate trend table based on domain type:
+    - trend_domains for secondary domains (child companies)
+    - trend_companies for regular company domains
+    - trend_parent_companies for parent companies
+    """
     logger.info(f"query combined company history: {company_domain=}")
+    parent_companies = get_parent_companies(state)
+    secondary_domains = get_company_secondary_domains(state)
+
+    if company_domain in secondary_domains:
+        query = sql.trend_domains
+    elif company_domain in parent_companies:
+        query = sql.trend_parent_companies
+    else:
+        query = sql.trend_companies
+
     df = pd.read_sql(
-        sql.combined_companies_history,
+        query,
         state.dbcon.engine,
         params={"company_domain": company_domain},
     )
@@ -1104,6 +1124,16 @@ def get_sitemap_companies(dbcon: PostgresCon) -> pd.DataFrame:
 def get_sitemap_apps(dbcon: PostgresCon) -> pd.DataFrame:
     """Get sitemap apps."""
     df = pd.read_sql(sql.sitemap_apps, dbcon.engine)
+    return df
+
+
+def get_company_tab_indicators(state: State, company_domain: str) -> pd.DataFrame:
+    """Get tab-level indicator flags from frontend.companies_overview MV."""
+    df = pd.read_sql(
+        sql.company_tab_indicators,
+        state.dbcon.engine,
+        params={"company_domain": company_domain},
+    )
     return df
 
 

@@ -21,7 +21,7 @@ logger = get_logger(__name__)
 
 TREND_HISTORY_WINDOW_QUARTERS = 4
 TREND_PLATFORM_MAP = {1: "android", 2: "ios"}
-TREND_TAG_SOURCE_ORDER = {"sdk_api": 0, "app_ads_direct": 1}
+TREND_TAG_SOURCE_ORDER = {"sdk": 0, "api_call": 1, "app_ads_direct": 2}
 TREND_OVERVIEW_MAX_SHARE_CHANGE_PCT = 500.0
 APP_CATEGORIES_OUTPUT_PATH = MODULE_DIR.parent / Path(
     "frontend/static/appCategories.json"
@@ -289,7 +289,7 @@ def _build_company_trends_overview_df(
         {"android": "google", "ios": "apple"}
     )
     tag_prefix = summary_rows_df["tag_source"].map(
-        {"sdk_api": "sdk", "app_ads_direct": "app_ads_direct"}
+        {"sdk": "sdk", "api_call": "api_call", "app_ads_direct": "app_ads_direct"}
     )
     valid_prefix_mask = platform_prefix.notna() & tag_prefix.notna()
     if not valid_prefix_mask.any():
@@ -529,7 +529,7 @@ def load_static_data(engine: PostgresCon) -> StaticData:
     company_api_call_countrys = pd.read_sql(sql.company_api_call_countrys, engine)
     logger.info("Loading combined companies history...")
     combined_companies_history = pd.read_sql(
-        sql.combined_companies_history_static,
+        sql.trends_static,
         engine,
     )
     logger.info("Precomputing company trends...")

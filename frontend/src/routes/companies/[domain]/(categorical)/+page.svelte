@@ -52,6 +52,11 @@
 	let activeOverview = $derived(
 		selectedOverview === 'parent' ? (parentOverview ?? domainOverview) : domainOverview
 	);
+	// Trends summary is only computed for the domain scope in the backend.
+	// When parent scope is selected, fall back to the domain-level trends summary.
+	let activeTrendsSummary = $derived(
+		activeOverview.trends_summary ?? data.companyDetails.trends_summary ?? null
+	);
 	let activeCategoryPromise = $derived(
 		selectedOverview === 'parent' && data.parentAppCategories
 			? data.parentAppCategories
@@ -190,7 +195,7 @@
 		{#snippet title()}
 			<span>{companyName} Apps Overview</span>
 		{/snippet}
-		<div class="px-4 pt-4 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+		<div class="px-4 pt-4 flex flex-col gap-3 lg:flex-row lg:items-end lg:gap-6">
 			{#if parentOverview}
 				<div>
 					<span
@@ -243,13 +248,13 @@
 					myType={{ name: 'All Companies & Domains', url_slug: 'all-companies' }}
 					hideAdstxtApps={true}
 					isSecondaryDomain={data.companyTree.is_secondary_domain}
-					trendsSummary={activeOverview.trends_summary}
+					trendsSummary={activeTrendsSummary}
 				/>
 			</div>
 			<div class="rounded border border-surface-200-800/70">
 				<AdsTxtTotalsBox
 					myTotals={activeOverview.adstxt_ad_domain_overview}
-					trendsSummary={activeOverview.trends_summary}
+					trendsSummary={activeTrendsSummary}
 					showReseller={false}
 				/>
 			</div>

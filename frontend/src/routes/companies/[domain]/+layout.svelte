@@ -53,20 +53,52 @@
 			'bg-secondary-100-900 text-surface-900-50 border-secondary-300-700 shadow-sm';
 		const unselectedClass =
 			'border-surface-200-800 text-surface-700-300 hover:border-secondary-300-700 hover:bg-surface-100-900';
-		return isSectionTabActive(tabSlug) ? selectedClass : unselectedClass;
+		const parentOnlyClass = 'opacity-50';
+		const isActive = isSectionTabActive(tabSlug);
+		let cls = isActive ? selectedClass : unselectedClass;
+		if (!isActive && isParentOnlyData(tabSlug)) {
+			cls += ` ${parentOnlyClass}`;
+		}
+		return cls;
+	}
+
+	function isParentOnlyData(tabSlug: string): boolean {
+		if (!tabInd) return false;
+		switch (tabSlug) {
+			case 'creatives':
+				return tabInd.creatives_app_count > 0 && tabInd.creatives_app_count_direct === 0;
+			case 'trends':
+				return tabInd.has_trends > 0 && tabInd.has_trends_direct === 0;
+			case 'apps-added':
+			case 'apps-lost':
+				return (
+					(tabInd.apps_added_count > 0 || tabInd.apps_lost_count > 0) &&
+					tabInd.apps_added_count_direct === 0 &&
+					tabInd.apps_lost_count_direct === 0
+				);
+			case 'sdks':
+				return tabInd.sdk_count > 0 && tabInd.sdk_count_direct === 0;
+			case 'mediation':
+				return tabInd.mediation_adapter_count > 0 && tabInd.mediation_adapter_count_direct === 0;
+			case 'app-adstxt':
+				return (
+					(tabInd.adstxt_publisher_count > 0 || tabInd.adstxt_ad_domain_count > 0) &&
+					tabInd.adstxt_publisher_count_direct === 0 &&
+					tabInd.adstxt_ad_domain_count_direct === 0
+				);
+			default:
+				return false;
+		}
 	}
 
 	let sectionSlug = $derived(getSectionSlug(page.url.pathname));
 	let companyDomain = $derived(
 		data.companyTree?.queried_domain || data.companyTree?.company_domain || domain
 	);
-	let showMediationTab = $derived(Boolean(data.companyDetails?.mediation_adapters));
-	let showCreativesTab = $derived(
-		Boolean(
-			data.companyDetails?.company_types?.some((companyType) => companyType === 'ad-networks')
-		)
-	);
-	let showTrendsTab = $derived(Boolean(data.companyDetails?.trends_summary));
+	let tabInd = $derived(data.tabIndicators);
+	let showCreativesTab = $derived(Boolean(tabInd?.creatives_app_count));
+	let showTrendsTab = $derived(Boolean(tabInd?.has_trends));
+	let showMediationTab = $derived(Boolean(tabInd?.mediation_adapter_count));
 	let companyDisplayName = $derived(
 		data.companyTree?.company_name ||
 			data.companyTree?.company_domain ||
@@ -219,6 +251,11 @@
 		crumbs.push({ title: companyDisplayName });
 		return crumbs;
 	});
+	let hasAdstxt = $derived(
+		Boolean(tabInd?.adstxt_publisher_count || tabInd?.adstxt_ad_domain_count)
+	);
+	let hasAppChanges = $derived(Boolean(tabInd?.apps_added_count || tabInd?.apps_lost_count));
+
 	let sectionLinks = $derived([
 		{
 			slug: 'overview',
@@ -242,19 +279,19 @@
 			slug: 'apps-added',
 			label: `${companyDisplayName} Apps Added`,
 			href: `/companies/${companyDomain}/apps-added`,
-			visible: true
+			visible: hasAppChanges
 		},
 		{
 			slug: 'apps-lost',
 			label: `${companyDisplayName} Apps Lost`,
 			href: `/companies/${companyDomain}/apps-lost`,
-			visible: true
+			visible: hasAppChanges
 		},
 		{
 			slug: 'sdks',
 			label: `${companyDisplayName} SDKs`,
 			href: `/companies/${companyDomain}/sdks`,
-			visible: true
+			visible: Boolean(tabInd?.sdk_count)
 		},
 		{
 			slug: 'mediation',
@@ -266,13 +303,13 @@
 			slug: 'app-adstxt',
 			label: `${companyDisplayName} App-ads.txt`,
 			href: `/companies/${companyDomain}/app-adstxt`,
-			visible: true
+			visible: hasAdstxt
 		},
 		{
 			slug: 'data-exports',
 			label: `${companyDisplayName} Data Exports`,
 			href: `/companies/${companyDomain}/data-exports`,
-			visible: true
+			visible: hasAdstxt || Boolean(tabInd?.sdk_count)
 		}
 	]);
 </script>

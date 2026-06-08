@@ -45,6 +45,7 @@ from api_app.models import (
     CompanyPubIDAppsRelationship,
     CompanyPubIDOverview,
     CompanyPubIDTotals,
+    CompanyTabIndicators,
     CompanyTree,
     CompanyTrendPoint,
     CompanyTrends,
@@ -71,6 +72,7 @@ from dbcon.queries import (
     get_company_follow_lookup,
     get_company_sdks,
     get_company_stats,
+    get_company_tab_indicators,
     get_company_tree_base,
     get_company_tree_related_domains,
     get_mediation_adapters,
@@ -98,7 +100,7 @@ logger = get_logger(__name__)
 
 TREND_HISTORY_WINDOW_QUARTERS = 4
 TREND_PLATFORM_MAP = {1: "android", 2: "ios"}
-TREND_TAG_SOURCE_ORDER = {"sdk_api": 0, "app_ads_direct": 1}
+TREND_TAG_SOURCE_ORDER = {"sdk": 0, "api_call": 1, "app_ads_direct": 2}
 COMPANY_APP_CHANGES_LIMIT = 50
 COMPANY_APP_CHANGE_TAG_SOURCES = ("sdk", "api_call", "app_ads_direct")
 COMPANY_APP_CHANGE_PERIOD_RE = re.compile(r"(?P<year>\d{4})-?Q(?P<quarter>[1-4])")
@@ -1607,6 +1609,8 @@ def _strip_private_companies_overview_metrics(
     dropped_keys = {
         "google_sdk_latest_apps_added",
         "apple_sdk_latest_apps_added",
+        "google_api_call_latest_apps_added",
+        "apple_api_call_latest_apps_added",
         "google_app_ads_direct_latest_apps_added",
         "apple_app_ads_direct_latest_apps_added",
     }
@@ -1711,6 +1715,78 @@ class CompaniesController(Controller):
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(f"GET /api/companies/{company_domain} took {duration}ms")
         return overview
+
+    @get(path="/companies/{company_domain:str}/tabs", cache=86400)
+    async def company_tabs(
+        self: Self,
+        state: State,
+        company_domain: str,
+    ) -> CompanyTabIndicators:
+        """Return tab-availability indicators for a company domain.
+
+        Uses the frontend.companies_overview materialized view.
+        Each count is coalesced (child → parent → 0) so the frontend
+        can show/hide or grey-out sub-page links.
+
+        Args:
+        ----
+        company_domain : str
+            The domain to look up indicators for.
+
+        Returns:
+        -------
+        CompanyTabIndicators
+            Per-tab indicators plus raw signal flags.
+
+        """
+        start = time.perf_counter() * 1000
+        df = get_company_tab_indicators(state=state, company_domain=company_domain)
+        if df.empty:
+            # Return a mostly-empty row so the frontend always gets a response
+            result = CompanyTabIndicators(company_domain=company_domain)
+        else:
+            row = df.iloc[0]
+
+            def _nan(val: object) -> int | None:
+                return None if pd.isna(val) else int(val)
+
+            def _nan_str(val: object) -> str | None:
+                return None if pd.isna(val) else str(val)
+
+            result = CompanyTabIndicators(
+                company_domain=str(row.company_domain),
+                domain_id=_nan(row.domain_id),
+                company_id=_nan(row.company_id),
+                company_name=_nan_str(row.company_name),
+                logo_url=_nan_str(row.logo_url),
+                parent_company_id=_nan(row.parent_company_id),
+                parent_domain=_nan_str(row.parent_domain),
+                has_sdk_signal=bool(row.has_sdk_signal),
+                has_api_signal=bool(row.has_api_signal),
+                has_publisher_signal=bool(row.has_publisher_signal),
+                has_app_ads_direct=bool(row.has_app_ads_direct),
+                has_app_ads_reseller=bool(row.has_app_ads_reseller),
+                creatives_app_count=int(row.creatives_app_count),
+                has_trends=int(row.has_trends),
+                apps_added_count=int(row.apps_added_count),
+                apps_lost_count=int(row.apps_lost_count),
+                sdk_count=int(row.sdk_count),
+                mediation_adapter_count=int(row.mediation_adapter_count),
+                adstxt_publisher_count=int(row.adstxt_publisher_count),
+                adstxt_ad_domain_count=int(row.adstxt_ad_domain_count),
+                creatives_app_count_direct=int(row.creatives_app_count_direct),
+                has_trends_direct=int(row.has_trends_direct),
+                apps_added_count_direct=int(row.apps_added_count_direct),
+                apps_lost_count_direct=int(row.apps_lost_count_direct),
+                sdk_count_direct=int(row.sdk_count_direct),
+                mediation_adapter_count_direct=int(row.mediation_adapter_count_direct),
+                adstxt_publisher_count_direct=int(row.adstxt_publisher_count_direct),
+                adstxt_ad_domain_count_direct=int(row.adstxt_ad_domain_count_direct),
+                is_parent_domain=bool(row.is_parent_domain),
+            )
+        duration = round((time.perf_counter() * 1000 - start), 2)
+        logger.info(f"GET /api/companies/{company_domain}/tabs took {duration}ms")
+        return result
 
     @get(path="/companies/{company_domain:str}/apps-added", cache=86400)
     async def company_apps_added(

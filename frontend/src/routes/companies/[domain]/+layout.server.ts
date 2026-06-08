@@ -41,10 +41,18 @@ export const load: LayoutServerLoad = async ({ fetch, params, parent, locals }) 
 		isFollowingCompany = !!followed;
 	}
 
+	let tabIndicators = null;
+	try {
+		tabIndicators = await api.get(`/companies/${companyDomain}/tabs`, 'Company Tab Indicators');
+	} catch {
+		tabIndicators = null;
+	}
+
 	return {
 		companyDetails,
 		companyTree,
 		companyLookup,
-		isFollowingCompany
+		isFollowingCompany,
+		tabIndicators
 	};
 };

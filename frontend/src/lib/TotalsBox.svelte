@@ -13,6 +13,8 @@
 		trendsSummary = null
 	} = $props();
 
+	let safeTotals = $derived(myTotals ?? {});
+
 	let categoryTitle = $derived(
 		page.params.category
 			? (page.data?.appCats?.categories?.find((c: { id: string }) => c.id === page.params.category)
@@ -49,8 +51,10 @@
 			(source) => source.platform === platform && source.tag_source === tagSource
 		);
 
-	const sdkAndroidTrend = $derived(getTrendSource(trendsSummary, 'android', 'sdk_api'));
-	const sdkIosTrend = $derived(getTrendSource(trendsSummary, 'ios', 'sdk_api'));
+	const sdkAndroidTrend = $derived(getTrendSource(trendsSummary, 'android', 'sdk'));
+	const sdkIosTrend = $derived(getTrendSource(trendsSummary, 'ios', 'sdk'));
+	const apiAndroidTrend = $derived(getTrendSource(trendsSummary, 'android', 'api_call'));
+	const apiIosTrend = $derived(getTrendSource(trendsSummary, 'ios', 'api_call'));
 </script>
 
 {#if !isSecondaryDomain}
@@ -61,7 +65,7 @@
 				Verified SDK counts are based on apps decompiled by AppGoblin.
 			</p>
 		</div>
-		{#if myTotals.sdk_android_total_apps === 0 && myTotals.sdk_ios_total_apps === 0}
+		{#if (safeTotals.sdk_android_total_apps ?? 0) === 0 && (safeTotals.sdk_ios_total_apps ?? 0) === 0}
 			<p class={greyFont}>
 				No apps with {companyName} SDKs found. Please feel free to contact if you would like this mapped.
 			</p>
@@ -79,17 +83,17 @@
 						<td class="py-2 px-1 {rowTitleFont}"
 							>{categoryTitle ? `${categoryTitle} Apps` : 'Apps'}</td
 						>
-						<td class="py-2 px-1">{formatNumberLocale(myTotals.sdk_android_total_apps)}</td>
-						<td class="py-2 px-1">{formatNumberLocale(myTotals.sdk_ios_total_apps)}</td>
+						<td class="py-2 px-1">{formatNumberLocale(safeTotals.sdk_android_total_apps ?? 0)}</td>
+						<td class="py-2 px-1">{formatNumberLocale(safeTotals.sdk_ios_total_apps ?? 0)}</td>
 					</tr>
 					<tr>
 						<td class="py-2 px-1 {rowTitleFont}">Monthly Installs</td>
-						<td class="py-2 px-1">{formatNumber(myTotals.sdk_android_installs_d30)}</td>
-						<td class="py-2 px-1">{formatNumber(myTotals.sdk_ios_installs_d30)}</td>
+						<td class="py-2 px-1">{formatNumber(safeTotals.sdk_android_installs_d30 ?? 0)}</td>
+						<td class="py-2 px-1">{formatNumber(safeTotals.sdk_ios_installs_d30 ?? 0)}</td>
 					</tr>
 					{#if trendsSummary}
 						<tr>
-							<td class="py-2 px-1 {rowTitleFont}">Latest Change in Market Share</td>
+							<td class="py-2 px-1 {rowTitleFont}">SDK Market Share Change</td>
 							<td
 								class={`py-2 px-1 ${toneClass(sdkAndroidTrend?.latest_pct_market_share_change_pct)}`}
 							>
@@ -97,6 +101,17 @@
 							</td>
 							<td class={`py-2 px-1 ${toneClass(sdkIosTrend?.latest_pct_market_share_change_pct)}`}>
 								{formatRelativeChange(sdkIosTrend?.latest_pct_market_share_change_pct)}
+							</td>
+						</tr>
+						<tr>
+							<td class="py-2 px-1 {rowTitleFont}">API Call Market Share Change</td>
+							<td
+								class={`py-2 px-1 ${toneClass(apiAndroidTrend?.latest_pct_market_share_change_pct)}`}
+							>
+								{formatRelativeChange(apiAndroidTrend?.latest_pct_market_share_change_pct)}
+							</td>
+							<td class={`py-2 px-1 ${toneClass(apiIosTrend?.latest_pct_market_share_change_pct)}`}>
+								{formatRelativeChange(apiIosTrend?.latest_pct_market_share_change_pct)}
 							</td>
 						</tr>
 					{/if}
@@ -107,29 +122,29 @@
 {/if}
 
 {#if myType.url_slug === 'ad-networks' || myType.url_slug === 'all-companies'}
-	{#if myTotals.total_companies}
+	{#if safeTotals.total_companies}
 		<div class="grid p-4">
 			<div class={titleFont}>Company Domains</div>
 			<div class="stat-container">
 				<div class="text-2xl font-bold">
-					{formatNumberLocale(myTotals.total_companies)}
+					{formatNumberLocale(safeTotals.total_companies)}
 				</div>
 			</div>
 		</div>
-	{:else if !hideAdstxtApps && myTotals.adstxt_direct_android_total_apps}
+	{:else if !hideAdstxtApps && safeTotals.adstxt_direct_android_total_apps}
 		<hr />
 		<div class={titleFont}>App-Ads.txt DIRECT apps</div>
 		<div class="grid grid-cols-2 gap-4 p-4">
 			<div class="stat-container">
 				<div class={subTitleFont}>Android Adstxt apps</div>
 				<div class="text-2xl font-bold">
-					{formatNumberLocale(myTotals.adstxt_direct_android_total_apps)}
+					{formatNumberLocale(safeTotals.adstxt_direct_android_total_apps)}
 				</div>
 			</div>
 			<div class="stat-container">
 				<div class={subTitleFont}>iOS Adstxt apps</div>
 				<div class="text-2xl font-bold">
-					{formatNumberLocale(myTotals.adstxt_direct_ios_total_apps)}
+					{formatNumberLocale(safeTotals.adstxt_direct_ios_total_apps)}
 				</div>
 			</div>
 		</div>

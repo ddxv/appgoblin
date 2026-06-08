@@ -38,26 +38,37 @@
 
 	const palette = ['#6929C4', '#1192E8', '#005D5D', '#9F1853', '#FA4D56'];
 	const platformOrder: Record<string, number> = { android: 0, ios: 1 };
-	const sourceOrder: Record<string, number> = { sdk_api: 0, app_ads_direct: 1 };
+	const sourceOrder: Record<string, number> = { sdk: 0, api_call: 1, app_ads_direct: 2 };
 	const sourceLabels: Record<string, string> = {
-		sdk_api: 'SDK/API Footprint',
+		sdk: 'SDK Footprint',
+		api_call: 'API Call Footprint',
 		app_ads_direct: 'App-ads.txt DIRECT'
 	};
 	const sourceMeta: Record<string, SourceMeta> = {
-		ios_sdk_api: {
-			label: 'SDK/API Footprint',
+		ios_sdk: {
+			label: 'SDK Footprint',
 			primary: palette[0],
 			secondary: palette[1]
+		},
+		ios_api_call: {
+			label: 'API Call Footprint',
+			primary: palette[1],
+			secondary: palette[0]
 		},
 		ios_app_ads_direct: {
 			label: 'App-ads.txt DIRECT',
 			primary: palette[1],
 			secondary: palette[0]
 		},
-		android_sdk_api: {
-			label: 'SDK/API Footprint',
+		android_sdk: {
+			label: 'SDK Footprint',
 			primary: palette[2],
 			secondary: palette[3]
+		},
+		android_api_call: {
+			label: 'API Call Footprint',
+			primary: palette[3],
+			secondary: palette[2]
 		},
 		android_app_ads_direct: {
 			label: 'App-ads.txt DIRECT',
