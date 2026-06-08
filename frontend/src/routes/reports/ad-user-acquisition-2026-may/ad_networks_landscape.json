@@ -1,0 +1,115 @@
+[
+  {
+    "ad_network_name": "Google",
+    "ad_network_domain": "google.com",
+    "company_logo_url": "company-logos/google.com/logo_200x200.jpeg",
+    "all_domains": [
+      "google.com"
+    ],
+    "publisher_count": 2711,
+    "advertiser_count": 510,
+    "creatives_count": 2724
+  },
+  {
+    "ad_network_name": "AppLovin",
+    "ad_network_domain": "applovin.com",
+    "company_logo_url": "company-logos/applovin.com/logo_200x200.jpeg",
+    "all_domains": [
+      "applovin.com"
+    ],
+    "publisher_count": 1200,
+    "advertiser_count": 0,
+    "creatives_count": 1184
+  },
+  {
+    "ad_network_name": "Mobvista",
+    "ad_network_domain": "mobvista.com",
+    "company_logo_url": "company-logos/mobvista.com/logo_200x200.jpeg",
+    "all_domains": [
+      "mintegral.com"
+    ],
+    "publisher_count": 390,
+    "advertiser_count": 31,
+    "creatives_count": 174
+  },
+  {
+    "ad_network_name": "BidEase",
+    "ad_network_domain": "bidease.com",
+    "company_logo_url": "company-logos/bidease.com/logo_200x200.jpeg",
+    "all_domains": [
+      "bidease.com"
+    ],
+    "publisher_count": 337,
+    "advertiser_count": 13,
+    "creatives_count": 149
+  },
+  {
+    "ad_network_name": "Yandex",
+    "ad_network_domain": "yandex.com",
+    "company_logo_url": "company-logos/yandex.com/logo_200x200.jpeg",
+    "all_domains": [
+      "yandex.com"
+    ],
+    "publisher_count": 279,
+    "advertiser_count": 15,
+    "creatives_count": 322
+  },
+  {
+    "ad_network_name": "Unity",
+    "ad_network_domain": "unity.com",
+    "company_logo_url": "company-logos/unity.com/logo_200x200.jpeg",
+    "all_domains": [
+      "unity.com",
+      "unity3d.com"
+    ],
+    "publisher_count": 161,
+    "advertiser_count": 41,
+    "creatives_count": 151
+  },
+  {
+    "ad_network_name": "Affle",
+    "ad_network_domain": "affle.com",
+    "company_logo_url": "company-logos/affle.com/logo_200x200.jpeg",
+    "all_domains": [
+      "jampp.com",
+      "revx.io",
+      "youappi.com"
+    ],
+    "publisher_count": 147,
+    "advertiser_count": 5,
+    "creatives_count": 46
+  },
+  {
+    "ad_network_name": "Remerge",
+    "ad_network_domain": "remerge.io",
+    "company_logo_url": "company-logos/remerge.io/logo_200x200.jpeg",
+    "all_domains": [
+      "remerge.io"
+    ],
+    "publisher_count": 63,
+    "advertiser_count": 2,
+    "creatives_count": 25
+  },
+  {
+    "ad_network_name": "Loopme",
+    "ad_network_domain": "loopme.com",
+    "company_logo_url": "company-logos/loopme.com/logo_200x200.jpeg",
+    "all_domains": [
+      "chartboost.com"
+    ],
+    "publisher_count": 41,
+    "advertiser_count": 4,
+    "creatives_count": 22
+  },
+  {
+    "ad_network_name": "Adikteev",
+    "ad_network_domain": "adikteev.com",
+    "company_logo_url": "company-logos/adikteev.com/logo_200x200.jpeg",
+    "all_domains": [
+      "adikteev.com"
+    ],
+    "publisher_count": 32,
+    "advertiser_count": 2,
+    "creatives_count": 15
+  }
+]

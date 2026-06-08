@@ -1,0 +1,938 @@
+[
+  {
+    "name": "Weathernews - Weather Forecast",
+    "store_id": "wni.WeathernewsTouch.jp",
+    "store": 1,
+    "category": "weather",
+    "installs": 22942917.0,
+    "rating": 3.7714715,
+    "rating_count": 87014.0,
+    "installs_sum_1w": 72451.0,
+    "installs_sum_4w": 74500.0,
+    "installs_z_score_2w": 0.9842266346,
+    "installs_z_score_4w": 0.0963639015,
+    "release_date": "2026-05-18T00:00:00.000",
+    "icon_url_100": "bc38c2878f6d3ac2.png",
+    "developer_name": "Weathernews Inc.",
+    "developer_id": "Weathernews+Inc.",
+    "ad_supported": true,
+    "in_app_purchases": true,
+    "ad_network_names": [
+      "Google"
+    ],
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": null,
+    "creative_count": 9,
+    "md5_hashes": [
+      "0722af38561cbaa1710976cd280c2670",
+      "3c546f0e00c99408525eba98269f27f3",
+      "5cb38e0e4967ac54dd1d397bff5aee47",
+      "bf05c70348fc4e7e920aeb4c8c0ec26c",
+      "cb121158e993c5164ec3df3dba810e5d",
+      "dc920b4a35328a9c39f9d898838f496c",
+      "e419b2f59f6a7f7f08f00a4bfda581d3",
+      "f2b493234aacfab1af43d68fe941ca5d",
+      "fc6aa462192ae6487887efe127c9caf9"
+    ],
+    "md5_file_extensions": [
+      "jpeg",
+      "mp4",
+      "webm"
+    ]
+  },
+  {
+    "name": "Shark Madness Launcher",
+    "store_id": "com.herofightinggames.shark.madness",
+    "store": 1,
+    "category": "tools",
+    "installs": 2790794.0,
+    "rating": 4.38423,
+    "rating_count": 5632.0,
+    "installs_sum_1w": 164392.0,
+    "installs_sum_4w": 2790794.0,
+    "installs_z_score_2w": null,
+    "installs_z_score_4w": null,
+    "release_date": "2026-04-16T00:00:00.000",
+    "icon_url_100": "c1fbdae06344cc8e.png",
+    "developer_name": "Hero Fighting Games",
+    "developer_id": "Hero+Fighting+Games",
+    "ad_supported": null,
+    "in_app_purchases": null,
+    "ad_network_names": [
+      "Mobvista"
+    ],
+    "ad_network_domains": [
+      "mobvista.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/mobvista.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": [
+      "adjust.com"
+    ],
+    "creative_count": 1,
+    "md5_hashes": [
+      "2feb03de4ca2c0fa34edbd458a3faa80"
+    ],
+    "md5_file_extensions": [
+      "jpeg"
+    ]
+  },
+  {
+    "name": "Super Rope Hero: Crime City",
+    "store_id": "flying.crime.city.simulator",
+    "store": 1,
+    "category": "game_action",
+    "installs": 2064905.0,
+    "rating": 4.2385097,
+    "rating_count": 311.0,
+    "installs_sum_1w": 189364.0,
+    "installs_sum_4w": 863101.0,
+    "installs_z_score_2w": -0.3780757904,
+    "installs_z_score_4w": -0.5576283519,
+    "release_date": "2026-05-05T00:00:00.000",
+    "icon_url_100": "c5d0da393ce6c076.png",
+    "developer_name": "CORGY TECH COMPANY LIMITED",
+    "developer_id": "CORGY+TECH+COMPANY+LIMITED",
+    "ad_supported": true,
+    "in_app_purchases": false,
+    "ad_network_names": [
+      "Google"
+    ],
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": [
+      "adjust.com"
+    ],
+    "creative_count": 1,
+    "md5_hashes": [
+      "d981058d00018853c2e47ddb60209788"
+    ],
+    "md5_file_extensions": [
+      "webm"
+    ]
+  },
+  {
+    "name": "Rhythm Tiles: Pop Songs",
+    "store_id": "com.piano.music.rhythm.tiles.games",
+    "store": 1,
+    "category": "game_casual",
+    "installs": 1777748.0,
+    "rating": 4.403182,
+    "rating_count": 1646.0,
+    "installs_sum_1w": 448254.0,
+    "installs_sum_4w": 1343009.0,
+    "installs_z_score_2w": 14.6343087253,
+    "installs_z_score_4w": 11.4813819947,
+    "release_date": "2026-05-06T00:00:00.000",
+    "icon_url_100": "f61c5965c363e384.png",
+    "developer_name": "Agile Lion Games",
+    "developer_id": "Agile+Lion+Games",
+    "ad_supported": null,
+    "in_app_purchases": null,
+    "ad_network_names": [
+      "Google"
+    ],
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": [
+      "appmetrica.yandex.com",
+      "appsflyer.com",
+      "metrica.yandex.com"
+    ],
+    "creative_count": 8,
+    "md5_hashes": [
+      "048a6554aab214c6bc01e78be46ff253",
+      "163a19a5b205ddb17c781b4cec7ae189",
+      "2f12e1064f4c27a59e5ea1fed7eebbbb",
+      "58d7eff90a8032441f9d2838193e291e",
+      "689de1c8c7da6df42f3dfc541190613a",
+      "9403ebdb19aafd4f6e751868e9396bf7",
+      "d26c0fdf66d49a7bccb826804ae6a6bf",
+      "e280dc61dd54130bc912af12ff1718d4",
+      "f4b74a0283ce78346df27bf5a6f62a62"
+    ],
+    "md5_file_extensions": [
+      "mp4",
+      "webm"
+    ]
+  },
+  {
+    "name": "Car Driving City: StreetPro",
+    "store_id": "com.streetpro.real3d.cardriving",
+    "store": 1,
+    "category": "game_racing",
+    "installs": 1643416.0,
+    "rating": 4.613254,
+    "rating_count": 3854.0,
+    "installs_sum_1w": 425186.0,
+    "installs_sum_4w": 1346214.0,
+    "installs_z_score_2w": null,
+    "installs_z_score_4w": null,
+    "release_date": "2026-04-21T00:00:00.000",
+    "icon_url_100": "9e9d944a9fa1c16a.png",
+    "developer_name": "BROWNE CURTIS HENRY",
+    "developer_id": "6952595285728195841",
+    "ad_supported": null,
+    "in_app_purchases": null,
+    "ad_network_names": [
+      "Google"
+    ],
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": [
+      "adjust.com"
+    ],
+    "creative_count": 2,
+    "md5_hashes": [
+      "cbca9af2b5bd205cd9f7dc6738617c1f",
+      "d86bbab94dc84f433fa890e5496d92ad"
+    ],
+    "md5_file_extensions": [
+      "webm"
+    ]
+  },
+  {
+    "name": "Sword x Staff",
+    "store_id": "com.zjcs.android.us",
+    "store": 1,
+    "category": "game_role_playing",
+    "installs": 1061764.0,
+    "rating": 4.734685,
+    "rating_count": 49269.0,
+    "installs_sum_1w": 632909.0,
+    "installs_sum_4w": 1040462.0,
+    "installs_z_score_2w": 1958.3069351667,
+    "installs_z_score_4w": 1026.3306289335,
+    "release_date": "2026-05-13T00:00:00.000",
+    "icon_url_100": "ca97789a1666a565.png",
+    "developer_name": "BOLTRAY GAMES",
+    "developer_id": "5555212361646746302",
+    "ad_supported": true,
+    "in_app_purchases": true,
+    "ad_network_names": [
+      "Google",
+      "Yandex"
+    ],
+    "ad_network_domains": [
+      "google.com",
+      "yandex.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg",
+      "company-logos/yandex.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": [
+      "appsflyer.com"
+    ],
+    "creative_count": 5,
+    "md5_hashes": [
+      "0160e7bd3d435fdbf4baeb58f18d8c90",
+      "9679008a75f4e66324348ec119ab0f84",
+      "9f9242c2f61fc43c8f174c59a3220ad6",
+      "ad6dbe57e68923340c34986f5d840e7e",
+      "fcab27403c2014afbe0b80033e5d3430"
+    ],
+    "md5_file_extensions": [
+      "jpeg",
+      "webm"
+    ]
+  },
+  {
+    "name": "Police Chief",
+    "store_id": "com.slg.policewar",
+    "store": 1,
+    "category": "game_strategy",
+    "installs": 520113.0,
+    "rating": 4.7259984,
+    "rating_count": 15198.0,
+    "installs_sum_1w": 141836.0,
+    "installs_sum_4w": 374619.0,
+    "installs_z_score_2w": 21.5054822762,
+    "installs_z_score_4w": 17.2226805962,
+    "release_date": "2026-05-06T00:00:00.000",
+    "icon_url_100": "fdb4f0588bc3c8c8.png",
+    "developer_name": "VoyagerOne IE",
+    "developer_id": "VoyagerOne+IE",
+    "ad_supported": false,
+    "in_app_purchases": true,
+    "ad_network_names": [
+      "Google"
+    ],
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": [
+      "adjust.com"
+    ],
+    "creative_count": 1,
+    "md5_hashes": [
+      "1e295b5996bc2f161a71549d710b8b1a"
+    ],
+    "md5_file_extensions": [
+      "webm"
+    ]
+  },
+  {
+    "name": "Pixel War: Block Sandbox",
+    "store_id": "com.fusionmind.playgroundlatestversion",
+    "store": 1,
+    "category": "game_casual",
+    "installs": 382607.0,
+    "rating": 3.8005052,
+    "rating_count": 185.0,
+    "installs_sum_1w": 65130.0,
+    "installs_sum_4w": 243461.0,
+    "installs_z_score_2w": 1.1231334693,
+    "installs_z_score_4w": 0.8972252094,
+    "release_date": "2026-04-01T00:00:00.000",
+    "icon_url_100": "cac2394d9666a3d9.png",
+    "developer_name": "Agro Smart",
+    "developer_id": "6753364894928821126",
+    "ad_supported": null,
+    "in_app_purchases": null,
+    "ad_network_names": [
+      "Mobvista",
+      "Unity"
+    ],
+    "ad_network_domains": [
+      "mobvista.com",
+      "unity.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/mobvista.com/logo_200x200.jpeg",
+      "company-logos/unity.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": [
+      "appmetrica.yandex.com",
+      "metrica.yandex.com"
+    ],
+    "creative_count": 1,
+    "md5_hashes": [
+      "5f3968ff202a86f9c178fb1f82f6b45c"
+    ],
+    "md5_file_extensions": [
+      "mp4"
+    ]
+  },
+  {
+    "name": "Puppet Smash",
+    "store_id": "com.puppet.smash.bang.stress.clam",
+    "store": 1,
+    "category": "game_casual",
+    "installs": 182861.0,
+    "rating": 2.0454545,
+    "rating_count": 64.0,
+    "installs_sum_1w": 87213.0,
+    "installs_sum_4w": 182861.0,
+    "installs_z_score_2w": null,
+    "installs_z_score_4w": null,
+    "release_date": "2026-04-21T00:00:00.000",
+    "icon_url_100": "a7964cc83332d9c7.png",
+    "developer_name": "Binary app solution",
+    "developer_id": "Binary+app+solution",
+    "ad_supported": null,
+    "in_app_purchases": null,
+    "ad_network_names": [
+      "Google"
+    ],
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": [
+      "adjust.com"
+    ],
+    "creative_count": 2,
+    "md5_hashes": [
+      "05a38d0cb538defced9614b4aa91166d",
+      "875d8e39e806eeeb5a862244c14a87c4"
+    ],
+    "md5_file_extensions": [
+      "webm"
+    ]
+  },
+  {
+    "name": "Kitchen Ninja \u2014 Knife Thrower",
+    "store_id": "com.playgames.kitchen.ninja",
+    "store": 1,
+    "category": "game_casual",
+    "installs": 115081.0,
+    "rating": 4.819677,
+    "rating_count": 458.0,
+    "installs_sum_1w": 54945.0,
+    "installs_sum_4w": 115081.0,
+    "installs_z_score_2w": null,
+    "installs_z_score_4w": null,
+    "release_date": "2026-05-26T00:00:00.000",
+    "icon_url_100": "c0cb371978750f96.png",
+    "developer_name": "Playvalve",
+    "developer_id": "8888129759365609391",
+    "ad_supported": null,
+    "in_app_purchases": null,
+    "ad_network_names": [
+      "Google"
+    ],
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": [
+      "appsflyer.com"
+    ],
+    "creative_count": 3,
+    "md5_hashes": [
+      "4d47e20a2bdce0696c3aac63921a81a9",
+      "8dfe8c563a08ab669b585effafd21aa1",
+      "98a37f59997791039f616dca564da1e4"
+    ],
+    "md5_file_extensions": [
+      "jpeg",
+      "mp4",
+      "webm"
+    ]
+  },
+  {
+    "name": "Crime State: Block City RP",
+    "store_id": "com.novagames.crimestate",
+    "store": 1,
+    "category": "game_role_playing",
+    "installs": 88758.0,
+    "rating": 4.446316,
+    "rating_count": 667.0,
+    "installs_sum_1w": 67548.0,
+    "installs_sum_4w": 88758.0,
+    "installs_z_score_2w": null,
+    "installs_z_score_4w": null,
+    "release_date": "2026-04-29T00:00:00.000",
+    "icon_url_100": "bdf0a45ba9a15193.png",
+    "developer_name": "NOVA GAMES LLP",
+    "developer_id": "NOVA+GAMES+LLP",
+    "ad_supported": null,
+    "in_app_purchases": null,
+    "ad_network_names": [
+      "Google"
+    ],
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": [
+      "appmetrica.yandex.com",
+      "appsflyer.com",
+      "metrica.yandex.com"
+    ],
+    "creative_count": 1,
+    "md5_hashes": [
+      "c9706255424fcf5924035b9017b464eb"
+    ],
+    "md5_file_extensions": [
+      "webm"
+    ]
+  },
+  {
+    "name": "Sound Booster: Audio Equalizer",
+    "store_id": "com.booster.sound.volume.equalizer.music",
+    "store": 1,
+    "category": "tools",
+    "installs": 42006.0,
+    "rating": 4.1642857,
+    "rating_count": 156.0,
+    "installs_sum_1w": 8346.0,
+    "installs_sum_4w": 30937.0,
+    "installs_z_score_2w": 1.4883527421,
+    "installs_z_score_4w": 1.3708289118,
+    "release_date": "2026-04-10T00:00:00.000",
+    "icon_url_100": "c0272fd831cdd336.png",
+    "developer_name": "SSon Studio",
+    "developer_id": "6453793963667514027",
+    "ad_supported": true,
+    "in_app_purchases": false,
+    "ad_network_names": [
+      "Google"
+    ],
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": null,
+    "creative_count": 1,
+    "md5_hashes": [
+      "0585155727065c6580614fa92d08c623"
+    ],
+    "md5_file_extensions": [
+      "jpeg"
+    ]
+  },
+  {
+    "name": "Explora Browser, Web Browser",
+    "store_id": "browser.web.fast.light.explore.mini",
+    "store": 1,
+    "category": "tools",
+    "installs": 37705.0,
+    "rating": null,
+    "rating_count": 26.0,
+    "installs_sum_1w": 21011.0,
+    "installs_sum_4w": 37705.0,
+    "installs_z_score_2w": null,
+    "installs_z_score_4w": null,
+    "release_date": "2026-04-29T00:00:00.000",
+    "icon_url_100": "eab5f06097c28d5a.jpeg",
+    "developer_name": "Fillog Studio",
+    "developer_id": "8100907766243743423",
+    "ad_supported": null,
+    "in_app_purchases": null,
+    "ad_network_names": [
+      "Unity"
+    ],
+    "ad_network_domains": [
+      "unity.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/unity.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": null,
+    "creative_count": 5,
+    "md5_hashes": [
+      "3f568d47b3d9e11854cb85e4dcd14c98",
+      "5305c6b725fcde0a7d91b35d553d411a",
+      "b31ba222fe7a6ff18f46d361f7178ee2",
+      "bd6661e88bfcf5b3dcb376b5e13b1fb4",
+      "ec46d2229d09163393d310b6b7e4f415"
+    ],
+    "md5_file_extensions": [
+      "mp4"
+    ]
+  },
+  {
+    "name": "ThemeHub - Themes & Widgets",
+    "store_id": "com.widget.hub.wallpaper.themes",
+    "store": 1,
+    "category": "personalization",
+    "installs": 34868.0,
+    "rating": null,
+    "rating_count": 51.0,
+    "installs_sum_1w": 20400.0,
+    "installs_sum_4w": 34817.0,
+    "installs_z_score_2w": null,
+    "installs_z_score_4w": null,
+    "release_date": "2026-04-20T00:00:00.000",
+    "icon_url_100": null,
+    "developer_name": "\u79d1\u6280\u5f15\u9886\u9cb2\u9e4f\u98de\u8c61",
+    "developer_id": "%E7%A7%91%E6%8A%80%E5%BC%95%E9%A2%86%E9%B2%B2%E9%B9%8F%E9%A3%9E%E8%B1%A1",
+    "ad_supported": null,
+    "in_app_purchases": null,
+    "ad_network_names": [
+      "Google"
+    ],
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": null,
+    "creative_count": 1,
+    "md5_hashes": [
+      "56ace3fa3b9d42e32cdc49a39c043b49"
+    ],
+    "md5_file_extensions": [
+      "jpeg"
+    ]
+  },
+  {
+    "name": "\u0414\u0435\u0434\u0418\u0418: \u0418\u0418 \u0447\u0430\u0442 \u043d\u0430 \u0440\u0443\u0441\u0441\u043a\u043e\u043c \u0441 GPT",
+    "store_id": "ru.altspace.dedgpt",
+    "store": 1,
+    "category": "education",
+    "installs": 19836.0,
+    "rating": null,
+    "rating_count": 0.0,
+    "installs_sum_1w": 12863.0,
+    "installs_sum_4w": 19836.0,
+    "installs_z_score_2w": null,
+    "installs_z_score_4w": null,
+    "release_date": "2026-04-29T00:00:00.000",
+    "icon_url_100": null,
+    "developer_name": "DedDevelopment",
+    "developer_id": "DedDevelopment",
+    "ad_supported": null,
+    "in_app_purchases": null,
+    "ad_network_names": [
+      "Yandex"
+    ],
+    "ad_network_domains": [
+      "yandex.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/yandex.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": null,
+    "creative_count": 4,
+    "md5_hashes": [
+      "2dc354c5b93ec68193d33c58acad420b",
+      "3f72e6d543d4d2024a2254045a9f2ab0",
+      "6a620137c849217b36944757de47b182",
+      "f8d8c9b0643998161cdc082af81926b7"
+    ],
+    "md5_file_extensions": [
+      "jpeg"
+    ]
+  },
+  {
+    "name": "ASMR Color: Cute Cartoon Book",
+    "store_id": "com.megaking.coloring.asmr.fun.game",
+    "store": 1,
+    "category": "game_casual",
+    "installs": 6740.0,
+    "rating": null,
+    "rating_count": 0.0,
+    "installs_sum_1w": 2075.0,
+    "installs_sum_4w": 6740.0,
+    "installs_z_score_2w": null,
+    "installs_z_score_4w": null,
+    "release_date": "2026-04-05T00:00:00.000",
+    "icon_url_100": null,
+    "developer_name": "MegaKing Game Studio",
+    "developer_id": "8530445099729457889",
+    "ad_supported": null,
+    "in_app_purchases": null,
+    "ad_network_names": [
+      "Google"
+    ],
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": null,
+    "creative_count": 1,
+    "md5_hashes": [
+      "3df75c48ec075232f49a947f370c354e"
+    ],
+    "md5_file_extensions": [
+      "webm"
+    ]
+  },
+  {
+    "name": "Daily crossword",
+    "store_id": "com.alexjkl.dailycrossword",
+    "store": 1,
+    "category": "game_word",
+    "installs": 120.0,
+    "rating": null,
+    "rating_count": 0.0,
+    "installs_sum_1w": 44.0,
+    "installs_sum_4w": 120.0,
+    "installs_z_score_2w": null,
+    "installs_z_score_4w": null,
+    "release_date": "2026-04-23T00:00:00.000",
+    "icon_url_100": "fa9de1c69472c238.png",
+    "developer_name": "AlexJKL",
+    "developer_id": "8814219101029162881",
+    "ad_supported": null,
+    "in_app_purchases": null,
+    "ad_network_names": [
+      "Google"
+    ],
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": null,
+    "creative_count": 1,
+    "md5_hashes": [
+      "6fcde7c6f8ce31be4865fcbb5102e1d8"
+    ],
+    "md5_file_extensions": [
+      "webm"
+    ]
+  },
+  {
+    "name": "Volume Booster-Sound Amplifier",
+    "store_id": "com.volume.booster.max.sound.extra",
+    "store": 1,
+    "category": "music_and_audio",
+    "installs": 80.0,
+    "rating": null,
+    "rating_count": 0.0,
+    "installs_sum_1w": 80.0,
+    "installs_sum_4w": 80.0,
+    "installs_z_score_2w": null,
+    "installs_z_score_4w": null,
+    "release_date": "2026-04-29T00:00:00.000",
+    "icon_url_100": "e0e00f1b7da9341f.png",
+    "developer_name": "PLHGlobal",
+    "developer_id": "PLHGlobal",
+    "ad_supported": null,
+    "in_app_purchases": null,
+    "ad_network_names": [
+      "Google"
+    ],
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": null,
+    "creative_count": 2,
+    "md5_hashes": [
+      "6507e552a63107c8467c2d209e9c6299",
+      "b801895ced4d49b5a52d61e254938bd4"
+    ],
+    "md5_file_extensions": [
+      "jpeg"
+    ]
+  },
+  {
+    "name": "Alarm Clock",
+    "store_id": "com.alarm.clock.stopwatchalarmclock.wakeupalarm",
+    "store": 1,
+    "category": "tools",
+    "installs": null,
+    "rating": null,
+    "rating_count": null,
+    "installs_sum_1w": null,
+    "installs_sum_4w": null,
+    "installs_z_score_2w": null,
+    "installs_z_score_4w": null,
+    "release_date": "2026-04-17T00:00:00.000",
+    "icon_url_100": null,
+    "developer_name": "Access All Emails",
+    "developer_id": "Access+All+Emails",
+    "ad_supported": null,
+    "in_app_purchases": null,
+    "ad_network_names": [
+      "Google"
+    ],
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": null,
+    "creative_count": 1,
+    "md5_hashes": [
+      "701d02fd0e2de5fcf54b702d7a505e09"
+    ],
+    "md5_file_extensions": [
+      "webm"
+    ]
+  },
+  {
+    "name": "All MCPE Content for Minecraft",
+    "store_id": "com.mine3.modsforminecraft",
+    "store": 1,
+    "category": "entertainment",
+    "installs": null,
+    "rating": null,
+    "rating_count": null,
+    "installs_sum_1w": null,
+    "installs_sum_4w": null,
+    "installs_z_score_2w": null,
+    "installs_z_score_4w": null,
+    "release_date": "2026-04-11T00:00:00.000",
+    "icon_url_100": null,
+    "developer_name": "ALFA CORPORATION - FZCO",
+    "developer_id": "ALFA+CORPORATION+-+FZCO",
+    "ad_supported": null,
+    "in_app_purchases": null,
+    "ad_network_names": [
+      "Google"
+    ],
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": null,
+    "creative_count": 1,
+    "md5_hashes": [
+      "4ec417bfca2563c3700c4ec550706f00"
+    ],
+    "md5_file_extensions": [
+      "webm"
+    ]
+  },
+  {
+    "name": "ColorVerse - Infinite Canvas",
+    "store_id": "com.nws.colorverse.canvas",
+    "store": 1,
+    "category": "art_and_design",
+    "installs": null,
+    "rating": null,
+    "rating_count": null,
+    "installs_sum_1w": null,
+    "installs_sum_4w": null,
+    "installs_z_score_2w": null,
+    "installs_z_score_4w": null,
+    "release_date": "2026-05-04T00:00:00.000",
+    "icon_url_100": null,
+    "developer_name": "NEOWAVE SYSTEMS LLC",
+    "developer_id": "NEOWAVE+SYSTEMS+LLC",
+    "ad_supported": null,
+    "in_app_purchases": null,
+    "ad_network_names": [
+      "Google"
+    ],
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": null,
+    "creative_count": 1,
+    "md5_hashes": [
+      "112f5df5244c639ca2cdfeee404ab074"
+    ],
+    "md5_file_extensions": [
+      "webm"
+    ]
+  },
+  {
+    "name": "Mafia Crime City: Gangster",
+    "store_id": "com.htk.mafiacity.crimegangster",
+    "store": 1,
+    "category": "game_action",
+    "installs": null,
+    "rating": null,
+    "rating_count": null,
+    "installs_sum_1w": null,
+    "installs_sum_4w": null,
+    "installs_z_score_2w": null,
+    "installs_z_score_4w": null,
+    "release_date": "2026-05-13T00:00:00.000",
+    "icon_url_100": "f3da0b13cb8d9468.png",
+    "developer_name": "HAI TRUNG KIM BUSINESS TRADING COMPANY LIMITED",
+    "developer_id": "HAI+TRUNG+KIM+BUSINESS+TRADING+COMPANY+LIMITED",
+    "ad_supported": null,
+    "in_app_purchases": null,
+    "ad_network_names": [
+      "Google"
+    ],
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": null,
+    "creative_count": 1,
+    "md5_hashes": [
+      "7caeca9d75a5155a03b849b750528693"
+    ],
+    "md5_file_extensions": [
+      "webm"
+    ]
+  },
+  {
+    "name": "Numbers Solitaire",
+    "store_id": "com.umbers.solitaire",
+    "store": 1,
+    "category": "game_puzzle",
+    "installs": null,
+    "rating": null,
+    "rating_count": null,
+    "installs_sum_1w": null,
+    "installs_sum_4w": null,
+    "installs_z_score_2w": null,
+    "installs_z_score_4w": null,
+    "release_date": "2026-05-07T00:00:00.000",
+    "icon_url_100": "c992166969b3e1ce.png",
+    "developer_name": "MCZ Apps developer",
+    "developer_id": "MCZ+Apps+developer",
+    "ad_supported": null,
+    "in_app_purchases": null,
+    "ad_network_names": [
+      "Google",
+      "Unity"
+    ],
+    "ad_network_domains": [
+      "google.com",
+      "unity.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg",
+      "company-logos/unity.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": null,
+    "creative_count": 1,
+    "md5_hashes": [
+      "047a724ca2f20c490449bea2ae9f7956"
+    ],
+    "md5_file_extensions": [
+      "mp4"
+    ]
+  },
+  {
+    "name": "Sparkle Fluff",
+    "store_id": "com.auragames.chaotic.bunny",
+    "store": 1,
+    "category": "game_role_playing",
+    "installs": null,
+    "rating": null,
+    "rating_count": null,
+    "installs_sum_1w": null,
+    "installs_sum_4w": null,
+    "installs_z_score_2w": null,
+    "installs_z_score_4w": null,
+    "release_date": "2026-05-15T00:00:00.000",
+    "icon_url_100": "fed42197342cc6c3.png",
+    "developer_name": "AuraEffects",
+    "developer_id": "6040448838084654871",
+    "ad_supported": null,
+    "in_app_purchases": null,
+    "ad_network_names": [
+      "Google"
+    ],
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": null,
+    "creative_count": 1,
+    "md5_hashes": [
+      "a9fa42181e0354f7944a39dd1c0b88a5"
+    ],
+    "md5_file_extensions": [
+      "webm"
+    ]
+  }
+]
