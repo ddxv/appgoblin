@@ -1775,16 +1775,13 @@ class CompaniesController(Controller):
                 apps_lost_count=int(row.apps_lost_count),
                 sdk_count=int(row.sdk_count),
                 mediation_adapter_count=int(row.mediation_adapter_count),
-                adstxt_publisher_count=int(row.adstxt_publisher_count),
-                adstxt_ad_domain_count=int(row.adstxt_ad_domain_count),
+                adstxt_direct_app_count=int(row.adstxt_direct_app_count),
                 creatives_app_count_direct=int(row.creatives_app_count_direct),
                 has_trends_direct=int(row.has_trends_direct),
                 apps_added_count_direct=int(row.apps_added_count_direct),
                 apps_lost_count_direct=int(row.apps_lost_count_direct),
                 sdk_count_direct=int(row.sdk_count_direct),
                 mediation_adapter_count_direct=int(row.mediation_adapter_count_direct),
-                adstxt_publisher_count_direct=int(row.adstxt_publisher_count_direct),
-                adstxt_ad_domain_count_direct=int(row.adstxt_ad_domain_count_direct),
                 is_parent_domain=bool(row.is_parent_domain),
             )
         duration = round((time.perf_counter() * 1000 - start), 2)

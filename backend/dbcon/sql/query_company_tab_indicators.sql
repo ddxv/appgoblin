@@ -17,16 +17,13 @@ SELECT
     apps_lost_count,
     sdk_count,
     mediation_adapter_count,
-    adstxt_publisher_count,
-    adstxt_ad_domain_count,
+    adstxt_direct_app_count,
     creatives_app_count_direct,
     has_trends_direct,
     apps_added_count_direct,
     apps_lost_count_direct,
     sdk_count_direct,
     mediation_adapter_count_direct,
-    adstxt_publisher_count_direct,
-    adstxt_ad_domain_count_direct,
     is_parent_domain
 FROM frontend.companies_overview
 WHERE company_domain = :company_domain;

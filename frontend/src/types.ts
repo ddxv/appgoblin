@@ -502,16 +502,13 @@ export interface CompanyTabIndicators {
 	apps_lost_count: number;
 	sdk_count: number;
 	mediation_adapter_count: number;
-	adstxt_publisher_count: number;
-	adstxt_ad_domain_count: number;
+	adstxt_direct_app_count: number;
 	creatives_app_count_direct: number;
 	has_trends_direct: number;
 	apps_added_count_direct: number;
 	apps_lost_count_direct: number;
 	sdk_count_direct: number;
 	mediation_adapter_count_direct: number;
-	adstxt_publisher_count_direct: number;
-	adstxt_ad_domain_count_direct: number;
 	is_parent_domain: boolean;
 }
 

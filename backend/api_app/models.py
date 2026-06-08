@@ -285,8 +285,7 @@ class CompanyTabIndicators:
     apps_lost_count: int = 0
     sdk_count: int = 0
     mediation_adapter_count: int = 0
-    adstxt_publisher_count: int = 0
-    adstxt_ad_domain_count: int = 0
+    adstxt_direct_app_count: int = 0
 
     # Direct-only indicators
     creatives_app_count_direct: int = 0
@@ -295,8 +294,6 @@ class CompanyTabIndicators:
     apps_lost_count_direct: int = 0
     sdk_count_direct: int = 0
     mediation_adapter_count_direct: int = 0
-    adstxt_publisher_count_direct: int = 0
-    adstxt_ad_domain_count_direct: int = 0
 
     is_parent_domain: bool = False
 

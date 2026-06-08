@@ -14,7 +14,8 @@
 		Sparkles,
 		Zap,
 		Calendar,
-		Star
+		Star,
+		FileText
 	} from 'lucide-svelte';
 
 	let { data } = $props();
@@ -271,7 +272,7 @@
 <div class="flex flex-col gap-8 px-2 md:px-20 lg:px-48">
 	<!-- Hero Header Section -->
 	<section class="text-center mt-8 mb-8 space-y-4">
-		<h1 class="text-xl md:text-3xl font-bold mb-4">App Marketing Tools and Mobile Intelligence</h1>
+		<h1 class="text-2xl md:text-4xl font-bold mb-4">App Marketing Tools and Mobile Intelligence</h1>
 		<div class="flex flex-wrap justify-center gap-4 text-sm mb-6">
 			<span class="px-3 py-1 bg-secondary-100-900/20 rounded-full">🚀 Free ASO Tools</span>
 			<span class="px-3 py-1 bg-warning-100-900/20 rounded-full"
@@ -330,7 +331,7 @@
 				<p class="mb-3 text-xs font-bold uppercase tracking-[0.32em] text-secondary-700-300">
 					Three ways to use AppGoblin
 				</p>
-				<h2 class="mb-3 text-3xl font-bold leading-tight md:text-4xl">
+				<h2 class="mb-3 text-2xl font-bold leading-tight md:text-3xl">
 					Research competitors, ad creatives, and map the mobile adtech ecosystem
 				</h2>
 				<p class="text-base md:text-lg">
@@ -447,6 +448,77 @@
 					</a>
 				</div>
 			</article>
+		</div>
+	</section>
+
+	<!-- Latest Insights & Reports Section -->
+	<section class={mainSectionClass}>
+		<div class="flex items-center mb-6">
+			<div
+				class="bg-gradient-to-br from-purple-900-100 to-purple-600 p-1 rounded-2xl shadow-lg mr-4"
+			>
+				<FileText class="h-8 w-8 text-white" />
+			</div>
+			<div>
+				<h2 class={sectionTitleClass}>Latest Insights &amp; Free Reports</h2>
+				<p class={sectionSubtitleClass}>Blog posts, market reports, and product updates</p>
+			</div>
+		</div>
+
+		<p class={sectionDescriptionClass}>
+			Stay up to date with the latest mobile app marketing insights, product updates, and free
+			research reports from the AppGoblin team.
+		</p>
+
+		{#if data.latestContent && data.latestContent.length > 0}
+			<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+				{#each data.latestContent as entry}
+					<div class="rounded-md border border-surface-100-900 p-4 bg-surface-100-900/50">
+						<div class="flex flex-wrap items-center gap-2 mb-2">
+							<span
+								class="text-[11px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full {entry.kind ===
+								'report'
+									? 'bg-purple-900-100/10 text-purple-800-200'
+									: 'bg-primary-900-100/10 text-primary-800-200'}"
+							>
+								{entry.kind === 'report' ? 'Report' : 'Blog'}
+							</span>
+							<span class="text-xs text-surface-500">
+								<time datetime={entry.pubDate.toISOString()}>
+									{entry.pubDate.toLocaleDateString('en-us', {
+										year: 'numeric',
+										month: 'short',
+										day: 'numeric'
+									})}
+								</time>
+							</span>
+						</div>
+						<h4 class="font-bold mb-2">
+							<a href={entry.relativeURL} class="hover:text-primary-600-400">
+								{entry.title}
+							</a>
+						</h4>
+						<p class="text-sm text-surface-500 mb-3 line-clamp-2">
+							{entry.description}
+						</p>
+						<div class="flex justify-between items-end gap-2">
+							<div></div>
+							<a href={entry.relativeURL} class={featureCtaClass}>
+								{entry.kind === 'report' ? 'Open Report →' : 'Read Post →'}
+							</a>
+						</div>
+					</div>
+				{/each}
+			</div>
+		{/if}
+
+		<div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
+			<div class="flex gap-4">
+				<span class={featureBulletClass}>Product updates and guides</span>
+				<span class={featureBulletClass}>Free research reports</span>
+				<span class={featureBulletClass}>ASO and ad intelligence</span>
+			</div>
+			<a href="/reports" class="btn preset-filled-primary-200-800"> Browse All Reports → </a>
 		</div>
 	</section>
 

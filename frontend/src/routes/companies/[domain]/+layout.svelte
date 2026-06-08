@@ -81,11 +81,7 @@
 			case 'mediation':
 				return tabInd.mediation_adapter_count > 0 && tabInd.mediation_adapter_count_direct === 0;
 			case 'app-adstxt':
-				return (
-					(tabInd.adstxt_publisher_count > 0 || tabInd.adstxt_ad_domain_count > 0) &&
-					tabInd.adstxt_publisher_count_direct === 0 &&
-					tabInd.adstxt_ad_domain_count_direct === 0
-				);
+				return false;
 			default:
 				return false;
 		}
@@ -251,65 +247,79 @@
 		crumbs.push({ title: companyDisplayName });
 		return crumbs;
 	});
-	let hasAdstxt = $derived(
-		Boolean(tabInd?.adstxt_publisher_count || tabInd?.adstxt_ad_domain_count)
-	);
+	let hasAdstxt = $derived(Boolean(tabInd?.adstxt_direct_app_count));
 	let hasAppChanges = $derived(Boolean(tabInd?.apps_added_count || tabInd?.apps_lost_count));
+
+	function formatCount(n: number | undefined | null): string {
+		if (n == null || n === 0) return '';
+		if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
+		if (n >= 1_000) return `${(n / 1_000).toFixed(1)}k`;
+		return String(n);
+	}
 
 	let sectionLinks = $derived([
 		{
 			slug: 'overview',
 			label: `${companyDisplayName} Apps Overview`,
 			href: `/companies/${companyDomain}`,
-			visible: true
+			visible: true,
+			count: null as number | null
 		},
 		{
 			slug: 'creatives',
-			label: `${companyDisplayName} Creatives`,
+			label: 'Creatives',
 			href: `/companies/${companyDomain}/creatives`,
-			visible: showCreativesTab
+			visible: showCreativesTab,
+			count: tabInd?.creatives_app_count ?? null
 		},
 		{
 			slug: 'trends',
-			label: `${companyDisplayName} Trends`,
+			label: 'Trends',
 			href: `/companies/${companyDomain}/trends`,
-			visible: showTrendsTab
+			visible: showTrendsTab,
+			count: null
 		},
 		{
 			slug: 'apps-added',
-			label: `${companyDisplayName} Apps Added`,
+			label: 'Apps Added',
 			href: `/companies/${companyDomain}/apps-added`,
-			visible: hasAppChanges
+			visible: hasAppChanges,
+			count: tabInd?.apps_added_count ?? null
 		},
 		{
 			slug: 'apps-lost',
-			label: `${companyDisplayName} Apps Lost`,
+			label: 'Apps Lost',
 			href: `/companies/${companyDomain}/apps-lost`,
-			visible: hasAppChanges
+			visible: hasAppChanges,
+			count: tabInd?.apps_lost_count ?? null
 		},
 		{
 			slug: 'sdks',
-			label: `${companyDisplayName} SDKs`,
+			label: 'SDKs',
 			href: `/companies/${companyDomain}/sdks`,
-			visible: Boolean(tabInd?.sdk_count)
+			visible: Boolean(tabInd?.sdk_count),
+			count: null
 		},
 		{
 			slug: 'mediation',
-			label: `${companyDisplayName} Mediation Adapters`,
+			label: 'Mediation Adapters',
 			href: `/companies/${companyDomain}/mediation`,
-			visible: showMediationTab
+			visible: showMediationTab,
+			count: tabInd?.mediation_adapter_count ?? null
 		},
 		{
 			slug: 'app-adstxt',
-			label: `${companyDisplayName} App-ads.txt`,
+			label: 'App-ads.txt',
 			href: `/companies/${companyDomain}/app-adstxt`,
-			visible: hasAdstxt
+			visible: hasAdstxt,
+			count: tabInd?.adstxt_direct_app_count ?? null
 		},
 		{
 			slug: 'data-exports',
-			label: `${companyDisplayName} Data Exports`,
+			label: 'Data Exports',
 			href: `/companies/${companyDomain}/data-exports`,
-			visible: hasAdstxt || Boolean(tabInd?.sdk_count)
+			visible: hasAdstxt || Boolean(tabInd?.sdk_count),
+			count: null as number | null
 		}
 	]);
 </script>
@@ -360,7 +370,16 @@
 						class={`rounded border px-3 py-2.5 text-sm font-medium transition ${sectionTabClass(link.slug)}`}
 						aria-current={isSectionTabActive(link.slug) ? 'page' : undefined}
 					>
-						{link.label}
+						<span class="flex items-center justify-between gap-2">
+							<span>{link.label}</span>
+							{#if link.count}
+								<span
+									class="inline-flex items-center justify-center rounded-full bg-secondary-100-800 px-2 py-0.5 text-xs font-semibold tabular-nums text-secondary-800-200"
+								>
+									{formatCount(link.count)}
+								</span>
+							{/if}
+						</span>
 					</a>
 				{/each}
 			</nav>
