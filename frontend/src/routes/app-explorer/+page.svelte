@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Crown from 'lucide-svelte/icons/crown';
 	import X from 'lucide-svelte/icons/x';
 	import Filter from 'lucide-svelte/icons/filter';
 	import Search from 'lucide-svelte/icons/search';
@@ -672,7 +673,10 @@
 					{#if !hasB2BSdkAccess}
 						<div class="p-3 rounded-lg border border-warning-500 bg-warning-50-950/20">
 							<p class="text-xs text-warning-900-100">
-								Company include/exclude filters are available on the B2B SDK tier.
+								Company include/exclude filters are available on the <Crown
+									class="inline w-3 h-3 mr-0.5 -mt-0.5 text-primary-900-100"
+									aria-hidden="true"
+								/>B2B SDK tier.
 								<a href="/pricing" class="underline hover:text-primary-600-400">Upgrade</a>
 								to unlock.
 							</p>

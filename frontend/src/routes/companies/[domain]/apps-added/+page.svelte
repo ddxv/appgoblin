@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Crown from 'lucide-svelte/icons/crown';
 	import CompanyAppChangesTable from '$lib/CompanyAppChangesTable.svelte';
 	import type { CompanyOverviewApps } from '../../../../types';
 
@@ -43,7 +44,8 @@
 				<rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
 				<path d="M7 11V7a5 5 0 0 1 10 0v4" />
 			</svg>
-			Preview only. Recently changed app lists are available on the B2B SDK Intelligence tier.
+			<Crown class="inline w-4 h-4 mr-0.5 -mt-0.5 text-primary-900-100" aria-hidden="true" />B2B SDK
+			Intelligence tier.
 			<a href="/pricing" class="underline hover:text-primary-600-400">Upgrade</a>
 			to unlock.
 		</p>

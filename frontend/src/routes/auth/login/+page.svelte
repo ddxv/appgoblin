@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Crown from 'lucide-svelte/icons/crown';
 	import { enhance } from '$app/forms';
 
 	import type { ActionData, PageData } from './$types';
@@ -49,7 +50,10 @@
 						<span class="font-semibold">Need bulk ad-tech data?</span>
 						Our paid
 						<a href="/pricing" class="underline font-medium hover:text-primary-500"
-							>B2B App-Ads.txt subscription</a
+							><Crown
+								class="inline w-4 h-4 mr-0.5 -mt-0.5 text-primary-900-100"
+								aria-hidden="true"
+							/>B2B App-Ads.txt subscription</a
 						> provides full, daily updated datasets for DSPs and SSPs.
 					</p>
 				</div>

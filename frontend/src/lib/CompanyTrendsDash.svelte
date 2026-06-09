@@ -1,10 +1,9 @@
 <script lang="ts">
-	import { LineChart } from 'layerchart';
+	import { LineChart, BarChart } from 'layerchart';
 	import type { CompanyTrendPoint, CompanyTrendSummary, CompanyTrends } from '../types';
 
 	interface Props {
 		trends: CompanyTrends | null | undefined;
-		companyName: string;
 	}
 
 	type SourceMeta = {
@@ -82,7 +81,7 @@
 		secondary: palette[1]
 	};
 
-	let { trends, companyName }: Props = $props();
+	let { trends }: Props = $props();
 
 	const titleCase = (value: string): string =>
 		value.replace(/_/g, ' ').replace(/\b\w/g, (letter) => letter.toUpperCase());
@@ -184,6 +183,10 @@
 			});
 	});
 
+	const availableTabs = ['sdk', 'api_call', 'app_ads_direct'] as const;
+	type TabSource = (typeof availableTabs)[number];
+	let activeTab = $state<TabSource>('sdk');
+
 	const sourceSections = $derived.by((): SourceSection[] => {
 		const sections = new Map<string, SourceSection>();
 		for (const card of sourceCards) {
@@ -209,31 +212,30 @@
 			}))
 			.sort((a, b) => (sourceOrder[a.tagSource] ?? 99) - (sourceOrder[b.tagSource] ?? 99));
 	});
+
+	const filteredSections = $derived(sourceSections.filter((s) => s.tagSource === activeTab));
 </script>
 
 {#if sourceSections.length > 0}
 	<div class="p-3 md:p-5">
-		<div class="mb-5 flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
-			<div>
-				<p class="text-xs font-semibold uppercase tracking-[0.22em] text-surface-500">
-					Quarterly Trends
-				</p>
-				<h3 class="text-xl font-semibold">{companyName} platform momentum</h3>
-				<p class="text-sm text-surface-500">
-					Latest quarter: {trends?.latest_period}. iOS and Android market share are split into
-					separate source histories so the underlying scan pools stay comparable.
-				</p>
-			</div>
-			<div
-				class="rounded-full border border-surface-200-800 px-3 py-1 text-xs font-medium text-surface-600"
-			>
-				{sourceCards.length} tracked source{sourceCards.length === 1 ? '' : 's'}
-			</div>
+		<!-- Tab selector -->
+		<div class="mb-6 flex gap-1 rounded-lg border border-surface-200-800 bg-surface-50-950/30 p-1">
+			{#each availableTabs as tab}
+				<button
+					class="flex-1 rounded-md px-3 py-2 text-center text-sm font-medium transition-all {activeTab ===
+					tab
+						? 'bg-surface-50-950 shadow-sm text-surface-900-50'
+						: 'text-surface-500 hover:text-surface-700-300'}"
+					onclick={() => (activeTab = tab)}
+				>
+					{sourceLabels[tab] ?? titleCase(tab)}
+				</button>
+			{/each}
 		</div>
 
 		<div class="space-y-6">
-			{#each sourceSections as section}
-				<section class="rounded-xl border border-surface-200-800 bg-surface-50-950/30 p-4 md:p-5">
+			{#each filteredSections as section}
+				<section class="rounded-xl bg-surface-50-950/30 p-4 md:p-5">
 					<div class="mb-4">
 						<p class="text-xs font-semibold uppercase tracking-[0.2em] text-surface-500">
 							{section.label}
@@ -245,7 +247,7 @@
 
 					<div class="grid grid-cols-1 gap-4 2xl:grid-cols-2">
 						{#each section.cards as card}
-							<section class="rounded-lg border border-surface-200-800 bg-surface-50-950/40 p-4">
+							<section class="rounded-lg bg-surface-50-950/40 p-4">
 								<div class="mb-4 flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
 									<div>
 										<p
@@ -269,7 +271,7 @@
 								</div>
 
 								<div class="grid grid-cols-1 gap-4 xl:grid-cols-2">
-									<div class="rounded-lg border border-surface-200-800 p-3">
+									<div class="rounded-lg p-3">
 										<h5 class="mb-2 text-sm font-semibold">Raw Market Share by Quarter</h5>
 										<div class="h-[220px]">
 											{#if card.history.length > 0}
@@ -297,11 +299,11 @@
 										</div>
 									</div>
 
-									<div class="rounded-lg border border-surface-200-800 p-3">
+									<div class="rounded-lg p-3">
 										<h5 class="mb-2 text-sm font-semibold">Quarter-over-Quarter Share % Change</h5>
 										<div class="h-[220px]">
 											{#if card.pastYear.some((point) => typeof point.pct_market_share_change_pct === 'number')}
-												<LineChart
+												<BarChart
 													data={card.pastYear}
 													x="period_index"
 													series={[
@@ -328,7 +330,7 @@
 									</div>
 								</div>
 
-								<div class="rounded-lg border border-surface-200-800 p-3">
+								<div class="rounded-lg p-3">
 									<div class="mb-3 flex flex-col gap-1 md:flex-row md:items-end md:justify-between">
 										<div>
 											<h5 class="text-sm font-semibold">Quarterly Raw Data</h5>

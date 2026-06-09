@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { Check, X } from 'lucide-svelte';
+	import { Check, Crown, X } from 'lucide-svelte';
 
 	/** @type {import('./$types').PageData} */
 	export let data;
@@ -24,14 +24,16 @@
 			name: 'B2B SDK Intelligence',
 			price: '$299',
 			period: '/mo',
-			description: 'Sales teams, ad networks, agencies'
+			description: 'Sales teams, ad networks, agencies',
+			b2b: true
 		},
 		{
 			key: 'b2b_appads',
 			name: 'App-Ads.txt',
 			price: '$299',
 			period: '/mo',
-			description: 'Ad networks, DSPs, SSPs'
+			description: 'Ad networks, DSPs, SSPs',
+			b2b: true
 		},
 		{
 			key: 'b2b_premium',
@@ -39,6 +41,7 @@
 			price: '$499',
 			period: '/mo',
 			description: 'Larger companies, security teams, ad networks, hedge funds',
+			b2b: true,
 			featured: true
 		}
 	];
@@ -257,7 +260,15 @@
 							? 'bg-primary-500/5'
 							: ''}"
 					>
-						<p class="text-xs uppercase tracking-wide opacity-60">{plan.name}</p>
+						<p class="text-xs uppercase tracking-wide opacity-60">
+							{#if plan.b2b}
+								<Crown
+									class="inline w-3 h-3 mr-0.5 -mt-0.5 text-primary-900-100"
+									aria-hidden="true"
+								/>
+							{/if}
+							{plan.name}
+						</p>
 						<p class="text-base font-semibold leading-tight mt-1">
 							{plan.price}<span class="text-xs opacity-60 ml-1">{plan.period || ''}</span>
 						</p>

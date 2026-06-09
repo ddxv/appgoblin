@@ -8,6 +8,7 @@
 	import FollowToggleButton from '$lib/components/follows/FollowToggleButton.svelte';
 	import MainContent from '$lib/MainContent.svelte';
 	import CompanyTypesTabs from '$lib/utils/CompanyTypesTabs.svelte';
+	import Crown from 'lucide-svelte/icons/crown';
 
 	let { children, data }: { children: any; data: CompanyLayoutDetails } = $props();
 	const domain = page.params.domain ?? '';
@@ -284,6 +285,7 @@
 			label: 'Apps Added',
 			href: `/companies/${companyDomain}/apps-added`,
 			visible: hasAppChanges,
+			b2b: true,
 			count: tabInd?.apps_added_count ?? null
 		},
 		{
@@ -291,6 +293,7 @@
 			label: 'Apps Lost',
 			href: `/companies/${companyDomain}/apps-lost`,
 			visible: hasAppChanges,
+			b2b: true,
 			count: tabInd?.apps_lost_count ?? null
 		},
 		{
@@ -319,6 +322,7 @@
 			label: 'Data Exports',
 			href: `/companies/${companyDomain}/data-exports`,
 			visible: hasAdstxt || Boolean(tabInd?.sdk_count),
+			b2b: true,
 			count: null as number | null
 		}
 	]);
@@ -371,7 +375,15 @@
 						aria-current={isSectionTabActive(link.slug) ? 'page' : undefined}
 					>
 						<span class="flex items-center justify-between gap-2">
-							<span>{link.label}</span>
+							<span>
+								{#if link.b2b}
+									<Crown
+										class="inline w-3 h-3 mr-0.5 -mt-0.5 text-primary-900-100"
+										aria-hidden="true"
+									/>
+								{/if}
+								{link.label}
+							</span>
 							{#if link.count}
 								<span
 									class="inline-flex items-center justify-center rounded-full bg-secondary-100-800 px-2 py-0.5 text-xs font-semibold tabular-nums text-secondary-800-200"

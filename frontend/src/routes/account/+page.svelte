@@ -2,6 +2,7 @@
 	import { enhance } from '$app/forms';
 	import type { PageData } from './$types';
 	import CreditCard from 'lucide-svelte/icons/credit-card';
+	import Crown from 'lucide-svelte/icons/crown';
 	import LogOut from 'lucide-svelte/icons/log-out';
 	import ShieldCheck from 'lucide-svelte/icons/shield-check';
 	import { getPlanSummary } from '$lib/account/subscription';
@@ -52,7 +53,15 @@
 						<h2 class="text-sm font-semibold uppercase tracking-wide">Subscription Plan</h2>
 						<div class="mt-2 flex items-center gap-2">
 							<CreditCard size={18} class="text-primary-500" />
-							<p class="text-xl font-bold">{data.subscriptionTier ?? planSummary.name}</p>
+							<p class="text-xl font-bold">
+								{#if data.subscriptionTier && data.subscriptionTier !== 'Premium Access'}
+									<Crown
+										class="inline w-5 h-5 mr-1 -mt-0.5 text-primary-900-100"
+										aria-hidden="true"
+									/>
+								{/if}
+								{data.subscriptionTier ?? planSummary.name}
+							</p>
 						</div>
 					</div>
 					<a href="/account/subscription" class="btn btn-sm preset-tonal shrink-0">Manage</a>
