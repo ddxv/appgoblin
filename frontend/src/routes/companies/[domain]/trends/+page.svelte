@@ -1,6 +1,5 @@
 <script lang="ts">
 	import CompanyTrendsDash from '$lib/CompanyTrendsDash.svelte';
-	import WhiteCard from '$lib/WhiteCard.svelte';
 	import type { CompanyTrendsDetails } from '../../../../types';
 
 	interface Props {
@@ -26,9 +25,4 @@
 	</p>
 </section>
 
-<WhiteCard>
-	{#snippet title()}
-		<span>{companyName}'s Quarterly Trends</span>
-	{/snippet}
-	<CompanyTrendsDash trends={data.companyTrends} companyName={companyName || ''} />
-</WhiteCard>
+<CompanyTrendsDash trends={data.companyTrends} />

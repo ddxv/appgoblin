@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import SideBarCatsListBoxItem from './SideBarCatsListBoxItem.svelte';
-	import type { CatData } from '../types';
-	import CardFirst from './CardFirst.svelte';
+	import type { SideBarCategoryData } from '../types';
 
 	function getBaseUrl(url: string, type: string | undefined) {
 		const parts = url.split('/').filter(Boolean);
@@ -42,7 +41,7 @@
 	let baseUrl = $derived(getBaseUrl(page.url.pathname.toString(), page.params.type));
 
 	interface Props {
-		myCatData: CatData;
+		myCatData: SideBarCategoryData;
 	}
 
 	let { myCatData }: Props = $props();
@@ -51,13 +50,14 @@
 </script>
 
 <div class="p-1 md:p-2">
-	<CardFirst>
-		{#snippet header()}
+	<div class="rounded border border-surface-100-900 bg-surface-100-900/30 p-4 md:p-5">
+		<header>
 			<h4 class="h5 md:h4">App Categories</h4>
-		{/snippet}
+			<hr class="mb-2 border-surface-100-900" />
+		</header>
 		{#if myCatData}
 			{#each Object.entries(myCatData.categories) as [_prop, values] (values.id)}
-				{#if values.id && (Number(values.android) > 0 || values.name == 'Games')}
+				{#if values.id && (values.android || values.name == 'Games')}
 					{#if values.id != 'overall'}
 						<a href="{baseUrl}/{values.id}" class="text-tertiary-900-100 hover:underline">
 							<SideBarCatsListBoxItem {values} {selectedCategory} />
@@ -74,5 +74,5 @@
 				{/if}
 			{/each}
 		{/if}
-	</CardFirst>
+	</div>
 </div>

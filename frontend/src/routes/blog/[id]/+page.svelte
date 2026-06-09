@@ -15,6 +15,13 @@
 		name="keywords"
 		content="appgoblin, blog, competitor analysis, aso, app research, sdk analysis, advertising, apps"
 	/>
+	<meta property="og:type" content="article" />
+	<meta property="og:site_name" content="AppGoblin" />
+	<meta property="og:locale" content="en_US" />
+	<meta property="og:image" content="https://appgoblin.info{data.heroImage}" />
+	<meta property="article:published_time" content={data.pubDate.toISOString()} />
+	<meta property="article:author" content="AppGoblin" />
+	<meta property="article:section" content="Mobile App Marketing" />
 
 	<!-- Blog Post Structured Data -->
 	<script type="application/ld+json">

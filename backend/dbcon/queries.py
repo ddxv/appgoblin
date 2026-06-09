@@ -8,7 +8,11 @@ from sqlalchemy import bindparam
 
 from config import get_logger
 from dbcon.connections import PostgresCon
-from dbcon.static import get_country_map, get_parent_companies
+from dbcon.static import (
+    get_company_secondary_domains,
+    get_country_map,
+    get_parent_companies,
+)
 from dbcon.utils import cache_by_params, clean_app_df, sql
 
 logger = get_logger(__name__)
@@ -451,7 +455,13 @@ def get_company_app_changes(
     df = df[df["store_id"].notna()].copy()
     df["store"] = df["store"].replace({1: "Google Play", 2: "Apple App Store"})
     df["tag_source"] = tag_source
-    df["status"] = df["status"].astype(str).str.strip().str.lower()
+    df["status"] = (
+        df["status"]
+        .astype(str)
+        .str.strip()
+        .str.lower()
+        .replace({"added_initial": "added", "removed": "lost"})
+    )
     df["name"] = df["name"].astype(str)
     df["store_id"] = df["store_id"].astype(str)
     df["developer_name"] = df["developer_name"].fillna("")
@@ -462,10 +472,26 @@ def get_company_app_changes(
 
 
 def get_combined_companies_history(state: State, company_domain: str) -> pd.DataFrame:
-    """Get quarterly company trend history for a company domain."""
+    """Get quarterly company trend history for a company domain.
+
+    Routes to the appropriate trend table based on domain type:
+    - trend_domains for secondary domains (child companies)
+    - trend_companies for regular company domains
+    - trend_parent_companies for parent companies
+    """
     logger.info(f"query combined company history: {company_domain=}")
+    parent_companies = get_parent_companies(state)
+    secondary_domains = get_company_secondary_domains(state)
+
+    if company_domain in secondary_domains:
+        query = sql.trend_domains
+    elif company_domain in parent_companies:
+        query = sql.trend_parent_companies
+    else:
+        query = sql.trend_companies
+
     df = pd.read_sql(
-        sql.combined_companies_history,
+        query,
         state.dbcon.engine,
         params={"company_domain": company_domain},
     )
@@ -587,13 +613,39 @@ def get_company_sdks(state: State, company_domain: str) -> pd.DataFrame:
     return df
 
 
+def _format_category_name(category: str) -> str:
+    """Format a raw app_category into a human-readable display name."""
+    if category in ("games", "apps", "others", "None"):
+        return category.title()
+    return (
+        category.replace("game_", "Games: ")
+        .replace("_and_", " & ")
+        .replace("_", " ")
+        .title()
+    )
+
+
 def get_company_categories_topn(
-    state: State, company_domain: str, num_categories: int = 9
-) -> pd.DataFrame:
-    """Get a company parent categories."""
+    state: State,
+    company_domain: str,
+    num_categories: int = 9,
+    include_parent_rollup: bool = True,
+    group_mode: str = "auto",
+) -> dict[str, pd.DataFrame]:
+    """Get a company parent categories, split by store (1=Android, 2=iOS).
+
+    Parameters
+    ----------
+    group_mode : str
+        - 'auto' — existing heuristic (buckets games or non-games based on dominance)
+        - 'none' — raw categories, no grouping (includes original category field)
+        - 'group_games' — force lump all game_* categories into "Games"
+        - 'group_apps' — force lump all non-game categories into "Apps"
+
+    """
     logger.info(f"query company parent categories: {company_domain=}")
     parent_companies = get_parent_companies(state)
-    is_parent_company = company_domain in parent_companies
+    is_parent_company = company_domain in parent_companies and include_parent_rollup
     query = (
         sql.company_parent_category_stats
         if is_parent_company
@@ -606,44 +658,85 @@ def get_company_categories_topn(
     )
     df.loc[df["app_category"].isna(), "app_category"] = "None"
 
-    top_cats = (
-        df.sort_values(by="app_count", ascending=False)
-        .head(num_categories)
-        .app_category.tolist()
-    )
-    game_cat_count = sum(["game" in x for x in top_cats])
-    is_mostly_games = game_cat_count > num_categories / 2
-    is_mostly_non_games = game_cat_count <= 1
+    def _is_game(cat: str) -> bool:
+        return isinstance(cat, str) and cat.startswith("game_")
 
-    if is_mostly_games:
-        df.loc[~df["app_category"].str.contains("game"), "app_category"] = "apps"
-        top_cats = (
-            df.sort_values(by="app_count", ascending=False)
-            .head(num_categories)
-            .app_category.tolist()
-        )
-    if is_mostly_non_games:
-        df.loc[df["app_category"].str.contains("game"), "app_category"] = "games"
-        top_cats = (
-            df.sort_values(by="app_count", ascending=False)
-            .head(num_categories)
-            .app_category.tolist()
-        )
+    def _process_store(store_df: pd.DataFrame) -> pd.DataFrame:
+        if store_df.empty:
+            return pd.DataFrame()
 
-    df.loc[~df["app_category"].isin(top_cats), "app_category"] = "others"
-    df = df.groupby(["app_category"])["app_count"].sum().reset_index()
-    df["name"] = df["app_category"]
-    df["name"] = (
-        df["name"]
-        .str.replace("game_", "Games: ")
-        .str.replace("_and_", " & ")
-        .str.replace("_", " ")
-        .str.title()
-    )
+        store_df = store_df.copy()
 
-    df = df.rename(columns={"name": "group", "app_count": "value"})
+        if group_mode == "none":
+            # Raw categories — no grouping or top-N truncation.
+            # The frontend handles grouping/truncation client-side.
+            store_df = store_df.sort_values(by="app_count", ascending=False)
+            result = store_df.rename(
+                columns={"app_category": "category", "app_count": "value"}
+            )
+            result["group"] = result["category"].apply(_format_category_name)
+            result["category"] = result["category"]
+            return result[["group", "category", "value"]]
 
-    return df
+        if group_mode == "group_games":
+            # Lump all game subcategories into a single "Games" slice
+            store_df.loc[store_df["app_category"].apply(_is_game), "app_category"] = (
+                "Games"
+            )
+
+        elif group_mode == "group_apps":
+            # Lump all non-game categories into a single "Apps" slice
+            store_df.loc[~store_df["app_category"].apply(_is_game), "app_category"] = (
+                "Apps"
+            )
+
+        else:  # 'auto' — existing heuristic
+            top_cats = (
+                store_df.sort_values(by="app_count", ascending=False)
+                .head(num_categories)
+                .app_category.tolist()
+            )
+            game_cat_count = sum(1 for c in top_cats if _is_game(c))
+            is_mostly_games = game_cat_count > num_categories / 2
+            is_mostly_non_games = game_cat_count <= 1
+
+            if is_mostly_games:
+                store_df.loc[
+                    ~store_df["app_category"].apply(_is_game), "app_category"
+                ] = "apps"
+            if is_mostly_non_games:
+                store_df.loc[
+                    store_df["app_category"].apply(_is_game), "app_category"
+                ] = "games"
+
+        # For non-none modes: top-N truncation, groupby, and format
+        if group_mode != "none":
+            top_cats = (
+                store_df.sort_values(by="app_count", ascending=False)
+                .head(num_categories)
+                .app_category.tolist()
+            )
+            store_df.loc[~store_df["app_category"].isin(top_cats), "app_category"] = (
+                "others"
+            )
+            store_df = (
+                store_df.groupby(["app_category"])["app_count"].sum().reset_index()
+            )
+            store_df["name"] = store_df["app_category"].apply(_format_category_name)
+            result = store_df.rename(columns={"name": "group", "app_count": "value"})
+        else:
+            result = store_df.rename(
+                columns={"app_category": "category", "app_count": "value"}
+            )
+            result["group"] = result["category"].apply(_format_category_name)
+            result = result[["group", "category", "value"]]
+
+        return result
+
+    return {
+        "android": _process_store(df[df["store"] == 1]),
+        "ios": _process_store(df[df["store"] == 2]),
+    }
 
 
 @cache_by_params
@@ -704,22 +797,35 @@ def get_tag_source_category_totals(
         )
         df["app_category"] = "all"
     df.loc[df["app_category"].isna(), "app_category"] = "None"
-    df = (
-        df.groupby(["app_category", "store", "tag_source"])[
-            [
-                "app_count",
-                "installs_total",
-                "installs_d30",
-            ]
-        ]
-        .sum()
-        .reset_index()
+    # Aggregate per-category counts (sum across categories for total),
+    # but take the first universe value per (store, tag_source) since
+    # universe totals are constants per store+tag_source, not per category.
+    universe_cols = [
+        "active_apps_universe",
+        "universe_installs_total",
+        "universe_installs_d30",
+    ]
+    count_cols = ["app_count", "installs_total", "installs_d30"]
+
+    df_counts = df.groupby(["app_category", "store", "tag_source"], as_index=False)[
+        count_cols
+    ].sum()
+    df_universe = df.groupby(["app_category", "store", "tag_source"], as_index=False)[
+        universe_cols
+    ].first()
+
+    df = df_counts.merge(
+        df_universe, on=["app_category", "store", "tag_source"], how="left"
     )
+
     df = df.rename(
         columns={
             "app_count": "cat_total_app_count",
             "installs_total": "cat_total_installs",
             "installs_d30": "cat_total_installs_d30",
+            "active_apps_universe": "cat_active_apps_universe",
+            "universe_installs_total": "cat_universe_installs_total",
+            "universe_installs_d30": "cat_universe_installs_d30",
         }
     )
     df["store"] = df["store"].replace({1: "Google Play", 2: "Apple App Store"})
@@ -1087,6 +1193,16 @@ def get_sitemap_companies(dbcon: PostgresCon) -> pd.DataFrame:
 def get_sitemap_apps(dbcon: PostgresCon) -> pd.DataFrame:
     """Get sitemap apps."""
     df = pd.read_sql(sql.sitemap_apps, dbcon.engine)
+    return df
+
+
+def get_company_tab_indicators(state: State, company_domain: str) -> pd.DataFrame:
+    """Get tab-level indicator flags from frontend.companies_overview MV."""
+    df = pd.read_sql(
+        sql.company_tab_indicators,
+        state.dbcon.engine,
+        params={"company_domain": company_domain},
+    )
     return df
 
 

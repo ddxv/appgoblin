@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { Check, X } from 'lucide-svelte';
+	import { Check, Crown, X } from 'lucide-svelte';
 
 	/** @type {import('./$types').PageData} */
 	export let data;
@@ -24,14 +24,16 @@
 			name: 'B2B SDK Intelligence',
 			price: '$299',
 			period: '/mo',
-			description: 'Sales teams, ad networks, agencies'
+			description: 'Sales teams, ad networks, agencies',
+			b2b: true
 		},
 		{
 			key: 'b2b_appads',
 			name: 'App-Ads.txt',
 			price: '$299',
 			period: '/mo',
-			description: 'Ad networks, DSPs, SSPs'
+			description: 'Ad networks, DSPs, SSPs',
+			b2b: true
 		},
 		{
 			key: 'b2b_premium',
@@ -39,6 +41,7 @@
 			price: '$499',
 			period: '/mo',
 			description: 'Larger companies, security teams, ad networks, hedge funds',
+			b2b: true,
 			featured: true
 		}
 	];
@@ -195,6 +198,31 @@
 
 <svelte:head>
 	<title>Pricing - AppGoblin</title>
+	<meta
+		name="description"
+		content="Choose the right AppGoblin plan — free ASO tools, B2B SDK intelligence, app-ads.txt data, or premium mobile market analytics for teams."
+	/>
+	<meta
+		name="keywords"
+		content="pricing, appgoblin pricing, b2b sdk intelligence, app-ads txt, mobile analytics pricing, app market data, aso tools free"
+	/>
+	<meta property="og:title" content="Pricing - AppGoblin" />
+	<meta
+		property="og:description"
+		content="Free and paid plans for mobile app intelligence — SDK data, app-ads.txt, and premium B2B analytics."
+	/>
+	<meta property="og:image" content="https://appgoblin.info/goblin_purple_hat_250.png" />
+	<meta property="og:url" content="https://appgoblin.info/pricing" />
+	<meta property="og:type" content="website" />
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:title" content="Pricing - AppGoblin" />
+	<meta
+		name="twitter:description"
+		content="Free and paid plans for mobile app intelligence — SDK data, app-ads.txt, and premium B2B analytics."
+	/>
+	<meta name="twitter:image" content="https://appgoblin.info/goblin_purple_hat_250.png" />
+	<meta name="robots" content="index, follow" />
+	<link rel="canonical" href="https://appgoblin.info/pricing" />
 </svelte:head>
 
 <div class="px-2 lg:px-4 xl:px-16 grid grid-cols-1 gap-4 md:gap-4 lg:gap-8">
@@ -232,7 +260,15 @@
 							? 'bg-primary-500/5'
 							: ''}"
 					>
-						<p class="text-xs uppercase tracking-wide opacity-60">{plan.name}</p>
+						<p class="text-xs uppercase tracking-wide opacity-60">
+							{#if plan.b2b}
+								<Crown
+									class="inline w-3 h-3 mr-0.5 -mt-0.5 text-primary-900-100"
+									aria-hidden="true"
+								/>
+							{/if}
+							{plan.name}
+						</p>
 						<p class="text-base font-semibold leading-tight mt-1">
 							{plan.price}<span class="text-xs opacity-60 ml-1">{plan.period || ''}</span>
 						</p>

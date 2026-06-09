@@ -1,9 +1,31 @@
 <script lang="ts">
+	import { page } from '$app/state';
 	import CompaniesOverviewTable from '$lib/CompaniesOverviewTable.svelte';
 	import CompaniesTableGrid from '$lib/CompaniesTableGrid.svelte';
 
 	let { data } = $props();
+
+	let typeName = $derived(
+		page.data.companyTypes?.types?.find((t: any) => t.url_slug === page.params.type)?.name ||
+			page.params.type ||
+			''
+	);
+	let categoryName = $derived(
+		data.appCats?.categories?.find((cat: any) => cat.id === page.params.category)?.name ||
+			page.params.category ||
+			''
+	);
 </script>
+
+<svelte:head>
+	<title>{typeName} Companies in {categoryName} | AppGoblin</title>
+	<meta
+		name="description"
+		content="Browse {typeName} companies operating in the {categoryName} app category. Explore SDK usage, API adoption, and app-ads.txt intelligence."
+	/>
+	<meta name="robots" content="index, follow" />
+	<link rel="canonical" href={page.url.href} />
+</svelte:head>
 
 {#if typeof data.companiesOverview == 'string'}
 	Failed to load companies.

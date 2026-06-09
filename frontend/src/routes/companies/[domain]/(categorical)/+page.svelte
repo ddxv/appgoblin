@@ -1,9 +1,13 @@
 <script lang="ts">
 	import type { CompanyFullDetails, CompanyOverviewScope } from '../../../../types';
-	import { Dialog, Portal } from '@skeletonlabs/skeleton-svelte';
 
-	import SideBarCompanies from '$lib/SideBarCompanies.svelte';
+	type CategoryItem = {
+		group: string;
+		category: string;
+		value: number;
+	};
 
+	import CompanyCategoryControls from '$lib/CompanyCategoryControls.svelte';
 	import TotalsBox from '$lib/TotalsBox.svelte';
 	import CompanyCategoryPie from '$lib/CompanyCategoryPie.svelte';
 	import AdsTxtTotalsBox from '$lib/AdsTxtTotalsBox.svelte';
@@ -50,99 +54,251 @@
 	} as CompanyOverviewScope);
 	let domainOverview = $derived(data.companyDetails.domain_overview ?? fallbackOverview);
 	let parentOverview = $derived(data.companyDetails.parent_overview ?? null);
+	let categoryControlOverview = $derived(parentOverview ?? domainOverview);
 	let activeOverview = $derived(
 		selectedOverview === 'parent' ? (parentOverview ?? domainOverview) : domainOverview
 	);
+	// Trends summary is only computed for the domain scope in the backend.
+	// When parent scope is selected, fall back to the domain-level trends summary.
+	let activeTrendsSummary = $derived(
+		activeOverview.trends_summary ?? data.companyDetails.trends_summary ?? null
+	);
+	let activeCategoryPromise = $derived(
+		selectedOverview === 'parent' && data.parentAppCategories
+			? data.parentAppCategories
+			: data.companyAppCategories
+	);
+
+	type GroupMode = 'all' | 'games' | 'apps';
+	let androidGroupMode = $state<GroupMode>('all');
+	let iosGroupMode = $state<GroupMode>('all');
+
+	const numberFormatter = new Intl.NumberFormat('en-US');
+	function formatCount(value: number | null | undefined): string {
+		return numberFormatter.format(Math.max(0, Math.round(value ?? 0)));
+	}
+
+	function joinWithAnd(items: string[]): string {
+		if (items.length === 0) return '';
+		if (items.length === 1) return items[0];
+		if (items.length === 2) return `${items[0]} and ${items[1]}`;
+		return `${items.slice(0, -1).join(', ')}, and ${items[items.length - 1]}`;
+	}
+
+	// Human-readable label for the company's primary classification (ad network, analytics, etc.).
+	const companyTypeLabels: Record<string, string> = {
+		'ad-networks': 'ad network',
+		'ad-network': 'ad network',
+		attribution: 'attribution provider',
+		analytics: 'analytics provider',
+		mediation: 'mediation platform',
+		'product-analytics': 'product analytics provider'
+	};
+	let primaryCompanyType = $derived(data.companyDetails?.company_types?.[0] ?? null);
+	let companyTypeLabel = $derived(
+		primaryCompanyType
+			? (companyTypeLabels[primaryCompanyType] ??
+					primaryCompanyType.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()))
+			: null
+	);
+
+	let overviewStats = $derived(activeOverview.categories.all);
+	let totalApps = $derived(overviewStats?.total_apps ?? 0);
+	let sdkApps = $derived(overviewStats?.sdk_total_apps ?? 0);
+	let apiApps = $derived(overviewStats?.api_total_apps ?? 0);
+	let adstxtApps = $derived(
+		(overviewStats?.adstxt_direct_ios_total_apps ?? 0) +
+			(overviewStats?.adstxt_direct_android_total_apps ?? 0) +
+			(overviewStats?.adstxt_reseller_ios_total_apps ?? 0) +
+			(overviewStats?.adstxt_reseller_android_total_apps ?? 0)
+	);
+
+	// Pull a few notable client app names from the top Android/iOS lists for richer, SEO-friendly copy.
+	let topApps = $derived(typeof data.companyTopApps === 'string' ? null : data.companyTopApps);
+	let notableApps = $derived.by(() => {
+		if (!topApps) return [] as string[];
+		const androidApps =
+			(topApps as { android?: { apps?: { app_name?: string }[] } }).android?.apps ?? [];
+		const iosApps = (topApps as { ios?: { apps?: { app_name?: string }[] } }).ios?.apps ?? [];
+		const names: string[] = [];
+		const seen = new Set<string>();
+		for (const app of [...androidApps, ...iosApps]) {
+			const name = app?.app_name?.trim();
+			if (name && !seen.has(name.toLowerCase())) {
+				seen.add(name.toLowerCase());
+				names.push(name);
+			}
+			if (names.length >= 3) break;
+		}
+		return names;
+	});
+
+	let dynamicDescription = $derived.by(() => {
+		const subject = companyTypeLabel
+			? `${companyName}, a mobile ${companyTypeLabel},`
+			: companyName;
+
+		const dataPoints: string[] = [];
+		if (sdkApps > 0) dataPoints.push(`${formatCount(sdkApps)} apps with detected SDKs`);
+		if (apiApps > 0) dataPoints.push(`${formatCount(apiApps)} apps making API calls`);
+		if (adstxtApps > 0) dataPoints.push(`${formatCount(adstxtApps)} app-ads.txt listings`);
+
+		const sentences: string[] = [];
+
+		if (totalApps > 0) {
+			const detail = dataPoints.length ? `, including ${joinWithAnd(dataPoints)}` : '';
+			sentences.push(`${subject} is tied to ${formatCount(totalApps)} mobile apps${detail}.`);
+		} else {
+			sentences.push(
+				`AppGoblin tracks ${subject} across SDKs, API calls, and app-ads.txt records.`
+			);
+		}
+
+		if (notableApps.length > 0) {
+			sentences.push(`Top apps using ${companyName} include ${joinWithAnd(notableApps)}.`);
+		}
+
+		return sentences.join(' ');
+	});
 </script>
 
 <section class="mb-6 space-y-2">
-	<h2 class="text-xl font-semibold">Company Overview</h2>
+	<h2 class="text-xl font-semibold">About {companyName}</h2>
+	<p class="text-sm">{dynamicDescription}</p>
 	<p class="text-sm mb-4">
-		AppGoblin intelligence for {companyName} SDKs, API calls, app-ads.txt records. Browse {companyName}
-		creatives, and mediation relationships tied to real mobile app IDs so you can evaluate technical footprint
-		and competitive position quickly.
+		AppGoblin intelligence for {companyName} maps SDK integrations, API calls, and app-ads.txt records
+		to real mobile app IDs. Explore {companyName} creatives and mediation relationships to evaluate technical
+		footprint and competitive position quickly.
 	</p>
 </section>
 
-<CompaniesLayout>
-	{#snippet card1()}
-		{#if !data.companyTree.is_secondary_domain}
-			<WhiteCard>
-				{#if typeof data.companyParentCategories == 'string'}
-					<p class="text-red-500 text-center">Failed to load company details.</p>
-				{:else if data.companyParentCategories && data.companyParentCategories.length > 0}
-					<WhiteCard>
-						{#snippet title()}
-							<span>{companyName}'s Company Apps</span>
-						{/snippet}
-						{#if parentOverview}
-							<div class="px-4 pt-4">
-								<div class="inline-flex rounded-full border border-surface-200-800 p-1 text-sm">
-									<button
-										type="button"
-										class={`rounded-full px-3 py-1 ${selectedOverview === 'parent' ? 'bg-surface-200-800 font-semibold' : 'text-surface-500'}`}
-										onclick={() => (selectedOverview = 'parent')}
-									>
-										Parent
-									</button>
-									<button
-										type="button"
-										class={`rounded-full px-3 py-1 ${selectedOverview === 'domain' ? 'bg-surface-200-800 font-semibold' : 'text-surface-500'}`}
-										onclick={() => (selectedOverview = 'domain')}
-									>
-										Domain
-									</button>
-								</div>
-							</div>
-						{/if}
+{#snippet androidPieContent()}
+	{#await activeCategoryPromise}
+		<span class="text-lg">Loading...</span>
+	{:then myPieData}
+		{#if myPieData && 'error' in myPieData}
+			<p class="text-red-500 text-center">Failed to load categories.</p>
+		{:else if myPieData}
+			<CompanyCategoryPie
+				plotData={myPieData.android as CategoryItem[]}
+				storeLabel="Google Play"
+				bind:groupMode={androidGroupMode}
+			/>
+		{/if}
+	{:catch error}
+		<p class="text-red-500 text-center">{error.message}</p>
+	{/await}
+{/snippet}
 
-						<TotalsBox
-							{companyName}
-							myTotals={activeOverview.categories.all}
-							myType={{ name: 'All Companies & Domains', url_slug: 'all-companies' }}
-							hideAdstxtApps={true}
-							isSecondaryDomain={data.companyTree.is_secondary_domain}
-							trendsSummary={activeOverview.trends_summary}
-						/>
-						{#if activeOverview.adstxt_ad_domain_overview && activeOverview.adstxt_ad_domain_overview.google}
-							<AdsTxtTotalsBox
-								myTotals={activeOverview.adstxt_ad_domain_overview}
-								trendsSummary={activeOverview.trends_summary}
-							/>
-						{/if}
-					</WhiteCard>
+{#snippet iosPieContent()}
+	{#await activeCategoryPromise}
+		<span class="text-lg">Loading...</span>
+	{:then myPieData}
+		{#if myPieData && 'error' in myPieData}
+			<p class="text-red-500 text-center">Failed to load categories.</p>
+		{:else if myPieData}
+			<CompanyCategoryPie
+				plotData={myPieData.ios as CategoryItem[]}
+				storeLabel="Apple App Store"
+				bind:groupMode={iosGroupMode}
+			/>
+		{/if}
+	{:catch error}
+		<p class="text-red-500 text-center">{error.message}</p>
+	{/await}
+{/snippet}
+
+<div class="mb-4 md:mb-6">
+	<WhiteCard>
+		{#snippet title()}
+			<span>{companyName} Apps Overview</span>
+		{/snippet}
+		<div class="px-4 pt-4 flex flex-col gap-3 lg:flex-row lg:items-end lg:gap-6">
+			{#if parentOverview}
+				<div>
+					<span
+						class="mb-1 flex items-center gap-1.5 text-[11px] uppercase tracking-[0.14em] opacity-60"
+						>Data Scope</span
+					>
+					<div
+						class="inline-flex rounded-md border border-surface-300-700 p-1"
+						role="radiogroup"
+						aria-label="Data scope"
+					>
+						<button
+							type="button"
+							title="Roll up all subsidiaries and child domains under this company"
+							class={`flex items-center justify-center gap-1 rounded-md px-2.5 py-1 text-sm transition ${selectedOverview === 'parent' ? 'border border-secondary-700-300 text-secondary-700-300' : 'border border-transparent hover:border-secondary-800-200 hover:text-secondary-800-200'}`}
+							role="radio"
+							aria-checked={selectedOverview === 'parent'}
+							onclick={() => (selectedOverview = 'parent')}
+						>
+							Parent Co.
+						</button>
+						<button
+							type="button"
+							title="Limit to this exact domain only, excluding subsidiaries"
+							class={`flex items-center justify-center gap-1 rounded-md px-2.5 py-1 text-sm transition ${selectedOverview === 'domain' ? 'border border-secondary-700-300 text-secondary-700-300' : 'border border-transparent hover:border-secondary-800-200 hover:text-secondary-800-200'}`}
+							role="radio"
+							aria-checked={selectedOverview === 'domain'}
+							onclick={() => (selectedOverview = 'domain')}
+						>
+							Exact Domain
+						</button>
+					</div>
+				</div>
+			{/if}
+			<CompanyCategoryControls
+				overview={categoryControlOverview}
+				compact={true}
+				hasB2BAccess={data.hasB2BSdkAccess}
+			/>
+		</div>
+		{#if data.companyTree.is_secondary_domain}
+			<p class="px-4 pt-4 text-sm text-gray-600">
+				This queried domain maps to {data.companyTree.company_name ||
+					data.companyTree.company_domain}.
+				{#if hasHigherLevelParent}
+					The larger parent company is {data.companyTree.parent?.company_name ||
+						data.companyTree.parent?.company_domain}.
 				{/if}
-			</WhiteCard>
-		{:else if typeof data.companyParentCategories == 'string'}
-			<p class="text-red-500 text-center">Failed to load company details.</p>
-		{:else if data.companyParentCategories && data.companyParentCategories.length > 0}
-			<WhiteCard>
-				{#snippet title()}
-					<span>{companyName} Apps</span>
-				{/snippet}
-				<p class="text-sm text-gray-600 mb-2">
-					This queried domain maps to {data.companyTree.company_name ||
-						data.companyTree.company_domain}.
-					{#if hasHigherLevelParent}
-						The larger parent company is {data.companyTree.parent?.company_name ||
-							data.companyTree.parent?.company_domain}.
-					{/if}
-				</p>
-
+			</p>
+		{/if}
+		<div class="grid gap-4 p-4 lg:grid-cols-3">
+			<div class="rounded border border-surface-200-800/70">
 				<TotalsBox
 					{companyName}
 					myTotals={activeOverview.categories.all}
 					myType={{ name: 'All Companies & Domains', url_slug: 'all-companies' }}
 					hideAdstxtApps={true}
 					isSecondaryDomain={data.companyTree.is_secondary_domain}
-					trendsSummary={activeOverview.trends_summary}
+					trendsSummary={activeTrendsSummary}
 				/>
-				{#if activeOverview.adstxt_ad_domain_overview && activeOverview.adstxt_ad_domain_overview.google}
-					<AdsTxtTotalsBox
-						myTotals={activeOverview.adstxt_ad_domain_overview}
-						trendsSummary={activeOverview.trends_summary}
-					/>
-				{/if}
+			</div>
+			<div class="rounded border border-surface-200-800/70">
+				<AdsTxtTotalsBox
+					myTotals={activeOverview.adstxt_ad_domain_overview}
+					trendsSummary={activeTrendsSummary}
+					showReseller={false}
+				/>
+			</div>
+			<div class="rounded border border-surface-200-800/70">
+				<AdsTxtTotalsBox myTotals={activeOverview.adstxt_ad_domain_overview} showDirect={false} />
+			</div>
+		</div>
+	</WhiteCard>
+</div>
+
+<CompaniesLayout>
+	{#snippet card1()}
+		{#if !data.companyTree.is_secondary_domain}
+			<WhiteCard>
+				{#snippet title()}
+					<span>{companyName}'s Android Apps by Category</span>
+				{/snippet}
+				<div>
+					{@render androidPieContent()}
+				</div>
 			</WhiteCard>
 		{/if}
 	{/snippet}
@@ -151,20 +307,10 @@
 		{#if !data.companyTree.is_secondary_domain}
 			<WhiteCard>
 				{#snippet title()}
-					<span>{companyName}'s Apps by Category</span>
+					<span>{companyName}'s iOS Apps by Category</span>
 				{/snippet}
 				<div>
-					{#await data.companyParentCategories}
-						<span class="text-lg">Loading...</span>
-					{:then myPieData}
-						{#if typeof myPieData == 'string'}
-							<p class="text-red-500 text-center">Failed to load parent categories.</p>
-						{:else if myPieData}
-							<CompanyCategoryPie plotData={myPieData} />
-						{/if}
-					{:catch error}
-						<p class="text-red-500 text-center">{error.message}</p>
-					{/await}
+					{@render iosPieContent()}
 				</div>
 			</WhiteCard>
 		{/if}
@@ -205,7 +351,11 @@
 {#if typeof data.companyTopApps == 'string'}
 	Failed to load company's apps.
 {:else}
-	<CompanyTableGrid tableData={data.companyTopApps} companyName={companyName || ''} />
+	<CompanyTableGrid
+		tableData={data.companyTopApps}
+		companyName={companyName || ''}
+		previewMode={!data.hasB2BSdkAccess}
+	/>
 {/if}
 {#if data.companyTree && (associatedDomains.length > 0 || data.companyTree.children.length > 0)}
 	<section class="mt-6">
@@ -222,17 +372,3 @@
 		/>
 	</section>
 {/if}
-
-<div class="md:hidden sticky bottom-0 bg-surface-50-950 p-2">
-	<!-- Small screen version of the side bar -->
-	<Dialog>
-		<Dialog.Trigger class="btn preset-filled">APP FILTERS</Dialog.Trigger>
-		<Portal>
-			<Dialog.Positioner class="fixed inset-0 z-50 flex justify-start">
-				<Dialog.Content class="h-screen card w-sm p-4 space-y-4 shadow-xl max-w-[320px]">
-					<SideBarCompanies myCatData={data.appCats} />
-				</Dialog.Content>
-			</Dialog.Positioner>
-		</Portal>
-	</Dialog>
-</div>

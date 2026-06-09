@@ -1,6 +1,7 @@
 import type { PageServerLoad } from './$types.js';
 import { createApiClient } from '$lib/server/api';
 import { getCachedData } from '../hooks.server.js';
+import { getMixedContentFeed } from '$lib/content.js';
 
 export const ssr = true;
 export const csr = true;
@@ -18,6 +19,8 @@ export const load: PageServerLoad = async ({ fetch }) => {
 
 	const appsOverview = cachedData.appsOverview;
 
+	const latestContent = getMixedContentFeed(4);
+
 	return {
 		androidAppRanks,
 		iOSAppRanks,
@@ -25,6 +28,7 @@ export const load: PageServerLoad = async ({ fetch }) => {
 		iOSGameRanks,
 		topCompanies,
 		topAdvertisers,
-		appsOverview
+		appsOverview,
+		latestContent
 	};
 };

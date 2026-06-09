@@ -67,7 +67,7 @@
 				class="grid grid-cols-[minmax(0,1.6fr)_auto_auto] gap-3 border-b border-surface-200-800 px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.08em] text-surface-700-300"
 			>
 				<span>App</span>
-				<span>{platform === 'android' ? 'Monthly Installs' : 'Monthly iOS Ratings'}</span>
+				<span>Monthly Installs</span>
 				<span>Signal</span>
 			</div>
 			<div class="px-3 py-3">

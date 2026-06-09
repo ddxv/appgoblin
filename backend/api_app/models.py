@@ -112,14 +112,14 @@ class DeveloperSDKs:
 class CategoryDetail:
     """Represents detailed information about a category.
 
-    Includes its identifier, name, and app counts for
-    both Android and iOS platforms, along with its type.
+    Includes its identifier, name, platform availability flags,
+    and its type.
     """
 
     id: str
     name: str
-    android: int
-    ios: int
+    android: bool
+    ios: bool
     type: str
 
 
@@ -256,6 +256,49 @@ class CompanyDirectoryEntry:
 
 
 @dataclass
+class CompanyTabIndicators:
+    """Per-company tab availability indicators from frontend.companies_overview MV.
+
+    Each *_count column is coalesced (child preferred, then parent, then 0).
+    Each *_direct column is the child-only value (0 if the domain itself has no data).
+    """
+
+    company_domain: str
+    domain_id: int | None = None
+    company_id: int | None = None
+    company_name: str | None = None
+    logo_url: str | None = None
+    parent_company_id: int | None = None
+    parent_domain: str | None = None
+
+    # Signal flags from combined_app_companies
+    has_sdk_signal: bool = False
+    has_api_signal: bool = False
+    has_publisher_signal: bool = False
+    has_app_ads_direct: bool = False
+    has_app_ads_reseller: bool = False
+
+    # Effective indicators (child → parent → 0)
+    creatives_app_count: int = 0
+    has_trends: int = 0
+    apps_added_count: int = 0
+    apps_lost_count: int = 0
+    sdk_count: int = 0
+    mediation_adapter_count: int = 0
+    adstxt_direct_app_count: int = 0
+
+    # Direct-only indicators
+    creatives_app_count_direct: int = 0
+    has_trends_direct: int = 0
+    apps_added_count_direct: int = 0
+    apps_lost_count_direct: int = 0
+    sdk_count_direct: int = 0
+    mediation_adapter_count_direct: int = 0
+
+    is_parent_domain: bool = False
+
+
+@dataclass
 class CompanyPubIDTotals:
     """Totals for a publisher ID."""
 
@@ -384,6 +427,15 @@ class CategoryCompanyStats:
     sdk_ios_installs_d30: int = 0
     adstxt_direct_android_installs_d30: int = 0
     adstxt_reseller_android_installs_d30: int = 0
+    api_android_installs_d30: int = 0
+    # Universe totals (category-wide counts for market share computation)
+    sdk_android_universe_apps: int = 0
+    sdk_ios_universe_apps: int = 0
+    sdk_android_universe_installs_d30: int = 0
+    sdk_ios_universe_installs_d30: int = 0
+    api_android_universe_apps: int = 0
+    api_ios_universe_apps: int = 0
+    api_android_universe_installs_d30: int = 0
 
 
 @dataclass

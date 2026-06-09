@@ -6,7 +6,6 @@
 import time
 from typing import Self
 
-import numpy as np
 from litestar import Controller, get
 from litestar.config.response_cache import CACHE_FOREVER
 from litestar.datastructures import State
@@ -16,57 +15,15 @@ from config import get_logger
 from dbcon.queries import (
     get_country_map,
 )
-from dbcon.static import get_appstore_categories
+from dbcon.static import build_app_categories_overview, get_appstore_categories
 
 logger = get_logger(__name__)
 
 
-def category_overview(state: State) -> CategoriesOverview:
+def category_overview(state: State) -> list[dict]:
     """Categories for apps."""
     cats = get_appstore_categories(state=state)
-    cats = cats[cats["total_apps"] > 100]  # noqa: PLR2004 magic number ok
-
-    cats["name"] = cats["category"]
-    cats["name"] = (
-        cats["name"]
-        .str.replace("game_", "Games: ")
-        .str.replace("_and_", " & ")
-        .str.replace("_", " ")
-        .str.title()
-    )
-    cats = cats.rename(columns={"category": "id"})
-
-    summary = cats[["android", "ios", "total_apps"]].sum()
-    summary["name"] = "Overall"
-    summary["id"] = "overall"
-    cats.loc["Overall"] = summary
-
-    cats[["android", "ios", "total_apps"]] = cats[
-        ["android", "ios", "total_apps"]
-    ].astype(int)
-
-    cats = cats.sort_values("total_apps", ascending=False)
-
-    android_games_total = cats[cats.id.str.startswith("game")]["android"].sum()
-
-    cats.loc[cats["id"] == "games", "android"] = android_games_total
-
-    cats["type"] = np.where(
-        cats.id.str.contains("_game|games", regex=True), "game", "app"
-    )
-
-    cats["sort_priority"] = 2
-    cats.loc[cats["id"] == "overall", "sort_priority"] = 0
-    cats.loc[(cats["id"] == "games") | (cats["name"] == "Games"), "sort_priority"] = 1
-
-    cats = cats.sort_values(["sort_priority", "type", "name"])
-    cats = cats.drop(columns=["sort_priority"])
-
-    category_dicts = cats.to_dict(orient="records")
-
-    overview = CategoriesOverview(categories=category_dicts)
-
-    return overview
+    return build_app_categories_overview(cats)
 
 
 class CategoryController(Controller):
@@ -94,7 +51,8 @@ class CategoryController(Controller):
 
         """
         start = time.perf_counter() * 1000
-        overview = category_overview(state=state)
+        category_dicts = category_overview(state=state)
+        overview = CategoriesOverview(categories=category_dicts)
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(f"{self.path} took {duration}ms")
         return overview

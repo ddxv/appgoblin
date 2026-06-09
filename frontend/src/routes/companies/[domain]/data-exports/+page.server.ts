@@ -6,20 +6,13 @@ import type { PageServerLoad } from './$types';
 type CompanyTotals = {
 	sdk_android_total_apps?: number | null;
 	sdk_ios_total_apps?: number | null;
-	adstxt_direct_android_total_apps?: number | null;
-	adstxt_direct_ios_total_apps?: number | null;
-	adstxt_reseller_android_total_apps?: number | null;
-	adstxt_reseller_ios_total_apps?: number | null;
 };
 
 type CompanyDetailsForExports = {
 	categories?: {
 		all?: CompanyTotals;
 	};
-	adstxt_ad_domain_overview?: {
-		google?: { direct?: unknown | null; reseller?: unknown | null } | null;
-		apple?: { direct?: unknown | null; reseller?: unknown | null } | null;
-	} | null;
+	adstxt_ad_domain_overview?: Record<string, unknown> | null;
 };
 
 export const load: PageServerLoad = async ({ locals, params, parent }) => {
@@ -39,39 +32,25 @@ export const load: PageServerLoad = async ({ locals, params, parent }) => {
 	}
 
 	const parentData = await parent();
-	const tree = parentData.companyTree as { queried_company_name?: string } | undefined;
+	const tree = parentData.companyTree as
+		| { company_name?: string | null; company_domain?: string | null; queried_domain?: string }
+		| undefined;
 	const companyDetails = parentData.companyDetails as CompanyDetailsForExports | undefined;
-	const companyName = tree?.queried_company_name ?? params.domain ?? '';
+	const companyName =
+		tree?.company_name ?? tree?.company_domain ?? tree?.queried_domain ?? params.domain ?? '';
 	const domain = params.domain ?? '';
 	const totals = companyDetails?.categories?.all;
-
-	const adstxtRowEstimate =
-		Number(totals?.adstxt_direct_android_total_apps ?? 0) +
-		Number(totals?.adstxt_direct_ios_total_apps ?? 0) +
-		Number(totals?.adstxt_reseller_android_total_apps ?? 0) +
-		Number(totals?.adstxt_reseller_ios_total_apps ?? 0);
-	const androidRowEstimate = Number(totals?.sdk_android_total_apps ?? 0);
-	const iosRowEstimate = Number(totals?.sdk_ios_total_apps ?? 0);
-
-	const adstxtOverview = companyDetails?.adstxt_ad_domain_overview;
-	const hasAdstxtDirectOrReseller = Boolean(
-		adstxtOverview?.google?.direct ||
-		adstxtOverview?.google?.reseller ||
-		adstxtOverview?.apple?.direct ||
-		adstxtOverview?.apple?.reseller
-	);
-
-	const hasAppAdsTxtData = hasAdstxtDirectOrReseller || adstxtRowEstimate > 0;
-	const hasAndroidTrafficData = androidRowEstimate > 0;
-	const hasIosTrafficData = iosRowEstimate > 0;
+	const hasAdstxtData = Boolean(companyDetails?.adstxt_ad_domain_overview);
+	const hasAndroidData = Number(totals?.sdk_android_total_apps ?? 0) > 0;
+	const hasIosData = Number(totals?.sdk_ios_total_apps ?? 0) > 0;
 
 	const downloadUrls = canDownload
 		? {
-				appAdsTxt: hasAppAdsTxtData ? buildAppAdsTxtUrl(domain) : null,
-				companyVerifiedAndroid: hasAndroidTrafficData
+				appAdsTxt: hasAdstxtData ? buildAppAdsTxtUrl(domain) : null,
+				companyVerifiedAndroid: hasAndroidData
 					? buildCompanyVerifiedAppsUrl(domain, 'android')
 					: null,
-				companyVerifiedIos: hasIosTrafficData ? buildCompanyVerifiedAppsUrl(domain, 'ios') : null
+				companyVerifiedIos: hasIosData ? buildCompanyVerifiedAppsUrl(domain, 'ios') : null
 			}
 		: null;
 
@@ -79,19 +58,8 @@ export const load: PageServerLoad = async ({ locals, params, parent }) => {
 		canDownload,
 		companyName,
 		downloadUrls,
-		exportStats: {
-			appAdsTxt: {
-				available: hasAppAdsTxtData,
-				estimatedRows: adstxtRowEstimate
-			},
-			companyVerifiedAndroid: {
-				available: hasAndroidTrafficData,
-				estimatedRows: androidRowEstimate
-			},
-			companyVerifiedIos: {
-				available: hasIosTrafficData,
-				estimatedRows: iosRowEstimate
-			}
-		}
+		hasAdstxtData,
+		hasAndroidData,
+		hasIosData
 	};
 };

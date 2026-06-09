@@ -7,6 +7,7 @@
 	import Copy from 'lucide-svelte/icons/copy';
 	import Check from 'lucide-svelte/icons/check';
 	import ExternalLink from 'lucide-svelte/icons/external-link';
+	import Crown from 'lucide-svelte/icons/crown';
 	import { getPlanSummary } from '$lib/account/subscription';
 
 	let { data, form }: { data: PageData; form?: ActionData | null } = $props();
@@ -16,6 +17,7 @@
 	let newKeyName = $state('');
 	let revokingId = $state<number | null>(null);
 	let planSummary = $derived(getPlanSummary(data.subscriptionTier));
+	let isB2B = $derived(data.subscriptionTier && data.subscriptionTier !== 'Premium Access');
 
 	function copyKey(key: string) {
 		navigator.clipboard.writeText(key);
@@ -78,7 +80,15 @@
 			<div class="grid gap-3 md:grid-cols-3">
 				<div>
 					<p class="text-xs font-semibold uppercase tracking-wide">Current plan</p>
-					<p class="mt-1 font-semibold">{data.subscriptionTier ?? planSummary.name}</p>
+					<p class="mt-1 font-semibold">
+						{#if isB2B}
+							<Crown
+								class="inline w-4 h-4 mr-0.5 -mt-0.5 text-primary-900-100"
+								aria-hidden="true"
+							/>
+						{/if}
+						{data.subscriptionTier ?? planSummary.name}
+					</p>
 				</div>
 				<div>
 					<p class="text-xs font-semibold uppercase tracking-wide">API limits</p>

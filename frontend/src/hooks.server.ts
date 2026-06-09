@@ -1,13 +1,6 @@
 import type { Handle, ServerInit } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
-import type {
-	CatData,
-	CompanyTypes,
-	AppStore,
-	CollectionRanks,
-	CategoryRanks,
-	Countries
-} from './types';
+import type { CompanyTypes, AppStore, CollectionRanks, CategoryRanks, Countries } from './types';
 import { RefillingTokenBucket } from '$lib/server/auth/rate-limit';
 import {
 	validateSessionToken,
@@ -175,7 +168,6 @@ const cacheAndRoutingHandle: Handle = async ({ event, resolve }) => {
 export const handle = sequence(rateLimitHandle, authHandle, cacheAndRoutingHandle);
 
 interface CachedData {
-	appCats: CatData;
 	appsOverview: any;
 	companyTypes: CompanyTypes;
 	countries: Countries;
@@ -194,7 +186,6 @@ interface CachedData {
 }
 
 let cachedData: CachedData = {
-	appCats: { categories: [] },
 	appsOverview: {},
 	companyTypes: { types: [] },
 	countries: { ['US']: { langen: 'United States', app_ranks: true, app_details: true } },
@@ -272,9 +263,8 @@ async function initializeCache(): Promise<void> {
 	console.log('[Cache] Initializing cache on server start...');
 
 	try {
-		const [appCats, appsOverview, companyTypes, countries, companyDirectory, myStoreRankingsMap] =
+		const [appsOverview, companyTypes, countries, companyDirectory, myStoreRankingsMap] =
 			await Promise.all([
-				fetchWithRetry(`${API_BASE_URL}/categories`),
 				fetchWithRetry(`${API_BASE_URL}/apps/overview`),
 				fetchWithRetry(`${API_BASE_URL}/companies/types`),
 				fetchWithRetry(`${API_BASE_URL}/categories/countries`),
@@ -286,7 +276,6 @@ async function initializeCache(): Promise<void> {
 			buildRankingsLookups(myStoreRankingsMap);
 
 		cachedData = {
-			appCats,
 			appsOverview,
 			companyTypes,
 			countries,

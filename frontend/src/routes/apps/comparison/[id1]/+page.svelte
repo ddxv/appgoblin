@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { page } from '$app/stores';
 	import AppComparisonSlot from '$lib/AppComparisonSlot.svelte';
 	import { goto } from '$app/navigation';
 	import type { PageData } from './$types';
@@ -22,6 +23,12 @@
 		goto(`/apps/comparison/${app1.store_id}/${app.store_id}`);
 	}
 </script>
+
+<svelte:head>
+	<title>{app1?.name || 'App'} Comparison - AppGoblin</title>
+	<meta name="robots" content="noindex, follow" />
+	<link rel="canonical" href={$page.url.href} />
+</svelte:head>
 
 <div class="container mx-auto space-y-4 p-1 md:p-4">
 	<h1 class="mb-4 text-xl md:text-3xl font-bold">App Comparison</h1>

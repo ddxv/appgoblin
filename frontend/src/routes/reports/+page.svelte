@@ -456,12 +456,7 @@
 									? report.title
 									: report.seriesDescription}
 						</p>
-						<div class="mt-4 flex flex-wrap gap-2">
-							{#each report.highlights as highlight}
-								<span class="badge preset-filled-surface-700-300 text-xs">{highlight}</span>
-							{/each}
-						</div>
-						<p class="mt-4 text-sm font-semibold">Open report</p>
+						<p class="mt-4 text-sm font-semibold">Open report →</p>
 					</a>
 				{/each}
 			</div>
@@ -493,7 +488,7 @@
 
 					<div class="flex flex-wrap gap-2">
 						{#each group.highlights as highlight}
-							<span class="badge preset-filled-surface-700-300 text-xs">{highlight}</span>
+							<span class="badge preset-outlined-surface-700-300 text-xs">{highlight}</span>
 						{/each}
 					</div>
 				</div>
@@ -524,7 +519,7 @@
 												: report.seriesDescription}
 									</p>
 								</div>
-								<span class="text-sm font-semibold">View</span>
+								<span class="text-sm font-semibold">View →</span>
 							</div>
 						</a>
 					{/each}

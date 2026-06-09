@@ -1,0 +1,1291 @@
+[
+  {
+    "advertiser_name": "Temu: Shop Like a Billionaire",
+    "advertiser_store_id": "com.einnovation.temu",
+    "advertiser_icon_url_100": "84747b9bc0e4965b.png",
+    "advertiser_category": "shopping",
+    "advertiser_installs": 1104031146,
+    "unique_creatives": 61,
+    "unique_publishers": 98,
+    "first_seen": "2026-05-22T07:46:30.759",
+    "last_seen": "2026-05-27T10:47:25.641",
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "avg_publisher_installs": 16182995.070866141,
+    "mmp_domains": [
+      "adjust.com"
+    ],
+    "top_md5_hashes": [
+      "f30810af596176c63549460a866d149c",
+      "06cc9e6f9f70cee91fffd18fb9431132",
+      "3809432016056e334c8d59c9bebbf732",
+      "e6e080438fe6f741de8f4c52e62881da",
+      "083ee154408bd12fa2202265cab0e09d"
+    ]
+  },
+  {
+    "advertiser_name": "Lords Mobile: Kingdom Wars",
+    "advertiser_store_id": "com.igg.android.lordsmobile",
+    "advertiser_icon_url_100": "92f3d8230fcd6a31.png",
+    "advertiser_category": "game_strategy",
+    "advertiser_installs": 620888947,
+    "unique_creatives": 27,
+    "unique_publishers": 65,
+    "first_seen": "2026-05-22T06:50:02.981",
+    "last_seen": "2026-05-27T09:45:03.853",
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "avg_publisher_installs": 40209558.07339449,
+    "mmp_domains": [
+      "adjust.com",
+      "appsflyer.com"
+    ],
+    "top_md5_hashes": [
+      "e722f9da3f063971b809929727ef6075",
+      "35726717c059f13136a8ea2ba3152afa",
+      "41674a419c136757c5b91149fffa0f58",
+      "f51c9070453ca62e23b9694b689389be",
+      "7a423c2efcc58fa515d3563b6bc530ab"
+    ]
+  },
+  {
+    "advertiser_name": "Tic Tac Toe 2 Player: XO Game",
+    "advertiser_store_id": "onetap.game.tictactoe",
+    "advertiser_icon_url_100": "c868b5574a1f1a1f.png",
+    "advertiser_category": "game_puzzle",
+    "advertiser_installs": 128634928,
+    "unique_creatives": 11,
+    "unique_publishers": 44,
+    "first_seen": "2026-05-27T13:12:09.910",
+    "last_seen": "2026-05-31T23:44:43.499",
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "avg_publisher_installs": 1958480.469387755,
+    "mmp_domains": [
+      "adjust.com"
+    ],
+    "top_md5_hashes": [
+      "2b0d34b53a560d13aef21d66c25e90f7",
+      "a52cbc9650a470db5759101fce11ef38",
+      "5f5deded267ea038446c01edab4861b2",
+      "a52cbc9650a470db5759101fce11ef38",
+      "6aeaa5a326544bac5403f167cf27b8f9"
+    ]
+  },
+  {
+    "advertiser_name": "BuySell Cyprus",
+    "advertiser_store_id": "com.buysellcyprus.android.app",
+    "advertiser_icon_url_100": "969c6963666c9636.png",
+    "advertiser_category": "productivity",
+    "advertiser_installs": 121950,
+    "unique_creatives": 11,
+    "unique_publishers": 41,
+    "first_seen": "2026-05-24T02:04:58.446",
+    "last_seen": "2026-05-27T09:59:55.501",
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "avg_publisher_installs": 6522644.132075472,
+    "mmp_domains": null,
+    "top_md5_hashes": [
+      "bda98f20ed7dfea0227d87a7eea6019c",
+      "092d01bd926569ba63c34a3f45c92ba6",
+      "72c57a78a86df8f71ed0b9888a7d6bfb",
+      "092d01bd926569ba63c34a3f45c92ba6",
+      "1f4faa8007ee3106e986cf49a0ce4d3e"
+    ]
+  },
+  {
+    "advertiser_name": "Benjamin - Earn Cash Rewards",
+    "advertiser_store_id": "com.benjaminone.client",
+    "advertiser_icon_url_100": "cee7319acd642493.png",
+    "advertiser_category": "shopping",
+    "advertiser_installs": 2763660,
+    "unique_creatives": 14,
+    "unique_publishers": 41,
+    "first_seen": "2026-05-27T14:32:18.656",
+    "last_seen": "2026-05-31T23:33:56.816",
+    "ad_network_domains": [
+      "bidease.com",
+      "google.com"
+    ],
+    "avg_publisher_installs": 2556817.6885245903,
+    "mmp_domains": [
+      "appsflyer.com"
+    ],
+    "top_md5_hashes": [
+      "a6204400011115e753d44fbede15d86e",
+      "e029663a77bd0b05c2bfca4b90fd3227",
+      "bcb6f84113dd24c81356704e538f55b1",
+      "e029663a77bd0b05c2bfca4b90fd3227",
+      "bcb6f84113dd24c81356704e538f55b1"
+    ]
+  },
+  {
+    "advertiser_name": "\u042f\u043d\u0434\u0435\u043a\u0441 \u2014 \u0441 \u0410\u043b\u0438\u0441\u043e\u0439 AI",
+    "advertiser_store_id": "com.yandex.searchapp",
+    "advertiser_icon_url_100": "9e9b253c63674a98.jpeg",
+    "advertiser_category": "tools",
+    "advertiser_installs": 96957023,
+    "unique_creatives": 28,
+    "unique_publishers": 41,
+    "first_seen": "2026-05-22T10:41:56.136",
+    "last_seen": "2026-05-31T18:41:51.159",
+    "ad_network_domains": [
+      "yandex.com"
+    ],
+    "avg_publisher_installs": 10673101.420454545,
+    "mmp_domains": [
+      "appmetrica.yandex.com",
+      "appsflyer.com",
+      "metrica.yandex.com"
+    ],
+    "top_md5_hashes": [
+      "49fb8b64fbcc9e7922b853adf17fc20e",
+      "d3ec9cc4a44b5180b6e65a12e7f8c716",
+      "df70df422389ff3afea969463a8f0c3e",
+      "3309962d857bd9f1bd6e62d00bf273f9",
+      "9d86decf6811cf9bbe0ed2bb0c39a807"
+    ]
+  },
+  {
+    "advertiser_name": "Loopit - Make Playables",
+    "advertiser_store_id": "com.seedleap.loopitapp",
+    "advertiser_icon_url_100": "90b67c4f87397a60.jpeg",
+    "advertiser_category": "entertainment",
+    "advertiser_installs": 3310229,
+    "unique_creatives": 14,
+    "unique_publishers": 38,
+    "first_seen": "2026-05-23T20:42:35.882",
+    "last_seen": "2026-05-31T21:00:11.192",
+    "ad_network_domains": [
+      "amazonaws.com",
+      "google.com",
+      "mobvista.com",
+      "toponad.com",
+      "unity.com"
+    ],
+    "avg_publisher_installs": 4792347.591836735,
+    "mmp_domains": [
+      "appsflyer.com",
+      "branch.io"
+    ],
+    "top_md5_hashes": [
+      "06168660b2cb31ee7928e12fe94fa4bc",
+      "06168660b2cb31ee7928e12fe94fa4bc",
+      "0fa06f1a468f1fc6a591710291c2333b",
+      "06168660b2cb31ee7928e12fe94fa4bc",
+      "0fa06f1a468f1fc6a591710291c2333b"
+    ]
+  },
+  {
+    "advertiser_name": "Pitch Changer - Music & Video",
+    "advertiser_store_id": "com.vandele.pitchchanger",
+    "advertiser_icon_url_100": "9d316293a46c739b.png",
+    "advertiser_category": "music_and_audio",
+    "advertiser_installs": 7178,
+    "unique_creatives": 11,
+    "unique_publishers": 35,
+    "first_seen": "2026-05-23T20:03:22.862",
+    "last_seen": "2026-05-27T11:05:58.108",
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "avg_publisher_installs": 7207880.25,
+    "mmp_domains": null,
+    "top_md5_hashes": [
+      "79728672be2dc99274242f5398d9b7d3",
+      "cb0f5df47de51d64898a814a362ae138",
+      "9148b4a78d28d8b31708ad3a3d463dac",
+      "9148b4a78d28d8b31708ad3a3d463dac",
+      "e9156771b1e415addb5efdec7e91b7bb"
+    ]
+  },
+  {
+    "advertiser_name": "Going Balls",
+    "advertiser_store_id": "com.pronetis.ironball2",
+    "advertiser_icon_url_100": "b49e2572d978c865.png",
+    "advertiser_category": "game_casual",
+    "advertiser_installs": 434401466,
+    "unique_creatives": 19,
+    "unique_publishers": 33,
+    "first_seen": "2026-05-24T09:20:53.888",
+    "last_seen": "2026-05-31T21:58:39.102",
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "avg_publisher_installs": 5627106.804878049,
+    "mmp_domains": [
+      "appsflyer.com"
+    ],
+    "top_md5_hashes": [
+      "09f2b4ecb0321047d47383db677ee403",
+      "1dc02233ee3fe6094d30d14f420bc10d",
+      "22e670bd91652eb137e72da8936c8316",
+      "669e40eee84448c0db5aedba11fc5c4d",
+      "1acb1d9925a1d1c80f17e76bcf874b6a"
+    ]
+  },
+  {
+    "advertiser_name": "Huuuge Casino 777 Slots Games",
+    "advertiser_store_id": "com.huuuge.casino.slots",
+    "advertiser_icon_url_100": "c056c01d77f07ee8.jpeg",
+    "advertiser_category": "game_casino",
+    "advertiser_installs": 52331248,
+    "unique_creatives": 15,
+    "unique_publishers": 32,
+    "first_seen": "2026-05-27T23:50:24.714",
+    "last_seen": "2026-05-31T22:02:38.242",
+    "ad_network_domains": [
+      "bidease.com",
+      "digitalturbine.com",
+      "unity.com"
+    ],
+    "avg_publisher_installs": 1360523.8863636365,
+    "mmp_domains": [
+      "appsflyer.com"
+    ],
+    "top_md5_hashes": [
+      "46c1b99a3117b493ce1ae46977d975c3",
+      "30252654f0940e50c73251b9cdc0c43f",
+      "46c1b99a3117b493ce1ae46977d975c3",
+      "6d4a999fe0cf760648541cda9a88bf52",
+      "56dba039109d5c663cc352afee8a3556"
+    ]
+  },
+  {
+    "advertiser_name": "Rumble: Stream & Watch Videos",
+    "advertiser_store_id": "com.rumble.battles",
+    "advertiser_icon_url_100": "b839c7c6cc393293.png",
+    "advertiser_category": "video_players",
+    "advertiser_installs": 10002799,
+    "unique_creatives": 3,
+    "unique_publishers": 28,
+    "first_seen": "2026-05-27T21:01:02.658",
+    "last_seen": "2026-05-30T09:39:04.982",
+    "ad_network_domains": [
+      "google.com",
+      "mobvista.com",
+      "unity.com"
+    ],
+    "avg_publisher_installs": 1832491.2666666666,
+    "mmp_domains": [
+      "appsflyer.com"
+    ],
+    "top_md5_hashes": [
+      "1b21c511d7bc8ee4e6bf45d9c6c22b6d",
+      "55d5b66c93cc562435907f7af0894d06",
+      "88c7cf90c30775b0b10aec2f76164bf4",
+      "88c7cf90c30775b0b10aec2f76164bf4",
+      "1b21c511d7bc8ee4e6bf45d9c6c22b6d"
+    ]
+  },
+  {
+    "advertiser_name": "Facebook",
+    "advertiser_store_id": "com.facebook.katana",
+    "advertiser_icon_url_100": "8c337467676c9893.png",
+    "advertiser_category": "social networking",
+    "advertiser_installs": 11727587347,
+    "unique_creatives": 23,
+    "unique_publishers": 28,
+    "first_seen": "2026-05-27T19:59:56.012",
+    "last_seen": "2026-05-31T23:16:13.730",
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "avg_publisher_installs": 2138138.685714286,
+    "mmp_domains": null,
+    "top_md5_hashes": [
+      "7da168aa69387e42ca74eb4514104399",
+      "cdf00fde26cc3226ca39a0d1b9c120ba",
+      "c5f674953d7b6649b50e1ec1ebc9978c",
+      "47b101dbd8774a3f46247bf6c2e88e55",
+      "33935e8f6be511b16ab70d2b9f2ad8c9"
+    ]
+  },
+  {
+    "advertiser_name": "Dominoes - classic domino game",
+    "advertiser_store_id": "org.sabgames.domino",
+    "advertiser_icon_url_100": "97903e06396f61d9.png",
+    "advertiser_category": "game_board",
+    "advertiser_installs": 2024870,
+    "unique_creatives": 7,
+    "unique_publishers": 27,
+    "first_seen": "2026-05-27T21:20:35.707",
+    "last_seen": "2026-05-31T21:12:26.870",
+    "ad_network_domains": [
+      "bidease.com",
+      "google.com"
+    ],
+    "avg_publisher_installs": 2190961.5,
+    "mmp_domains": [
+      "appmetrica.yandex.com",
+      "appsflyer.com",
+      "devtodev.com",
+      "metrica.yandex.com"
+    ],
+    "top_md5_hashes": [
+      "881939d3da09eafb59f269d2b8d63731",
+      "54f8910985007fd199bfbdd424860454",
+      "f71e6326aa65a1bef4d3b714787d44fc",
+      "881939d3da09eafb59f269d2b8d63731",
+      "f71e6326aa65a1bef4d3b714787d44fc"
+    ]
+  },
+  {
+    "advertiser_name": "PUBG MOBILE",
+    "advertiser_store_id": "com.tencent.ig",
+    "advertiser_icon_url_100": "8ab14ccafddb2192.png",
+    "advertiser_category": "game_action",
+    "advertiser_installs": 1084707651,
+    "unique_creatives": 15,
+    "unique_publishers": 27,
+    "first_seen": "2026-05-22T11:57:03.155",
+    "last_seen": "2026-05-26T12:02:32.608",
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "avg_publisher_installs": 23434107.861111112,
+    "mmp_domains": [
+      "adjust.com"
+    ],
+    "top_md5_hashes": [
+      "9ce39ec7771d1d0ffdcfd93f8f76f6a5",
+      "9ce39ec7771d1d0ffdcfd93f8f76f6a5",
+      "6538717688a50821a1a951d5823ee8f2",
+      "9ce39ec7771d1d0ffdcfd93f8f76f6a5",
+      "7e6aa2c543cd5db31e20e240a6d2c7d2"
+    ]
+  },
+  {
+    "advertiser_name": "TikTok - Videos, Shop & LIVE",
+    "advertiser_store_id": "com.zhiliaoapp.musically",
+    "advertiser_icon_url_100": "d93b2ee16686303e.png",
+    "advertiser_category": "social networking",
+    "advertiser_installs": 4488283764,
+    "unique_creatives": 31,
+    "unique_publishers": 27,
+    "first_seen": "2026-05-13T21:06:33.772",
+    "last_seen": "2026-05-31T17:24:04.885",
+    "ad_network_domains": [
+      "bidease.com",
+      "google.com",
+      "unity.com"
+    ],
+    "avg_publisher_installs": 6431240.9,
+    "mmp_domains": [
+      "appsflyer.com",
+      "onelink.me"
+    ],
+    "top_md5_hashes": [
+      "99584608d3d035b0ee0bbacc2b4255ad",
+      "51c900b3b4cf278c6af9bb94bbe75cea",
+      "0c3190ddfe0c84f04889d62dc376af30",
+      "5a2519e6d6731179b0091471e8f4015e",
+      "5a2519e6d6731179b0091471e8f4015e"
+    ]
+  },
+  {
+    "advertiser_name": "Happy Color\u00ae: Color by Number",
+    "advertiser_store_id": "com.pixel.art.coloring.color.number",
+    "advertiser_icon_url_100": "f094cd1c8cfc31cb.png",
+    "advertiser_category": "game_board",
+    "advertiser_installs": 331024325,
+    "unique_creatives": 23,
+    "unique_publishers": 26,
+    "first_seen": "2026-05-27T15:18:22.262",
+    "last_seen": "2026-05-31T16:30:54.961",
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "avg_publisher_installs": 3616821.0285714287,
+    "mmp_domains": [
+      "adjust.com",
+      "appmetrica.yandex.com",
+      "metrica.yandex.com"
+    ],
+    "top_md5_hashes": [
+      "169328b689a45d31f4959e95b8dce8ad",
+      "ca3a04d51e93a451840e97ce04044936",
+      "987d8c093831102e3c0d112f637707b9",
+      "d85bb7f33d1197c47034a233ed3c942c",
+      "1c69613a483ea319599b24b02cc45c06"
+    ]
+  },
+  {
+    "advertiser_name": "Pixel Starships\u2122",
+    "advertiser_store_id": "com.savysoda.pixelstarships",
+    "advertiser_icon_url_100": "a828d43f2fc1b23d.png",
+    "advertiser_category": "game_strategy",
+    "advertiser_installs": 4479118,
+    "unique_creatives": 4,
+    "unique_publishers": 23,
+    "first_seen": "2026-05-26T22:53:55.059",
+    "last_seen": "2026-05-31T18:02:02.909",
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "avg_publisher_installs": 2414876.3076923075,
+    "mmp_domains": [
+      "appmetrica.yandex.com",
+      "appsflyer.com",
+      "metrica.yandex.com"
+    ],
+    "top_md5_hashes": [
+      "1ff9ace080ff351e48934763528de909",
+      "1ff9ace080ff351e48934763528de909",
+      "1ff9ace080ff351e48934763528de909",
+      "8d62161edacc5eb0d6e31bf04f0117dd",
+      "71c3e5a82a58b14468e3a46f9ce82571"
+    ]
+  },
+  {
+    "advertiser_name": "Pooking - Billiards City",
+    "advertiser_store_id": "com.billiards.city.pool.nation.club",
+    "advertiser_icon_url_100": "86596ab6f11831cf.png",
+    "advertiser_category": "game_sports",
+    "advertiser_installs": 551698538,
+    "unique_creatives": 16,
+    "unique_publishers": 21,
+    "first_seen": "2026-05-24T12:56:50.935",
+    "last_seen": "2026-05-31T17:58:05.550",
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "avg_publisher_installs": 4173879.28,
+    "mmp_domains": [
+      "adjust.com",
+      "appmetrica.yandex.com",
+      "metrica.yandex.com"
+    ],
+    "top_md5_hashes": [
+      "0b2f2b32871502ef408a0631d2140c3c",
+      "ea63fab935ec1b8faca453aba62f178c",
+      "e90e03838ce6beab6d41dd4a4cae4069",
+      "aa7307e705d7e79c491062fa7d885808",
+      "93794610db8049e43be5ca442fe4a7ec"
+    ]
+  },
+  {
+    "advertiser_name": "Opera: Private Web Browser",
+    "advertiser_store_id": "com.opera.browser",
+    "advertiser_icon_url_100": "be4be195c692869a.png",
+    "advertiser_category": "communication",
+    "advertiser_installs": 538759431,
+    "unique_creatives": 17,
+    "unique_publishers": 21,
+    "first_seen": "2026-05-24T01:59:43.223",
+    "last_seen": "2026-05-29T18:51:21.296",
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "avg_publisher_installs": 6206118.517241379,
+    "mmp_domains": [
+      "appsflyer.com"
+    ],
+    "top_md5_hashes": [
+      "b089023fbf4ad66e572066851f03bc50",
+      "f96f7341fc18c5a0f99329ca5cf1e087",
+      "91966422c10e8ae99204aade6f0de376",
+      "0dc2f144a70dfe87d7ba64a8b13041d0",
+      "91966422c10e8ae99204aade6f0de376"
+    ]
+  },
+  {
+    "advertiser_name": "Billiards City - 8 Ball Pool",
+    "advertiser_store_id": "com.azgame.app.poolcity",
+    "advertiser_icon_url_100": "eb94a55a1e698876.jpeg",
+    "advertiser_category": "game_sports",
+    "advertiser_installs": 5922043,
+    "unique_creatives": 13,
+    "unique_publishers": 21,
+    "first_seen": "2026-05-27T14:47:19.085",
+    "last_seen": "2026-05-31T22:29:38.465",
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "avg_publisher_installs": 1967850.8,
+    "mmp_domains": null,
+    "top_md5_hashes": [
+      "0d7a49e11e3faf4d894f7cc09e0f91a8",
+      "bdf7d57fec80f43501ce48400f901d4b",
+      "bdf7d57fec80f43501ce48400f901d4b",
+      "bdf7d57fec80f43501ce48400f901d4b",
+      "279e63af98e83622b86706c1475cdbe2"
+    ]
+  },
+  {
+    "advertiser_name": "Super Goal: Fun Soccer Game",
+    "advertiser_store_id": "com.soccer.football.kick",
+    "advertiser_icon_url_100": "b91286393663ec6d.png",
+    "advertiser_category": "game_action",
+    "advertiser_installs": 89109568,
+    "unique_creatives": 10,
+    "unique_publishers": 20,
+    "first_seen": "2026-05-26T02:47:33.023",
+    "last_seen": "2026-05-31T21:46:12.310",
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "avg_publisher_installs": 3128526.4545454546,
+    "mmp_domains": [
+      "adjust.com"
+    ],
+    "top_md5_hashes": [
+      "70c70d716b94921de60bc23dcd99eda2",
+      "ca9ab8eb4c37e85132ee8583cdc2f356",
+      "ca9ab8eb4c37e85132ee8583cdc2f356",
+      "34f8cc2ccecf120ebab07184571c3b9b",
+      "4b7da5dfba4783c4b47a026491fa5d23"
+    ]
+  },
+  {
+    "advertiser_name": "Kick & Break The Ragdoll Games",
+    "advertiser_store_id": "com.playflix.kick.breakragdoll.games",
+    "advertiser_icon_url_100": "dbc80ef242d139a7.jpeg",
+    "advertiser_category": "game_simulation",
+    "advertiser_installs": 86608151,
+    "unique_creatives": 8,
+    "unique_publishers": 19,
+    "first_seen": "2026-05-27T11:16:18.711",
+    "last_seen": "2026-05-31T12:22:20.104",
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "avg_publisher_installs": 2261231.8636363638,
+    "mmp_domains": [
+      "adjust.com",
+      "appmetrica.yandex.com",
+      "metrica.yandex.com"
+    ],
+    "top_md5_hashes": [
+      "d9d006bc67485bd9359953e1b5997450",
+      "ef74126cb07bc938bd3b98a9ac287e10",
+      "a72c829b03968935b9d777c670ecd9fa",
+      "6cb03e9a4836ae1ed54492b7e9e724e1",
+      "ef74126cb07bc938bd3b98a9ac287e10"
+    ]
+  },
+  {
+    "advertiser_name": "TikTok",
+    "advertiser_store_id": "com.ss.android.ugc.trill",
+    "advertiser_icon_url_100": "d93b2ee16686303e.png",
+    "advertiser_category": "video_players",
+    "advertiser_installs": 1219924814,
+    "unique_creatives": 5,
+    "unique_publishers": 19,
+    "first_seen": "2026-05-27T11:24:16.447",
+    "last_seen": "2026-05-29T07:23:50.443",
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "avg_publisher_installs": 2889268.5,
+    "mmp_domains": [
+      "appsflyer.com"
+    ],
+    "top_md5_hashes": [
+      "3d160cf3481f9cee56a49901b01547f0",
+      "3d160cf3481f9cee56a49901b01547f0",
+      "cd9f0576e8118cf454493bea4d791cc4",
+      "cd9f0576e8118cf454493bea4d791cc4",
+      "cd9f0576e8118cf454493bea4d791cc4"
+    ]
+  },
+  {
+    "advertiser_name": "Soccer Superstar",
+    "advertiser_store_id": "com.soccer.score.star",
+    "advertiser_icon_url_100": "e1795c074b48a79b.png",
+    "advertiser_category": "game_sports",
+    "advertiser_installs": 444453948,
+    "unique_creatives": 23,
+    "unique_publishers": 19,
+    "first_seen": "2026-05-24T17:04:58.047",
+    "last_seen": "2026-05-31T13:11:24.039",
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "avg_publisher_installs": 4358897.392857143,
+    "mmp_domains": [
+      "adjust.com"
+    ],
+    "top_md5_hashes": [
+      "62a19a2540665abf48662a5d6535e0b7",
+      "dfad5bdd13abcad06db9a694372c4c04",
+      "f5c323b054deec7fdecab2071c7a9bc7",
+      "d92f3f9f60700c70f072331daa2d7da5",
+      "2036fc353a3bcbf1b5097addd81f3d71"
+    ]
+  },
+  {
+    "advertiser_name": "Pilot Simulator: Airplane Game",
+    "advertiser_store_id": "com.gp.pilot.simulator.airplanegames",
+    "advertiser_icon_url_100": "d6b54b2ca6c7244e.jpeg",
+    "advertiser_category": "game_simulation",
+    "advertiser_installs": 38196803,
+    "unique_creatives": 2,
+    "unique_publishers": 18,
+    "first_seen": "2026-05-27T22:23:28.109",
+    "last_seen": "2026-05-31T00:42:04.142",
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "avg_publisher_installs": 3682398.6666666665,
+    "mmp_domains": [
+      "adjust.com",
+      "appmetrica.yandex.com",
+      "metrica.yandex.com"
+    ],
+    "top_md5_hashes": [
+      "69027b6a230b584c0367741fc25a69a2",
+      "7c7e7203c70be11009ceeb04543cffde",
+      "baae5aa3aff664f875da132cfc063b4d",
+      "7c7e7203c70be11009ceeb04543cffde",
+      "7c7e7203c70be11009ceeb04543cffde"
+    ]
+  },
+  {
+    "advertiser_name": "Explora Browser, Web Browser",
+    "advertiser_store_id": "browser.web.fast.light.explore.mini",
+    "advertiser_icon_url_100": "eab5f06097c28d5a.jpeg",
+    "advertiser_category": "tools",
+    "advertiser_installs": 37705,
+    "unique_creatives": 5,
+    "unique_publishers": 17,
+    "first_seen": "2026-05-24T09:14:19.298",
+    "last_seen": "2026-05-31T22:57:11.796",
+    "ad_network_domains": [
+      "unity.com"
+    ],
+    "avg_publisher_installs": 3513261.8235294116,
+    "mmp_domains": null,
+    "top_md5_hashes": [
+      "5305c6b725fcde0a7d91b35d553d411a",
+      "5305c6b725fcde0a7d91b35d553d411a",
+      "ec46d2229d09163393d310b6b7e4f415",
+      "ec46d2229d09163393d310b6b7e4f415",
+      "ec46d2229d09163393d310b6b7e4f415"
+    ]
+  },
+  {
+    "advertiser_name": "Rhythm Tiles: Pop Songs",
+    "advertiser_store_id": "com.piano.music.rhythm.tiles.games",
+    "advertiser_icon_url_100": "f61c5965c363e384.png",
+    "advertiser_category": "game_casual",
+    "advertiser_installs": 1777748,
+    "unique_creatives": 8,
+    "unique_publishers": 16,
+    "first_seen": "2026-05-22T14:14:30.064",
+    "last_seen": "2026-05-27T10:09:51.169",
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "avg_publisher_installs": 15092391.035714285,
+    "mmp_domains": [
+      "appmetrica.yandex.com",
+      "appsflyer.com",
+      "metrica.yandex.com"
+    ],
+    "top_md5_hashes": [
+      "e280dc61dd54130bc912af12ff1718d4",
+      "2f12e1064f4c27a59e5ea1fed7eebbbb",
+      "e280dc61dd54130bc912af12ff1718d4",
+      "048a6554aab214c6bc01e78be46ff253",
+      "58d7eff90a8032441f9d2838193e291e"
+    ]
+  },
+  {
+    "advertiser_name": "Tile Explorer - Triple Match",
+    "advertiser_store_id": "com.oakever.tiletrip",
+    "advertiser_icon_url_100": "80dfdefa0d443946.png",
+    "advertiser_category": "game_puzzle",
+    "advertiser_installs": 219453221,
+    "unique_creatives": 14,
+    "unique_publishers": 16,
+    "first_seen": "2026-05-24T10:34:23.123",
+    "last_seen": "2026-05-31T21:47:27.148",
+    "ad_network_domains": [
+      "bidease.com",
+      "digitalturbine.com",
+      "google.com",
+      "unity.com"
+    ],
+    "avg_publisher_installs": 6548732.222222222,
+    "mmp_domains": [
+      "airbridge.io",
+      "appmetrica.yandex.com",
+      "appsflyer.com",
+      "metrica.yandex.com"
+    ],
+    "top_md5_hashes": [
+      "09851f5052b920d4d391dff98196c518",
+      "037044a3206ed14b2dfe0ead1951e1be",
+      "759ca8a05c2313dd3b8a02922dcfc748",
+      "f2b49837f1ee279fb4a2bc80935633b7",
+      "09851f5052b920d4d391dff98196c518"
+    ]
+  },
+  {
+    "advertiser_name": "Bazaraki",
+    "advertiser_store_id": "com.larixon.bazaraki",
+    "advertiser_icon_url_100": "87a7781e36189c73.png",
+    "advertiser_category": "shopping",
+    "advertiser_installs": 626754,
+    "unique_creatives": 19,
+    "unique_publishers": 16,
+    "first_seen": "2026-05-24T01:59:43.223",
+    "last_seen": "2026-05-27T10:01:14.416",
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "avg_publisher_installs": 8747199.0,
+    "mmp_domains": [
+      "appmetrica.yandex.com",
+      "appsflyer.com",
+      "metrica.yandex.com"
+    ],
+    "top_md5_hashes": [
+      "c6d2e98a000dcfd47d7f9fb256daea61",
+      "b83771df21357469f01424b055b14462",
+      "09e46d67f91b34b646b1db3c3ac5e5bf",
+      "09e46d67f91b34b646b1db3c3ac5e5bf",
+      "971eb59e8434c1b4921b573f80472db3"
+    ]
+  },
+  {
+    "advertiser_name": "Arrows \u2013 Puzzle Escape",
+    "advertiser_store_id": "com.ecffri.arrows",
+    "advertiser_icon_url_100": "be9999e1c1666398.png",
+    "advertiser_category": "game_puzzle",
+    "advertiser_installs": 63714391,
+    "unique_creatives": 9,
+    "unique_publishers": 15,
+    "first_seen": "2026-05-22T09:30:57.249",
+    "last_seen": "2026-05-31T13:06:03.635",
+    "ad_network_domains": [
+      "google.com",
+      "moloco.com"
+    ],
+    "avg_publisher_installs": 13543943.6,
+    "mmp_domains": [
+      "singular.net"
+    ],
+    "top_md5_hashes": [
+      "a714c146be96317332fb0a5a99139945",
+      "95ae824945647767885614a8c6e39603",
+      "75e3b5a04893ea7ab29d36d91702fcfc",
+      "4916a9ba8c62323fb2c707f760f82fc5",
+      "02e0e402af53906828dd4cd701997eef"
+    ]
+  },
+  {
+    "advertiser_name": "Mr Spider Hero Shooting Puzzle",
+    "advertiser_store_id": "com.nexar.spider.web.shooting.puzzles",
+    "advertiser_icon_url_100": "c6e2918e2ce9cf4c.png",
+    "advertiser_category": "game_puzzle",
+    "advertiser_installs": 38601378,
+    "unique_creatives": 17,
+    "unique_publishers": 14,
+    "first_seen": "2026-05-27T17:05:17.724",
+    "last_seen": "2026-05-31T05:37:43.856",
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "avg_publisher_installs": 1962299.4285714286,
+    "mmp_domains": [
+      "adjust.com"
+    ],
+    "top_md5_hashes": [
+      "a5a9a44f4f5e91e025a57c517858c780",
+      "a23c3ed196a26f5ba04c2e094acc21bb",
+      "a23c3ed196a26f5ba04c2e094acc21bb",
+      "41938f7e01444d42a53786f53c2a3a99",
+      "28a8a798ef89a0f7eee49f5c0da62e44"
+    ]
+  },
+  {
+    "advertiser_name": "Tada - Group Voice Chat Rooms",
+    "advertiser_store_id": "com.vpb.popo",
+    "advertiser_icon_url_100": "bcc1833cce736938.png",
+    "advertiser_category": "entertainment",
+    "advertiser_installs": 8194798,
+    "unique_creatives": 4,
+    "unique_publishers": 14,
+    "first_seen": "2026-05-22T09:39:09.316",
+    "last_seen": "2026-05-27T03:09:25.241",
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "avg_publisher_installs": 19069652.23529412,
+    "mmp_domains": [
+      "appsflyer.com",
+      "developer.huawei.com"
+    ],
+    "top_md5_hashes": [
+      "630887cc2988a32e7a01114f69bdd90e",
+      "8c6d2b01456a1d87dee8f02ed7a286ac",
+      "630887cc2988a32e7a01114f69bdd90e",
+      "630887cc2988a32e7a01114f69bdd90e",
+      "7566ebb079bbf2fd8762e1be54c7d23d"
+    ]
+  },
+  {
+    "advertiser_name": "Dola: Smart AI Assistant",
+    "advertiser_store_id": "com.larus.wolf",
+    "advertiser_icon_url_100": "b963c724d21c9bd8.png",
+    "advertiser_category": "productivity",
+    "advertiser_installs": 228433151,
+    "unique_creatives": 13,
+    "unique_publishers": 14,
+    "first_seen": "2026-05-27T22:06:10.495",
+    "last_seen": "2026-05-30T04:41:01.213",
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "avg_publisher_installs": 2197650.1052631577,
+    "mmp_domains": [
+      "appsflyer.com"
+    ],
+    "top_md5_hashes": [
+      "c1c664fe28d35d93d014c5aee62ec9c6",
+      "e73214ed5516ad201375bbcd20e7e317",
+      "4971f4355ce147c15e1df86ea1457a65",
+      "bbe3f7107cbe38acc61c98ee235c2501",
+      "d8390a236df60c93bb1b6b83a928872e"
+    ]
+  },
+  {
+    "advertiser_name": "Magic Fashion: Doll Dressup",
+    "advertiser_store_id": "com.game.fashion.magic.princess.dressup",
+    "advertiser_icon_url_100": "b3868f33cc73c8c8.png",
+    "advertiser_category": "game_simulation",
+    "advertiser_installs": 37850452,
+    "unique_creatives": 5,
+    "unique_publishers": 14,
+    "first_seen": "2026-05-22T13:59:38.961",
+    "last_seen": "2026-05-26T17:38:16.302",
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "avg_publisher_installs": 21133739.785714287,
+    "mmp_domains": [
+      "appmetrica.yandex.com",
+      "appsflyer.com",
+      "metrica.yandex.com"
+    ],
+    "top_md5_hashes": [
+      "d7aea69dac31f1636eb00973b241f599",
+      "c50f164f867ac8811539c1fce331d88c",
+      "a51a01736e982b2590202f82f40e3a2a",
+      "a51a01736e982b2590202f82f40e3a2a",
+      "a51a01736e982b2590202f82f40e3a2a"
+    ]
+  },
+  {
+    "advertiser_name": "PETFOODCYPRUS",
+    "advertiser_store_id": "com.PETFOODCYPRUS.PETFOODCYPRUS",
+    "advertiser_icon_url_100": "91c06e3f91c06e3f.png",
+    "advertiser_category": "shopping",
+    "advertiser_installs": 40726,
+    "unique_creatives": 5,
+    "unique_publishers": 14,
+    "first_seen": "2026-05-24T00:18:48.592",
+    "last_seen": "2026-05-27T11:30:05.860",
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "avg_publisher_installs": 8433282.5,
+    "mmp_domains": null,
+    "top_md5_hashes": [
+      "582643298b22294e8562f123deb12fcd",
+      "60b9ee3fc6ac5b7d5b528e00eb0157f5",
+      "582643298b22294e8562f123deb12fcd",
+      "582643298b22294e8562f123deb12fcd",
+      "582643298b22294e8562f123deb12fcd"
+    ]
+  },
+  {
+    "advertiser_name": "8 Pool Master",
+    "advertiser_store_id": "com.afgame.app.poolball",
+    "advertiser_icon_url_100": "e94b3436cb61946e.png",
+    "advertiser_category": "game_sports",
+    "advertiser_installs": 13450426,
+    "unique_creatives": 9,
+    "unique_publishers": 13,
+    "first_seen": "2026-05-28T21:19:35.101",
+    "last_seen": "2026-05-31T21:12:26.870",
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "avg_publisher_installs": 1729188.5625,
+    "mmp_domains": null,
+    "top_md5_hashes": [
+      "2280437122a9d71ffa1ec5e35ee52ce0",
+      "bc2a43d275ec811c6cca13594f0d3270",
+      "ea9c22f5911aa5e826e7a2053604bf7d",
+      "9884fe45e30844ba1925348a4029aec8",
+      "07cfb02400b6394ab3f324122e22b073"
+    ]
+  },
+  {
+    "advertiser_name": "StarMaker: Sing Karaoke Songs",
+    "advertiser_store_id": "com.starmakerinteractive.starmaker",
+    "advertiser_icon_url_100": "807c7f2770c23727.png",
+    "advertiser_category": "music_and_audio",
+    "advertiser_installs": 617440914,
+    "unique_creatives": 8,
+    "unique_publishers": 13,
+    "first_seen": "2026-05-27T20:23:34.800",
+    "last_seen": "2026-05-31T21:54:43.740",
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "avg_publisher_installs": 2767346.3333333335,
+    "mmp_domains": [
+      "appmetrica.yandex.com",
+      "appsflyer.com",
+      "metrica.yandex.com"
+    ],
+    "top_md5_hashes": [
+      "84d2f501f6f4471ffce4decefa81a588",
+      "e32655d5d42feda13b4253fb19294e8f",
+      "511761610c59fa4e65beee640ae52047",
+      "e32655d5d42feda13b4253fb19294e8f",
+      "1ff3d412872bcdde0a80d99ce92117e1"
+    ]
+  },
+  {
+    "advertiser_name": "World War Heroes \u2014 WW2 PvP FPS",
+    "advertiser_store_id": "com.gamedevltd.wwh",
+    "advertiser_icon_url_100": "806ec5b93b912ee5.png",
+    "advertiser_category": "game_action",
+    "advertiser_installs": 155581536,
+    "unique_creatives": 10,
+    "unique_publishers": 11,
+    "first_seen": "2026-05-27T12:19:08.579",
+    "last_seen": "2026-05-31T14:46:04.944",
+    "ad_network_domains": [
+      "bidease.com",
+      "google.com"
+    ],
+    "avg_publisher_installs": 1998003.45,
+    "mmp_domains": [
+      "appmetrica.yandex.com",
+      "appsflyer.com",
+      "metrica.yandex.com"
+    ],
+    "top_md5_hashes": [
+      "76549e1cc88a41adca962f6306aa501d",
+      "ec1edc4bc1cc6d6e4c436bc13d8b8098",
+      "379ecb634b27eb72db692c0b7ab2ee18",
+      "dc52ce91fa14c4d7fe0b38ddb916527f",
+      "f5db1b3d4b75e464f692ee5cf2d6d75b"
+    ]
+  },
+  {
+    "advertiser_name": "Mobile Legends: Bang Bang",
+    "advertiser_store_id": "com.mobile.legends",
+    "advertiser_icon_url_100": "ea801b416f8535bf.png",
+    "advertiser_category": "game_action",
+    "advertiser_installs": 913683057,
+    "unique_creatives": 10,
+    "unique_publishers": 11,
+    "first_seen": "2026-05-28T09:44:57.892",
+    "last_seen": "2026-05-29T13:51:34.933",
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "avg_publisher_installs": 2233126.6666666665,
+    "mmp_domains": [
+      "adjust.com"
+    ],
+    "top_md5_hashes": [
+      "379a785bb129d30fdbdc4d9f0c4a4248",
+      "11bda567fddb85d939788191fd470027",
+      "dc920b4a35328a9c39f9d898838f496c",
+      "27575b5c972abfca8625ad9b208261bb",
+      "e48b597e55d755ee6a8eb604c8d55def"
+    ]
+  },
+  {
+    "advertiser_name": "Talkie: Creative AI Community",
+    "advertiser_store_id": "com.weaver.app.prod",
+    "advertiser_icon_url_100": "90787f8781787a87.png",
+    "advertiser_category": "entertainment",
+    "advertiser_installs": 55869498,
+    "unique_creatives": 5,
+    "unique_publishers": 11,
+    "first_seen": "2026-05-24T14:06:44.165",
+    "last_seen": "2026-05-26T13:51:31.109",
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "avg_publisher_installs": 7761460.7272727275,
+    "mmp_domains": [
+      "adjust.com",
+      "appsflyer.com"
+    ],
+    "top_md5_hashes": [
+      "6f39bdaccf249a2f21673be7da0003e8",
+      "45fc8dca6ca5e0d362040ee10b4b2bc4",
+      "45fc8dca6ca5e0d362040ee10b4b2bc4",
+      "1af152df21cdce524d11301eb923e433",
+      "18686f022eb2d7dbc026aaa2cccb6f1e"
+    ]
+  },
+  {
+    "advertiser_name": "Princesses - Enchanted Castle",
+    "advertiser_store_id": "com.tutotoons.app.princesses",
+    "advertiser_icon_url_100": "859a577f007cd247.png",
+    "advertiser_category": "game_educational",
+    "advertiser_installs": 30205283,
+    "unique_creatives": 9,
+    "unique_publishers": 11,
+    "first_seen": "2026-05-22T12:11:24.688",
+    "last_seen": "2026-05-31T00:52:51.558",
+    "ad_network_domains": [
+      "tutoads.tv"
+    ],
+    "avg_publisher_installs": 17041167.25,
+    "mmp_domains": [
+      "singular.net",
+      "sng.link"
+    ],
+    "top_md5_hashes": [
+      "b1f552adc05f536ca552a6dcc79baa68",
+      "0503685b9a1cdae71ab11a0dda925318",
+      "0503685b9a1cdae71ab11a0dda925318",
+      "f98763cc3ce79327c8aa060d9ff6938e",
+      "eefd6529e7d21b5a4d613a172b087c56"
+    ]
+  },
+  {
+    "advertiser_name": "CallApp: Caller ID & Block",
+    "advertiser_store_id": "com.callapp.contacts",
+    "advertiser_icon_url_100": "eb32b44cc3989e33.png",
+    "advertiser_category": "communication",
+    "advertiser_installs": 418600478,
+    "unique_creatives": 11,
+    "unique_publishers": 10,
+    "first_seen": "2026-05-27T13:59:13.048",
+    "last_seen": "2026-05-31T15:33:09.285",
+    "ad_network_domains": [
+      "bidease.com",
+      "google.com"
+    ],
+    "avg_publisher_installs": 2422364.4285714286,
+    "mmp_domains": [
+      "singular.net"
+    ],
+    "top_md5_hashes": [
+      "a4f3ab83ef8e5687d980c29123e1dc9e",
+      "4b4c1c556b3018987590d096f98b698f",
+      "01fbb16193666cc985b641f432d495bf",
+      "c78e26444248e5b6051053777461c087",
+      "1b13525bbe13fb0511167bc98dea6c99"
+    ]
+  },
+  {
+    "advertiser_name": "Flood-It!",
+    "advertiser_store_id": "com.labpixies.flood",
+    "advertiser_icon_url_100": "c578856e303e6b27.png",
+    "advertiser_category": "game_puzzle",
+    "advertiser_installs": 4904732,
+    "unique_creatives": 2,
+    "unique_publishers": 10,
+    "first_seen": "2026-05-25T12:37:38.747",
+    "last_seen": "2026-05-31T21:34:38.039",
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "avg_publisher_installs": 2442646.909090909,
+    "mmp_domains": null,
+    "top_md5_hashes": [
+      "6708fd9abe3e1c4d4eb55ef34de0c3dc",
+      "6708fd9abe3e1c4d4eb55ef34de0c3dc",
+      "6708fd9abe3e1c4d4eb55ef34de0c3dc",
+      "ded513fe20b0b3d15fc375fefd59e79a",
+      "6708fd9abe3e1c4d4eb55ef34de0c3dc"
+    ]
+  },
+  {
+    "advertiser_name": "Volume Booster - Sound Booster",
+    "advertiser_store_id": "volumebooster.soundspeaker.louder",
+    "advertiser_icon_url_100": "c526582e69ba856f.png",
+    "advertiser_category": "music_and_audio",
+    "advertiser_installs": 63196011,
+    "unique_creatives": 9,
+    "unique_publishers": 10,
+    "first_seen": "2026-05-28T09:26:09.208",
+    "last_seen": "2026-05-31T13:51:31.110",
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "avg_publisher_installs": 3324082.3636363638,
+    "mmp_domains": null,
+    "top_md5_hashes": [
+      "dc0ab8fb258d46ef80847ff0d5ab61cf",
+      "bf7d64f0f0bb86d527e588c015c6caaf",
+      "3ff6f5f28dc12e16d327134a0bcd9899",
+      "3d2921face5c0324885fcfc41a6fd42e",
+      "2c852fa75491677476358ee31aa294de"
+    ]
+  },
+  {
+    "advertiser_name": "Alice AI",
+    "advertiser_store_id": "com.yandex.aliceapp",
+    "advertiser_icon_url_100": "eb98b4e29a2dc992.png",
+    "advertiser_category": "productivity",
+    "advertiser_installs": 15382550,
+    "unique_creatives": 5,
+    "unique_publishers": 10,
+    "first_seen": "2026-05-29T13:59:15.318",
+    "last_seen": "2026-05-31T03:47:29.428",
+    "ad_network_domains": [
+      "yandex.com"
+    ],
+    "avg_publisher_installs": 2761371.2,
+    "mmp_domains": [
+      "adjust.com",
+      "appmetrica.yandex.com",
+      "metrica.yandex.com"
+    ],
+    "top_md5_hashes": [
+      "515b2f86132cbaf5c340dbcaccddaf18",
+      "235c4a8ade13cf2a9b9ac76a51624ab2",
+      "b4a1a96771f80170375f45e31f2fa556",
+      "660f4a2f833bad39c4faa3087708fbb3",
+      "63c2e8a021202b00c6bf329aeddbc0cd"
+    ]
+  },
+  {
+    "advertiser_name": "AppLock Pro - App Lock & Guard",
+    "advertiser_store_id": "com.ibragunduz.applockpro",
+    "advertiser_icon_url_100": "d2cb4f646c923993.png",
+    "advertiser_category": "productivity",
+    "advertiser_installs": 184041675,
+    "unique_creatives": 5,
+    "unique_publishers": 10,
+    "first_seen": "2026-05-27T16:22:32.943",
+    "last_seen": "2026-05-31T04:39:49.308",
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "avg_publisher_installs": 2543868.4,
+    "mmp_domains": [
+      "appmetrica.yandex.com",
+      "metrica.yandex.com",
+      "singular.net"
+    ],
+    "top_md5_hashes": [
+      "4f38c8de692f8575fe546a8a2d0c9064",
+      "4f38c8de692f8575fe546a8a2d0c9064",
+      "4f38c8de692f8575fe546a8a2d0c9064",
+      "4f38c8de692f8575fe546a8a2d0c9064",
+      "cc606a37746a7ab4aec26dbc59a29c46"
+    ]
+  },
+  {
+    "advertiser_name": "My Puppy Daycare Salon",
+    "advertiser_store_id": "com.lionroar.puppydaycare",
+    "advertiser_icon_url_100": "c12d0d4e376734f8.png",
+    "advertiser_category": "game_role_playing",
+    "advertiser_installs": 25590850,
+    "unique_creatives": 2,
+    "unique_publishers": 10,
+    "first_seen": "2026-05-24T07:19:14.467",
+    "last_seen": "2026-05-31T17:46:40.096",
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "avg_publisher_installs": 5643375.076923077,
+    "mmp_domains": null,
+    "top_md5_hashes": [
+      "fc5db0672aed471b0bb0db29aec33cdd",
+      "fc5db0672aed471b0bb0db29aec33cdd",
+      "fc5db0672aed471b0bb0db29aec33cdd",
+      "2056a2dde0d46dd7bbcdaa708d2ad5fa",
+      "fc5db0672aed471b0bb0db29aec33cdd"
+    ]
+  },
+  {
+    "advertiser_name": "Triple Match City",
+    "advertiser_store_id": "com.rc.cityCleaner",
+    "advertiser_icon_url_100": "f6a9d1b2d42a87c2.jpeg",
+    "advertiser_category": "game_puzzle",
+    "advertiser_installs": 4616901,
+    "unique_creatives": 3,
+    "unique_publishers": 10,
+    "first_seen": "2026-05-24T03:48:05.213",
+    "last_seen": "2026-05-27T11:38:04.615",
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "avg_publisher_installs": 8561564.923076924,
+    "mmp_domains": [
+      "adjust.com"
+    ],
+    "top_md5_hashes": [
+      "b48f6c2723803008d84686170e653dc0",
+      "b48f6c2723803008d84686170e653dc0",
+      "b48f6c2723803008d84686170e653dc0",
+      "b48f6c2723803008d84686170e653dc0",
+      "775320edef288bcfd4945f46cadc2e8b"
+    ]
+  },
+  {
+    "advertiser_name": "Moneplay:Earn Rewards",
+    "advertiser_store_id": "com.zb.integralwall",
+    "advertiser_icon_url_100": "80222a8828a2a228.png",
+    "advertiser_category": "entertainment",
+    "advertiser_installs": 3055105,
+    "unique_creatives": 6,
+    "unique_publishers": 9,
+    "first_seen": "2026-05-27T17:11:58.837",
+    "last_seen": "2026-05-29T19:49:15.231",
+    "ad_network_domains": [
+      "google.com",
+      "mobvista.com",
+      "unity.com"
+    ],
+    "avg_publisher_installs": 2657308.8181818184,
+    "mmp_domains": [
+      "appsflyer.com"
+    ],
+    "top_md5_hashes": [
+      "01514d72a4d0c7a08d3d4d6406886de5",
+      "93883202066b2e776fc566a5a35941f6",
+      "6a085aff5c6eb143535b548b5be7ac03",
+      "9081be262c5ca667764e1adfbae61bbc",
+      "9081be262c5ca667764e1adfbae61bbc"
+    ]
+  },
+  {
+    "advertiser_name": "Find Hidden Cats- Spot it!",
+    "advertiser_store_id": "spot.hidden.cat.find.hidden.objects",
+    "advertiser_icon_url_100": "dff6a058a7429e50.png",
+    "advertiser_category": "game_casual",
+    "advertiser_installs": 958644,
+    "unique_creatives": 3,
+    "unique_publishers": 9,
+    "first_seen": "2026-05-27T15:54:18.029",
+    "last_seen": "2026-05-31T16:24:19.035",
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "avg_publisher_installs": 1428230.4444444445,
+    "mmp_domains": [
+      "adjust.com",
+      "appsflyer.com"
+    ],
+    "top_md5_hashes": [
+      "bad90f68cf1e4616220bbf56fd906313",
+      "4f8448d213dd0ade3a4eba5a5999fd7b",
+      "bad90f68cf1e4616220bbf56fd906313",
+      "bad90f68cf1e4616220bbf56fd906313",
+      "bad90f68cf1e4616220bbf56fd906313"
+    ]
+  }
+]

@@ -48,6 +48,7 @@
 	<meta property="og:type" content="website" />
 	<meta name="twitter:card" content="summary_large_image" />
 	<meta name="twitter:image" content="https://appgoblin.info/goblin_purple_hat_250.png" />
+	<meta name="robots" content="index, follow" />
 </svelte:head>
 
 <div class="p-2 px-2 md:px-16 lg:px-32">

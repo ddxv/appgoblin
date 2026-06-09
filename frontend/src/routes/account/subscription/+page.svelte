@@ -2,6 +2,7 @@
 	import { enhance } from '$app/forms';
 	import type { PageData } from './$types';
 	import { getPlanSummary } from '$lib/account/subscription';
+	import Crown from 'lucide-svelte/icons/crown';
 
 	let { data }: { data: PageData } = $props();
 	let planSummary = $derived(getPlanSummary(data.subscriptionTier));
@@ -44,7 +45,12 @@
 							<p class="font-bold text-xl mb-1">{formatStatus(data.subscription.status)}</p>
 						{/if}
 
-						<p>Plan: {data.subscriptionTier ?? planSummary.name}</p>
+						<p>
+							Plan: {#if data.subscriptionTier && data.subscriptionTier !== 'Premium Access'}<Crown
+									class="inline w-4 h-4 mr-0.5 -mt-0.5 text-primary-900-100"
+									aria-hidden="true"
+								/>{/if}{data.subscriptionTier ?? planSummary.name}
+						</p>
 						<p class="mt-3 max-w-2xl text-sm">{planSummary.description}</p>
 
 						<div class="mt-2">
@@ -69,7 +75,12 @@
 				<div class="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
 					<div class="rounded-lg border border-surface-300-700 p-4">
 						<p class="text-xs font-semibold uppercase tracking-wide">Plan tier</p>
-						<p class="mt-1 font-semibold">{data.subscriptionTier ?? planSummary.name}</p>
+						<p class="mt-1 font-semibold">
+							{#if data.subscriptionTier && data.subscriptionTier !== 'Premium Access'}<Crown
+									class="inline w-4 h-4 mr-0.5 -mt-0.5 text-primary-900-100"
+									aria-hidden="true"
+								/>{/if}{data.subscriptionTier ?? planSummary.name}
+						</p>
 					</div>
 					<div class="rounded-lg border border-surface-300-700 p-4">
 						<p class="text-xs font-semibold uppercase tracking-wide">API limits</p>

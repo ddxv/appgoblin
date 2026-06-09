@@ -9,6 +9,11 @@ import pandas as pd
 from config import MODULE_DIR, get_logger
 from dbcon.connections import get_db_connection
 from dbcon.queries import get_sitemap_apps, get_sitemap_companies
+from dbcon.static import (
+    build_app_categories_overview,
+    load_appstore_categories,
+    write_app_categories_json,
+)
 
 logger = get_logger(__name__)
 
@@ -253,3 +258,10 @@ allurls = pd.concat(
 )
 
 create_sitemap(allurls, "sitemap.xml")
+
+appstore_categories = load_appstore_categories(dbcon.engine)
+app_categories = build_app_categories_overview(appstore_categories)
+app_categories_path = write_app_categories_json(
+    app_categories, SITEMAP_DIR / "appCategories.json"
+)
+logger.info(f"Generated {app_categories_path.name}")

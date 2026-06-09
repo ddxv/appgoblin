@@ -80,11 +80,27 @@
 	<title>{data.title}</title>
 	<meta name="description" content={data.description} />
 	<meta name="keywords" content={data.keywords} />
+	<meta property="og:type" content="article" />
+	<meta property="og:site_name" content="AppGoblin" />
+	<meta property="og:title" content={data.title} />
+	<meta property="og:description" content={data.description} />
+	<meta
+		property="og:url"
+		content="https://appgoblin.info/reports/ad-user-acquisition-2025-september"
+	/>
+	<meta property="og:image" content="https://appgoblin.info/appgoblin_screenshot.png" />
+	<meta property="article:published_time" content="2025-10-01" />
+	<meta property="article:author" content="AppGoblin" />
+	<meta property="article:section" content="Mobile Advertising" />
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:title" content={data.title} />
+	<meta name="twitter:description" content={data.description} />
+	<meta name="twitter:image" content="https://appgoblin.info/appgoblin_screenshot.png" />
 
 	<!-- Structured Data for Report and NewsArticle -->
 	{@html `<script type="application/ld+json">${JSON.stringify({
 		'@context': 'https://schema.org',
-		'@type': 'Report',
+		'@type': ['Report', 'NewsArticle'],
 		name: data.title,
 		headline: data.title,
 		description: data.description,

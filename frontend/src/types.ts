@@ -111,12 +111,23 @@ export interface AppleStoreSearchResponse {
 export interface CategoryInfo {
 	id: string;
 	name: string;
-	android: string;
-	ios: string;
+	android: boolean;
+	ios: boolean;
 }
 
 export interface CatData {
-	categories: Array<{ id: string; name: string; android: number; ios: number }>;
+	categories: Array<{ id: string; name: string; android: boolean; ios: boolean }>;
+}
+
+export interface SideBarCategoryItem {
+	id: string;
+	name: string;
+	android: boolean | number;
+	ios: boolean | number;
+}
+
+export interface SideBarCategoryData {
+	categories: SideBarCategoryItem[];
 }
 
 export interface CategoriesInfo {
@@ -360,6 +371,8 @@ export interface CompanyOverviewApps {
 	publisher: boolean;
 	api_call: boolean;
 	app_ads_direct: boolean;
+	year?: number;
+	quarter?: number;
 }
 
 export interface CompanyAppChangesOverview {
@@ -429,6 +442,15 @@ export interface CategoryAppStats {
 	sdk_ios_installs_d30: number;
 	adstxt_direct_android_installs_d30: number;
 	adstxt_reseller_android_installs_d30: number;
+	api_android_installs_d30: number;
+	// Universe totals for market share / penetration computation
+	sdk_android_universe_apps: number;
+	sdk_ios_universe_apps: number;
+	sdk_android_universe_installs_d30: number;
+	sdk_ios_universe_installs_d30: number;
+	api_android_universe_apps: number;
+	api_ios_universe_apps: number;
+	api_android_universe_installs_d30: number;
 }
 
 export interface CompanyDomain {
@@ -470,11 +492,41 @@ export interface CompanyLookup {
 	company_domain: string;
 }
 
+export interface CompanyTabIndicators {
+	company_domain: string;
+	domain_id: number | null;
+	company_id: number | null;
+	company_name: string | null;
+	logo_url: string | null;
+	parent_company_id: number | null;
+	parent_domain: string | null;
+	has_sdk_signal: boolean;
+	has_api_signal: boolean;
+	has_publisher_signal: boolean;
+	has_app_ads_direct: boolean;
+	has_app_ads_reseller: boolean;
+	creatives_app_count: number;
+	has_trends: number;
+	apps_added_count: number;
+	apps_lost_count: number;
+	sdk_count: number;
+	mediation_adapter_count: number;
+	adstxt_direct_app_count: number;
+	creatives_app_count_direct: number;
+	has_trends_direct: number;
+	apps_added_count_direct: number;
+	apps_lost_count_direct: number;
+	sdk_count_direct: number;
+	mediation_adapter_count_direct: number;
+	is_parent_domain: boolean;
+}
+
 export interface CompanyLayoutDetails {
 	companyDetails: CompanyCategoryOverview;
 	companyTree: CompanyTree;
 	companyLookup: CompanyLookup | null;
 	isFollowingCompany: boolean;
+	tabIndicators: CompanyTabIndicators;
 }
 
 export interface CompanyPatterns {
@@ -652,6 +704,11 @@ export interface CompanyCreative {
 	store_link?: string;
 }
 
+type AppCategoriesByStore = {
+	android: TabularData;
+	ios: TabularData;
+};
+
 export interface CompanyFullDetails {
 	status?: number;
 	error?: string;
@@ -661,8 +718,10 @@ export interface CompanyFullDetails {
 
 	companyTree: CompanyTree;
 	companySdks: CompanySDKsDict;
-	companyParentCategories: TabularData;
+	companyAppCategories: AppCategoriesByStore;
+	parentAppCategories: AppCategoriesByStore | null;
 	companyCreatives: CompanyCreative[];
+	hasB2BSdkAccess?: boolean;
 }
 
 export interface CompanyTrendsDetails {
@@ -681,6 +740,7 @@ export interface CompanyCategoryDetails {
 	companyDetails: CompanyCategoryOverview;
 	companyCategoryApps: CompanyOverviewSections;
 	companyTree: CompanyTree;
+	hasB2BSdkAccess?: boolean;
 }
 
 export interface KeywordScore {

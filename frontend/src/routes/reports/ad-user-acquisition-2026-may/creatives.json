@@ -1,0 +1,112 @@
+[
+  {
+    "phash": "9c766f98d3cb",
+    "md5_hash": "b3e69b821ef5c31a8faddf29e606af55",
+    "file_extension": "webm",
+    "advertiser_count": 1,
+    "publisher_count": 29,
+    "first_seen": "2026-05-24T02:04:58.446",
+    "last_seen": "2026-05-27T09:31:52.447",
+    "advertiser_store_id": "com.buysellcyprus.android.app",
+    "advertiser_icon_url_100": "969c6963666c9636.png"
+  },
+  {
+    "phash": "78d97d738dcf",
+    "md5_hash": "636d0e9cd055ebfc6ba7a564bc545592",
+    "file_extension": "mp4",
+    "advertiser_count": 1,
+    "publisher_count": 26,
+    "first_seen": "2026-05-24T00:49:41.688",
+    "last_seen": "2026-05-27T09:57:06.718",
+    "advertiser_store_id": "com.vandele.pitchchanger",
+    "advertiser_icon_url_100": "9d316293a46c739b.png"
+  },
+  {
+    "phash": "955afb492e6c",
+    "md5_hash": "dc687bff30b85b20b00b1def24a1b9ec",
+    "file_extension": "mp4",
+    "advertiser_count": 1,
+    "publisher_count": 21,
+    "first_seen": "2026-05-27T21:47:38.108",
+    "last_seen": "2026-05-31T13:03:31.843",
+    "advertiser_store_id": "org.sabgames.domino",
+    "advertiser_icon_url_100": "97903e06396f61d9.png"
+  },
+  {
+    "phash": "bdda3b5f7ef6",
+    "md5_hash": "048a6554aab214c6bc01e78be46ff253",
+    "file_extension": "webm",
+    "advertiser_count": 1,
+    "publisher_count": 18,
+    "first_seen": "2026-05-22T14:14:30.064",
+    "last_seen": "2026-05-27T10:09:51.169",
+    "advertiser_store_id": "com.piano.music.rhythm.tiles.games",
+    "advertiser_icon_url_100": "f61c5965c363e384.png"
+  },
+  {
+    "phash": "fb33f59ff76c",
+    "md5_hash": "55d5b66c93cc562435907f7af0894d06",
+    "file_extension": "mp4",
+    "advertiser_count": 1,
+    "publisher_count": 17,
+    "first_seen": "2026-05-27T22:36:52.519",
+    "last_seen": "2026-05-30T09:39:04.982",
+    "advertiser_store_id": "com.rumble.battles",
+    "advertiser_icon_url_100": "b839c7c6cc393293.png"
+  },
+  {
+    "phash": "4f673af19cf0",
+    "md5_hash": "f0cda1589313fd7d3506203272c6319d",
+    "file_extension": "mp4",
+    "advertiser_count": 1,
+    "publisher_count": 17,
+    "first_seen": "2026-05-27T03:20:00.199",
+    "last_seen": "2026-05-27T23:34:52.720",
+    "advertiser_store_id": "com.cars.android",
+    "advertiser_icon_url_100": "814b3e3ec1cb3636.png"
+  },
+  {
+    "phash": "02e9cfebdbb3",
+    "md5_hash": "1ff9ace080ff351e48934763528de909",
+    "file_extension": "webm",
+    "advertiser_count": 1,
+    "publisher_count": 16,
+    "first_seen": "2026-05-26T22:53:55.059",
+    "last_seen": "2026-05-31T18:02:02.909",
+    "advertiser_store_id": "com.savysoda.pixelstarships",
+    "advertiser_icon_url_100": "a828d43f2fc1b23d.png"
+  },
+  {
+    "phash": "ed5d50fb6dfe",
+    "md5_hash": "41674a419c136757c5b91149fffa0f58",
+    "file_extension": "webm",
+    "advertiser_count": 1,
+    "publisher_count": 15,
+    "first_seen": "2026-05-22T07:08:24.778",
+    "last_seen": "2026-05-27T09:04:40.600",
+    "advertiser_store_id": "com.igg.android.lordsmobile",
+    "advertiser_icon_url_100": "92f3d8230fcd6a31.png"
+  },
+  {
+    "phash": "f3d98f7a7c26",
+    "md5_hash": "06168660b2cb31ee7928e12fe94fa4bc",
+    "file_extension": "mp4",
+    "advertiser_count": 1,
+    "publisher_count": 14,
+    "first_seen": "2026-05-25T18:48:12.417",
+    "last_seen": "2026-05-31T21:00:11.192",
+    "advertiser_store_id": "com.seedleap.loopitapp",
+    "advertiser_icon_url_100": "90b67c4f87397a60.jpeg"
+  },
+  {
+    "phash": "e7e7dd48e9e2",
+    "md5_hash": "630887cc2988a32e7a01114f69bdd90e",
+    "file_extension": "webm",
+    "advertiser_count": 1,
+    "publisher_count": 13,
+    "first_seen": "2026-05-22T09:39:09.316",
+    "last_seen": "2026-05-27T03:09:25.241",
+    "advertiser_store_id": "com.vpb.popo",
+    "advertiser_icon_url_100": "bcc1833cce736938.png"
+  }
+]

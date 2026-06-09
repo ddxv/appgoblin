@@ -1,4 +1,5 @@
 import type { PageServerLoad } from './$types';
+import type { CatData } from '../../types';
 
 import { error, redirect } from '@sveltejs/kit';
 import {
@@ -13,8 +14,7 @@ import {
 } from '$lib/ad-creatives';
 import { loginUrl } from '$lib/server/auth/auth';
 import { createApiClient } from '$lib/server/api';
-
-import { getCachedData } from '../../hooks.server';
+import { getAppCategories } from '$lib/server/appCategories';
 
 type PrimaryFilter = 'base' | 'network' | 'app-category';
 
@@ -93,7 +93,7 @@ export async function _loadAdCreativesPage({
 		: 'overall';
 	const selectedFormat = allowAdvancedFilters ? (queryFormat ?? 'all') : 'all';
 	const searchCompany = routeNetwork ?? queryCompany ?? '';
-	const { appCats } = await getCachedData();
+	const appCats = await getAppCategories();
 	const categoryOptions = buildAdCreativeCategoryOptions(appCats);
 
 	if (selectedCategory !== 'overall') {
@@ -196,10 +196,7 @@ function compareCreativeClusters(left: CreativeCluster, right: CreativeCluster):
 	return rightLastSeen - leftLastSeen;
 }
 
-function validateCategory(
-	category: string,
-	appCats: Awaited<ReturnType<typeof getCachedData>>['appCats']
-) {
+function validateCategory(category: string, appCats: CatData) {
 	const isValidCategory = appCats.categories.some((item) => item.id === category);
 
 	if (!isValidCategory) {

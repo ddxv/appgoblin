@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Crown from 'lucide-svelte/icons/crown';
 	import X from 'lucide-svelte/icons/x';
 	import Filter from 'lucide-svelte/icons/filter';
 	import Search from 'lucide-svelte/icons/search';
@@ -428,12 +429,33 @@
 		name="description"
 		content="Powerful app discovery tool for sales teams. Find apps using specific SDKs, ad networks, and monetization strategies."
 	/>
+	<meta
+		name="keywords"
+		content="app discovery, sdk search, app explorer, mobile app sales, lead generation, ad network app finder, appgoblin"
+	/>
+	<meta property="og:title" content="App Explorer - AppGoblin" />
+	<meta
+		property="og:description"
+		content="Discover and filter mobile apps by SDKs, ad networks, IAP, and monetization signals for sales prospecting and competitive research."
+	/>
+	<meta property="og:image" content="https://appgoblin.info/goblin_purple_hat_250.png" />
+	<meta property="og:url" content="https://appgoblin.info/app-explorer" />
+	<meta property="og:type" content="website" />
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:title" content="App Explorer - AppGoblin" />
+	<meta
+		name="twitter:description"
+		content="Discover and filter mobile apps by SDKs, ad networks, IAP, and monetization signals."
+	/>
+	<meta name="twitter:image" content="https://appgoblin.info/goblin_purple_hat_250.png" />
+	<meta name="robots" content="index, follow" />
+	<link rel="canonical" href="https://appgoblin.info/app-explorer" />
 </svelte:head>
 
 <div class="container mx-auto px-2 md:px-4 py-4 md:py-8">
 	<div class="mb-6">
 		<h1 class="text-2xl md:text-3xl font-bold">App Explorer</h1>
-		<p class="text-sm md:text-base mt-2">
+		<p class="text-sm mt-2">
 			Powerful app discovery and filtering tool for sales teams, market researchers, and app
 			developers.
 		</p>
@@ -651,7 +673,10 @@
 					{#if !hasB2BSdkAccess}
 						<div class="p-3 rounded-lg border border-warning-500 bg-warning-50-950/20">
 							<p class="text-xs text-warning-900-100">
-								Company include/exclude filters are available on the B2B SDK tier.
+								Company include/exclude filters are available on the <Crown
+									class="inline w-3 h-3 mr-0.5 -mt-0.5 text-primary-900-100"
+									aria-hidden="true"
+								/>B2B SDK tier.
 								<a href="/pricing" class="underline hover:text-primary-600-400">Upgrade</a>
 								to unlock.
 							</p>

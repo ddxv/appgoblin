@@ -1,46 +1,86 @@
 <script lang="ts">
 	import { PieChart, Text, Tooltip } from 'layerchart';
 
-	type CompanyCategoryDatum = {
-		group?: string;
-		key?: string;
-		label?: string;
-		value?: number;
+	type CategoryItem = {
+		group: string;
+		category: string;
+		value: number;
 	};
 
-	let { plotData, plotHeightPx = 250 } = $props();
+	type GroupMode = 'all' | 'games' | 'apps';
+
+	let {
+		plotData,
+		plotHeightPx = 250,
+		storeLabel = 'Apps (all sources)',
+		groupMode = $bindable('all')
+	}: {
+		plotData: CategoryItem[];
+		plotHeightPx?: number;
+		storeLabel?: string;
+		groupMode?: GroupMode;
+	} = $props();
 
 	const palette = ['#6929C4', '#1192E8', '#005D5D', '#9F1853', '#FA4D56', '#FF832B', '#198038'];
+	const MAX_SLICES = 9;
 
-	const normalizedPlotData = $derived.by(() => {
-		return ((plotData ?? []) as CompanyCategoryDatum[])
-			.map((item) => {
-				const label =
-					typeof item.group === 'string'
-						? item.group
-						: typeof item.label === 'string'
-							? item.label
-							: typeof item.key === 'string'
-								? item.key
-								: null;
-				const value = typeof item.value === 'number' ? item.value : 0;
+	function isGame(category: string): boolean {
+		return category.startsWith('game_');
+	}
 
-				if (!label || value <= 0) return null;
+	/** Apply client-side filtering to the raw category data. */
+	const groupedPlotData = $derived.by(() => {
+		const raw = (plotData ?? []) as CategoryItem[];
+		if (raw.length === 0) return [];
 
-				return {
-					key: label,
-					label,
-					value
-				};
-			})
-			.filter((item): item is { key: string; label: string; value: number } => item !== null)
+		let filtered = raw.map((d) => ({ ...d }));
+
+		if (groupMode === 'games') {
+			// Show only game subcategories
+			filtered = filtered.filter((item) => isGame(item.category));
+		} else if (groupMode === 'apps') {
+			// Show only non-game app categories
+			filtered = filtered.filter((item) => !isGame(item.category) || item.category === 'None');
+		}
+		// 'all' mode — keep all raw categories
+
+		// Sum values by category key (in case of duplicates after filtering)
+		const merged = new Map<string, { label: string; value: number }>();
+		for (const item of filtered) {
+			const key = item.category;
+			const label = item.group;
+			if (merged.has(key)) {
+				merged.get(key)!.value += item.value;
+			} else {
+				merged.set(key, { label, value: item.value });
+			}
+		}
+
+		// Sort descending
+		const entries = [...merged.entries()]
+			.map(([key, { label, value }]) => ({ key, label, value }))
 			.sort((a, b) => b.value - a.value);
+
+		// Top-N truncation: keep top MAX_SLICES, rest -> "Others"
+		if (entries.length > MAX_SLICES) {
+			const top = entries.slice(0, MAX_SLICES - 1);
+			const rest = entries.slice(MAX_SLICES - 1);
+			const othersValue = rest.reduce((s, d) => s + d.value, 0);
+			top.push({ key: 'others', label: 'Others', value: othersValue });
+			return top;
+		}
+
+		return entries;
 	});
 
-	const totalApps = $derived(normalizedPlotData.reduce((sum, item) => sum + item.value, 0));
+	const totalApps = $derived(groupedPlotData.reduce((sum, item) => sum + item.value, 0));
+
+	const centerLabel = $derived(
+		groupMode === 'games' ? 'Games' : groupMode === 'apps' ? 'Apps' : storeLabel
+	);
 
 	const labeledPlotData = $derived(
-		normalizedPlotData.map((item, index) => ({
+		groupedPlotData.map((item, index) => ({
 			...item,
 			color: palette[index % palette.length],
 			percentage: totalApps > 0 ? (item.value / totalApps) * 100 : 0
@@ -57,6 +97,27 @@
 </script>
 
 <div class="p-1 md:p-2">
+	<div class="mb-2 flex items-center gap-1.5">
+		<span class="text-[10px] uppercase tracking-[0.12em] opacity-50">Show</span>
+		<div class="inline-flex rounded border border-surface-300-700">
+			<button
+				type="button"
+				class={`px-2 py-0.5 text-xs transition ${groupMode === 'all' ? 'bg-secondary-700-300 text-white' : 'hover:bg-surface-200-800'}`}
+				onclick={() => (groupMode = 'all')}>All</button
+			>
+			<button
+				type="button"
+				class={`px-2 py-0.5 text-xs transition ${groupMode === 'games' ? 'bg-secondary-700-300 text-white' : 'hover:bg-surface-200-800'}`}
+				onclick={() => (groupMode = 'games')}>Games</button
+			>
+			<button
+				type="button"
+				class={`px-2 py-0.5 text-xs transition ${groupMode === 'apps' ? 'bg-secondary-700-300 text-white' : 'hover:bg-surface-200-800'}`}
+				onclick={() => (groupMode = 'apps')}>Apps</button
+			>
+		</div>
+	</div>
+
 	<PieChart
 		data={labeledPlotData}
 		key="key"
@@ -81,7 +142,7 @@
 				dy={-4}
 			/>
 			<Text
-				value="Apps (all sources)"
+				value={centerLabel}
 				textAnchor="middle"
 				verticalAnchor="middle"
 				class="text-base"
@@ -101,19 +162,4 @@
 			</Tooltip.Root>
 		{/snippet}
 	</PieChart>
-
-	<!-- <div class="mt-2 grid grid-cols-1 gap-1 text-xs md:grid-cols-2">
-		{#each labeledPlotData as item}
-			<div
-				class="flex items-center justify-between gap-3 rounded-md bg-surface-100-900/60 px-2 py-1"
-			>
-				<div class="flex min-w-0 items-center gap-2">
-					<span class="h-2.5 w-2.5 shrink-0 rounded-full" style={`background-color: ${item.color};`}
-					></span>
-					<span class="truncate">{item.label}</span>
-				</div>
-				<span class="shrink-0 font-medium">{formatPercent(item.percentage)}</span>
-			</div>
-		{/each}
-	</div> -->
 </div>
