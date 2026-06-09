@@ -476,7 +476,7 @@
 
 	const structuredData = $derived({
 		'@context': 'https://schema.org',
-		'@type': 'Report',
+		'@type': ['Report', 'NewsArticle'],
 		name: data.title,
 		headline: 'AppGoblin Mobile Ecosystem Report Q1 2026',
 		description: data.description,
@@ -511,6 +511,19 @@
 	<meta name="description" content={data.description} />
 	<meta name="keywords" content={data.keywords} />
 	<link rel="canonical" href="https://appgoblin.info/reports/app-ecosystem-report-Q1-2026" />
+	<meta property="og:type" content="article" />
+	<meta property="og:site_name" content="AppGoblin" />
+	<meta property="og:title" content={data.title} />
+	<meta property="og:description" content={data.description} />
+	<meta property="og:url" content="https://appgoblin.info/reports/app-ecosystem-report-Q1-2026" />
+	<meta property="og:image" content="https://appgoblin.info/appgoblin_screenshot.png" />
+	<meta property="article:published_time" content="2026-05-17" />
+	<meta property="article:author" content="AppGoblin" />
+	<meta property="article:section" content="Mobile App Ecosystem" />
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:title" content={data.title} />
+	<meta name="twitter:description" content={data.description} />
+	<meta name="twitter:image" content="https://appgoblin.info/appgoblin_screenshot.png" />
 	{@html `<script type="application/ld+json">${JSON.stringify(structuredData)}<\/script>`}
 </svelte:head>
 

@@ -8,4 +8,5 @@ Disallow: /auth/*
 Allow: /
 
 Sitemap: https://appgoblin.info/sitemap.xml
+Sitemap: https://appgoblin.info/news-sitemap.xml
 
