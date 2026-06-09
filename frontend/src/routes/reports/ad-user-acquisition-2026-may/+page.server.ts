@@ -1,4 +1,6 @@
 import type { PageServerLoad } from '../../$types';
+import { db } from '$lib/server/auth/db';
+import { STRIPE_PRICES } from '$lib/server/stripe';
 
 const reportJsonModules = import.meta.glob('./*.json', {
 	eager: true,
@@ -294,7 +296,26 @@ function processData(data: AppAdImpactGrowthData[]): ProcessedApp[] {
 	return sortedApps;
 }
 
-export const load: PageServerLoad = async () => {
+async function getB2BAccess(userId: number): Promise<boolean> {
+	const row = await db.queryOne<{ provider_price_id: string }>(
+		`SELECT provider_price_id FROM subscriptions
+		 WHERE user_id = $1
+		 AND status IN ('active', 'trialing')
+		 AND (cancel_at IS NULL OR cancel_at > NOW())
+		 ORDER BY created_at DESC LIMIT 1`,
+		[userId]
+	);
+	if (!row) return false;
+	const b2bIds = [STRIPE_PRICES.b2b_sdk, STRIPE_PRICES.b2b_appads, STRIPE_PRICES.b2b_premium];
+	return b2bIds.includes(row.provider_price_id);
+}
+
+export const load: PageServerLoad = async ({ locals }) => {
+	let hasB2BAccess = false;
+	if (locals.user) {
+		hasB2BAccess = await getB2BAccess(locals.user.id);
+	}
+
 	const [
 		rawSummaryData,
 		rawMostPopularCreatives,
@@ -494,6 +515,7 @@ export const load: PageServerLoad = async () => {
 		description:
 			'See May 2026 mobile ad campaigns, ad networks, and creatives behind the fastest-rising apps.',
 		keywords:
-			'user acquisition, may 2026, mobile ad campaigns, app marketing, mobile advertising, ad creatives, install growth'
+			'user acquisition, may 2026, mobile ad campaigns, app marketing, mobile advertising, ad creatives, install growth',
+		hasB2BAccess
 	};
 };

@@ -74,9 +74,11 @@
 		}
 	];
 
+	const visibleData = $derived(previewMode ? data.slice(0, 3) : data.slice(0, 10));
+
 	const table = createSvelteTable({
 		get data() {
-			return data;
+			return visibleData;
 		},
 		get columns() {
 			return genericColumns(
@@ -186,20 +188,53 @@
 						{/if}
 					</tr>
 				{/each}
+				{#if previewMode && data.length > 3}
+					{#each { length: Math.min(2, data.length - 3) } as _, i}
+						<tr class="px-0 opacity-30">
+							<td class="table-cell-fit text-gray-500 text-xs md:text-sm">{3 + i + 1}</td>
+							<td class="table-cell-fit">
+								<div class="flex items-center gap-2">
+									<div class="w-8 h-8 rounded bg-surface-200-800"></div>
+									<div class="flex flex-col gap-1">
+										<div class="h-3 w-32 rounded bg-surface-200-800"></div>
+										<div class="h-2 w-20 rounded bg-surface-200-800"></div>
+									</div>
+								</div>
+							</td>
+							<td class="table-cell-fit"><div class="h-3 w-16 rounded bg-surface-200-800"></div></td
+							>
+							<td class="table-cell-fit"><div class="h-3 w-4 rounded bg-surface-200-800"></div></td>
+							{#if tableHasPublisher(data)}
+								<td class="table-cell-fit"
+									><div class="h-3 w-4 rounded bg-surface-200-800"></div></td
+								>
+							{/if}
+							{#if !isiOS}
+								<td class="table-cell-fit"
+									><div class="h-3 w-4 rounded bg-surface-200-800"></div></td
+								>
+							{/if}
+							{#if tableHasAdsTxt(data)}
+								<td class="table-cell-fit"
+									><div class="h-3 w-4 rounded bg-surface-200-800"></div></td
+								>
+							{/if}
+						</tr>
+					{/each}
+					<tr class="px-0">
+						<td colspan="99" class="text-center py-4">
+							<div class="flex flex-col items-center gap-2">
+								<p class="text-sm opacity-70">
+									<a href="/pricing" class="font-semibold underline hover:text-primary-600-400"
+										>Upgrade to B2B</a
+									>
+									to see all apps
+								</p>
+							</div>
+						</td>
+					</tr>
+				{/if}
 			</tbody>
 		</table>
-		{#if previewMode}
-			<footer class="flex justify-between">
-				<div class="flex items-center justify-end space-x-2 py-4 gap-2">
-					<ExportAsCSV {table} filename="appgoblin_apps" />
-					<span class="text-xs md:text-sm text-gray-500">
-						Sample only. For a full list of {companyName ? `${companyName}'s` : "your company's"} client
-						apps, see
-						<a href="/pricing">pricing page</a>. AppGoblin B2B users can download the full app
-						exports in the Data Exports tab above.
-					</span>
-				</div>
-			</footer>
-		{/if}
 	</div>
 </div>

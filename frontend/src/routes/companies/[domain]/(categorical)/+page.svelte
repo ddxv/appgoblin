@@ -1,6 +1,12 @@
 <script lang="ts">
 	import type { CompanyFullDetails, CompanyOverviewScope } from '../../../../types';
 
+	type CategoryItem = {
+		group: string;
+		category: string;
+		value: number;
+	};
+
 	import CompanyCategoryControls from '$lib/CompanyCategoryControls.svelte';
 	import TotalsBox from '$lib/TotalsBox.svelte';
 	import CompanyCategoryPie from '$lib/CompanyCategoryPie.svelte';
@@ -62,6 +68,10 @@
 			? data.parentAppCategories
 			: data.companyAppCategories
 	);
+
+	type GroupMode = 'all' | 'games' | 'apps';
+	let androidGroupMode = $state<GroupMode>('all');
+	let iosGroupMode = $state<GroupMode>('all');
 
 	const numberFormatter = new Intl.NumberFormat('en-US');
 	function formatCount(value: number | null | undefined): string {
@@ -169,7 +179,11 @@
 		{#if myPieData && 'error' in myPieData}
 			<p class="text-red-500 text-center">Failed to load categories.</p>
 		{:else if myPieData}
-			<CompanyCategoryPie plotData={myPieData.android ?? []} storeLabel="Google Play" />
+			<CompanyCategoryPie
+				plotData={myPieData.android as CategoryItem[]}
+				storeLabel="Google Play"
+				bind:groupMode={androidGroupMode}
+			/>
 		{/if}
 	{:catch error}
 		<p class="text-red-500 text-center">{error.message}</p>
@@ -183,7 +197,11 @@
 		{#if myPieData && 'error' in myPieData}
 			<p class="text-red-500 text-center">Failed to load categories.</p>
 		{:else if myPieData}
-			<CompanyCategoryPie plotData={myPieData.ios ?? []} storeLabel="Apple App Store" />
+			<CompanyCategoryPie
+				plotData={myPieData.ios as CategoryItem[]}
+				storeLabel="Apple App Store"
+				bind:groupMode={iosGroupMode}
+			/>
 		{/if}
 	{:catch error}
 		<p class="text-red-500 text-center">{error.message}</p>
@@ -200,35 +218,41 @@
 				<div>
 					<span
 						class="mb-1 flex items-center gap-1.5 text-[11px] uppercase tracking-[0.14em] opacity-60"
-						>Scope</span
+						>Data Scope</span
 					>
 					<div
 						class="inline-flex rounded-md border border-surface-300-700 p-1"
 						role="radiogroup"
-						aria-label="Overview scope"
+						aria-label="Data scope"
 					>
 						<button
 							type="button"
+							title="Roll up all subsidiaries and child domains under this company"
 							class={`flex items-center justify-center gap-1 rounded-md px-2.5 py-1 text-sm transition ${selectedOverview === 'parent' ? 'border border-secondary-700-300 text-secondary-700-300' : 'border border-transparent hover:border-secondary-800-200 hover:text-secondary-800-200'}`}
 							role="radio"
 							aria-checked={selectedOverview === 'parent'}
 							onclick={() => (selectedOverview = 'parent')}
 						>
-							Parent
+							Parent Co.
 						</button>
 						<button
 							type="button"
+							title="Limit to this exact domain only, excluding subsidiaries"
 							class={`flex items-center justify-center gap-1 rounded-md px-2.5 py-1 text-sm transition ${selectedOverview === 'domain' ? 'border border-secondary-700-300 text-secondary-700-300' : 'border border-transparent hover:border-secondary-800-200 hover:text-secondary-800-200'}`}
 							role="radio"
 							aria-checked={selectedOverview === 'domain'}
 							onclick={() => (selectedOverview = 'domain')}
 						>
-							Domain
+							Exact Domain
 						</button>
 					</div>
 				</div>
 			{/if}
-			<CompanyCategoryControls overview={categoryControlOverview} compact={true} />
+			<CompanyCategoryControls
+				overview={categoryControlOverview}
+				compact={true}
+				hasB2BAccess={data.hasB2BSdkAccess}
+			/>
 		</div>
 		{#if data.companyTree.is_secondary_domain}
 			<p class="px-4 pt-4 text-sm text-gray-600">
@@ -327,7 +351,11 @@
 {#if typeof data.companyTopApps == 'string'}
 	Failed to load company's apps.
 {:else}
-	<CompanyTableGrid tableData={data.companyTopApps} companyName={companyName || ''} />
+	<CompanyTableGrid
+		tableData={data.companyTopApps}
+		companyName={companyName || ''}
+		previewMode={!data.hasB2BSdkAccess}
+	/>
 {/if}
 {#if data.companyTree && (associatedDomains.length > 0 || data.companyTree.children.length > 0)}
 	<section class="mt-6">

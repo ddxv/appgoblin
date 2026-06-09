@@ -27,6 +27,12 @@
 		DIRECT removals are excluded since they more often reflect publisher reorganisation than true
 		churn.
 	</p>
+	<p class="text-sm opacity-70">
+		This data is also available via the <a
+			href="/api-docs"
+			class="underline hover:text-primary-600-400">AppGoblin API</a
+		>.
+	</p>
 </section>
 
 {#if !data.hasB2BSdkAccess}

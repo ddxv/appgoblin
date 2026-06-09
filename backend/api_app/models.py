@@ -427,6 +427,15 @@ class CategoryCompanyStats:
     sdk_ios_installs_d30: int = 0
     adstxt_direct_android_installs_d30: int = 0
     adstxt_reseller_android_installs_d30: int = 0
+    api_android_installs_d30: int = 0
+    # Universe totals (category-wide counts for market share computation)
+    sdk_android_universe_apps: int = 0
+    sdk_ios_universe_apps: int = 0
+    sdk_android_universe_installs_d30: int = 0
+    sdk_ios_universe_installs_d30: int = 0
+    api_android_universe_apps: int = 0
+    api_ios_universe_apps: int = 0
+    api_android_universe_installs_d30: int = 0
 
 
 @dataclass

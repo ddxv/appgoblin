@@ -995,8 +995,23 @@ def make_companies_stats(
     return overview
 
 
-def make_company_stats(df: pd.DataFrame) -> CompanyCategoryOverview:
-    """Make stats for a single company."""
+def make_company_stats(
+    df: pd.DataFrame,
+    category_totals: pd.DataFrame | None = None,
+) -> CompanyCategoryOverview:
+    """Make stats for a single company.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        Company-specific tag stats with columns: app_count, installs_d30, etc.
+    category_totals : pd.DataFrame, optional
+        Category-wide totals from :func:`get_tag_source_category_totals`.
+        Must contain columns: cat_total_app_count, cat_total_installs_d30,
+        cat_active_apps_universe, cat_universe_installs_d30, store, tag_source.
+        Used to compute market share / penetration metrics.
+
+    """
     overview = CompanyCategoryOverview()
     if df.empty:
         return overview
@@ -1053,11 +1068,13 @@ def make_company_stats(df: pd.DataFrame) -> CompanyCategoryOverview:
     (
         sdk_ios_installs_d30,
         sdk_android_installs_d30,
+        api_android_installs_d30,
         adstxt_direct_android_installs_d30,
         adstxt_reseller_android_installs_d30,
     ) = (
         res_installs_d30["sdk_ios"],
         res_installs_d30["sdk_android"],
+        res_installs_d30["api_android"],
         res_installs_d30["adstxt_direct_android"],
         res_installs_d30["adstxt_reseller_android"],
     )
@@ -1072,6 +1089,51 @@ def make_company_stats(df: pd.DataFrame) -> CompanyCategoryOverview:
         + adstxt_reseller_ios_total_apps
         + adstxt_reseller_android_total_apps
     )
+
+    # Extract category-wide totals (sum across all companies) for market share denominators.
+    # The category_totals DataFrame has cat_total_app_count and cat_total_installs_d30
+    # which are the total_active_scanned_apps_with_tag and total_scanned_installs_d30_with_tag
+    # summed across all companies for each store+tag_source+category.
+    if category_totals is not None and not category_totals.empty:
+        # When a specific category is requested, category_totals has per-category rows.
+        # Sum across all rows to get the universe-wide total for that category.
+        # Also works when no category filter is applied (app_category == "all").
+        def _get_cat_total_val(store_pattern: str, tag_src: str, col: str) -> int:
+            mask = category_totals["store"].str.contains(store_pattern, na=False) & (
+                category_totals["tag_source"] == tag_src
+            )
+            vals = category_totals.loc[mask, col]
+            return int(vals.sum()) if not vals.empty else 0
+
+        sdk_android_universe_apps = _get_cat_total_val(
+            "Google", "sdk", "cat_total_app_count"
+        )
+        sdk_ios_universe_apps = _get_cat_total_val(
+            "Apple", "sdk", "cat_total_app_count"
+        )
+        sdk_android_universe_installs_d30 = _get_cat_total_val(
+            "Google", "sdk", "cat_total_installs_d30"
+        )
+        sdk_ios_universe_installs_d30 = _get_cat_total_val(
+            "Apple", "sdk", "cat_total_installs_d30"
+        )
+        api_android_universe_apps = _get_cat_total_val(
+            "Google", "api_call", "cat_total_app_count"
+        )
+        api_ios_universe_apps = _get_cat_total_val(
+            "Apple", "api_call", "cat_total_app_count"
+        )
+        api_android_universe_installs_d30 = _get_cat_total_val(
+            "Google", "api_call", "cat_total_installs_d30"
+        )
+    else:
+        sdk_android_universe_apps = 0
+        sdk_ios_universe_apps = 0
+        sdk_android_universe_installs_d30 = 0
+        sdk_ios_universe_installs_d30 = 0
+        api_android_universe_apps = 0
+        api_ios_universe_apps = 0
+        api_android_universe_installs_d30 = 0
 
     overview.update_stats(
         "all",
@@ -1090,6 +1152,14 @@ def make_company_stats(df: pd.DataFrame) -> CompanyCategoryOverview:
         api_total_apps=int(api_total_apps),
         adstxt_direct_android_installs_d30=int(adstxt_direct_android_installs_d30),
         adstxt_reseller_android_installs_d30=int(adstxt_reseller_android_installs_d30),
+        api_android_installs_d30=int(api_android_installs_d30),
+        sdk_android_universe_apps=int(sdk_android_universe_apps),
+        sdk_ios_universe_apps=int(sdk_ios_universe_apps),
+        sdk_android_universe_installs_d30=int(sdk_android_universe_installs_d30),
+        sdk_ios_universe_installs_d30=int(sdk_ios_universe_installs_d30),
+        api_android_universe_apps=int(api_android_universe_apps),
+        api_ios_universe_apps=int(api_ios_universe_apps),
+        api_android_universe_installs_d30=int(api_android_universe_installs_d30),
     )
     cats = df.app_category.unique().tolist()
     for cat in cats:
@@ -1153,10 +1223,12 @@ def make_company_stats(df: pd.DataFrame) -> CompanyCategoryOverview:
 
         (
             sdk_android_installs_d30,
+            api_android_installs_d30,
             adstxt_direct_android_installs_d30,
             adstxt_reseller_android_installs_d30,
         ) = (
             res_installs_d30["sdk_android"],
+            res_installs_d30["api_android"],
             res_installs_d30["adstxt_direct_android"],
             res_installs_d30["adstxt_reseller_android"],
         )
@@ -1170,6 +1242,53 @@ def make_company_stats(df: pd.DataFrame) -> CompanyCategoryOverview:
             + adstxt_reseller_ios_total_apps
             + adstxt_reseller_android_total_apps
         )
+
+        # For per-category stats, look up per-category universe data if available
+        if category_totals is not None and not category_totals.empty:
+            # If category_totals has a row for this specific category, use it.
+            # Otherwise fall back to the "all" row (which is used when the main
+            # overview was built without a category filter).
+            cat_mask = category_totals["app_category"] == cat
+            if not cat_mask.any():
+                cat_mask = category_totals["app_category"] == "all"
+            cat_totals_row = category_totals[cat_mask]
+
+            def _cat_total_val(store_pattern: str, tag_src: str, col: str) -> int:
+                mask = cat_totals_row["store"].str.contains(store_pattern, na=False) & (
+                    cat_totals_row["tag_source"] == tag_src
+                )
+                vals = cat_totals_row.loc[mask, col]
+                return int(vals.sum()) if not vals.empty else 0
+
+            cat_sdk_android_universe_apps = _cat_total_val(
+                "Google", "sdk", "cat_total_app_count"
+            )
+            cat_sdk_ios_universe_apps = _cat_total_val(
+                "Apple", "sdk", "cat_total_app_count"
+            )
+            cat_sdk_android_universe_installs_d30 = _cat_total_val(
+                "Google", "sdk", "cat_total_installs_d30"
+            )
+            cat_sdk_ios_universe_installs_d30 = _cat_total_val(
+                "Apple", "sdk", "cat_total_installs_d30"
+            )
+            cat_api_android_universe_apps = _cat_total_val(
+                "Google", "api_call", "cat_total_app_count"
+            )
+            cat_api_ios_universe_apps = _cat_total_val(
+                "Apple", "api_call", "cat_total_app_count"
+            )
+            cat_api_android_universe_installs_d30 = _cat_total_val(
+                "Google", "api_call", "cat_total_installs_d30"
+            )
+        else:
+            cat_sdk_android_universe_apps = 0
+            cat_sdk_ios_universe_apps = 0
+            cat_sdk_android_universe_installs_d30 = 0
+            cat_sdk_ios_universe_installs_d30 = 0
+            cat_api_android_universe_apps = 0
+            cat_api_ios_universe_apps = 0
+            cat_api_android_universe_installs_d30 = 0
 
         overview.update_stats(
             cat,
@@ -1185,9 +1304,21 @@ def make_company_stats(df: pd.DataFrame) -> CompanyCategoryOverview:
             api_android_total_apps=int(api_android_total_apps),
             api_total_apps=int(api_total_apps),
             sdk_android_installs_d30=int(sdk_android_installs_d30),
+            api_android_installs_d30=int(api_android_installs_d30),
             adstxt_direct_android_installs_d30=int(adstxt_direct_android_installs_d30),
             adstxt_reseller_android_installs_d30=int(
                 adstxt_reseller_android_installs_d30
+            ),
+            sdk_android_universe_apps=int(cat_sdk_android_universe_apps),
+            sdk_ios_universe_apps=int(cat_sdk_ios_universe_apps),
+            sdk_android_universe_installs_d30=int(
+                cat_sdk_android_universe_installs_d30
+            ),
+            sdk_ios_universe_installs_d30=int(cat_sdk_ios_universe_installs_d30),
+            api_android_universe_apps=int(cat_api_android_universe_apps),
+            api_ios_universe_apps=int(cat_api_ios_universe_apps),
+            api_android_universe_installs_d30=int(
+                cat_api_android_universe_installs_d30
             ),
         )
     return overview
@@ -1491,7 +1622,8 @@ def _build_company_overview_scope(
         app_category=category,
         include_parent_rollup=include_parent_rollup,
     )
-    stats_overview = make_company_stats(df=df)
+    category_totals = get_tag_source_category_totals(state=state, app_category=category)
+    stats_overview = make_company_stats(df=df, category_totals=category_totals)
 
     if df.empty or not df["tag_source"].str.contains("app_ads").any():
         ad_domain_overview = None
@@ -1917,6 +2049,7 @@ class CompaniesController(Controller):
         state: State,
         company_domain: str,
         rollup: bool = True,
+        group_mode: str = "auto",
     ) -> dict:
         """Handle GET request for a specific company parent categories.
 
@@ -1926,6 +2059,9 @@ class CompaniesController(Controller):
             The domain of the company to retrieve apps for.
         rollup : bool
             Whether to include parent company rollup data.
+        group_mode : str
+            Category grouping strategy: 'auto' (default heuristic),
+            'none' (raw categories), 'group_games', or 'group_apps'.
 
         Returns:
         -------
@@ -1936,7 +2072,10 @@ class CompaniesController(Controller):
         start = time.perf_counter() * 1000
 
         dfs = get_company_categories_topn(
-            state=state, company_domain=company_domain, include_parent_rollup=rollup
+            state=state,
+            company_domain=company_domain,
+            include_parent_rollup=rollup,
+            group_mode=group_mode,
         )
 
         duration = round((time.perf_counter() * 1000 - start), 2)

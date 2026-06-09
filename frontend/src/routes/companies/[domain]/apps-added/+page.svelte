@@ -25,6 +25,12 @@
 		This view tracks the quarterly adoption side of this company's churn data through SDK, API-call,
 		or app-ads.txt direct signals across the latest available quarter and the quarter before it.
 	</p>
+	<p class="text-sm opacity-70">
+		This data is also available via the <a
+			href="/api-docs"
+			class="underline hover:text-primary-600-400">AppGoblin API</a
+		>.
+	</p>
 </section>
 
 {#if !data.hasB2BSdkAccess}

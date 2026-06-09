@@ -97,7 +97,11 @@
 						</div>
 					</div>
 				{/if}
-				<CompanyCategoryControls overview={parentOverview ?? domainOverview} compact={true} />
+				<CompanyCategoryControls
+					overview={parentOverview ?? domainOverview}
+					compact={true}
+					hasB2BAccess={data.hasB2BSdkAccess}
+				/>
 			</div>
 			{#if activeOverview.categories[company_category]}
 				<TotalsBox
@@ -139,7 +143,11 @@
 	{/snippet}
 </CompaniesLayout>
 
-<CompanyTableGrid tableData={data.companyCategoryApps} companyName={companyName || ''} />
+<CompanyTableGrid
+	tableData={data.companyCategoryApps}
+	companyName={companyName || ''}
+	previewMode={!data.hasB2BSdkAccess}
+/>
 
 {#if associatedDomains.length > 0 || data.companyTree.children.length > 0}
 	<section class="mt-6">

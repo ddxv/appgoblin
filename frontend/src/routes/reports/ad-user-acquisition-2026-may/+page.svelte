@@ -2,6 +2,8 @@
 	import CompanyButton from '$lib/CompanyButton.svelte';
 	import CreativeModal from '$lib/CreativeModal.svelte';
 	import PopularCreativeCard from '$lib/PopularCreativeCard.svelte';
+	import Crown from 'lucide-svelte/icons/crown';
+	import Lock from 'lucide-svelte/icons/lock';
 	import { createCreativeModal } from '$lib/stores/creativeModal.svelte';
 
 	import { formatNumber } from '$lib/utils/formatNumber.js';
@@ -114,11 +116,6 @@
 	const insightCardBaseClass = 'card p-6 bg-gradient-to-br border-2';
 	const insightIconClass =
 		'flex-shrink-0 w-12 h-12 bg-gradient-to-br rounded-full flex items-center justify-center text-2xl';
-	const ctaPrimaryClass =
-		'btn-primary inline-flex w-full justify-center items-center gap-2 px-6 py-3 bg-white rounded-lg hover:scale-105 transition-transform duration-200 shadow-lg md:w-auto';
-	const ctaSecondaryClass =
-		'btn preset-outlined-primary-100-900 inline-flex w-full justify-center items-center gap-2 px-6 py-3 rounded-lg md:w-auto';
-
 	const tHeadClass = 'bg-gradient-to-r from-purple-600 to-pink-600 text-white';
 </script>
 
@@ -364,6 +361,37 @@
 		</p>
 	</div>
 
+	<!-- Top CSV Download Banner -->
+	<div
+		class="mb-10 rounded-xl border border-primary-500/30 bg-gradient-to-br from-primary-500/5 to-secondary-500/5 p-4 md:p-5"
+	>
+		<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+			<div class="flex items-center gap-2 min-w-0">
+				<Crown class="w-5 h-5 shrink-0 text-primary-900-100" aria-hidden="true" />
+				<p class="text-sm font-semibold text-surface-800-200 truncate">
+					Full advertiser CSV with estimated buying size
+				</p>
+			</div>
+			{#if data.hasB2BAccess}
+				<a
+					href="/reports/ad-user-acquisition-2026-may/advertisers-csv"
+					class="btn preset-filled-primary-500 inline-flex items-center gap-2 p-2 text-sm shrink-0"
+				>
+					<span class="text-black">Download CSV</span>
+					<span class="text-black">↓</span>
+				</a>
+			{:else}
+				<a
+					href="/pricing"
+					class="btn preset-outlined-primary-500 inline-flex items-center gap-2 p-2 text-sm shrink-0"
+				>
+					<Lock class="w-3.5 h-3.5" aria-hidden="true" />
+					<span>Upgrade to Download</span>
+				</a>
+			{/if}
+		</div>
+	</div>
+
 	<!-- May Snapshot -->
 	<div
 		class="mb-12 rounded-2xl border border-surface-200 dark:border-surface-700 bg-gradient-to-br from-surface-50 to-white dark:from-surface-900 dark:to-surface-800 p-5 md:p-7 shadow-md"
@@ -379,7 +407,7 @@
 			<div class="space-y-4 xl:col-span-4">
 				<div class="rounded-xl bg-gradient-to-r from-pink-600 to-rose-500 text-white p-5">
 					<div class="text-xl md:text-2xl font-bold leading-tight">
-						Familiar advertisers from April and new apps with big growth spikes
+						Dig into May 2026's biggest mobile apps and games ad buyers.
 					</div>
 				</div>
 
@@ -438,7 +466,7 @@
 
 			<div class="xl:col-span-8 xl:h-full xl:flex xl:flex-col">
 				<div class="featured-creatives-strip xl:flex-1">
-					{#each data.popularCreatives.slice(0, 3) as creative, index}
+					{#each [data.popularCreatives[2], data.popularCreatives[8], data.popularCreatives[6]] as creative, index}
 						<div class="featured-creative-slide">
 							<PopularCreativeCard
 								{creative}
@@ -561,22 +589,24 @@
 		</div>
 		<div class={sectionDescriptionClass}>
 			<p class="mt-2">
-				Leading the pack was <span class={publisherTextColor}>{data.apps[0].app_name}</span>
-				with 379,000 weekly installs and a composite score of 7.6. This music game was advertising via
-				Google's ad network and using AppMetrica and AppsFlyer for attribution.
+				<span class={publisherTextColor}>{data.apps[0].app_name}</span>
+				had a blowout end of May with 379,000 weekly installs and a composite score of 7.6. This music
+				game was advertising via Google's ad network and using AppMetrica and AppsFlyer for attribution.
 			</p>
 			<p>
-				A runner up was <span class={publisherTextColor}>{data.apps[1].app_name}</span> with
+				A smaller app that saw big % gains in May 2026 was <span class={publisherTextColor}
+					>{data.apps[1].app_name}</span
+				>
+				with
 				{formatNumber(data.apps[1].weekly_installs)} weekly installs and
-				<strong>{data.apps[1].wow_growth_pct?.toFixed(1)}% week-over-week growth</strong> — an impressive
-				jump driven by Admob campaigns.
+				<strong>{data.apps[1].wow_growth_pct?.toFixed(1)}% week-over-week growth</strong>. The
+				creatives we tracked look like they might have been made with the new AdMob AI creative
+				generator tools, though that is just conjecture based on the style.
 			</p>
 			<p>
-				Another interesting advertising app in May was <span class={publisherTextColor}
-					>{data.apps[4].app_name}</span
-				> notable for its 74.7% week-over-week growth and use of Adjust and Singular for MMPs. Both platforms
-				are known for strong attribution accuracy and fraud detection, making this a well-instrumented
-				campaign.
+				<span class={publisherTextColor}>{data.apps[4].app_name}</span> has 10x their weekly installs
+				since March and saw a notable 74.7% week-over-week growth in May. This game has been steadily
+				ramping up for a couple months now and the ads are helping.
 			</p>
 		</div>
 		<div class={cardTableWrapperClass}>
@@ -1102,9 +1132,9 @@
 		<div
 			class={`${sectionHeaderBaseClass} border-sky-200 dark:border-sky-800 pl-4 border-l-sky-500`}
 		>
-			<h2 class={sectionTitleClass}>New Apps Advertising This Month</h2>
+			<h2 class={sectionTitleClass}>New Releases Buying Ads</h2>
 			<p class={sectionHeaderSubtitleClass}>
-				Top newly released apps running ad campaigns during {data.summary.reportPeriod}
+				Brand new apps starting off running ad campaigns during {data.summary.reportPeriod}
 			</p>
 		</div>
 		<div class={sectionIntroRowClass}>
@@ -1113,19 +1143,19 @@
 		</div>
 		<div class={sectionDescriptionClass}>
 			<p>
-				These apps were released between April and May 2026 and were already running ad campaigns
-				tracked by AppGoblin in May. {data.newAdvertisers[0].name} led by installs with
-				{formatNumber(data.newAdvertisers[0].installs ?? 0)} total downloads, using
+				These apps were released recently, some even in May 2026, and were already running ad
+				campaigns tracked by AppGoblin in May.
+			</p>
+			<p>
+				<span class={publisherTextColor}>{data.newAdvertisers[2].name}</span> was a brand new game
+				released by CORGY TECH COMPANY and led by installs with
+				{formatNumber(data.newAdvertisers[2].installs ?? 0)} total downloads, using
 				{data.newAdvertisers[0].ad_networks[0]?.name ?? 'ad networks'} for acquisition.
 			</p>
 			<p>
-				{data.newAdvertisers[3].name} stood out with
-				{#each data.newAdvertisers[3].ad_networks as net, i}{i > 0 ? ', ' : ''}{net.name}{/each} ad networks
-				and {data.newAdvertisers[3].mmps.length} MMPs ({data.newAdvertisers[3].mmps
-					.map((m) => m.domain.replace(/\..+$/, ''))
-					.join(', ')}), suggesting a sophisticated UA setup from day one. Its {data
-					.newAdvertisers[3].creative_count}
-				creatives and strong install trajectory make it one to watch.
+				<span class={publisherTextColor}>{data.newAdvertisers[10].name}</span> by NOVA GAMES LLP has eye
+				catching GTA like creatives and a fun blocky style. Notably they use AppMetrica and AppsFlyer
+				for attribution and analytics.
 			</p>
 		</div>
 
@@ -1140,48 +1170,49 @@
 					</span>
 				</h4>
 				<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-					{#each data.newGames.slice(0, 10) as app, index (app.store_id)}
+					{#each data.newGames.slice(0, 10) as app (app.store_id)}
 						<div
 							class="card p-4 md:p-5 border border-sky-200 dark:border-sky-800 hover:border-sky-400 dark:hover:border-sky-500 transition-all duration-200 hover:shadow-lg flex flex-col"
 						>
-							<!-- Card Header: Rank + App Info -->
-							<div class="flex items-start gap-3 mb-3">
-								<span
-									class="inline-flex items-center justify-center w-7 h-7 rounded-full font-bold text-xs shrink-0 bg-sky-100 dark:bg-sky-900 text-sky-700 dark:text-sky-300"
-								>
-									{index + 1}
-								</span>
-								<a href="/apps/{app.store_id}" class="flex items-center gap-2 min-w-0 flex-1 group">
-									<img
-										src="https://media.appgoblin.info/app-icons/{app.store_id}/{app.icon_url_100}"
-										alt={app.name}
-										class="w-10 h-10 md:w-12 md:h-12 rounded-xl border border-surface-200 dark:border-surface-700 shadow-sm shrink-0"
-										onerror={(e) =>
-											((e.currentTarget as HTMLImageElement).src = '/default_company_logo.png')}
-									/>
-									<div class="min-w-0">
-										<div class="text-sm md:text-base font-semibold truncate group-hover:underline">
-											{app.name}
-										</div>
-										<div class={textMutedXsClass}>{app.store_id}</div>
+							<!-- Card Header -->
+							<a href="/apps/{app.store_id}" class="flex items-center gap-3 mb-3 group">
+								<img
+									src="https://media.appgoblin.info/app-icons/{app.store_id}/{app.icon_url_100}"
+									alt={app.name}
+									class="w-14 h-14 md:w-16 md:h-16 rounded-xl border border-surface-200 dark:border-surface-700 shadow-sm shrink-0"
+									onerror={(e) =>
+										((e.currentTarget as HTMLImageElement).src = '/default_company_logo.png')}
+								/>
+								<div class="min-w-0">
+									<div
+										class="text-base md:text-lg font-bold truncate group-hover:underline text-surface-800-200"
+									>
+										{app.name}
 									</div>
-								</a>
-							</div>
+									<div class="text-xs md:text-sm text-surface-500 dark:text-surface-400 truncate">
+										{app.store_id}
+									</div>
+								</div>
+							</a>
 
 							<!-- Stats Row -->
-							<div class="flex items-center gap-3 text-xs md:text-sm mb-3">
-								<span class="font-bold text-emerald-400">
-									{formatNumber(app.installs ?? 0)} installs
-								</span>
-								<span class="text-surface-400">·</span>
-								<span class="text-surface-500 dark:text-surface-400">
+							<div class="flex items-center gap-3 text-sm md:text-lg mb-3">
+								{#if app.installs}
+									<span class="font-bold text-emerald-400">
+										{formatNumber(app.installs)} installs
+									</span>
+									<span class="text-surface-500">·</span>
+								{/if}
+								<span class="text-surface-600 dark:text-surface-400 text-sm md:text-base">
 									{app.release_date ? app.release_date.split('T')[0] : '—'}
 								</span>
 							</div>
 
 							<!-- Ad Networks -->
 							<div class="mb-3">
-								<div class="text-xs text-surface-500 dark:text-surface-400 mb-1">Ad Networks</div>
+								<div class="text-sm font-semibold text-surface-600 dark:text-surface-400 mb-1.5">
+									Ad Networks
+								</div>
 								<div class={companyButtonListClass}>
 									{#each app.ad_networks.slice(0, 3) as network}
 										<CompanyButton
@@ -1201,7 +1232,7 @@
 							<!-- Creatives Thumbnails -->
 							{#if app.md5_hashes && app.md5_hashes.length > 0}
 								<div class="mt-auto pt-3 border-t border-surface-200 dark:border-surface-700">
-									<div class="text-xs text-surface-500 dark:text-surface-400 mb-2">
+									<div class="text-sm font-semibold text-surface-600 dark:text-surface-400 mb-2">
 										{app.creative_count} creative{app.creative_count !== 1 ? 's' : ''}
 									</div>
 									<div class="flex flex-wrap gap-1.5">
@@ -1217,7 +1248,7 @@
 												title="Click to view creative"
 											>
 												<div
-													class="w-12 h-12 md:w-14 md:h-14 rounded-lg border border-surface-300 dark:border-surface-600 overflow-hidden group-hover:border-sky-500"
+													class="w-16 h-16 md:w-20 md:h-20 rounded-lg border border-surface-300 dark:border-surface-600 overflow-hidden group-hover:border-sky-500"
 												>
 													<img
 														src="https://media.appgoblin.info/creatives/thumbs/{md5_hash}.jpg"
@@ -1233,13 +1264,6 @@
 														}}
 													/>
 												</div>
-												{#if ci === 0 && app.creative_count > 1}
-													<div
-														class="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-sky-500 text-white text-[10px] font-bold flex items-center justify-center shadow-sm"
-													>
-														{app.creative_count}
-													</div>
-												{/if}
 											</button>
 										{/each}
 										{#if app.md5_hashes.length > 4}
@@ -1249,7 +1273,7 @@
 														`https://media.appgoblin.info/creatives/raw/${app.md5_hashes[4].substring(0, 3)}/${app.md5_hashes[4]}.${app.md5_file_extensions?.[4] ?? 'mp4'}`,
 														app.name
 													)}
-												class="w-12 h-12 md:w-14 md:h-14 rounded-lg border border-dashed border-surface-300 dark:border-surface-600 flex items-center justify-center text-xs font-semibold text-surface-500 hover:border-sky-500 hover:text-sky-500 transition-colors"
+												class="w-16 h-16 md:w-20 md:h-20 rounded-lg border border-dashed border-surface-300 dark:border-surface-600 flex items-center justify-center text-xs font-semibold text-surface-500 hover:border-sky-500 hover:text-sky-500 transition-colors"
 												title="View all creatives"
 											>
 												+{app.md5_hashes.length - 4}
@@ -1271,52 +1295,53 @@
 					<span class="text-2xl">📱</span>
 					<span class="text-sky-900 dark:text-sky-100">New Non-Game Apps</span>
 					<span class="text-sm font-normal text-surface-500 dark:text-surface-400">
-						({Math.min(data.newApps.length, 10)} titles)
+						({Math.min(data.newApps.length, 5)} titles)
 					</span>
 				</h4>
 				<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-					{#each data.newApps.slice(0, 10) as app, index (app.store_id)}
+					{#each data.newApps.slice(0, 5) as app (app.store_id)}
 						<div
 							class="card p-4 md:p-5 border border-sky-200 dark:border-sky-800 hover:border-sky-400 dark:hover:border-sky-500 transition-all duration-200 hover:shadow-lg flex flex-col"
 						>
-							<!-- Card Header: Rank + App Info -->
-							<div class="flex items-start gap-3 mb-3">
-								<span
-									class="inline-flex items-center justify-center w-7 h-7 rounded-full font-bold text-xs shrink-0 bg-sky-100 dark:bg-sky-900 text-sky-700 dark:text-sky-300"
-								>
-									{index + 1}
-								</span>
-								<a href="/apps/{app.store_id}" class="flex items-center gap-2 min-w-0 flex-1 group">
-									<img
-										src="https://media.appgoblin.info/app-icons/{app.store_id}/{app.icon_url_100}"
-										alt={app.name}
-										class="w-10 h-10 md:w-12 md:h-12 rounded-xl border border-surface-200 dark:border-surface-700 shadow-sm shrink-0"
-										onerror={(e) =>
-											((e.currentTarget as HTMLImageElement).src = '/default_company_logo.png')}
-									/>
-									<div class="min-w-0">
-										<div class="text-sm md:text-base font-semibold truncate group-hover:underline">
-											{app.name}
-										</div>
-										<div class={textMutedXsClass}>{app.store_id}</div>
+							<!-- Card Header -->
+							<a href="/apps/{app.store_id}" class="flex items-center gap-3 mb-3 group">
+								<img
+									src="https://media.appgoblin.info/app-icons/{app.store_id}/{app.icon_url_100}"
+									alt={app.name}
+									class="w-14 h-14 md:w-16 md:h-16 rounded-xl border border-surface-200 dark:border-surface-700 shadow-sm shrink-0"
+									onerror={(e) =>
+										((e.currentTarget as HTMLImageElement).src = '/default_company_logo.png')}
+								/>
+								<div class="min-w-0">
+									<div
+										class="text-base md:text-lg font-bold truncate group-hover:underline text-surface-800-200"
+									>
+										{app.name}
 									</div>
-								</a>
-							</div>
+									<div class="text-xs md:text-sm text-surface-500 dark:text-surface-400 truncate">
+										{app.store_id}
+									</div>
+								</div>
+							</a>
 
 							<!-- Stats Row -->
-							<div class="flex items-center gap-3 text-xs md:text-sm mb-3">
-								<span class="font-bold text-purple-400">
-									{formatNumber(app.installs ?? 0)} installs
-								</span>
-								<span class="text-surface-400">·</span>
-								<span class="text-surface-500 dark:text-surface-400">
+							<div class="flex items-center gap-3 text-sm md:text-lg mb-3">
+								{#if app.installs}
+									<span class="font-bold text-purple-400">
+										{formatNumber(app.installs)} installs
+									</span>
+									<span class="text-surface-500">·</span>
+								{/if}
+								<span class="text-surface-600 dark:text-surface-400 text-sm md:text-base">
 									{app.release_date ? app.release_date.split('T')[0] : '—'}
 								</span>
 							</div>
 
 							<!-- Ad Networks -->
 							<div class="mb-3">
-								<div class="text-xs text-surface-500 dark:text-surface-400 mb-1">Ad Networks</div>
+								<div class="text-sm font-semibold text-surface-600 dark:text-surface-400 mb-1.5">
+									Ad Networks
+								</div>
 								<div class={companyButtonListClass}>
 									{#each app.ad_networks.slice(0, 3) as network}
 										<CompanyButton
@@ -1336,7 +1361,7 @@
 							<!-- Creatives Thumbnails -->
 							{#if app.md5_hashes && app.md5_hashes.length > 0}
 								<div class="mt-auto pt-3 border-t border-surface-200 dark:border-surface-700">
-									<div class="text-xs text-surface-500 dark:text-surface-400 mb-2">
+									<div class="text-sm font-semibold text-surface-600 dark:text-surface-400 mb-2">
 										{app.creative_count} creative{app.creative_count !== 1 ? 's' : ''}
 									</div>
 									<div class="flex flex-wrap gap-1.5">
@@ -1352,7 +1377,7 @@
 												title="Click to view creative"
 											>
 												<div
-													class="w-12 h-12 md:w-14 md:h-14 rounded-lg border border-surface-300 dark:border-surface-600 overflow-hidden group-hover:border-sky-500"
+													class="w-16 h-16 md:w-20 md:h-20 rounded-lg border border-surface-300 dark:border-surface-600 overflow-hidden group-hover:border-sky-500"
 												>
 													<img
 														src="https://media.appgoblin.info/creatives/thumbs/{md5_hash}.jpg"
@@ -1368,13 +1393,6 @@
 														}}
 													/>
 												</div>
-												{#if ci === 0 && app.creative_count > 1}
-													<div
-														class="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-purple-500 text-white text-[10px] font-bold flex items-center justify-center shadow-sm"
-													>
-														{app.creative_count}
-													</div>
-												{/if}
 											</button>
 										{/each}
 										{#if app.md5_hashes.length > 4}
@@ -1384,7 +1402,7 @@
 														`https://media.appgoblin.info/creatives/raw/${app.md5_hashes[4].substring(0, 3)}/${app.md5_hashes[4]}.${app.md5_file_extensions?.[4] ?? 'mp4'}`,
 														app.name
 													)}
-												class="w-12 h-12 md:w-14 md:h-14 rounded-lg border border-dashed border-surface-300 dark:border-surface-600 flex items-center justify-center text-xs font-semibold text-surface-500 hover:border-sky-500 hover:text-sky-500 transition-colors"
+												class="w-16 h-16 md:w-20 md:h-20 rounded-lg border border-dashed border-surface-300 dark:border-surface-600 flex items-center justify-center text-xs font-semibold text-surface-500 hover:border-sky-500 hover:text-sky-500 transition-colors"
 												title="View all creatives"
 											>
 												+{app.md5_hashes.length - 4}
@@ -1403,6 +1421,7 @@
 	<!-- ========================================= -->
 	<!-- SECTION 7: KEY INSIGHTS & RECOMMENDATIONS -->
 	<!-- ========================================= -->
+	<!--
 	<div class={sectionContainerClass}>
 		<div
 			class={`${sectionHeaderBaseClass} border-blue-200 dark:border-warning-800-200 pl-4 border-l-warning-800-200`}
@@ -1412,9 +1431,7 @@
 				Actionable takeaways and strategic recommendations for user acquisition
 			</p>
 		</div>
-		<!-- Content -->
 		<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-			<!-- Insight Card 1 -->
 			<div
 				class={`${insightCardBaseClass} from-blue-50 to-cyan-50 dark:from-surface-800 dark:to-surface-700 border-blue-200 dark:border-blue-800`}
 			>
@@ -1450,6 +1467,7 @@
 			</div>
 		</div>
 	</div>
+	-->
 
 	<!-- CTA Section -->
 	<div class={sectionContainerClass}>
@@ -1467,39 +1485,132 @@
 				today.
 			</p>
 
-			<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
-				<div
-					class="card p-6 border border-purple-200 dark:border-purple-800 hover:border-purple-500 transition-colors"
-				>
-					<div class="text-sm uppercase tracking-wide text-surface-500 dark:text-surface-400">
-						Pricing
+			<div
+				class="rounded-xl border border-primary-500/30 bg-gradient-to-br from-primary-500/5 to-secondary-500/5 p-5 md:p-6 mt-6"
+			>
+				<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+					<div>
+						<h3 class="text-lg font-bold text-primary-900-100 flex items-center gap-2">
+							<Crown class="w-5 h-5 text-primary-900-100" aria-hidden="true" />
+							B2B Intelligence — Full Advertiser CSV
+						</h3>
+						<p class="text-sm text-surface-600 dark:text-surface-300 mt-1">
+							All {data.summary.advertisers?.toLocaleString() ?? ''} advertisers we tracked in {data
+								.summary.reportPeriod} with estimated buying size, ad networks, publisher reach, and creative
+							counts — one row per advertiser.
+						</p>
 					</div>
-					<h3 class="text-xl font-bold mt-2 mb-2">Get Access to AppGoblin Data</h3>
-					<p class="text-sm text-surface-600 dark:text-surface-300 mb-4">
-						See plans and unlock broader AppGoblin datasets, exports, and deeper coverage.
-					</p>
-					<a href="/pricing" class={ctaSecondaryClass}>
-						<span class="font-bold">View Pricing</span>
-						<span class="font-bold">→</span>
-					</a>
+					{#if data.hasB2BAccess}
+						<a
+							href="/reports/ad-user-acquisition-2026-may/advertisers-csv"
+							class="btn preset-filled-primary-500 inline-flex items-center gap-2 p-3 shrink-0"
+						>
+							<span class="text-black">Download CSV</span>
+							<span class="text-black">↓</span>
+						</a>
+					{:else}
+						<a
+							href="/pricing"
+							class="btn preset-outlined-primary-500 inline-flex items-center gap-2 p-3 shrink-0"
+						>
+							<Lock class="w-4 h-4" aria-hidden="true" />
+							<span>Upgrade to Download</span>
+						</a>
+					{/if}
 				</div>
 
-				<div
-					class="card p-6 border border-emerald-200 dark:border-emerald-800 hover:border-emerald-500 transition-colors"
-				>
-					<div class="text-sm uppercase tracking-wide text-surface-500 dark:text-surface-400">
-						Free Account
-					</div>
-					<h3 class="text-xl font-bold mt-2 mb-2">Create Free Account</h3>
-					<p class="text-sm text-surface-600 dark:text-surface-300 mb-4">
-						Start exploring the platform immediately and see what AppGoblin already makes available
-						for free.
+				<div class="border-t border-primary-500/20 pt-4 mt-2">
+					<p
+						class="text-xs font-semibold text-surface-500 dark:text-surface-400 uppercase tracking-wide mb-3"
+					>
+						CSV Columns
 					</p>
-					<a href="/auth/signup" class={ctaPrimaryClass}>
-						<span class="text-black font-bold">Sign Up Free</span>
-						<span class="text-black font-bold">→</span>
-					</a>
+					<div
+						class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-1.5 text-xs md:text-sm"
+					>
+						<div class="flex gap-2">
+							<span class="font-mono font-semibold shrink-0">store_id</span><span
+								class="text-surface-500 dark:text-surface-400">App store bundle ID</span
+							>
+						</div>
+						<div class="flex gap-2">
+							<span class="font-mono font-semibold shrink-0">app_name</span><span
+								class="text-surface-500 dark:text-surface-400">App name</span
+							>
+						</div>
+						<div class="flex gap-2">
+							<span class="font-mono font-semibold shrink-0">category</span><span
+								class="text-surface-500 dark:text-surface-400">App category</span
+							>
+						</div>
+						<div class="flex gap-2">
+							<span class="font-mono font-semibold shrink-0">developer</span><span
+								class="text-surface-500 dark:text-surface-400">Developer name</span
+							>
+						</div>
+						<div class="flex gap-2">
+							<span class="font-mono font-semibold shrink-0">report_period</span><span
+								class="text-surface-500 dark:text-surface-400">May 2026</span
+							>
+						</div>
+						<div class="flex gap-2">
+							<span class="font-mono font-semibold shrink-0">weekly_installs</span><span
+								class="text-surface-500 dark:text-surface-400"
+								>Peak weekly installs (max across May)</span
+							>
+						</div>
+						<div class="flex gap-2">
+							<span class="font-mono font-semibold shrink-0">total_estimated_installs</span><span
+								class="text-surface-500 dark:text-surface-400">Lifetime estimated installs</span
+							>
+						</div>
+						<div class="flex gap-2">
+							<span class="font-mono font-semibold shrink-0">unique_publishers</span><span
+								class="text-surface-500 dark:text-surface-400"
+								>Publisher apps running their ads</span
+							>
+						</div>
+						<div class="flex gap-2">
+							<span class="font-mono font-semibold shrink-0">unique_creatives_count</span><span
+								class="text-surface-500 dark:text-surface-400">Unique ad creatives tracked</span
+							>
+						</div>
+						<div class="flex gap-2">
+							<span class="font-mono font-semibold shrink-0">ad_networks</span><span
+								class="text-surface-500 dark:text-surface-400"
+								>Ad networks used (semicolon-separated)</span
+							>
+						</div>
+						<div class="flex gap-2">
+							<span class="font-mono font-semibold shrink-0">mmp_providers</span><span
+								class="text-surface-500 dark:text-surface-400">MMP/attribution providers</span
+							>
+						</div>
+						<div class="flex gap-2">
+							<span class="font-mono font-semibold shrink-0">estimated_buying_size_score</span><span
+								class="text-surface-500 dark:text-surface-400"
+								>Our rough estimate of ad buying scale</span
+							>
+						</div>
+					</div>
 				</div>
+			</div>
+
+			<div class="flex flex-wrap items-center justify-center gap-3 mt-6">
+				<a
+					href="/auth/signup"
+					class="btn preset-filled-primary-500 inline-flex items-center gap-2 p-3"
+				>
+					<span class="text-black">Create Free Account</span>
+					<span class="text-black">→</span>
+				</a>
+				<a
+					href="/pricing"
+					class="btn preset-outlined-primary-500 inline-flex items-center gap-2 p-3"
+				>
+					<span>View Pricing</span>
+					<span>→</span>
+				</a>
 			</div>
 		</div>
 	</div>

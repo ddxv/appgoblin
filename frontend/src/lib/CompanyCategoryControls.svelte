@@ -7,6 +7,7 @@
 		value: string;
 		label: string;
 		total: number;
+		locked: boolean;
 	}
 
 	interface Props {
@@ -14,13 +15,15 @@
 		label?: string;
 		description?: string;
 		compact?: boolean;
+		hasB2BAccess?: boolean;
 	}
 
 	let {
 		overview,
 		label = 'App Categories',
 		description = 'Filter the company view by app category.',
-		compact = false
+		compact = false,
+		hasB2BAccess = false
 	}: Props = $props();
 
 	function getCategoryName(category: string): string {
@@ -37,14 +40,15 @@
 		currentOverview: CompanyOverviewScope | null | undefined
 	): CategoryOption[] {
 		if (!currentOverview?.categories) {
-			return [{ value: 'overall', label: 'Overall', total: 0 }];
+			return [{ value: 'overall', label: 'Overall', total: 0, locked: false }];
 		}
 
 		const options = Object.entries(currentOverview.categories)
 			.map(([id, stats]) => ({
 				value: id === 'all' ? 'overall' : id,
 				label: getCategoryName(id),
-				total: stats.sdk_android_total_apps + stats.sdk_ios_total_apps
+				total: stats.sdk_android_total_apps + stats.sdk_ios_total_apps,
+				locked: !['all', 'games'].includes(id) && !hasB2BAccess
 			}))
 			.filter((option) => option.value === 'overall' || option.total > 0)
 			.sort((left, right) => {
@@ -54,7 +58,9 @@
 				return left.label.localeCompare(right.label);
 			});
 
-		return options.length > 0 ? options : [{ value: 'overall', label: 'Overall', total: 0 }];
+		return options.length > 0
+			? options
+			: [{ value: 'overall', label: 'Overall', total: 0, locked: false }];
 	}
 
 	async function handleCategoryChange(event: Event) {
@@ -62,6 +68,14 @@
 		const domain = page.params.domain;
 
 		if (!domain) return;
+
+		// Don't navigate to locked categories for non-B2B users
+		if (!['overall', 'games'].includes(nextCategory) && !hasB2BAccess) {
+			// Reset the select back to the current category
+			const select = event.currentTarget as HTMLSelectElement;
+			select.value = page.params.category || 'overall';
+			return;
+		}
 
 		const href =
 			nextCategory === 'overall' ? `/companies/${domain}` : `/companies/${domain}/${nextCategory}`;
@@ -86,7 +100,9 @@
 				onchange={handleCategoryChange}
 			>
 				{#each categoryOptions as option}
-					<option value={option.value}>{option.label}</option>
+					<option value={option.value} disabled={option.locked}
+						>{option.label}{option.locked ? ' 🔒 B2B' : ''}</option
+					>
 				{/each}
 			</select>
 		</label>
@@ -116,7 +132,9 @@
 						onchange={handleCategoryChange}
 					>
 						{#each categoryOptions as option}
-							<option value={option.value}>{option.label}</option>
+							<option value={option.value} disabled={option.locked}
+								>{option.label}{option.locked ? ' 🔒 B2B' : ''}</option
+							>
 						{/each}
 					</select>
 				</label>

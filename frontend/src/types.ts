@@ -442,6 +442,15 @@ export interface CategoryAppStats {
 	sdk_ios_installs_d30: number;
 	adstxt_direct_android_installs_d30: number;
 	adstxt_reseller_android_installs_d30: number;
+	api_android_installs_d30: number;
+	// Universe totals for market share / penetration computation
+	sdk_android_universe_apps: number;
+	sdk_ios_universe_apps: number;
+	sdk_android_universe_installs_d30: number;
+	sdk_ios_universe_installs_d30: number;
+	api_android_universe_apps: number;
+	api_ios_universe_apps: number;
+	api_android_universe_installs_d30: number;
 }
 
 export interface CompanyDomain {
@@ -712,6 +721,7 @@ export interface CompanyFullDetails {
 	companyAppCategories: AppCategoriesByStore;
 	parentAppCategories: AppCategoriesByStore | null;
 	companyCreatives: CompanyCreative[];
+	hasB2BSdkAccess?: boolean;
 }
 
 export interface CompanyTrendsDetails {
@@ -730,6 +740,7 @@ export interface CompanyCategoryDetails {
 	companyDetails: CompanyCategoryOverview;
 	companyCategoryApps: CompanyOverviewSections;
 	companyTree: CompanyTree;
+	hasB2BSdkAccess?: boolean;
 }
 
 export interface KeywordScore {

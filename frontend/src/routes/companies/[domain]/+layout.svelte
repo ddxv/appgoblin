@@ -249,7 +249,8 @@
 		return crumbs;
 	});
 	let hasAdstxt = $derived(Boolean(tabInd?.adstxt_direct_app_count));
-	let hasAppChanges = $derived(Boolean(tabInd?.apps_added_count || tabInd?.apps_lost_count));
+	let hasAppsAdded = $derived(Boolean(tabInd?.apps_added_count));
+	let hasAppsLost = $derived(Boolean(tabInd?.apps_lost_count));
 
 	function formatCount(n: number | undefined | null): string {
 		if (n == null || n === 0) return '';
@@ -284,7 +285,7 @@
 			slug: 'apps-added',
 			label: 'Apps Added',
 			href: `/companies/${companyDomain}/apps-added`,
-			visible: hasAppChanges,
+			visible: hasAppsAdded,
 			b2b: true,
 			count: tabInd?.apps_added_count ?? null
 		},
@@ -292,7 +293,7 @@
 			slug: 'apps-lost',
 			label: 'Apps Lost',
 			href: `/companies/${companyDomain}/apps-lost`,
-			visible: hasAppChanges,
+			visible: hasAppsLost,
 			b2b: true,
 			count: tabInd?.apps_lost_count ?? null
 		},
@@ -319,7 +320,7 @@
 		},
 		{
 			slug: 'data-exports',
-			label: 'Data Exports',
+			label: 'Full Client App CSVs',
 			href: `/companies/${companyDomain}/data-exports`,
 			visible: hasAdstxt || Boolean(tabInd?.sdk_count),
 			b2b: true,

@@ -2,7 +2,7 @@
 	import WhiteCard from './WhiteCard.svelte';
 	import CompanyOverviewTable from './CompanyTopAppsTable.svelte';
 
-	let { tableData, hideiOSApps = false, companyName = '' } = $props();
+	let { tableData, hideiOSApps = false, companyName = '', previewMode = true } = $props();
 	let androidTitle = $derived(
 		companyName ? `${companyName}'s Android Top Apps` : 'Android Top Apps'
 	);
@@ -16,7 +16,12 @@
 				{androidTitle}
 			{/snippet}
 			{#if tableData.android.apps && tableData.android.apps.length > 0}
-				<CompanyOverviewTable data={tableData.android.apps} isiOS={false} {companyName} />
+				<CompanyOverviewTable
+					data={tableData.android.apps}
+					isiOS={false}
+					{companyName}
+					{previewMode}
+				/>
 			{:else}
 				<p class="text-xs md:text-sm mb-2">No Android apps found for {companyName}</p>
 			{/if}
@@ -26,7 +31,7 @@
 				{iosTitle}
 			{/snippet}
 			{#if tableData.ios.apps && tableData.ios.apps.length > 0}
-				<CompanyOverviewTable data={tableData.ios.apps} isiOS={true} {companyName} />
+				<CompanyOverviewTable data={tableData.ios.apps} isiOS={true} {companyName} {previewMode} />
 			{:else}
 				<p class="text-xs md:text-sm mb-2">No iOS apps found for {companyName}</p>
 			{/if}
