@@ -258,7 +258,7 @@ async function buildAdvertiserCsv(): Promise<string> {
         const publisherScore = entry.unique_publishers * 3;
         const creativeScore = Math.max(entry.creative_count_from_impact, entry.unique_creatives_reach) * 5;
         const networkScore = entry.ad_networks_set.size * 10;
-        return Math.round(installScore + publisherScore + creativeScore + growthBonus + networkScore);
+        return Math.round(installScore + publisherScore + creativeScore + networkScore);
     }
 
     // ---- Write CSV ----
