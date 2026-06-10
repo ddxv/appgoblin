@@ -183,7 +183,7 @@
 							Category: {getCategoryName(data.myapp.category)}
 						</span>
 					</div>
-					<div class="flex flex-row items-center gap-2">
+					<div class="flex flex-col md:flex-row items-center gap-2">
 						<a
 							href="/apps/comparison/{data.myapp.store_id}"
 							class="btn preset-tonal w-full inline-flex items-center justify-center gap-2"

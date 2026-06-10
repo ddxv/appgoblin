@@ -46,29 +46,41 @@
 							url_slug: '/data-flows',
 							icon: FileText
 						},
-						{
-							name: 'Ad Creatives',
-							url_slug: '/ad-creatives',
-							icon: Image
-						},
-						{
-							name: 'Ad Placements',
-							url_slug: '/ad-placements',
-							icon: Image
-						},
-						{
-							name: 'Monetized Ad Creatives',
-							url_slug: '/monetized-ads',
-							icon: Image
-						}
+						...(myapp.ad_creative_count > 0
+							? [
+									{
+										name: 'Ad Creatives',
+										url_slug: '/ad-creatives',
+										icon: Image
+									},
+									{
+										name: 'Ad Placements',
+										url_slug: '/ad-placements',
+										icon: Image
+									}
+								]
+							: []),
+						...(myapp.ad_monetized_creative_count > 0
+							? [
+									{
+										name: 'Monetized Ad Creatives',
+										url_slug: '/monetized-ads',
+										icon: Image
+									}
+								]
+							: [])
 					]
 				: []),
 
-			{
-				name: 'App-Ads.txt',
-				url_slug: '/ads-txt',
-				icon: FileText
-			}
+			...(myapp.adstxt_crawl_result == 1
+				? [
+						{
+							name: 'App-Ads.txt',
+							url_slug: '/ads-txt',
+							icon: FileText
+						}
+					]
+				: [])
 		]
 	});
 
@@ -96,14 +108,6 @@
 		if (tab === '/sdks' && !myapp.sdk_successful_last_crawled) {
 			return textGreyedOutColor;
 		} else if (tab === '/data-flows' && !myapp.api_successful_last_crawled) {
-			return textGreyedOutColor;
-		} else if (tab === '/ads-txt' && myapp.adstxt_crawl_result != 1) {
-			return textGreyedOutColor;
-		} else if (tab === '/ad-creatives' && myapp.ad_creative_count == 0) {
-			return textGreyedOutColor;
-		} else if (tab === '/ad-placements' && myapp.ad_creative_count == 0) {
-			return textGreyedOutColor;
-		} else if (tab === '/monetized-ads' && myapp.ad_monetized_creative_count == 0) {
 			return textGreyedOutColor;
 		} else {
 			return '';
