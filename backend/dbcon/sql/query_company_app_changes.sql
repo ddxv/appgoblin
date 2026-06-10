@@ -22,7 +22,10 @@ WHERE
             CAST(:mystatus AS text) = 'added'
             AND CAST(dac.status AS text) IN ('added', 'added_initial')
         )
-        OR (CAST(:mystatus AS text) = 'removed' AND CAST(dac.status AS text) = 'removed')
+        OR (
+            CAST(:mystatus AS text) = 'removed'
+            AND CAST(dac.status AS text) = 'removed'
+        )
         OR CAST(dac.status AS text) = CAST(:mystatus AS text)
     )
     AND sa.store_id IS NOT NULL
