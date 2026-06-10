@@ -1,5 +1,5 @@
 import { fail, redirect } from '@sveltejs/kit';
-import { loginUrl } from '$lib/server/auth/auth';
+import { loginUrl, isSafeRedirect } from '$lib/server/auth/auth';
 import {
 	EMAIL_VERIFICATION_LIMIT_MESSAGE,
 	createEmailVerificationRequest,
@@ -33,12 +33,17 @@ export async function load(event: RequestEvent) {
 	let verificationRequest = await getUserEmailVerificationRequestFromRequest(event);
 	if (verificationRequest === null || Date.now() >= verificationRequest.expiresAt.getTime()) {
 		if (event.locals.user.emailVerified) {
+			const redirectTo = event.url.searchParams.get('redirectTo');
+			if (isSafeRedirect(redirectTo)) {
+				return redirect(302, redirectTo);
+			}
 			return redirect(302, '/');
 		}
 		if (!sendVerificationEmailBucket.consume(event.locals.user.id, 1)) {
 			return {
 				email: event.locals.user.email,
 				notice: EMAIL_VERIFICATION_LIMIT_MESSAGE,
+				redirectTo: event.url.searchParams.get('redirectTo') ?? '',
 				...getVerificationEmailState(event.locals.user.id)
 			};
 		}
@@ -49,9 +54,11 @@ export async function load(event: RequestEvent) {
 		await sendVerificationEmail(verificationRequest.email, verificationRequest.code);
 		await setEmailVerificationRequestCookie(event, verificationRequest);
 	}
+	const redirectTo = event.url.searchParams.get('redirectTo') ?? '';
 	return {
 		email: verificationRequest.email,
 		notice: null,
+		redirectTo: isSafeRedirect(redirectTo) ? redirectTo : '',
 		...getVerificationEmailState(event.locals.user.id)
 	};
 }
@@ -175,6 +182,10 @@ async function verifyCode(event: RequestEvent) {
 	await updateUserEmailAndSetEmailAsVerified(event.locals.user.id, verificationRequest.email);
 	sendVerificationEmailBucket.reset(event.locals.user.id);
 	deleteEmailVerificationRequestCookie(event);
+	const redirectTo = formData.get('redirectTo');
+	if (typeof redirectTo === 'string' && isSafeRedirect(redirectTo)) {
+		return redirect(302, redirectTo);
+	}
 	return redirect(302, '/');
 }
 

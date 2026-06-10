@@ -801,7 +801,7 @@ class TestV1CompanyAppChanges:
                 "/api/v1/companies/google.com/app-changes",
                 headers={"X-API-Key": "ag_companychanges"},
                 params={
-                    "status": "lost",
+                    "status": "removed",
                     "tag_source": "invalid",
                     "year": 2026,
                     "quarter": 1,
@@ -824,7 +824,7 @@ class TestV1CompanyAppChanges:
                 tag_source="sdk",
                 year=2026,
                 quarter=1,
-                status="lost",
+                status="removed",
             )
 
         assert payload == PublicCompanyAppChangeStoreIds(
@@ -832,7 +832,7 @@ class TestV1CompanyAppChanges:
             tag_source="sdk",
             year=2026,
             quarter=1,
-            status="lost",
+            status="removed",
             android_apps=["com.example.first"],
             ios_apps=["id123456"],
         )

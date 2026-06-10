@@ -3,13 +3,13 @@
 	import { Check, Crown, X } from 'lucide-svelte';
 
 	/** @type {import('./$types').PageData} */
-	export let data;
+	let { data } = $props();
 
 	let titlePadding = 'p-2 md:p-4';
 	let contentPadding = 'p-2 md:p-4';
 
-	let loading = false;
-	let activePriceKey: string | null = null;
+	let loading = $state(false);
+	let activePriceKey: string | null = $state(null);
 
 	const plans = [
 		{
@@ -313,7 +313,9 @@
 					>
 						{#if plan.included}
 							{#if !data?.user}
-								<a href="/auth/signup" class="btn preset-tonal-primary w-full">Create Account</a>
+								<a href="/auth/signup?redirectTo=/pricing" class="btn preset-tonal-primary w-full"
+									>Create Account</a
+								>
 							{:else}
 								<p class="text-center text-xs opacity-60">Included with your account</p>
 							{/if}

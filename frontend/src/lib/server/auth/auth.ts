@@ -104,6 +104,11 @@ export function redirectIfAuthenticated(event: RequestEvent) {
 			throw redirect(302, target);
 		}
 		if (!event.locals.user.emailVerified) {
+			const redirectTo = event.url.searchParams.get('redirectTo');
+			const target = isSafeRedirect(redirectTo) ? redirectTo : '';
+			if (target) {
+				throw redirect(302, `/auth/verify-email?redirectTo=${encodeURIComponent(target)}`);
+			}
 			throw redirect(302, '/auth/verify-email');
 		}
 	}

@@ -1958,7 +1958,7 @@ class CompaniesController(Controller):
         payload = build_company_app_changes_payload(
             state=state,
             company_domain=company_domain,
-            status="lost",
+            status="removed",
             year=year,
             quarter=quarter,
             tag_sources=COMPANY_APP_CHANGE_TAG_SOURCES_LOST,

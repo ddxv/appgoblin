@@ -100,6 +100,12 @@ async function action(event: RequestEvent) {
 	setSessionTokenCookie(event, sessionToken, session.expiresAt);
 
 	if (!user.emailVerified) {
+		const redirectTo = formData.get('redirectTo');
+		const destination =
+			typeof redirectTo === 'string' && isSafeRedirect(redirectTo) ? redirectTo : '';
+		if (destination) {
+			return redirect(302, `/auth/verify-email?redirectTo=${encodeURIComponent(destination)}`);
+		}
 		return redirect(302, '/auth/verify-email');
 	}
 	const redirectTo = formData.get('redirectTo');

@@ -15,7 +15,7 @@ import {
 	sendVerificationEmailBucket,
 	setEmailVerificationRequestCookie
 } from '$lib/server/auth/email-verification';
-import { redirectIfAuthenticated } from '$lib/server/auth/auth';
+import { redirectIfAuthenticated, isSafeRedirect } from '$lib/server/auth/auth';
 
 import type { SessionFlags } from '$lib/server/auth/session';
 import type { Actions, PageServerLoadEvent, RequestEvent } from './$types';
@@ -25,7 +25,8 @@ const ipBucket = new RefillingTokenBucket<string>(3, 10);
 export function load(event: PageServerLoadEvent) {
 	// Redirect if already authenticated (public route)
 	redirectIfAuthenticated(event);
-	return {};
+	const redirectTo = event.url.searchParams.get('redirectTo') ?? '';
+	return { redirectTo: isSafeRedirect(redirectTo) ? redirectTo : '' };
 }
 
 export const actions: Actions = {
@@ -47,6 +48,7 @@ async function action(event: RequestEvent) {
 	const email = formData.get('email');
 	const username = formData.get('username');
 	const password = formData.get('password');
+	const redirectToParam = formData.get('redirectTo');
 	if (typeof email !== 'string' || typeof username !== 'string' || typeof password !== 'string') {
 		return fail(400, {
 			message: 'Invalid or missing fields',
@@ -115,5 +117,10 @@ async function action(event: RequestEvent) {
 		DEFAULT_SESSION_DURATION_HOURS
 	);
 	setSessionTokenCookie(event, sessionToken, session.expiresAt);
+	const redirectDest =
+		typeof redirectToParam === 'string' && isSafeRedirect(redirectToParam) ? redirectToParam : '';
+	if (redirectDest) {
+		throw redirect(302, `/auth/verify-email?redirectTo=${encodeURIComponent(redirectDest)}`);
+	}
 	throw redirect(302, '/auth/verify-email');
 }

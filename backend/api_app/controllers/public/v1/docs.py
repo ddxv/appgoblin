@@ -474,7 +474,7 @@ def _set_company_app_changes_examples(schema: dict[str, Any]) -> None:
             "summary": "Store IDs for Unity apps lost in 2026 Q1",
             "value": {
                 **COMPANY_APPS_ADDED_EXAMPLE_RESPONSE,
-                "status": "lost",
+                "status": "removed",
             },
         },
     }

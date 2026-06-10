@@ -66,7 +66,7 @@
 		ios={data.appChanges.ios}
 		companyName={data.companyName}
 		previewMode={!data.hasB2BSdkAccess}
-		statusLabel="Lost"
+		statusLabel="removed"
 	/>
 {:else}
 	<p class="text-center p-4">

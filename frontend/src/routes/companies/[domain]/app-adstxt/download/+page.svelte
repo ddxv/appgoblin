@@ -2,7 +2,7 @@
 	import { page } from '$app/state';
 	import { onMount } from 'svelte';
 
-	export let data: { downloadUrl: string | null };
+	let { data }: { data: { downloadUrl: string | null } } = $props();
 
 	onMount(() => {
 		if (data.downloadUrl) {

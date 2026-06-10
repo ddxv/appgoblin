@@ -21,7 +21,6 @@ WHERE
             CAST(:mystatus AS text) = 'added'
             AND dac.status IN ('added', 'added_initial')
         )
-        OR (CAST(:mystatus AS text) = 'lost' AND dac.status = 'removed')
         OR (CAST(:mystatus AS text) = 'removed' AND dac.status = 'removed')
         OR dac.status = CAST(:mystatus AS text)
     )
