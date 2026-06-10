@@ -789,7 +789,12 @@ export interface AppSDKs {
 		skadnetwork: string[];
 		app_queries: string[];
 	};
-	versionTimeline: any;
+	versionTimeline: Array<{
+		app_version_code: string;
+		sdk_scan_result: number | null;
+		sdks_last_scanned_at: string | null;
+		downloaded_at: string | null;
+	}>;
 	companyTypes: CompanyTypes;
 	myapp: AppFullDetail;
 }

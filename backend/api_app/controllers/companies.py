@@ -103,7 +103,6 @@ TREND_PLATFORM_MAP = {1: "android", 2: "ios"}
 TREND_TAG_SOURCE_ORDER = {"sdk": 0, "api_call": 1, "app_ads_direct": 2}
 COMPANY_APP_CHANGES_LIMIT = 50
 COMPANY_APP_CHANGE_TAG_SOURCES = ("sdk", "api_call", "app_ads_direct")
-COMPANY_APP_CHANGE_TAG_SOURCES_LOST = ("sdk", "api_call")
 COMPANY_APP_CHANGE_PERIOD_RE = re.compile(r"(?P<year>\d{4})-?Q(?P<quarter>[1-4])")
 
 
@@ -1951,17 +1950,16 @@ class CompaniesController(Controller):
     ) -> CompanyAppChangesOverview:
         """Return recently lost apps for a company, capped for frontend rendering.
 
-        Only SDK and API-call signals are used for churn data since app-ads.txt
-        DIRECT removals are more often publisher reorganisation than true churn.
+        SDK, API-call and app-ads.txt DIRECT signals are all used for churn data.
         """
         start = time.perf_counter() * 1000
         payload = build_company_app_changes_payload(
             state=state,
             company_domain=company_domain,
-            status="lost",
+            status="removed",
             year=year,
             quarter=quarter,
-            tag_sources=COMPANY_APP_CHANGE_TAG_SOURCES_LOST,
+            tag_sources=COMPANY_APP_CHANGE_TAG_SOURCES,
         )
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(f"GET /api/companies/{company_domain}/apps-lost took {duration}ms")

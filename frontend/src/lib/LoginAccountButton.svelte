@@ -20,7 +20,7 @@
 		</a>
 	{:else}
 		<a
-			href="/account"
+			href="/auth/login?redirectTo={encodeURIComponent(page.url.pathname + page.url.search)}"
 			class="btn preset-tonal-primary inline-flex items-center gap-2 p-2"
 			title="Login"
 		>

@@ -4,21 +4,21 @@
 	import AppComparisonSlot from '$lib/AppComparisonSlot.svelte';
 	import { goto } from '$app/navigation';
 
-	export let data: PageData;
+	let { data }: { data: PageData } = $props();
 
-	$: ({
+	let {
 		app1,
 		app2,
 		history1,
 		history2,
 		histogram1,
 		histogram2,
-		sdks1,
-		sdks2,
+		sdk1,
+		sdk2,
 		companyTypes,
 		searchResult1,
 		searchResult2
-	} = data);
+	} = $derived(data);
 
 	function handleSlot1Change(app: any) {
 		// Swap app 1, keep app 2

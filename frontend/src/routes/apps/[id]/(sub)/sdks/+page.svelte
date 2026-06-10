@@ -4,13 +4,11 @@
 	import ManifestItemUnknownsList from '$lib/ManifestItemUnknownsList.svelte';
 	import { Tabs } from '@skeletonlabs/skeleton-svelte';
 
-	import RequestSDKScanButton from '$lib/RequestSDKScanButton.svelte';
-
 	import type { AppSDKs } from '../../../../../types';
 
 	let { data }: { data: AppSDKs } = $props();
 
-	function resultToString(result: number) {
+	function resultToString(result: number | null) {
 		switch (result) {
 			case 1:
 				return 'Success';
@@ -20,7 +18,8 @@
 				return 'Unknown';
 		}
 	}
-	function formatDateTime(date: string) {
+	function formatDateTime(date: string | null) {
+		if (!date) return '—';
 		return new Date(date).toLocaleDateString('en-US', {
 			year: 'numeric',
 			month: 'long',
@@ -65,28 +64,28 @@
 						<table class="table">
 							<thead>
 								<tr>
-									<th class="text-left p-2">Scanned At</th>
+									<th class="text-left p-2">SDKs Last Scanned</th>
 									<th class="text-left p-2">Version</th>
 									<th class="text-left p-2">Scan Result</th>
+									<th class="text-left p-2">First Downloaded</th>
 								</tr>
 							</thead>
 							<tbody>
 								{#each data.versionTimeline as version}
 									<tr>
-										<td class="p-2">{formatDateTime(version.scanned_at)}</td>
+										<td class="p-2">{formatDateTime(version.sdks_last_scanned_at)}</td>
 										<td class="p-2">{version.app_version_code}</td>
-										<td class="p-2">{resultToString(version.scan_result)}</td>
+										<td class="p-2">{resultToString(version.sdk_scan_result)}</td>
+										<td class="p-2">{formatDateTime(version.downloaded_at)}</td>
 									</tr>
 								{/each}
 							</tbody>
 						</table>
 					{:else}
 						App not yet analyzed for SDKs.
-						<RequestSDKScanButton />
 					{/if}
 				</div>
 			</WhiteCard>
-			<RequestSDKScanButton />
 		</section>
 
 		<Tabs defaultValue="sdks">

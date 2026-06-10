@@ -1,14 +1,17 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 
-	import type { ActionData } from './$types';
+	import type { ActionData, PageData } from './$types';
 
-	export let form: ActionData;
+	let { data, form }: { data: PageData; form: ActionData } = $props();
 </script>
 
 <h2 class="text-2xl font-bold">Create an account</h2>
 <p>Name must be at least 2 characters long and password must be at least 8 characters long.</p>
 <form class="space-y-1" method="post" use:enhance>
+	{#if data.redirectTo}
+		<input type="hidden" name="redirectTo" value={data.redirectTo} />
+	{/if}
 	<label class="label" for="form-signup.username">Name</label>
 	<input
 		class="input"
@@ -41,4 +44,8 @@
 	<button class="btn preset-filled">Create Account</button>
 	<p>{form?.message ?? ''}</p>
 </form>
-<a class="btn preset-tonal" href="/auth/login">Already have an account? Sign in</a>
+<a
+	class="btn preset-tonal"
+	href="/auth/login?redirectTo={encodeURIComponent(data.redirectTo || '')}"
+	>Already have an account? Sign in</a
+>

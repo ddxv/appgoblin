@@ -1,5 +1,14 @@
 <script lang="ts">
 	import { page } from '$app/state';
+	import ScanText from 'lucide-svelte/icons/scan-text';
+
+	let {
+		compact = false,
+		fullWidth = false
+	}: {
+		compact?: boolean;
+		fullWidth?: boolean;
+	} = $props();
 
 	let myMessage = $state('');
 	let isLoading = $state(false);
@@ -30,19 +39,20 @@
 	}
 </script>
 
-<div class="mx-auto w-full max-w-md space-y-1">
+<div class="space-y-1">
 	<button
-		class="btn preset-tonal text-tertiary-900-100 text-sm md:text-base"
+		type="button"
+		class={`btn preset-tonal-secondary ${compact ? 'btn-sm' : ''} ${fullWidth ? 'w-full justify-center' : ''}`}
 		onclick={handleClick}
 		disabled={isLoading}
 	>
-		{isLoading ? 'Requesting...' : 'Request New SDK Scan'}
+		{#if isLoading}
+			Requesting...
+		{:else}
+			<ScanText class="h-3.5 w-3.5" aria-hidden="true" /> Scan SDK & API
+		{/if}
 	</button>
 	{#if myMessage}
-		<p class="text-green-500">{myMessage}</p>
+		<p class="text-green-500 text-sm">{myMessage}</p>
 	{/if}
-	<p class="text-xs md:text-sm">
-		The download and scan process is automated but can require manual troubleshooting. Feel free to
-		reach out if your request does not complete in 24hrs or if you have any questions.
-	</p>
 </div>

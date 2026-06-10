@@ -4,8 +4,9 @@
 	import { goto } from '$app/navigation';
 	import type { PageData } from './$types';
 
-	export let data: PageData;
-	$: ({ app1, history1, histogram1, sdks1, companyTypes, searchResult1, searchResult2 } = data);
+	let { data }: { data: PageData } = $props();
+	let { app1, history1, histogram1, sdks1, companyTypes, searchResult1, searchResult2 } =
+		$derived(data);
 
 	function handleSlot1Change(app: any) {
 		// Replace app1

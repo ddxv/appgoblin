@@ -42,6 +42,9 @@
 	</div>
 {/if}
 <form class="space-y-1" method="post" use:enhance action="?/verify">
+	{#if data.redirectTo}
+		<input type="hidden" name="redirectTo" value={data.redirectTo} />
+	{/if}
 	<label class="label" for="form-verify.code">Code</label>
 	<input class="input" id="form-verify.code" name="code" required />
 	<button class="btn preset-filled">Verify</button>

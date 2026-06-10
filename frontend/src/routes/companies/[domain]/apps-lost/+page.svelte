@@ -22,10 +22,9 @@
 <section class="mb-4 space-y-2">
 	<h2 class="text-xl font-semibold">Recently Lost Apps</h2>
 	<p class="text-sm mb-3">
-		This view tracks the quarterly churn side of this company's app-change data through SDK and
-		API-call signals across the latest available quarter and the quarter before it. App-ads.txt
-		DIRECT removals are excluded since they more often reflect publisher reorganisation than true
-		churn.
+		This view tracks the quarterly churn side of this company's app-change data through SDK,
+		API-call and app-ads.txt DIRECT signals across the latest available quarter and the quarter
+		before it.
 	</p>
 	<p class="text-sm opacity-70">
 		This data is also available via the <a
@@ -66,7 +65,7 @@
 		ios={data.appChanges.ios}
 		companyName={data.companyName}
 		previewMode={!data.hasB2BSdkAccess}
-		statusLabel="Lost"
+		statusLabel="removed"
 	/>
 {:else}
 	<p class="text-center p-4">

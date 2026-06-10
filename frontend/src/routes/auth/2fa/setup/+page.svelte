@@ -3,8 +3,7 @@
 
 	import type { ActionData, PageData } from './$types';
 
-	export let data: PageData;
-	export let form: ActionData;
+	let { data, form }: { data: PageData; form: ActionData } = $props();
 </script>
 
 <h2 class="text-2xl font-bold">Set up two-factor authentication</h2>

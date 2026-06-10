@@ -5,6 +5,8 @@
 	import { countryCodeToEmoji } from './utils/countryCodeToEmoji';
 	import { Switch } from '@skeletonlabs/skeleton-svelte';
 	import { goto } from '$app/navigation';
+	import ChartLine from 'lucide-svelte/icons/chart-line';
+	import Star from 'lucide-svelte/icons/star';
 
 	// Star rating colors (1-star to 5-star order)
 	const red = '#E53935';
@@ -67,6 +69,7 @@
 	// State for toggles
 	let starsExpanded = $state(false);
 	let showNewStars = $state(false);
+	let activeTab = $state<'metrics' | 'ratings'>('metrics');
 
 	async function onRegionChange(event: Event) {
 		const region = (event.currentTarget as HTMLSelectElement).value;
@@ -143,7 +146,7 @@
 		isGoogleStore &&
 			filteredData.some((row) => {
 				const growthRate = Number(row.weekly_installs_rate_of_change ?? 0) || 0;
-				return growthRate > 1000 && isAprilInstallAnomalyWindow(row);
+				return growthRate > 100 && isAprilInstallAnomalyWindow(row);
 			})
 	);
 	const installAxisReferenceRows = $derived.by(() => {
@@ -388,530 +391,615 @@
 	</div>
 </div>
 
-<!-- Main Content -->
+<!-- Tab Navigation (keywords style) -->
+<nav class="p-3">
+	<div class="flex gap-2 overflow-x-auto pb-1">
+		<button
+			onclick={() => (activeTab = 'metrics')}
+			class={`whitespace-nowrap px-3 py-2 text-sm font-medium ${
+				activeTab === 'metrics' ? 'bg-secondary-100-900' : 'hover:bg-secondary-100-900'
+			}`}
+		>
+			<span class="inline-flex items-center gap-1.5">
+				<ChartLine size={18} strokeWidth={1.5} />
+				Metrics
+			</span>
+		</button>
+		<button
+			onclick={() => (activeTab = 'ratings')}
+			class={`whitespace-nowrap px-3 py-2 text-sm font-medium ${
+				activeTab === 'ratings' ? 'bg-secondary-100-900' : 'hover:bg-secondary-100-900'
+			}`}
+		>
+			<span class="inline-flex items-center gap-1.5">
+				<Star size={18} strokeWidth={1.5} />
+				Ratings Breakdown
+			</span>
+		</button>
+	</div>
+</nav>
+
+<!-- Tab Content -->
 <div class="space-y-8">
-	<!-- Installs Section -->
-	{#if hasInstallMetrics}
-		<div class="rounded-lg border p-6">
-			<h2 class="mb-6 text-xl font-bold">Install Analytics</h2>
-			{#if hasAprilInstallGrowthAnomaly}
-				<div
-					class="mb-6 rounded-lg border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-950"
-				>
-					<div class="font-semibold">Google Play installs anomaly detected</div>
-					<div class="mt-1">Google APIs returned a raw data anamoly from April 13-April27</div>
+	{#if activeTab === 'metrics'}
+		<!-- Installs Section -->
+		{#if hasInstallMetrics}
+			<div class="rounded-lg border p-6">
+				<h2 class="mb-6 text-xl font-bold">Install Analytics</h2>
+				{#if hasAprilInstallGrowthAnomaly}
+					<div
+						class="mb-6 rounded-lg border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-950"
+					>
+						<div class="font-semibold">Google Play installs anomaly detected</div>
+						<div class="mt-1">Google APIs returned a raw data anamoly from April 13-April27</div>
+					</div>
+				{/if}
+				<div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+					<div>
+						<h3 class="mb-3 text-sm font-semibold">Cumulative Installs</h3>
+						<div class="h-[300px]">
+							<AreaChart
+								data={filteredData}
+								x={xAxisKey}
+								y="cumulative_installs"
+								props={{
+									xAxis: {
+										format: (d) => format(d, PeriodType.Day, { variant: 'short' }),
+										ticks: 5
+									},
+									yAxis: { format: (d) => formatNumber(d) }
+								}}
+							/>
+						</div>
+					</div>
+
+					<div>
+						<h3 class="mb-3 text-sm font-semibold">Weekly Installs</h3>
+						<div class="h-[300px]">
+							<BarChart
+								data={filteredData}
+								x={xAxisKey}
+								y="weekly_installs"
+								yDomain={weeklyInstallsYDomain}
+								props={{
+									svg: { clip: true },
+									xAxis: {
+										format: (d) => format(d, PeriodType.Day, { variant: 'short' }),
+										ticks: 5
+									},
+									yAxis: { format: (d) => formatNumber(d) }
+								}}
+							/>
+						</div>
+					</div>
+
+					<div>
+						<h3 class="mb-3 text-sm font-semibold">Install Growth Rate (%)</h3>
+						<div class="h-[300px]">
+							<LineChart
+								data={filteredData}
+								x={xAxisKey}
+								y="weekly_installs_rate_of_change"
+								yDomain={installGrowthYDomain}
+								props={{
+									svg: { clip: true },
+									xAxis: {
+										format: (d) => format(d, PeriodType.Day, { variant: 'short' }),
+										ticks: 5
+									},
+									yAxis: { format: (d) => d.toFixed(2) + '%' }
+								}}
+							/>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			{#if selectedCountry === 'global'}
+				<!-- Engagement & Revenue Section -->
+				<div class="rounded-lg border p-6">
+					<h2 class="mb-6 text-xl font-bold">Engagement & Revenue</h2>
+					<div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+						<div>
+							<h3 class="mb-3 text-sm font-semibold">Weekly Active Users</h3>
+							<div class="h-[300px]">
+								<BarChart
+									data={filteredData}
+									x={xAxisKey}
+									y="weekly_active_users"
+									props={{
+										xAxis: {
+											format: (d) => format(d, PeriodType.Day, { variant: 'short' }),
+											ticks: 5
+										},
+										yAxis: { format: (d) => formatNumber(d) }
+									}}
+								/>
+							</div>
+						</div>
+
+						<div>
+							<h3 class="mb-3 text-sm font-semibold">Weekly Ad Revenue</h3>
+							<div class="h-[300px]">
+								<BarChart
+									data={filteredData}
+									x={xAxisKey}
+									y="weekly_ad_revenue"
+									props={{
+										xAxis: {
+											format: (d) => format(d, PeriodType.Day, { variant: 'short' }),
+											ticks: 5
+										},
+										yAxis: { format: (d) => formatNumber(d) }
+									}}
+								/>
+							</div>
+						</div>
+
+						<div>
+							<h3 class="mb-3 text-sm font-semibold">Weekly IAP Revenue</h3>
+							<div class="h-[300px]">
+								<BarChart
+									data={filteredData}
+									x={xAxisKey}
+									y="weekly_iap_revenue"
+									props={{
+										xAxis: {
+											format: (d) => format(d, PeriodType.Day, { variant: 'short' }),
+											ticks: 5
+										},
+										yAxis: { format: (d) => formatNumber(d) }
+									}}
+								/>
+							</div>
+						</div>
+					</div>
 				</div>
 			{/if}
+		{/if}
+
+		<!-- Ratings Section -->
+		<div class="rounded-lg border p-6">
+			<h2 class="mb-6 text-xl font-bold">Rating Analytics</h2>
 			<div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
 				<div>
-					<h3 class="mb-3 text-sm font-semibold">Cumulative Installs</h3>
-					<div class="h-[300px]">
-						<AreaChart
-							data={filteredData}
-							x={xAxisKey}
-							y="cumulative_installs"
-							props={{
-								xAxis: { format: (d) => format(d, PeriodType.Day, { variant: 'short' }), ticks: 5 },
-								yAxis: { format: (d) => formatNumber(d) }
-							}}
-						/>
-					</div>
-				</div>
-
-				<div>
-					<h3 class="mb-3 text-sm font-semibold">Weekly Installs</h3>
-					<div class="h-[300px]">
-						<BarChart
-							data={filteredData}
-							x={xAxisKey}
-							y="weekly_installs"
-							yDomain={weeklyInstallsYDomain}
-							props={{
-								svg: { clip: true },
-								xAxis: { format: (d) => format(d, PeriodType.Day, { variant: 'short' }), ticks: 5 },
-								yAxis: { format: (d) => formatNumber(d) }
-							}}
-						/>
-					</div>
-				</div>
-
-				<div>
-					<h3 class="mb-3 text-sm font-semibold">Install Growth Rate (%)</h3>
+					<h3 class="mb-3 text-sm font-semibold">Average Rating</h3>
 					<div class="h-[300px]">
 						<LineChart
 							data={filteredData}
 							x={xAxisKey}
-							y="weekly_installs_rate_of_change"
-							yDomain={installGrowthYDomain}
+							y="rating"
 							props={{
-								svg: { clip: true },
 								xAxis: { format: (d) => format(d, PeriodType.Day, { variant: 'short' }), ticks: 5 },
-								yAxis: { format: (d) => d.toFixed(2) + '%' }
+								yAxis: { format: (d) => d.toFixed(2) }
+							}}
+						/>
+					</div>
+				</div>
+
+				<div>
+					<h3 class="mb-3 text-sm font-semibold">Total Rating Count</h3>
+					<div class="h-[300px]">
+						<AreaChart
+							data={filteredData}
+							x={xAxisKey}
+							y={ratingCountKey}
+							props={{
+								xAxis: { format: (d) => format(d, PeriodType.Day, { variant: 'short' }), ticks: 5 },
+								yAxis: { format: (d) => formatNumber(d) }
+							}}
+						/>
+					</div>
+				</div>
+
+				<div>
+					<h3 class="mb-3 text-sm font-semibold">Weekly Ratings</h3>
+					<div class="h-[300px]">
+						<BarChart
+							data={filteredData}
+							x={xAxisKey}
+							y={newRatingCountKey}
+							props={{
+								xAxis: { format: (d) => format(d, PeriodType.Day, { variant: 'short' }), ticks: 5 },
+								yAxis: { format: (d) => formatNumber(d) }
 							}}
 						/>
 					</div>
 				</div>
 			</div>
 		</div>
+	{:else}
+		<!-- Sentiment Analysis Section -->
+		<div class="rounded-lg border p-6">
+			<div class="mb-6">
+				<div class="flex items-center justify-between">
+					<h2 class="text-xl font-bold">Star Rating Sentiment Analysis</h2>
 
-		{#if selectedCountry === 'global'}
-			<!-- Engagement & Revenue Section -->
-			<div class="rounded-lg border p-6">
-				<h2 class="mb-6 text-xl font-bold">Engagement & Revenue</h2>
-				<div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
-					<div>
-						<h3 class="mb-3 text-sm font-semibold">Weekly Active Users</h3>
-						<div class="h-[300px]">
-							<BarChart
-								data={filteredData}
-								x={xAxisKey}
-								y="weekly_active_users"
-								props={{
-									xAxis: {
-										format: (d) => format(d, PeriodType.Day, { variant: 'short' }),
-										ticks: 5
-									},
-									yAxis: { format: (d) => formatNumber(d) }
-								}}
-							/>
+					<!-- Toggle Switches -->
+					<div class="flex items-center gap-6">
+						<!-- Cumulative vs New Toggle -->
+						<div class="flex items-center gap-3">
+							<Switch onCheckedChange={() => (showNewStars = !showNewStars)}>
+								<Switch.Control>
+									<Switch.Thumb />
+								</Switch.Control>
+								<Switch.Label>Daily Ratings</Switch.Label>
+								<Switch.HiddenInput />
+							</Switch>
 						</div>
-					</div>
 
-					<div>
-						<h3 class="mb-3 text-sm font-semibold">Weekly Ad Revenue</h3>
-						<div class="h-[300px]">
-							<BarChart
-								data={filteredData}
-								x={xAxisKey}
-								y="weekly_ad_revenue"
-								props={{
-									xAxis: {
-										format: (d) => format(d, PeriodType.Day, { variant: 'short' }),
-										ticks: 5
-									},
-									yAxis: { format: (d) => formatNumber(d) }
-								}}
-							/>
-						</div>
-					</div>
-
-					<div>
-						<h3 class="mb-3 text-sm font-semibold">Weekly IAP Revenue</h3>
-						<div class="h-[300px]">
-							<BarChart
-								data={filteredData}
-								x={xAxisKey}
-								y="weekly_iap_revenue"
-								props={{
-									xAxis: {
-										format: (d) => format(d, PeriodType.Day, { variant: 'short' }),
-										ticks: 5
-									},
-									yAxis: { format: (d) => formatNumber(d) }
-								}}
-							/>
+						<!-- Count vs Percentage Toggle -->
+						<div class="flex items-center gap-3">
+							<Switch onCheckedChange={() => (starsExpanded = !starsExpanded)}>
+								<Switch.Control>
+									<Switch.Thumb />
+								</Switch.Control>
+								<Switch.Label>Percentage</Switch.Label>
+								<Switch.HiddenInput />
+							</Switch>
 						</div>
 					</div>
 				</div>
 			</div>
-		{/if}
-	{/if}
 
-	<!-- Ratings Section -->
-	<div class="rounded-lg border p-6">
-		<h2 class="mb-6 text-xl font-bold">Rating Analytics</h2>
-		<div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
-			<div>
-				<h3 class="mb-3 text-sm font-semibold">Average Rating</h3>
-				<div class="h-[300px]">
-					<LineChart
-						data={filteredData}
-						x={xAxisKey}
-						y="rating"
-						props={{
-							xAxis: { format: (d) => format(d, PeriodType.Day, { variant: 'short' }), ticks: 5 },
-							yAxis: { format: (d) => d.toFixed(2) }
-						}}
-					/>
-				</div>
-			</div>
-
-			<div>
-				<h3 class="mb-3 text-sm font-semibold">Total Rating Count</h3>
-				<div class="h-[300px]">
-					<AreaChart
-						data={filteredData}
-						x={xAxisKey}
-						y={ratingCountKey}
-						props={{
-							xAxis: { format: (d) => format(d, PeriodType.Day, { variant: 'short' }), ticks: 5 },
-							yAxis: { format: (d) => formatNumber(d) }
-						}}
-					/>
-				</div>
-			</div>
-
-			<div>
-				<h3 class="mb-3 text-sm font-semibold">Weekly Ratings</h3>
-				<div class="h-[300px]">
+			<!-- Stacked Bar Chart -->
+			<div class="mb-6">
+				<h3 class="mb-3 text-sm font-semibold">
+					{showNewStars ? 'New Star Ratings per Period' : 'Cumulative Star Rating Distribution'} Over
+					Time
+				</h3>
+				<div class="h-[350px]">
 					<BarChart
 						data={filteredData}
 						x={xAxisKey}
-						y={newRatingCountKey}
+						series={seriesKeysBar}
+						seriesLayout={starsExpanded ? 'stackExpand' : 'stack'}
 						props={{
 							xAxis: { format: (d) => format(d, PeriodType.Day, { variant: 'short' }), ticks: 5 },
-							yAxis: { format: (d) => formatNumber(d) }
+							yAxis: { format: (d) => (starsExpanded ? d.toFixed(0) + '%' : formatNumber(d)) }
 						}}
 					/>
 				</div>
 			</div>
-		</div>
-	</div>
 
-	<!-- Sentiment Analysis Section -->
-	<div class="rounded-lg border p-6">
-		<div class="mb-6">
-			<div class="flex items-center justify-between">
-				<h2 class="text-xl font-bold">Star Rating Sentiment Analysis</h2>
+			<!-- Star Distribution Overview -->
+			<div class="mb-8 grid grid-cols-2 gap-4 md:grid-cols-5">
+				<div class="rounded border p-4" style="border-color: {darkgreen};">
+					<div class="text-xs font-medium">5 Stars ⭐⭐⭐⭐⭐</div>
+					<div class="mt-2 text-xl font-bold">
+						{formatNumber(latestData?.five_star ?? 0)}
+					</div>
+					<div class="mt-1 text-xs">
+						+{formatNumber(latestData?.new_five_star ?? 0)}
+					</div>
+				</div>
+				<div class="rounded border p-4" style="border-color: {lightgreen};">
+					<div class="text-xs font-medium">4 Stars ⭐⭐⭐⭐</div>
+					<div class="mt-2 text-xl font-bold">
+						{formatNumber(latestData?.four_star ?? 0)}
+					</div>
+					<div class="mt-1 text-xs">
+						+{formatNumber(latestData?.new_four_star ?? 0)}
+					</div>
+				</div>
+				<div class="rounded border p-4" style="border-color: {yellow};">
+					<div class="text-xs font-medium">3 Stars ⭐⭐⭐</div>
+					<div class="mt-2 text-xl font-bold">
+						{formatNumber(latestData?.three_star ?? 0)}
+					</div>
+					<div class="mt-1 text-xs">
+						+{formatNumber(latestData?.new_three_star ?? 0)}
+					</div>
+				</div>
+				<div class="rounded border p-4" style="border-color: {orange};">
+					<div class="text-xs font-medium">2 Stars ⭐⭐</div>
+					<div class="mt-2 text-xl font-bold">
+						{formatNumber(latestData?.two_star ?? 0)}
+					</div>
+					<div class="mt-1 text-xs">
+						+{formatNumber(latestData?.new_two_star ?? 0)}
+					</div>
+				</div>
+				<div class="rounded border p-4" style="border-color: {red};">
+					<div class="text-xs font-medium">1 Star ⭐</div>
+					<div class="mt-2 text-xl font-bold">
+						{formatNumber(latestData?.one_star ?? 0)}
+					</div>
+					<div class="mt-1 text-xs">
+						+{formatNumber(latestData?.new_one_star ?? 0)}
+					</div>
+				</div>
+			</div>
 
-				<!-- Toggle Switches -->
-				<div class="flex items-center gap-6">
-					<!-- Cumulative vs New Toggle -->
-					<div class="flex items-center gap-3">
-						<Switch onCheckedChange={() => (showNewStars = !showNewStars)}>
-							<Switch.Control>
-								<Switch.Thumb />
-							</Switch.Control>
-							<Switch.Label>Daily Ratings</Switch.Label>
-							<Switch.HiddenInput />
-						</Switch>
+			<!-- 5 Star Charts -->
+			<div class="mb-6">
+				<h3 class="mb-4 text-lg font-semibold" style="color: {darkgreen};">5-Star Ratings</h3>
+				<div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+					<div>
+						<h4 class="mb-3 text-xs font-semibold opacity-70">Total 5-Star Ratings</h4>
+						<div class="h-[250px]">
+							<AreaChart
+								data={filteredData}
+								x={xAxisKey}
+								y="five_star"
+								props={{
+									xAxis: {
+										format: (d) => format(d, PeriodType.Day, { variant: 'short' }),
+										ticks: 4
+									},
+									yAxis: { format: (d) => formatNumber(d) }
+								}}
+							/>
+						</div>
 					</div>
+					<div>
+						<h4 class="mb-3 text-xs font-semibold opacity-70">New 5-Star Ratings</h4>
+						<div class="h-[250px]">
+							<BarChart
+								data={filteredData}
+								x={xAxisKey}
+								y="weekly_five_star"
+								props={{
+									xAxis: {
+										format: (d) => format(d, PeriodType.Day, { variant: 'short' }),
+										ticks: 4
+									},
+									yAxis: { format: (d) => formatNumber(d) }
+								}}
+							/>
+						</div>
+					</div>
+					<div>
+						<h4 class="mb-3 text-xs font-semibold opacity-70">5-Star Growth Rate (%)</h4>
+						<div class="h-[250px]">
+							<LineChart
+								data={filteredData}
+								x={xAxisKey}
+								y="five_star_rate_of_change"
+								props={{
+									xAxis: {
+										format: (d) => format(d, PeriodType.Day, { variant: 'short' }),
+										ticks: 4
+									},
+									yAxis: { format: (d) => d.toFixed(2) + '%' }
+								}}
+							/>
+						</div>
+					</div>
+				</div>
+			</div>
 
-					<!-- Count vs Percentage Toggle -->
-					<div class="flex items-center gap-3">
-						<Switch onCheckedChange={() => (starsExpanded = !starsExpanded)}>
-							<Switch.Control>
-								<Switch.Thumb />
-							</Switch.Control>
-							<Switch.Label>Percentage</Switch.Label>
-							<Switch.HiddenInput />
-						</Switch>
+			<!-- 4 Star Charts -->
+			<div class="mb-6">
+				<h3 class="mb-4 text-lg font-semibold" style="color: {lightgreen};">4-Star Ratings</h3>
+				<div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+					<div>
+						<h4 class="mb-3 text-xs font-semibold opacity-70">Total 4-Star Ratings</h4>
+						<div class="h-[250px]">
+							<AreaChart
+								data={filteredData}
+								x={xAxisKey}
+								y="four_star"
+								props={{
+									xAxis: {
+										format: (d) => format(d, PeriodType.Day, { variant: 'short' }),
+										ticks: 4
+									},
+									yAxis: { format: (d) => formatNumber(d) }
+								}}
+							/>
+						</div>
+					</div>
+					<div>
+						<h4 class="mb-3 text-xs font-semibold opacity-70">New 4-Star Ratings</h4>
+						<div class="h-[250px]">
+							<BarChart
+								data={filteredData}
+								x={xAxisKey}
+								y="weekly_four_star"
+								props={{
+									xAxis: {
+										format: (d) => format(d, PeriodType.Day, { variant: 'short' }),
+										ticks: 4
+									},
+									yAxis: { format: (d) => formatNumber(d) }
+								}}
+							/>
+						</div>
+					</div>
+					<div>
+						<h4 class="mb-3 text-xs font-semibold opacity-70">4-Star Growth Rate (%)</h4>
+						<div class="h-[250px]">
+							<LineChart
+								data={filteredData}
+								x={xAxisKey}
+								y="four_star_rate_of_change"
+								props={{
+									xAxis: {
+										format: (d) => format(d, PeriodType.Day, { variant: 'short' }),
+										ticks: 4
+									},
+									yAxis: { format: (d) => d.toFixed(2) + '%' }
+								}}
+							/>
+						</div>
 					</div>
 				</div>
 			</div>
-		</div>
 
-		<!-- Stacked Bar Chart -->
-		<div class="mb-6">
-			<h3 class="mb-3 text-sm font-semibold">
-				{showNewStars ? 'New Star Ratings per Period' : 'Cumulative Star Rating Distribution'} Over Time
-			</h3>
-			<div class="h-[350px]">
-				<BarChart
-					data={filteredData}
-					x={xAxisKey}
-					series={seriesKeysBar}
-					seriesLayout={starsExpanded ? 'stackExpand' : 'stack'}
-					props={{
-						xAxis: { format: (d) => format(d, PeriodType.Day, { variant: 'short' }), ticks: 5 },
-						yAxis: { format: (d) => (starsExpanded ? d.toFixed(0) + '%' : formatNumber(d)) }
-					}}
-				/>
+			<!-- 3 Star Charts -->
+			<div class="mb-6">
+				<h3 class="mb-4 text-lg font-semibold" style="color: {yellow};">3-Star Ratings</h3>
+				<div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+					<div>
+						<h4 class="mb-3 text-xs font-semibold opacity-70">Total 3-Star Ratings</h4>
+						<div class="h-[250px]">
+							<AreaChart
+								data={filteredData}
+								x={xAxisKey}
+								y="three_star"
+								props={{
+									xAxis: {
+										format: (d) => format(d, PeriodType.Day, { variant: 'short' }),
+										ticks: 4
+									},
+									yAxis: { format: (d) => formatNumber(d) }
+								}}
+							/>
+						</div>
+					</div>
+					<div>
+						<h4 class="mb-3 text-xs font-semibold opacity-70">New 3-Star Ratings</h4>
+						<div class="h-[250px]">
+							<BarChart
+								data={filteredData}
+								x={xAxisKey}
+								y="weekly_three_star"
+								props={{
+									xAxis: {
+										format: (d) => format(d, PeriodType.Day, { variant: 'short' }),
+										ticks: 4
+									},
+									yAxis: { format: (d) => formatNumber(d) }
+								}}
+							/>
+						</div>
+					</div>
+					<div>
+						<h4 class="mb-3 text-xs font-semibold opacity-70">3-Star Growth Rate (%)</h4>
+						<div class="h-[250px]">
+							<LineChart
+								data={filteredData}
+								x={xAxisKey}
+								y="three_star_rate_of_change"
+								props={{
+									xAxis: {
+										format: (d) => format(d, PeriodType.Day, { variant: 'short' }),
+										ticks: 4
+									},
+									yAxis: { format: (d) => d.toFixed(2) + '%' }
+								}}
+							/>
+						</div>
+					</div>
+				</div>
 			</div>
-		</div>
 
-		<!-- Star Distribution Overview -->
-		<div class="mb-8 grid grid-cols-2 gap-4 md:grid-cols-5">
-			<div class="rounded border p-4" style="border-color: {darkgreen};">
-				<div class="text-xs font-medium">5 Stars ⭐⭐⭐⭐⭐</div>
-				<div class="mt-2 text-xl font-bold">
-					{formatNumber(latestData?.five_star ?? 0)}
-				</div>
-				<div class="mt-1 text-xs">
-					+{formatNumber(latestData?.new_five_star ?? 0)}
+			<!-- 2 Star Charts -->
+			<div class="mb-6">
+				<h3 class="mb-4 text-lg font-semibold" style="color: {orange};">2-Star Ratings</h3>
+				<div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+					<div>
+						<h4 class="mb-3 text-xs font-semibold opacity-70">Total 2-Star Ratings</h4>
+						<div class="h-[250px]">
+							<AreaChart
+								data={filteredData}
+								x={xAxisKey}
+								y="two_star"
+								props={{
+									xAxis: {
+										format: (d) => format(d, PeriodType.Day, { variant: 'short' }),
+										ticks: 4
+									},
+									yAxis: { format: (d) => formatNumber(d) }
+								}}
+							/>
+						</div>
+					</div>
+					<div>
+						<h4 class="mb-3 text-xs font-semibold opacity-70">New 2-Star Ratings</h4>
+						<div class="h-[250px]">
+							<BarChart
+								data={filteredData}
+								x={xAxisKey}
+								y="weekly_two_star"
+								props={{
+									xAxis: {
+										format: (d) => format(d, PeriodType.Day, { variant: 'short' }),
+										ticks: 4
+									},
+									yAxis: { format: (d) => formatNumber(d) }
+								}}
+							/>
+						</div>
+					</div>
+					<div>
+						<h4 class="mb-3 text-xs font-semibold opacity-70">2-Star Growth Rate (%)</h4>
+						<div class="h-[250px]">
+							<LineChart
+								data={filteredData}
+								x={xAxisKey}
+								y="two_star_rate_of_change"
+								props={{
+									xAxis: {
+										format: (d) => format(d, PeriodType.Day, { variant: 'short' }),
+										ticks: 4
+									},
+									yAxis: { format: (d) => d.toFixed(2) + '%' }
+								}}
+							/>
+						</div>
+					</div>
 				</div>
 			</div>
-			<div class="rounded border p-4" style="border-color: {lightgreen};">
-				<div class="text-xs font-medium">4 Stars ⭐⭐⭐⭐</div>
-				<div class="mt-2 text-xl font-bold">
-					{formatNumber(latestData?.four_star ?? 0)}
-				</div>
-				<div class="mt-1 text-xs">
-					+{formatNumber(latestData?.new_four_star ?? 0)}
-				</div>
-			</div>
-			<div class="rounded border p-4" style="border-color: {yellow};">
-				<div class="text-xs font-medium">3 Stars ⭐⭐⭐</div>
-				<div class="mt-2 text-xl font-bold">
-					{formatNumber(latestData?.three_star ?? 0)}
-				</div>
-				<div class="mt-1 text-xs">
-					+{formatNumber(latestData?.new_three_star ?? 0)}
-				</div>
-			</div>
-			<div class="rounded border p-4" style="border-color: {orange};">
-				<div class="text-xs font-medium">2 Stars ⭐⭐</div>
-				<div class="mt-2 text-xl font-bold">
-					{formatNumber(latestData?.two_star ?? 0)}
-				</div>
-				<div class="mt-1 text-xs">
-					+{formatNumber(latestData?.new_two_star ?? 0)}
-				</div>
-			</div>
-			<div class="rounded border p-4" style="border-color: {red};">
-				<div class="text-xs font-medium">1 Star ⭐</div>
-				<div class="mt-2 text-xl font-bold">
-					{formatNumber(latestData?.one_star ?? 0)}
-				</div>
-				<div class="mt-1 text-xs">
-					+{formatNumber(latestData?.new_one_star ?? 0)}
-				</div>
-			</div>
-		</div>
 
-		<!-- 5 Star Charts -->
-		<div class="mb-6">
-			<h3 class="mb-4 text-lg font-semibold" style="color: {darkgreen};">5-Star Ratings</h3>
-			<div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
-				<div>
-					<h4 class="mb-3 text-xs font-semibold opacity-70">Total 5-Star Ratings</h4>
-					<div class="h-[250px]">
-						<AreaChart
-							data={filteredData}
-							x={xAxisKey}
-							y="five_star"
-							props={{
-								xAxis: { format: (d) => format(d, PeriodType.Day, { variant: 'short' }), ticks: 4 },
-								yAxis: { format: (d) => formatNumber(d) }
-							}}
-						/>
+			<!-- 1 Star Charts -->
+			<div class="mb-6">
+				<h3 class="mb-4 text-lg font-semibold" style="color: {red};">1-Star Ratings</h3>
+				<div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+					<div>
+						<h4 class="mb-3 text-xs font-semibold opacity-70">Total 1-Star Ratings</h4>
+						<div class="h-[250px]">
+							<AreaChart
+								data={filteredData}
+								x={xAxisKey}
+								y="one_star"
+								props={{
+									xAxis: {
+										format: (d) => format(d, PeriodType.Day, { variant: 'short' }),
+										ticks: 4
+									},
+									yAxis: { format: (d) => formatNumber(d) }
+								}}
+							/>
+						</div>
 					</div>
-				</div>
-				<div>
-					<h4 class="mb-3 text-xs font-semibold opacity-70">New 5-Star Ratings</h4>
-					<div class="h-[250px]">
-						<BarChart
-							data={filteredData}
-							x={xAxisKey}
-							y="weekly_five_star"
-							props={{
-								xAxis: { format: (d) => format(d, PeriodType.Day, { variant: 'short' }), ticks: 4 },
-								yAxis: { format: (d) => formatNumber(d) }
-							}}
-						/>
+					<div>
+						<h4 class="mb-3 text-xs font-semibold opacity-70">New 1-Star Ratings</h4>
+						<div class="h-[250px]">
+							<BarChart
+								data={filteredData}
+								x={xAxisKey}
+								y="weekly_one_star"
+								props={{
+									xAxis: {
+										format: (d) => format(d, PeriodType.Day, { variant: 'short' }),
+										ticks: 4
+									},
+									yAxis: { format: (d) => formatNumber(d) }
+								}}
+							/>
+						</div>
 					</div>
-				</div>
-				<div>
-					<h4 class="mb-3 text-xs font-semibold opacity-70">5-Star Growth Rate (%)</h4>
-					<div class="h-[250px]">
-						<LineChart
-							data={filteredData}
-							x={xAxisKey}
-							y="five_star_rate_of_change"
-							props={{
-								xAxis: { format: (d) => format(d, PeriodType.Day, { variant: 'short' }), ticks: 4 },
-								yAxis: { format: (d) => d.toFixed(2) + '%' }
-							}}
-						/>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<!-- 4 Star Charts -->
-		<div class="mb-6">
-			<h3 class="mb-4 text-lg font-semibold" style="color: {lightgreen};">4-Star Ratings</h3>
-			<div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
-				<div>
-					<h4 class="mb-3 text-xs font-semibold opacity-70">Total 4-Star Ratings</h4>
-					<div class="h-[250px]">
-						<AreaChart
-							data={filteredData}
-							x={xAxisKey}
-							y="four_star"
-							props={{
-								xAxis: { format: (d) => format(d, PeriodType.Day, { variant: 'short' }), ticks: 4 },
-								yAxis: { format: (d) => formatNumber(d) }
-							}}
-						/>
-					</div>
-				</div>
-				<div>
-					<h4 class="mb-3 text-xs font-semibold opacity-70">New 4-Star Ratings</h4>
-					<div class="h-[250px]">
-						<BarChart
-							data={filteredData}
-							x={xAxisKey}
-							y="weekly_four_star"
-							props={{
-								xAxis: { format: (d) => format(d, PeriodType.Day, { variant: 'short' }), ticks: 4 },
-								yAxis: { format: (d) => formatNumber(d) }
-							}}
-						/>
-					</div>
-				</div>
-				<div>
-					<h4 class="mb-3 text-xs font-semibold opacity-70">4-Star Growth Rate (%)</h4>
-					<div class="h-[250px]">
-						<LineChart
-							data={filteredData}
-							x={xAxisKey}
-							y="four_star_rate_of_change"
-							props={{
-								xAxis: { format: (d) => format(d, PeriodType.Day, { variant: 'short' }), ticks: 4 },
-								yAxis: { format: (d) => d.toFixed(2) + '%' }
-							}}
-						/>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<!-- 3 Star Charts -->
-		<div class="mb-6">
-			<h3 class="mb-4 text-lg font-semibold" style="color: {yellow};">3-Star Ratings</h3>
-			<div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
-				<div>
-					<h4 class="mb-3 text-xs font-semibold opacity-70">Total 3-Star Ratings</h4>
-					<div class="h-[250px]">
-						<AreaChart
-							data={filteredData}
-							x={xAxisKey}
-							y="three_star"
-							props={{
-								xAxis: { format: (d) => format(d, PeriodType.Day, { variant: 'short' }), ticks: 4 },
-								yAxis: { format: (d) => formatNumber(d) }
-							}}
-						/>
-					</div>
-				</div>
-				<div>
-					<h4 class="mb-3 text-xs font-semibold opacity-70">New 3-Star Ratings</h4>
-					<div class="h-[250px]">
-						<BarChart
-							data={filteredData}
-							x={xAxisKey}
-							y="weekly_three_star"
-							props={{
-								xAxis: { format: (d) => format(d, PeriodType.Day, { variant: 'short' }), ticks: 4 },
-								yAxis: { format: (d) => formatNumber(d) }
-							}}
-						/>
-					</div>
-				</div>
-				<div>
-					<h4 class="mb-3 text-xs font-semibold opacity-70">3-Star Growth Rate (%)</h4>
-					<div class="h-[250px]">
-						<LineChart
-							data={filteredData}
-							x={xAxisKey}
-							y="three_star_rate_of_change"
-							props={{
-								xAxis: { format: (d) => format(d, PeriodType.Day, { variant: 'short' }), ticks: 4 },
-								yAxis: { format: (d) => d.toFixed(2) + '%' }
-							}}
-						/>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<!-- 2 Star Charts -->
-		<div class="mb-6">
-			<h3 class="mb-4 text-lg font-semibold" style="color: {orange};">2-Star Ratings</h3>
-			<div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
-				<div>
-					<h4 class="mb-3 text-xs font-semibold opacity-70">Total 2-Star Ratings</h4>
-					<div class="h-[250px]">
-						<AreaChart
-							data={filteredData}
-							x={xAxisKey}
-							y="two_star"
-							props={{
-								xAxis: { format: (d) => format(d, PeriodType.Day, { variant: 'short' }), ticks: 4 },
-								yAxis: { format: (d) => formatNumber(d) }
-							}}
-						/>
-					</div>
-				</div>
-				<div>
-					<h4 class="mb-3 text-xs font-semibold opacity-70">New 2-Star Ratings</h4>
-					<div class="h-[250px]">
-						<BarChart
-							data={filteredData}
-							x={xAxisKey}
-							y="weekly_two_star"
-							props={{
-								xAxis: { format: (d) => format(d, PeriodType.Day, { variant: 'short' }), ticks: 4 },
-								yAxis: { format: (d) => formatNumber(d) }
-							}}
-						/>
-					</div>
-				</div>
-				<div>
-					<h4 class="mb-3 text-xs font-semibold opacity-70">2-Star Growth Rate (%)</h4>
-					<div class="h-[250px]">
-						<LineChart
-							data={filteredData}
-							x={xAxisKey}
-							y="two_star_rate_of_change"
-							props={{
-								xAxis: { format: (d) => format(d, PeriodType.Day, { variant: 'short' }), ticks: 4 },
-								yAxis: { format: (d) => d.toFixed(2) + '%' }
-							}}
-						/>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<!-- 1 Star Charts -->
-		<div class="mb-6">
-			<h3 class="mb-4 text-lg font-semibold" style="color: {red};">1-Star Ratings</h3>
-			<div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
-				<div>
-					<h4 class="mb-3 text-xs font-semibold opacity-70">Total 1-Star Ratings</h4>
-					<div class="h-[250px]">
-						<AreaChart
-							data={filteredData}
-							x={xAxisKey}
-							y="one_star"
-							props={{
-								xAxis: { format: (d) => format(d, PeriodType.Day, { variant: 'short' }), ticks: 4 },
-								yAxis: { format: (d) => formatNumber(d) }
-							}}
-						/>
-					</div>
-				</div>
-				<div>
-					<h4 class="mb-3 text-xs font-semibold opacity-70">New 1-Star Ratings</h4>
-					<div class="h-[250px]">
-						<BarChart
-							data={filteredData}
-							x={xAxisKey}
-							y="weekly_one_star"
-							props={{
-								xAxis: { format: (d) => format(d, PeriodType.Day, { variant: 'short' }), ticks: 4 },
-								yAxis: { format: (d) => formatNumber(d) }
-							}}
-						/>
-					</div>
-				</div>
-				<div>
-					<h4 class="mb-3 text-xs font-semibold opacity-70">1-Star Growth Rate (%)</h4>
-					<div class="h-[250px]">
-						<LineChart
-							data={filteredData}
-							x={xAxisKey}
-							y="one_star_rate_of_change"
-							props={{
-								xAxis: { format: (d) => format(d, PeriodType.Day, { variant: 'short' }), ticks: 4 },
-								yAxis: { format: (d) => d.toFixed(2) + '%' }
-							}}
-						/>
+					<div>
+						<h4 class="mb-3 text-xs font-semibold opacity-70">1-Star Growth Rate (%)</h4>
+						<div class="h-[250px]">
+							<LineChart
+								data={filteredData}
+								x={xAxisKey}
+								y="one_star_rate_of_change"
+								props={{
+									xAxis: {
+										format: (d) => format(d, PeriodType.Day, { variant: 'short' }),
+										ticks: 4
+									},
+									yAxis: { format: (d) => d.toFixed(2) + '%' }
+								}}
+							/>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-	</div>
+	{/if}
 </div>
