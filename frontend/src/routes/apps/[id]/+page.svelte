@@ -1,6 +1,5 @@
 <script lang="ts">
 	import ExternalLinkSvg from '$lib/svg/ExternalLinkSVG.svelte';
-	import RequestSDKScanButton from '$lib/RequestSDKScanButton.svelte';
 	import type { AppFullDetails } from '../../../types';
 	import WhiteCard from '$lib/WhiteCard.svelte';
 	import AppSDKOverview from '$lib/AppSDKOverview.svelte';
@@ -185,7 +184,6 @@
 								</div>
 							{:else}
 								App not yet analyzed for SDKs.
-								<RequestSDKScanButton />
 							{/if}
 						</div>
 					</WhiteCard>

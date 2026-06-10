@@ -3,6 +3,7 @@
 	import RatingInstallsLarge from '$lib/RatingInstallsLarge.svelte';
 	import StarsRating from '$lib/StarsRating.svelte';
 	import FollowToggleButton from '$lib/components/follows/FollowToggleButton.svelte';
+	import RequestSDKScanButton from '$lib/RequestSDKScanButton.svelte';
 	import LogIn from 'lucide-svelte/icons/log-in';
 	import type { CompanyTypes, AppFullDetail, CatData } from '../../../types';
 	import AvailableOniOs from '$lib/svg/AvailableOniOS.svelte';
@@ -198,6 +199,9 @@
 								initialFollowing={Boolean(data.isFollowingApp)}
 								fullWidth={true}
 							/>
+						</div>
+						<div class="w-full">
+							<RequestSDKScanButton fullWidth={true} />
 						</div>
 					</div>
 				</div>

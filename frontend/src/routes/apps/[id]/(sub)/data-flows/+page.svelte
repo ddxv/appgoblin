@@ -3,7 +3,6 @@
 	import AppAPICallsTable from '$lib/AppAPICallsTable.svelte';
 	import CompanyButton from '$lib/CompanyButton.svelte';
 
-	import RequestSDKScanButton from '$lib/RequestSDKScanButton.svelte';
 	import { countryCodeToEmoji } from '$lib/utils/countryCodeToEmoji';
 
 	let { data }: { data: any } = $props();
@@ -48,7 +47,6 @@
 		{:then apis}
 			{#if typeof apis == 'string' || apis.apis.length == 0}
 				<p>API calls data not yet available for this app.</p>
-				<RequestSDKScanButton />
 			{:else if apis.apis && Object.keys(apis.apis).length > 0}
 				{@const stats = getDataStats(apis.apis)}
 				<p class="mb-4">
