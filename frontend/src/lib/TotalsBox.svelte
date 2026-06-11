@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { formatNumberLocale } from '$lib/utils/formatNumber';
+	import { formatNumberLocale, getCountBucket } from '$lib/utils/formatNumber';
 	import type { CompanyTrendSummary, CompanyTrendsSummary } from '../types';
 
 	import { page } from '$app/state';
@@ -10,7 +10,8 @@
 		hideAdstxtApps = false,
 		companyName,
 		isSecondaryDomain = false,
-		trendsSummary = null
+		trendsSummary = null,
+		isOverview = false
 	} = $props();
 
 	let safeTotals = $derived(myTotals ?? {});
@@ -20,6 +21,10 @@
 			? (page.data?.appCats?.categories?.find((c: { id: string }) => c.id === page.params.category)
 					?.name ?? 'All')
 			: null
+	);
+
+	let showAdsTxt = $derived(
+		myType?.url_slug === 'ad-networks' || myType?.url_slug === 'all-companies'
 	);
 
 	const titleFont = 'text-xl  tracking-wide';
@@ -101,7 +106,52 @@
 	);
 </script>
 
-{#if !isSecondaryDomain}
+{#if isOverview}
+	<!-- === OVERVIEW: PIVOTED TAG SOURCE COUNTS === -->
+	<div class="table-container p-4">
+		<div class={titleFont}>
+			{categoryTitle ? `${categoryTitle} App` : ''} Counts by Source
+			<p class="text-xs text-surface-500">Aggregated across all companies mapped by AppGoblin.</p>
+		</div>
+		<table class="table w-full">
+			<thead>
+				<tr>
+					<th class="text-left py-2 px-1"></th>
+					<th class="text-left py-2 px-1">SDK</th>
+					<th class="text-left py-2 px-1">API Call</th>
+					{#if showAdsTxt}
+						<th class="text-left py-2 px-1">Ads.txt DIRECT</th>
+						<th class="text-left py-2 px-1">Ads.txt RESELLER</th>
+					{/if}
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="py-2 px-1 {rowTitleFont}">App Count</td>
+					<td class="py-2 px-1">{getCountBucket(safeTotals.sdk_total_apps ?? 0)}</td>
+					<td class="py-2 px-1">{getCountBucket(safeTotals.api_total_apps ?? 0)}</td>
+					{#if showAdsTxt}
+						<td class="py-2 px-1">{getCountBucket(safeTotals.adstxt_direct_total_apps ?? 0)}</td>
+						<td class="py-2 px-1">{getCountBucket(safeTotals.adstxt_reseller_total_apps ?? 0)}</td>
+					{/if}
+				</tr>
+				<tr>
+					<td class="py-2 px-1 {rowTitleFont}">Company Domains</td>
+					<td class="py-2 px-1">{getCountBucket(safeTotals.sdk_android_total_companies ?? 0)}</td>
+					<td class="py-2 px-1">{getCountBucket(safeTotals.api_android_total_companies ?? 0)}</td>
+					{#if showAdsTxt}
+						<td class="py-2 px-1"
+							>{getCountBucket(safeTotals.adstxt_direct_android_total_companies ?? 0)}</td
+						>
+						<td class="py-2 px-1"
+							>{getCountBucket(safeTotals.adstxt_reseller_android_total_companies ?? 0)}</td
+						>
+					{/if}
+				</tr>
+			</tbody>
+		</table>
+	</div>
+{:else if !isSecondaryDomain}
 	<!-- === SDK SECTION === -->
 	<div class="table-container p-4">
 		<div class={titleFont}>
@@ -214,7 +264,7 @@
 {#if myType.url_slug === 'ad-networks' || myType.url_slug === 'all-companies'}
 	{#if safeTotals.total_companies}
 		<div class="grid p-4">
-			<div class={titleFont}>Company Domains</div>
+			<div class={titleFont}>All Tracked Domains</div>
 			<div class="stat-container">
 				<div class="text-2xl font-bold">
 					{formatNumberLocale(safeTotals.total_companies)}

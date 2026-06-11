@@ -72,18 +72,18 @@ export function getMauBucket(value: number): string {
  * @param value - The category total to bucket
  * @returns Bucket label (e.g. '25K+') or empty string
  */
-export function getCategoryCountBucket(value: number): string {
+export function getCountBucket(value: number): string {
 	if (value <= 0) return '';
-
-	if (value < 1000) return '<1K';
 	if (value >= 2000000) return '2M+';
 	if (value >= 1000000) return '1M+';
 	if (value >= 500000) return '500K+';
 	if (value >= 250000) return '250K+';
+	if (value >= 200000) return '200K+';
+	if (value >= 150000) return '150K+';
 	if (value >= 100000) return '100K+';
 	if (value >= 50000) return '50K+';
 	if (value >= 25000) return '25K+';
 	if (value >= 10000) return '10K+';
-
-	return '1K+';
+	if (value >= 1000) return '1K+';
+	return String(value);
 }

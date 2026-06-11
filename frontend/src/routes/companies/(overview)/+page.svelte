@@ -77,16 +77,13 @@
 {#if typeof data.companiesOverview == 'string'}
 	<p class="text-red-500 text-center">Failed to load companies details.</p>
 {:else if data.companiesOverview && data.companiesOverview.categories}
-	<p class="text-sm mb-4">
-		Explore verified ad networks, analytics platforms, mediation providers, and developer tooling
-		across millions of mobile apps. This view is updated with SDK, API, and app-ads.txt intelligence
-		to help researchers, growth teams, and fraud analysts compare market presence and technical
-		footprint.
-	</p>
 	<CompaniesTableGrid>
 		{#snippet mainTable()}
 			{#if data.companiesOverview && data.companiesOverview.companies_overview.length > 0}
-				<CompaniesOverviewTable data={data.companiesOverview.companies_overview} />
+				<CompaniesOverviewTable
+					data={data.companiesOverview.companies_overview}
+					showLimitNote={false}
+				/>
 			{/if}
 		{/snippet}
 	</CompaniesTableGrid>

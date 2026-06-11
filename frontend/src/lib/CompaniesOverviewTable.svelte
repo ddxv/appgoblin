@@ -35,6 +35,7 @@
 	type DataTableProps<CompaniesOverviewEntries, TValue> = {
 		data: CompaniesOverviewEntries[];
 		viewMode?: ViewMode;
+		showLimitNote?: boolean;
 	};
 
 	let pagination = $state<PaginationState>({ pageIndex: 0, pageSize: 50 });
@@ -44,7 +45,11 @@
 	let globalFilter = $state<string>('');
 	let dataMetric = $state<MetricValue>('market_share');
 
-	let { data, viewMode = 'auto' }: DataTableProps<CompaniesOverviewEntries, TValue> = $props();
+	let {
+		data,
+		viewMode = 'auto',
+		showLimitNote = false
+	}: DataTableProps<CompaniesOverviewEntries, TValue> = $props();
 
 	import { page } from '$app/state';
 
@@ -407,6 +412,12 @@
 	}
 </script>
 
+{#if showLimitNote}
+	<p class="text-xs mb-1">
+		Table shows the top 1,000 company domains. Use the site wide search for specific domains or
+		companies that may not make the top 1000.
+	</p>
+{/if}
 <div class="table-container p-0 md:p-2">
 	<div class="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-8 m-2">
 		<div class="preset-outlined-surface-100-900 flex items-center flex-col p-0 md:p-2">

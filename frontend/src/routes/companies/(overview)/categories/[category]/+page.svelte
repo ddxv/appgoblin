@@ -28,7 +28,10 @@
 	<CompaniesTableGrid>
 		{#snippet mainTable()}
 			{#if data.companiesOverview && data.companiesOverview.companies_overview.length > 0}
-				<CompaniesOverviewTable data={data.companiesOverview.companies_overview} />
+				<CompaniesOverviewTable
+					data={data.companiesOverview.companies_overview}
+					showLimitNote={true}
+				/>
 			{/if}
 		{/snippet}
 	</CompaniesTableGrid>

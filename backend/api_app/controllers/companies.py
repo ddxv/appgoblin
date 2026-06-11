@@ -77,6 +77,7 @@ from dbcon.queries import (
     get_company_tree_related_domains,
     get_mediation_adapters,
     get_tag_source_category_totals,
+    get_tag_source_company_counts,
     get_topapps_for_company,
     get_topapps_for_company_parent,
     get_topapps_for_company_secondary,
@@ -743,11 +744,15 @@ def get_overviews(
         category_app_counts = get_category_type_stats(
             state, type_slug=type_slug, category=category
         )
+        # Type-filtered path already returns all companies (no limit)
+        company_counts = None
     else:
         companies_df = get_companies_stats(state, app_category=category)
         category_app_counts = get_tag_source_category_totals(
             state, app_category=category
         )
+        # Get real company counts without the top-1000 cutoff
+        company_counts = get_tag_source_company_counts(state, app_category=category)
 
     companies_df = companies_df.merge(
         category_app_counts,
@@ -758,6 +763,7 @@ def get_overviews(
     category_overview_stats = make_companies_stats(
         df=companies_df.copy(),
         tag_source_category_app_counts=category_app_counts,
+        tag_source_company_counts=company_counts,
     )
 
     companies_df = prep_companies_overview_df(
@@ -893,6 +899,7 @@ def append_overall_categories(df: pd.DataFrame) -> pd.DataFrame:
 def make_companies_stats(
     df: pd.DataFrame,
     tag_source_category_app_counts: pd.DataFrame,
+    tag_source_company_counts: pd.DataFrame | None = None,
 ) -> CompaniesCategoryOverview:
     """Make category sums for multiple companies overview."""
     overview = CompaniesCategoryOverview()
@@ -901,37 +908,53 @@ def make_companies_stats(
     df_is_apple = df["store"].str.contains("Apple")
     df_is_google = df["store"].str.contains("Google")
     df_is_sdk = df["tag_source"] == "sdk"
+    df_is_api_call = df["tag_source"] == "api_call"
     df_is_app_ads_reseller = df["tag_source"] == "app_ads_reseller"
     df_is_app_ads_direct = df["tag_source"] == "app_ads_direct"
 
-    # Function to calculate unique counts
-    def get_unique_company_counts(mask: pd.Series) -> int:
-        return df.loc[mask, "company_domain"].nunique()
-
-    def get_installs_d30(mask: pd.Series) -> int:
-        return df.loc[mask, "installs_d30"].sum()
-
-    def get_app_count(mask: pd.Series) -> int:
-        return int(df.loc[mask, "app_count"].sum())
+    # Use real company counts from a separate query (no top-1000 cutoff)
+    # Falls back to nunique on the limited df if not provided.
+    def _company_count(
+        store_mask: pd.Series, tag_mask: pd.Series, store_label: str, tag_label: str
+    ) -> int:
+        if tag_source_company_counts is not None:
+            mask = (tag_source_company_counts["store"] == store_label) & (
+                tag_source_company_counts["tag_source"] == tag_label
+            )
+            vals = tag_source_company_counts.loc[mask, "company_count"]
+            return int(vals.sum()) if not vals.empty else 0
+        return int(df.loc[store_mask & tag_mask, "company_domain"].nunique())
 
     # Calculate overall stats
     overall_stats = {
-        "total_companies": df["company_domain"].nunique(),
-        "sdk_ios_total_companies": get_unique_company_counts(df_is_apple & df_is_sdk),
-        "sdk_android_total_companies": get_unique_company_counts(
-            df_is_google & df_is_sdk
+        "total_companies": (
+            int(tag_source_company_counts["company_count"].sum())
+            if tag_source_company_counts is not None
+            else df["company_domain"].nunique()
         ),
-        "adstxt_direct_ios_total_companies": get_unique_company_counts(
-            df_is_apple & df_is_app_ads_direct
+        "sdk_ios_total_companies": _company_count(
+            df_is_apple, df_is_sdk, "Apple App Store", "sdk"
         ),
-        "adstxt_direct_android_total_companies": get_unique_company_counts(
-            df_is_google & df_is_app_ads_direct,
+        "sdk_android_total_companies": _company_count(
+            df_is_google, df_is_sdk, "Google Play", "sdk"
         ),
-        "adstxt_reseller_ios_total_companies": get_unique_company_counts(
-            df_is_apple & df_is_app_ads_reseller,
+        "adstxt_direct_ios_total_companies": _company_count(
+            df_is_apple, df_is_app_ads_direct, "Apple App Store", "app_ads_direct"
         ),
-        "adstxt_reseller_android_total_companies": get_unique_company_counts(
-            df_is_google & df_is_app_ads_reseller,
+        "adstxt_direct_android_total_companies": _company_count(
+            df_is_google, df_is_app_ads_direct, "Google Play", "app_ads_direct"
+        ),
+        "adstxt_reseller_ios_total_companies": _company_count(
+            df_is_apple, df_is_app_ads_reseller, "Apple App Store", "app_ads_reseller"
+        ),
+        "adstxt_reseller_android_total_companies": _company_count(
+            df_is_google, df_is_app_ads_reseller, "Google Play", "app_ads_reseller"
+        ),
+        "api_android_total_companies": _company_count(
+            df_is_google, df_is_api_call, "Google Play", "api_call"
+        ),
+        "api_ios_total_companies": _company_count(
+            df_is_apple, df_is_api_call, "Apple App Store", "api_call"
         ),
     }
 
@@ -949,6 +972,9 @@ def make_companies_stats(
     )
     tag_source_category_app_counts_is_app_ads_direct = (
         tag_source_category_app_counts["tag_source"] == "app_ads_direct"
+    )
+    tag_source_category_app_counts_is_api_call = (
+        tag_source_category_app_counts["tag_source"] == "api_call"
     )
 
     sdk_app_counts = {
@@ -988,8 +1014,88 @@ def make_companies_stats(
         }
     )
 
+    # --- api_call app counts ---
+    api_app_counts = {
+        "api_total_apps": int(
+            tag_source_category_app_counts[tag_source_category_app_counts_is_api_call][
+                "cat_total_app_count"
+            ].sum()
+        ),
+        "api_android_total_apps": int(
+            tag_source_category_app_counts[
+                tag_source_category_app_counts_is_api_call
+                & tag_source_category_app_counts_is_google
+            ]["cat_total_app_count"].sum()
+        ),
+        "api_android_installs_d30": int(
+            tag_source_category_app_counts[
+                tag_source_category_app_counts_is_api_call
+                & tag_source_category_app_counts_is_google
+            ]["cat_total_installs_d30"].sum()
+        ),
+    }
+    # api_ios_total_apps — only SDK columns exist in cat totals, not api_call iOS
+    api_app_counts["api_ios_total_apps"] = 0
+
+    # --- app_ads_direct app counts ---
+    adstxt_direct_app_counts = {
+        "adstxt_direct_total_apps": int(
+            tag_source_category_app_counts[
+                tag_source_category_app_counts_is_app_ads_direct
+            ]["cat_total_app_count"].sum()
+        ),
+        "adstxt_direct_android_total_apps": int(
+            tag_source_category_app_counts[
+                tag_source_category_app_counts_is_app_ads_direct
+                & tag_source_category_app_counts_is_google
+            ]["cat_total_app_count"].sum()
+        ),
+        "adstxt_direct_ios_total_apps": int(
+            tag_source_category_app_counts[
+                tag_source_category_app_counts_is_app_ads_direct
+                & tag_source_category_app_counts_is_apple
+            ]["cat_total_app_count"].sum()
+        ),
+        "adstxt_direct_android_installs_d30": int(
+            tag_source_category_app_counts[
+                tag_source_category_app_counts_is_app_ads_direct
+                & tag_source_category_app_counts_is_google
+            ]["cat_total_installs_d30"].sum()
+        ),
+    }
+
+    # --- app_ads_reseller app counts ---
+    adstxt_reseller_app_counts = {
+        "adstxt_reseller_total_apps": int(
+            tag_source_category_app_counts[
+                tag_source_category_app_counts_is_app_ads_reseller
+            ]["cat_total_app_count"].sum()
+        ),
+        "adstxt_reseller_android_total_apps": int(
+            tag_source_category_app_counts[
+                tag_source_category_app_counts_is_app_ads_reseller
+                & tag_source_category_app_counts_is_google
+            ]["cat_total_app_count"].sum()
+        ),
+        "adstxt_reseller_ios_total_apps": int(
+            tag_source_category_app_counts[
+                tag_source_category_app_counts_is_app_ads_reseller
+                & tag_source_category_app_counts_is_apple
+            ]["cat_total_app_count"].sum()
+        ),
+        "adstxt_reseller_android_installs_d30": int(
+            tag_source_category_app_counts[
+                tag_source_category_app_counts_is_app_ads_reseller
+                & tag_source_category_app_counts_is_google
+            ]["cat_total_installs_d30"].sum()
+        ),
+    }
+
     overview.update_stats("all", **overall_stats)
     overview.update_stats("all", **sdk_app_counts)
+    overview.update_stats("all", **api_app_counts)
+    overview.update_stats("all", **adstxt_direct_app_counts)
+    overview.update_stats("all", **adstxt_reseller_app_counts)
 
     return overview
 

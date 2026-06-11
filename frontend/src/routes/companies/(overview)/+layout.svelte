@@ -58,6 +58,7 @@
 							companyName=""
 							myTotals={page.data.companiesOverview.categories.categories.all}
 							myType={currentType}
+							isOverview={true}
 						/>
 					{/if}
 				</WhiteCard>
