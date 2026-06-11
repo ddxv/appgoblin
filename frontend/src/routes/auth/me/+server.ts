@@ -5,19 +5,19 @@ import type { RequestHandler } from './$types';
 export const prerender = false;
 
 const NO_CACHE_HEADERS = {
-    'Cache-Control': 'no-store, no-cache, must-revalidate',
-    Pragma: 'no-cache',
-    Expires: '0',
-    'Content-Type': 'application/json'
+	'Cache-Control': 'no-store, no-cache, must-revalidate',
+	Pragma: 'no-cache',
+	Expires: '0',
+	'Content-Type': 'application/json'
 };
 
 export const GET: RequestHandler = async ({ locals }) => {
-    const user = locals.user
-        ? { username: locals.user.username, emailVerified: locals.user.emailVerified }
-        : null;
+	const user = locals.user
+		? { username: locals.user.username, emailVerified: locals.user.emailVerified }
+		: null;
 
-    return new Response(JSON.stringify({ user }), {
-        status: 200,
-        headers: NO_CACHE_HEADERS
-    });
+	return new Response(JSON.stringify({ user }), {
+		status: 200,
+		headers: NO_CACHE_HEADERS
+	});
 };
