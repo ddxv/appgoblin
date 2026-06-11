@@ -7,6 +7,10 @@
 	import CompanyButton from '$lib/CompanyButton.svelte';
 </script>
 
+<svelte:head>
+	<meta name="robots" content="noindex, nofollow" />
+</svelte:head>
+
 <h1 class="text-2xl font-bold break-all">{pattern}</h1>
 
 <div class="p-2 md:p-4">

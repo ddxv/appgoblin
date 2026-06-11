@@ -19,6 +19,10 @@
 	);
 </script>
 
+<svelte:head>
+	<meta name="robots" content="noindex, nofollow" />
+</svelte:head>
+
 <div class="space-y-4">
 	<section class="space-y-4">
 		<h2 class="text-2xl font-bold">Publisher ID: {page.params.publisher_id}</h2>
