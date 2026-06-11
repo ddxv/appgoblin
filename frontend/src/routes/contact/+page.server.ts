@@ -18,7 +18,8 @@ export const actions = {
         if (email && (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 320)) {
             errors.email = 'Please enter a valid email address.';
         }
-        if (!message || message.length > 2_500) errors.message = 'Please enter a message (max 2,500 characters).';
+        if (!message || message.length > 2_500)
+            errors.message = 'Please enter a message (max 2,500 characters).';
 
         if (Object.keys(errors).length > 0) {
             return { status: 'error', errors, values: { name, email, message } };
