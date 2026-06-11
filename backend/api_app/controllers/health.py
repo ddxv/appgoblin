@@ -117,8 +117,9 @@ def _check_ranks_freshness(
             )
         last_ranks_raw = ranks_row.get("last_ranks_crawled_date")
         last_ranks_utc = _normalize_to_utc(last_ranks_raw)
+        days_threshold = 2 if now_utc.time() < time(12, 0) else 1
         ranks_ok = last_ranks_utc is not None and now_utc - last_ranks_utc <= timedelta(
-            days=2
+            days=days_threshold
         )
         check_payload = {
             "ok": ranks_ok,
