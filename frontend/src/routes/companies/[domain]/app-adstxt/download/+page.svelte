@@ -11,6 +11,10 @@
 	});
 </script>
 
+<svelte:head>
+	<meta name="robots" content="noindex, nofollow" />
+</svelte:head>
+
 <section class="space-y-3">
 	<h2 class="text-xl font-semibold">App-ads.txt Download</h2>
 	<p>Download for {page.params.domain} app-ads.txt. Download should start automatically.</p>

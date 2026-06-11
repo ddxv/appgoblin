@@ -51,6 +51,10 @@
 	);
 </script>
 
+<svelte:head>
+	<meta name="robots" content="noindex, follow" />
+</svelte:head>
+
 <section class="mb-6 space-y-2">
 	<h2 class="text-xl font-semibold">Category Breakdown</h2>
 	<p class="text-sm text-gray-600">

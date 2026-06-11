@@ -18,6 +18,7 @@ from dbcon.static import (
 logger = get_logger(__name__)
 
 SITEMAP_DIR = MODULE_DIR.parent / pathlib.Path("frontend/static")
+BLOG_DIR = MODULE_DIR.parent / pathlib.Path("frontend/src/content/blog")
 
 STATIC_URLS = [
     "https://appgoblin.info",
@@ -38,6 +39,7 @@ STATIC_URLS = [
     "https://appgoblin.info/reports/ad-user-acquisition-2026-february",
     "https://appgoblin.info/reports/ad-user-acquisition-2026-january",
     "https://appgoblin.info/reports/ad-user-acquisition-2026-march",
+    "https://appgoblin.info/reports/ad-user-acquisition-2026-may",
     "https://appgoblin.info/reports/mobile-apps-growth-sdks-2025",
     "https://appgoblin.info/reports/app-ecosystem-report-Q1-2026",
     "https://appgoblin.info/fastest-growing-apps/google/overall",
@@ -48,9 +50,19 @@ STATIC_URLS = [
     "https://appgoblin.info/collections/new_monthly/apple/overall",
     "https://appgoblin.info/collections/new_yearly/apple/overall",
     "https://appgoblin.info/collections/new_yearly/google/overall",
-    "https://appgoblin.info/rankings/store/1/collection/1/category/1/US",
-    "https://appgoblin.info/rankings/store/2/collection/4/category/120/US",
 ]
+
+
+def get_blog_urls() -> pd.DataFrame:
+    """Build a DataFrame of blog post URLs from the blog content directory.
+
+    Returns:
+        DataFrame with blog post URLs
+
+    """
+    slugs = sorted(p.stem for p in BLOG_DIR.glob("*.mdx"))
+    urls = [f"https://appgoblin.info/blog/{slug}" for slug in slugs]
+    return pd.DataFrame({"url": urls})
 
 
 def set_df_sitemap_columns(
@@ -201,6 +213,7 @@ company_types["url"] = (
 company_types = set_df_sitemap_columns(company_types, 0.9)
 
 # about 50
+cdf["app_category"] = "games"
 company_categories = (
     cdf.groupby("app_category")["app_count"]
     .sum()
@@ -246,9 +259,13 @@ apps = set_df_sitemap_columns(apps, 0.5, "monthly")
 static_pages = pd.DataFrame({"url": STATIC_URLS})
 static_pages = set_df_sitemap_columns(static_pages, 1.0, "weekly")
 
+blog_posts_df = get_blog_urls()
+blog_posts_df = set_df_sitemap_columns(blog_posts_df, 0.7, "monthly")
+
 allurls = pd.concat(
     [
         static_pages,
+        blog_posts_df,
         company_types,
         company_type_categories,
         companies,
