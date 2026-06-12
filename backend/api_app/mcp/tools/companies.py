@@ -6,10 +6,7 @@ receive a descriptive access-denied message rather than data.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from fastmcp import Context
+from fastmcp import Context
 
 from api_app.controllers.companies import get_overviews
 from api_app.controllers.public.v1.companies import (
