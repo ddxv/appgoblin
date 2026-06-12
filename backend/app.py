@@ -5,11 +5,12 @@ from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 from datetime import UTC, datetime, timedelta
 
-from litestar import Litestar, Request
+from litestar import Litestar, Request, asgi
 from litestar.config.cors import CORSConfig
 from litestar.logging import LoggingConfig
 from litestar.middleware import DefineMiddleware
 from litestar.openapi import OpenAPIConfig, OpenAPIController
+from litestar.types import Receive, Scope, Send
 
 from api_app.controllers.apps import AppController
 from api_app.controllers.categories import CategoryController
@@ -27,6 +28,7 @@ from api_app.controllers.rankings import RankingsController
 from api_app.controllers.scry import ScryController
 from api_app.controllers.sdks import SdksController
 from api_app.guards import configure_tier_mapping, validate_tier_mapping_config
+from api_app.mcp.controller import protected_mcp_app, set_mcp_engine
 from config import CONFIG
 from dbcon.connections import get_db_connection
 from dbcon.static import load_static_data
@@ -91,13 +93,28 @@ for controller in private_controllers:
 
 
 class RateLimitMiddleware:
-    """Adds X-RateLimit-* headers to V1 API responses."""
+    """Adds X-RateLimit-* headers to V1 API responses.
+
+    Skips the MCP Streamable HTTP path (``/api/v1/mcp/``) because those
+    connections use long-lived SSE streams and have their own auth + rate
+    limiting baked into ``AuthenticatedMCPMiddleware``.
+    """
 
     def __init__(self, app) -> None:
         self.app = app
 
     async def __call__(self, scope, receive, send) -> None:
         if scope["type"] != "http":
+            await self.app(scope, receive, send)
+            return
+
+        # --- Bypass for MCP Streamable HTTP SSE connections ---
+        # The MCP server manages its own tier-gated rate limiting at the
+        # ASGI layer.  Wrapping the long-lived SSE stream would interfere
+        # with tool-call message frames and could accidentally time out an
+        # active Claude Code / Cursor conversation loop.
+        raw_path = scope.get("raw_path", b"").decode("latin-1", errors="replace")
+        if raw_path.startswith("/api/v1/mcp"):
             await self.app(scope, receive, send)
             return
 
@@ -225,6 +242,12 @@ async def db_lifespan(app: Litestar) -> AsyncGenerator[None]:
         except Exception:
             logger.exception("Failed to connect to goblinadmin-write")
             app.state.dbconwrite = None
+
+        # Inject the write engine into the MCP module so its ASGI
+        # middleware and tools can authenticate & query without coupling
+        # to app.state.
+        if app.state.dbconwrite is not None:
+            set_mcp_engine(app.state.dbconwrite.engine)
     except Exception:
         logger.exception("Failed to initialize database connections")
         raise
@@ -251,6 +274,22 @@ async def db_lifespan(app: Litestar) -> AsyncGenerator[None]:
                 logger.exception("Error disposing madrone-write connection")
 
 
+# ---------------------------------------------------------------------------
+# Registered ASGI route for the authenticated MCP (Streamable HTTP) server
+# ---------------------------------------------------------------------------
+# FastMCP generates a Starlette ASGI app internally.  Litestar mounts
+# external ASGI applications via ``@asgi(is_mount=True)`` route handlers
+# rather than a ``mount()`` method (which is Starlette-specific).
+# The AuthenticatedMCPMiddleware wraps the raw FastMCP app with API-key
+# authentication and rate limiting (same tier rules as the REST endpoints).
+
+
+@asgi(path="/api/v1/mcp/{path:path}", is_mount=True)
+async def mcp_asgi_handler(scope: Scope, receive: Receive, send: Send) -> None:
+    """Route all ``/api/v1/mcp/*`` requests through the protected FastMCP app."""
+    await protected_mcp_app(scope, receive, send)
+
+
 app = Litestar(
     route_handlers=[
         AppController,
@@ -268,6 +307,7 @@ app = Litestar(
         V1CompaniesController,
         V1KeywordsController,
         V1DocsController,
+        mcp_asgi_handler,
     ],
     cors_config=cors_config,
     openapi_config=OpenAPIConfig(
