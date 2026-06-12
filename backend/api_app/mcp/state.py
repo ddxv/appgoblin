@@ -15,9 +15,12 @@ Usage::
 
 from __future__ import annotations
 
-from sqlalchemy import Engine
+from typing import TYPE_CHECKING
 
 from api_app.mcp.engine import get_engine
+
+if TYPE_CHECKING:
+    from sqlalchemy import Engine
 
 
 class _MCPState:

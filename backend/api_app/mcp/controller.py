@@ -168,9 +168,12 @@ class AuthenticatedMCPMiddleware:
     """
 
     def __init__(self, app: ASGIApp) -> None:
+        """Store the underlying ASGI app."""
         self.app = app
 
-    async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
+    async def __call__(  # noqa: D102
+        self, scope: Scope, receive: Receive, send: Send
+    ) -> None:
         if scope["type"] != "http":
             await self.app(scope, receive, send)
             return
@@ -211,7 +214,8 @@ class AuthenticatedMCPMiddleware:
             await send(
                 {
                     "type": "http.response.body",
-                    "body": b'{"error":"Unauthorized: Valid X-API-Key header required."}',
+                    "body": b'{"error":"Unauthorized: Valid X-API-Key "'
+                    b'"header required."}',
                     "more_body": False,
                 }
             )

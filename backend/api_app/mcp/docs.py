@@ -7,6 +7,7 @@ automatically with the actual tool registrations on ``mcp_server``.
 
 from __future__ import annotations
 
+# ruff: noqa: E501
 from litestar import Controller, get
 from litestar.enums import MediaType
 
@@ -17,7 +18,7 @@ MCP_DOCS_SERVERS = [
 ]
 
 
-def _parameter_schema(tool) -> dict:
+def _parameter_schema(tool: object) -> dict:
     """Extract a human-readable parameter listing from a tool's input schema."""
     params: dict[str, object] = {}
     properties = tool.parameters.get("properties", {})
@@ -40,16 +41,14 @@ def _parameter_schema(tool) -> dict:
 async def _build_tools_docs() -> dict:
     """Build a documentation payload from the live tool registry."""
     tools = await mcp_server.list_tools()
-    tools_docs: list[dict[str, object]] = []
-
-    for tool in tools:
-        tools_docs.append(
-            {
-                "name": tool.name,
-                "description": tool.description or "",
-                "parameters": _parameter_schema(tool),
-            }
-        )
+    tools_docs: list[dict[str, object]] = [
+        {
+            "name": tool.name,
+            "description": tool.description or "",
+            "parameters": _parameter_schema(tool),
+        }
+        for tool in tools
+    ]
 
     return {
         "server": {

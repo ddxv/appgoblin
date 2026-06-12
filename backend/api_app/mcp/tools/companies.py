@@ -6,7 +6,10 @@ receive a descriptive access-denied message rather than data.
 
 from __future__ import annotations
 
-from fastmcp import Context
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from fastmcp import Context
 
 from api_app.controllers.companies import get_overviews
 from api_app.controllers.public.v1.companies import (
@@ -47,7 +50,7 @@ def _assert_paid_tier(ctx: Context, tool_name: str) -> str | None:
 
 @mcp_server.tool()
 async def list_companies(ctx: Context) -> str:
-    """Return a list of all queryable company domains with latest overview trend snapshots.
+    """Return all queryable company domains with latest overview trend snapshots.
 
     .. warning::
        This tool is restricted to paid-tier subscribers.
@@ -64,8 +67,10 @@ async def list_companies(ctx: Context) -> str:
 
 
 @mcp_server.tool()
-async def get_company_overview(company_domain: str, ctx: Context) -> str:
-    """Fetch comprehensive market metrics, trends, and data snapshots for a company domain.
+async def get_company_overview(  # noqa: D417
+    company_domain: str, ctx: Context
+) -> str:
+    """Fetch comprehensive market metrics, trends, and data for a company domain.
 
     Parameters
     ----------
@@ -83,12 +88,12 @@ async def get_company_overview(company_domain: str, ctx: Context) -> str:
             state=state, company_domain=company_domain
         )
         return to_json(payload)
-    except Exception as exc:
+    except Exception as exc:  # noqa: BLE001
         return f"Error fetching overview for {company_domain!r}: {exc}"
 
 
 @mcp_server.tool()
-async def get_company_app_changes(
+async def get_company_app_changes(  # noqa: D417, PLR0913
     company_domain: str,
     tag_source: str,
     year: int,
@@ -127,7 +132,7 @@ async def get_company_app_changes(
             status=status,
         )
         return to_json(payload)
-    except Exception as exc:
+    except Exception as exc:  # noqa: BLE001
         return (
             f"Error fetching app changes for {company_domain!r} "
             f"({tag_source=}, {year}Q{quarter}, {status=}): {exc}"

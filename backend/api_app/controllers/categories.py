@@ -10,7 +10,7 @@ from litestar import Controller, get
 from litestar.config.response_cache import CACHE_FOREVER
 from litestar.datastructures import State
 
-from api_app.models import CategoriesOverview
+from api_app.models import CategoriesOverview, CategoryDetail
 from config import get_logger
 from dbcon.queries import (
     get_country_map,
@@ -52,7 +52,9 @@ class CategoryController(Controller):
         """
         start = time.perf_counter() * 1000
         category_dicts = category_overview(state=state)
-        overview = CategoriesOverview(categories=category_dicts)
+        overview = CategoriesOverview(
+            categories=[CategoryDetail(**d) for d in category_dicts],  # type: ignore[arg-type]
+        )
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(f"{self.path} took {duration}ms")
         return overview

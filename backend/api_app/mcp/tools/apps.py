@@ -6,7 +6,10 @@ Each tool reuses the existing ``dbcon.queries`` functions and
 
 from __future__ import annotations
 
-from fastmcp import Context
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from fastmcp import Context
 
 from api_app.controllers.public.v1.apps import (
     _build_app_basics_payload,
@@ -28,8 +31,11 @@ logger = get_logger(__name__)
 
 
 @mcp_server.tool()
-async def get_app_basics(store_id: str, ctx: Context) -> str:
-    """Return basic app metadata, growth estimates, and revenue signals for a single store identifier.
+async def get_app_basics(  # noqa: D417
+    store_id: str,
+    ctx: Context,  # noqa: ARG001
+) -> str:
+    """Return app metadata, growth estimates, and revenue signals for a store.
 
     Parameters
     ----------
@@ -42,13 +48,16 @@ async def get_app_basics(store_id: str, ctx: Context) -> str:
     try:
         payload = _build_app_basics_payload(state, store_id)
         return to_json(payload)
-    except Exception as exc:
+    except Exception as exc:  # noqa: BLE001
         return f"Error fetching app basics for {store_id!r}: {exc}"
 
 
 @mcp_server.tool()
-async def get_app_best_ranks(store_id: str, ctx: Context) -> str:
-    """Return the best rank achieved by an app across countries, collections, and categories.
+async def get_app_best_ranks(  # noqa: D417
+    store_id: str,
+    ctx: Context,  # noqa: ARG001
+) -> str:
+    """Return the best rank achieved by an app across countries and collections.
 
     Parameters
     ----------
@@ -74,8 +83,13 @@ async def get_app_best_ranks(store_id: str, ctx: Context) -> str:
 
 
 @mcp_server.tool()
-async def get_app_sdk_details(store_id: str, ctx: Context) -> str:
-    """Return detailed SDK and manifest findings for a single app, including permissions, SDK companies, and app queries.
+async def get_app_sdk_details(  # noqa: D417
+    store_id: str,
+    ctx: Context,  # noqa: ARG001
+) -> str:
+    """Return detailed SDK and manifest findings for a single app.
+
+    Includes permissions, SDK companies, and app queries.
 
     Parameters
     ----------
@@ -87,5 +101,5 @@ async def get_app_sdk_details(store_id: str, ctx: Context) -> str:
     try:
         payload = _build_app_sdk_details_payload(state, store_id)
         return to_json(payload)
-    except Exception as exc:
+    except Exception as exc:  # noqa: BLE001
         return f"Error fetching SDK details for {store_id!r}: {exc}"

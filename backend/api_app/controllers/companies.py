@@ -1727,7 +1727,7 @@ def _build_company_overview_scope(
         app_category=category,
         include_parent_rollup=include_parent_rollup,
     )
-    category_totals = get_tag_source_category_totals(state=state, app_category=category)
+    category_totals = get_tag_source_category_totals(state, category)
     stats_overview = make_company_stats(df=df, category_totals=category_totals)
 
     if df.empty or not df["tag_source"].str.contains("app_ads").any():
@@ -1988,7 +1988,7 @@ class CompaniesController(Controller):
             row = df.iloc[0]
 
             def _nan(val: object) -> int | None:
-                return None if pd.isna(val) else int(val)
+                return None if pd.isna(val) else int(val)  # type: ignore[call-overload]
 
             def _nan_str(val: object) -> str | None:
                 return None if pd.isna(val) else str(val)

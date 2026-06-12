@@ -5,7 +5,10 @@ Keyword tools are **paid-tier only**.
 
 from __future__ import annotations
 
-from fastmcp import Context
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from fastmcp import Context
 
 from api_app.controllers.public.v1.keywords import (
     _build_keyword_metrics_payload,
@@ -43,8 +46,10 @@ def _assert_paid_tier(ctx: Context, tool_name: str) -> str | None:
 
 
 @mcp_server.tool()
-async def get_keyword_metrics(keyword: str, ctx: Context) -> str:
-    """Return keyword difficulty, competition, and opportunity scores for an exact keyword lookup.
+async def get_keyword_metrics(  # noqa: D417
+    keyword: str, ctx: Context
+) -> str:
+    """Return keyword difficulty, competition, and opportunity scores.
 
     Parameters
     ----------
@@ -63,12 +68,14 @@ async def get_keyword_metrics(keyword: str, ctx: Context) -> str:
     try:
         payload = _build_keyword_metrics_payload(state=state, keyword=keyword)
         return to_json(payload)
-    except Exception as exc:
+    except Exception as exc:  # noqa: BLE001
         return f"Error fetching keyword metrics for {keyword!r}: {exc}"
 
 
 @mcp_server.tool()
-async def get_keyword_ranks(keyword: str, ctx: Context, limit: int = 20) -> str:
+async def get_keyword_ranks(  # noqa: D417
+    keyword: str, ctx: Context, limit: int = 20
+) -> str:
     """Return the top-ranked apps for an exact keyword lookup, grouped by platform.
 
     Parameters
@@ -92,5 +99,5 @@ async def get_keyword_ranks(keyword: str, ctx: Context, limit: int = 20) -> str:
             state=state, keyword=keyword, limit=limit
         )
         return to_json(payload)
-    except Exception as exc:
+    except Exception as exc:  # noqa: BLE001
         return f"Error fetching keyword ranks for {keyword!r}: {exc}"

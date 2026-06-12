@@ -74,9 +74,12 @@ def _build_keyword_metrics_by_platform(
         msg = f"Keyword not found: {keyword!r}"
         raise NotFoundException(msg, status_code=404)
 
-    metrics_by_platform = dict.fromkeys(_PLATFORM_ORDER)
+    metrics_by_platform: dict[str, PublicKeywordPlatformMetrics | None] = dict.fromkeys(
+        _PLATFORM_ORDER
+    )  # type: ignore[assignment]
     for row in keyword_df.to_dict(orient="records"):
-        platform = _STORE_TO_PLATFORM.get(_optional_int(row.get("store")))
+        store_val = _optional_int(row.get("store"))
+        platform = _STORE_TO_PLATFORM.get(store_val)  # type: ignore[arg-type]
         if platform is None:
             continue
 
@@ -117,9 +120,12 @@ def _build_keyword_top_apps_by_platform(
 
     apps_df = extend_app_icon_url(apps_df)
 
-    apps_by_platform = {platform: [] for platform in _PLATFORM_ORDER}
+    apps_by_platform: dict[str, list[PublicKeywordRankedApp]] = {
+        platform: [] for platform in _PLATFORM_ORDER
+    }
     for row in apps_df.to_dict(orient="records"):
-        platform = _STORE_TO_PLATFORM.get(_optional_int(row.get("store")))
+        store_val = _optional_int(row.get("store"))
+        platform = _STORE_TO_PLATFORM.get(store_val)  # type: ignore[arg-type]
         if platform is None:
             continue
 

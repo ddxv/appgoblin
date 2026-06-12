@@ -10,12 +10,10 @@ from __future__ import annotations
 
 import dataclasses
 import json
-from collections.abc import Callable
-from typing import Any
 
 
 def to_json(
-    obj: Any, *, indent: int | None = 2, default: Callable[[Any], Any] | None = None
+    obj: object, *, indent: int | None = 2, default: object | None = None
 ) -> str:
     """Serialize a dataclass (or list of dataclasses) to a JSON string.
 

@@ -11,9 +11,12 @@ Exists as a separate module to avoid circular imports:
 
 from __future__ import annotations
 
-from sqlalchemy import Engine
+from typing import TYPE_CHECKING
 
 from config import get_logger
+
+if TYPE_CHECKING:
+    from sqlalchemy import Engine
 
 logger = get_logger(__name__)
 
@@ -35,6 +38,9 @@ def set_mcp_engine(engine: Engine) -> None:
 def get_engine() -> Engine:
     """Return the injected engine or raise."""
     if _engine is None:
-        msg = "MCP database engine not initialised — call set_mcp_engine() during lifespan"
+        msg = (
+            "MCP database engine not initialised - call set_mcp_engine()"
+            " during lifespan"
+        )
         raise RuntimeError(msg)
     return _engine
