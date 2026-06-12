@@ -5,9 +5,11 @@
 	import WhiteCard from './WhiteCard.svelte';
 
 	let {
-		mainTable
+		mainTable,
+		showIntro = true
 	}: {
 		mainTable: Snippet;
+		showIntro?: boolean;
 	} = $props();
 
 	const typeName = $derived(
@@ -23,15 +25,6 @@
 			page.params.category ??
 			'All'
 	);
-	const overview = $derived(page.data?.companiesOverview);
-	const totals = $derived(
-		typeof overview === 'object' && overview?.categories?.categories?.all
-			? overview.categories.categories.all
-			: null
-	);
-
-	const showAdstxt = $derived(!page.params.type || page.params.type === 'ad-networks');
-
 	const TYPE_DESCRIPTIONS: Record<string, string> = {
 		'ad-networks':
 			'Ad Networks includes any company that provides monetization for mobile apps by displaying ads to users. The ad network data comes from api, sdk and app-ads.txt files.',
@@ -61,74 +54,61 @@
 		return `${typeDesc} Shown across all app categories.`;
 	});
 
-	const hasSdkTotals = $derived(
-		totals && (totals.sdk_android_total_companies > 0 || totals.sdk_ios_total_companies > 0)
-	);
-	const hasAdstxtTotals = $derived(
-		showAdstxt &&
-			totals &&
-			(totals.adstxt_direct_android_total_companies > 0 ||
-				totals.adstxt_direct_ios_total_companies > 0)
-	);
+	const isFiltered = $derived(!!(page.params.type || page.params.category));
+	const filteredLead = $derived.by(() => {
+		const typeLabel = typeName ?? 'companies';
+		const catLabel = categoryName && categoryName !== 'All' ? categoryName : null;
+		if (catLabel) {
+			return `Browse ${typeLabel} found in ${catLabel} apps across iOS and Android.`;
+		}
+		return `Browse ${typeLabel} across iOS and Android apps.`;
+	});
 </script>
 
-{#if introText}
-	<div class="text-sm md:text-base leading-relaxed space-y-2">
-		<p class="">
-			{introText}
-		</p>
-		<p class="">
-			{#if totals && (hasSdkTotals || hasAdstxtTotals)}
-				{#if hasSdkTotals}
-					AppGoblin has mapped and verified {formatNumber(totals.sdk_android_total_companies)} companies
-					with Android SDKs and {formatNumber(totals.sdk_ios_total_companies)} with iOS SDKs.
+{#if showIntro}
+	<div class="text-sm md:text-base leading-relaxed space-y-4 mb-6">
+		{#if isFiltered}
+			<p>{filteredLead}</p>
+			<p class="text-surface-600-400">{introText}</p>
+		{:else}
+			<p>
+				Explore the top 1,000 companies and domains powering the mobile ecosystem. Updated
+				continuously with SDK, API, and app-ads.txt intelligence, this free dashboard helps
+				researchers, growth teams, and fraud analysts compare market presence and technical
+				footprints across millions of iOS and Android apps.
+			</p>
+		{/if}
+
+		<div>
+			<h2 class="text-lg md:text-xl font-semibold mb-2">Features</h2>
+			<ul class="list-disc list-outside ml-5 space-y-1">
+				{#if !isFiltered}
+					<li>
+						<span class="font-semibold">Categorization:</span> Browse top players across Ad Networks,
+						Trackers, MMPs, Business Tools, and Development Tools.
+					</li>
 				{/if}
-				{#if hasAdstxtTotals}
-					In addition to SDK Ad Networks we found {formatNumber(
-						totals.adstxt_direct_android_total_companies
-					)} advertising domains found in App-ads.txt (DIRECT) for Android and {formatNumber(
-						totals.adstxt_direct_ios_total_companies
-					)} for iOS. These numbers overlap with the SDK Ad Network totals and also include apps that
-					misconfigure advertising domains in app-ads.txt file.
-				{/if}
-			{/if}
-		</p>
+				<li>
+					<span class="font-semibold">More Insights:</span> Click any company to view detailed historical
+					data, quarterly market share changes, and top app clients.
+				</li>
+				<li>
+					<span class="font-semibold">Free Export:</span> Download the dataset as a CSV.
+				</li>
+			</ul>
+		</div>
+
+		{#if !isFiltered}
+			<blockquote class="border-l-4 border-surface-300-700 pl-4 italic">
+				<span class="font-semibold not-italic">Can't find a specific company?</span> The table below features
+				the top 1,000 domains across all categories. Use the site-wide search bar at the top of the page
+				to find specific or long-tail companies or domains.
+			</blockquote>
+		{/if}
 	</div>
 {/if}
 
 <div class="grid grid-cols-1 gap-8 mt-6">
 	<!-- MAIN TABLE -->
-	<div class="card-content">
-		{@render mainTable()}
-	</div>
-
-	<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-6">
-		<!-- SDK Section -->
-		<WhiteCard>
-			{#snippet title()}
-				About AppGoblin SDK data
-			{/snippet}
-			<p class="text-sm md:text-lg mb-2 p-2 md:p-4">
-				SDK data is derived by downloading the app's Android APK or iOS IPA file and unzipped. We
-				then check the app's data for SDK signatures in paths, AndroidManifest.xml and the
-				Info.plist. Many apps are unable to be zipped. Downloading and opening the APK or IPA takes
-				time and resources thus the smaller totals.
-			</p>
-		</WhiteCard>
-
-		{#if !page.params.type || page.params.type == 'ad-networks'}
-			<!-- App Ads.txt Section -->
-			<WhiteCard>
-				{#snippet title()}
-					About AppGoblin App Ads.txt data
-				{/snippet}
-				<p class="text-sm md:text-lg mb-2 p-2 md:p-4">
-					App-ads.txt files are an open standard by the IAB to help combat ad fraud. This data was
-					crawled from the URLs on the app's developer pages. Not all apps have app-ads.txt, many do
-					not. Additionally, below are only apps that have the ad network listed as DIRECT instead
-					of RESELLER.
-				</p>
-			</WhiteCard>
-		{/if}
-	</div>
+	{@render mainTable()}
 </div>

@@ -13,8 +13,8 @@
 		history2,
 		histogram1,
 		histogram2,
-		sdk1,
-		sdk2,
+		sdks1,
+		sdks2,
 		companyTypes,
 		searchResult1,
 		searchResult2

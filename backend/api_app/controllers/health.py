@@ -108,21 +108,22 @@ def _check_ranks_freshness(
             ranks_row = (
                 conn.execute(
                     text(
-                        "SELECT max(crawled_date) AS last_ranks_crawled_at "
+                        "SELECT max(crawled_date) AS last_ranks_crawled_date "
                         "FROM frontend.store_app_ranks_weekly"
                     )
                 )
                 .mappings()
                 .one()
             )
-        last_ranks_raw = ranks_row.get("last_ranks_crawled_at")
+        last_ranks_raw = ranks_row.get("last_ranks_crawled_date")
         last_ranks_utc = _normalize_to_utc(last_ranks_raw)
+        days_threshold = 2 if now_utc.time() < time(12, 0) else 1
         ranks_ok = last_ranks_utc is not None and now_utc - last_ranks_utc <= timedelta(
-            days=1
+            days=days_threshold
         )
         check_payload = {
             "ok": ranks_ok,
-            "last_ranks_crawled_at": (
+            "last_ranks_crawled_date": (
                 last_ranks_utc.isoformat().replace("+00:00", "Z")
                 if last_ranks_utc
                 else None

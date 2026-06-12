@@ -451,6 +451,12 @@ export interface CategoryAppStats {
 	api_android_universe_apps: number;
 	api_ios_universe_apps: number;
 	api_android_universe_installs_d30: number;
+	// Totals for aggregated overview (multiple companies)
+	total_companies?: number;
+	sdk_ios_total_companies?: number;
+	sdk_android_total_companies?: number;
+	api_ios_total_companies?: number;
+	api_android_total_companies?: number;
 }
 
 export interface CompanyDomain {

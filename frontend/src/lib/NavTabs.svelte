@@ -123,7 +123,7 @@
 			<a href="/blog" class={isHighlighted('/blog') ? topBarHighlightedFont : topBarFont}>BLOG</a>
 			<div class={myDivider}></div>
 			<a href="/api-docs" class={isHighlighted('/api-docs') ? topBarHighlightedFont : topBarFont}
-				>API DOCS</a
+				>API & MCP DOCS</a
 			>
 			<div class={myDivider}></div>
 			<a href="/reports" class={isHighlighted('/reports') ? topBarHighlightedFont : topBarFont}
@@ -297,7 +297,8 @@
 					>
 					<a
 						href="/api-docs"
-						class={isHighlighted('/api-docs') ? dropdownHighlightedItem : dropdownItem}>API Docs</a
+						class={isHighlighted('/api-docs') ? dropdownHighlightedItem : dropdownItem}
+						>API & MCP Docs</a
 					>
 					<a
 						href="/reports"

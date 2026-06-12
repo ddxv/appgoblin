@@ -772,6 +772,40 @@ def get_category_type_stats(
 
 
 @cache_by_params
+def get_tag_source_company_counts(
+    state: State, app_category: str | None = None
+) -> pd.DataFrame:
+    """Get distinct company counts per (store, tag_source, app_category).
+
+    This queries the source table without the top-1000 cutoff that
+    get_companies_stats applies, so the counts reflect all companies.
+    """
+    if app_category:
+        if app_category == "games":
+            app_category = "game%"
+        df = pd.read_sql(
+            sql.companies_counts,
+            state.dbcon.engine,
+            params={"app_category": app_category},
+        )
+        if app_category == "game%":
+            df.loc[
+                df["app_category"].str.contains("game"),
+                "app_category",
+            ] = "games"
+    else:
+        df = pd.read_sql(
+            sql.companies_counts,
+            state.dbcon.engine,
+            params={"app_category": "%"},
+        )
+        df["app_category"] = "all"
+
+    df["store"] = df["store"].replace({1: "Google Play", 2: "Apple App Store"})
+    return df
+
+
+@cache_by_params
 def get_tag_source_category_totals(
     state: State, app_category: str | None = None
 ) -> pd.DataFrame:
