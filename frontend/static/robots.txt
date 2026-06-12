@@ -6,6 +6,12 @@ Disallow: /apps/*.jpeg
 Disallow: /apps/*.png
 Disallow: /auth/*
 Allow: /
+Allow: /.well-known/
+Allow: /api-docs
+
+# MCP server discovery
+Mcp-Server-Card: https://appgoblin.info/.well-known/mcp/server-card.json
+Mcp-Manifest: https://appgoblin.info/.well-known/mcp.json
 
 Sitemap: https://appgoblin.info/sitemap.xml
 Sitemap: https://appgoblin.info/news-sitemap.xml
