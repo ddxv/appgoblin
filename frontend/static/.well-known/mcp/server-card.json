@@ -1,0 +1,26 @@
+{
+    "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+    "name": "com.appgoblin.mcp",
+    "title": "AppGoblin Intelligence Server",
+    "description": "Official MCP Server for AppGoblin ASO, mobile app store intelligence, SDK tracking, and keyword metrics. Query app metadata, growth estimates, SDK manifests, company market share, and keyword difficulty across Android and iOS.",
+    "version": "0.1.0",
+    "websiteUrl": "https://appgoblin.info/api-docs",
+    "repository": {
+        "url": "https://github.com/appgoblin-dev/appgoblin",
+        "source": "github"
+    },
+    "remotes": [
+        {
+            "type": "streamable-http",
+            "url": "https://appgoblin.info/api/v1/mcp",
+            "headers": [
+                {
+                    "name": "X-API-Key",
+                    "description": "AppGoblin API key — generate one from the account dashboard at https://appgoblin.info/account/api-keys",
+                    "isRequired": true,
+                    "isSecret": true
+                }
+            ]
+        }
+    ]
+}

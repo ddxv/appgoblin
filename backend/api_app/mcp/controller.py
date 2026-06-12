@@ -214,8 +214,7 @@ class AuthenticatedMCPMiddleware:
             await send(
                 {
                     "type": "http.response.body",
-                    "body": b'{"error":"Unauthorized: Valid X-API-Key "'
-                    b'"header required."}',
+                    "body": b'{"error":"Unauthorized: Valid X-API-Key header required."}',
                     "more_body": False,
                 }
             )

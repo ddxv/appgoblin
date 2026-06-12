@@ -49,6 +49,39 @@
 1.  Python Litestar backend API found in `backend/`
 2.  Javascript SvelteKit+Tailwind UI found in `frontend/`
 
+## Public API & MCP (AI Agents)
+
+AppGoblin exposes a public REST API and an MCP (Model Context Protocol) server for AI agents.
+
+### REST API — `/api/v1/`
+
+- Interactive docs at **[appgoblin.info/api-docs](https://appgoblin.info/api-docs)**
+- Requires an API key (`X-API-Key` header) — generate one from your [account dashboard](https://appgoblin.info/account/api-keys)
+- Rate-limited per key (tier-based)
+- Endpoints cover apps, companies, keywords, SDKs, and rankings
+
+### MCP Server — `/api/v1/mcp`
+
+- **Endpoint**: `https://appgoblin.info/api/v1/mcp`
+- **Protocol**: [Streamable HTTP](https://modelcontextprotocol.io/docs/concepts/architecture#transport-layer) (SSE + JSON-RPC)
+- **Auth**: `X-API-Key` header (same key as the REST API)
+- AI agents (Claude Code, Cursor, etc.) dynamically discover available tools via `tools/list` after connecting — no static configuration needed
+
+### MCP Discovery
+
+AI agents and crawlers can discover the server at these well-known paths:
+
+| Path | Purpose |
+|---|---|
+| `/.well-known/mcp.json` | MCP manifest (short alias) |
+| `/.well-known/mcp/server-card.json` | Full server card (SEP-1649) |
+
+Headers advertised in `robots.txt`:
+```
+Mcp-Server-Card: https://appgoblin.info/.well-known/mcp/server-card.json
+Mcp-Manifest: https://appgoblin.info/.well-known/mcp.json
+```
+
 
 
 
