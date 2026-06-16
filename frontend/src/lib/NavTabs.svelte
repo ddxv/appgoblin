@@ -31,87 +31,88 @@
 			<a
 				href="/rankings/store/1/collection/1/category/1/US"
 				class={isHighlighted('/rankings') ? topBarHighlightedFont : topBarFont}
-				>TOP GOOGLE PLAY APP RANKS</a
+				>Top Google Play App Ranks</a
 			>
 			<div class={myDivider}></div>
 			<a
 				href="/rankings/store/2/collection/4/category/120/US"
 				class={isHighlighted('/rankings') ? topBarHighlightedFont : topBarFont}
-				>APPLE APP STORE RANKS</a
+				>Apple App Store Ranks</a
 			>
 			<div class={myDivider}></div>
 			<a
 				href="/fastest-growing-apps/google/overall"
 				class={isHighlighted('/fastest-growing-apps') ? topBarHighlightedFont : topBarFont}
-				>TOP GROWTH APPS</a
+				>Top Growth Apps</a
 			>
 			<div class={myDivider}></div>
 			<a
 				href="/collections/new_monthly/google/overall"
-				class={isHighlighted('/collections') ? topBarHighlightedFont : topBarFont}>NEW APPS</a
+				class={isHighlighted('/collections') ? topBarHighlightedFont : topBarFont}>New Apps</a
 			>
 			<div class={myDivider}></div>
-			<!-- INTELLIGENCE group -->
-			<p class={sectionLabel}>Intelligence</p>
+			<!-- B2B INTELLIGENCE group -->
+			<p class={sectionLabel}>B2B Intelligence</p>
 			<p class={sectionLabel}>Company Rankings</p>
 			<a href="/companies" class={isHighlighted('/companies') ? topBarHighlightedFont : topBarFont}
-				>COMPANY RANKS</a
+				>Company Ranks</a
 			>
 			<div class={myDivider}></div>
 			<a
 				href="/companies/types/ad-networks"
 				class={isHighlighted('/companies/types/ad-networks') ? topBarHighlightedFont : topBarFont}
-				>AD NETWORKS</a
+				>Ad Networks</a
 			>
 			<div class={myDivider}></div>
 			<a
 				href="/companies/types/ad-attribution"
 				class={isHighlighted('/companies/types/ad-attribution')
 					? topBarHighlightedFont
-					: topBarFont}>ANALYTICS: ATTRIBUTION</a
+					: topBarFont}>Analytics: Attribution</a
 			>
 			<div class={myDivider}></div>
 			<a
 				href="/companies/types/product-analytics"
 				class={isHighlighted('/companies/types/product-analytics')
 					? topBarHighlightedFont
-					: topBarFont}>ANALYTICS</a
+					: topBarFont}>Analytics</a
 			>
 			<div class={myDivider}></div>
 			<a
 				href="/companies/types/development-tools"
 				class={isHighlighted('/companies/types/development-tools')
 					? topBarHighlightedFont
-					: topBarFont}>DEVELOPMENT TOOLS</a
+					: topBarFont}>Development Tools</a
 			>
 			<div class={myDivider}></div>
 			<a
 				href="/companies/types/mediation"
 				class={isHighlighted('/companies/types/mediation') ? topBarHighlightedFont : topBarFont}
-				>MEDIATION PLATFORMS</a
+				>Mediation Platforms</a
 			>
 			<div class={myDivider}></div>
 			<a
 				href="/companies/types/business-tools"
 				class={isHighlighted('/companies/types/business-tools')
 					? topBarHighlightedFont
-					: topBarFont}>BUSINESS TOOLS</a
+					: topBarFont}>Business Tools</a
 			>
 			<div class={myDivider}></div>
-			<p class={sectionLabel}>Apps</p>
+			<!-- APP INTELLIGENCE group -->
+			<p class={sectionLabel}>App Intelligence</p>
 			<a
 				href="/ad-creatives"
-				class={isHighlighted('/ad-creatives') ? topBarHighlightedFont : topBarFont}>AD CREATIVES</a
+				class={isHighlighted('/ad-creatives') ? topBarHighlightedFont : topBarFont}>Ad Creatives</a
 			>
 			<a
 				href="/top-mobile-advertisers"
 				class={isHighlighted('/top-mobile-advertisers') ? topBarHighlightedFont : topBarFont}
-				>TOP ADVERTISERS</a
+				>Top Advertisers</a
 			>
 			<div class={myDivider}></div>
 			<a
 				href="/app-explorer"
-				class={isHighlighted('/app-explorer') ? topBarHighlightedFont : topBarFont}>APP EXPLORER</a
+				class={isHighlighted('/app-explorer') ? topBarHighlightedFont : topBarFont}>App Explorer</a
 			>
 			<div class={myDivider}></div>
 			<a href="/sdks" class={isHighlighted('/sdks') ? topBarHighlightedFont : topBarFont}
@@ -120,29 +121,27 @@
 			<div class={myDivider}></div>
 			<!-- RESOURCES group -->
 			<p class={sectionLabel}>Resources</p>
-			<a href="/blog" class={isHighlighted('/blog') ? topBarHighlightedFont : topBarFont}>BLOG</a>
+			<a href="/blog" class={isHighlighted('/blog') ? topBarHighlightedFont : topBarFont}>Blog</a>
 			<div class={myDivider}></div>
 			<a href="/api-docs" class={isHighlighted('/api-docs') ? topBarHighlightedFont : topBarFont}
-				>API & MCP DOCS</a
+				>API & MCP Docs</a
 			>
 			<div class={myDivider}></div>
 			<a href="/reports" class={isHighlighted('/reports') ? topBarHighlightedFont : topBarFont}
-				>REPORTS</a
+				>Reports</a
 			>
 			<div class={myDivider}></div>
 			<a
 				href="/free-app-datasets"
 				class={isHighlighted('/free-app-datasets') ? topBarHighlightedFont : topBarFont}
 			>
-				Free datasets</a
+				Free Datasets</a
 			>
 			<div class={myDivider}></div>
 		{/if}
 		<a href="/pricing" class={isHighlighted('/pricing') ? topBarHighlightedFont : topBarFont}
-			>PRICING</a
+			>Pricing</a
 		>
-		<div class={myDivider}></div>
-		<a href="/about" class={isHighlighted('/about') ? topBarHighlightedFont : topBarFont}>ABOUT</a>
 	</div>
 {:else}
 	<!-- Desktop dropdown bar -->
@@ -158,7 +157,7 @@
 					? topBarHighlightedFont
 					: topBarFont}"
 			>
-				RANKINGS <ChevronDown class="h-3 w-3 transition-transform group-hover:rotate-180" />
+				Rankings <ChevronDown class="h-3 w-3 transition-transform group-hover:rotate-180" />
 			</button>
 			<div class="absolute left-0 top-full pt-1 hidden group-hover:block z-50 min-w-max">
 				<div class="card bg-surface-50-950 shadow-xl rounded-md py-1">
@@ -188,20 +187,14 @@
 
 		<div class={myDivider}></div>
 
-		<!-- INTELLIGENCE dropdown -->
+		<!-- B2B INTELLIGENCE dropdown -->
 		<div class="relative group">
 			<button
-				class="flex items-center gap-0.5 {isHighlighted(
-					'/companies',
-					'/ad-creatives',
-					'/top-mobile-advertisers',
-					'/app-explorer',
-					'/sdks'
-				)
+				class="flex items-center gap-0.5 {isHighlighted('/companies')
 					? topBarHighlightedFont
 					: topBarFont}"
 			>
-				INTELLIGENCE <ChevronDown class="h-3 w-3 transition-transform group-hover:rotate-180" />
+				B2B Intelligence <ChevronDown class="h-3 w-3 transition-transform group-hover:rotate-180" />
 			</button>
 			<div class="absolute left-0 top-full pt-1 hidden group-hover:block z-50 min-w-max">
 				<div class="bg-surface-50-950 shadow-xl py-1">
@@ -249,8 +242,28 @@
 								: dropdownItem}>Business Tools</a
 						>
 					</div>
-					<div class={dropdownSectionDivider}></div>
-					<p class={dropdownSectionLabel}>Apps</p>
+				</div>
+			</div>
+		</div>
+
+		<div class={myDivider}></div>
+
+		<!-- APP INTELLIGENCE dropdown -->
+		<div class="relative group">
+			<button
+				class="flex items-center gap-0.5 {isHighlighted(
+					'/ad-creatives',
+					'/top-mobile-advertisers',
+					'/app-explorer',
+					'/sdks'
+				)
+					? topBarHighlightedFont
+					: topBarFont}"
+			>
+				App Intelligence <ChevronDown class="h-3 w-3 transition-transform group-hover:rotate-180" />
+			</button>
+			<div class="absolute left-0 top-full pt-1 hidden group-hover:block z-50 min-w-max">
+				<div class="card bg-surface-50-950 shadow-xl rounded-md py-1">
 					<a
 						href="/ad-creatives"
 						class={isHighlighted('/ad-creatives') ? dropdownHighlightedItem : dropdownItem}
@@ -288,7 +301,7 @@
 					? topBarHighlightedFont
 					: topBarFont}"
 			>
-				RESOURCES <ChevronDown class="h-3 w-3 transition-transform group-hover:rotate-180" />
+				Resources <ChevronDown class="h-3 w-3 transition-transform group-hover:rotate-180" />
 			</button>
 			<div class="absolute left-0 top-full pt-1 hidden group-hover:block z-50 min-w-max">
 				<div class="card bg-surface-50-950 shadow-xl rounded-md py-1">
@@ -316,11 +329,7 @@
 		<div class={myDivider}></div>
 
 		<a href="/pricing" class={isHighlighted('/pricing') ? topBarHighlightedFont : topBarFont}
-			>PRICING</a
+			>Pricing</a
 		>
-
-		<div class={myDivider}></div>
-
-		<a href="/about" class={isHighlighted('/about') ? topBarHighlightedFont : topBarFont}>ABOUT</a>
 	</div>
 {/if}
