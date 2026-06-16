@@ -32,7 +32,7 @@ APP_BASICS_FIELD_SOURCES = {
 
 
 def _api_key_guard(request, route_handler) -> None:
-    """Guard that validates the X-API-Key header."""
+    """Guard that validates the Authorization: Bearer header (X-API-Key also accepted)."""
     state = request.app.state
     validate_api_key(request, state)
 

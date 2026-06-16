@@ -41,7 +41,9 @@
 			>https://appgoblin.info/api/v1/mcp</code
 		>
 		<p>
-			Authenticate with your API key via the <code class="px-1">X-API-Key</code>
+			Authenticate with your API key via the <code class="px-1"
+				>Authorization: Bearer &lt;token&gt;</code
+			>
 			header.
 		</p>
 	</div>

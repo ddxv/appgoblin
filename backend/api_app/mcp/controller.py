@@ -77,15 +77,16 @@ def _authenticate(scope: Scope) -> MCPAuthContext | None:
     Rate-limit violations raise ``_RateLimitError`` so the middleware can emit
     429 responses.
     """
-    raw_key = _normalise_header(scope, b"x-api-key")
-    if not raw_key:
-        raw_key = _normalise_header(scope, b"authorization")
-        if raw_key:
-            # Strip "Bearer " prefix if present
-            for prefix in ("bearer ", "token "):
-                if raw_key.lower().startswith(prefix):
-                    raw_key = raw_key[len(prefix) :]
-                    break
+    raw_key = _normalise_header(scope, b"authorization")
+    if raw_key:
+        for prefix in ("bearer ", "token "):
+            if raw_key.lower().startswith(prefix):
+                raw_key = raw_key[len(prefix) :]
+                break
+        else:
+            raw_key = _normalise_header(scope, b"x-api-key")
+    else:
+        raw_key = _normalise_header(scope, b"x-api-key")
     if not raw_key:
         return None
 
@@ -223,7 +224,7 @@ class AuthenticatedMCPMiddleware:
                 {
                     "type": "http.response.body",
                     "body": (
-                        b'{"error":"Unauthorized: Valid X-API-Key header required."}'
+                        b'{"error":"Unauthorized: Send your API key as the Authorization: Bearer header."}'
                     ),
                     "more_body": False,
                 }

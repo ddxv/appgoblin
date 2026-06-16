@@ -253,7 +253,7 @@ class TestDailyQuotaTracker:
 
 
 def _make_request(api_key: str | None = None):
-    """Create a mock Litestar Request with an X-API-Key header."""
+    """Create a mock Litestar Request with an API key."""
     request = MagicMock()
     request.headers = {}
     if api_key:
@@ -295,7 +295,7 @@ class TestValidateApiKey:
         request = _make_request(api_key=None)
         state = mock_state()
 
-        with pytest.raises(NotAuthorizedException, match="Missing X-API-Key"):
+        with pytest.raises(NotAuthorizedException, match="Missing API key"):
             validate_api_key(request, state)
 
     def test_invalid_key_raises_401(self, mock_state):

@@ -34,7 +34,7 @@ async def get_app_basics(  # noqa: D417
     store_id: str,
     ctx: Context,  # noqa: ARG001
 ) -> str:
-    """Return app metadata, growth estimates, and revenue signals for a store.
+    """Return app metadata, growth estimates, and revenue signals for an app.
 
     Parameters
     ----------

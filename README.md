@@ -56,7 +56,7 @@ AppGoblin exposes a public REST API and an MCP (Model Context Protocol) server f
 ### REST API — `/api/v1/`
 
 - Interactive docs at **[appgoblin.info/api-docs](https://appgoblin.info/api-docs)**
-- Requires an API key (`X-API-Key` header) — generate one from your [account dashboard](https://appgoblin.info/account/api-keys)
+- Requires an API key (`Authorization: Bearer` header, legacy `X-API-Key` also accepted) — generate one from your [account dashboard](https://appgoblin.info/account/api-keys)
 - Rate-limited per key (tier-based)
 - Endpoints cover apps, companies, keywords, SDKs, and rankings
 
@@ -64,7 +64,7 @@ AppGoblin exposes a public REST API and an MCP (Model Context Protocol) server f
 
 - **Endpoint**: `https://appgoblin.info/api/v1/mcp`
 - **Protocol**: [Streamable HTTP](https://modelcontextprotocol.io/docs/concepts/architecture#transport-layer) (SSE + JSON-RPC)
-- **Auth**: `X-API-Key` header (same key as the REST API)
+- **Auth**: `Authorization: Bearer` header (same key as the REST API; legacy `X-API-Key` also accepted)
 - AI agents (Claude Code, Cursor, etc.) dynamically discover available tools via `tools/list` after connecting — no static configuration needed
 
 ### MCP Discovery

@@ -318,14 +318,24 @@ def _evict_expired_cache() -> None:
 
 
 def validate_api_key(request: Request, state) -> ApiKeyContext:
-    """Validate an API key from the X-API-Key header.
+    """Validate an API key from the ``Authorization: Bearer`` header.
 
-    Must be called from a guard or middleware where ``state`` is the
-    Litestar application state (``app.state``).
+    Falls back to ``X-API-Key`` for backward compatibility with earlier
+    client integrations.  Must be called from a guard or middleware where
+    ``state`` is the Litestar application state (``app.state``).
     """
-    raw_key = request.headers.get("x-api-key")
+    raw_key = request.headers.get("authorization", "")
+    for prefix in ("bearer ", "token "):
+        if raw_key.lower().startswith(prefix):
+            raw_key = raw_key[len(prefix) :]
+            break
+    else:
+        raw_key = request.headers.get("x-api-key", "")
+    raw_key = raw_key.strip()
     if not raw_key:
-        raise NotAuthorizedException(detail="Missing X-API-Key header")
+        raise NotAuthorizedException(
+            detail="Missing API key — send it as the Authorization: Bearer header"
+        )
 
     key_hash = hashlib.sha256(raw_key.encode()).hexdigest()
 
