@@ -121,7 +121,7 @@ def _render_html(docs: dict) -> str:
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AppGoblin AI Agents — MCP Tool Reference</title>
 <meta name="description" content="Model Context Protocol tool reference for the AppGoblin Intelligence Server. Connect Claude Code, Cursor, and other AI agents.">
-<link rel="canonical" href="https://appgoblin.info/ai-agents">
+<link rel="canonical" href="https://appgoblin.info/api-docs">
 <style>
   *, *::before, *::after {{ box-sizing: border-box; margin: 0; padding: 0; }}
   body {{ font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #0f0a1a; color: #e2d9f0; line-height: 1.6; }}
