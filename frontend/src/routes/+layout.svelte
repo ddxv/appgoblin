@@ -195,6 +195,8 @@
 					<div class="flex flex-wrap items-center justify-center gap-x-2 gap-y-3 text-center">
 						<a href="/about" class="underline hover:">About AppGoblin</a>
 						&nbsp;|&nbsp;
+						<a href="/contact" class="underline hover:">Contact</a>
+						&nbsp;|&nbsp;
 						<a href="/blog" class="underline hover:">Blog</a>
 						&nbsp;|&nbsp;
 						<a href="/reports" class="underline hover:">Reports</a>
@@ -206,8 +208,6 @@
 						<a href="https://github.com/appgoblin-dev/appgoblin" class="underline hover:">GitHub</a>
 						&nbsp;|&nbsp;
 						<a href="https://linkedin.com/companies/AppGoblin" class="underline hover:">LinkedIn</a>
-						&nbsp;|&nbsp;
-						<a href="/contact" class="underline hover:">Contact</a>
 					</div>
 				</div>
 			</div>

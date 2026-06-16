@@ -7,10 +7,10 @@
 			url: 'contact@appgoblin.info'
 		},
 		{
-			label: 'GitHub',
-			description: 'Report technical issues or request features',
-			href: 'https://github.com/appgoblin-dev/appgoblin',
-			url: 'https://github.com/appgoblin-dev/appgoblin'
+			label: 'Discord',
+			description: 'Community discussions, ASO, app marketing and ad tech',
+			href: 'https://discord.gg/7jpWEhkXRW',
+			url: 'https://discord.gg/7jpWEhkXRW'
 		},
 		{
 			label: 'LinkedIn',
@@ -19,10 +19,10 @@
 			url: 'https://linkedin.com/company/AppGoblin'
 		},
 		{
-			label: 'Discord',
-			description: 'Community discussions, ASO, app marketing and ad tech',
-			href: 'https://discord.gg/7jpWEhkXRW',
-			url: 'https://discord.gg/7jpWEhkXRW'
+			label: 'GitHub',
+			description: 'Report technical issues or request features',
+			href: 'https://github.com/appgoblin-dev/appgoblin',
+			url: 'https://github.com/appgoblin-dev/appgoblin'
 		}
 	];
 
