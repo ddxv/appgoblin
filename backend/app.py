@@ -5,6 +5,7 @@ from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 from datetime import UTC, datetime, timedelta
 
+from fastmcp.utilities.lifespan import combine_lifespans
 from litestar import Litestar, Request, asgi
 from litestar.config.cors import CORSConfig
 from litestar.logging import LoggingConfig
@@ -28,7 +29,11 @@ from api_app.controllers.rankings import RankingsController
 from api_app.controllers.scry import ScryController
 from api_app.controllers.sdks import SdksController
 from api_app.guards import configure_tier_mapping, validate_tier_mapping_config
-from api_app.mcp.controller import protected_mcp_app, set_mcp_engine
+from api_app.mcp.controller import (
+    fastmcp_asgi_app,
+    protected_mcp_app,
+    set_mcp_engine,
+)
 from config import CONFIG
 from dbcon.connections import get_db_connection
 from dbcon.static import load_static_data
@@ -252,6 +257,11 @@ async def db_lifespan(app: Litestar) -> AsyncGenerator[None]:
         logger.exception("Failed to initialize database connections")
         raise
 
+    # --- Run the app + FastMCP lifespans together.
+    #     Litestar does NOT forward lifecycle events to mounted ASGI apps,
+    #     so the FastMCP lifespan has to be entered manually.  The MCP
+    #     lifespan must run AFTER ``set_mcp_engine()`` above so the tool
+    #     registry can resolve the database engine.
     try:
         # Application runs here
         yield
@@ -284,9 +294,14 @@ async def db_lifespan(app: Litestar) -> AsyncGenerator[None]:
 # authentication and rate limiting (same tier rules as the REST endpoints).
 
 
-@asgi(path="/api/v1/mcp/{path:path}", is_mount=True)
+@asgi(path="/api/v1/mcp", is_mount=True, copy_scope=True)
 async def mcp_asgi_handler(scope: Scope, receive: Receive, send: Send) -> None:
-    """Route all ``/api/v1/mcp/*`` requests through the protected FastMCP app."""
+    """Route all ``/api/v1/mcp`` requests through the protected FastMCP app.
+
+    ``copy_scope=True`` is required: the auth middleware mutates ``scope``
+    (sets ``scope["user"]``); without copying, those mutations leak into
+    Litestar's own scope.  Litestar 3 will default ``copy_scope`` to True.
+    """
     await protected_mcp_app(scope, receive, send)
 
 
@@ -315,7 +330,10 @@ app = Litestar(
         version="0.0.1",
         openapi_controller=MyOpenAPIController,
     ),
-    lifespan=[db_lifespan],
+    # Combine Litestar's db_lifespan with FastMCP's lifespan so the
+    # StreamableHTTPSessionManager is initialised alongside the app.
+    # Entered in order, exited in reverse order (LIFO).
+    lifespan=[combine_lifespans(db_lifespan, fastmcp_asgi_app.lifespan)],
     logging_config=logging_config,
     after_response=cleanup_expired_responses,
     middleware=[DefineMiddleware(RateLimitMiddleware)],

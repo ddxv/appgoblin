@@ -76,10 +76,7 @@
 					Get premium data access →
 				</a>
 			</div>
-			<a
-				href="mailto:contact@appgoblin.info"
-				class="btn preset-outlined inline-flex items-center gap-2 px-6 py-3"
-			>
+			<a href="/contact" class="btn preset-outlined inline-flex items-center gap-2 px-6 py-3">
 				<span>Get in Touch</span>
 			</a>
 

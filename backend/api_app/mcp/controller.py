@@ -77,7 +77,16 @@ def _authenticate(scope: Scope) -> MCPAuthContext | None:
     Rate-limit violations raise ``_RateLimitError`` so the middleware can emit
     429 responses.
     """
-    raw_key = _normalise_header(scope, b"x-api-key")
+    raw_key = _normalise_header(scope, b"authorization")
+    if raw_key:
+        for prefix in ("bearer ", "token "):
+            if raw_key.lower().startswith(prefix):
+                raw_key = raw_key[len(prefix) :]
+                break
+        else:
+            raw_key = _normalise_header(scope, b"x-api-key")
+    else:
+        raw_key = _normalise_header(scope, b"x-api-key")
     if not raw_key:
         return None
 
@@ -214,7 +223,9 @@ class AuthenticatedMCPMiddleware:
             await send(
                 {
                     "type": "http.response.body",
-                    "body": b'{"error":"Unauthorized: Valid X-API-Key header required."}',
+                    "body": (
+                        b'{"error":"Unauthorized: Send your API key as the Authorization: Bearer header."}'
+                    ),
                     "more_body": False,
                 }
             )
@@ -231,5 +242,5 @@ class AuthenticatedMCPMiddleware:
 # Pre-wired ASGI app (imported by app.py)
 # ---------------------------------------------------------------------------
 
-fastmcp_asgi_app = mcp_server.http_app()
+fastmcp_asgi_app = mcp_server.http_app(path="/")
 protected_mcp_app = AuthenticatedMCPMiddleware(fastmcp_asgi_app)

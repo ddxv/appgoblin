@@ -57,28 +57,30 @@ async def _build_tools_docs() -> dict:
         },
         "protocol": "Streamable HTTP",
         "authentication": {
-            "type": "apiKey",
-            "in": "header",
-            "name": "X-API-Key",
+            "type": "http",
+            "scheme": "bearer",
             "description": (
                 "Generate an API Token from the AppGoblin dashboard at "
-                "https://appgoblin.info/account/api-keys and send it in the "
-                "X-API-Key header on every request."
+                "https://appgoblin.info/account/api-keys and send it as the "
+                "`Authorization: Bearer <token>` header on every request. "
+                "The legacy `X-API-Key` header is also accepted."
             ),
         },
         "endpoint": {
             "url": "{server}/api/v1/mcp",
             "description": (
-                "Connect MCP clients (Claude Code, Cursor, etc.) to this SSE "
-                "endpoint. The server authenticates on SSE open and keeps the "
-                "connection alive for tool call sequences."
+                "Connect MCP clients (Claude Code, Cursor, etc.) to this "
+                "Streamable HTTP endpoint. The server authenticates on every "
+                "request via the `Authorization: Bearer` header and supports "
+                "long-lived sessions for tool call sequences. The legacy "
+                "`X-API-Key` header is also accepted."
             ),
         },
         "rate_limits": (
             "Rate limits use the same per-key token bucket as the REST API. "
             "Free tier: 30 req/min, 1,000 req/day. Paid tiers scale higher. "
-            "A single SSE session counts as one request against the per-minute "
-            "bucket; individual tool calls within the session do not."
+            "Each HTTP request to the MCP endpoint counts as one request "
+            "against the per-minute bucket."
         ),
         "tier_access": {
             "apps": "All tiers (free and paid).",
@@ -119,7 +121,7 @@ def _render_html(docs: dict) -> str:
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AppGoblin AI Agents — MCP Tool Reference</title>
 <meta name="description" content="Model Context Protocol tool reference for the AppGoblin Intelligence Server. Connect Claude Code, Cursor, and other AI agents.">
-<link rel="canonical" href="https://appgoblin.info/ai-agents">
+<link rel="canonical" href="https://appgoblin.info/api-docs">
 <style>
   *, *::before, *::after {{ box-sizing: border-box; margin: 0; padding: 0; }}
   body {{ font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #0f0a1a; color: #e2d9f0; line-height: 1.6; }}
@@ -157,14 +159,12 @@ def _render_html(docs: dict) -> str:
     <h2>🔌 Connection</h2>
     <p>Connect your AI agent using the MCP Streamable HTTP endpoint:</p>
     <div class="endpoint-box">https://appgoblin.info/api/v1/mcp</div>
-    <p>Authenticate with your API key via the <code>X-API-Key</code> header.</p>
+    <p>Authenticate with your API key via the <code>Authorization: Bearer &lt;token&gt;</code> header. The legacy <code>X-API-Key</code> header is also accepted.</p>
   </div>
 
   <div class="section">
     <h2>🔐 Authentication</h2>
-    <p>Generate an API token from your <a href="https://appgoblin.info/account/api-keys">account dashboard</a> and pass it as the <code>X-API-Key</code> header on every request.</p>
-  </div>
-
+    <p>Generate an API token from your <a href="https://appgoblin.info/account/api-keys">account dashboard</a> and pass it as the <code>Authorization: Bearer &lt;token&gt;</code> header on every request. The legacy <code>X-API-Key</code> header is also accepted.</p>
   <div class="section">
     <h2>⚡ Rate Limits</h2>
     <p>{docs["rate_limits"]}</p>

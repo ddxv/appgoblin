@@ -1,0 +1,125 @@
+---
+title: "AppGoblin just shipped an MCP connector — now your AI agents can query app intelligence directly"
+description: "Connect Claude, Cursor, or any MCP client to AppGoblin's intelligence server and get app metadata, SDK profiles, keyword scores, and company market data — without copy-pasting from a browser."
+pubDate: "Jun 16 2026"
+heroImage: "/blog-images/appgoblin_mcp_ai_connectors.png"
+---
+
+
+## Your AI agent can now talk to AppGoblin directly
+
+AppGoblin's public API [launched three weeks ago](/blog/AppGoblin-API-access-for-metrics-companies-more) and the response has been great — people are pulling app data into notebooks, dashboards, and internal tools.
+
+But the next question came up immediately: *"Can I give this to my AI agent?"*
+
+Starting today, yes. AppGoblin now speaks [MCP (Model Context Protocol)](https://modelcontextprotocol.io) — the open standard that Claude Code, Cursor, GitHub Copilot, and a growing list of AI coding and research agents use to fetch live data.
+
+You don't need a separate SDK, a custom plugin, or a webhook. You point your agent at a URL, hand it an API key, and it can query app intelligence as naturally as it reads a file.
+
+---
+
+## What an MCP agent can actually do with AppGoblin
+
+The server exposes eight tools across four areas. Here is what that looks like in practice.
+
+### 1. App research on autopilot
+
+Instead of opening a browser tab and typing a store ID into a search bar, you type this into Claude:
+
+> *"What SDKs does Spotify use, and how many installs have they seen in the last 30 days?"*
+
+Claude calls `get_app_basics` and `get_app_sdk_details` against `com.spotify.music`, reads the JSON, and answers in natural language — permissions, ad SDKs, MAU estimates, install velocity, everything.
+
+**Concrete workflow:** Have an agent audit your competitor's SDK stack every week and flag any new ad measurement SDKs. One prompt, zero manual clicks.
+
+### 2. Rank monitoring across countries
+
+Rank movement is noisy and hard to track by hand. The agent handles it:
+
+> *"Check the best ranks for Canva on Android across all countries in the last 90 days."*
+
+`get_app_best_ranks` returns the peak rank per country per category. The agent can spot which markets Canva broke into the top 10 and summarize the shift.
+
+**Concrete workflow:** Build a morning briefing agent that checks your app's best ranks across your top 10 countries and alerts you if any category rank drops below a threshold.
+
+### 3. Company footprint tracking (paid tier)
+
+If you are on a paid plan, the company tools are where the leverage is.
+
+> *"What apps added Unity SDK last quarter, and which ones dropped it?"*
+
+`get_company_app_changes` returns the full store-ID lists for apps that added or removed a company's SDK. The agent can compare the list against your own CRM to surface churn risks or expansion opportunities.
+
+**Concrete workflow:** Every quarter, have the agent pull the companies in your pipeline, check their SDK footprints via `get_company_overview`, and flag acquisition targets whose app counts are growing fast.
+
+### 4. Keyword discovery and gap analysis
+
+> *"What is the keyword difficulty for 'fitness tracker' on both platforms, and which apps rank highest?"*
+
+The agent gets `get_keyword_metrics` (difficulty, competition, opportunity score) and `get_keyword_ranks` (top-ranked apps) in one turn — then cross-references them against your own apps to find gaps.
+
+**Concrete workflow:** Run a weekly keyword-gap report: feed your target keyword list to the agent, let it pull difficulty and top competitors, and have it write a prioritized list of keywords where your app could break the top 10 with the least competition.
+
+---
+
+## Quick start — connect in 30 seconds
+
+The endpoint:
+
+```
+https://appgoblin.info/api/v1/mcp
+```
+
+**In Claude Code** — add to your `~/.claude/servers.json` or project MCP config:
+
+```json
+{
+  "mcpServers": {
+    "appgoblin": {
+      "type": "url",
+      "url": "https://appgoblin.info/api/v1/mcp",
+      "headers": {
+        "Authorization": "Bearer YOUR_API_KEY"
+      }
+    }
+  }
+}
+```
+
+**In Cursor** — go to Settings → MCP → Add Server, paste:
+
+| Field | Value |
+|-------|-------|
+| URL | `https://appgoblin.info/api/v1/mcp` |
+| Header | `Authorization: Bearer YOUR_API_KEY` |
+
+**Or test with curl:**
+
+```bash
+# Initialize a session
+SESSION=$(curl -s -D - -o /dev/null \
+  -X POST https://appgoblin.info/api/v1/mcp \
+  -H "Content-Type: application/json" \
+  -H "Accept: application/json, text/event-stream" \
+  -H "Authorization: Bearer YOUR_KEY" \
+  -d '{"jsonrpc":"2.0","method":"initialize","params":{"protocolVersion":"2025-03-26","capabilities":{},"clientInfo":{"name":"curl","version":"1.0"}},"id":1}' \
+  | grep -i 'mcp-session-id' | awk '{print $2}' | tr -d '\r')
+
+# List available tools
+curl -s -X POST https://appgoblin.info/api/v1/mcp \
+  -H "Content-Type: application/json" \
+  -H "Accept: application/json, text/event-stream" \
+  -H "Authorization: Bearer YOUR_KEY" \
+  -H "mcp-session-id: $SESSION" \
+  -d '{"jsonrpc":"2.0","method":"tools/list","params":{},"id":1}'
+```
+
+Generate your API key here:
+
+**[appgoblin.info/account/api-keys](https://appgoblin.info/account/api-keys)**
+
+---
+
+**Try it today:**
+
+- Browse the API docs: [appgoblin.info/api-docs](https://appgoblin.info/api-docs)

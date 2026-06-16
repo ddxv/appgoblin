@@ -6,7 +6,9 @@ Each tool reuses the existing ``dbcon.queries`` functions and
 
 from __future__ import annotations
 
-from fastmcp import Context
+# `Context` must be importable at runtime in FastMCP 3.x — the framework
+# uses it for dependency injection into tool functions, not just typing.
+from fastmcp import Context  # noqa: TC002
 
 from api_app.controllers.public.v1.apps import (
     _build_app_basics_payload,
@@ -32,7 +34,7 @@ async def get_app_basics(  # noqa: D417
     store_id: str,
     ctx: Context,  # noqa: ARG001
 ) -> str:
-    """Return app metadata, growth estimates, and revenue signals for a store.
+    """Return app metadata, growth estimates, and revenue signals for an app.
 
     Parameters
     ----------
@@ -45,8 +47,10 @@ async def get_app_basics(  # noqa: D417
     try:
         payload = _build_app_basics_payload(state, store_id)
         return to_json(payload)
-    except Exception as exc:  # noqa: BLE001
-        return f"Error fetching app basics for {store_id!r}: {exc}"
+    except Exception as exc:
+        logger.exception("Error fetching app basics for %r", store_id)
+        msg = f"Error fetching app basics for {store_id!r}: {exc}"
+        raise RuntimeError(msg) from exc
 
 
 @mcp_server.tool()
@@ -98,5 +102,7 @@ async def get_app_sdk_details(  # noqa: D417
     try:
         payload = _build_app_sdk_details_payload(state, store_id)
         return to_json(payload)
-    except Exception as exc:  # noqa: BLE001
-        return f"Error fetching SDK details for {store_id!r}: {exc}"
+    except Exception as exc:
+        logger.exception("Error fetching SDK details for %r", store_id)
+        msg = f"Error fetching SDK details for {store_id!r}: {exc}"
+        raise RuntimeError(msg) from exc

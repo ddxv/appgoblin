@@ -582,8 +582,8 @@ def build_v1_openapi_schema(request: Request) -> dict[str, Any]:
             "Interactive reference for AppGoblin public v1 endpoints.\n\n"
             "## Authentication\n"
             "Create or manage your API Token from the AppGoblin account dashboard, "
-            "then send it in the `X-API-Key` header on each request.\n\n"
-            "- Header: `X-API-Key: <your-api-token>`\n"
+            "then send it as the `Authorization: Bearer <token>` header on each request. "
+            "The legacy `X-API-Key` header is also accepted.\n\n"
             f"- Get a token: {PUBLIC_API_SERVER_URL}/account/api-keys\n"
             "\n"
             "## Plans & Access\n"
@@ -612,16 +612,16 @@ def build_v1_openapi_schema(request: Request) -> dict[str, Any]:
     }
     components = schema.setdefault("components", {})
     security_schemes = components.setdefault("securitySchemes", {})
-    security_schemes["ApiKeyAuth"] = {
-        "type": "apiKey",
-        "in": "header",
-        "name": "X-API-Key",
+    security_schemes["BearerAuth"] = {
+        "type": "http",
+        "scheme": "bearer",
         "description": (
             "Generate an API Token from the AppGoblin dashboard and send it as the "
-            "X-API-Key header."
+            "`Authorization: Bearer <token>` header. The legacy `X-API-Key` header "
+            "is also accepted."
         ),
     }
-    schema["security"] = [{"ApiKeyAuth": []}]
+    schema["security"] = [{"BearerAuth": []}]
     schema["servers"] = [{"url": PUBLIC_API_SERVER_URL}]
     _set_operation_docs(schema)
     _set_companies_index_example(schema)

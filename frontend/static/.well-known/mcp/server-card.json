@@ -15,8 +15,8 @@
             "url": "https://appgoblin.info/api/v1/mcp",
             "headers": [
                 {
-                    "name": "X-API-Key",
-                    "description": "AppGoblin API key — generate one from the account dashboard at https://appgoblin.info/account/api-keys",
+                    "name": "Authorization",
+                    "description": "AppGoblin API key — send as `Bearer <token>`. Generate one from the account dashboard at https://appgoblin.info/account/api-keys",
                     "isRequired": true,
                     "isSecret": true
                 }

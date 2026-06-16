@@ -319,135 +319,109 @@
 	<section
 		class="relative overflow-hidden rounded-[2rem] border border-secondary-900-100/20 bg-surface-100-900/40 px-4 py-6 shadow-2xl md:px-8 md:py-10"
 	>
-		<div
-			class="pointer-events-none absolute -right-16 top-0 h-48 w-48 rounded-full bg-secondary-500/10 blur-3xl"
-		></div>
-		<div
-			class="pointer-events-none absolute -left-12 bottom-0 h-40 w-40 rounded-full bg-primary-500/10 blur-3xl"
-		></div>
+		<div class="grid gap-6 p-4 md:grid-cols-[minmax(0,0.78fr)_minmax(0,1.22fr)] md:p-6">
+			<div class="flex flex-col justify-between gap-6">
+				<div>
+					<p class="mb-3 text-xs font-bold uppercase tracking-[0.28em] text-primary-800-200">
+						{dashboardHighlights[activeDashboardIndex].kicker}
+					</p>
+					<h3 class="mb-3 text-2xl font-bold leading-tight md:text-3xl">
+						{dashboardHighlights[activeDashboardIndex].title}
+					</h3>
+					<p class="mb-5 text-sm leading-7 md:text-base">
+						{dashboardHighlights[activeDashboardIndex].description}
+					</p>
 
-		<div class="relative">
-			<div class="mb-8 max-w-3xl">
-				<p class="mb-3 text-xs font-bold uppercase tracking-[0.32em] text-secondary-700-300">
-					Three ways to use AppGoblin
-				</p>
-				<h2 class="mb-3 text-2xl font-bold leading-tight md:text-3xl">
-					Research competitors, ad creatives, and map the mobile adtech ecosystem
-				</h2>
-				<p class="text-base md:text-lg">
-					Whether you're optimizing app store keywords, prospecting ad sales clients, or
-					investigating SDK supply chains — AppGoblin gives you the data.
-				</p>
-			</div>
+					<ul class="mb-6 space-y-2 text-sm md:text-base">
+						{#each dashboardHighlights[activeDashboardIndex].points as point}
+							<li class="flex items-start gap-3">
+								<span class="mt-1 h-2.5 w-2.5 shrink-0 rounded-full bg-success-500"></span>
+								<span>{point}</span>
+							</li>
+						{/each}
+					</ul>
 
-			<article
-				class="overflow-hidden rounded-[1.75rem] border border-surface-100-900/70 bg-surface-100-900/55 shadow-lg"
-			>
-				<div class="grid gap-6 p-4 md:grid-cols-[minmax(0,0.78fr)_minmax(0,1.22fr)] md:p-6">
-					<div class="flex flex-col justify-between gap-6">
-						<div>
-							<p class="mb-3 text-xs font-bold uppercase tracking-[0.28em] text-primary-800-200">
-								{dashboardHighlights[activeDashboardIndex].kicker}
-							</p>
-							<h3 class="mb-3 text-2xl font-bold leading-tight md:text-3xl">
-								{dashboardHighlights[activeDashboardIndex].title}
-							</h3>
-							<p class="mb-5 text-sm leading-7 md:text-base">
-								{dashboardHighlights[activeDashboardIndex].description}
-							</p>
+					<div class="flex flex-wrap items-center gap-3">
+						<a
+							href={dashboardHighlights[activeDashboardIndex].href}
+							class="btn preset-filled-primary-500 px-4 py-2 font-medium"
+						>
+							{dashboardHighlights[activeDashboardIndex].cta}
+						</a>
+					</div>
+				</div>
 
-							<ul class="mb-6 space-y-2 text-sm md:text-base">
-								{#each dashboardHighlights[activeDashboardIndex].points as point}
-									<li class="flex items-start gap-3">
-										<span class="mt-1 h-2.5 w-2.5 shrink-0 rounded-full bg-success-500"></span>
-										<span>{point}</span>
-									</li>
-								{/each}
-							</ul>
+				<div class="flex items-center gap-3">
+					<button
+						type="button"
+						class="flex h-10 w-10 items-center justify-center rounded-full border border-surface-100-900/60 bg-surface-50-950/35 text-lg font-bold transition-colors hover:border-secondary-600/60 hover:bg-surface-50-950/55"
+						onclick={showPreviousDashboard}
+						aria-label="Show previous dashboard"
+					>
+						&lt;
+					</button>
 
-							<div class="flex flex-wrap items-center gap-3">
-								<a
-									href={dashboardHighlights[activeDashboardIndex].href}
-									class="btn preset-filled-primary-500 px-4 py-2 font-medium"
-								>
-									{dashboardHighlights[activeDashboardIndex].cta}
-								</a>
-							</div>
-						</div>
-
-						<div class="flex items-center gap-3">
+					<div class="flex items-center gap-2">
+						{#each dashboardHighlights as _, index}
 							<button
 								type="button"
-								class="flex h-10 w-10 items-center justify-center rounded-full border border-surface-100-900/60 bg-surface-50-950/35 text-lg font-bold transition-colors hover:border-secondary-600/60 hover:bg-surface-50-950/55"
-								onclick={showPreviousDashboard}
-								aria-label="Show previous dashboard"
-							>
-								&lt;
-							</button>
-
-							<div class="flex items-center gap-2">
-								{#each dashboardHighlights as _, index}
-									<button
-										type="button"
-										class={[
-											'h-3 w-3 rounded-full transition-all',
-											activeDashboardIndex === index
-												? 'bg-primary-500 shadow-[0_0_0_4px_rgba(125,211,252,0.12)]'
-												: 'bg-surface-500/40 hover:bg-surface-500/70'
-										].join(' ')}
-										onclick={() => showDashboard(index)}
-										aria-label={`Show dashboard ${index + 1}`}
-										aria-pressed={activeDashboardIndex === index}
-									></button>
-								{/each}
-							</div>
-
-							<button
-								type="button"
-								class="flex h-10 w-10 items-center justify-center rounded-full border border-surface-100-900/60 bg-surface-50-950/35 text-lg font-bold transition-colors hover:border-secondary-600/60 hover:bg-surface-50-950/55"
-								onclick={showNextDashboard}
-								aria-label="Show next dashboard"
-							>
-								&gt;
-							</button>
-						</div>
+								class={[
+									'h-3 w-3 rounded-full transition-all',
+									activeDashboardIndex === index
+										? 'bg-primary-500 shadow-[0_0_0_4px_rgba(125,211,252,0.12)]'
+										: 'bg-surface-500/40 hover:bg-surface-500/70'
+								].join(' ')}
+								onclick={() => showDashboard(index)}
+								aria-label={`Show dashboard ${index + 1}`}
+								aria-pressed={activeDashboardIndex === index}
+							></button>
+						{/each}
 					</div>
 
-					<a
-						href={dashboardHighlights[activeDashboardIndex].href}
-						class="group relative block overflow-hidden rounded-[1.5rem] border border-secondary-900-100/20 bg-surface-50-950/70 p-2 shadow-xl"
+					<button
+						type="button"
+						class="flex h-10 w-10 items-center justify-center rounded-full border border-surface-100-900/60 bg-surface-50-950/35 text-lg font-bold transition-colors hover:border-secondary-600/60 hover:bg-surface-50-950/55"
+						onclick={showNextDashboard}
+						aria-label="Show next dashboard"
 					>
-						<div
-							class="absolute inset-0 z-10 bg-gradient-to-tr from-surface-950/35 via-transparent to-primary-500/15"
-						></div>
-						<div
-							class="absolute inset-x-0 bottom-0 z-10 h-28 bg-gradient-to-t from-surface-950/45 to-transparent"
-						></div>
-						<div
-							class="absolute inset-y-0 left-0 z-10 hidden w-24 bg-gradient-to-r from-surface-950/25 to-transparent md:block"
-						></div>
-						<div
-							class="absolute right-4 top-4 z-20 rounded-full border border-white/20 bg-surface-950/55 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.2em] text-white/90 backdrop-blur-sm"
-						>
-							Live Preview
-						</div>
-						<div class="aspect-[16/11] overflow-hidden rounded-[1rem]">
-							<img
-								src={dashboardHighlights[activeDashboardIndex].imageLight}
-								alt={dashboardHighlights[activeDashboardIndex].imageAlt}
-								class="block h-full w-full object-cover object-top-left opacity-90 saturate-[0.92] transition-transform duration-500 group-hover:scale-[1.015] dark:hidden"
-								loading="eager"
-							/>
-							<img
-								src={dashboardHighlights[activeDashboardIndex].imageDark}
-								alt={dashboardHighlights[activeDashboardIndex].imageAlt}
-								class="hidden h-full w-full object-cover object-top-left opacity-90 saturate-[0.92] transition-transform duration-500 group-hover:scale-[1.015] dark:block"
-								loading="eager"
-							/>
-						</div>
-					</a>
+						&gt;
+					</button>
 				</div>
-			</article>
+			</div>
+
+			<a
+				href={dashboardHighlights[activeDashboardIndex].href}
+				class="group relative block overflow-hidden rounded-[1.5rem] border border-secondary-900-100/20 bg-surface-50-950/70 p-2 shadow-xl"
+			>
+				<div
+					class="absolute inset-0 z-10 bg-gradient-to-tr from-surface-950/35 via-transparent to-primary-500/15"
+				></div>
+				<div
+					class="absolute inset-x-0 bottom-0 z-10 h-28 bg-gradient-to-t from-surface-950/45 to-transparent"
+				></div>
+				<div
+					class="absolute inset-y-0 left-0 z-10 hidden w-24 bg-gradient-to-r from-surface-950/25 to-transparent md:block"
+				></div>
+				<div
+					class="absolute right-4 top-4 z-20 rounded-full border border-white/20 bg-surface-950/55 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.2em] text-white/90 backdrop-blur-sm"
+				>
+					Preview
+				</div>
+				<div class="aspect-[16/11] overflow-hidden rounded-[1rem]">
+					<img
+						src={dashboardHighlights[activeDashboardIndex].imageLight}
+						alt={dashboardHighlights[activeDashboardIndex].imageAlt}
+						class="block h-full w-full object-cover object-top-left opacity-90 saturate-[0.92] transition-transform duration-500 group-hover:scale-[1.015] dark:hidden"
+						loading="eager"
+					/>
+					<img
+						src={dashboardHighlights[activeDashboardIndex].imageDark}
+						alt={dashboardHighlights[activeDashboardIndex].imageAlt}
+						class="hidden h-full w-full object-cover object-top-left opacity-90 saturate-[0.92] transition-transform duration-500 group-hover:scale-[1.015] dark:block"
+						loading="eager"
+					/>
+				</div>
+			</a>
 		</div>
 	</section>
 

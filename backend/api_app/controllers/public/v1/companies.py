@@ -106,7 +106,7 @@ def _optional_float(value: object) -> float | None:
 
 
 def _api_key_guard(request: ASGIConnection, route_handler: BaseRouteHandler) -> None:
-    """Guard that validates the X-API-Key header."""
+    """Guard that validates the Authorization: Bearer header (X-API-Key also accepted)."""
     state = request.app.state
     context = validate_api_key(cast("Request", request), state)
     if context.tier == "free":

@@ -241,42 +241,42 @@ class TestV1CompaniesAuth:
         with TestClient(app=app, raise_server_exceptions=False) as client:
             resp = client.get("/api/v1/companies/google.com")
         assert resp.status_code == 401
-        assert "Missing X-API-Key" in resp.json()["detail"]
+        assert "Missing API key" in resp.json()["detail"]
 
     def test_app_requires_api_key(self):
         app = _make_test_app()
         with TestClient(app=app, raise_server_exceptions=False) as client:
             resp = client.get("/api/v1/apps/com.example.app")
         assert resp.status_code == 401
-        assert "Missing X-API-Key" in resp.json()["detail"]
+        assert "Missing API key" in resp.json()["detail"]
 
     def test_app_ranks_requires_api_key(self):
         app = _make_test_app()
         with TestClient(app=app, raise_server_exceptions=False) as client:
             resp = client.get("/api/v1/apps/com.example.app/ranks")
         assert resp.status_code == 401
-        assert "Missing X-API-Key" in resp.json()["detail"]
+        assert "Missing API key" in resp.json()["detail"]
 
     def test_app_sdks_requires_api_key(self):
         app = _make_test_app()
         with TestClient(app=app, raise_server_exceptions=False) as client:
             resp = client.get("/api/v1/apps/com.example.app/sdks")
         assert resp.status_code == 401
-        assert "Missing X-API-Key" in resp.json()["detail"]
+        assert "Missing API key" in resp.json()["detail"]
 
     def test_keyword_overview_requires_api_key(self):
         app = _make_test_app()
         with TestClient(app=app, raise_server_exceptions=False) as client:
             resp = client.get("/api/v1/keywords/app privacy")
         assert resp.status_code == 401
-        assert "Missing X-API-Key" in resp.json()["detail"]
+        assert "Missing API key" in resp.json()["detail"]
 
     def test_keyword_ranks_requires_api_key(self):
         app = _make_test_app()
         with TestClient(app=app, raise_server_exceptions=False) as client:
             resp = client.get("/api/v1/keywords/app privacy/ranks")
         assert resp.status_code == 401
-        assert "Missing X-API-Key" in resp.json()["detail"]
+        assert "Missing API key" in resp.json()["detail"]
 
     def test_invalid_api_key_returns_401(self):
         app = _make_test_app()
@@ -1484,7 +1484,7 @@ class TestV1Docs:
         data = resp.json()
         assert data["info"]["title"] == "AppGoblin Public API v1"
         assert data["info"]["version"] == "0.1.0"
-        assert "X-API-Key" in data["info"]["description"]
+        assert "Bearer" in data["info"]["description"]
         assert "## Rate Limits" in data["info"]["description"]
         assert "## Plans & Access" in data["info"]["description"]
         assert "https://appgoblin.info/pricing" in data["info"]["description"]
@@ -1496,9 +1496,9 @@ class TestV1Docs:
         assert "/api/v1/docs/openapi.json" in data["info"]["description"]
         assert data["servers"] == [{"url": "https://appgoblin.info"}]
         assert (
-            data["components"]["securitySchemes"]["ApiKeyAuth"]["name"] == "X-API-Key"
+            data["components"]["securitySchemes"]["BearerAuth"]["scheme"] == "bearer"
         )
-        assert data["security"] == [{"ApiKeyAuth": []}]
+        assert data["security"] == [{"BearerAuth": []}]
         assert "/health" not in data["paths"]
         assert "/api/v1/apps/{store_id}/sdksoverview" not in data["paths"]
         assert "/api/v1/keywords/{keyword}" in data["paths"]
