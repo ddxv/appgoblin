@@ -69,16 +69,17 @@ async def _build_tools_docs() -> dict:
         "endpoint": {
             "url": "{server}/api/v1/mcp",
             "description": (
-                "Connect MCP clients (Claude Code, Cursor, etc.) to this SSE "
-                "endpoint. The server authenticates on SSE open and keeps the "
-                "connection alive for tool call sequences."
+                "Connect MCP clients (Claude Code, Cursor, etc.) to this "
+                "Streamable HTTP endpoint. The server authenticates on every "
+                "request via the X-API-Key header and supports long-lived "
+                "sessions for tool call sequences."
             ),
         },
         "rate_limits": (
             "Rate limits use the same per-key token bucket as the REST API. "
             "Free tier: 30 req/min, 1,000 req/day. Paid tiers scale higher. "
-            "A single SSE session counts as one request against the per-minute "
-            "bucket; individual tool calls within the session do not."
+            "Each HTTP request to the MCP endpoint counts as one request "
+            "against the per-minute bucket."
         ),
         "tier_access": {
             "apps": "All tiers (free and paid).",

@@ -79,6 +79,14 @@ def _authenticate(scope: Scope) -> MCPAuthContext | None:
     """
     raw_key = _normalise_header(scope, b"x-api-key")
     if not raw_key:
+        raw_key = _normalise_header(scope, b"authorization")
+        if raw_key:
+            # Strip "Bearer " prefix if present
+            for prefix in ("bearer ", "token "):
+                if raw_key.lower().startswith(prefix):
+                    raw_key = raw_key[len(prefix) :]
+                    break
+    if not raw_key:
         return None
 
     key_hash = hashlib.sha256(raw_key.encode()).hexdigest()
@@ -214,7 +222,9 @@ class AuthenticatedMCPMiddleware:
             await send(
                 {
                     "type": "http.response.body",
-                    "body": b'{"error":"Unauthorized: Valid X-API-Key header required."}',
+                    "body": (
+                        b'{"error":"Unauthorized: Valid X-API-Key header required."}'
+                    ),
                     "more_body": False,
                 }
             )
@@ -231,5 +241,5 @@ class AuthenticatedMCPMiddleware:
 # Pre-wired ASGI app (imported by app.py)
 # ---------------------------------------------------------------------------
 
-fastmcp_asgi_app = mcp_server.http_app()
+fastmcp_asgi_app = mcp_server.http_app(path="/")
 protected_mcp_app = AuthenticatedMCPMiddleware(fastmcp_asgi_app)

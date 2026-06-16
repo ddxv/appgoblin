@@ -6,7 +6,9 @@ receive a descriptive access-denied message rather than data.
 
 from __future__ import annotations
 
-from fastmcp import Context
+# `Context` must be importable at runtime in FastMCP 3.x — the framework
+# uses it for dependency injection into tool functions, not just typing.
+from fastmcp import Context  # noqa: TC002
 
 from api_app.controllers.companies import get_overviews
 from api_app.controllers.public.v1.companies import (
@@ -16,28 +18,10 @@ from api_app.controllers.public.v1.companies import (
 )
 from api_app.mcp.serialize import to_json
 from api_app.mcp.server import mcp_server
-from api_app.mcp.state import get_mcp_state
+from api_app.mcp.state import assert_paid_tier, get_mcp_state
 from config import get_logger
 
 logger = get_logger(__name__)
-
-
-# ---------------------------------------------------------------------------
-# Helpers
-# ---------------------------------------------------------------------------
-
-
-def _assert_paid_tier(ctx: Context, tool_name: str) -> str | None:
-    """Return ``None`` if the user has a paid tier, else an error string."""
-    user = ctx.request_context.request.scope.get("user")
-    if not user:
-        return "Access Denied: Unauthenticated agent request."
-    if user.tier == "free":
-        return (
-            f"Access Denied: The '{tool_name}' tool requires an active AppGoblin "
-            "Paid Tier subscription. Please upgrade your account to continue."
-        )
-    return None
 
 
 # ---------------------------------------------------------------------------
@@ -52,9 +36,7 @@ async def list_companies(ctx: Context) -> str:
     .. warning::
        This tool is restricted to paid-tier subscribers.
     """
-    denied = _assert_paid_tier(ctx, "list_companies")
-    if denied:
-        return denied
+    assert_paid_tier(ctx, "list_companies")
 
     state = get_mcp_state()
     overview = get_overviews(state=state)
@@ -75,9 +57,7 @@ async def get_company_overview(  # noqa: D417
         The domain of the target company (e.g. 'unity.com').
 
     """
-    denied = _assert_paid_tier(ctx, "get_company_overview")
-    if denied:
-        return denied
+    assert_paid_tier(ctx, "get_company_overview")
 
     state = get_mcp_state()
     try:
@@ -85,8 +65,10 @@ async def get_company_overview(  # noqa: D417
             state=state, company_domain=company_domain
         )
         return to_json(payload)
-    except Exception as exc:  # noqa: BLE001
-        return f"Error fetching overview for {company_domain!r}: {exc}"
+    except Exception as exc:
+        logger.exception("Error fetching overview for %r", company_domain)
+        msg = f"Error fetching overview for {company_domain!r}: {exc}"
+        raise RuntimeError(msg) from exc
 
 
 @mcp_server.tool()
@@ -114,9 +96,7 @@ async def get_company_app_changes(  # noqa: D417, PLR0913
         Change direction — ``added`` or ``lost``.
 
     """
-    denied = _assert_paid_tier(ctx, "get_company_app_changes")
-    if denied:
-        return denied
+    assert_paid_tier(ctx, "get_company_app_changes")
 
     state = get_mcp_state()
     try:
@@ -129,8 +109,17 @@ async def get_company_app_changes(  # noqa: D417, PLR0913
             status=status,
         )
         return to_json(payload)
-    except Exception as exc:  # noqa: BLE001
-        return (
+    except Exception as exc:
+        logger.exception(
+            "Error fetching app changes for %r (%s, %dQ%d, %s)",
+            company_domain,
+            tag_source,
+            year,
+            quarter,
+            status,
+        )
+        msg = (
             f"Error fetching app changes for {company_domain!r} "
             f"({tag_source=}, {year}Q{quarter}, {status=}): {exc}"
         )
+        raise RuntimeError(msg) from exc
