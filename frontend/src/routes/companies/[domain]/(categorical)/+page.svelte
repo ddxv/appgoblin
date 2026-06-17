@@ -9,12 +9,12 @@
 
 	import CompanyCategoryControls from '$lib/CompanyCategoryControls.svelte';
 	import TotalsBox from '$lib/TotalsBox.svelte';
+	import ApiTotalsBox from '$lib/ApiTotalsBox.svelte';
 	import CompanyCategoryPie from '$lib/CompanyCategoryPie.svelte';
 	import AdsTxtTotalsBox from '$lib/AdsTxtTotalsBox.svelte';
 	import CompanyTableGrid from '$lib/CompanyTableGrid.svelte';
 	import HierarchyTree from '$lib/HierarchyTree.svelte';
 	import WhiteCard from '$lib/WhiteCard.svelte';
-	import CompaniesLayout from '$lib/CompaniesLayout.svelte';
 	interface Props {
 		data: CompanyFullDetails;
 	}
@@ -101,6 +101,11 @@
 					primaryCompanyType.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()))
 			: null
 	);
+	let isAdNetwork = $derived(
+		(data.companyDetails?.company_types ?? []).some(
+			(t) => t === 'ad-networks' || t === 'ad-network'
+		)
+	);
 
 	let overviewStats = $derived(activeOverview.categories.all);
 	let totalApps = $derived(overviewStats?.total_apps ?? 0);
@@ -162,51 +167,90 @@
 	});
 </script>
 
-<section class="mb-6 space-y-2">
-	<h2 class="text-xl font-semibold">About {companyName}</h2>
-	<p class="text-sm">{dynamicDescription}</p>
-	<p class="text-sm mb-4">
-		AppGoblin intelligence for {companyName} maps SDK integrations, API calls, and app-ads.txt records
-		to real mobile app IDs. Explore {companyName} creatives and mediation relationships to evaluate technical
-		footprint and competitive position quickly.
-	</p>
-</section>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-6">
+	<div class="md:col-span-2 space-y-2">
+		<p class="text-base">{dynamicDescription}</p>
+		<p class="text-base">
+			AppGoblin intelligence for {companyName} maps SDK integrations, API calls, and app-ads.txt records
+			to real mobile app IDs. Explore {companyName} creatives and mediation relationships to evaluate
+			technical footprint and competitive position quickly.
+		</p>
+	</div>
+	<div class="md:row-span-2">
+		<WhiteCard>
+			{#snippet title()}
+				<span>{companyName}'s Related Entities</span>
+			{/snippet}
+			<div class="p-2">
+				{#if hasHierarchyContext}
+					<HierarchyTree
+						companyTree={data.companyTree}
+						{hasHigherLevelParent}
+						{queriedIsMappedCompany}
+						{associatedDomains}
+						showTruncated={true}
+					/>
+				{/if}
 
-{#snippet androidPieContent()}
-	{#await activeCategoryPromise}
-		<span class="text-lg">Loading...</span>
-	{:then myPieData}
-		{#if myPieData && 'error' in myPieData}
-			<p class="text-red-500 text-center">Failed to load categories.</p>
-		{:else if myPieData}
-			<CompanyCategoryPie
-				plotData={myPieData.android as CategoryItem[]}
-				storeLabel="Google Play"
-				bind:groupMode={androidGroupMode}
-			/>
-		{/if}
-	{:catch error}
-		<p class="text-red-500 text-center">{error.message}</p>
-	{/await}
-{/snippet}
-
-{#snippet iosPieContent()}
-	{#await activeCategoryPromise}
-		<span class="text-lg">Loading...</span>
-	{:then myPieData}
-		{#if myPieData && 'error' in myPieData}
-			<p class="text-red-500 text-center">Failed to load categories.</p>
-		{:else if myPieData}
-			<CompanyCategoryPie
-				plotData={myPieData.ios as CategoryItem[]}
-				storeLabel="Apple App Store"
-				bind:groupMode={iosGroupMode}
-			/>
-		{/if}
-	{:catch error}
-		<p class="text-red-500 text-center">{error.message}</p>
-	{/await}
-{/snippet}
+				{#if typeof data.companyTree == 'string'}
+					<p class="text-red-500 text-center">Failed to load company tree.</p>
+				{:else}
+					<!-- REGULAR COMPANY (no child or parent companies) -->
+				{/if}
+			</div>
+		</WhiteCard>
+	</div>
+	{#if !data.companyTree.is_secondary_domain}
+		<div class="md:col-span-1">
+			<WhiteCard>
+				{#snippet title()}
+					<span>{companyName}'s Android Apps by Category</span>
+				{/snippet}
+				<div>
+					{#await activeCategoryPromise}
+						<span class="text-lg">Loading...</span>
+					{:then myPieData}
+						{#if myPieData && 'error' in myPieData}
+							<p class="text-red-500 text-center">Failed to load categories.</p>
+						{:else if myPieData}
+							<CompanyCategoryPie
+								plotData={myPieData.android as CategoryItem[]}
+								storeLabel="Google Play"
+								bind:groupMode={androidGroupMode}
+							/>
+						{/if}
+					{:catch error}
+						<p class="text-red-500 text-center">{error.message}</p>
+					{/await}
+				</div>
+			</WhiteCard>
+		</div>
+		<div class="md:col-span-1">
+			<WhiteCard>
+				{#snippet title()}
+					<span>{companyName}'s iOS Apps by Category</span>
+				{/snippet}
+				<div>
+					{#await activeCategoryPromise}
+						<span class="text-lg">Loading...</span>
+					{:then myPieData}
+						{#if myPieData && 'error' in myPieData}
+							<p class="text-red-500 text-center">Failed to load categories.</p>
+						{:else if myPieData}
+							<CompanyCategoryPie
+								plotData={myPieData.ios as CategoryItem[]}
+								storeLabel="Apple App Store"
+								bind:groupMode={iosGroupMode}
+							/>
+						{/if}
+					{:catch error}
+						<p class="text-red-500 text-center">{error.message}</p>
+					{/await}
+				</div>
+			</WhiteCard>
+		</div>
+	{/if}
+</div>
 
 <div class="mb-4 md:mb-6">
 	<WhiteCard>
@@ -264,7 +308,7 @@
 				{/if}
 			</p>
 		{/if}
-		<div class="grid gap-4 p-4 lg:grid-cols-3">
+		<div class="grid gap-4 p-4 lg:grid-cols-2">
 			<div class="rounded border border-surface-200-800/70">
 				<TotalsBox
 					{companyName}
@@ -276,77 +320,27 @@
 				/>
 			</div>
 			<div class="rounded border border-surface-200-800/70">
-				<AdsTxtTotalsBox
-					myTotals={activeOverview.adstxt_ad_domain_overview}
+				<ApiTotalsBox
+					{companyName}
+					myTotals={activeOverview.categories.all}
 					trendsSummary={activeTrendsSummary}
-					showReseller={false}
 				/>
 			</div>
-			<div class="rounded border border-surface-200-800/70">
-				<AdsTxtTotalsBox myTotals={activeOverview.adstxt_ad_domain_overview} showDirect={false} />
-			</div>
+			{#if isAdNetwork}
+				<div class="rounded border border-surface-200-800/70">
+					<AdsTxtTotalsBox
+						myTotals={activeOverview.adstxt_ad_domain_overview}
+						trendsSummary={activeTrendsSummary}
+						showReseller={false}
+					/>
+				</div>
+				<div class="rounded border border-surface-200-800/70">
+					<AdsTxtTotalsBox myTotals={activeOverview.adstxt_ad_domain_overview} showDirect={false} />
+				</div>
+			{/if}
 		</div>
 	</WhiteCard>
 </div>
-
-<CompaniesLayout>
-	{#snippet card1()}
-		{#if !data.companyTree.is_secondary_domain}
-			<WhiteCard>
-				{#snippet title()}
-					<span>{companyName}'s Android Apps by Category</span>
-				{/snippet}
-				<div>
-					{@render androidPieContent()}
-				</div>
-			</WhiteCard>
-		{/if}
-	{/snippet}
-
-	{#snippet card2()}
-		{#if !data.companyTree.is_secondary_domain}
-			<WhiteCard>
-				{#snippet title()}
-					<span>{companyName}'s iOS Apps by Category</span>
-				{/snippet}
-				<div>
-					{@render iosPieContent()}
-				</div>
-			</WhiteCard>
-		{/if}
-	{/snippet}
-	{#snippet card3()}
-		<WhiteCard>
-			{#snippet title()}
-				<span>{companyName}'s Related Entities</span>
-			{/snippet}
-			<div class="p-2">
-				{#if hasHierarchyContext}
-					<HierarchyTree
-						companyTree={data.companyTree}
-						{hasHigherLevelParent}
-						{queriedIsMappedCompany}
-						{associatedDomains}
-						showTruncated={true}
-					/>
-				{/if}
-
-				{#if typeof data.companyTree == 'string'}
-					<p class="text-red-500 text-center">Failed to load company tree.</p>
-				{:else if data.companyTree.is_orphan}
-					<p class="text-sm text-gray-500 text-center">
-						This domain has not been mapped to a company yet. If you would like it added, please <a
-							href="/contact"
-							class="underline hover:text-gray-700">reach out</a
-						>.
-					</p>
-				{:else}
-					<!-- REGULAR COMPANY (no child or parent companies) -->
-				{/if}
-			</div>
-		</WhiteCard>
-	{/snippet}
-</CompaniesLayout>
 
 {#if typeof data.companyTopApps == 'string'}
 	Failed to load company's apps.

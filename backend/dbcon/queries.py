@@ -382,12 +382,15 @@ def get_company_stats(
     """Get overview of companies from multiple types like sdk and app-ads.txt."""
     logger.info(f"query company overview: {company_domain=}")
     parent_companies = get_parent_companies(state)
+    secondary_domains = get_company_secondary_domains(state)
     is_parent_company = company_domain in parent_companies and include_parent_rollup
-    query = (
-        sql.company_parent_category_tag_stats
-        if is_parent_company
-        else sql.company_category_tag_stats
-    )
+    is_secondary_domain = company_domain in secondary_domains
+    if is_secondary_domain:
+        query = sql.company_secondary_category_tag_stats
+    elif is_parent_company:
+        query = sql.company_parent_category_tag_stats
+    else:
+        query = sql.company_category_tag_stats
     if app_category == "games":
         app_category = "game%"
     df = pd.read_sql(
@@ -432,6 +435,7 @@ def get_company_app_changes(
     year: int,
     quarter: int,
     status: str | None = None,
+    limit: int | None = None,
 ) -> pd.DataFrame:
     """Get quarter-over-quarter app additions or losses for a company domain."""
     logger.info(
@@ -468,6 +472,8 @@ def get_company_app_changes(
     df["icon_url_100"] = df["icon_url_100"].fillna("")
     df["rank"] = pd.to_numeric(df["rank"], errors="coerce")
     df["installs_d30"] = pd.to_numeric(df["installs_d30"], errors="coerce").fillna(0)
+    if limit is not None:
+        df = df.head(limit)
     return df
 
 
@@ -645,12 +651,15 @@ def get_company_categories_topn(
     """
     logger.info(f"query company parent categories: {company_domain=}")
     parent_companies = get_parent_companies(state)
+    secondary_domains = get_company_secondary_domains(state)
     is_parent_company = company_domain in parent_companies and include_parent_rollup
-    query = (
-        sql.company_parent_category_stats
-        if is_parent_company
-        else sql.company_category_stats
-    )
+    is_secondary_domain = company_domain in secondary_domains
+    if is_secondary_domain:
+        query = sql.company_secondary_category_stats
+    elif is_parent_company:
+        query = sql.company_parent_category_stats
+    else:
+        query = sql.company_category_stats
     df = pd.read_sql(
         query,
         state.dbcon.engine,

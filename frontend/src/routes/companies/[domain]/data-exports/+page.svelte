@@ -28,7 +28,7 @@
 			},
 			{
 				key: 'companyVerifiedAndroid',
-				label: 'Active Engine Footprint (Android)',
+				label: 'SDK & API Verified Apps (Android)',
 				platform: 'Android',
 				signalDepth: 'Active SDK Runtime & API Signals',
 				url: data.downloadUrls?.companyVerifiedAndroid ?? null,
@@ -36,7 +36,7 @@
 			},
 			{
 				key: 'companyVerifiedIos',
-				label: 'Active Engine Footprint (iOS)',
+				label: 'SDK & API Verified Apps (iOS)',
 				platform: 'iOS',
 				signalDepth: 'Active SDK Runtime & API Signals',
 				url: data.downloadUrls?.companyVerifiedIos ?? null,

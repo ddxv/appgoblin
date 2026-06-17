@@ -66,8 +66,6 @@
 
 	const sdkAndroidTrend = $derived(getTrendSource(trendsSummary, 'android', 'sdk'));
 	const sdkIosTrend = $derived(getTrendSource(trendsSummary, 'ios', 'sdk'));
-	const apiAndroidTrend = $derived(getTrendSource(trendsSummary, 'android', 'api_call'));
-	const apiIosTrend = $derived(getTrendSource(trendsSummary, 'ios', 'api_call'));
 
 	// --- Computed penetration & share metrics ---
 
@@ -90,18 +88,6 @@
 	const sdkIosShareInstalls = $derived(
 		safeTotals.sdk_ios_universe_installs_d30 > 0
 			? safeTotals.sdk_ios_installs_d30 / safeTotals.sdk_ios_universe_installs_d30
-			: 0
-	);
-
-	const apiAndroidPenetration = $derived(
-		safeTotals.api_android_universe_apps > 0
-			? safeTotals.api_android_total_apps / safeTotals.api_android_universe_apps
-			: 0
-	);
-
-	const apiAndroidShareInstalls = $derived(
-		safeTotals.api_android_universe_installs_d30 > 0
-			? safeTotals.api_android_installs_d30 / safeTotals.api_android_universe_installs_d30
 			: 0
 	);
 </script>
@@ -201,60 +187,7 @@
 								{formatRelativeChange(sdkIosTrend?.latest_pct_market_share_change_pct)}
 							</td>
 						</tr>
-						<tr>
-							<td class="py-2 px-1 {rowTitleFont}">API Call Market Share Change</td>
-							<td
-								class={`py-2 px-1 ${toneClass(apiAndroidTrend?.latest_pct_market_share_change_pct)}`}
-							>
-								{formatRelativeChange(apiAndroidTrend?.latest_pct_market_share_change_pct)}
-							</td>
-							<td class={`py-2 px-1 ${toneClass(apiIosTrend?.latest_pct_market_share_change_pct)}`}>
-								{formatRelativeChange(apiIosTrend?.latest_pct_market_share_change_pct)}
-							</td>
-						</tr>
 					{/if}
-				</tbody>
-			</table>
-		{/if}
-	</div>
-
-	<!-- === API CALLS SECTION === -->
-	<div class="table-container p-4 border-t border-surface-200-800/50">
-		<div class={titleFont}>
-			{categoryTitle ? `${categoryTitle} App` : 'App'} API Call Activity
-			<p class="text-xs text-surface-500">
-				Apps detected making API calls associated with {companyName}.
-			</p>
-		</div>
-		{#if (safeTotals.api_android_total_apps ?? 0) === 0 && (safeTotals.api_ios_total_apps ?? 0) === 0}
-			<p class={greyFont}>
-				No apps with API calls for {companyName} found.
-			</p>
-		{:else}
-			<table class="table w-full">
-				<thead>
-					<tr>
-						<th class="text-left py-2 px-1"></th>
-						<th class="text-left py-2 px-1">Android</th>
-						<th class="text-left py-2 px-1">iOS</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td class="py-2 px-1 {rowTitleFont}">Apps</td>
-						<td class="py-2 px-1">{formatNumberLocale(safeTotals.api_android_total_apps ?? 0)}</td>
-						<td class="py-2 px-1">—</td>
-					</tr>
-					<tr>
-						<td class="py-2 px-1 {rowTitleFont}">API Call Penetration</td>
-						<td class="py-2 px-1">{formatPct(apiAndroidPenetration)}</td>
-						<td class="py-2 px-1">—</td>
-					</tr>
-					<tr>
-						<td class="py-2 px-1 {rowTitleFont}">Monthly Share of Installs</td>
-						<td class="py-2 px-1">{formatPct(apiAndroidShareInstalls)}</td>
-						<td class="py-2 px-1">—</td>
-					</tr>
 				</tbody>
 			</table>
 		{/if}

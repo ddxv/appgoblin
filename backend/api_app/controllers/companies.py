@@ -104,6 +104,8 @@ TREND_PLATFORM_MAP = {1: "android", 2: "ios"}
 TREND_TAG_SOURCE_ORDER = {"sdk": 0, "api_call": 1, "app_ads_direct": 2}
 COMPANY_APP_CHANGES_LIMIT = 50
 COMPANY_APP_CHANGE_TAG_SOURCES = ("sdk", "api_call", "app_ads_direct")
+COMPANY_APP_CHANGE_SDK_API_TAG_SOURCES = ("sdk", "api_call")
+COMPANY_APP_CHANGE_ADSTXT_TAG_SOURCES = ("app_ads_direct",)
 COMPANY_APP_CHANGE_PERIOD_RE = re.compile(r"(?P<year>\d{4})-?Q(?P<quarter>[1-4])")
 
 
@@ -2033,7 +2035,7 @@ class CompaniesController(Controller):
         year: int | None = None,
         quarter: int | None = None,
     ) -> CompanyAppChangesOverview:
-        """Return recently added apps for a company, capped for frontend rendering."""
+        """Return recently added apps (SDK + API-call signals only)."""
         start = time.perf_counter() * 1000
         payload = build_company_app_changes_payload(
             state=state,
@@ -2041,6 +2043,7 @@ class CompaniesController(Controller):
             status="added",
             year=year,
             quarter=quarter,
+            tag_sources=COMPANY_APP_CHANGE_SDK_API_TAG_SOURCES,
         )
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(f"GET /api/companies/{company_domain}/apps-added took {duration}ms")
@@ -2054,10 +2057,7 @@ class CompaniesController(Controller):
         year: int | None = None,
         quarter: int | None = None,
     ) -> CompanyAppChangesOverview:
-        """Return recently lost apps for a company, capped for frontend rendering.
-
-        SDK, API-call and app-ads.txt DIRECT signals are all used for churn data.
-        """
+        """Return recently lost apps (SDK + API-call signals only)."""
         start = time.perf_counter() * 1000
         payload = build_company_app_changes_payload(
             state=state,
@@ -2065,10 +2065,54 @@ class CompaniesController(Controller):
             status="removed",
             year=year,
             quarter=quarter,
-            tag_sources=COMPANY_APP_CHANGE_TAG_SOURCES,
+            tag_sources=COMPANY_APP_CHANGE_SDK_API_TAG_SOURCES,
         )
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(f"GET /api/companies/{company_domain}/apps-lost took {duration}ms")
+        return payload
+
+    @get(path="/companies/{company_domain:str}/apps-added-adstxt", cache=86400)
+    async def company_apps_added_adstxt(
+        self: Self,
+        state: State,
+        company_domain: str,
+        year: int | None = None,
+        quarter: int | None = None,
+    ) -> CompanyAppChangesOverview:
+        """Return recently added apps (app-ads.txt direct signals only)."""
+        start = time.perf_counter() * 1000
+        payload = build_company_app_changes_payload(
+            state=state,
+            company_domain=company_domain,
+            status="added",
+            year=year,
+            quarter=quarter,
+            tag_sources=COMPANY_APP_CHANGE_ADSTXT_TAG_SOURCES,
+        )
+        duration = round((time.perf_counter() * 1000 - start), 2)
+        logger.info(f"GET /api/companies/{company_domain}/apps-added-adstxt took {duration}ms")
+        return payload
+
+    @get(path="/companies/{company_domain:str}/apps-lost-adstxt", cache=86400)
+    async def company_apps_lost_adstxt(
+        self: Self,
+        state: State,
+        company_domain: str,
+        year: int | None = None,
+        quarter: int | None = None,
+    ) -> CompanyAppChangesOverview:
+        """Return recently lost apps (app-ads.txt direct signals only)."""
+        start = time.perf_counter() * 1000
+        payload = build_company_app_changes_payload(
+            state=state,
+            company_domain=company_domain,
+            status="removed",
+            year=year,
+            quarter=quarter,
+            tag_sources=COMPANY_APP_CHANGE_ADSTXT_TAG_SOURCES,
+        )
+        duration = round((time.perf_counter() * 1000 - start), 2)
+        logger.info(f"GET /api/companies/{company_domain}/apps-lost-adstxt took {duration}ms")
         return payload
 
     @get(path="/companies/{company_domain:str}/trends", cache=86400)
