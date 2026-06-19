@@ -30,7 +30,7 @@
 		label: string;
 	};
 
-	type ViewMode = 'auto' | 'sdk' | 'ads' | 'both';
+	type ViewMode = 'auto' | 'sdk' | 'ads' | 'both' | 'api';
 
 	type DataTableProps<CompaniesOverviewEntries, TValue> = {
 		data: CompaniesOverviewEntries[];
@@ -43,7 +43,7 @@
 	let columnFilters = $state<ColumnFiltersState>([]);
 
 	let globalFilter = $state<string>('');
-	let dataMetric = $state<MetricValue>('market_share');
+	let dataMetric = $state<MetricValue>('app_count');
 
 	let {
 		data,
@@ -53,155 +53,129 @@
 
 	import { page } from '$app/state';
 
-	const columns = genericColumns([
-		{
-			title: 'Tracking',
-			accessorKey: 'percent_open_source',
-			isSortable: true
-		},
-		{
-			title: 'Servers',
-			accessorKey: 'api_ip_resolved_country',
-			isSortable: true
-		},
-		{
-			title: 'Company',
-			accessorKey: 'company_name',
-			isSortable: true
-		},
-		{
-			title: 'Parent Company',
-			accessorKey: 'parent_company_name',
-			isSortable: true
-		},
-		{
-			title: 'Total Apps',
-			accessorKey: 'total_app_count',
-			isSortable: true
-		},
-		{
-			title: 'SDK Android',
-			accessorKey: 'google_sdk_app_count',
-			isSortable: true
-		},
-		{
-			title: 'SDK iOS',
-			accessorKey: 'apple_sdk_app_count',
-			isSortable: true
-		},
-		{
-			title: 'API Android',
-			accessorKey: 'google_api_call_app_count',
-			isSortable: true
-		},
-		{
-			title: 'API iOS',
-			accessorKey: 'apple_api_call_app_count',
-			isSortable: true
-		},
-		{
-			title: 'Direct Android',
-			accessorKey: 'google_app_ads_direct_app_count',
-			isSortable: true
-		},
-		{
-			title: 'Direct iOS',
-			accessorKey: 'apple_app_ads_direct_app_count',
-			isSortable: true
-		},
-		{
-			title: 'Reseller Android',
-			accessorKey: 'google_app_ads_reseller_app_count',
-			isSortable: true
-		},
-		{
-			title: 'Reseller iOS',
-			accessorKey: 'apple_app_ads_reseller_app_count',
-			isSortable: true
-		},
-		// ### SDK Stats
-		{
-			title: 'SDK Android',
-			accessorKey: 'google_sdk_installs_d30',
-			isSortable: true
-		},
-		{
-			title: 'SDK iOS',
-			accessorKey: 'apple_sdk_installs_d30',
-			isSortable: true
-		},
-		{
-			title: 'SDK Android',
-			accessorKey: 'google_sdk_percentage',
-			isSortable: true
-		},
-		{
-			title: 'SDK iOS',
-			accessorKey: 'apple_sdk_percentage',
-			isSortable: true
-		},
-		// ### Direct Stats
-		{
-			title: 'Direct Android',
-			accessorKey: 'google_app_ads_direct_installs_d30',
-			isSortable: true
-		},
-		{
-			title: 'Direct iOS',
-			accessorKey: 'apple_app_ads_direct_installs_d30',
-			isSortable: true
-		},
-		{
-			title: 'Direct Android',
-			accessorKey: 'google_app_ads_direct_percentage',
-			isSortable: true
-		},
-		{
-			title: 'Direct iOS',
-			accessorKey: 'apple_app_ads_direct_percentage',
-			isSortable: true
-		},
-		{
-			title: 'SDK Android',
-			accessorKey: 'google_sdk_latest_pct_market_share_change',
-			isSortable: true
-		},
-		{
-			title: 'SDK iOS',
-			accessorKey: 'apple_sdk_latest_pct_market_share_change',
-			isSortable: true
-		},
-		{
-			title: 'Direct Android',
-			accessorKey: 'google_app_ads_direct_latest_pct_market_share_change',
-			isSortable: true
-		},
-		{
-			title: 'Direct iOS',
-			accessorKey: 'apple_app_ads_direct_latest_pct_market_share_change',
-			isSortable: true
-		},
-		{
-			title: 'SDK Android',
-			accessorKey: 'google_sdk_latest_apps_lost',
-			isSortable: true
-		},
-		{
-			title: 'SDK iOS',
-			accessorKey: 'apple_sdk_latest_apps_lost',
-			isSortable: true
-		},
-		{
-			title: 'Direct Android',
-			accessorKey: 'google_app_ads_direct_latest_apps_lost',
-			isSortable: true
-		},
-		{
-			title: 'Direct iOS',
-			accessorKey: 'apple_app_ads_direct_latest_apps_lost',
-			isSortable: true
+	// ===== View mode resolution =====
+	let resolvedViewMode = $derived.by<ViewMode>(() => {
+		if (viewMode !== 'auto') {
+			return viewMode;
 		}
-	]);
+		if (!page.params.type) {
+			return 'both';
+		}
+		if (page.params.type == 'ad-networks') return 'ads';
+		if (page.params.type == 'app-publishers') return 'api';
+		return 'sdk';
+	});
+	let showsSdkColumns = $derived(resolvedViewMode !== 'ads' && resolvedViewMode !== 'api');
+	let showsApiColumns = $derived(resolvedViewMode === 'api');
+	let showsAdsColumns = $derived(resolvedViewMode !== 'sdk');
+	let isAdsPage = $derived(resolvedViewMode === 'ads');
+
+	// ===== Dynamic column definitions =====
+	let columns = $derived.by<ReturnType<typeof genericColumns>>(() => {
+		// In app-publishers mode: show per-store app counts + per-store installs
+		if (showsApiColumns) {
+			return genericColumns([
+				{ title: 'Tracking', accessorKey: 'percent_open_source', isSortable: true },
+				{ title: 'Servers', accessorKey: 'api_ip_resolved_country', isSortable: true },
+				{ title: 'Company', accessorKey: 'company_name', isSortable: true },
+				{ title: 'Parent Company', accessorKey: 'parent_company_name', isSortable: true },
+				{ title: 'Total Apps', accessorKey: 'total_app_count', isSortable: true },
+				{ title: 'Android Apps', accessorKey: 'google_app_count', isSortable: true },
+				{ title: 'iOS Apps', accessorKey: 'apple_app_count', isSortable: true },
+				{ title: 'Total Installs (30d)', accessorKey: 'installs_d30', isSortable: true },
+				{ title: 'Android Installs', accessorKey: 'google_installs_d30', isSortable: true },
+				{ title: 'iOS Installs', accessorKey: 'apple_installs_d30', isSortable: true }
+			]);
+		}
+
+		const sdkMetricColDefs = [
+			{ title: 'SDK Android', accessorKey: 'google_sdk_app_count', isSortable: true },
+			{ title: 'SDK iOS', accessorKey: 'apple_sdk_app_count', isSortable: true },
+			{ title: 'SDK Android', accessorKey: 'google_sdk_installs_d30', isSortable: true },
+			{ title: 'SDK iOS', accessorKey: 'apple_sdk_installs_d30', isSortable: true },
+			{ title: 'SDK Android', accessorKey: 'google_sdk_percentage', isSortable: true },
+			{ title: 'SDK iOS', accessorKey: 'apple_sdk_percentage', isSortable: true },
+			{
+				title: 'SDK Android',
+				accessorKey: 'google_sdk_latest_pct_market_share_change',
+				isSortable: true
+			},
+			{
+				title: 'SDK iOS',
+				accessorKey: 'apple_sdk_latest_pct_market_share_change',
+				isSortable: true
+			},
+			{ title: 'SDK Android', accessorKey: 'google_sdk_latest_apps_lost', isSortable: true },
+			{ title: 'SDK iOS', accessorKey: 'apple_sdk_latest_apps_lost', isSortable: true }
+		];
+		const apiColDefs = [
+			{ title: 'API Android', accessorKey: 'google_api_call_app_count', isSortable: true },
+			{ title: 'API iOS', accessorKey: 'apple_api_call_app_count', isSortable: true }
+		];
+
+		const rawCols = [
+			{ title: 'Tracking', accessorKey: 'percent_open_source', isSortable: true },
+			{ title: 'Servers', accessorKey: 'api_ip_resolved_country', isSortable: true },
+			{ title: 'Company', accessorKey: 'company_name', isSortable: true },
+			{ title: 'Parent Company', accessorKey: 'parent_company_name', isSortable: true },
+			{ title: 'Total Apps', accessorKey: 'total_app_count', isSortable: true },
+			// App counts
+			...sdkMetricColDefs.filter((c) => c.accessorKey.endsWith('_app_count')),
+			...apiColDefs,
+			// Ad counts
+			{ title: 'Direct Android', accessorKey: 'google_app_ads_direct_app_count', isSortable: true },
+			{ title: 'Direct iOS', accessorKey: 'apple_app_ads_direct_app_count', isSortable: true },
+			{
+				title: 'Reseller Android',
+				accessorKey: 'google_app_ads_reseller_app_count',
+				isSortable: true
+			},
+			{ title: 'Reseller iOS', accessorKey: 'apple_app_ads_reseller_app_count', isSortable: true },
+			// Metric columns — installs + market share
+			...sdkMetricColDefs.filter(
+				(c) => c.accessorKey.includes('installs_d30') || c.accessorKey.includes('percentage')
+			),
+			{
+				title: 'Direct Android',
+				accessorKey: 'google_app_ads_direct_installs_d30',
+				isSortable: true
+			},
+			{ title: 'Direct iOS', accessorKey: 'apple_app_ads_direct_installs_d30', isSortable: true },
+			{
+				title: 'Direct Android',
+				accessorKey: 'google_app_ads_direct_percentage',
+				isSortable: true
+			},
+			{ title: 'Direct iOS', accessorKey: 'apple_app_ads_direct_percentage', isSortable: true },
+			// Trend columns
+			...sdkMetricColDefs.filter(
+				(c) =>
+					c.accessorKey.includes('latest_pct_market_share_change') ||
+					c.accessorKey.includes('latest_apps_lost')
+			),
+			{
+				title: 'Direct Android',
+				accessorKey: 'google_app_ads_direct_latest_pct_market_share_change',
+				isSortable: true
+			},
+			{
+				title: 'Direct iOS',
+				accessorKey: 'apple_app_ads_direct_latest_pct_market_share_change',
+				isSortable: true
+			},
+			{
+				title: 'Direct Android',
+				accessorKey: 'google_app_ads_direct_latest_apps_lost',
+				isSortable: true
+			},
+			{
+				title: 'Direct iOS',
+				accessorKey: 'apple_app_ads_direct_latest_apps_lost',
+				isSortable: true
+			}
+		];
+		return genericColumns(rawCols);
+	});
 
 	const globalFilterFn = (row: any, columnId: string, filterValue: string) => {
 		const name = row.original.company_name?.toLowerCase() ?? '';
@@ -221,7 +195,9 @@
 		get data() {
 			return data;
 		},
-		columns,
+		get columns() {
+			return columns;
+		},
 		state: {
 			get pagination() {
 				return pagination;
@@ -316,19 +292,6 @@
 		}
 		return formatNumber(num);
 	}
-
-	let resolvedViewMode = $derived.by<ViewMode>(() => {
-		if (viewMode !== 'auto') {
-			return viewMode;
-		}
-		if (!page.params.type) {
-			return 'both';
-		}
-		return page.params.type == 'ad-networks' ? 'ads' : 'sdk';
-	});
-	let showsSdkColumns = $derived(resolvedViewMode !== 'ads');
-	let showsAdsColumns = $derived(resolvedViewMode !== 'sdk');
-	let isAdsPage = $derived(resolvedViewMode === 'ads');
 	let hasCategorySelected = $derived(Boolean(page.params.category));
 	const QOQ_METRICS: MetricValue[] = ['qoq_share', 'apps_lost'];
 	const BASE_METRIC_OPTIONS: MetricOption[] = [
@@ -371,19 +334,43 @@
 		let headerHasShareChange = header.column.id.includes('latest_pct_market_share_change');
 		let headerHasAppsLost = header.column.id.includes('latest_apps_lost');
 		let headerIsAds = header.column.id.includes('direct') || header.column.id.includes('reseller');
+		if (showsApiColumns) {
+			// Basic columns always visible
+			let alwaysCols = [
+				'percent_open_source',
+				'api_ip_resolved_country',
+				'company_name',
+				'parent_company_name'
+			];
+			if (alwaysCols.includes(header.column.id)) return true;
+			// App count columns when metric is app_count
+			if (dataMetric === 'app_count') {
+				let appCountCols = ['total_app_count', 'google_app_count', 'apple_app_count'];
+				return appCountCols.includes(header.column.id);
+			}
+			// Install columns when metric is installs
+			if (dataMetric === 'installs') {
+				let installCols = ['installs_d30', 'google_installs_d30', 'apple_installs_d30'];
+				return installCols.includes(header.column.id);
+			}
+			return false;
+		}
+
+		let headerIsApi = header.column.id.includes('api_call');
+		let headerIsSdk = header.column.id.includes('_sdk_');
 
 		if (dataMetric === 'app_count' && headerHasAppCount) {
-			return headerIsAds ? showsAdsColumns : showsSdkColumns;
+			return true;
 		}
 
 		if (dataMetric === 'installs' && headerHasInstall) {
-			return headerIsAds ? showsAdsColumns : showsSdkColumns;
+			return true;
 		} else if (dataMetric === 'market_share' && headerHasPercent) {
-			return headerIsAds ? showsAdsColumns : showsSdkColumns;
+			return true;
 		} else if (dataMetric === 'qoq_share' && headerHasShareChange) {
-			return headerIsAds ? showsAdsColumns : showsSdkColumns;
+			return true;
 		} else if (dataMetric === 'apps_lost' && headerHasAppsLost) {
-			return headerIsAds ? showsAdsColumns : showsSdkColumns;
+			return true;
 		}
 		return false;
 	}
@@ -393,7 +380,7 @@
 			if (resolvedViewMode === 'both') {
 				return 'w-[24%]';
 			}
-			if (isAdsPage) {
+			if (isAdsPage || showsApiColumns) {
 				return 'w-[30%]';
 			} else {
 				return 'w-[36%]';
@@ -438,9 +425,14 @@
 				class="select select-sm preset-outlined-primary-100-900 w-full max-w-sm p-1"
 				bind:value={dataMetric}
 			>
-				{#each metricOptions as option (option.value)}
-					<option value={option.value}>{option.label}</option>
-				{/each}
+				{#if showsApiColumns}
+					<option value="app_count">App Count</option>
+					<option value="installs">Installs (Last 30 Days)</option>
+				{:else}
+					{#each metricOptions as option (option.value)}
+						<option value={option.value}>{option.label}</option>
+					{/each}
+				{/if}
 			</select>
 			{#if hasCategorySelected}
 				<p class="px-1 text-xs text-surface-500-400">
@@ -582,7 +574,40 @@
 								<span class="text-xs text-surface-500-400">-</span>
 							{/if}
 						</td>
-						{#if dataMetric == 'app_count'}
+						{#if showsApiColumns && dataMetric == 'app_count'}
+							<td class="table-cell-fit">
+								<p class="text-xs md:text-sm">
+									{formatOptionalNumber(row.original.total_app_count)}
+								</p>
+							</td>
+							<td class="table-cell-fit">
+								<p class="text-xs md:text-sm">
+									{formatOptionalNumber(row.original.google_app_count)}
+								</p>
+							</td>
+							<td class="table-cell-fit">
+								<p class="text-xs md:text-sm">
+									{formatOptionalNumber(row.original.apple_app_count)}
+								</p>
+							</td>
+						{/if}
+						{#if showsApiColumns && dataMetric == 'installs'}
+							<td class="table-cell-fit">
+								<p class="text-xs md:text-sm">{formatNumber(row.original.installs_d30 ?? 0)}</p>
+							</td>
+							<td class="table-cell-fit">
+								<p class="text-xs md:text-sm">
+									{formatNumber(row.original.google_installs_d30 ?? 0)}
+								</p>
+							</td>
+							<td class="table-cell-fit">
+								<p class="text-xs md:text-sm">
+									{formatNumber(row.original.apple_installs_d30 ?? 0)}
+								</p>
+							</td>
+						{/if}
+
+						{#if !showsApiColumns && dataMetric == 'app_count'}
 							<td class="table-cell-fit">
 								<p class="text-xs md:text-sm">
 									{formatOptionalNumber(row.original.total_app_count)}
@@ -634,7 +659,7 @@
 							{/if}
 						{/if}
 
-						{#if dataMetric == 'installs'}
+						{#if !showsApiColumns && dataMetric == 'installs'}
 							{#if showsSdkColumns}
 								<td class="table-cell-fit">
 									<p class="text-xs md:text-sm">
@@ -662,7 +687,7 @@
 							{/if}
 						{/if}
 
-						{#if dataMetric == 'market_share'}
+						{#if !showsApiColumns && dataMetric == 'market_share'}
 							{#if showsSdkColumns}
 								<td class="table-cell-fit">
 									<p class="text-xs md:text-sm">
@@ -692,7 +717,7 @@
 							{/if}
 						{/if}
 
-						{#if dataMetric == 'qoq_share'}
+						{#if !showsApiColumns && dataMetric == 'qoq_share'}
 							{#if showsSdkColumns}
 								<td class="table-cell-fit">
 									<p class="text-xs md:text-sm">
@@ -728,7 +753,7 @@
 							{/if}
 						{/if}
 
-						{#if dataMetric == 'apps_lost'}
+						{#if !showsApiColumns && dataMetric == 'apps_lost'}
 							{#if showsSdkColumns}
 								<td class="table-cell-fit">
 									<p class="text-xs md:text-sm">

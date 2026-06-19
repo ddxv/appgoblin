@@ -270,6 +270,7 @@ class CompanyTabIndicators:
     logo_url: str | None = None
     parent_company_id: int | None = None
     parent_domain: str | None = None
+    parent_domain_id: int | None = None
 
     # Signal flags from combined_app_companies
     has_sdk_signal: bool = False
@@ -279,10 +280,14 @@ class CompanyTabIndicators:
     has_app_ads_reseller: bool = False
 
     # Effective indicators (child → parent → 0)
+    country: str | None = None
+    country_direct: str | None = None
     creatives_app_count: int = 0
     has_trends: int = 0
-    apps_added_count: int = 0
-    apps_lost_count: int = 0
+    apps_sdk_added_count: int = 0
+    apps_sdk_lost_count: int = 0
+    apps_adstxt_direct_added_count: int = 0
+    apps_adstxt_direct_lost_count: int = 0
     sdk_count: int = 0
     mediation_adapter_count: int = 0
     adstxt_direct_app_count: int = 0
@@ -290,8 +295,10 @@ class CompanyTabIndicators:
     # Direct-only indicators
     creatives_app_count_direct: int = 0
     has_trends_direct: int = 0
-    apps_added_count_direct: int = 0
-    apps_lost_count_direct: int = 0
+    apps_sdk_added_count_direct: int = 0
+    apps_sdk_lost_count_direct: int = 0
+    apps_adstxt_direct_added_count_direct: int = 0
+    apps_adstxt_direct_lost_count_direct: int = 0
     sdk_count_direct: int = 0
     mediation_adapter_count_direct: int = 0
 
@@ -385,15 +392,15 @@ class CategoryCompaniesStats:
     sdk_android_total_apps: int = 0
     sdk_android_installs_d30: int = 0
     sdk_ios_installs_d30: int = 0
+    android_total_apps: int = 0
+    ios_total_apps: int = 0
+    android_total_companies: int = 0
+    ios_total_companies: int = 0
     api_total_apps: int = 0
     api_android_total_apps: int = 0
     api_ios_total_apps: int = 0
     api_android_installs_d30: int = 0
     adstxt_direct_total_apps: int = 0
-    adstxt_direct_android_total_apps: int = 0
-    adstxt_direct_ios_total_apps: int = 0
-    adstxt_direct_android_installs_d30: int = 0
-    adstxt_reseller_total_apps: int = 0
     adstxt_reseller_android_total_apps: int = 0
     adstxt_reseller_ios_total_apps: int = 0
     adstxt_reseller_android_installs_d30: int = 0

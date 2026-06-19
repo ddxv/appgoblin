@@ -5,10 +5,9 @@
 
 	import ExternalLink from '$lib/ExternalLink.svelte';
 	import CompanyButton from '$lib/CompanyButton.svelte';
-	import FollowToggleButton from '$lib/components/follows/FollowToggleButton.svelte';
 	import MainContent from '$lib/MainContent.svelte';
 	import CompanyTypesTabs from '$lib/utils/CompanyTypesTabs.svelte';
-	import Crown from 'lucide-svelte/icons/crown';
+	import CompanyNavTabs from '$lib/utils/CompanyNavTabs.svelte';
 
 	let { children, data }: { children: any; data: CompanyLayoutDetails } = $props();
 	const domain = page.params.domain ?? '';
@@ -32,6 +31,8 @@
 	function getSectionSlug(pathname: string) {
 		if (pathname.includes('/app-adstxt/publisher/')) return 'app-adstxt-publisher';
 		if (pathname.includes('/app-adstxt')) return 'app-adstxt';
+		if (pathname.includes('/apps-added-adstxt')) return 'apps-added-adstxt';
+		if (pathname.includes('/apps-lost-adstxt')) return 'apps-lost-adstxt';
 		if (pathname.includes('/apps-added')) return 'apps-added';
 		if (pathname.includes('/apps-lost')) return 'apps-lost';
 		if (pathname.includes('/creatives')) return 'creatives';
@@ -42,60 +43,10 @@
 		return 'overview';
 	}
 
-	function isSectionTabActive(tabSlug: string): boolean {
-		if (tabSlug === 'app-adstxt') {
-			return sectionSlug === 'app-adstxt' || sectionSlug === 'app-adstxt-publisher';
-		}
-		return sectionSlug === tabSlug;
-	}
-
-	function sectionTabClass(tabSlug: string): string {
-		const selectedClass =
-			'bg-secondary-100-900 text-surface-900-50 border-secondary-300-700 shadow-sm';
-		const unselectedClass =
-			'border-surface-200-800 text-surface-700-300 hover:border-secondary-300-700 hover:bg-surface-100-900';
-		const parentOnlyClass = 'opacity-50';
-		const isActive = isSectionTabActive(tabSlug);
-		let cls = isActive ? selectedClass : unselectedClass;
-		if (!isActive && isParentOnlyData(tabSlug)) {
-			cls += ` ${parentOnlyClass}`;
-		}
-		return cls;
-	}
-
-	function isParentOnlyData(tabSlug: string): boolean {
-		if (!tabInd) return false;
-		switch (tabSlug) {
-			case 'creatives':
-				return tabInd.creatives_app_count > 0 && tabInd.creatives_app_count_direct === 0;
-			case 'trends':
-				return tabInd.has_trends > 0 && tabInd.has_trends_direct === 0;
-			case 'apps-added':
-			case 'apps-lost':
-				return (
-					(tabInd.apps_added_count > 0 || tabInd.apps_lost_count > 0) &&
-					tabInd.apps_added_count_direct === 0 &&
-					tabInd.apps_lost_count_direct === 0
-				);
-			case 'sdks':
-				return tabInd.sdk_count > 0 && tabInd.sdk_count_direct === 0;
-			case 'mediation':
-				return tabInd.mediation_adapter_count > 0 && tabInd.mediation_adapter_count_direct === 0;
-			case 'app-adstxt':
-				return false;
-			default:
-				return false;
-		}
-	}
-
 	let sectionSlug = $derived(getSectionSlug(page.url.pathname));
 	let companyDomain = $derived(
 		data.companyTree?.queried_domain || data.companyTree?.company_domain || domain
 	);
-	let tabInd = $derived(data.tabIndicators);
-	let showCreativesTab = $derived(Boolean(tabInd?.creatives_app_count));
-	let showTrendsTab = $derived(Boolean(tabInd?.has_trends));
-	let showMediationTab = $derived(Boolean(tabInd?.mediation_adapter_count));
 	let companyDisplayName = $derived(
 		data.companyTree?.company_name ||
 			data.companyTree?.company_domain ||
@@ -110,6 +61,17 @@
 			data.companyTree.parent.company_domain !== data.companyTree.company_domain
 		)
 	);
+	let isParentCompany = $derived(
+		Boolean(
+			data.companyTree &&
+			!data.companyTree.parent &&
+			!data.companyTree.is_secondary_domain &&
+			!data.companyTree.is_orphan
+		)
+	);
+	let isSecondaryDomain = $derived(Boolean(data.companyTree?.is_secondary_domain));
+	let isStubDomain = $derived(Boolean(data.companyTree?.is_orphan));
+
 	let selectedCategoryName = $derived(
 		categoryName && categoryName.trim() ? categoryName : 'All Apps'
 	);
@@ -125,6 +87,10 @@
 				return `${companyDisplayName} Recently Added Client Apps | AppGoblin`;
 			case 'apps-lost':
 				return `${companyDisplayName} Recently Lost Client Apps | AppGoblin`;
+			case 'apps-added-adstxt':
+				return `${companyDisplayName} Recently Added App-Ads.txt Apps | AppGoblin`;
+			case 'apps-lost-adstxt':
+				return `${companyDisplayName} Recently Lost App-Ads.txt Apps | AppGoblin`;
 			case 'trends':
 				return `${companyDisplayName} Quarterly Market Share Trends | AppGoblin`;
 			case 'sdks':
@@ -147,9 +113,13 @@
 	let pageDescription = $derived.by(() => {
 		switch (sectionSlug) {
 			case 'apps-added':
-				return `Review the latest Android and iOS apps that recently added ${companyDisplayName} across SDK, API-call, and app-ads.txt signals.`;
+				return `Review the latest Android and iOS apps that recently added ${companyDisplayName} via verified SDK and API-call signals.`;
 			case 'apps-lost':
-				return `Review the latest Android and iOS apps that recently removed ${companyDisplayName} across SDK, API-call, and app-ads.txt signals.`;
+				return `Review the latest Android and iOS apps that recently removed ${companyDisplayName} via verified SDK and API-call signals.`;
+			case 'apps-added-adstxt':
+				return `Review the latest Android and iOS apps with new app-ads.txt DIRECT listings for ${companyDisplayName}.`;
+			case 'apps-lost-adstxt':
+				return `Review the latest Android and iOS apps where ${companyDisplayName} lost their app-ads.txt DIRECT listing.`;
 			case 'trends':
 				return `Analyze quarterly iOS and Android market share trends for ${companyDisplayName}, split by SDK/API and app-ads.txt direct signals.`;
 			case 'sdks':
@@ -232,9 +202,24 @@
 		};
 	});
 
-	let titleClass = 'h1 text-2xl md:text-3xl font-bold ';
-	let titleSecondaryClass = 'text-xl font-bold  mr-2';
-	let titleDividerClass = 'md:h-8 w-px bg-gray-300 mx-2';
+	function sectionDisplayName(slug: string): string {
+		const names: Record<string, string> = {
+			overview: 'Overview',
+			'apps-added': 'Apps Added',
+			'apps-lost': 'Apps Lost',
+			'apps-added-adstxt': 'Apps Added (ads.txt)',
+			'apps-lost-adstxt': 'Apps Lost (ads.txt)',
+			creatives: 'Creatives',
+			trends: 'Trends',
+			sdks: 'SDKs',
+			mediation: 'Mediation Adapters',
+			'app-adstxt': 'App-ads.txt',
+			'app-adstxt-publisher': 'Publisher',
+			'data-exports': 'Full Client App CSVs'
+		};
+		return names[slug] ?? slug.replace(/-/g, ' ');
+	}
+
 	let customCrumbs = $derived.by((): Crumb<MyCrumbMetadata>[] => {
 		const primaryType = data.companyDetails?.company_types?.[0];
 		const typeName = primaryType
@@ -245,88 +230,14 @@
 		if (typeName && primaryType) {
 			crumbs.push({ title: typeName, url: `/companies/types/${primaryType}` });
 		}
-		crumbs.push({ title: companyDisplayName });
+		crumbs.push({ title: companyDisplayName, url: `/companies/${companyDomain}` });
+		if (sectionSlug !== 'overview') {
+			crumbs.push({
+				title: sectionDisplayName(sectionSlug)
+			});
+		}
 		return crumbs;
 	});
-	let hasAdstxt = $derived(Boolean(tabInd?.adstxt_direct_app_count));
-	let hasAppsAdded = $derived(Boolean(tabInd?.apps_added_count));
-	let hasAppsLost = $derived(Boolean(tabInd?.apps_lost_count));
-
-	function formatCount(n: number | undefined | null): string {
-		if (n == null || n === 0) return '';
-		if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
-		if (n >= 1_000) return `${(n / 1_000).toFixed(1)}k`;
-		return String(n);
-	}
-
-	let sectionLinks = $derived([
-		{
-			slug: 'overview',
-			label: `${companyDisplayName} Apps Overview`,
-			href: `/companies/${companyDomain}`,
-			visible: true,
-			count: null as number | null
-		},
-		{
-			slug: 'creatives',
-			label: 'Creatives',
-			href: `/companies/${companyDomain}/creatives`,
-			visible: showCreativesTab,
-			count: tabInd?.creatives_app_count ?? null
-		},
-		{
-			slug: 'trends',
-			label: 'Trends',
-			href: `/companies/${companyDomain}/trends`,
-			visible: showTrendsTab,
-			count: null
-		},
-		{
-			slug: 'apps-added',
-			label: 'Apps Added',
-			href: `/companies/${companyDomain}/apps-added`,
-			visible: hasAppsAdded,
-			b2b: true,
-			count: tabInd?.apps_added_count ?? null
-		},
-		{
-			slug: 'apps-lost',
-			label: 'Apps Lost',
-			href: `/companies/${companyDomain}/apps-lost`,
-			visible: hasAppsLost,
-			b2b: true,
-			count: tabInd?.apps_lost_count ?? null
-		},
-		{
-			slug: 'sdks',
-			label: 'SDKs',
-			href: `/companies/${companyDomain}/sdks`,
-			visible: Boolean(tabInd?.sdk_count),
-			count: null
-		},
-		{
-			slug: 'mediation',
-			label: 'Mediation Adapters',
-			href: `/companies/${companyDomain}/mediation`,
-			visible: showMediationTab,
-			count: tabInd?.mediation_adapter_count ?? null
-		},
-		{
-			slug: 'app-adstxt',
-			label: 'App-ads.txt',
-			href: `/companies/${companyDomain}/app-adstxt`,
-			visible: hasAdstxt,
-			count: tabInd?.adstxt_direct_app_count ?? null
-		},
-		{
-			slug: 'data-exports',
-			label: 'Full Client App CSVs',
-			href: `/companies/${companyDomain}/data-exports`,
-			visible: hasAdstxt || Boolean(tabInd?.sdk_count),
-			b2b: true,
-			count: null as number | null
-		}
-	]);
 </script>
 
 <svelte:head>
@@ -362,42 +273,7 @@
 {/if}
 
 <div class="-ml-1 grid grid-cols-1 gap-6 md:-ml-4 md:grid-cols-[minmax(220px,260px)_1fr]">
-	<aside class="md:sticky md:top-4 md:self-start">
-		<div class="rounded border border-surface-200-800 bg-surface-100-900/20 p-3 md:p-4">
-			<div class="mb-3">
-				<h2 class="text-sm font-semibold uppercase tracking-[0.14em] opacity-70">Sections</h2>
-				<p class="mt-1 text-xs text-surface-500">Browse company intelligence views.</p>
-			</div>
-			<nav class="flex flex-col gap-2" aria-label="Company sections">
-				{#each sectionLinks.filter((link) => link.visible) as link (link.slug)}
-					<a
-						href={link.href}
-						class={`rounded border px-3 py-2.5 text-sm font-medium transition ${sectionTabClass(link.slug)}`}
-						aria-current={isSectionTabActive(link.slug) ? 'page' : undefined}
-					>
-						<span class="flex items-center justify-between gap-2">
-							<span>
-								{#if link.b2b}
-									<Crown
-										class="inline w-3 h-3 mr-0.5 -mt-0.5 text-primary-900-100"
-										aria-hidden="true"
-									/>
-								{/if}
-								{link.label}
-							</span>
-							{#if link.count}
-								<span
-									class="inline-flex items-center justify-center rounded-full bg-secondary-100-800 px-2 py-0.5 text-xs font-semibold tabular-nums text-secondary-800-200"
-								>
-									{formatCount(link.count)}
-								</span>
-							{/if}
-						</span>
-					</a>
-				{/each}
-			</nav>
-		</div>
-	</aside>
+	<CompanyNavTabs tabIndicators={data.tabIndicators} {companyDomain} {companyDisplayName} />
 
 	<MainContent class="min-w-0 pl-1 md:pl-4">
 		<div class="mb-4">
@@ -429,109 +305,164 @@
 			</Breadcrumbs>
 		</div>
 
-		<div class="flex items-center mb-2">
+		<div class="mb-2">
 			{#await data.companyTree}
 				<span class="text-lg">Loading...</span>
 			{:then myTree}
 				{#if typeof myTree == 'string'}
-					<h1 class={titleClass}>{domain}</h1>
+					<h1 class="h1 text-2xl md:text-3xl font-bold">{domain}</h1>
 					<p class="text-red-500">Failed to load company tree.</p>
 				{:else if myTree}
-					<div class="flex flex-col md:flex-row items-left md:items-center">
+					<div class="flex items-start gap-3 md:gap-5">
+						<!-- Logo -->
 						{#if page.url.pathname.includes('adstxt/publisher') && myTree.parent}
-							<h1 class={titleClass}>
-								<a href={`/companies/${myTree.parent.company_domain}`}
-									>{myTree.parent.company_name || myTree.parent.company_domain}</a
-								>
-							</h1>
-						{:else if myTree.company_domain || myTree.queried_domain}
-							{#if myTree.company_logo_url}
-								<img
-									src="https://media.appgoblin.info/{myTree.company_logo_url}"
-									alt={myTree.company_logo_url}
-									class="w-20 h-20 rounded-sm mr-2 md:mr-8"
-								/>
-							{:else if myTree.parent?.company_logo_url}
+							{#if myTree.parent.company_logo_url}
 								<img
 									src="https://media.appgoblin.info/{myTree.parent.company_logo_url}"
 									alt={myTree.parent.company_logo_url}
-									class="w-20 h-20 rounded-sm mr-2 md:mr-8"
+									class="w-14 h-14 rounded-sm shrink-0"
 								/>
 							{:else}
 								<img
 									src="/default_company_logo.png"
 									alt="Default Company Logo"
-									class="w-20 h-20 rounded-sm mr-2 md:mr-8"
+									class="w-14 h-14 rounded-sm shrink-0"
 								/>
 							{/if}
-
-							{#if !myTree.parent && !myTree.is_secondary_domain && !myTree.is_orphan}
-								<!-- IS PARENT COMPANY -->
-								<h1 class={titleClass}>
-									{myTree.company_name ||
-										myTree.company_domain ||
-										myTree.queried_domain}{#if page.params.category}, App Category:
-										{categoryName}{/if}
-								</h1>
-								<div class={titleDividerClass}></div>
-								<ExternalLink domain={myTree.company_domain || myTree.queried_domain} />
-							{:else if myTree.is_secondary_domain}
-								<!-- IS SUB DOMAIN ONLY -->
-								<h1 class={titleClass}>{myTree.queried_domain} / {categoryName}</h1>
-								<div class={titleDividerClass}></div>
-								<ExternalLink domain={myTree.queried_domain} />
-								<div class={titleDividerClass}></div>
-								<span class="flex row items-center">
-									<h2 class={titleSecondaryClass}>Company:</h2>
-									<CompanyButton
-										companyName={myTree.company_name || undefined}
-										companyDomain={myTree.company_domain || myTree.queried_domain}
-										companyLogoUrl={myTree.company_logo_url || undefined}
-									/>
-								</span>
-								{#if hasHigherLevelParent && myTree.parent}
-									<div class={titleDividerClass}></div>
-									<span class="flex row">
-										<h2 class={titleSecondaryClass}>Parent:</h2>
-										<CompanyButton
-											companyName={myTree.parent.company_name}
-											companyDomain={myTree.parent.company_domain}
-											companyLogoUrl={myTree.parent.company_logo_url || undefined}
-										/>
-									</span>
-								{/if}
-							{:else}
-								<!-- REGULAR COMPANY  -->
-								<h1 class={titleClass}>
-									{myTree.company_name || myTree.company_domain || myTree.queried_domain} / {categoryName}
-								</h1>
-								<div class={titleDividerClass}></div>
-								<ExternalLink domain={myTree.company_domain || myTree.queried_domain} />
-								{#if myTree.parent}
-									<div class={titleDividerClass}></div>
-									<!-- HAS PARENT COMPANY -->
-									<span class="flex row">
-										<h2 class={titleSecondaryClass}>Parent Company:</h2>
-										<CompanyButton
-											companyName={myTree.parent.company_name}
-											companyDomain={myTree.parent.company_domain}
-											companyLogoUrl={myTree.parent.company_logo_url || undefined}
-										/>
-									</span>
-								{/if}
-							{/if}
-						{/if}
-					</div>
-					{#if data.companyLookup?.company_id}
-						<div class="mt-2 md:mt-0 md:ml-4">
-							<FollowToggleButton
-								entity="company"
-								label="Company"
-								companyId={data.companyLookup.company_id}
-								initialFollowing={Boolean(data.isFollowingCompany)}
+						{:else if myTree.company_logo_url}
+							<img
+								src="https://media.appgoblin.info/{myTree.company_logo_url}"
+								alt={myTree.company_logo_url}
+								class="w-14 h-14 rounded-sm shrink-0"
 							/>
+						{:else if myTree.parent?.company_logo_url}
+							<img
+								src="https://media.appgoblin.info/{myTree.parent.company_logo_url}"
+								alt={myTree.parent.company_logo_url}
+								class="w-14 h-14 rounded-sm shrink-0"
+							/>
+						{:else}
+							<img
+								src="/default_company_logo.png"
+								alt="Default Company Logo"
+								class="w-14 h-14 rounded-sm shrink-0"
+							/>
+						{/if}
+
+						<!-- Name + Type Badge (Line 1) + Relationship Info (Line 2) -->
+						<div class="min-w-0">
+							<!-- Line 1: Company Name + Type Badge -->
+							<div class="flex flex-wrap items-center gap-2">
+								{#if page.url.pathname.includes('adstxt/publisher') && myTree.parent}
+									<h1 class="h1 text-2xl md:text-3xl font-bold">
+										<a href={`/companies/${myTree.parent.company_domain}`} class="hover:underline"
+											>{myTree.parent.company_name || myTree.parent.company_domain}</a
+										>
+									</h1>
+								{:else if isParentCompany}
+									<h1 class="h1 text-2xl md:text-3xl font-bold">
+										{myTree.company_name || myTree.company_domain || myTree.queried_domain}
+										{#if page.params.category}, App Category: {categoryName}{/if}
+									</h1>
+									<span class="badge preset-filled-secondary-500 text-xs">Parent Company</span>
+								{:else if isSecondaryDomain}
+									<h1 class="h1 text-2xl md:text-3xl font-bold">
+										{myTree.queried_domain}
+										{#if page.params.category}
+											/ {categoryName}{/if}
+									</h1>
+									<span class="badge preset-filled-warning-500-100 text-xs">Secondary Domain</span>
+								{:else if isStubDomain}
+									<h1 class="h1 text-2xl md:text-3xl font-bold">
+										{myTree.queried_domain}
+										{#if page.params.category}
+											/ {categoryName}{/if}
+									</h1>
+									<span class="badge preset-filled-error-900-100 text-xs">Unmapped Domain</span>
+								{:else}
+									<!-- Regular Company -->
+									<h1 class="h1 text-2xl md:text-3xl font-bold">
+										{myTree.company_name || myTree.company_domain || myTree.queried_domain}
+										{#if page.params.category}
+											/ {categoryName}{/if}
+									</h1>
+								{/if}
+							</div>
+
+							<!-- Line 2: External Link + Entity Relationships -->
+							<div class="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1 text-sm">
+								{#if !isSecondaryDomain && (!isStubDomain || page.url.pathname.includes('adstxt/publisher'))}
+									<ExternalLink
+										domain={page.url.pathname.includes('adstxt/publisher') && myTree.parent
+											? myTree.parent.company_domain || myTree.queried_domain
+											: myTree.company_domain || myTree.queried_domain}
+									/>
+								{/if}
+
+								{#if isSecondaryDomain}
+									<span class="flex items-center gap-1.5">
+										<span
+											class="text-surface-600-400 text-[11px] font-medium uppercase tracking-wide"
+										>
+											Belongs to:
+										</span>
+										<CompanyButton
+											companyName={myTree.company_name || undefined}
+											companyDomain={myTree.company_domain || myTree.queried_domain}
+											companyLogoUrl={myTree.company_logo_url || undefined}
+											size="sm"
+										/>
+									</span>
+									{#if hasHigherLevelParent && myTree.parent}
+										<span class="flex items-center gap-1.5">
+											<span
+												class="text-surface-500-400 text-[11px] font-medium uppercase tracking-wide"
+											>
+												Parent:
+											</span>
+											<CompanyButton
+												companyName={myTree.parent.company_name}
+												companyDomain={myTree.parent.company_domain}
+												companyLogoUrl={myTree.parent.company_logo_url || undefined}
+												size="sm"
+											/>
+										</span>
+									{/if}
+									<!-- Secondary domain external link: use the queried domain, placed at end -->
+									<ExternalLink domain={myTree.queried_domain} />
+								{/if}
+
+								{#if !isParentCompany && !isSecondaryDomain && !isStubDomain && myTree.parent}
+									<span class="flex items-center gap-1.5">
+										<span
+											class="text-surface-600-400 text-[11px] font-medium uppercase tracking-wide"
+										>
+											Part of:
+										</span>
+										<CompanyButton
+											companyName={myTree.parent.company_name}
+											companyDomain={myTree.parent.company_domain}
+											companyLogoUrl={myTree.parent.company_logo_url || undefined}
+											size="sm"
+										/>
+									</span>
+								{/if}
+
+								{#if isStubDomain}
+									<div class="flex flex-wrap items-center gap-3 mt-1">
+										<a href="/contact" class="btn preset-tonal-secondary btn-sm">
+											Identify Parent
+										</a>
+										<span class="text-surface-600-400 text-xs">
+											This domain is currently identified as a standalone entity and is not linked
+											to a parent organization in our database. Please contact if you would like
+											this mapped or have information to share.
+										</span>
+									</div>
+								{/if}
+							</div>
 						</div>
-					{/if}
+					</div>
 				{/if}
 			{:catch error}
 				<p class="text-red-500">{error.message}</p>

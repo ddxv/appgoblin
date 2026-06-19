@@ -242,7 +242,11 @@ export interface CompaniesOverviewEntries {
 	parent_company_logo_url?: string | null;
 	api_ip_resolved_country?: string | null;
 	total_app_count?: number | null;
+	google_app_count?: number | null;
+	apple_app_count?: number | null;
 	installs_d30?: number | null;
+	google_installs_d30?: number | null;
+	apple_installs_d30?: number | null;
 	google_sdk_app_count?: number | null;
 	apple_sdk_app_count?: number | null;
 	google_api_call_app_count?: number | null;
@@ -424,6 +428,10 @@ export interface CategoryCompaniesStats {
 	sdk_total_apps: number;
 	sdk_ios_total_apps: number;
 	sdk_android_total_apps: number;
+	android_total_apps: number;
+	ios_total_apps: number;
+	android_total_companies: number;
+	ios_total_companies: number;
 }
 
 export interface CategoryAppStats {
@@ -506,22 +514,29 @@ export interface CompanyTabIndicators {
 	logo_url: string | null;
 	parent_company_id: number | null;
 	parent_domain: string | null;
+	parent_domain_id: number | null;
 	has_sdk_signal: boolean;
 	has_api_signal: boolean;
 	has_publisher_signal: boolean;
 	has_app_ads_direct: boolean;
 	has_app_ads_reseller: boolean;
+	country: string | null;
+	country_direct: string | null;
 	creatives_app_count: number;
 	has_trends: number;
-	apps_added_count: number;
-	apps_lost_count: number;
+	apps_sdk_added_count: number;
+	apps_sdk_lost_count: number;
+	apps_adstxt_direct_added_count: number;
+	apps_adstxt_direct_lost_count: number;
 	sdk_count: number;
 	mediation_adapter_count: number;
 	adstxt_direct_app_count: number;
 	creatives_app_count_direct: number;
 	has_trends_direct: number;
-	apps_added_count_direct: number;
-	apps_lost_count_direct: number;
+	apps_sdk_added_count_direct: number;
+	apps_sdk_lost_count_direct: number;
+	apps_adstxt_direct_added_count_direct: number;
+	apps_adstxt_direct_lost_count_direct: number;
 	sdk_count_direct: number;
 	mediation_adapter_count_direct: number;
 	is_parent_domain: boolean;
