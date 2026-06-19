@@ -128,7 +128,8 @@
 						<td class="py-2 px-1">{getCountBucket(safeTotals.api_total_apps ?? 0)}</td>
 						{#if showAdsTxt}
 							<td class="py-2 px-1">{getCountBucket(safeTotals.adstxt_direct_total_apps ?? 0)}</td>
-							<td class="py-2 px-1">{getCountBucket(safeTotals.adstxt_reseller_total_apps ?? 0)}</td>
+							<td class="py-2 px-1">{getCountBucket(safeTotals.adstxt_reseller_total_apps ?? 0)}</td
+							>
 						{/if}
 					{/if}
 				</tr>

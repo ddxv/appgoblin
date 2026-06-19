@@ -84,7 +84,7 @@
 				{ title: 'iOS Apps', accessorKey: 'apple_app_count', isSortable: true },
 				{ title: 'Total Installs (30d)', accessorKey: 'installs_d30', isSortable: true },
 				{ title: 'Android Installs', accessorKey: 'google_installs_d30', isSortable: true },
-				{ title: 'iOS Installs', accessorKey: 'apple_installs_d30', isSortable: true },
+				{ title: 'iOS Installs', accessorKey: 'apple_installs_d30', isSortable: true }
 			]);
 		}
 
@@ -95,8 +95,16 @@
 			{ title: 'SDK iOS', accessorKey: 'apple_sdk_installs_d30', isSortable: true },
 			{ title: 'SDK Android', accessorKey: 'google_sdk_percentage', isSortable: true },
 			{ title: 'SDK iOS', accessorKey: 'apple_sdk_percentage', isSortable: true },
-			{ title: 'SDK Android', accessorKey: 'google_sdk_latest_pct_market_share_change', isSortable: true },
-			{ title: 'SDK iOS', accessorKey: 'apple_sdk_latest_pct_market_share_change', isSortable: true },
+			{
+				title: 'SDK Android',
+				accessorKey: 'google_sdk_latest_pct_market_share_change',
+				isSortable: true
+			},
+			{
+				title: 'SDK iOS',
+				accessorKey: 'apple_sdk_latest_pct_market_share_change',
+				isSortable: true
+			},
 			{ title: 'SDK Android', accessorKey: 'google_sdk_latest_apps_lost', isSortable: true },
 			{ title: 'SDK iOS', accessorKey: 'apple_sdk_latest_apps_lost', isSortable: true }
 		];
@@ -117,20 +125,54 @@
 			// Ad counts
 			{ title: 'Direct Android', accessorKey: 'google_app_ads_direct_app_count', isSortable: true },
 			{ title: 'Direct iOS', accessorKey: 'apple_app_ads_direct_app_count', isSortable: true },
-			{ title: 'Reseller Android', accessorKey: 'google_app_ads_reseller_app_count', isSortable: true },
+			{
+				title: 'Reseller Android',
+				accessorKey: 'google_app_ads_reseller_app_count',
+				isSortable: true
+			},
 			{ title: 'Reseller iOS', accessorKey: 'apple_app_ads_reseller_app_count', isSortable: true },
 			// Metric columns — installs + market share
-			...sdkMetricColDefs.filter((c) => c.accessorKey.includes('installs_d30') || c.accessorKey.includes('percentage')),
-			{ title: 'Direct Android', accessorKey: 'google_app_ads_direct_installs_d30', isSortable: true },
+			...sdkMetricColDefs.filter(
+				(c) => c.accessorKey.includes('installs_d30') || c.accessorKey.includes('percentage')
+			),
+			{
+				title: 'Direct Android',
+				accessorKey: 'google_app_ads_direct_installs_d30',
+				isSortable: true
+			},
 			{ title: 'Direct iOS', accessorKey: 'apple_app_ads_direct_installs_d30', isSortable: true },
-			{ title: 'Direct Android', accessorKey: 'google_app_ads_direct_percentage', isSortable: true },
+			{
+				title: 'Direct Android',
+				accessorKey: 'google_app_ads_direct_percentage',
+				isSortable: true
+			},
 			{ title: 'Direct iOS', accessorKey: 'apple_app_ads_direct_percentage', isSortable: true },
 			// Trend columns
-			...sdkMetricColDefs.filter((c) => c.accessorKey.includes('latest_pct_market_share_change') || c.accessorKey.includes('latest_apps_lost')),
-			{ title: 'Direct Android', accessorKey: 'google_app_ads_direct_latest_pct_market_share_change', isSortable: true },
-			{ title: 'Direct iOS', accessorKey: 'apple_app_ads_direct_latest_pct_market_share_change', isSortable: true },
-			{ title: 'Direct Android', accessorKey: 'google_app_ads_direct_latest_apps_lost', isSortable: true },
-			{ title: 'Direct iOS', accessorKey: 'apple_app_ads_direct_latest_apps_lost', isSortable: true }
+			...sdkMetricColDefs.filter(
+				(c) =>
+					c.accessorKey.includes('latest_pct_market_share_change') ||
+					c.accessorKey.includes('latest_apps_lost')
+			),
+			{
+				title: 'Direct Android',
+				accessorKey: 'google_app_ads_direct_latest_pct_market_share_change',
+				isSortable: true
+			},
+			{
+				title: 'Direct iOS',
+				accessorKey: 'apple_app_ads_direct_latest_pct_market_share_change',
+				isSortable: true
+			},
+			{
+				title: 'Direct Android',
+				accessorKey: 'google_app_ads_direct_latest_apps_lost',
+				isSortable: true
+			},
+			{
+				title: 'Direct iOS',
+				accessorKey: 'apple_app_ads_direct_latest_apps_lost',
+				isSortable: true
+			}
 		];
 		return genericColumns(rawCols);
 	});
@@ -294,7 +336,12 @@
 		let headerIsAds = header.column.id.includes('direct') || header.column.id.includes('reseller');
 		if (showsApiColumns) {
 			// Basic columns always visible
-			let alwaysCols = ['percent_open_source', 'api_ip_resolved_country', 'company_name', 'parent_company_name'];
+			let alwaysCols = [
+				'percent_open_source',
+				'api_ip_resolved_country',
+				'company_name',
+				'parent_company_name'
+			];
 			if (alwaysCols.includes(header.column.id)) return true;
 			// App count columns when metric is app_count
 			if (dataMetric === 'app_count') {
@@ -529,13 +576,19 @@
 						</td>
 						{#if showsApiColumns && dataMetric == 'app_count'}
 							<td class="table-cell-fit">
-								<p class="text-xs md:text-sm">{formatOptionalNumber(row.original.total_app_count)}</p>
+								<p class="text-xs md:text-sm">
+									{formatOptionalNumber(row.original.total_app_count)}
+								</p>
 							</td>
 							<td class="table-cell-fit">
-								<p class="text-xs md:text-sm">{formatOptionalNumber(row.original.google_app_count)}</p>
+								<p class="text-xs md:text-sm">
+									{formatOptionalNumber(row.original.google_app_count)}
+								</p>
 							</td>
 							<td class="table-cell-fit">
-								<p class="text-xs md:text-sm">{formatOptionalNumber(row.original.apple_app_count)}</p>
+								<p class="text-xs md:text-sm">
+									{formatOptionalNumber(row.original.apple_app_count)}
+								</p>
 							</td>
 						{/if}
 						{#if showsApiColumns && dataMetric == 'installs'}
@@ -543,10 +596,14 @@
 								<p class="text-xs md:text-sm">{formatNumber(row.original.installs_d30 ?? 0)}</p>
 							</td>
 							<td class="table-cell-fit">
-								<p class="text-xs md:text-sm">{formatNumber(row.original.google_installs_d30 ?? 0)}</p>
+								<p class="text-xs md:text-sm">
+									{formatNumber(row.original.google_installs_d30 ?? 0)}
+								</p>
 							</td>
 							<td class="table-cell-fit">
-								<p class="text-xs md:text-sm">{formatNumber(row.original.apple_installs_d30 ?? 0)}</p>
+								<p class="text-xs md:text-sm">
+									{formatNumber(row.original.apple_installs_d30 ?? 0)}
+								</p>
 							</td>
 						{/if}
 

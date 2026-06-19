@@ -664,8 +664,8 @@ def prep_companies_overview_df(
         validate="1:1",
     )
 
-    if type_slug == 'app-publishers':
-        overview_df['tempsort'] = overview_df[['installs_d30']].fillna(0).sum(axis=1)
+    if type_slug == "app-publishers":
+        overview_df["tempsort"] = overview_df[["installs_d30"]].fillna(0).sum(axis=1)
     else:
         overview_df["tempsort"] = (
             overview_df[sdk_cols + adstxt_direct_cols].fillna(0).mean(axis=1)
@@ -2102,8 +2102,12 @@ class CompaniesController(Controller):
                 has_trends_direct=int(row.has_trends_direct),
                 apps_sdk_added_count_direct=int(row.apps_sdk_added_count_direct),
                 apps_sdk_lost_count_direct=int(row.apps_sdk_lost_count_direct),
-                apps_adstxt_direct_added_count_direct=int(row.apps_adstxt_direct_added_count_direct),
-                apps_adstxt_direct_lost_count_direct=int(row.apps_adstxt_direct_lost_count_direct),
+                apps_adstxt_direct_added_count_direct=int(
+                    row.apps_adstxt_direct_added_count_direct
+                ),
+                apps_adstxt_direct_lost_count_direct=int(
+                    row.apps_adstxt_direct_lost_count_direct
+                ),
                 sdk_count_direct=int(row.sdk_count_direct),
                 mediation_adapter_count_direct=int(row.mediation_adapter_count_direct),
                 is_parent_domain=bool(row.is_parent_domain),

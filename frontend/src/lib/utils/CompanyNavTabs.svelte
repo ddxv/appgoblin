@@ -54,9 +54,9 @@
 			case 'apps-added':
 			case 'apps-lost':
 				return (
-					(tabIndicators.apps_added_count > 0 || tabIndicators.apps_lost_count > 0) &&
-					tabIndicators.apps_added_count_direct === 0 &&
-					tabIndicators.apps_lost_count_direct === 0
+					(tabIndicators.apps_sdk_added_count > 0 || tabIndicators.apps_sdk_lost_count > 0) &&
+					tabIndicators.apps_sdk_added_count_direct === 0 &&
+					tabIndicators.apps_sdk_lost_count_direct === 0
 				);
 			case 'sdks':
 				return tabIndicators.sdk_count > 0 && tabIndicators.sdk_count_direct === 0;
@@ -94,8 +94,10 @@
 	let showTrendsTab = $derived(Boolean(tabIndicators?.has_trends));
 	let showMediationTab = $derived(Boolean(tabIndicators?.mediation_adapter_count));
 	let hasAdstxt = $derived(Boolean(tabIndicators?.adstxt_direct_app_count));
-	let hasAppsAdded = $derived(Boolean(tabIndicators?.apps_added_count));
-	let hasAppsLost = $derived(Boolean(tabIndicators?.apps_lost_count));
+	let hasAppsAdded = $derived(Boolean(tabIndicators?.apps_sdk_added_count));
+	let hasAppsLost = $derived(Boolean(tabIndicators?.apps_sdk_lost_count));
+	let hasAdstxtAppsAdded = $derived(Boolean(tabIndicators?.apps_adstxt_direct_added_count));
+	let hasAdstxtAppsLost = $derived(Boolean(tabIndicators?.apps_adstxt_direct_lost_count));
 
 	let sectionLinks = $derived([
 		{
@@ -125,7 +127,7 @@
 			href: `/companies/${companyDomain}/apps-added`,
 			visible: hasAppsAdded,
 			b2b: true,
-			count: tabIndicators?.apps_added_count ?? null
+			count: tabIndicators?.apps_sdk_added_count ?? null
 		},
 		{
 			slug: 'apps-lost',
@@ -133,23 +135,23 @@
 			href: `/companies/${companyDomain}/apps-lost`,
 			visible: hasAppsLost,
 			b2b: true,
-			count: tabIndicators?.apps_lost_count ?? null
+			count: tabIndicators?.apps_sdk_lost_count ?? null
 		},
 		{
 			slug: 'apps-added-adstxt',
 			label: 'Apps Added (ads.txt)',
 			href: `/companies/${companyDomain}/apps-added-adstxt`,
-			visible: hasAdstxt && hasAppsAdded,
+			visible: hasAdstxtAppsAdded,
 			b2b: true,
-			count: tabIndicators?.adstxt_direct_app_count ?? null
+			count: tabIndicators?.apps_adstxt_direct_added_count ?? null
 		},
 		{
 			slug: 'apps-lost-adstxt',
 			label: 'Apps Lost (ads.txt)',
 			href: `/companies/${companyDomain}/apps-lost-adstxt`,
-			visible: hasAdstxt && hasAppsLost,
+			visible: hasAdstxtAppsLost,
 			b2b: true,
-			count: tabIndicators?.adstxt_direct_app_count ?? null
+			count: tabIndicators?.apps_adstxt_direct_lost_count ?? null
 		},
 		{
 			slug: 'sdks',

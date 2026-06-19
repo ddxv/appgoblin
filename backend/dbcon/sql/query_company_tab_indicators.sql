@@ -32,5 +32,5 @@ SELECT
     sdk_count_direct,
     mediation_adapter_count_direct,
     is_parent_domain
-FROM frontend.companies_overview_reroll
+FROM frontend.companies_overview
 WHERE company_domain = :company_domain;
