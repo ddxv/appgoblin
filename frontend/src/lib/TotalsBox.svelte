@@ -26,6 +26,7 @@
 	let showAdsTxt = $derived(
 		myType?.url_slug === 'ad-networks' || myType?.url_slug === 'all-companies'
 	);
+	let isAppPublishers = $derived(myType?.url_slug === 'app-publishers');
 
 	const titleFont = 'text-xl  tracking-wide';
 	const subTitleFont = 'text-large -200 tracking-wide';
@@ -103,35 +104,50 @@
 			<thead>
 				<tr>
 					<th class="text-left py-2 px-1"></th>
-					<th class="text-left py-2 px-1">SDK</th>
-					<th class="text-left py-2 px-1">API Call</th>
-					{#if showAdsTxt}
-						<th class="text-left py-2 px-1">Ads.txt DIRECT</th>
-						<th class="text-left py-2 px-1">Ads.txt RESELLER</th>
+					{#if isAppPublishers}
+						<th class="text-left py-2 px-1">Android</th>
+						<th class="text-left py-2 px-1">iOS</th>
+					{:else}
+						<th class="text-left py-2 px-1">SDK</th>
+						<th class="text-left py-2 px-1">API Call</th>
+						{#if showAdsTxt}
+							<th class="text-left py-2 px-1">Ads.txt DIRECT</th>
+							<th class="text-left py-2 px-1">Ads.txt RESELLER</th>
+						{/if}
 					{/if}
 				</tr>
 			</thead>
 			<tbody>
 				<tr>
 					<td class="py-2 px-1 {rowTitleFont}">App Count</td>
-					<td class="py-2 px-1">{getCountBucket(safeTotals.sdk_total_apps ?? 0)}</td>
-					<td class="py-2 px-1">{getCountBucket(safeTotals.api_total_apps ?? 0)}</td>
-					{#if showAdsTxt}
-						<td class="py-2 px-1">{getCountBucket(safeTotals.adstxt_direct_total_apps ?? 0)}</td>
-						<td class="py-2 px-1">{getCountBucket(safeTotals.adstxt_reseller_total_apps ?? 0)}</td>
+					{#if isAppPublishers}
+						<td class="py-2 px-1">{getCountBucket(safeTotals.android_total_apps ?? 0)}</td>
+						<td class="py-2 px-1">{getCountBucket(safeTotals.ios_total_apps ?? 0)}</td>
+					{:else}
+						<td class="py-2 px-1">{getCountBucket(safeTotals.sdk_total_apps ?? 0)}</td>
+						<td class="py-2 px-1">{getCountBucket(safeTotals.api_total_apps ?? 0)}</td>
+						{#if showAdsTxt}
+							<td class="py-2 px-1">{getCountBucket(safeTotals.adstxt_direct_total_apps ?? 0)}</td>
+							<td class="py-2 px-1">{getCountBucket(safeTotals.adstxt_reseller_total_apps ?? 0)}</td>
+						{/if}
 					{/if}
 				</tr>
 				<tr>
 					<td class="py-2 px-1 {rowTitleFont}">Company Domains</td>
-					<td class="py-2 px-1">{getCountBucket(safeTotals.sdk_android_total_companies ?? 0)}</td>
-					<td class="py-2 px-1">{getCountBucket(safeTotals.api_android_total_companies ?? 0)}</td>
-					{#if showAdsTxt}
-						<td class="py-2 px-1"
-							>{getCountBucket(safeTotals.adstxt_direct_android_total_companies ?? 0)}</td
-						>
-						<td class="py-2 px-1"
-							>{getCountBucket(safeTotals.adstxt_reseller_android_total_companies ?? 0)}</td
-						>
+					{#if isAppPublishers}
+						<td class="py-2 px-1">{getCountBucket(safeTotals.android_total_companies ?? 0)}</td>
+						<td class="py-2 px-1">{getCountBucket(safeTotals.ios_total_companies ?? 0)}</td>
+					{:else}
+						<td class="py-2 px-1">{getCountBucket(safeTotals.sdk_android_total_companies ?? 0)}</td>
+						<td class="py-2 px-1">{getCountBucket(safeTotals.api_android_total_companies ?? 0)}</td>
+						{#if showAdsTxt}
+							<td class="py-2 px-1"
+								>{getCountBucket(safeTotals.adstxt_direct_android_total_companies ?? 0)}</td
+							>
+							<td class="py-2 px-1"
+								>{getCountBucket(safeTotals.adstxt_reseller_android_total_companies ?? 0)}</td
+							>
+						{/if}
 					{/if}
 				</tr>
 			</tbody>

@@ -48,4 +48,5 @@ GROUP BY
             ccts.app_category
     END,
     ccts.type_url_slug
-ORDER BY installs_d30 DESC
+ORDER BY installs_d30 DESC NULLS LAST
+LIMIT 500

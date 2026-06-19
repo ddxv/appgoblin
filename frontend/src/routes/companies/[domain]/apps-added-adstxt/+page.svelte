@@ -22,8 +22,8 @@
 <section class="mb-4 space-y-2">
 	<h2 class="text-xl font-semibold">Recently Added App-Ads.txt Apps</h2>
 	<p class="text-sm mb-3">
-		This view tracks the quarterly adoption of app-ads.txt DIRECT signals for this company
-		across the latest available quarter and the quarter before it.
+		This view tracks the quarterly adoption of app-ads.txt DIRECT signals for this company across
+		the latest available quarter and the quarter before it.
 	</p>
 	<p class="text-sm opacity-70">
 		This data is also available via the <a

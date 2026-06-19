@@ -22,8 +22,11 @@
 <section class="mb-4 space-y-2">
 	<h2 class="text-xl font-semibold">Recently Lost App-Ads.txt Apps</h2>
 	<p class="text-sm mb-3">
-		This view tracks the quarterly removal of app-ads.txt DIRECT signals for this company
-		across the latest available quarter and the quarter before it.
+		This view tracks the quarterly removal of app-ads.txt DIRECT signals for this company across the
+		latest available quarter and the quarter before it. Apps on this list can be affected by App
+		Store removals, app publishers changing domain names as well as a developer removing lines from
+		their App-Ads.txt. As such the churn on these lists can be much higher and less deterministic
+		than the SDK & API apps loss list.
 	</p>
 	<p class="text-sm opacity-70">
 		This data is also available via the <a

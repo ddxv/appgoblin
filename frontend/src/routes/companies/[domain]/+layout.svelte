@@ -202,6 +202,24 @@
 		};
 	});
 
+	function sectionDisplayName(slug: string): string {
+		const names: Record<string, string> = {
+			overview: 'Overview',
+			'apps-added': 'Apps Added',
+			'apps-lost': 'Apps Lost',
+			'apps-added-adstxt': 'Apps Added (ads.txt)',
+			'apps-lost-adstxt': 'Apps Lost (ads.txt)',
+			creatives: 'Creatives',
+			trends: 'Trends',
+			sdks: 'SDKs',
+			mediation: 'Mediation Adapters',
+			'app-adstxt': 'App-ads.txt',
+			'app-adstxt-publisher': 'Publisher',
+			'data-exports': 'Full Client App CSVs'
+		};
+		return names[slug] ?? slug.replace(/-/g, ' ');
+	}
+
 	let customCrumbs = $derived.by((): Crumb<MyCrumbMetadata>[] => {
 		const primaryType = data.companyDetails?.company_types?.[0];
 		const typeName = primaryType
@@ -212,7 +230,12 @@
 		if (typeName && primaryType) {
 			crumbs.push({ title: typeName, url: `/companies/types/${primaryType}` });
 		}
-		crumbs.push({ title: companyDisplayName });
+		crumbs.push({ title: companyDisplayName, url: `/companies/${companyDomain}` });
+		if (sectionSlug !== 'overview') {
+			crumbs.push({
+				title: sectionDisplayName(sectionSlug)
+			});
+		}
 		return crumbs;
 	});
 </script>

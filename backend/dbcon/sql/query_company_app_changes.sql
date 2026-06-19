@@ -31,5 +31,4 @@ WHERE
     AND sa.store_id IS NOT NULL
 ORDER BY
     sa.installs_sum_4w DESC NULLS LAST,
-    sa.name ASC
-;
+    sa.name ASC;

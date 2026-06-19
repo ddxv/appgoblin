@@ -515,6 +515,7 @@ def prep_companies_overview_df(
     overview_df: pd.DataFrame,
     *,
     include_trends_overview: bool = True,
+    type_slug: str | None = None,
 ) -> pd.DataFrame:
     """Prep companies overview dataframe."""
     overview_df = (
@@ -574,6 +575,36 @@ def prep_companies_overview_df(
         overview_df["store_tag"] + "_" + overview_df["tag_source"]
     )
 
+    # Per-store totals (across all tag sources) for app-publishers view
+    store_totals_df = (
+        overview_df.groupby(
+            [
+                "company_name",
+                "company_domain",
+                "parent_company_domain",
+                "parent_company_name",
+                "store_tag",
+            ],
+            dropna=False,
+        )[["app_count", "installs_d30"]]
+        .sum()
+        .reset_index()
+    )
+    store_totals_pivoted = store_totals_df.pivot(
+        index=[
+            "company_name",
+            "company_domain",
+            "parent_company_domain",
+            "parent_company_name",
+        ],
+        columns=["store_tag"],
+        values=["app_count", "installs_d30"],
+    )
+    store_totals_pivoted.columns = [
+        f"{col[1]}_{col[0]}" for col in store_totals_pivoted.columns
+    ]
+    store_totals_pivoted = store_totals_pivoted.reset_index()
+
     # NOTE: Crucial for SDK to be first
     # since it has more than just advertising data
     store_tag_source_cols = [
@@ -582,6 +613,7 @@ def prep_companies_overview_df(
     sdk_cols = [x for x in store_tag_source_cols if "sdk" in x]
     adstxt_cols = [x for x in store_tag_source_cols if "app_ads" in x]
     adstxt_direct_cols = [x for x in adstxt_cols if "direct" in x]
+    publisher_cols = [x for x in adstxt_cols if "publisher" in x]
 
     pivoted_df = overview_df.pivot(
         index=[
@@ -620,10 +652,24 @@ def prep_companies_overview_df(
         how="left",
         validate="1:1",
     )
-
-    overview_df["tempsort"] = (
-        overview_df[sdk_cols + adstxt_direct_cols].fillna(0).mean(axis=1)
+    overview_df = overview_df.merge(
+        store_totals_pivoted,
+        on=[
+            "company_name",
+            "company_domain",
+            "parent_company_domain",
+            "parent_company_name",
+        ],
+        how="left",
+        validate="1:1",
     )
+
+    if type_slug == 'app-publishers':
+        overview_df['tempsort'] = overview_df[['installs_d30']].fillna(0).sum(axis=1)
+    else:
+        overview_df["tempsort"] = (
+            overview_df[sdk_cols + adstxt_direct_cols].fillna(0).mean(axis=1)
+        )
 
     overview_df = (
         overview_df.sort_values(
@@ -772,6 +818,7 @@ def get_overviews(
         state,
         companies_df,
         include_trends_overview=category is None,
+        type_slug=type_slug,
     )
 
     results = CompaniesOverview(
@@ -1093,11 +1140,42 @@ def make_companies_stats(
         ),
     }
 
+    # Per-store totals (across all tag sources) for app-publishers-like views
+    store_company_count = {}
+    for store_label, store_mask in [("android", df_is_google), ("ios", df_is_apple)]:
+        if tag_source_company_counts is not None:
+            mask = tag_source_company_counts["store"].str.contains(
+                "Google" if store_label == "android" else "Apple", na=False
+            )
+            store_company_count[store_label] = int(
+                tag_source_company_counts.loc[mask, "company_count"].sum()
+            )
+        else:
+            store_company_count[store_label] = int(
+                df.loc[store_mask, "company_domain"].nunique()
+            )
+
+    store_totals = {
+        "android_total_apps": int(
+            tag_source_category_app_counts.loc[
+                tag_source_category_app_counts_is_google, "cat_total_app_count"
+            ].sum()
+        ),
+        "ios_total_apps": int(
+            tag_source_category_app_counts.loc[
+                tag_source_category_app_counts_is_apple, "cat_total_app_count"
+            ].sum()
+        ),
+        "android_total_companies": store_company_count["android"],
+        "ios_total_companies": store_company_count["ios"],
+    }
+
     overview.update_stats("all", **overall_stats)
     overview.update_stats("all", **sdk_app_counts)
     overview.update_stats("all", **api_app_counts)
     overview.update_stats("all", **adstxt_direct_app_counts)
     overview.update_stats("all", **adstxt_reseller_app_counts)
+    overview.update_stats("all", **store_totals)
 
     return overview
 
@@ -2003,22 +2081,29 @@ class CompaniesController(Controller):
                 logo_url=_nan_str(row.logo_url),
                 parent_company_id=_nan(row.parent_company_id),
                 parent_domain=_nan_str(row.parent_domain),
+                parent_domain_id=_nan(row.parent_domain_id),
                 has_sdk_signal=bool(row.has_sdk_signal),
                 has_api_signal=bool(row.has_api_signal),
                 has_publisher_signal=bool(row.has_publisher_signal),
                 has_app_ads_direct=bool(row.has_app_ads_direct),
                 has_app_ads_reseller=bool(row.has_app_ads_reseller),
+                country=_nan_str(row.country),
+                country_direct=_nan_str(row.country_direct),
                 creatives_app_count=int(row.creatives_app_count),
                 has_trends=int(row.has_trends),
-                apps_added_count=int(row.apps_added_count),
-                apps_lost_count=int(row.apps_lost_count),
+                apps_sdk_added_count=int(row.apps_sdk_added_count),
+                apps_sdk_lost_count=int(row.apps_sdk_lost_count),
+                apps_adstxt_direct_added_count=int(row.apps_adstxt_direct_added_count),
+                apps_adstxt_direct_lost_count=int(row.apps_adstxt_direct_lost_count),
                 sdk_count=int(row.sdk_count),
                 mediation_adapter_count=int(row.mediation_adapter_count),
                 adstxt_direct_app_count=int(row.adstxt_direct_app_count),
                 creatives_app_count_direct=int(row.creatives_app_count_direct),
                 has_trends_direct=int(row.has_trends_direct),
-                apps_added_count_direct=int(row.apps_added_count_direct),
-                apps_lost_count_direct=int(row.apps_lost_count_direct),
+                apps_sdk_added_count_direct=int(row.apps_sdk_added_count_direct),
+                apps_sdk_lost_count_direct=int(row.apps_sdk_lost_count_direct),
+                apps_adstxt_direct_added_count_direct=int(row.apps_adstxt_direct_added_count_direct),
+                apps_adstxt_direct_lost_count_direct=int(row.apps_adstxt_direct_lost_count_direct),
                 sdk_count_direct=int(row.sdk_count_direct),
                 mediation_adapter_count_direct=int(row.mediation_adapter_count_direct),
                 is_parent_domain=bool(row.is_parent_domain),
@@ -2090,7 +2175,9 @@ class CompaniesController(Controller):
             tag_sources=COMPANY_APP_CHANGE_ADSTXT_TAG_SOURCES,
         )
         duration = round((time.perf_counter() * 1000 - start), 2)
-        logger.info(f"GET /api/companies/{company_domain}/apps-added-adstxt took {duration}ms")
+        logger.info(
+            f"GET /api/companies/{company_domain}/apps-added-adstxt took {duration}ms"
+        )
         return payload
 
     @get(path="/companies/{company_domain:str}/apps-lost-adstxt", cache=86400)
@@ -2112,7 +2199,9 @@ class CompaniesController(Controller):
             tag_sources=COMPANY_APP_CHANGE_ADSTXT_TAG_SOURCES,
         )
         duration = round((time.perf_counter() * 1000 - start), 2)
-        logger.info(f"GET /api/companies/{company_domain}/apps-lost-adstxt took {duration}ms")
+        logger.info(
+            f"GET /api/companies/{company_domain}/apps-lost-adstxt took {duration}ms"
+        )
         return payload
 
     @get(path="/companies/{company_domain:str}/trends", cache=86400)
