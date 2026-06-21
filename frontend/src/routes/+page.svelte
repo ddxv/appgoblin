@@ -283,8 +283,7 @@
 			>
 		</div>
 		<p class="text-base md:text-lg max-w-2xl mx-auto">
-			Track competitor app growth, analyze SDK footprints, monitor live ad creatives — all from one
-			platform.
+			Track competitor app growth, analyze SDK footprints, monitor live ad creatives.
 		</p>
 		<p>
 			Browse

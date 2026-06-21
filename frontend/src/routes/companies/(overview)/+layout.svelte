@@ -16,6 +16,8 @@
 		) || { name: 'All Companies & Domains', url_slug: 'all-companies' }
 	);
 
+	let isAppPublishers = $derived(page.params.type === 'app-publishers');
+
 	let currentCategoryName = $derived(getCategoryName(page.params.category));
 
 	function getCategoryName(category: string | undefined) {
@@ -67,17 +69,25 @@
 			{#snippet card2()}
 				<WhiteCard>
 					{#snippet title()}
-						Top Companies (Android SDKs)
+						Top Companies ({isAppPublishers ? 'Android Publishers' : 'Android SDKs'})
 					{/snippet}
-					<CompaniesBarChart plotData={page.data.companiesOverview.top.sdk_android} />
+					<CompaniesBarChart
+						plotData={isAppPublishers
+							? page.data.companiesOverview.top.pub_android
+							: page.data.companiesOverview.top.sdk_android}
+					/>
 				</WhiteCard>
 			{/snippet}
 			{#snippet card3()}
 				<WhiteCard>
 					{#snippet title()}
-						Top Companies (iOS SDKs)
+						Top Companies ({isAppPublishers ? 'iOS Publishers' : 'iOS SDKs'})
 					{/snippet}
-					<CompaniesBarChart plotData={page.data.companiesOverview.top.sdk_ios} />
+					<CompaniesBarChart
+						plotData={isAppPublishers
+							? page.data.companiesOverview.top.pub_ios
+							: page.data.companiesOverview.top.sdk_ios}
+					/>
 				</WhiteCard>
 			{/snippet}
 		</CompaniesLayout>
