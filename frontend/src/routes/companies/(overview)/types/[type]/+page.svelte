@@ -20,10 +20,6 @@
 
 <svelte:head>
 	<title>{typeName} Companies & Domains | AppGoblin</title>
-	<meta
-		name="description"
-		content="Browse mobile {typeName} companies, their SDK usage, API adoption, and app-ads.txt coverage. Discover top ad networks, analytics, and attribution providers."
-	/>
 	<meta name="robots" content="index, follow" />
 	<link rel="canonical" href={page.url.href} />
 </svelte:head>

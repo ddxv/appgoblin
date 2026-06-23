@@ -506,8 +506,8 @@ def top_companies_by_tag_source(top_df: pd.DataFrame) -> TopCompaniesShort:
     top_companies_short = TopCompaniesShort(
         sdk_ios=top_ios_sdk_df.to_dict(orient="records"),
         sdk_android=top_android_sdk_df.to_dict(orient="records"),
-        pub_ios=top_ios_pub_df.to_dict(orient='records'),
-        pub_android=top_android_pub_df.to_dict(orient='records'),
+        pub_ios=top_ios_pub_df.to_dict(orient="records"),
+        pub_android=top_android_pub_df.to_dict(orient="records"),
         adstxt_direct_ios=top_ios_adstxt_direct_df.to_dict(orient="records"),
         adstxt_direct_android=top_android_adstxt_direct_df.to_dict(orient="records"),
     )
