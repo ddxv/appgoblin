@@ -16,10 +16,28 @@
 			page.params.type ||
 			'Companies'
 	);
+
+	// Type-specific SEO overrides — add new types here as needed.
+	// Falls back to the original generic pattern for unknown types.
+	const typeSeo: Record<string, { title: string; description: string }> = {
+		'ad-networks': {
+			title: 'Ad Network Companies & Tracking Domains | AppGoblin',
+			description:
+				'Analyze mobile ad network market share, Android/iOS SDK integration counts, and app-ads.txt records across 400+ tracking domains. Download the free CSV dataset.'
+		}
+	};
+
+	let seo = $derived(typeSeo[page.params.type!]);
+	let seoTitle = $derived(seo?.title || `${typeName} Companies & Domains | AppGoblin`);
+	let seoDescription = $derived(
+		seo?.description ||
+			`Explore leading ${typeName} by app coverage, SDK/API footprint, and app-ads.txt visibility in the mobile ecosystem.`
+	);
 </script>
 
 <svelte:head>
-	<title>{typeName} Companies & Domains | AppGoblin</title>
+	<title>{seoTitle}</title>
+	<meta name="description" content={seoDescription} />
 	<meta name="robots" content="index, follow" />
 	<link rel="canonical" href={page.url.href} />
 </svelte:head>
