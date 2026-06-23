@@ -24,6 +24,36 @@
 			title: 'Ad Network Companies & Tracking Domains | AppGoblin',
 			description:
 				'Analyze mobile ad network market share, Android/iOS SDK integration counts, and app-ads.txt records across 400+ tracking domains. Download the free CSV dataset.'
+		},
+		'ad-attribution': {
+			title: 'Top Mobile Attribution & MMP Companies | AppGoblin',
+			description:
+				'Compare mobile attribution platforms and MMPs. Analyze SDK adoption, network integrations, and iOS/Android market share data.'
+		},
+		'product-analytics': {
+			title: 'Mobile Product Analytics & BI Platforms | AppGoblin',
+			description:
+				'Discover top mobile product analytics tools. Evaluate SDK counts, category reach, and market share across millions of mobile apps.'
+		},
+		'development-tools': {
+			title: 'Mobile Development Tools & API Directory | AppGoblin',
+			description:
+				'Browse mobile development tools and APIs. View live SDK footprints, backend services, and adoption trends across app stores.'
+		},
+		'business-tools': {
+			title: 'Mobile Business & Enterprise Software | AppGoblin',
+			description:
+				'Analyze enterprise software and CRM platforms for mobile apps. Filter by SDK adoption, category distribution, and market reach.'
+		},
+		mediation: {
+			title: 'Top Ad Mediation Platforms & SDKs | AppGoblin',
+			description:
+				'Compare mobile ad mediation networks. Track SDK penetration, supported ad networks, and market share data for publishers.'
+		},
+		'app-publishers': {
+			title: 'Mobile App Publishers & Developer Portfolios | AppGoblin',
+			description:
+				'Explore top mobile app publishers. Analyze app portfolios, global store performance, category presence, and SDK stacks.'
 		}
 	};
 
