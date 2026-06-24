@@ -43,7 +43,7 @@
 	let columnFilters = $state<ColumnFiltersState>([]);
 
 	let globalFilter = $state<string>('');
-	let dataMetric = $state<MetricValue>('app_count');
+	let dataMetric = $state<MetricValue>('market_share');
 
 	let {
 		data,
@@ -386,16 +386,16 @@
 	function getCompanyNameColumnWidth(header: any) {
 		if (header.column.id === 'company_name') {
 			if (resolvedViewMode === 'both') {
-				return 'w-[24%]';
+				return 'w-[20%]';
 			}
 			if (isAdsPage || showsApiColumns) {
-				return 'w-[30%]';
+				return 'w-[20%]';
 			} else {
-				return 'w-[36%]';
+				return 'w-[20%]';
 			}
 		}
 		if (header.column.id === 'parent_company_name') {
-			return 'w-[18%]';
+			return 'w-[10%]';
 		}
 		return '';
 	}
@@ -533,9 +533,8 @@
 											loading="lazy"
 										/>
 									{/if}
-									{#if row.original.company_name}
+									{#if row.original.company_name && row.original.company_name != row.original.company_domain}
 										{row.original.company_name}
-										({row.original.company_domain})
 									{:else}
 										{row.original.company_domain}
 									{/if}
@@ -567,7 +566,6 @@
 										{/if}
 										{#if row.original.parent_company_name}
 											{row.original.parent_company_name}
-											({row.original.parent_company_domain})
 										{:else}
 											{row.original.parent_company_domain}
 										{/if}
