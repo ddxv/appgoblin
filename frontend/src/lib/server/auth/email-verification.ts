@@ -104,7 +104,7 @@ export async function createEmailVerificationRequest(
 	// The verify-email action accepts any unexpired code the user has been
 	// sent (within the 10-minute lifetime), so prior codes are kept so the
 	// user can paste whichever one they see in their inbox. Successful
-	// verification, explicit logout, and email changes still call
+	// verification and email changes still call
 	// deleteUserEmailVerificationRequest to clean up.
 	const idBytes = new Uint8Array(20);
 	crypto.getRandomValues(idBytes);
