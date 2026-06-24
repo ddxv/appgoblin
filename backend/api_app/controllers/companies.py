@@ -7,7 +7,7 @@
 /companies/{company_domain}/topapps returns top apps for a specific company.
 /companies/{company_domain}/tree returns parent/child company tree for a specific company.
 /companies/categories/{category} returns list of top companies for a specific category.
-/companies/countries returns list of countries where companies are located.
+# /companies/countries returns list of countries where companies are located.
 
 
 """
@@ -193,13 +193,6 @@ def get_search_results(state: State, search_term: str) -> pd.DataFrame:
         on="company_domain",
         how="left",
         validate="m:1",
-    )
-    countries_df = get_company_countries(state)
-    df = df.merge(
-        countries_df,
-        on="company_domain",
-        how="left",
-        validate="1:1",
     )
     logger.info(f"{decoded_input=} returned rows: {df.shape[0]}")
     return df
@@ -498,12 +491,16 @@ def top_companies_by_tag_source(top_df: pd.DataFrame) -> TopCompaniesShort:
 
     top_ios_sdk_df = process_top_df(top_df, "sdk", "Apple")
     top_android_sdk_df = process_top_df(top_df, "sdk", "Google")
+    top_ios_pub_df = process_top_df(top_df, "publisher", "Apple")
+    top_android_pub_df = process_top_df(top_df, "publisher", "Google")
     top_ios_adstxt_direct_df = process_top_df(top_df, "app_ads_direct", "Apple")
     top_android_adstxt_direct_df = process_top_df(top_df, "app_ads_direct", "Google")
 
     top_companies_short = TopCompaniesShort(
         sdk_ios=top_ios_sdk_df.to_dict(orient="records"),
         sdk_android=top_android_sdk_df.to_dict(orient="records"),
+        pub_ios=top_ios_pub_df.to_dict(orient="records"),
+        pub_android=top_android_pub_df.to_dict(orient="records"),
         adstxt_direct_ios=top_ios_adstxt_direct_df.to_dict(orient="records"),
         adstxt_direct_android=top_android_adstxt_direct_df.to_dict(orient="records"),
     )
@@ -684,15 +681,16 @@ def prep_companies_overview_df(
         open_source_df, on="company_domain", how="left", validate="m:1"
     )
     overview_df["percent_open_source"] = overview_df["percent_open_source"].fillna(0)
-    countries_df = get_company_countries(state).drop(
-        columns=["total_app_count"], errors="ignore"
-    )
+
+    countries_df = get_company_countries(state)
     overview_df = overview_df.merge(
-        countries_df,
-        on="company_domain",
-        how="left",
-        validate="1:1",
+        countries_df, on="company_domain", how="left", validate="m:1"
     )
+    # Coalesce HQ country first, fall back to IP-resolved country
+    overview_df["country"] = overview_df["hq_country"].fillna(
+        overview_df["api_ip_resolved_country"]
+    )
+
     company_logos_df = get_company_logos_df(state)
     overview_df = overview_df.merge(
         company_logos_df,
@@ -1993,15 +1991,6 @@ class CompaniesController(Controller):
         logger.info(f"GET /api/companies/categories/{category} took {duration}ms")
         return overview
 
-    @get(path="/companies/countries", cache=CACHE_FOREVER)
-    async def companies_countries(self: Self, state: State) -> dict:
-        """Handle GET request for all companies countries."""
-        start = time.perf_counter() * 1000
-        df = get_company_countries(state)
-        duration = round((time.perf_counter() * 1000 - start), 2)
-        logger.info(f"GET /api/companies/countries took {duration}ms")
-        return df.to_dict(orient="records")
-
     @get(
         path="/companies/{company_domain:str}",
         cache=86400,
@@ -2111,6 +2100,9 @@ class CompaniesController(Controller):
                 sdk_count_direct=int(row.sdk_count_direct),
                 mediation_adapter_count_direct=int(row.mediation_adapter_count_direct),
                 is_parent_domain=bool(row.is_parent_domain),
+                linkedin_url=_nan_str(row.linkedin_url),
+                github_user=_nan_str(row.github_user),
+                api_ip_resolved_country=_nan_str(row.api_ip_resolved_country),
             )
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(f"GET /api/companies/{company_domain}/tabs took {duration}ms")

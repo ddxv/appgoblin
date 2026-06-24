@@ -365,7 +365,6 @@ class StaticData:
     store_collection_category_map: pd.DataFrame
     parent_companies: list[str]
     company_secondary_domains: list[str]
-    company_countries: pd.DataFrame
     company_categories: pd.DataFrame
     company_logos_df: pd.DataFrame
     adtech_categories: pd.DataFrame
@@ -373,7 +372,6 @@ class StaticData:
     advertiser_creative_rankings: pd.DataFrame
     advertiser_creative_rankings_top: pd.DataFrame
     country_map: pd.DataFrame
-    company_open_source: pd.DataFrame
     company_api_call_countrys: pd.DataFrame
     mediation_companies: pd.DataFrame
     company_trends_summaries: dict[str, CompanyTrendsSummary]
@@ -509,8 +507,6 @@ def load_static_data(engine: PostgresCon) -> StaticData:
     store_collection_category_map = pd.read_sql(
         sql.store_collection_category_map, engine
     )
-    logger.info("Loading company countries...")
-    company_countries = pd.read_sql(sql.company_countries, engine)
     logger.info("Loading company categories...")
     company_categories = pd.read_sql(sql.company_categories, engine)
     logger.info("Loading total counts...")
@@ -523,8 +519,6 @@ def load_static_data(engine: PostgresCon) -> StaticData:
     )
     logger.info("Loading country map...")
     country_map = pd.read_sql(sql.countries, engine)
-    logger.info("Loading company open source...")
-    company_open_source = pd.read_sql(sql.company_open_source, engine)
     logger.info("Loading company api call countrys...")
     company_api_call_countrys = pd.read_sql(sql.company_api_call_countrys, engine)
     logger.info("Loading combined companies history...")
@@ -578,7 +572,6 @@ def load_static_data(engine: PostgresCon) -> StaticData:
         store_collection_category_map=store_collection_category_map,
         parent_companies=parent_companies,
         company_secondary_domains=company_secondary_domains,
-        company_countries=company_countries,
         company_categories=company_categories,
         company_logos_df=company_logos_df,
         adtech_categories=adtech_categories,
@@ -586,7 +579,6 @@ def load_static_data(engine: PostgresCon) -> StaticData:
         advertiser_creative_rankings=advertiser_creative_rankings,
         advertiser_creative_rankings_top=advertiser_creative_rankings_top,
         country_map=country_map,
-        company_open_source=company_open_source,
         company_api_call_countrys=company_api_call_countrys,
         mediation_companies=mediation_companies,
         company_trends_summaries=company_trends_summaries,
@@ -614,11 +606,6 @@ def get_parent_companies(state: State) -> list[str]:
 def get_company_secondary_domains(state: State) -> list[str]:
     """Get company secondary domains (preloaded at startup)."""
     return state.static_data.company_secondary_domains
-
-
-def get_company_countries(state: State) -> pd.DataFrame:
-    """Get company countries (preloaded at startup)."""
-    return state.static_data.company_countries
 
 
 def get_company_categories(state: State) -> pd.DataFrame:
@@ -657,8 +644,13 @@ def get_country_map(state: State) -> pd.DataFrame:
 
 
 def get_company_open_source(state: State) -> pd.DataFrame:
-    """Get company is open source (preloaded at startup)."""
-    return state.static_data.company_open_source
+    """Get company percent open source (live query)."""
+    return pd.read_sql(sql.company_open_source, state.dbcon.engine)
+
+
+def get_company_countries(state: State) -> pd.DataFrame:
+    """Get company HQ + IP country info (live query)."""
+    return pd.read_sql(sql.company_countries_combined, state.dbcon.engine)
 
 
 def get_company_api_call_countrys(state: State) -> pd.DataFrame:

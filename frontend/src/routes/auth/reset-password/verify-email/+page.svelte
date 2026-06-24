@@ -7,7 +7,7 @@
 </script>
 
 <h1>Verify your email address</h1>
-<p>We sent an 8-digit code to {data.email}.</p>
+<p>Sent 8-digit code to {data.email}.</p>
 <form method="post" use:enhance>
 	<label for="form-verify.code">Code</label>
 	<input id="form-verify.code" name="code" required />

@@ -11,7 +11,7 @@
 </script>
 
 <section class="mb-4 space-y-2">
-	<h2 class="text-xl font-semibold">SDK Footprint</h2>
+	<h2 class="text-xl font-semibold">SDKs</h2>
 	<p class="text-sm mb-3">
 		This SDK section shows which mobile libraries are linked to this company across real apps,
 		helping you compare adtech, analytics, and tooling distribution at app level.

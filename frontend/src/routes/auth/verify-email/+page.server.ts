@@ -5,6 +5,7 @@ import {
 	createEmailVerificationRequest,
 	deleteEmailVerificationRequestCookie,
 	deleteUserEmailVerificationRequest,
+	findEmailVerificationCodeMatch,
 	getRemainingVerificationEmailSends,
 	getUserEmailVerificationRequestFromRequest,
 	sendVerificationEmail,
@@ -111,15 +112,6 @@ async function verifyCode(event: RequestEvent) {
 		});
 	}
 
-	let verificationRequest = await getUserEmailVerificationRequestFromRequest(event);
-	if (verificationRequest === null) {
-		return fail(401, {
-			verify: {
-				message: 'Not authenticated',
-				...getVerificationEmailState(event.locals.user.id)
-			}
-		});
-	}
 	const formData = await event.request.formData();
 	const code = formData.get('code');
 	if (typeof code !== 'string') {
@@ -146,30 +138,14 @@ async function verifyCode(event: RequestEvent) {
 			}
 		});
 	}
-	if (Date.now() >= verificationRequest.expiresAt.getTime()) {
-		if (!sendVerificationEmailBucket.consume(event.locals.user.id, 1)) {
-			return fail(429, {
-				verify: {
-					message: EMAIL_VERIFICATION_LIMIT_MESSAGE,
-					...getVerificationEmailState(event.locals.user.id)
-				}
-			});
-		}
-		verificationRequest = await createEmailVerificationRequest(
-			verificationRequest.userId,
-			verificationRequest.email
-		);
-		await sendVerificationEmail(verificationRequest.email, verificationRequest.code);
-		setEmailVerificationRequestCookie(event, verificationRequest);
-		return {
-			verify: {
-				message:
-					'The verification code expired. We sent another code to your inbox. Check spam or junk if it does not arrive.',
-				...getVerificationEmailState(event.locals.user.id)
-			}
-		};
-	}
-	if (verificationRequest.code !== code) {
+
+	// Accept any unexpired code the user has been sent. The match query
+	// filters by user_id, code, and expires_at > now() in one shot.
+	const matchedRequest = await findEmailVerificationCodeMatch(
+		event.locals.user.id,
+		code
+	);
+	if (matchedRequest === null) {
 		return fail(400, {
 			verify: {
 				message: 'Incorrect code.',
@@ -179,7 +155,10 @@ async function verifyCode(event: RequestEvent) {
 	}
 	await deleteUserEmailVerificationRequest(event.locals.user.id);
 	await invalidateUserPasswordResetSessions(event.locals.user.id);
-	await updateUserEmailAndSetEmailAsVerified(event.locals.user.id, verificationRequest.email);
+	await updateUserEmailAndSetEmailAsVerified(
+		event.locals.user.id,
+		matchedRequest.email
+	);
 	sendVerificationEmailBucket.reset(event.locals.user.id);
 	deleteEmailVerificationRequestCookie(event);
 	const redirectTo = formData.get('redirectTo');

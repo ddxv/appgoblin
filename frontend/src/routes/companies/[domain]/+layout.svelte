@@ -5,6 +5,7 @@
 
 	import ExternalLink from '$lib/ExternalLink.svelte';
 	import CompanyButton from '$lib/CompanyButton.svelte';
+	import { countryCodeToEmoji } from '$lib/utils/countryCodeToEmoji';
 	import MainContent from '$lib/MainContent.svelte';
 	import CompanyTypesTabs from '$lib/utils/CompanyTypesTabs.svelte';
 	import CompanyNavTabs from '$lib/utils/CompanyNavTabs.svelte';
@@ -399,6 +400,56 @@
 									/>
 								{/if}
 
+								{#if data.tabIndicators?.country || data.tabIndicators?.api_ip_resolved_country}
+									<span class="inline-flex items-center gap-1.5 text-xs">
+										{#if data.tabIndicators?.country}
+											<span
+												class="inline-flex items-center gap-0.5"
+												title={`HQ: ${data.tabIndicators.country}`}
+											>
+												<span class="text-[10px] font-medium text-gray-600">HQ:</span>
+												{countryCodeToEmoji(data.tabIndicators.country)}
+											</span>
+										{/if}
+										{#if data.tabIndicators?.api_ip_resolved_country}
+											<span
+												class="inline-flex items-center gap-0.5"
+												title={`IP: ${data.tabIndicators.api_ip_resolved_country}`}
+											>
+												<span class="text-[10px] font-medium text-gray-600">IP:</span>
+												{countryCodeToEmoji(data.tabIndicators.api_ip_resolved_country)}
+											</span>
+										{/if}
+									</span>
+								{/if}
+								{#if data.tabIndicators?.linkedin_url}
+									<a
+										href={`https://linkedin.com/${data.tabIndicators.linkedin_url}`}
+										target="_blank"
+										rel="noopener noreferrer"
+										class="inline-flex items-center gap-1 text-tertiary-400-600 hover: underline"
+									>
+										LinkedIn
+										<svg class="w-3 h-3" viewBox="0 0 24 24" fill="currentColor">
+											<path d="M21 13v10h-6v-7c0-1.7-1.3-3-3-3s-3 1.3-3 3v7H3V13h4V3h10v10h4z" />
+										</svg>
+									</a>
+								{/if}
+								{#if data.tabIndicators?.github_user}
+									<a
+										href={`https://github.com/${data.tabIndicators.github_user}`}
+										target="_blank"
+										rel="noopener noreferrer"
+										class="inline-flex items-center gap-1 text-tertiary-400-600 hover: underline"
+									>
+										GitHub
+										<svg class="w-3 h-3" viewBox="0 0 24 24" fill="currentColor">
+											<path
+												d="M12 0C5.4 0 0 5.4 0 12c0 5.3 3.4 9.8 8.2 11.4.6.1.8-.3.8-.6v-2.2c-3.3.7-4-1.4-4-1.4-.5-1.3-1.3-1.7-1.3-1.7-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1.1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.6.1-3.3 0 0 1-.3 3.3 1.2 1-.3 2-.4 3-.4s2 .1 3 .4c2.3-1.6 3.3-1.2 3.3-1.2.6 1.7.2 3 .1 3.3.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6C20.6 21.8 24 17.3 24 12 24 5.4 18.6 0 12 0z"
+											/>
+										</svg>
+									</a>
+								{/if}
 								{#if isSecondaryDomain}
 									<span class="flex items-center gap-1.5">
 										<span

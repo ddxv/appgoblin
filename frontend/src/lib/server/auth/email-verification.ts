@@ -42,8 +42,47 @@ export async function getUserEmailVerificationRequestByUserId(
 		email: string;
 		expires_at: string;
 	}>(
-		'SELECT id, user_id, code, email, expires_at FROM email_verification_requests WHERE user_id = $1',
+		`SELECT id, user_id, code, email, expires_at
+		 FROM email_verification_requests
+		 WHERE user_id = $1 AND expires_at > now()
+		 ORDER BY expires_at DESC
+		 LIMIT 1`,
 		[userId]
+	);
+	if (row === null) {
+		return null;
+	}
+	return {
+		id: row.id,
+		userId: row.user_id,
+		code: row.code,
+		email: row.email,
+		expiresAt: new Date(row.expires_at)
+	};
+}
+
+/**
+ * Look up any unexpired verification request for the user whose code matches.
+ * Used by the verify-email action to accept any of the recent codes the user
+ * has been sent (within their 10-minute lifetime).
+ */
+export async function findEmailVerificationCodeMatch(
+	userId: number,
+	code: string
+): Promise<EmailVerificationRequest | null> {
+	const row = await db.queryOne<{
+		id: string;
+		user_id: number;
+		code: string;
+		email: string;
+		expires_at: string;
+	}>(
+		`SELECT id, user_id, code, email, expires_at
+		 FROM email_verification_requests
+		 WHERE user_id = $1 AND code = $2 AND expires_at > now()
+		 ORDER BY expires_at DESC
+		 LIMIT 1`,
+		[userId, code]
 	);
 	if (row === null) {
 		return null;
@@ -61,7 +100,12 @@ export async function createEmailVerificationRequest(
 	userId: number,
 	email: string
 ): Promise<EmailVerificationRequest> {
-	await deleteUserEmailVerificationRequest(userId);
+	// Note: we intentionally do NOT delete prior codes for this user here.
+	// The verify-email action accepts any unexpired code the user has been
+	// sent (within the 10-minute lifetime), so prior codes are kept so the
+	// user can paste whichever one they see in their inbox. Successful
+	// verification, explicit logout, and email changes still call
+	// deleteUserEmailVerificationRequest to clean up.
 	const idBytes = new Uint8Array(20);
 	crypto.getRandomValues(idBytes);
 	const id = encodeBase32(idBytes).toLowerCase();
@@ -236,7 +280,7 @@ export const EMAIL_VERIFICATION_SEND_LIMIT = 3;
 const EMAIL_VERIFICATION_SEND_WINDOW_SECONDS = 60 * 60;
 
 export const EMAIL_VERIFICATION_LIMIT_MESSAGE =
-	'You can request up to 3 verification emails for now. Check spam or junk for the latest AppGoblin email.';
+	'You can request up to 3 verification emails for now. Check spam or junk folder.';
 
 export const sendVerificationEmailBucket = new ExpiringTokenBucket<number>(
 	EMAIL_VERIFICATION_SEND_LIMIT,

@@ -303,6 +303,9 @@ class CompanyTabIndicators:
     mediation_adapter_count_direct: int = 0
 
     is_parent_domain: bool = False
+    linkedin_url: str | None = None
+    github_user: str | None = None
+    api_ip_resolved_country: str | None = None
 
 
 @dataclass
@@ -358,6 +361,8 @@ class TopCompaniesShort:
 
     sdk_ios: PlatformCompanies
     sdk_android: PlatformCompanies
+    pub_ios: PlatformCompanies
+    pub_android: PlatformCompanies
     adstxt_direct_ios: PlatformCompanies
     adstxt_direct_android: PlatformCompanies
 
