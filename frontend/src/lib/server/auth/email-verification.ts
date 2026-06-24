@@ -236,7 +236,7 @@ export const EMAIL_VERIFICATION_SEND_LIMIT = 3;
 const EMAIL_VERIFICATION_SEND_WINDOW_SECONDS = 60 * 60;
 
 export const EMAIL_VERIFICATION_LIMIT_MESSAGE =
-	'You can request up to 3 verification emails for now. Check spam or junk for the latest AppGoblin email.';
+	'You can request up to 3 verification emails for now. Check spam or junk folder.';
 
 export const sendVerificationEmailBucket = new ExpiringTokenBucket<number>(
 	EMAIL_VERIFICATION_SEND_LIMIT,

@@ -20,7 +20,7 @@
 </script>
 
 <h2 class="text-2xl font-bold">Verify your email address</h2>
-<p>We sent an 8-digit code to {data.email}.</p>
+<p>Sent an 8-digit code to {data.email}.</p>
 {#if showExpandedSpamNotice}
 	<div
 		class="mt-4 rounded border border-warning-500/40 bg-warning-500/10 p-4 text-base font-semibold leading-6"
