@@ -236,7 +236,7 @@
 						name: 'What is AppGoblin?',
 						acceptedAnswer: {
 							'@type': 'Answer',
-							text: 'AppGoblin is a free mobile app intelligence and ad tracking platform. It provides ASO keyword tools, SDK footprint analysis, live ad creative monitoring, app-ads.txt validation, and competitive research across 6M+ Android and iOS apps.'
+							text: 'AppGoblin is a free mobile app intelligence and ad tracking platform. Free ASO keyword tools, free SDK intel reports, live ad creative monitoring, app-ads.txt, and competitor research across millions of Android and iOS apps. Paid B2B intelligence APIs and reports.'
 						}
 					},
 					{
@@ -244,7 +244,7 @@
 						name: 'Is AppGoblin free to use?',
 						acceptedAnswer: {
 							'@type': 'Answer',
-							text: 'Yes. AppGoblin offers free app intelligence including keyword tracking, store rankings, SDK analysis, and ad creative browsing. Paid B2B plans add API access, company churn reports, and bulk data exports for sales and ad intelligence teams.'
+							text: 'Yes. AppGoblin offers free app intelligence including keyword tracking, store rankings, SDK analysis, install, revenue, MAU and ad creative browsing. Paid B2B plans add API access, company churn reports, and bulk data exports for sales and ad intelligence teams.'
 						}
 					},
 					{
@@ -252,7 +252,7 @@
 						name: 'Who uses AppGoblin?',
 						acceptedAnswer: {
 							'@type': 'Answer',
-							text: 'App marketers and ASO teams use AppGoblin for competitor keyword and ranking analysis. Ad sales teams use it for prospect research and SDK adoption intelligence. Developers and security analysts use it for SDK footprint detection and supply path validation.'
+							text: 'App marketers and app researchers use AppGoblin for competitor keyword and ranking analysis. Ad sales teams use it for prospect research and SDK adoption intelligence. Developers and security analysts use it for SDK footprint detection and supply path validation.'
 						}
 					},
 					{
@@ -283,7 +283,7 @@
 			>
 		</div>
 		<p class="text-base md:text-lg max-w-2xl mx-auto">
-			Track competitor app growth, analyze SDK footprints, monitor live ad creatives.
+			Track competitor app growth, analyze SDK reports, monitor live ad creatives.
 		</p>
 		<p>
 			Browse
@@ -542,8 +542,8 @@
 						across categories
 					</li>
 					<li>
-						<span class={coreFeatureBulletSpanClass}>SDK Footprints</span> — See which SDKs each app is
-						using
+						<span class={coreFeatureBulletSpanClass}>SDK/API Market Share Reports</span> — See which SDKs
+						each app is using
 					</li>
 				</ul>
 				<p class="text-xs text-surface-500/60 mt-3 mb-1">Who it's for:</p>
@@ -564,8 +564,8 @@
 					<a href="/sdks" class="hover:text-primary-600-400">SDK Analysis</a>
 				</h4>
 				<p class="text-sm">
-					Inspect SDK footprints from decompiled Android and iOS apps, including ad, analytics, and
-					open-source libraries.
+					Inspect SDK intelligence from decompiled Android and iOS apps, including ad, analytics,
+					and open-source libraries.
 				</p>
 				<ul class="text-sm space-y-1.5 mt-3">
 					<li>

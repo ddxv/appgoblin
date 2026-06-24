@@ -242,7 +242,7 @@
 					const value = e.currentTarget.value;
 					table.setGlobalFilter(value);
 				}}
-				class="preset-filled-surface-50-950 max-w-sm p-1"
+				class="bg-surface-50-950 max-w-sm p-1"
 			/>
 		</div>
 		<div class="flex items-center p-2">

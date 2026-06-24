@@ -102,18 +102,28 @@ def get_companies_type_stats(
     """Get top companies for a company type, optionally filtered by app category."""
     if category == "games":
         category = "game%"
+    tag_sources = None
+    if type_slug == 'app-publishers':
+        tag_sources = ['publisher']
+    elif type_slug in ['ad-attribution', 'business-tools', 'development-tools']:
+        tag_sources = ['sdk','api_call']
+
 
     df = pd.read_sql(
-        sql.companies_tag_type_stats,
+        sql=sql.companies_tag_type_stats,
         con=state.dbcon.engine,
-        params={"type_slug": type_slug, "app_category": category},
+        params={"type_slug": type_slug, "app_category": category, "tag_sources": tag_sources, "mylimit":500},
     )
 
     # game% -> games label normalization handled in SQL via CASE,
     # but LIKE 'game%' returns multiple subcategories when filtering,
     # so normalize the label here if needed
     if category == "game%":
-        df.loc[df["app_category"].str.startswith("game"), "app_category"] = "games"
+        df["app_category"] = 'games'
+    elif category is not None:
+        df["app_category"] = category
+    else:
+        df['app_category'] = 'all'
 
     df["store"] = df["store"].replace({1: "Google Play", 2: "Apple App Store"})
     return df
@@ -759,6 +769,9 @@ def get_category_type_stats(
         params={"type_url_slug": type_slug},
     )
     if category:
+        if category == 'games':
+            df = df[df['app_category'].str.startswith('game')]
+            df['app_category'] = 'games'
         df = df[df["app_category"] == category]
     else:
         df["app_category"] = "all"
@@ -798,10 +811,8 @@ def get_tag_source_company_counts(
             params={"app_category": app_category},
         )
         if app_category == "game%":
-            df.loc[
-                df["app_category"].str.contains("game"),
-                "app_category",
-            ] = "games"
+            df["app_category"] = "games"
+            df = df.groupby(['store', 'tag_source', 'app_category'])['company_count'].sum().reset_index()
     else:
         df = pd.read_sql(
             sql.companies_counts,
@@ -828,10 +839,14 @@ def get_tag_source_category_totals(
             params={"app_category": app_category},
         )
         if app_category == "game%":
-            df.loc[
-                df["app_category"].str.contains("game"),
-                "app_category",
-            ] = "games"
+            df["app_category"] = "games"
+            df = df.groupby(['store', 'tag_source', 'app_category'])[[
+    'app_count',
+    'installs_d30',
+    'installs_total',
+    'active_apps_universe',
+    'universe_installs_total',
+    'universe_installs_d30']].sum().reset_index()
     else:
         df = pd.read_sql(
             sql.category_totals,

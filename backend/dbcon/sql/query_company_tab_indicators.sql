@@ -31,6 +31,9 @@ SELECT
     apps_adstxt_direct_lost_count_direct,
     sdk_count_direct,
     mediation_adapter_count_direct,
-    is_parent_domain
+    is_parent_domain,
+    linkedin_url,
+    github_user,
+    api_ip_resolved_country
 FROM frontend.companies_overview
-WHERE company_domain = :company_domain;
+WHERE frontend.companies_overview.company_domain = :company_domain;

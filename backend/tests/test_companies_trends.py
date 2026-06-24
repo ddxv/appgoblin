@@ -772,7 +772,7 @@ def test_prep_companies_overview_df_skips_static_trends_for_category_views():
         patch(
             "api_app.controllers.companies.get_company_countries",
             return_value=pd.DataFrame(
-                [{"company_domain": "google.com", "api_ip_resolved_country": "US"}]
+                [{"company_domain": "google.com", "hq_country": "US", "api_ip_resolved_country": "US"}]
             ),
         ),
         patch(
@@ -831,7 +831,7 @@ def test_prep_companies_overview_df_adds_company_category_without_mediation():
         patch(
             "api_app.controllers.companies.get_company_countries",
             return_value=pd.DataFrame(
-                [{"company_domain": "google.com", "api_ip_resolved_country": "US"}]
+                [{"company_domain": "google.com", "hq_country": "US", "api_ip_resolved_country": "US"}]
             ),
         ),
         patch(

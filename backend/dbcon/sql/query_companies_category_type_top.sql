@@ -7,7 +7,8 @@ WITH ranked_apps AS (
         SUM(app_count) AS app_count,
         ROW_NUMBER() OVER (
             PARTITION BY tag_source, store
-            ORDER BY SUM(app_count) DESC
+            ORDER BY 
+            SUM(installs_d30) DESC NULLS LAST
         ) AS rank
     FROM
         frontend.companies_category_tag_type_stats

@@ -303,6 +303,9 @@ class CompanyTabIndicators:
     mediation_adapter_count_direct: int = 0
 
     is_parent_domain: bool = False
+    linkedin_url: str | None = None
+    github_user: str | None = None
+    api_ip_resolved_country: str | None = None
 
 
 @dataclass
