@@ -43,7 +43,6 @@
 	let columnFilters = $state<ColumnFiltersState>([]);
 
 	let globalFilter = $state<string>('');
-	let dataMetric = $state<MetricValue>('market_share');
 
 	let {
 		data,
@@ -69,6 +68,10 @@
 	let showsApiColumns = $derived(resolvedViewMode === 'api');
 	let showsAdsColumns = $derived(resolvedViewMode === 'ads');
 	let isAdsPage = $derived(resolvedViewMode === 'ads');
+
+	// Metric state — declared after view-mode derivations since dataMetric depends on showsApiColumns
+	let rawMetric = $state<MetricValue>('market_share');
+	let dataMetric = $derived(showsApiColumns ? 'app_count' : rawMetric);
 
 	// ===== Dynamic column definitions =====
 	let columns = $derived.by<ReturnType<typeof genericColumns>>(() => {
@@ -325,8 +328,8 @@
 	);
 
 	$effect(() => {
-		if (hasCategorySelected && QOQ_METRICS.includes(dataMetric)) {
-			dataMetric = 'installs';
+		if (hasCategorySelected && QOQ_METRICS.includes(rawMetric)) {
+			rawMetric = 'installs';
 		}
 	});
 
@@ -431,7 +434,7 @@
 			<select
 				id="metric-select"
 				class="select select-sm preset-outlined-primary-100-900 w-full max-w-sm p-1"
-				bind:value={dataMetric}
+				bind:value={rawMetric}
 			>
 				{#if showsApiColumns}
 					<option value="app_count">App Count</option>
