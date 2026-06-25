@@ -14,6 +14,9 @@ import { redirectIfAuthenticated, isSafeRedirect } from '$lib/server/auth/auth';
 import type { SessionFlags } from '$lib/server/auth/session';
 import type { Actions, PageServerLoadEvent, RequestEvent } from './$types';
 
+export const ssr = true;
+export const csr = true;
+
 export function load(event: PageServerLoadEvent) {
 	// Redirect if already authenticated (public route)
 	redirectIfAuthenticated(event);

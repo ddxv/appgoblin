@@ -20,6 +20,9 @@ import { redirectIfAuthenticated, isSafeRedirect } from '$lib/server/auth/auth';
 import type { SessionFlags } from '$lib/server/auth/session';
 import type { Actions, PageServerLoadEvent, RequestEvent } from './$types';
 
+export const ssr = true;
+export const csr = true;
+
 const ipBucket = new RefillingTokenBucket<string>(3, 10);
 
 export function load(event: PageServerLoadEvent) {
