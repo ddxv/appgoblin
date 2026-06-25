@@ -17,6 +17,9 @@ import { updateUserPassword } from '$lib/server/auth/user';
 import type { Actions, RequestEvent } from './$types';
 import type { SessionFlags } from '$lib/server/auth/session';
 
+export const ssr = true;
+export const csr = true;
+
 export async function load(event: RequestEvent) {
 	const { session, user } = await validatePasswordResetSessionRequest(event);
 	if (session === null) {

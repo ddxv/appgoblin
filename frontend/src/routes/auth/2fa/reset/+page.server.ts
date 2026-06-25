@@ -3,6 +3,9 @@ import { fail, redirect } from '@sveltejs/kit';
 
 import type { Actions, RequestEvent } from './$types';
 
+export const ssr = true;
+export const csr = true;
+
 export const actions: Actions = {
 	default: action
 };

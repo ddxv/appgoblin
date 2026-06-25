@@ -25,6 +25,19 @@ export const csr = true;
 
 const ipBucket = new RefillingTokenBucket<string>(3, 10);
 
+function getClientIP(request: Request): string | null {
+	const cfIp = request.headers.get('CF-Connecting-IP');
+	if (cfIp && cfIp.trim() !== '') {
+		return cfIp.trim();
+	}
+	const xff = request.headers.get('X-Forwarded-For');
+	if (xff) {
+		const first = xff.split(',')[0]?.trim();
+		if (first) return first;
+	}
+	return null;
+}
+
 export function load(event: PageServerLoadEvent) {
 	// Redirect if already authenticated (public route)
 	redirectIfAuthenticated(event);
@@ -37,8 +50,7 @@ export const actions: Actions = {
 };
 
 async function action(event: RequestEvent) {
-	// TODO: Assumes X-Forwarded-For is always included.
-	const clientIP = event.request.headers.get('X-Forwarded-For');
+	const clientIP = getClientIP(event.request);
 	if (clientIP !== null && !ipBucket.check(clientIP, 1)) {
 		return fail(429, {
 			message: 'Too many requests',

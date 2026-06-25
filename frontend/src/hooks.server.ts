@@ -15,17 +15,15 @@ const rateLimitHandle: Handle = async ({ event, resolve }) => {
 	const route = event.url.pathname;
 
 	// Skip rate limiting for static assets
-	if (route.startsWith('/_app') || route.startsWith('/favicon')) {
+	if (route.startsWith('/_app') || route.startsWith('/favicon') || route.startsWith('/auth/me')) {
 		return resolve(event);
 	}
 
-	// Optional: Skip rate limiting for specific public routes
-	// const publicRoutes = ['/about', '/companies', '/apps'];
-	// if (publicRoutes.some(path => route.startsWith(path))) {
-	//     return resolve(event);
-	// }
-
-	const clientIP = event.request.headers.get('X-Forwarded-For');
+	// Prefer CF-Connecting-IP (Cloudflare's single-IP header). Fall back to the
+	// leftmost entry of X-Forwarded-For (the original client) so we don't key
+	// the bucket on the entire proxy chain — that causes unrelated users sharing
+	// the same edge to collide on a single bucket and produce spurious 429s.
+	const clientIP = getClientIP(event.request);
 	if (clientIP === null) {
 		return resolve(event);
 	}
@@ -45,6 +43,21 @@ const rateLimitHandle: Handle = async ({ event, resolve }) => {
 
 	return resolve(event);
 };
+
+function getClientIP(request: Request): string | null {
+	// Cloudflare sets this to the real client IP as a single value.
+	const cfIp = request.headers.get('CF-Connecting-IP');
+	if (cfIp && cfIp.trim() !== '') {
+		return cfIp.trim();
+	}
+	// Fallback: leftmost entry of X-Forwarded-For is the original client.
+	const xff = request.headers.get('X-Forwarded-For');
+	if (xff) {
+		const first = xff.split(',')[0]?.trim();
+		if (first) return first;
+	}
+	return null;
+}
 
 // Authentication handle
 const authHandle: Handle = async ({ event, resolve }) => {

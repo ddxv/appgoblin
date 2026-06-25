@@ -19,6 +19,9 @@ import { ExpiringTokenBucket } from '$lib/server/auth/rate-limit';
 
 import type { Actions, RequestEvent } from './$types';
 
+export const ssr = true;
+export const csr = true;
+
 function getVerificationEmailState(userId: number) {
 	const verificationEmailsRemaining = getRemainingVerificationEmailSends(userId);
 	return {

@@ -8,6 +8,9 @@ import { fail, redirect } from '@sveltejs/kit';
 
 import type { Actions, RequestEvent } from './$types';
 
+export const ssr = true;
+export const csr = true;
+
 const bucket = new ExpiringTokenBucket<number>(5, 60 * 30);
 
 export async function load(event: RequestEvent) {

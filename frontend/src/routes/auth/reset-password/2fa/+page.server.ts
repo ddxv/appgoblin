@@ -11,6 +11,9 @@ import { recoveryCodeBucket } from '$lib/server/auth/2fa';
 
 import type { Actions, RequestEvent } from './$types';
 
+export const ssr = true;
+export const csr = true;
+
 export async function load(event: RequestEvent) {
 	const { session, user } = await validatePasswordResetSessionRequest(event);
 

@@ -27,13 +27,25 @@ export function load(event: PageServerLoadEvent) {
 const throttler = new Throttler<number>([0, 1, 2, 4, 8, 16, 30, 60, 180, 300]);
 const ipBucket = new RefillingTokenBucket<string>(20, 1);
 
+function getClientIP(request: Request): string | null {
+	const cfIp = request.headers.get('CF-Connecting-IP');
+	if (cfIp && cfIp.trim() !== '') {
+		return cfIp.trim();
+	}
+	const xff = request.headers.get('X-Forwarded-For');
+	if (xff) {
+		const first = xff.split(',')[0]?.trim();
+		if (first) return first;
+	}
+	return null;
+}
+
 export const actions: Actions = {
 	default: action
 };
 
 async function action(event: RequestEvent) {
-	// TODO: Assumes X-Forwarded-For is always included.
-	const clientIP = event.request.headers.get('X-Forwarded-For');
+	const clientIP = getClientIP(event.request);
 	if (clientIP !== null && !ipBucket.check(clientIP, 1)) {
 		return fail(429, {
 			message: 'Too many requests',
