@@ -21,6 +21,9 @@ import { ExpiringTokenBucket } from '$lib/server/auth/rate-limit';
 import type { Actions, RequestEvent } from './$types';
 import type { SessionFlags } from '$lib/server/auth/session';
 
+export const ssr = true;
+export const csr = true;
+
 const passwordUpdateBucket = new ExpiringTokenBucket<string>(5, 60 * 30);
 
 export async function load(event: RequestEvent) {

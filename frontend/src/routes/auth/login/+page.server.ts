@@ -10,9 +10,13 @@ import {
 	setSessionTokenCookie
 } from '$lib/server/auth/session';
 import { redirectIfAuthenticated, isSafeRedirect } from '$lib/server/auth/auth';
+import { getClientIP } from '$lib/server/request';
 
 import type { SessionFlags } from '$lib/server/auth/session';
 import type { Actions, PageServerLoadEvent, RequestEvent } from './$types';
+
+export const ssr = true;
+export const csr = true;
 
 export function load(event: PageServerLoadEvent) {
 	// Redirect if already authenticated (public route)
@@ -29,8 +33,7 @@ export const actions: Actions = {
 };
 
 async function action(event: RequestEvent) {
-	// TODO: Assumes X-Forwarded-For is always included.
-	const clientIP = event.request.headers.get('X-Forwarded-For');
+	const clientIP = getClientIP(event.request);
 	if (clientIP !== null && !ipBucket.check(clientIP, 1)) {
 		return fail(429, {
 			message: 'Too many requests',

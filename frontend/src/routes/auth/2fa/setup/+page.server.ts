@@ -7,6 +7,9 @@ import { encodeQR } from 'qr';
 
 import type { Actions, RequestEvent } from './$types';
 
+export const ssr = true;
+export const csr = true;
+
 const totpUpdateBucket = new RefillingTokenBucket<number>(3, 60 * 10);
 
 export async function load(event: RequestEvent) {

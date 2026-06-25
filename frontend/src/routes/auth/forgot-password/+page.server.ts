@@ -8,9 +8,13 @@ import {
 } from '$lib/server/auth/password-reset';
 import { RefillingTokenBucket } from '$lib/server/auth/rate-limit';
 import { generateSessionToken } from '$lib/server/auth/session';
+import { getClientIP } from '$lib/server/request';
 import { fail, redirect } from '@sveltejs/kit';
 
 import type { Actions, RequestEvent } from './$types';
+
+export const ssr = true;
+export const csr = true;
 
 const ipBucket = new RefillingTokenBucket<string>(3, 60);
 const userBucket = new RefillingTokenBucket<number>(3, 60);
@@ -20,8 +24,7 @@ export const actions: Actions = {
 };
 
 async function action(event: RequestEvent) {
-	// TODO: Assumes X-Forwarded-For is always included.
-	const clientIP = event.request.headers.get('X-Forwarded-For');
+	const clientIP = getClientIP(event.request);
 	if (clientIP !== null && !ipBucket.check(clientIP, 1)) {
 		return fail(429, {
 			message: 'Too many requests',
