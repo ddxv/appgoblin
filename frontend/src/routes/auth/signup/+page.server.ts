@@ -16,6 +16,7 @@ import {
 	setEmailVerificationRequestCookie
 } from '$lib/server/auth/email-verification';
 import { redirectIfAuthenticated, isSafeRedirect } from '$lib/server/auth/auth';
+import { getClientIP } from '$lib/server/request';
 
 import type { SessionFlags } from '$lib/server/auth/session';
 import type { Actions, PageServerLoadEvent, RequestEvent } from './$types';
@@ -24,19 +25,6 @@ export const ssr = true;
 export const csr = true;
 
 const ipBucket = new RefillingTokenBucket<string>(3, 10);
-
-function getClientIP(request: Request): string | null {
-	const cfIp = request.headers.get('CF-Connecting-IP');
-	if (cfIp && cfIp.trim() !== '') {
-		return cfIp.trim();
-	}
-	const xff = request.headers.get('X-Forwarded-For');
-	if (xff) {
-		const first = xff.split(',')[0]?.trim();
-		if (first) return first;
-	}
-	return null;
-}
 
 export function load(event: PageServerLoadEvent) {
 	// Redirect if already authenticated (public route)

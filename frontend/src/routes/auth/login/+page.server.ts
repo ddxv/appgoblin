@@ -10,6 +10,7 @@ import {
 	setSessionTokenCookie
 } from '$lib/server/auth/session';
 import { redirectIfAuthenticated, isSafeRedirect } from '$lib/server/auth/auth';
+import { getClientIP } from '$lib/server/request';
 
 import type { SessionFlags } from '$lib/server/auth/session';
 import type { Actions, PageServerLoadEvent, RequestEvent } from './$types';
@@ -26,19 +27,6 @@ export function load(event: PageServerLoadEvent) {
 
 const throttler = new Throttler<number>([0, 1, 2, 4, 8, 16, 30, 60, 180, 300]);
 const ipBucket = new RefillingTokenBucket<string>(20, 1);
-
-function getClientIP(request: Request): string | null {
-	const cfIp = request.headers.get('CF-Connecting-IP');
-	if (cfIp && cfIp.trim() !== '') {
-		return cfIp.trim();
-	}
-	const xff = request.headers.get('X-Forwarded-For');
-	if (xff) {
-		const first = xff.split(',')[0]?.trim();
-		if (first) return first;
-	}
-	return null;
-}
 
 export const actions: Actions = {
 	default: action

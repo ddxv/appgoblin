@@ -8,6 +8,7 @@ import {
 } from '$lib/server/auth/password-reset';
 import { RefillingTokenBucket } from '$lib/server/auth/rate-limit';
 import { generateSessionToken } from '$lib/server/auth/session';
+import { getClientIP } from '$lib/server/request';
 import { fail, redirect } from '@sveltejs/kit';
 
 import type { Actions, RequestEvent } from './$types';
@@ -17,19 +18,6 @@ export const csr = true;
 
 const ipBucket = new RefillingTokenBucket<string>(3, 60);
 const userBucket = new RefillingTokenBucket<number>(3, 60);
-
-function getClientIP(request: Request): string | null {
-	const cfIp = request.headers.get('CF-Connecting-IP');
-	if (cfIp && cfIp.trim() !== '') {
-		return cfIp.trim();
-	}
-	const xff = request.headers.get('X-Forwarded-For');
-	if (xff) {
-		const first = xff.split(',')[0]?.trim();
-		if (first) return first;
-	}
-	return null;
-}
 
 export const actions: Actions = {
 	default: action

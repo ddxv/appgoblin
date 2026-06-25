@@ -7,6 +7,7 @@ import {
 	setSessionTokenCookie,
 	deleteSessionTokenCookie
 } from '$lib/server/auth/session';
+import { getClientIP } from '$lib/server/request';
 
 const bucket = new RefillingTokenBucket<string>(100, 1);
 
@@ -14,15 +15,13 @@ const bucket = new RefillingTokenBucket<string>(100, 1);
 const rateLimitHandle: Handle = async ({ event, resolve }) => {
 	const route = event.url.pathname;
 
-	// Skip rate limiting for static assets
-	if (route.startsWith('/_app') || route.startsWith('/favicon') || route.startsWith('/auth/me')) {
+	// Skip rate limiting for static assets and the live-session probe
+	// (the LoginAccountButton in the header calls /auth/me on every SPA
+	// navigation, so a 429 there would blank the header for the user).
+	if (route.startsWith('/_app') || route.startsWith('/favicon') || route === '/auth/me') {
 		return resolve(event);
 	}
 
-	// Prefer CF-Connecting-IP (Cloudflare's single-IP header). Fall back to the
-	// leftmost entry of X-Forwarded-For (the original client) so we don't key
-	// the bucket on the entire proxy chain — that causes unrelated users sharing
-	// the same edge to collide on a single bucket and produce spurious 429s.
 	const clientIP = getClientIP(event.request);
 	if (clientIP === null) {
 		return resolve(event);
@@ -43,21 +42,6 @@ const rateLimitHandle: Handle = async ({ event, resolve }) => {
 
 	return resolve(event);
 };
-
-function getClientIP(request: Request): string | null {
-	// Cloudflare sets this to the real client IP as a single value.
-	const cfIp = request.headers.get('CF-Connecting-IP');
-	if (cfIp && cfIp.trim() !== '') {
-		return cfIp.trim();
-	}
-	// Fallback: leftmost entry of X-Forwarded-For is the original client.
-	const xff = request.headers.get('X-Forwarded-For');
-	if (xff) {
-		const first = xff.split(',')[0]?.trim();
-		if (first) return first;
-	}
-	return null;
-}
 
 // Authentication handle
 const authHandle: Handle = async ({ event, resolve }) => {
@@ -131,15 +115,29 @@ const cacheAndRoutingHandle: Handle = async ({ event, resolve }) => {
 		});
 	}
 
-	// --- Block requests until cache is ready (except for static assets) ---
-	if (
-		!route.startsWith('/_app') &&
-		!route.startsWith('/favicon') &&
-		!isInitialized &&
-		initializationPromise
-	) {
+	// --- Bounded wait for cache init, only for routes that need it ---
+	// The cache is only consumed by a small number of routes. Waiting on it for
+	// every request (e.g. /auth/*, which doesn't touch the cache) lets a slow
+	// or failing API init hang the whole subtree until the reverse proxy times
+	// out — that's the source of the 523s on cold paths. Use a short budget so
+	// a stuck init can't exceed typical origin timeouts.
+	const cacheDependentPrefixes = [
+		'/companies',
+		'/apps',
+		'/top-mobile-advertisers',
+		'/sdks',
+		'/ad-creatives',
+		'/collections',
+		'/categories'
+	];
+	const needsCache = cacheDependentPrefixes.some((p) => route.startsWith(p));
+	if (needsCache && !isInitialized && initializationPromise) {
+		const CACHE_WAIT_BUDGET_MS = 2000;
 		const waitStart = Date.now();
-		await initializationPromise;
+		await Promise.race([
+			initializationPromise,
+			new Promise<void>((resolve) => setTimeout(resolve, CACHE_WAIT_BUDGET_MS))
+		]);
 		const waitDuration = Date.now() - waitStart;
 		if (waitDuration > 100) {
 			console.log(`[Handle] Request to ${route} waited ${waitDuration}ms for cache`);
@@ -232,7 +230,7 @@ function appendVaryHeader(response: Response, value: string) {
 	}
 }
 
-async function fetchWithRetry(url: string, retries = 10): Promise<any> {
+async function fetchWithRetry(url: string, retries = 3): Promise<any> {
 	for (let i = 0; i < retries; i++) {
 		try {
 			const response = await fetch(url);
@@ -243,7 +241,10 @@ async function fetchWithRetry(url: string, retries = 10): Promise<any> {
 		} catch (error) {
 			console.error(`Attempt ${i + 1} failed for ${url}:`, error);
 			if (i === retries - 1) throw error;
-			await new Promise((resolve) => setTimeout(resolve, Math.pow(2, i) * 1000));
+			// Cap each backoff at 1s so total worst-case init stays well under any
+			// origin timeout. Previous code used Math.pow(2, i) * 1000 with i up to 9,
+			// which could block for ~17 minutes on a single failing endpoint.
+			await new Promise((resolve) => setTimeout(resolve, Math.min(1000, 100 * Math.pow(2, i))));
 		}
 	}
 }
@@ -307,9 +308,11 @@ async function initializeCache(): Promise<void> {
 	}
 }
 
-export const init: ServerInit = async () => {
+export const init: ServerInit = () => {
+	// Kick off cache init in the background; do not block server startup on it.
+	// Routes that need the cache wait briefly in the handle (with a budget); if
+	// init is still pending, the loader can fall back to on-demand fetches.
 	initializationPromise = initializeCache();
-	await initializationPromise;
 };
 
 export const getCachedData = async (): Promise<CachedData> => {
