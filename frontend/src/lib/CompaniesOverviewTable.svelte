@@ -71,7 +71,15 @@
 
 	// Metric state — declared after view-mode derivations since dataMetric depends on showsApiColumns
 	let rawMetric = $state<MetricValue>('market_share');
-	let dataMetric = $derived(showsApiColumns ? 'app_count' : rawMetric);
+	let dataMetric = $derived(rawMetric);
+
+	$effect(() => {
+		// App-publishers view only supports app_count and installs metrics,
+		// so snap any unsupported selection (e.g. market_share) back to app_count.
+		if (showsApiColumns && rawMetric !== 'app_count' && rawMetric !== 'installs') {
+			rawMetric = 'app_count';
+		}
+	});
 
 	// ===== Dynamic column definitions =====
 	let columns = $derived.by<ReturnType<typeof genericColumns>>(() => {

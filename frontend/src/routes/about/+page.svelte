@@ -158,6 +158,13 @@
 		</div>
 	</div>
 
+	<div class="card preset-filled-surface-100-900 {cardPadding}">
+		<h2 class="h2 {titlePadding}">About the Founder & Architect</h2>
+		<div class={contentPadding}>
+			<p>AppGoblin was founded and engineered by James O'Claire.</p>
+		</div>
+	</div>
+
 	<div class="card preset-filled-surface-100-900 p-2 md:p-8">
 		<h2 class="h2 p-2 md:p-4">Community & Feedback</h2>
 		<div class="p-2 space-y-4">
@@ -194,8 +201,9 @@
 				</div>
 			</a>
 			<p>
-				Join AppGoblin's Discord for a quick way to contact me or discuss ASO, app marketing and in
-				app advertisements. Feel free to give feedback or request new features.
+				Join AppGoblin's Discord to connect with the AppGoblin community or to DM me. Feel free to
+				give feedback or request new features. You can also use the <a href="/contact">/contact</a> form
+				for tips or to start an email conversation.
 			</p>
 		</div>
 	</div>
