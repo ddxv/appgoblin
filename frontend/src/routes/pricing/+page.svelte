@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { Check, Crown, X, ChevronDown, ChevronUp } from 'lucide-svelte';
+	import { Check, Crown, X, ChevronDown, ChevronUp, Sparkles } from 'lucide-svelte';
+	import type { BillingCycle } from '$lib/server/stripe';
 
 	/** @type {import('./$types').PageData} */
 	let { data } = $props();
@@ -11,59 +12,79 @@
 	let loading = $state(false);
 	let activePriceKey: string | null = $state(null);
 	let showFullComparison = $state(false);
+	let billingCycle: BillingCycle = $state('monthly');
+
+	const currentPlanIsCancelling = $derived(
+		!!data.currentSubscription?.cancel_at &&
+			new Date(data.currentSubscription.cancel_at).getTime() > Date.now()
+	);
+
+	const currentPlanIsActive = $derived(
+		data.currentSubscription?.status === 'active' || data.currentSubscription?.status === 'trialing'
+	);
+
+	const formatDate = (date: Date | string | null | undefined) => {
+		if (!date) return '';
+		return new Date(date).toLocaleDateString('en-US', {
+			year: 'numeric',
+			month: 'short',
+			day: 'numeric'
+		});
+	};
 
 	const plans = [
 		{
 			key: 'free',
-			name: 'Deeper App Insights',
-			price: '$0',
-			description: 'Indie devs, researchers, casual users',
-			included: true,
+			name: '',
+			monthlyPrice: 'Free',
+			yearlyPrice: 'Free',
+			description: 'Indie devs, casual users',
+			freeTier: true,
 			highlights: [
-				'Core SDK app data & ASO tools',
-				'App comparisons & ad intelligence',
-				'Request SDK/API scans',
-				'Limited API access'
-			]
-		},
-		{
-			key: 'b2b_sdk',
-			name: 'B2B SDK Intelligence',
-			price: '$299',
-			period: '/mo',
-			description: 'Sales teams, ad networks, agencies',
-			b2b: true,
-			highlights: [
-				'Everything in Free, plus...',
-				'Full company/churn API endpoints',
-				'Higher API rate limits',
-				'App Explorer with SDK filters',
-				'Export Company & SDK app datasets'
+				'MAU, Revenue & app metrics',
+				'ASO app keyword dash',
+				'Track keywords',
+				'Creative & ad intelligence'
 			]
 		},
 		{
 			key: 'b2b_appads',
 			name: 'App-Ads.txt',
-			price: '$299',
+			monthlyPrice: '$99',
+			yearlyPrice: '$950',
 			period: '/mo',
 			description: 'Ad networks, DSPs, SSPs',
 			b2b: true,
+			highlights: ['Everything in Free, plus...', 'Bulk app-ads.txt datasets']
+		},
+		{
+			key: 'b2b_sdk',
+			name: 'B2B SDK Intelligence',
+			monthlyPrice: '$399',
+			yearlyPrice: '$3,850',
+			period: '/mo',
+			description: 'Sales teams, ad networks, agencies',
+			b2b: true,
+			featured: true,
 			highlights: [
 				'Everything in Free, plus...',
-				'Full company/churn API endpoints',
+				'SDK client app data for all companies',
+				'Company apps added/lost report',
+				'All B2B company API endpoints',
 				'Higher API rate limits',
-				'App Explorer with SDK filters',
-				'Bulk app-ads.txt datasets'
+				'App Explorer & B2B filters'
 			]
 		},
+
 		{
 			key: 'b2b_premium',
 			name: 'Premium B2B',
-			price: '$499',
+			monthlyPrice: '$599',
+			yearlyPrice: '$5,750',
 			period: '/mo',
 			description: 'Larger companies, security teams, ad networks, hedge funds',
 			b2b: true,
-			featured: true,
+			featured: false,
 			highlights: [
 				'Everything in paid plans, plus...',
 				'Compliance & security requests',
@@ -73,15 +94,16 @@
 		}
 	];
 
+	const getPrice = (plan: (typeof plans)[number]) =>
+		billingCycle === 'yearly' ? plan.yearlyPrice : plan.monthlyPrice;
+
+	const getPeriod = (plan: (typeof plans)[number]) => {
+		if (plan.freeTier) return '';
+		return billingCycle === 'yearly' ? '/yr' : (plan.period ?? '/mo');
+	};
+
 	/** Features that are identical across every tier */
-	const commonFeatures = [
-		'Advanced SDK app data',
-		'Request free SDK/API scans',
-		'App Comparisons',
-		'ASO keyword dashboard',
-		'Ad intelligence',
-		'Limited API access'
-	];
+	const commonFeatures = ['Limited API access', 'Request free SDK/API scans'];
 
 	/** Features that differentiate the plans */
 	const comparisonFeatures = [
@@ -215,9 +237,9 @@
 	<h1 class="h1 {titlePadding}">Plans & Pricing</h1>
 	<div class={contentPadding}>
 		<p>
-			For alternative payment options (Invoice, PayPal, etc.), please reach out to us at <a
+			For Invoices, PayPal or Crypto, please reach out to us at <a
 				href="mailto:contact@appgoblin.info">contact@appgoblin.info</a
-			>.
+			>. Yearly invoices receive an additional +5% discount.
 		</p>
 
 		<p class="text-sm opacity-80 mt-3 max-w-3xl">
@@ -225,7 +247,91 @@
 			through the end of your current billing period. Payments already made are non-refundable.
 		</p>
 
+		{#if data.user && data.currentPlanKey && data.currentPlanLabel}
+			<div
+				class="mt-6 card preset-outlined-primary-100-900 p-4 md:p-5 flex flex-col gap-3 md:flex-row md:items-center md:justify-between"
+			>
+				<div class="flex items-start gap-3">
+					<span
+						class="badge preset-filled-primary-500 text-white rounded-full p-2 shrink-0"
+						aria-hidden="true"
+					>
+						<Sparkles class="w-4 h-4" />
+					</span>
+					<div>
+						<p class="text-sm font-semibold flex items-center gap-1.5">
+							<Crown class="w-4 h-4 text-primary-900-100" aria-hidden="true" />
+							Your current plan: {data.currentPlanLabel}
+							{#if data.currentPlanCycle}
+								<span class="text-xs opacity-70 font-normal">
+									({data.currentPlanCycle === 'yearly' ? 'Yearly' : 'Monthly'})
+								</span>
+							{/if}
+						</p>
+						<p class="text-xs opacity-80 mt-1">
+							{#if currentPlanIsCancelling && data.currentSubscription?.cancel_at}
+								<span class="text-warning-700-300 font-medium"
+									>Cancels on {formatDate(data.currentSubscription.cancel_at)}.</span
+								>
+								Access remains until then.
+							{:else if currentPlanIsActive && data.currentSubscription?.current_period_end}
+								Renews on {formatDate(data.currentSubscription.current_period_end)}.
+							{:else}
+								Status: {data.currentSubscription?.status ?? 'unknown'}.
+							{/if}
+						</p>
+					</div>
+				</div>
+				<a
+					href="/account/subscription"
+					class="btn preset-tonal-primary w-full md:w-auto whitespace-nowrap"
+				>
+					Manage subscription
+				</a>
+			</div>
+		{/if}
+
 		<br />
+
+		<!-- Billing cycle toggle -->
+		<div class="flex items-center justify-center gap-3 my-4">
+			<span
+				class="text-sm font-semibold transition-opacity {billingCycle === 'monthly'
+					? 'opacity-100'
+					: 'opacity-50'}"
+			>
+				Monthly
+			</span>
+			<button
+				type="button"
+				role="switch"
+				aria-checked={billingCycle === 'yearly'}
+				aria-label="Toggle between monthly and yearly billing"
+				onclick={() => (billingCycle = billingCycle === 'monthly' ? 'yearly' : 'monthly')}
+				class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors {billingCycle ===
+				'yearly'
+					? 'bg-primary-500'
+					: 'bg-surface-500/40'}"
+			>
+				<span
+					class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform {billingCycle ===
+					'yearly'
+						? 'translate-x-6'
+						: 'translate-x-1'}"
+				></span>
+			</button>
+			<span
+				class="text-sm font-semibold transition-opacity flex items-center gap-1.5 {billingCycle ===
+				'yearly'
+					? 'opacity-100'
+					: 'opacity-50'}"
+			>
+				Yearly
+				<span class="badge preset-filled-success-500 text-[10px] px-1.5 py-0.5 rounded-full"
+					>Save ~20%</span
+				>
+			</span>
+		</div>
 
 		<!-- Included in all plans -->
 		<div class="p-5">
@@ -246,40 +352,50 @@
 		<!-- Pricing Cards -->
 		<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
 			{#each plans as plan (plan.key)}
+				{@const isCurrent = data.currentPlanKey === plan.key}
 				<div
-					class="card flex flex-col {plan.featured
-						? 'ring-2 ring-primary-500 scale-[1.02] relative'
-						: 'preset-outlined-surface-100-900'}"
+					class="card flex flex-col relative {isCurrent
+						? 'border-2 border-success-500 rounded-md bg-success-500/5'
+						: plan.featured
+							? 'border-2 border-primary-100-900 rounded-md'
+							: 'preset-outlined-surface-100-900'}"
 				>
-					{#if plan.featured}
+					{#if plan.featured && !isCurrent}
 						<div
-							class="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary-500 text-primary-50 text-xs font-bold px-3 py-0.5 rounded-full uppercase tracking-wider whitespace-nowrap"
+							class="badge preset-filled-primary-50-950 rounded-full px-3 absolute -top-4 left-1/2 -translate-x-1/2 whitespace-nowrap font-bold text-sm"
 						>
 							Most Popular
+						</div>
+					{/if}
+					{#if isCurrent}
+						<div
+							class="badge preset-filled-success-500 text-white rounded-full px-3 absolute -top-4 left-1/2 -translate-x-1/2 whitespace-nowrap font-bold text-sm"
+						>
+							Your current plan
 						</div>
 					{/if}
 
 					<div class="p-5 flex flex-col gap-3 flex-1">
 						<!-- Plan header -->
 						<div>
-							<p class="text-xs uppercase tracking-wide opacity-60 flex items-center gap-1">
+							<p class="uppercase tracking-wide opacity-60 flex items-center gap-1">
 								{#if plan.b2b}
 									<Crown class="w-3 h-3 text-primary-900-100" aria-hidden="true" />
 								{/if}
 								{plan.name}
 							</p>
 							<p class="text-2xl font-bold leading-tight mt-1">
-								{plan.price}<span class="text-sm font-normal opacity-60 ml-1"
-									>{plan.period || ''}</span
+								{getPrice(plan)}<span class="text-sm font-normal opacity-60 ml-1"
+									>{getPeriod(plan)}</span
 								>
 							</p>
-							<p class="text-xs opacity-70 mt-1">{plan.description}</p>
+							<p class="text-sm opacity-90 mt-1">{plan.description}</p>
 						</div>
 
 						<!-- Highlights -->
 						<ul class="space-y-1.5 flex-1">
 							{#each plan.highlights as highlight}
-								<li class="text-xs flex items-start gap-1.5">
+								<li class="flex items-start gap-1.5">
 									<Check class="w-3 h-3 mt-0.5 text-success-700-300 shrink-0" aria-hidden="true" />
 									<span>{highlight}</span>
 								</li>
@@ -288,18 +404,15 @@
 
 						<!-- CTA -->
 						<div class="mt-auto pt-3">
-							{#if plan.included}
-								{#if !data?.user}
-									<a
-										href="/auth/signup?redirectTo=/pricing"
-										class="btn preset-outlined-primary w-full"
-									>
-										Create Free Account
-									</a>
-								{:else}
-									<p class="text-center text-xs opacity-60">Included with your account</p>
-								{/if}
-							{:else}
+							{#if isCurrent}
+								<a
+									href="/account/subscription"
+									class="btn preset-outlined-success-500 w-full"
+									aria-label="Manage your {plan.name} subscription"
+								>
+									Manage subscription
+								</a>
+							{:else if !plan.freeTier}
 								<form
 									method="POST"
 									action="?/subscribe"
@@ -307,6 +420,7 @@
 									data-price-key={plan.key}
 								>
 									<input type="hidden" name="priceKey" value={plan.key} />
+									<input type="hidden" name="billingCycle" value={billingCycle} />
 									<button type="submit" disabled={loading} class="btn preset-tonal-primary w-full">
 										{loading && activePriceKey === plan.key ? 'Redirecting...' : 'Get ' + plan.name}
 									</button>
@@ -349,7 +463,7 @@
 								{plan.name}
 							</p>
 							<p class="text-base font-semibold leading-tight mt-1">
-								{plan.price}<span class="text-xs opacity-60 ml-1">{plan.period || ''}</span>
+								{getPrice(plan)}<span class="text-xs opacity-60 ml-1">{getPeriod(plan)}</span>
 							</p>
 						</div>
 					{/each}
@@ -416,15 +530,7 @@
 								? 'bg-primary-500/5'
 								: ''}"
 						>
-							{#if plan.included}
-								{#if !data?.user}
-									<a href="/auth/signup?redirectTo=/pricing" class="btn preset-tonal-primary w-full"
-										>Create Account</a
-									>
-								{:else}
-									<p class="text-center text-xs opacity-60">Included with your account</p>
-								{/if}
-							{:else}
+							{#if !plan.freeTier}
 								<form
 									method="POST"
 									action="?/subscribe"
@@ -432,6 +538,7 @@
 									data-price-key={plan.key}
 								>
 									<input type="hidden" name="priceKey" value={plan.key} />
+									<input type="hidden" name="billingCycle" value={billingCycle} />
 									<button type="submit" disabled={loading} class="btn preset-tonal-primary w-full">
 										{loading && activePriceKey === plan.key ? 'Redirecting...' : 'Get ' + plan.name}
 									</button>
@@ -449,7 +556,7 @@
 				<p class="text-sm">
 					AppGoblin supports independent research and journalism. If you're a student, academic
 					researcher, or investigative journalist working on mobile advertising, privacy, or app
-					ecosystems, you're welcome to reach out for collaboration.
+					ecosystems, please reach out for collaboration.
 				</p>
 			</div>
 		</div>

@@ -3,7 +3,7 @@ import { createApiClient } from '$lib/server/api';
 import { getAppCategories } from '$lib/server/appCategories';
 import { requireFullAuth } from '$lib/server/auth/auth';
 import { db } from '$lib/server/auth/db';
-import { STRIPE_PRICES } from '$lib/server/stripe';
+import { STRIPE_PRICES, getStripePriceIds } from '$lib/server/stripe';
 import { getCachedData } from '../../hooks.server';
 
 interface ActiveSubscriptionRow {
@@ -104,7 +104,7 @@ async function getSubscriptionAccess(userId: number) {
 
 	const hasPaidAccess = !!row;
 	const hasB2BSdkAccess =
-		!!row && [STRIPE_PRICES.b2b_sdk, STRIPE_PRICES.b2b_premium].includes(row.provider_price_id);
+		!!row && getStripePriceIds('b2b_sdk', 'b2b_premium').includes(row.provider_price_id);
 
 	return { hasPaidAccess, hasB2BSdkAccess };
 }

@@ -1,6 +1,6 @@
 import { requireFullAuth } from '$lib/server/auth/auth';
 import { db } from '$lib/server/auth/db';
-import { STRIPE_PRICES } from '$lib/server/stripe';
+import { getStripePriceIds, STRIPE_PLAN_LABELS, type StripePriceKey } from '$lib/server/stripe';
 import type { LayoutServerLoadEvent } from './$types';
 
 export async function load(event: LayoutServerLoadEvent) {
@@ -33,12 +33,12 @@ export async function load(event: LayoutServerLoadEvent) {
 		[user.id]
 	);
 
-	const priceIdToLabel: Record<string, string> = {
-		[STRIPE_PRICES.app_dev]: 'Premium Access',
-		[STRIPE_PRICES.b2b_sdk]: 'Business SDK',
-		[STRIPE_PRICES.b2b_appads]: 'App-Ads.txt',
-		[STRIPE_PRICES.b2b_premium]: 'Premium B2B'
-	};
+	const priceIdToLabel: Record<string, string> = {};
+	for (const key of Object.keys(STRIPE_PLAN_LABELS) as StripePriceKey[]) {
+		for (const id of getStripePriceIds(key)) {
+			priceIdToLabel[id] = STRIPE_PLAN_LABELS[key];
+		}
+	}
 
 	const subscriptionHistory = await db.query<SubscriptionHistoryRow>(
 		`SELECT status, current_period_start, current_period_end, cancel_at, cancel_requested_at,
