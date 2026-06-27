@@ -88,8 +88,8 @@
 			highlights: [
 				'Everything in paid plans, plus...',
 				'Compliance & security requests',
-				'Custom reports & integration',
-				'Priority support'
+				'Custom reports & features',
+				'Deeper integration options'
 			]
 		}
 	];
