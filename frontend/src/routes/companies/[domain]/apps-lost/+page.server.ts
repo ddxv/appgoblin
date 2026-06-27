@@ -1,7 +1,7 @@
 import type { PageServerLoad } from './$types';
 import { createApiClient } from '$lib/server/api';
 import { db } from '$lib/server/auth/db';
-import { STRIPE_PRICES } from '$lib/server/stripe';
+import { getStripePriceIds } from '$lib/server/stripe';
 import type { CompanyAppChangesOverview, CompanyOverviewApps } from '../../../../types';
 
 type ActiveSubscriptionRow = {
@@ -75,7 +75,7 @@ async function getSubscriptionAccess(userId: number) {
 	);
 
 	const hasB2BSdkAccess =
-		!!row && [STRIPE_PRICES.b2b_sdk, STRIPE_PRICES.b2b_premium].includes(row.provider_price_id);
+		!!row && getStripePriceIds('b2b_sdk', 'b2b_premium').includes(row.provider_price_id);
 
 	return { hasB2BSdkAccess };
 }

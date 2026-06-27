@@ -4,10 +4,12 @@ import { error } from '@sveltejs/kit';
 
 import {
 	STRIPE_SECRET_KEY,
-	STRIPE_PRICE_APP_DEV_ID,
-	STRIPE_PRICE_B2B_SDK_ID,
-	STRIPE_PRICE_B2B_APPADS_ID,
-	STRIPE_PRICE_B2B_PREMIUM_ID,
+	STRIPE_PRICE_B2B_SDK_MO,
+	STRIPE_PRICE_B2B_SDK_YR,
+	STRIPE_PRICE_B2B_APPADS_ID_MO,
+	STRIPE_PRICE_B2B_APPADS_ID_YR,
+	STRIPE_PRICE_B2B_PREMIUM_MO,
+	STRIPE_PRICE_B2B_PREMIUM_YR,
 	APPGOBLIN_ENDPOINT_URL
 } from '$env/static/private';
 
@@ -15,19 +17,42 @@ export const stripe = new Stripe(STRIPE_SECRET_KEY, {
 	apiVersion: '2026-03-25.dahlia'
 });
 
+export type BillingCycle = 'monthly' | 'yearly';
+
 export const STRIPE_PRICES = {
-	app_dev: STRIPE_PRICE_APP_DEV_ID,
-	b2b_sdk: STRIPE_PRICE_B2B_SDK_ID,
-	b2b_appads: STRIPE_PRICE_B2B_APPADS_ID,
-	b2b_premium: STRIPE_PRICE_B2B_PREMIUM_ID
-} as const;
+	b2b_sdk: { monthly: STRIPE_PRICE_B2B_SDK_MO, yearly: STRIPE_PRICE_B2B_SDK_YR },
+	b2b_appads: {
+		monthly: STRIPE_PRICE_B2B_APPADS_ID_MO,
+		yearly: STRIPE_PRICE_B2B_APPADS_ID_YR
+	},
+	b2b_premium: {
+		monthly: STRIPE_PRICE_B2B_PREMIUM_MO,
+		yearly: STRIPE_PRICE_B2B_PREMIUM_YR
+	}
+} as const satisfies Record<string, Record<BillingCycle, string>>;
 
 export type StripePriceKey = keyof typeof STRIPE_PRICES;
+
+/** Flatten one or more plan keys into their full list of price IDs (both cycles). */
+export function getStripePriceIds(...keys: StripePriceKey[]): string[] {
+	return keys.flatMap((key) => {
+		const entry = STRIPE_PRICES[key];
+		return [entry.monthly, entry.yearly];
+	});
+}
+
+/** Human-readable label for a plan, useful for account/receipt pages. */
+export const STRIPE_PLAN_LABELS: Record<StripePriceKey, string> = {
+	b2b_sdk: 'Business SDK',
+	b2b_appads: 'App-Ads.txt',
+	b2b_premium: 'Premium B2B'
+};
 
 export async function createCheckoutSession(
 	userId: number,
 	email: string,
-	priceKey: StripePriceKey
+	priceKey: StripePriceKey,
+	billingCycle: BillingCycle = 'monthly'
 ) {
 	try {
 		// Create or get customer
@@ -54,10 +79,10 @@ export async function createCheckoutSession(
 			]);
 		}
 
-		const priceId = STRIPE_PRICES[priceKey];
+		const priceId = STRIPE_PRICES[priceKey]?.[billingCycle];
 
 		if (!priceId) {
-			throw error(400, 'Invalid Stripe price key');
+			throw error(400, 'Invalid Stripe price key or billing cycle');
 		}
 
 		const session = await stripe.checkout.sessions.create({

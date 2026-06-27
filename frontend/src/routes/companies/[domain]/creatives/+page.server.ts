@@ -1,7 +1,7 @@
 import type { PageServerLoad } from './$types';
 import { createApiClient } from '$lib/server/api';
 import { db } from '$lib/server/auth/db';
-import { STRIPE_PRICES } from '$lib/server/stripe';
+import { getStripePriceIds } from '$lib/server/stripe';
 
 type ActiveSubscriptionRow = {
 	provider_price_id: string;
@@ -17,7 +17,7 @@ async function isPremiumB2B(userId: number | null): Promise<boolean> {
 		 ORDER BY created_at DESC LIMIT 1`,
 		[userId]
 	);
-	return !!row && [STRIPE_PRICES.b2b_premium].includes(row.provider_price_id);
+	return !!row && getStripePriceIds('b2b_premium').includes(row.provider_price_id);
 }
 
 export const load: PageServerLoad = async ({ fetch, params, parent, locals }) => {

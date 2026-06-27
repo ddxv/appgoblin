@@ -1,6 +1,6 @@
 import type { PageServerLoad } from '../../$types';
 import { db } from '$lib/server/auth/db';
-import { STRIPE_PRICES } from '$lib/server/stripe';
+import { getStripePriceIds } from '$lib/server/stripe';
 
 const reportJsonModules = import.meta.glob('./*.json', {
 	eager: true,
@@ -306,7 +306,7 @@ async function getB2BAccess(userId: number): Promise<boolean> {
 		[userId]
 	);
 	if (!row) return false;
-	const b2bIds = [STRIPE_PRICES.b2b_sdk, STRIPE_PRICES.b2b_appads, STRIPE_PRICES.b2b_premium];
+	const b2bIds = getStripePriceIds('b2b_sdk', 'b2b_appads', 'b2b_premium');
 	return b2bIds.includes(row.provider_price_id);
 }
 
