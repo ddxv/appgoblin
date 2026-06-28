@@ -1,9 +1,3 @@
-/**
- * Parametrized download URL builder for data exports.
- * Base URL: set APPGOBLIN_DOWNLOADS_BASE in env, or defaults to https://media.appgoblin.info/
- * You can replace with loadConfig() and parsedConfig.cloud?.downloads_base if using config.toml.
- */
-
 import { env } from '$env/dynamic/private';
 
 const DEFAULT_BASE = 'https://media.appgoblin.info/';
