@@ -14,7 +14,7 @@ import {
 } from '$env/static/private';
 
 export const stripe = new Stripe(STRIPE_SECRET_KEY, {
-	apiVersion: '2026-03-25.dahlia'
+	apiVersion: '2026-06-24.dahlia'
 });
 
 export type BillingCycle = 'monthly' | 'yearly';

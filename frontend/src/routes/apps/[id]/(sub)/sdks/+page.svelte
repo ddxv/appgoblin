@@ -149,7 +149,7 @@
 						</p>
 						<div class="px-4 md:px-8 max-w-sm md:max-w-md lg:max-w-full overflow-x-scroll">
 							{#each data.myPackageInfo.app_queries as app_query}
-								<p><a href="/apps/{app_query}">{app_query}</a></p>
+								<p><a href="/apps/{app_query}" rel="nofollow">{app_query}</a></p>
 							{/each}
 						</div>
 					{/if}
