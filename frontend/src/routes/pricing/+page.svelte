@@ -1,10 +1,16 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { Check, Crown, X, ChevronDown, ChevronUp, Sparkles } from 'lucide-svelte';
+	import Check from 'lucide-svelte/icons/check';
+	import Crown from 'lucide-svelte/icons/crown';
+	import X from 'lucide-svelte/icons/x';
+	import ChevronDown from 'lucide-svelte/icons/chevron-down';
+	import ChevronUp from 'lucide-svelte/icons/chevron-up';
+	import Sparkles from 'lucide-svelte/icons/sparkles';
 	import type { BillingCycle } from '$lib/server/stripe';
+	import type { PageData } from './$types';
+	import type { ActionResult } from '@sveltejs/kit';
 
-	/** @type {import('./$types').PageData} */
-	let { data } = $props();
+	let { data }: { data: PageData } = $props();
 
 	let titlePadding = 'p-2 md:p-4';
 	let contentPadding = 'p-2 md:p-4';
@@ -32,7 +38,20 @@
 		});
 	};
 
-	const plans = [
+	interface Plan {
+		key: string;
+		name: string;
+		monthlyPrice: string;
+		yearlyPrice: string;
+		period?: string;
+		description: string;
+		freeTier?: boolean;
+		b2b?: boolean;
+		featured?: boolean;
+		highlights: string[];
+	}
+
+	const plans: Plan[] = [
 		{
 			key: 'free',
 			name: '',
@@ -105,8 +124,17 @@
 	/** Features that are identical across every tier */
 	const commonFeatures = ['Limited API access', 'Request free SDK/API scans'];
 
+	interface ComparisonFeature {
+		category: string;
+		name: string;
+		free: boolean;
+		sdk: boolean;
+		appads: boolean;
+		b2b: boolean;
+	}
+
 	/** Features that differentiate the plans */
-	const comparisonFeatures = [
+	const comparisonFeatures: ComparisonFeature[] = [
 		{
 			category: 'API Access',
 			name: 'API /companies + churn endpoints',
@@ -165,12 +193,7 @@
 		}
 	];
 
-	/** @param {{ result: import('@sveltejs/kit').ActionResult }} param0 */
-	const handleSubscribeResult = async ({
-		result
-	}: {
-		result: import('@sveltejs/kit').ActionResult;
-	}) => {
+	const handleSubscribeResult = async ({ result }: { result: ActionResult }) => {
 		console.log('Form result:', result);
 
 		if (result.type === 'redirect') {

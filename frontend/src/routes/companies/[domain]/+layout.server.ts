@@ -4,7 +4,17 @@ import { createApiClient } from '$lib/server/api';
 import { getAppCategories } from '$lib/server/appCategories';
 import { db } from '$lib/server/auth/db';
 
-export const load: LayoutServerLoad = async ({ fetch, params, parent, locals }) => {
+const PROTECTED_PREFIXES = ['/app-adstxt/publisher/', '/app-adstxt/download'];
+
+export const load: LayoutServerLoad = async ({ fetch, params, parent, locals, url }) => {
+	// If the child route requires authentication and the user isn't logged in,
+	// bail early and return 401 so Googlebot understands this page requires auth.
+	const path = url.pathname.replace(/\/$/, '');
+	const isProtected = PROTECTED_PREFIXES.some((prefix) => path.includes(prefix));
+	if (isProtected && !locals.user) {
+		error(401, 'Please sign in to view this page.');
+	}
+
 	const api = createApiClient(fetch);
 	const companyDomain = params.domain;
 	const category = params.category;

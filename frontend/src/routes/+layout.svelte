@@ -49,6 +49,14 @@
 	onMount(() => {
 		initializeTheme();
 	});
+
+	// Identify logged-in users in Umami analytics.
+	$effect(() => {
+		const user = page.data.user;
+		if (user && typeof window !== 'undefined' && (window as any).umami?.identify) {
+			(window as any).umami.identify({ id: String(user.id) });
+		}
+	});
 </script>
 
 <div class="grid h-screen grid grid-rows-[auto_1fr_auto]">

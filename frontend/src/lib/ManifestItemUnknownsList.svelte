@@ -1,59 +1,49 @@
 <script lang="ts">
-	import { Accordion } from '@skeletonlabs/skeleton-svelte';
 	import type { UnknownSDKs } from '../types';
-	import WhiteCard from './WhiteCard.svelte';
+
 	interface Props {
 		items: UnknownSDKs;
 	}
 
 	let { items = {} }: Props = $props();
-
-	const androidNameFont = 'text-xs md:text-sm px-8 md:px-16';
-	// const xmlPathFont = 'text-base px-4 md:px-8';
-
-	let accordionValue = $state(['allclosed']);
 </script>
 
 <div class="max-w-sm lg:max-w-full overflow-x-scroll">
-	<h4 class="h4 md:h3 p-2 md:p-4 mt-4">Unknown SDKs and Services</h4>
-	<p>If you recognize any of these please reach out to have it added.</p>
-	<ul>
-		<div
-			class="grid grid-cols-1 md:grid-cols-{Object.keys(items).length === 1
-				? '1'
-				: '2'} gap-2 md:gap-4"
-		>
-			<!-- {"bytedance.com": {"application/acitivity":["com.bytedance.sdk.analytics"]}} -->
-			{#each Object.entries(items) as [sdkShort, sdkShortValue]}
-				<li>
-					<Accordion
-						value={accordionValue}
-						onValueChange={(e) => (accordionValue = e.value)}
-						multiple
-					>
-						<Accordion.Item value={sdkShort}>
-							<Accordion.ItemTrigger
-								><p class={androidNameFont}>{sdkShort}</p></Accordion.ItemTrigger
-							>
-							<Accordion.ItemContent>
-								{#each Object.entries(sdkShortValue) as [xmlPath, sdkParts]}
-									{#each sdkParts as androidName}
-										<ul>
-											<li>
-												{xmlPath}:<a
-													href={`/sdks/${androidName}`}
-													class={androidNameFont}
-													rel="nofollow">{androidName}</a
-												>
-											</li>
-										</ul>
-									{/each}
+	{#if Object.keys(items).length > 0}
+		<table class="table">
+			<thead>
+				<tr>
+					<th class="text-left p-2">Domain</th>
+					<th class="text-left p-2">XML Path</th>
+					<th class="text-left p-2">Value Name</th>
+				</tr>
+			</thead>
+			<tbody>
+				{#each Object.entries(items) as [domain, xmlPaths]}
+					{#each Object.entries(xmlPaths) as [xmlPath, values]}
+						<tr>
+							<td class="p-2">{domain.slice(0, 100)}</td>
+							<td class="p-2">{xmlPath}</td>
+							<td class="p-2">
+								{#each values.slice(0, 5) as value}
+									<div>
+										{#if xmlPath.includes('res.raw')}
+											{value.slice(0, 100)}
+										{:else}
+											<a href="/sdks/{value}" rel="nofollow">{value.slice(0, 100)}</a>
+										{/if}
+									</div>
 								{/each}
-							</Accordion.ItemContent>
-						</Accordion.Item>
-					</Accordion>
-				</li>
-			{/each}
-		</div>
-	</ul>
+								{#if values.length > 5}
+									<div class="text-surface-500-400 text-xs mt-1">
+										... and {values.length - 5} more
+									</div>
+								{/if}
+							</td>
+						</tr>
+					{/each}
+				{/each}
+			</tbody>
+		</table>
+	{/if}
 </div>
