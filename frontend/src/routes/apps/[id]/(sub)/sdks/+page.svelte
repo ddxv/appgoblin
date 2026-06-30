@@ -93,6 +93,9 @@
 				<Tabs.Trigger value="sdks" class="p-0 md:p-8"
 					><p class="text-xs md:text-base">SDKs</p></Tabs.Trigger
 				>
+				<Tabs.Trigger value="unknowns" class="p-0 md:p-8"
+					><p class="text-xs md:text-base">Unmapped SDKs / Unknown</p></Tabs.Trigger
+				>
 				{#if data.myapp.store.startsWith('Apple')}
 					<Tabs.Trigger value="SKAdNetwork" class="p-0 md:p-8"
 						><p class="text-xs md:text-base">SKAdNetwork</p></Tabs.Trigger
@@ -133,12 +136,25 @@
 							{/await}
 						{/if}
 					</section>
-
-					{#if data.myPackageInfo.leftovers && Object.keys(data.myPackageInfo.leftovers).length > 0}
-						<ManifestItemUnknownsList items={data.myPackageInfo.leftovers}
-						></ManifestItemUnknownsList>
-					{/if}
 				{/if}
+			</Tabs.Content>
+
+			<Tabs.Content value="unknowns">
+				<section class="grid grid-cols-1 gap-4">
+					{#if typeof data.myPackageInfo == 'string'}
+						<p>Permissions, SDKs and trackers info not yet available for this app.</p>
+					{:else}
+						{#if data.myPackageInfo.leftovers && Object.keys(data.myPackageInfo.leftovers).length > 0}
+							<div class="p-2">
+								<p>If you recognize any of these please reach out to have it added.</p>
+							</div>
+							<ManifestItemUnknownsList items={data.myPackageInfo.leftovers}
+							></ManifestItemUnknownsList>
+						{:else}
+							<p>No unknown SDKs found.</p>
+						{/if}
+					{/if}
+				</section>
 			</Tabs.Content>
 			<Tabs.Content value="queries">
 				<section class="grid grid-cols-1">

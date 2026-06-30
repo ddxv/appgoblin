@@ -677,6 +677,14 @@ class AppController(Controller):
             for short_value_name, dddf in leftovers_df.groupby("short_value_name")
         }
 
+        # Sort so entries whose xml_path contains "res.raw" come last
+        leftovers_dict = dict(
+            sorted(
+                leftovers_dict.items(),
+                key=lambda item: any("res.raw" in k for k in item[1]),
+            )
+        )
+
         permissions_list = permissions_df.value_name.tolist()
         permissions_list = [
             x.replace("android.permission.", "") for x in permissions_list
