@@ -60,96 +60,94 @@
 </script>
 
 <div class="grid h-screen grid grid-rows-[auto_1fr_auto]">
-	<header class="sticky top-0 z-10">
-		<AppBar class="bg-surface-50-950">
-			<AppBar.Toolbar class="grid-cols-[auto_1fr_auto]">
-				<AppBar.Lead class="shrink-0 min-w-fit">
-					<a href="/" class="flex items-center shrink-0">
-						<img
-							class="h-8 w-8 shrink-0 lg:ml-2 lg:h-12 lg:w-12"
-							src="/goblin_purple_hat_60.png"
-							alt="AppGoblin Icon"
+	<AppBar class="sticky top-0 z-10 bg-surface-50-950 border-b border-surface-100-900">
+		<AppBar.Toolbar class="grid-cols-[auto_1fr_auto]">
+			<AppBar.Lead class="shrink-0 min-w-fit">
+				<a href="/" class="flex items-center shrink-0">
+					<img
+						class="h-8 w-8 shrink-0 lg:ml-2 lg:h-12 lg:w-12"
+						src="/goblin_purple_hat_60.png"
+						alt="AppGoblin Icon"
+					/>
+					<strong
+						class="hidden lg:inline-flex text-xs ml-1 lg:ml-2 lg:text-lg xl:text-xl uppercase text-secondary-800-200"
+						>AppGoblin</strong
+					>
+				</a>
+			</AppBar.Lead>
+
+			<AppBar.Headline class="hidden md:inline-flex md:ml-8 ">
+				<div>
+					<NavTabs />
+				</div>
+			</AppBar.Headline>
+
+			<AppBar.Trail class="overflow-hidden flex justify-end">
+				<div class="flex gap-1 md:gap-2">
+					<div class="hidden lg:flex items-center gap-1">
+						<a
+							href="https://discord.gg/7jpWEhkXRW"
+							target="_blank"
+							rel="noreferrer"
+							class="inline-flex h-11 w-11 items-center justify-center rounded-full text-secondary-800-200 transition-colors hover:bg-secondary-900-100/10 hover:text-primary-900-100"
+							aria-label="Join AppGoblin Discord"
+							title="Discord"
+						>
+							<span class="inline-flex h-5 w-5 items-center justify-center xl:h-6 xl:w-6"
+								>{@html discordIcon}</span
+							>
+						</a>
+						<a
+							href="https://github.com/appgoblin-dev/appgoblin"
+							target="_blank"
+							rel="noreferrer"
+							class="inline-flex h-11 w-11 items-center justify-center rounded-full text-secondary-800-200 transition-colors hover:bg-secondary-900-100/10 hover:text-primary-900-100"
+							aria-label="Open AppGoblin GitHub"
+							title="GitHub"
+						>
+							<span class="inline-flex h-5 w-5 items-center justify-center xl:h-6 xl:w-6"
+								>{@html githubIcon}</span
+							>
+						</a>
+					</div>
+
+					<form
+						class="input-group grid-cols-[1fr_auto]"
+						role="search"
+						aria-busy={isSearchStarting}
+						onsubmit={handleSearchSubmit}
+					>
+						<input
+							class="ig-input"
+							type="search"
+							name="term"
+							placeholder="Search Apps & Companies"
+							disabled={isSearchStarting}
+							required
 						/>
-						<strong
-							class="hidden lg:inline-flex text-xs ml-1 lg:ml-2 lg:text-lg xl:text-xl uppercase text-secondary-800-200"
-							>AppGoblin</strong
+						<button
+							class="ig-cell preset-tonal inline-flex items-center justify-center p-2 md:p-4"
+							type="submit"
+							disabled={isSearchStarting}
+							aria-label={isSearchStarting ? 'Searching' : 'Search'}
 						>
-					</a>
-				</AppBar.Lead>
+							{#if isSearchStarting}
+								<span
+									class="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"
+									aria-hidden="true"
+								></span>
+								<span class="sr-only">Searching...</span>
+							{:else}
+								<IconSearch />
+							{/if}
+						</button>
+					</form>
 
-				<AppBar.Headline class="hidden md:inline-flex md:ml-8 ">
-					<div>
-						<NavTabs />
-					</div>
-				</AppBar.Headline>
-
-				<AppBar.Trail class="overflow-hidden flex justify-end">
-					<div class="flex gap-1 md:gap-2">
-						<div class="hidden lg:flex items-center gap-1">
-							<a
-								href="https://discord.gg/7jpWEhkXRW"
-								target="_blank"
-								rel="noreferrer"
-								class="inline-flex h-11 w-11 items-center justify-center rounded-full text-secondary-800-200 transition-colors hover:bg-secondary-900-100/10 hover:text-primary-900-100"
-								aria-label="Join AppGoblin Discord"
-								title="Discord"
-							>
-								<span class="inline-flex h-5 w-5 items-center justify-center xl:h-6 xl:w-6"
-									>{@html discordIcon}</span
-								>
-							</a>
-							<a
-								href="https://github.com/appgoblin-dev/appgoblin"
-								target="_blank"
-								rel="noreferrer"
-								class="inline-flex h-11 w-11 items-center justify-center rounded-full text-secondary-800-200 transition-colors hover:bg-secondary-900-100/10 hover:text-primary-900-100"
-								aria-label="Open AppGoblin GitHub"
-								title="GitHub"
-							>
-								<span class="inline-flex h-5 w-5 items-center justify-center xl:h-6 xl:w-6"
-									>{@html githubIcon}</span
-								>
-							</a>
-						</div>
-
-						<form
-							class="input-group grid-cols-[1fr_auto]"
-							role="search"
-							aria-busy={isSearchStarting}
-							onsubmit={handleSearchSubmit}
-						>
-							<input
-								class="ig-input"
-								type="search"
-								name="term"
-								placeholder="Search Apps & Companies"
-								disabled={isSearchStarting}
-								required
-							/>
-							<button
-								class="ig-cell preset-tonal inline-flex items-center justify-center p-2 md:p-4"
-								type="submit"
-								disabled={isSearchStarting}
-								aria-label={isSearchStarting ? 'Searching' : 'Search'}
-							>
-								{#if isSearchStarting}
-									<span
-										class="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"
-										aria-hidden="true"
-									></span>
-									<span class="sr-only">Searching...</span>
-								{:else}
-									<IconSearch />
-								{/if}
-							</button>
-						</form>
-
-						<LoginAccountButton />
-					</div>
-				</AppBar.Trail>
-			</AppBar.Toolbar>
-		</AppBar>
-	</header>
+					<LoginAccountButton />
+				</div>
+			</AppBar.Trail>
+		</AppBar.Toolbar>
+	</AppBar>
 
 	<MainContent>
 		{@render children?.()}

@@ -670,20 +670,18 @@ class AppController(Controller):
         # example: {"bytedance.com":
         # {"application/acitivity":
         # ["com.bytedance.sdk.analytics"] }}
-        leftovers_dict = {
-            short_value_name: dddf.groupby("xml_path")["value_name"]
-            .apply(list)
-            .to_dict()
-            for short_value_name, dddf in leftovers_df.groupby("short_value_name")
-        }
-
-        # Sort so entries whose xml_path contains "res.raw" come last
-        leftovers_dict = dict(
-            sorted(
-                leftovers_dict.items(),
-                key=lambda item: any("res.raw" in k for k in item[1]),
+        leftovers_dict: dict[str, dict[str, list[str]]] = {}
+        for short_value_name, dddf in leftovers_df.groupby("short_value_name"):
+            inner = dddf.groupby("xml_path")["value_name"].apply(list).to_dict()
+            key = (
+                "Raw Resources"
+                if all("res.raw" in k for k in inner)
+                else short_value_name
             )
-        )
+            if key in leftovers_dict:
+                leftovers_dict[key].update(inner)
+            else:
+                leftovers_dict[key] = inner
 
         permissions_list = permissions_df.value_name.tolist()
         permissions_list = [

@@ -7,7 +7,7 @@
 	import LogIn from 'lucide-svelte/icons/log-in';
 	import type { CompanyTypes, AppFullDetail, CatData } from '../../../types';
 	import AvailableOniOs from '$lib/svg/AvailableOniOS.svelte';
-	import AppTabs from '$lib/utils/AppTabs.svelte';
+	import AppNavTabs from '$lib/utils/AppNavTabs.svelte';
 	import MainContent from '$lib/MainContent.svelte';
 
 	let {
@@ -101,121 +101,119 @@
 	<meta name="robots" content={page.data.toFollow ?? defaultToFollow} />
 </svelte:head>
 
-<nav class="border-y my-2 md:my-6">
-	<div class="mx-1: md:mx-8">
-		<AppTabs {isAndroidApp} myapp={data.myapp} />
-	</div>
-</nav>
+<div class="grid grid-cols-1 gap-6 md:grid-cols-[minmax(220px,260px)_1fr]">
+	<AppNavTabs {isAndroidApp} myapp={data.myapp} />
 
-<MainContent>
-	<div class="card-header px-4 md:px-8">
-		<h1 class=" text-3xl font-bold mb-4">{data.myapp.name}</h1>
-		<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
-			<!-- COL 1  -->
-			<div class="grid grid-cols-3 gap-0">
-				<div class="col-span-1">
-					{#if data.myapp.app_icon_url}
-						<img
-							src={data.myapp.app_icon_url}
-							alt={data.myapp.name}
-							class="w-32 sm:w-40 md:w-48 h-auto"
-							referrerpolicy="no-referrer"
-						/>
-					{/if}
-					<!-- Ratings: STARS (123) -->
-					<div class="md:hidden">
-						<StarsRating total={5} size={20} rating={data.myapp.rating} />
-					</div>
-					<div class="hidden md:inline-flex">
-						<StarsRating total={5} size={40} rating={data.myapp.rating} />
-					</div>
-				</div>
-
-				<div class="space-y-2 md:space-y-4 col-span-2">
-					<div class="flex items-center justify-center">
-						<a
-							href={data.myapp.store_link}
-							target="_blank"
-							class="anchor inline-flex items-center hover:scale-105 transition-transform"
-						>
-							{#if data.myapp.store.includes('Google')}
-								<img
-									class="w-32 md:w-48 md:w-64"
-									src="/gp_en_badge_web_generic.png"
-									alt={data.myapp.name}
-								/>
-							{:else if data.myapp.store.includes('Apple')}
-								<AvailableOniOs size={180} />
-							{/if}
-						</a>
-					</div>
-					{#if data.myapp.developer_id}
-						<a href="/developers/{data.myapp.developer_id}" class="block">
-							<div class="btn preset-tonal hover:preset-tonal-primary w-full">
-								<span class="flex items-center gap-1 md:gap-2 text-sm md:text-base">
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										class="h-5 w-5"
-										viewBox="0 0 20 20"
-										fill="currentColor"
-									>
-										<path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" />
-									</svg>
-									Developer: {data.myapp.developer_name?.split(' ').slice(0, 3).join(' ') ||
-										data.myapp.developer_id}
-								</span>
-							</div>
-						</a>
-					{/if}
-
-					<div class="btn preset-tonal hover:preset-tonal-primary w-full">
-						<span class="flex items-center gap-1 md:gap-2 text-xs md:text-sm">
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								class="h-5 w-5"
-								viewBox="0 0 20 20"
-								fill="currentColor"
-							>
-								<path
-									d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z"
-								/>
-							</svg>
-							Category: {getCategoryName(data.myapp.category)}
-						</span>
-					</div>
-					<div class="flex flex-col md:flex-row items-center gap-2">
-						<a
-							href="/apps/comparison/{data.myapp.store_id}"
-							class="btn preset-tonal w-full inline-flex items-center justify-center gap-2"
-						>
-							<LogIn class="h-3.5 w-3.5" aria-hidden="true" />
-							Add App to Comparison
-						</a>
-						<div class="w-full">
-							<FollowToggleButton
-								entity="app"
-								label="App"
-								storeId={data.myapp.store_id}
-								initialFollowing={Boolean(data.isFollowingApp)}
-								fullWidth={true}
+	<MainContent class="min-w-0 pl-1 md:pl-4">
+		<div class="card-header px-4 md:px-8">
+			<h1 class=" text-3xl font-bold mb-4">{data.myapp.name}</h1>
+			<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+				<!-- COL 1  -->
+				<div class="grid grid-cols-3 gap-0">
+					<div class="col-span-1">
+						{#if data.myapp.app_icon_url}
+							<img
+								src={data.myapp.app_icon_url}
+								alt={data.myapp.name}
+								class="w-32 sm:w-40 md:w-48 h-auto"
+								referrerpolicy="no-referrer"
 							/>
+						{/if}
+						<!-- Ratings: STARS (123) -->
+						<div class="md:hidden">
+							<StarsRating total={5} size={20} rating={data.myapp.rating} />
 						</div>
-						<div class="w-full">
-							<RequestSDKScanButton fullWidth={true} />
+						<div class="hidden md:inline-flex">
+							<StarsRating total={5} size={40} rating={data.myapp.rating} />
+						</div>
+					</div>
+
+					<div class="space-y-2 md:space-y-4 col-span-2">
+						<div class="flex items-center justify-center">
+							<a
+								href={data.myapp.store_link}
+								target="_blank"
+								class="anchor inline-flex items-center hover:scale-105 transition-transform"
+							>
+								{#if data.myapp.store.includes('Google')}
+									<img
+										class="w-32 md:w-48 md:w-64"
+										src="/gp_en_badge_web_generic.png"
+										alt={data.myapp.name}
+									/>
+								{:else if data.myapp.store.includes('Apple')}
+									<AvailableOniOs size={180} />
+								{/if}
+							</a>
+						</div>
+						{#if data.myapp.developer_id}
+							<a href="/developers/{data.myapp.developer_id}" class="block">
+								<div class="btn preset-tonal hover:preset-tonal-primary w-full">
+									<span class="flex items-center gap-1 md:gap-2 text-sm md:text-base">
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											class="h-5 w-5"
+											viewBox="0 0 20 20"
+											fill="currentColor"
+										>
+											<path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" />
+										</svg>
+										Developer: {data.myapp.developer_name?.split(' ').slice(0, 3).join(' ') ||
+											data.myapp.developer_id}
+									</span>
+								</div>
+							</a>
+						{/if}
+
+						<div class="btn preset-tonal hover:preset-tonal-primary w-full">
+							<span class="flex items-center gap-1 md:gap-2 text-xs md:text-sm">
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									class="h-5 w-5"
+									viewBox="0 0 20 20"
+									fill="currentColor"
+								>
+									<path
+										d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z"
+									/>
+								</svg>
+								Category: {getCategoryName(data.myapp.category)}
+							</span>
+						</div>
+						<div class="flex flex-col md:flex-row items-center gap-2">
+							<a
+								href="/apps/comparison/{data.myapp.store_id}"
+								class="btn preset-tonal w-full inline-flex items-center justify-center gap-2"
+							>
+								<LogIn class="h-3.5 w-3.5" aria-hidden="true" />
+								Add App to Comparison
+							</a>
+							<div class="w-full">
+								<FollowToggleButton
+									entity="app"
+									label="App"
+									storeId={data.myapp.store_id}
+									initialFollowing={Boolean(data.isFollowingApp)}
+									fullWidth={true}
+								/>
+							</div>
+							<div class="w-full">
+								<RequestSDKScanButton fullWidth={true} />
+							</div>
 						</div>
 					</div>
 				</div>
+				<!-- COL 2  -->
+				<div>
+					{#if data.myapp.installs || data.myapp.rating_count}
+						<RatingInstallsLarge app={data.myapp} />
+					{/if}
+				</div>
+				<!-- COL 3  -->
+				<!-- EMPTY COL? -->
 			</div>
-			<!-- COL 2  -->
-			<div>
-				{#if data.myapp.installs || data.myapp.rating_count}
-					<RatingInstallsLarge app={data.myapp} />
-				{/if}
-			</div>
-			<!-- COL 3  -->
-			<!-- EMPTY COL? -->
 		</div>
-	</div>
 
-	{@render children?.()}
-</MainContent>
+		{@render children?.()}
+	</MainContent>
+</div>

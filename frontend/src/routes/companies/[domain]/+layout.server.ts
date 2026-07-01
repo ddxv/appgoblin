@@ -31,26 +31,6 @@ export const load: LayoutServerLoad = async ({ fetch, params, parent, locals, ur
 
 	const companyTree = await api.get(`/companies/${companyDomain}/tree`, 'Company Tree');
 
-	let companyLookup: { company_id: number; company_name: string; company_domain: string } | null =
-		null;
-	try {
-		companyLookup = await api.get(`/companies/${companyDomain}/lookup`, 'Company Lookup');
-	} catch {
-		companyLookup = null;
-	}
-
-	let isFollowingCompany = false;
-	if (locals.user && companyLookup?.company_id) {
-		const followed = await db.queryOne<{ id: number }>(
-			`SELECT id
-			 FROM public.user_followed_companies
-			 WHERE user_id = $1 AND company_id = $2
-			 LIMIT 1`,
-			[locals.user.id, companyLookup.company_id]
-		);
-		isFollowingCompany = !!followed;
-	}
-
 	let tabIndicators = null;
 	try {
 		tabIndicators = await api.get(`/companies/${companyDomain}/tabs`, 'Company Tab Indicators');
@@ -61,8 +41,6 @@ export const load: LayoutServerLoad = async ({ fetch, params, parent, locals, ur
 	return {
 		companyDetails,
 		companyTree,
-		companyLookup,
-		isFollowingCompany,
 		tabIndicators
 	};
 };
