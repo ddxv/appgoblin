@@ -52,20 +52,38 @@
 
 	$effect(() => {
 		const user = page.data.user;
+		if (typeof window === 'undefined' || !user?.id) return;
 
-		if (typeof window !== 'undefined' && user?.id) {
-			// If Umami hasn't finished initializing yet, wait for it
+		let intervalId: ReturnType<typeof setInterval>;
+
+		const tryIdentify = () => {
 			if ((window as any).umami?.identify) {
 				(window as any).umami.identify({ id: String(user.id) });
-			} else {
-				// Fallback for immediate load race conditions
-				const handleUmamiReady = () => {
-					(window as any).umami?.identify({ id: String(user.id) });
-					document.removeEventListener('umami:ready', handleUmamiReady);
-				};
-				document.addEventListener('umami:ready', handleUmamiReady);
+				return true;
 			}
+			return false;
+		};
+
+		// Immediate try because of <script defer>
+		const success = tryIdentify();
+
+		// Defensive fallback: only spin up the interval if immediate try fails
+		if (!success) {
+			let retries = 0;
+			const MAX_RETRIES = 100; // ~5 seconds at 50ms
+
+			intervalId = setInterval(() => {
+				retries++;
+				if (tryIdentify() || retries >= MAX_RETRIES) {
+					clearInterval(intervalId);
+				}
+			}, 50);
 		}
+
+		// Always return a cleanup so Svelte handles the lifecycle smoothly
+		return () => {
+			if (intervalId) clearInterval(intervalId);
+		};
 	});
 </script>
 
