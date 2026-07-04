@@ -50,11 +50,21 @@
 		initializeTheme();
 	});
 
-	// Identify logged-in users in Umami analytics.
 	$effect(() => {
 		const user = page.data.user;
-		if (user && typeof window !== 'undefined' && (window as any).umami?.identify) {
-			(window as any).umami.identify({ id: String(user.id) });
+
+		if (typeof window !== 'undefined' && user?.id) {
+			// If Umami hasn't finished initializing yet, wait for it
+			if ((window as any).umami?.identify) {
+				(window as any).umami.identify({ id: String(user.id) });
+			} else {
+				// Fallback for immediate load race conditions
+				const handleUmamiReady = () => {
+					(window as any).umami?.identify({ id: String(user.id) });
+					document.removeEventListener('umami:ready', handleUmamiReady);
+				};
+				document.addEventListener('umami:ready', handleUmamiReady);
+			}
 		}
 	});
 </script>
