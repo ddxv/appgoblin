@@ -1,5 +1,7 @@
 <script lang="ts">
 	import Crown from 'lucide-svelte/icons/crown';
+	import Menu from 'lucide-svelte/icons/menu';
+	import X from 'lucide-svelte/icons/x';
 
 	export interface SubNavTabItem {
 		slug: string;
@@ -31,12 +33,20 @@
 	let {
 		tabs,
 		currentSlug,
-		ariaLabel = 'Navigation tabs'
+		ariaLabel = 'Navigation tabs',
+		menuLabel = 'Page Menu'
 	}: {
 		tabs: SubNavTabItem[];
 		currentSlug: string;
 		ariaLabel?: string;
+		menuLabel?: string;
 	} = $props();
+
+	let isExpanded = $state(false);
+
+	const activeTab = $derived(
+		tabs.find((t) => t.slug === currentSlug || t.matchSlugs?.includes(currentSlug))
+	);
 
 	function formatCount(n: number | undefined | null): string {
 		if (n == null || n === 0) return '';
@@ -64,11 +74,54 @@
 		if (tab.dimmed) return 'opacity-60';
 		return '';
 	}
+
+	function handleTabClick() {
+		isExpanded = false;
+	}
 </script>
 
 <aside class="md:sticky md:top-24 md:self-start">
 	<div class="border-r border-surface-200-800 pl-1 md:pl-2 pr-2 md:pr-4">
-		<nav class="flex flex-col gap-2" aria-label={ariaLabel}>
+		<!-- Mobile toggle header -->
+		<button
+			type="button"
+			class="flex w-full items-center justify-between gap-2 border border-surface-300-600 rounded-lg px-3 py-2 text-sm font-medium text-surface-700-300 md:hidden"
+			onclick={() => (isExpanded = !isExpanded)}
+			aria-expanded={isExpanded}
+			aria-label="{isExpanded ? 'Collapse' : 'Expand'} section navigation"
+		>
+			<span class="flex items-center gap-2">
+				{#if isExpanded}
+					<X size={18} class="shrink-0" aria-hidden="true" />
+				{:else}
+					<Menu size={18} class="shrink-0" aria-hidden="true" />
+				{/if}
+				<span class="text-surface-500 font-normal">{menuLabel}</span>
+				{#if activeTab}
+					<span class="text-surface-500 mx-0.5">·</span>
+					{#if activeTab.icon}
+						{@const Icon = activeTab.icon}
+						<Icon size={16} class="shrink-0" aria-hidden="true" />
+					{/if}
+					{activeTab.label}
+					{#if activeTab.count}
+						<span
+							class="inline-flex items-center justify-center bg-secondary-100-800 px-2 py-0.5 text-xs font-semibold tabular-nums text-secondary-800-200"
+						>
+							{formatCount(activeTab.count)}
+						</span>
+					{/if}
+				{/if}
+			</span>
+		</button>
+
+		<!-- Full nav: always visible on desktop, toggled on mobile -->
+		<nav
+			class="flex-col gap-2 {isExpanded
+				? 'flex border-t border-surface-200-800 pt-2 mt-2'
+				: 'hidden'} md:flex md:border-t-0 md:pt-0 md:mt-0"
+			aria-label={ariaLabel}
+		>
 			{#each tabs as tab (tab.slug || tab.sectionLabel)}
 				{#if tab.sectionLabel}
 					<p
@@ -81,6 +134,7 @@
 						href={tab.href}
 						class="px-2 py-2 text-sm transition {tabClass(tab)} {tab.indent ? 'ml-4' : ''}"
 						aria-current={isTabActive(tab) ? 'page' : undefined}
+						onclick={handleTabClick}
 					>
 						<span class="flex items-center justify-between gap-2">
 							<span class="flex items-center gap-1.5 {labelClass(tab)}">

@@ -254,4 +254,9 @@
 	});
 </script>
 
-<SubNavTabs tabs={sectionLinks} currentSlug={sectionSlug} ariaLabel="Company sections" />
+<SubNavTabs
+	tabs={sectionLinks}
+	currentSlug={sectionSlug}
+	ariaLabel="Company sections"
+	menuLabel="Company Menu"
+/>

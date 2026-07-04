@@ -109,4 +109,4 @@
 	});
 </script>
 
-<SubNavTabs {tabs} {currentSlug} ariaLabel="App sections" />
+<SubNavTabs {tabs} {currentSlug} ariaLabel="App sections" menuLabel="App Menu" />
