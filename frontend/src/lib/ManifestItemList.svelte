@@ -26,12 +26,10 @@
 
 			{#each Object.entries(items) as [companyDomain, companyObj]}
 				<!-- For trackers and networks -->
-				<WhiteCard>
-					{#snippet title()}
-						<div class="text-lg text-bold p-2">
-							<CompanyButton companyName={companyDomain} {companyDomain} />
-						</div>
-					{/snippet}
+				<div>
+					<div class="text-lg text-bold p-2">
+						<CompanyButton companyName={companyDomain} {companyDomain} />
+					</div>
 					{#each Object.entries(companyObj) as [sdkShort, sdkShortObj]}
 						<Accordion
 							value={accordionValue}
@@ -63,7 +61,7 @@
 							</Accordion.Item>
 						</Accordion>
 					{/each}
-				</WhiteCard>
+				</div>
 			{/each}
 		</div>
 	</ul>

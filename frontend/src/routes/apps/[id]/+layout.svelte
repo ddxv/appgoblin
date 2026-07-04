@@ -101,7 +101,8 @@
 	<meta name="robots" content={page.data.toFollow ?? defaultToFollow} />
 </svelte:head>
 
-<div class="grid grid-cols-1 gap-6 md:grid-cols-[minmax(220px,260px)_1fr]">
+<!-- <div class="grid grid-cols-1 gap-6 md:grid-cols-[minmax(220px,260px)_1fr]"> -->
+<div class="grid grid-cols-1 gap-6 md:grid-cols-[220px_1fr] xl:grid-cols-[260px_1fr]">
 	<AppNavTabs {isAndroidApp} myapp={data.myapp} />
 
 	<MainContent class="min-w-0 pl-1 md:pl-4">
@@ -170,7 +171,7 @@
 								class="btn preset-tonal w-full inline-flex items-center justify-center gap-2"
 							>
 								<LogIn class="h-3.5 w-3.5" aria-hidden="true" />
-								Add App to Comparison
+								Add to Compare
 							</a>
 							<div class="w-full">
 								<FollowToggleButton
@@ -181,9 +182,9 @@
 									fullWidth={true}
 								/>
 							</div>
-							<div class="w-full">
-								<RequestSDKScanButton fullWidth={true} />
-							</div>
+						</div>
+						<div class="w-full">
+							<RequestSDKScanButton fullWidth={true} />
 						</div>
 					</div>
 				</div>

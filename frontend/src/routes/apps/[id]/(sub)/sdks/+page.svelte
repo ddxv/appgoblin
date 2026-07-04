@@ -35,59 +35,26 @@
 <div class="p-2 md:p-16 mt-2 md:mt-4">
 	<section class="space-y-6">
 		<h2 class="h1 md:h3 p-2">SDKs, Trackers & Permissions for {data.myapp.name || ''}</h2>
-
-		<section class="grid grid-cols-1 md:grid-cols-2 gap-4">
-			<WhiteCard>
-				{#snippet title()}
-					SDK Scan Status
-				{/snippet}
-				<div class="space-y-2 p-2">
-					{#if data.myapp.sdk_last_crawled}
-						<div class="flex items-center gap-2">
-							<span class="font-medium">Last Successful SDK Scan:</span>
-							<span class="">{data.myapp.sdk_successful_last_crawled}</span>
-						</div>
-						<div class="flex items-center gap-2">
-							<span class="font-medium">Lastest Attempt:</span>
-							<span class="">{data.myapp.sdk_last_crawled}</span>
-						</div>
-						<div class="flex items-center gap-2">
-							<span class="font-medium">Last Attempt Status:</span>
-							<span
-								class={data.myapp.sdk_last_crawl_result == 1
-									? 'text-success-900-100'
-									: 'text-error-900-100'}
-							>
-								{data.myapp.sdk_last_crawl_result == 1 ? 'Success' : 'Failed'}
-							</span>
-						</div>
-						<table class="table">
-							<thead>
-								<tr>
-									<th class="text-left p-2">SDKs Last Scanned</th>
-									<th class="text-left p-2">Version</th>
-									<th class="text-left p-2">Scan Result</th>
-									<th class="text-left p-2">First Downloaded</th>
-								</tr>
-							</thead>
-							<tbody>
-								{#each data.versionTimeline as version}
-									<tr>
-										<td class="p-2">{formatDateTime(version.sdks_last_scanned_at)}</td>
-										<td class="p-2">{version.app_version_code}</td>
-										<td class="p-2">{resultToString(version.sdk_scan_result)}</td>
-										<td class="p-2">{formatDateTime(version.downloaded_at)}</td>
-									</tr>
-								{/each}
-							</tbody>
-						</table>
-					{:else}
-						App not yet analyzed for SDKs.
-					{/if}
-				</div>
-			</WhiteCard>
-		</section>
-
+		{#if data.myapp.sdk_last_crawled}
+			<div class="flex items-center gap-2">
+				<span class="font-medium">Last Successful SDK Scan:</span>
+				<span class="">{data.myapp.sdk_successful_last_crawled}</span>
+			</div>
+			<div class="flex items-center gap-2">
+				<span class="font-medium">Lastest Attempt:</span>
+				<span class="">{data.myapp.sdk_last_crawled}</span>
+			</div>
+			<div class="flex items-center gap-2">
+				<span class="font-medium">Last Attempt Status:</span>
+				<span
+					class={data.myapp.sdk_last_crawl_result == 1
+						? 'text-success-900-100'
+						: 'text-error-900-100'}
+				>
+					{data.myapp.sdk_last_crawl_result == 1 ? 'Success' : 'Failed'}
+				</span>
+			</div>
+		{/if}
 		<Tabs defaultValue="sdks">
 			<Tabs.List>
 				<Tabs.Trigger value="sdks" class="p-0 md:p-8"
@@ -115,23 +82,20 @@
 				{#if typeof data.myPackageInfo == 'string'}
 					<p>Permissions, SDKs and trackers info not yet available for this app.</p>
 				{:else}
-					<section class="grid grid-cols-1 md:grid-cols-2 gap-4">
+					<section class="grid grid-cols-1 gap-4">
 						{#if data.myPackageInfo.company_categories && Object.keys(data.myPackageInfo.company_categories).length > 0}
 							{#await data.companyTypes}
 								Loading company types...
 							{:then myCompanyTypes}
 								{#each Object.keys(data.myPackageInfo.company_categories) as category}
-									<WhiteCard>
-										{#snippet title()}
-											{myCompanyTypes.types.find(
-												(x: { url_slug: string }) => x.url_slug === category
-											)?.name || category}
-										{/snippet}
-										<div class="p-2 lg:p-4">
-											<ManifestItemList items={data.myPackageInfo.company_categories[category]}
-											></ManifestItemList>
-										</div>
-									</WhiteCard>
+									<h3 class="h3">
+										{myCompanyTypes.types.find((x: { url_slug: string }) => x.url_slug === category)
+											?.name || category}
+									</h3>
+									<div class="p-2 lg:p-4">
+										<ManifestItemList items={data.myPackageInfo.company_categories[category]}
+										></ManifestItemList>
+									</div>
 								{/each}
 							{/await}
 						{/if}
@@ -200,3 +164,51 @@
 		</Tabs>
 	</section>
 </div>
+
+<section class="gap-4 mt-8">
+	SDK Scans History
+	<div class="space-y-2 p-2">
+		{#if data.myapp.sdk_last_crawled}
+			<div class="flex items-center gap-2">
+				<span class="font-medium">Last Successful SDK Scan:</span>
+				<span class="">{data.myapp.sdk_successful_last_crawled}</span>
+			</div>
+			<div class="flex items-center gap-2">
+				<span class="font-medium">Lastest Attempt:</span>
+				<span class="">{data.myapp.sdk_last_crawled}</span>
+			</div>
+			<div class="flex items-center gap-2">
+				<span class="font-medium">Last Attempt Status:</span>
+				<span
+					class={data.myapp.sdk_last_crawl_result == 1
+						? 'text-success-900-100'
+						: 'text-error-900-100'}
+				>
+					{data.myapp.sdk_last_crawl_result == 1 ? 'Success' : 'Failed'}
+				</span>
+			</div>
+			<table class="table">
+				<thead>
+					<tr>
+						<th class="text-left p-2">SDKs Last Scanned</th>
+						<th class="text-left p-2">Version</th>
+						<th class="text-left p-2">Scan Result</th>
+						<th class="text-left p-2">First Downloaded</th>
+					</tr>
+				</thead>
+				<tbody>
+					{#each data.versionTimeline as version}
+						<tr>
+							<td class="p-2">{formatDateTime(version.sdks_last_scanned_at)}</td>
+							<td class="p-2">{version.app_version_code}</td>
+							<td class="p-2">{resultToString(version.sdk_scan_result)}</td>
+							<td class="p-2">{formatDateTime(version.downloaded_at)}</td>
+						</tr>
+					{/each}
+				</tbody>
+			</table>
+		{:else}
+			App not yet analyzed for SDKs.
+		{/if}
+	</div>
+</section>
