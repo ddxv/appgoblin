@@ -36,26 +36,25 @@
 
 <section class="grid grid-flow-cols-1 md:grid-cols-2 md:gap-4 p-2">
 	<!-- App Overview Summary - Full Width -->
-	<div class="col-span-full mb-4">
-		<div class="card preset-filled-surface-100-900 p-4 lg:p-6">
-			<AppOverviewSummary app={data.myapp} />
-		</div>
+	<div class="col-span-full p-0 md:p-2">
+		<AppOverviewSummary
+			app={data.myapp}
+			sdkOverview={data.appSDKsOverview}
+			companyTypes={data.companyTypes}
+		/>
+
+		<div class="mt-2 md:mt-4"></div>
+
+		<AppSDKOverview
+			myPackageInfo={data.appSDKsOverview}
+			companyTypes={data.companyTypes}
+			myapp={data.myapp}
+		/>
 	</div>
 
-	<div class="p-0 lg:p-8">
+	<div class="p-0 lg:p-2">
 		<div class="card-footer md:flex">
-			<!-- SDKs, Trackers & Permissions Overview -->
 			<div class="grid grid-cols-1 gap-2 md:gap-4">
-				<WhiteCard>
-					{#snippet title()}
-						SDKs, Trackers & Permissions
-					{/snippet}
-					<AppSDKOverview
-						myPackageInfo={data.appSDKsOverview}
-						companyTypes={data.companyTypes}
-						myapp={data.myapp}
-					/>
-				</WhiteCard>
 				<!-- App Details Section -->
 				<div class="grid grid-cols-2 gap-2 md:gap-4 text-xs md:text-base">
 					<WhiteCard>
@@ -74,6 +73,14 @@
 							<div class="flex items-center gap-2">
 								<span class="font-medium">Store Last Updated:</span>
 								<span class="">{data.myapp.store_last_updated}</span>
+							</div>
+							<div class="flex items-center gap-2">
+								<span class="font-medium">App Store Category:</span>
+								<span class=""
+									>{data.appCats?.categories?.find(
+										(cat: { id: string }) => cat.id == data.myapp.category
+									)?.name || data.myapp.category}</span
+								>
 							</div>
 							<div class="flex items-center gap-2">
 								<span class="font-medium">In-App Purchases:</span>
@@ -97,7 +104,6 @@
 									</a>
 								</div>
 							{/if}
-							<hr class="opacity-50" />
 						</div>
 					</WhiteCard>
 
@@ -157,35 +163,6 @@
 						{:else}
 							App does not have ads.
 						{/if}
-					</WhiteCard>
-					<WhiteCard>
-						{#snippet title()}
-							AppGoblin SDK Scans
-						{/snippet}
-						<div class="space-y-2 p-2">
-							{#if data.myapp.sdk_last_crawled}
-								<div class="flex items-center gap-2">
-									<span class="font-medium">Successful Last Crawled:</span>
-									<span class="">{data.myapp.sdk_successful_last_crawled}</span>
-								</div>
-								<div class="flex items-center gap-2">
-									<span class="font-medium">Last Crawled:</span>
-									<span class="">{data.myapp.sdk_last_crawled}</span>
-								</div>
-								<div class="flex items-center gap-2">
-									<span class="font-medium">Last Crawl Status:</span>
-									<span
-										class={data.myapp.sdk_last_crawl_result == 1
-											? 'text-success-900-100'
-											: 'text-error-900-100'}
-									>
-										{data.myapp.sdk_last_crawl_result == 1 ? 'Success' : 'Failed'}
-									</span>
-								</div>
-							{:else}
-								App not yet analyzed for SDKs.
-							{/if}
-						</div>
 					</WhiteCard>
 				</div>
 			</div>

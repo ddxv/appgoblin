@@ -15,32 +15,32 @@
 	let { myapp, myPackageInfo, companyTypes }: Props = $props();
 </script>
 
+<h2 class="text-lg font-bold">{myapp.name} SDKs Summary</h2>
 {#if typeof myPackageInfo == 'string'}
 	<p>Permissions, SDKs and trackers info not yet available for {myapp.name}.</p>
 {:else if myPackageInfo.company_categories && myapp.sdk_successful_last_crawled}
-	<div class="">
-		<p class="p-2 md:p-4">
-			<span class="">{myapp.name}</span> was last scanned for SDKs
-			<span class="">{myapp.sdk_last_crawled}</span>.
+	<div class="space-y-3 text-sm leading-relaxed">
+		<p>
+			<strong>{myapp.name}</strong> was last scanned for SDKs on
+			<span class="font-semibold">{myapp.sdk_last_crawled}</span>.
 			{#if Object.keys(myPackageInfo.company_categories).length == 0}
-				No known SDKs were detected, so check the <a href="/apps/{page.params.id}/sdks"
-					>raw list of SDK parts detected here</a
-				> and feel free to request unknown SDKs and companies be added to AppGoblin.
+				No known SDKs were detected. Check the
+				<a href="/apps/{page.params.id}/sdks" class="anchor">raw list of SDK parts detected here</a>
+				and feel free to request unknown SDKs be added to AppGoblin.
 			{:else}
-				Below is the overview of third party companies detected in the app. The full list of raw <a
-					href="/apps/{page.params.id}/sdks"
-				>
-					SDKs, app permissions and unknown SDKs is available here</a
+				Below is the overview of third-party companies detected in the app. The full list of
+				<a href="/apps/{page.params.id}/sdks" class="anchor"
+					>SDKs, permissions and unknowns is available here</a
 				>.
 			{/if}
 		</p>
 	</div>
 	{#if Object.keys(myPackageInfo.company_categories).length > 0}
-		<div class="grid grid-cols-1 md:grid-cols-2 gap-1">
+		<div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-1 md:gap-4">
 			{#each Object.keys(myPackageInfo.company_categories) as category}
 				<WhiteCard>
 					{#snippet title()}
-						<span class="text-sm font-semibold">
+						<span class="text-base">
 							AppGoblin saw {myapp.name} uses
 							{myPackageInfo.company_categories[category].length}
 							{companyTypes.types.find((x: { url_slug: string }) => x.url_slug === category)

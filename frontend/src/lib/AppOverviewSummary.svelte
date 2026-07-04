@@ -1,12 +1,14 @@
 <script lang="ts">
-	import type { AppFullDetail } from '../types';
+	import type { AppFullDetail, AppSDKsOverview, CompanyTypes } from '../types';
 	import { formatNumber, getRevenueBucket } from '$lib/utils/formatNumber';
 
 	interface Props {
 		app: AppFullDetail;
+		sdkOverview?: AppSDKsOverview;
+		companyTypes?: CompanyTypes;
 	}
 
-	let { app }: Props = $props();
+	let { app, sdkOverview, companyTypes }: Props = $props();
 
 	// Determine platform
 	const isAndroid = $derived(
@@ -130,6 +132,23 @@
 	const apiLastCrawled = $derived(formatDate(app.api_last_crawled));
 	const sdkLastCrawled = $derived(formatDate(app.sdk_last_crawled));
 
+	// SDK category summary
+	const sdkCategories = $derived.by(() => {
+		if (!sdkOverview?.company_categories || !companyTypes?.types) return null;
+		const cats = sdkOverview.company_categories;
+		const typeNames = companyTypes.types;
+		const entries = Object.entries(cats)
+			.map(([slug, companies]) => ({
+				slug,
+				label: typeNames.find((t) => t.url_slug === slug)?.name || slug,
+				count: companies.length,
+				firstCompany: companies[0]?.company_name
+			}))
+			.filter((e) => e.count > 0)
+			.sort((a, b) => b.count - a.count);
+		return entries.length > 0 ? entries : null;
+	});
+
 	// Base path for app links
 	const appBasePath = $derived(`/apps/${app.store_id}`);
 </script>
@@ -170,12 +189,8 @@
 				IAP / {monthlyAdRevenueShare}% ads)
 			{/if}.
 		{/if}
-		{#if app.store_last_updated || app.version_code || app.content_rating}
-			Store metadata{#if app.store_last_updated}: updated <span class="font-semibold"
-					>{formatDate(app.store_last_updated)}</span
-				>{/if}{#if app.version_code}, version <span class="font-semibold">{app.version_code}</span
-				>{/if}{#if app.content_rating}, rated <span class="font-semibold">{app.content_rating}</span
-				>{/if}.
+		{#if app.store_last_updated}
+			Store last updated <span class="font-semibold">{formatDate(app.store_last_updated)}</span>
 		{/if}
 	</p>
 
@@ -215,41 +230,32 @@
 			{/if}
 		</p>
 	{/if}
-
-	<!-- SDK & API Tracking -->
-	{#if sdkLastCrawled || apiLastCrawled}
+	<!-- SDK Categories Summary -->
+	{#if sdkCategories}
 		<p>
-			<span class="font-medium -200">Data tracking:</span>
-			{#if sdkLastCrawled}
-				<a href="{appBasePath}/sdks">SDKs and third-party integrations</a> were last analyzed on
-				<span class="font-semibold">{sdkLastCrawled}</span>.
-			{/if}
-			{#if apiLastCrawled}
-				{#if sdkLastCrawled}The app's{:else}The app's{/if}
-				<a href="{appBasePath}/data-flows">network data flows</a>
-				(API traffic to/from the app and its SDKs) were last crawled on
-				<span class="font-semibold">{apiLastCrawled}</span>.
-			{/if}
+			<span class="font-medium -200">SDK intelligence:</span>
+			AppGoblin detected
+			{#each sdkCategories as cat, i}
+				{#if i > 0 && i === sdkCategories.length - 1}
+					and
+				{/if}
+				<span class="font-semibold">{cat.count}</span>
+				{cat.label.toLowerCase()}{#if cat.firstCompany && i === 0}
+					(e.g. {cat.firstCompany}){/if}{#if i < sdkCategories.length - 1},
+				{/if}
+			{/each}
+			integrated into {app.name}.
+			<a href="{appBasePath}/sdks">View full SDK list →</a>
 		</p>
 	{/if}
-
-	<!-- Store metadata -->
-	{#if app.store_last_updated || app.version_code}
+	<!-- API Tracking -->
+	{#if apiLastCrawled}
 		<p>
-			<span class="font-medium -200">Store info:</span>
-			{#if app.store_last_updated}
-				Last updated on {storeName} on
-				<span class="font-semibold">{formatDate(app.store_last_updated)}</span>
-			{/if}
-			{#if app.version_code}
-				{#if app.store_last_updated}({:else}Current{/if}version
-				<span class="font-semibold">{app.version_code}</span>{#if app.store_last_updated}){/if}
-			{/if}.
-			{#if app.size}App size: <span class="font-semibold">{app.size}</span>.{/if}
-			{#if app.minimum_android && isAndroid}Requires Android <span class="font-semibold"
-					>{app.minimum_android}</span
-				> or higher.{/if}
-			{#if app.content_rating}Rated <span class="font-semibold">{app.content_rating}</span>.{/if}
+			<span class="font-medium -200">Data tracking:</span>
+			{#if sdkLastCrawled}The app's{:else}The app's{/if}
+			<a href="{appBasePath}/data-flows">network data flows</a>
+			(API traffic to/from the app and its SDKs) were last crawled on
+			<span class="font-semibold">{apiLastCrawled}</span>.
 		</p>
 	{/if}
 </div>

@@ -49,7 +49,7 @@
 		{#if isLoading}
 			Requesting...
 		{:else}
-			<ScanText class="h-3.5 w-3.5" aria-hidden="true" /> Scan SDK & API
+			<ScanText class="h-3.5 w-3.5" aria-hidden="true" /> Request New SDK & API Scans
 		{/if}
 	</button>
 	{#if myMessage}

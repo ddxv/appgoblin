@@ -273,7 +273,7 @@
 	<CompanyTypesTabs companyTypes={companyTypesData} />
 {/if}
 
-<div class="-ml-1 grid grid-cols-1 gap-6 md:-ml-4 md:grid-cols-[minmax(220px,260px)_1fr]">
+<div class="grid grid-cols-1 gap-6 md:grid-cols-[minmax(180px,260px)_1fr]">
 	<CompanyNavTabs tabIndicators={data.tabIndicators} {companyDomain} {companyDisplayName} />
 
 	<MainContent class="min-w-0 pl-1 md:pl-4">
@@ -379,7 +379,6 @@
 										{#if page.params.category}
 											/ {categoryName}{/if}
 									</h1>
-									<span class="badge preset-filled-error-900-100 text-xs">Unmapped Domain</span>
 								{:else}
 									<!-- Regular Company -->
 									<h1 class="h1 text-2xl md:text-3xl font-bold">
@@ -500,15 +499,14 @@
 								{/if}
 
 								{#if isStubDomain}
-									<div class="flex flex-wrap items-center gap-3 mt-1">
+									<div class="gap-3 mt-1">
+										<p class="text-surface-600-400 text-sm">
+											This domain is not yet linked to an organization/sdks in the AppGoblin
+											database.
+										</p>
 										<a href="/contact" class="btn preset-tonal-secondary btn-sm">
-											Identify Parent
+											Identify Parent or Request Mapping
 										</a>
-										<span class="text-surface-600-400 text-xs">
-											This domain is currently identified as a standalone entity and is not linked
-											to a parent organization in our database. Please contact if you would like
-											this mapped or have information to share.
-										</span>
 									</div>
 								{/if}
 							</div>

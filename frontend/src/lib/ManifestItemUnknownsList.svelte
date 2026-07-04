@@ -6,6 +6,26 @@
 	}
 
 	let { items = {} }: Props = $props();
+
+	let sortedEntries = $derived(
+		Object.entries(items)
+			.map(
+				([domain, xmlPaths]) =>
+					[
+						domain,
+						Object.entries(xmlPaths)
+							.map(([xmlPath, values]) => [xmlPath, [...values].sort()] as const)
+							.sort(([a], [b]) => a.localeCompare(b))
+					] as const
+			)
+			.sort(([a], [b]) => {
+				const aIsRaw = a === 'Raw Resources';
+				const bIsRaw = b === 'Raw Resources';
+				if (aIsRaw && !bIsRaw) return 1;
+				if (!aIsRaw && bIsRaw) return -1;
+				return a.localeCompare(b);
+			})
+	);
 </script>
 
 <div class="max-w-sm lg:max-w-full overflow-x-scroll">
@@ -19,8 +39,8 @@
 				</tr>
 			</thead>
 			<tbody>
-				{#each Object.entries(items) as [domain, xmlPaths]}
-					{#each Object.entries(xmlPaths) as [xmlPath, values]}
+				{#each sortedEntries as [domain, xmlPaths]}
+					{#each xmlPaths as [xmlPath, values]}
 						<tr>
 							<td class="p-2">{domain.slice(0, 100)}</td>
 							<td class="p-2">{xmlPath}</td>
