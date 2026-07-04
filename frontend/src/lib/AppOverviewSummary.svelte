@@ -15,7 +15,6 @@
 		app.store === '1' || app.store === 'google' || app.store_id?.includes('.')
 	);
 	const platformName = $derived(isAndroid ? 'Android' : 'iOS');
-	const storeName = $derived(isAndroid ? 'Google Play' : 'App Store');
 
 	// Format category name
 	const categoryName = $derived(

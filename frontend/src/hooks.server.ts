@@ -131,7 +131,11 @@ const cacheAndRoutingHandle: Handle = async ({ event, resolve }) => {
 		'/categories'
 	];
 	const needsCache = cacheDependentPrefixes.some((p) => route.startsWith(p));
-	if (needsCache && !isInitialized && initializationPromise) {
+	if (needsCache && !isInitialized) {
+		// Kick off on-demand init if none is in progress (e.g. start-up attempt failed).
+		if (!initializationPromise) {
+			initializationPromise = initializeCache();
+		}
 		const CACHE_WAIT_BUDGET_MS = 2000;
 		const waitStart = Date.now();
 		await Promise.race([
@@ -305,6 +309,8 @@ async function initializeCache(): Promise<void> {
 	} catch (error) {
 		const duration = initStartTime ? Date.now() - initStartTime : 0;
 		console.error(`[Cache] Failed to initialize cache after ${duration}ms:`, error);
+		// Reset so the next request can retry initialization (e.g. backend not ready yet).
+		initializationPromise = null;
 	}
 }
 
@@ -316,16 +322,19 @@ export const init: ServerInit = () => {
 };
 
 export const getCachedData = async (): Promise<CachedData> => {
-	if (!isInitialized && initializationPromise) {
-		console.log('[Cache] Waiting for cache initialization...');
-		const waitStart = Date.now();
-		await initializationPromise;
-		const waitDuration = Date.now() - waitStart;
-		console.log(`[Cache] Cache ready after ${waitDuration}ms wait`);
-	}
-
 	if (!isInitialized) {
-		console.warn('[Cache] Cache not initialized, returning empty defaults');
+		if (initializationPromise) {
+			console.log('[Cache] Waiting for cache initialization...');
+			const waitStart = Date.now();
+			await initializationPromise;
+			const waitDuration = Date.now() - waitStart;
+			console.log(`[Cache] Cache ready after ${waitDuration}ms wait`);
+		} else {
+			// No initialization in progress — start one on-demand (e.g. previous start-up attempt failed).
+			console.log('[Cache] Cache not initialized, triggering on-demand initialization...');
+			initializationPromise = initializeCache();
+			await initializationPromise;
+		}
 	}
 
 	return cachedData;
