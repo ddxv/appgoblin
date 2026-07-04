@@ -21,35 +21,28 @@
 		page.url.pathname.startsWith(href) ? buttonSelectedClass : buttonDeselectedClass
 	);
 
-	let store = $state(1);
-	$effect(() => {
-		store = +page.params.store!;
+	let store = $derived.by(() => {
+		const s = +page.params.store!;
+		return isNaN(s) ? 1 : s;
 	});
-	let collection = $state(1);
-	$effect(() => {
-		collection = +page.params.collection!;
-	});
-	let category = $state(1);
-	$effect(() => {
-		category = +page.params.category!;
-	});
-	// Logic to adjust collection and category based on the store's value
-	$effect(() => {
-		// If store is not a number (NaN), default it to 1
-		if (isNaN(store)) {
-			store = 1;
-		}
-
+	let collection = $derived.by(() => {
+		const raw = +page.params.collection!;
+		if (!isNaN(raw)) return raw;
 		switch (store) {
 			case 2:
-				collection = 4;
-				category = 120;
-				break;
-			case 1:
-			default: // Defaults for store=1 or any other value not explicitly handled
-				collection = 1;
-				category = 1;
-				break;
+				return 4;
+			default:
+				return 1;
+		}
+	});
+	let category = $derived.by(() => {
+		const raw = +page.params.category!;
+		if (!isNaN(raw)) return raw;
+		switch (store) {
+			case 2:
+				return 120;
+			default:
+				return 1;
 		}
 	});
 </script>
@@ -89,7 +82,7 @@
 		{/snippet}
 		<nav class="list-nav">
 			<ul>
-				{#each Object.entries(collectionIDLookup[store]) as [id, values]}
+				{#each Object.entries(collectionIDLookup[store] ?? {}) as [id, values]}
 					<li>
 						<a
 							href={`/rankings/store/${store}/collection/${values.collection_id}/category/${category}/${country}`}
@@ -115,7 +108,7 @@
 		{/snippet}
 		<nav class="list-nav">
 			<ul>
-				{#each Object.entries(categoryIDLookup[collection]) as [id, values]}
+				{#each Object.entries(categoryIDLookup[collection] ?? {}) as [id, values]}
 					<li>
 						<a
 							href={`/rankings/store/${store}/collection/${collection}/category/${values.category_id}/${country}`}

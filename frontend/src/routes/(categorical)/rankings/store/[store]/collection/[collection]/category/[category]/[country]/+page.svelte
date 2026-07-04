@@ -17,17 +17,19 @@
 	let category = $derived(+page.params.category!);
 
 	let collectionName = $derived(
-		prettyName(data.collectionIDLookup[store][collection].collection_name)
+		prettyName(data.collectionIDLookup[store]?.[collection]?.collection_name ?? '')
 	);
 	let categoryName = $derived(
-		prettyName(data.categoryIDLookup[collection][category].category_name)
+		prettyName(data.categoryIDLookup[collection]?.[category]?.category_name ?? '')
 	);
 
 	let country = $state(page.params.country || 'US');
 
+	let storeName = $derived(data.storeIDLookup[store]?.store_name ?? 'App Store');
+
 	function getTitle(): string {
 		const title =
-			data.storeIDLookup[store].store_name +
+			storeName +
 			' ' +
 			'Daily App Ranks ' +
 			collectionName +
@@ -42,7 +44,7 @@
 	function getDescription(): string {
 		const description =
 			'Free app store charts. Top ranked ' +
-			data.storeIDLookup[store].store_name +
+			storeName +
 			' ' +
 			collectionName +
 			' ' +
@@ -59,10 +61,9 @@
 	<meta name="description" content={description} />
 	<meta
 		name="keywords"
-		content="free, free aso, {data.storeIDLookup[store].store_name}, {data.collectionIDLookup[
-			store
-		][collection].collection_name}, {data.categoryIDLookup[collection][category]
-			.category_name}, app rankings, top apps, Google Play charts, iOS App Store charts, free, ASO, marketing, competitor analysis, app category rankings, app performance tracking, mobile app trends"
+		content="free, free aso, {storeName}, {data.collectionIDLookup[store]?.[collection]
+			?.collection_name ?? ''}, {data.categoryIDLookup[collection]?.[category]?.category_name ??
+			''}, app rankings, top apps, Google Play charts, iOS App Store charts, free, ASO, marketing, competitor analysis, app category rankings, app performance tracking, mobile app trends"
 	/>
 
 	<!-- Open Graph meta tags -->
@@ -89,7 +90,7 @@
 			<p class="">
 				The {collectionName}
 				{categoryName} Apps on
-				{data.storeIDLookup[store].store_name}
+				{storeName}
 				in
 				{country}
 			</p>
