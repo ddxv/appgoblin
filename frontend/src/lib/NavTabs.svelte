@@ -24,31 +24,6 @@
 	<!-- Flat list used inside the mobile hamburger menu -->
 	<div class="flex flex-col gap-1 {topDivider} mx-2">
 		{#if !hideLinks}
-			<!-- RANKINGS group -->
-			<p class={sectionLabel}>Rankings</p>
-			<a
-				href="/rankings/store/1/collection/1/category/1/US"
-				class={isHighlighted('/rankings') ? topBarHighlightedFont : topBarFont}
-				>Top Google Play App Ranks</a
-			>
-			<div class={myDivider}></div>
-			<a
-				href="/rankings/store/2/collection/4/category/120/US"
-				class={isHighlighted('/rankings') ? topBarHighlightedFont : topBarFont}
-				>Apple App Store Ranks</a
-			>
-			<div class={myDivider}></div>
-			<a
-				href="/fastest-growing-apps/google/overall"
-				class={isHighlighted('/fastest-growing-apps') ? topBarHighlightedFont : topBarFont}
-				>Top Growth Apps</a
-			>
-			<div class={myDivider}></div>
-			<a
-				href="/collections/new_monthly/google/overall"
-				class={isHighlighted('/collections') ? topBarHighlightedFont : topBarFont}>New Apps</a
-			>
-			<div class={myDivider}></div>
 			<!-- B2B INTELLIGENCE group -->
 			<p class={sectionLabel}>B2B Intelligence</p>
 			<p class={sectionLabel}>Company Rankings</p>
@@ -117,6 +92,32 @@
 				>Free SDK Scans</a
 			>
 			<div class={myDivider}></div>
+			<!-- RANKINGS group -->
+			<p class={sectionLabel}>Rankings</p>
+			<a
+				href="/rankings/store/1/collection/1/category/1/US"
+				class={isHighlighted('/rankings') ? topBarHighlightedFont : topBarFont}
+				>Top Google Play App Ranks</a
+			>
+			<div class={myDivider}></div>
+			<a
+				href="/rankings/store/2/collection/4/category/120/US"
+				class={isHighlighted('/rankings') ? topBarHighlightedFont : topBarFont}
+				>Apple App Store Ranks</a
+			>
+			<div class={myDivider}></div>
+			<a
+				href="/fastest-growing-apps/google/overall"
+				class={isHighlighted('/fastest-growing-apps') ? topBarHighlightedFont : topBarFont}
+				>Top Growth Apps</a
+			>
+			<div class={myDivider}></div>
+			<a
+				href="/collections/new_monthly/google/overall"
+				class={isHighlighted('/collections') ? topBarHighlightedFont : topBarFont}>New Apps</a
+			>
+			<div class={myDivider}></div>
+
 			<!-- RESOURCES group -->
 			<p class={sectionLabel}>Resources</p>
 			<a href="/blog" class={isHighlighted('/blog') ? topBarHighlightedFont : topBarFont}>Blog</a>
@@ -144,47 +145,6 @@
 {:else}
 	<!-- Desktop dropdown bar -->
 	<div class="flex flex-row gap-1 md:gap-2 xxl:gap-6 text-center items-center mx-2">
-		<!-- RANKINGS dropdown -->
-		<div class="relative group">
-			<button
-				class="flex items-center gap-0.5 {isHighlighted(
-					'/rankings',
-					'/fastest-growing-apps',
-					'/collections'
-				)
-					? topBarHighlightedFont
-					: topBarFont}"
-			>
-				Rankings <ChevronDown class="h-3 w-3 transition-transform group-hover:rotate-180" />
-			</button>
-			<div class="absolute left-0 top-full pt-1 hidden group-hover:block z-50 min-w-max">
-				<div class="card bg-surface-50-950 shadow-xl rounded-md py-1">
-					<a
-						href="/rankings/store/1/collection/1/category/1/US"
-						class={isHighlighted('/rankings') ? dropdownHighlightedItem : dropdownItem}
-						>Top Google Play App Ranks</a
-					>
-					<a
-						href="/rankings/store/2/collection/4/category/120/US"
-						class={isHighlighted('/rankings') ? dropdownHighlightedItem : dropdownItem}
-						>Apple App Store Ranks</a
-					>
-					<a
-						href="/fastest-growing-apps/google/overall"
-						class={isHighlighted('/fastest-growing-apps') ? dropdownHighlightedItem : dropdownItem}
-						>Top Growth Apps</a
-					>
-					<a
-						href="/collections/new_monthly/google/overall"
-						class={isHighlighted('/collections') ? dropdownHighlightedItem : dropdownItem}
-						>New Apps</a
-					>
-				</div>
-			</div>
-		</div>
-
-		<div class={myDivider}></div>
-
 		<!-- B2B INTELLIGENCE dropdown -->
 		<div class="relative group">
 			<button
@@ -286,7 +246,46 @@
 		</div>
 
 		<div class={myDivider}></div>
+		<!-- RANKINGS dropdown -->
+		<div class="relative group">
+			<button
+				class="flex items-center gap-0.5 {isHighlighted(
+					'/rankings',
+					'/fastest-growing-apps',
+					'/collections'
+				)
+					? topBarHighlightedFont
+					: topBarFont}"
+			>
+				Rankings <ChevronDown class="h-3 w-3 transition-transform group-hover:rotate-180" />
+			</button>
+			<div class="absolute left-0 top-full pt-1 hidden group-hover:block z-50 min-w-max">
+				<div class="card bg-surface-50-950 shadow-xl rounded-md py-1">
+					<a
+						href="/rankings/store/1/collection/1/category/1/US"
+						class={isHighlighted('/rankings') ? dropdownHighlightedItem : dropdownItem}
+						>Top Google Play App Ranks</a
+					>
+					<a
+						href="/rankings/store/2/collection/4/category/120/US"
+						class={isHighlighted('/rankings') ? dropdownHighlightedItem : dropdownItem}
+						>Apple App Store Ranks</a
+					>
+					<a
+						href="/fastest-growing-apps/google/overall"
+						class={isHighlighted('/fastest-growing-apps') ? dropdownHighlightedItem : dropdownItem}
+						>Top Growth Apps</a
+					>
+					<a
+						href="/collections/new_monthly/google/overall"
+						class={isHighlighted('/collections') ? dropdownHighlightedItem : dropdownItem}
+						>New Apps</a
+					>
+				</div>
+			</div>
+		</div>
 
+		<div class={myDivider}></div>
 		<!-- RESOURCES dropdown -->
 		<div class="relative group">
 			<button
