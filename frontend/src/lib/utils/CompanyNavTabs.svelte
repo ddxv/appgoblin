@@ -105,9 +105,16 @@
 			case 'mediation':
 				return Boolean(tabIndicators.mediation_adapter_count);
 			case 'app-adstxt':
-				return Boolean(tabIndicators.adstxt_direct_app_count);
+				return (
+					Boolean(tabIndicators.adstxt_direct_app_count) ||
+					Boolean(tabIndicators.adstxt_parent_app_count)
+				);
 			case 'data-exports':
-				return Boolean(tabIndicators.adstxt_direct_app_count) || Boolean(tabIndicators.sdk_count);
+				return (
+					Boolean(tabIndicators.adstxt_direct_app_count) ||
+					Boolean(tabIndicators.adstxt_parent_app_count) ||
+					Boolean(tabIndicators.sdk_count)
+				);
 			default:
 				return true;
 		}
@@ -171,7 +178,8 @@
 				href: `/companies/${companyDomain}/app-adstxt`,
 				icon: FileText,
 				matchSlugs: ['app-adstxt-publisher'],
-				count: tabIndicators?.adstxt_direct_app_count ?? null
+				count:
+					tabIndicators?.adstxt_parent_app_count ?? tabIndicators?.adstxt_direct_app_count ?? null
 			},
 			{
 				slug: 'data-exports',

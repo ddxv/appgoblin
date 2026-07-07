@@ -5,19 +5,17 @@ SELECT
     sa.category AS app_category,
     sa.installs,
     sa.rating_count,
-    d.developer_id,
-    d.name AS developer_name,
+    sa.developer_id,
+    sa.name AS developer_name,
     pd.domain_name AS developer_domain_url,
     aae.relationship,
     pdcr.crawled_at AS developer_domain_crawled_at
 FROM
-    frontend.adstxt_entries_store_apps AS aesa
+    frontend.adstxt_domain_entries AS aesa
+     LEFT JOIN app_urls_map aum ON aesa.pub_domain_id  = aum.pub_domain
 LEFT JOIN frontend.store_apps_overview AS sa
     ON
-        aesa.store_app = sa.id
-LEFT JOIN developers AS d
-    ON
-        sa.developer = d.id
+        aum.store_app = sa.id
 LEFT JOIN domains AS ad
     ON
         aesa.ad_domain_id = ad.id

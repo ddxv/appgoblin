@@ -2087,6 +2087,7 @@ class CompaniesController(Controller):
                 sdk_count=int(row.sdk_count),
                 mediation_adapter_count=int(row.mediation_adapter_count),
                 adstxt_direct_app_count=int(row.adstxt_direct_app_count),
+                adstxt_parent_app_count=_nan(row.get("adstxt_parent_app_count")) or 0,
                 creatives_app_count_direct=int(row.creatives_app_count_direct),
                 has_trends_direct=int(row.has_trends_direct),
                 apps_sdk_added_count_direct=int(row.apps_sdk_added_count_direct),
