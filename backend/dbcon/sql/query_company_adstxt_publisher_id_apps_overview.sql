@@ -9,8 +9,9 @@ WITH ranked_apps AS (
         aae.relationship,
         pdcr.crawled_at AS developer_domain_crawled_at,
         ROW_NUMBER() OVER (PARTITION BY store, relationship) AS rn
-    FROM frontend.adstxt_entries_store_apps AS aesa
-    LEFT JOIN frontend.store_apps_overview AS sa ON aesa.store_app = sa.id
+    FROM frontend.adstxt_domain_entries AS aesa
+    LEFT JOIN app_urls_map aum ON aesa.pub_domain_id = aum.pub_domain
+    LEFT JOIN frontend.store_apps_overview AS sa ON aum.store_app = sa.id
     LEFT JOIN app_ads_entrys AS aae ON aesa.app_ad_entry_id = aae.id
     LEFT JOIN domains AS ad ON aesa.ad_domain_id = ad.id
     LEFT JOIN domains AS pd ON aesa.pub_domain_id = pd.id
@@ -21,7 +22,6 @@ WITH ranked_apps AS (
         ad.domain_name = :ad_domain_url
         AND aae.publisher_id = :publisher_id
 )
-
 SELECT
     store,
     store_id,

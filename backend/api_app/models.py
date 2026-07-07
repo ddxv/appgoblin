@@ -291,6 +291,7 @@ class CompanyTabIndicators:
     sdk_count: int = 0
     mediation_adapter_count: int = 0
     adstxt_direct_app_count: int = 0
+    adstxt_parent_app_count: int = 0
 
     # Direct-only indicators
     creatives_app_count_direct: int = 0
