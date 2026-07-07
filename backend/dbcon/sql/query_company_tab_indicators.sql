@@ -23,6 +23,7 @@ SELECT
     sdk_count,
     mediation_adapter_count,
     adstxt_direct_app_count,
+    adstxt_parent_app_count,
     creatives_app_count_direct,
     has_trends_direct,
     apps_sdk_added_count_direct,
