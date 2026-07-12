@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import 'altcha';
 
 	import type { ActionData, PageData } from './$types';
 
@@ -41,6 +42,18 @@
 		autocomplete="new-password"
 		required
 	/><br />
+	<label class="label" for="form-signup.referral">
+		Where did you hear about AppGoblin?
+		<span class="text-sm font-normal text-gray-500"> — Optional but greatly appreciated</span>
+	</label>
+	<input
+		class="input"
+		id="form-signup.referral"
+		name="referral_source"
+		value={form?.referral_source ?? ''}
+		placeholder="e.g. Google, Twitter, friend, conference..."
+	/><br />
+	<altcha-widget challenge="/api/altcha-challenge"></altcha-widget><br />
 	<button class="btn preset-filled">Create Account</button>
 	<p>{form?.message ?? ''}</p>
 </form>

@@ -10,14 +10,14 @@
  * on the same bucket and produce false 429s.
  */
 export function getClientIP(request: Request): string | null {
-    const cfIp = request.headers.get('CF-Connecting-IP');
-    if (cfIp && cfIp.trim() !== '') {
-        return cfIp.trim();
-    }
-    const xff = request.headers.get('X-Forwarded-For');
-    if (xff) {
-        const first = xff.split(',')[0]?.trim();
-        if (first) return first;
-    }
-    return null;
+	const cfIp = request.headers.get('CF-Connecting-IP');
+	if (cfIp && cfIp.trim() !== '') {
+		return cfIp.trim();
+	}
+	const xff = request.headers.get('X-Forwarded-For');
+	if (xff) {
+		const first = xff.split(',')[0]?.trim();
+		if (first) return first;
+	}
+	return null;
 }

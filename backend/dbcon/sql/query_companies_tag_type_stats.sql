@@ -7,8 +7,8 @@ WITH top_companies AS (
     WHERE
         ccts.type_url_slug = :type_slug
         AND (
-            CAST(:tag_sources AS text[]) IS NULL 
-            OR ccts.tag_source = ANY(CAST(:tag_sources AS text[]))
+            CAST(:tag_sources AS text []) IS NULL
+            OR ccts.tag_source = ANY(CAST(:tag_sources AS text []))
         )
         AND (
             CAST(:app_category AS text) IS NULL
@@ -27,17 +27,19 @@ detailed_data AS (
         ccts.store,
         ccts.tag_source,
         ccts.company_domain,
-        COALESCE(ccts.company_name, ccts.company_domain) AS company_name,
-        COALESCE(parent_domain.domain_name, resolved_domain.domain_name) AS parent_company_domain,
-        COALESCE(parent_company.name, resolved_company.name) AS parent_company_name,
         ccts.type_url_slug,
+        tc.total_global_installs,
+        COALESCE(ccts.company_name, ccts.company_domain) AS company_name,
+        COALESCE(parent_domain.domain_name, resolved_domain.domain_name)
+            AS parent_company_domain,
+        COALESCE(parent_company.name, resolved_company.name)
+            AS parent_company_name,
         SUM(ccts.app_count) AS app_count,
-        SUM(ccts.installs_d30) AS installs_d30,
         -- Reference the global metric from our first CTE for ordering consistency
-        tc.total_global_installs
+        SUM(ccts.installs_d30) AS installs_d30
     FROM frontend.companies_category_tag_type_stats AS ccts
     -- Inner join forces Postgres to drop any domain not in the top limit list immediately
-    INNER JOIN top_companies tc 
+    INNER JOIN top_companies AS tc
         ON ccts.company_domain = tc.company_domain
     LEFT JOIN domains AS input_domain
         ON ccts.company_domain = input_domain.domain_name
@@ -54,8 +56,8 @@ detailed_data AS (
     WHERE
         ccts.type_url_slug = :type_slug
         AND (
-            CAST(:tag_sources AS text[]) IS NULL 
-            OR ccts.tag_source = ANY(CAST(:tag_sources AS text[]))
+            CAST(:tag_sources AS text []) IS NULL
+            OR ccts.tag_source = ANY(CAST(:tag_sources AS text []))
         )
         AND (
             CAST(:app_category AS text) IS NULL
@@ -85,7 +87,9 @@ SELECT
     app_count,
     installs_d30
 FROM detailed_data
-ORDER BY 
-    total_global_installs DESC, -- Keeps the top companies grouped together at the top
-    company_domain, 
-    installs_d30 DESC;          -- Sorts internal breakdowns (e.g. Google Play vs App Store)
+ORDER BY
+    -- Keeps the top companies grouped together at the top
+    total_global_installs DESC,
+    company_domain ASC,
+    -- Sorts internal breakdowns (e.g. Google Play vs App Store)
+    installs_d30 DESC;
