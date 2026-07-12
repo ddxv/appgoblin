@@ -58,7 +58,7 @@
 
 		const tryIdentify = () => {
 			if ((window as any).umami?.identify) {
-				(window as any).umami.identify({ id: String(user.id) });
+				(window as any).umami.identify(String(user.id));
 				return true;
 			}
 			return false;
