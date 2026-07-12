@@ -14,8 +14,7 @@
 		if (!page.params.domain) return undefined;
 		const companyDetails = page.data.companyDetails as { company_types?: string[] } | undefined;
 		const companyTree = page.data.companyTree as
-			| { company_name?: string; company_domain?: string; queried_domain?: string }
-			| undefined;
+			{ company_name?: string; company_domain?: string; queried_domain?: string } | undefined;
 		const primaryType = companyDetails?.company_types?.[0];
 		const typeName = primaryType
 			? data.companyTypes?.types.find(

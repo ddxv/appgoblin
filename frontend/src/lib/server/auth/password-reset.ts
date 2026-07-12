@@ -159,5 +159,4 @@ export interface PasswordResetSession {
 }
 
 export type PasswordResetSessionValidationResult =
-	| { session: PasswordResetSession; user: User }
-	| { session: null; user: null };
+	{ session: PasswordResetSession; user: User } | { session: null; user: null };

@@ -144,10 +144,7 @@ async function verifyCode(event: RequestEvent) {
 
 	// Accept any unexpired code the user has been sent. The match query
 	// filters by user_id, code, and expires_at > now() in one shot.
-	const matchedRequest = await findEmailVerificationCodeMatch(
-		event.locals.user.id,
-		code
-	);
+	const matchedRequest = await findEmailVerificationCodeMatch(event.locals.user.id, code);
 	if (matchedRequest === null) {
 		return fail(400, {
 			verify: {
@@ -158,10 +155,7 @@ async function verifyCode(event: RequestEvent) {
 	}
 	await deleteUserEmailVerificationRequest(event.locals.user.id);
 	await invalidateUserPasswordResetSessions(event.locals.user.id);
-	await updateUserEmailAndSetEmailAsVerified(
-		event.locals.user.id,
-		matchedRequest.email
-	);
+	await updateUserEmailAndSetEmailAsVerified(event.locals.user.id, matchedRequest.email);
 	sendVerificationEmailBucket.reset(event.locals.user.id);
 	deleteEmailVerificationRequestCookie(event);
 	const redirectTo = formData.get('redirectTo');

@@ -5,8 +5,8 @@ SELECT
     aae.relationship,
     pdcr.crawled_at AS developer_domain_crawled_at
 FROM
-    frontend.adstxt_domain_entries  AS aesa
-LEFT JOIN app_urls_map aum ON aesa.pub_domain_id = aum.pub_domain
+    frontend.adstxt_domain_entries AS aesa
+LEFT JOIN app_urls_map AS aum ON aesa.pub_domain_id = aum.pub_domain
 LEFT JOIN store_apps AS sa
     ON
         aum.store_app = sa.id

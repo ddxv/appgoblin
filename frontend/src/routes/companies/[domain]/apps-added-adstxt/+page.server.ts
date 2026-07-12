@@ -141,8 +141,7 @@ export const load: PageServerLoad = async ({ fetch, locals, params, parent }) =>
 	}
 
 	const tree = parentData.companyTree as
-		| { queried_domain?: string; company_name?: string; company_domain?: string }
-		| undefined;
+		{ queried_domain?: string; company_name?: string; company_domain?: string } | undefined;
 	const companyName =
 		tree?.company_name ?? tree?.company_domain ?? tree?.queried_domain ?? params.domain ?? '';
 
