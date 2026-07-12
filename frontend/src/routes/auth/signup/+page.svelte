@@ -1,14 +1,11 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import 'altcha';
 
 	import type { ActionData, PageData } from './$types';
 
 	let { data, form }: { data: PageData; form: ActionData } = $props();
 </script>
-
-<svelte:head>
-	<script async defer src="/altcha.js" type="module"></script>
-</svelte:head>
 
 <h2 class="text-2xl font-bold">Create an account</h2>
 <p>Name must be at least 2 characters long and password must be at least 8 characters long.</p>
