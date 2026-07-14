@@ -4,18 +4,24 @@ import pandas as pd
 
 
 def extend_app_icon_url(df: pd.DataFrame) -> pd.DataFrame:
-    """Extend the app icon url."""
+    """Extend the app icon url. Prefers icon_128, falls back to icon_64."""
     if df.empty:
         df["app_icon_url"] = None
         return df
 
-    has_icon_url = df["icon_url_100"].notna()
     df["app_icon_url"] = None
+    prefix = "https://media.appgoblin.info/app-icons/"
 
-    if has_icon_url.any():
-        prefix = "https://media.appgoblin.info/app-icons/"
-        store_ids = df.loc[has_icon_url, "store_id"].astype("object")
-        icon_paths = df.loc[has_icon_url, "icon_url_100"].astype("object")
-        df.loc[has_icon_url, "app_icon_url"] = prefix + store_ids + "/" + icon_paths
+    for col in ("icon_128", "icon_64"):
+        if col not in df.columns:
+            continue
+        mask = df[col].notna()
+        if not mask.any():
+            continue
+        store_ids = df.loc[mask, "store_id"].astype("object")
+        icon_paths = df.loc[mask, col].astype("object")
+        df.loc[mask, "app_icon_url"] = prefix + store_ids + "/" + icon_paths
+        if mask.all():
+            break
 
     return df

@@ -4,7 +4,7 @@ SELECT
     sa.store_id,
     sa.installs,
     sa.rating_count,
-    sa.icon_url_100,
+    sa.icon_64,
     sa.category,
     akr.latest_app_rank,
     akr.d30_best_rank

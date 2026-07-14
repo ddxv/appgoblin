@@ -18,7 +18,7 @@ SELECT
     installs_z_score_4w,
     store_last_updated,
     created_at,
-    updated_at,
+    last_crawled_at,
     crawl_result,
     release_date,
     featured_image_url,
@@ -37,7 +37,6 @@ SELECT
     adstxt_crawl_result,
     ad_supported,
     in_app_purchases,
-    version_code,
     sdk_last_crawled,
     sdk_last_crawl_result,
     sdk_successful_last_crawled,
@@ -45,16 +44,17 @@ SELECT
     run_result AS api_crawl_result,
     api_successful_last_crawled,
     CASE
-        WHEN icon_url_100 IS NOT NULL
+        WHEN icon_64 IS NOT NULL
             THEN
                 CONCAT(
                     'https://media.appgoblin.info/app-icons/',
                     store_id,
                     '/',
-                    icon_url_100
+                    icon_64
                 )
         ELSE icon_url_512
     END AS app_icon_url,
+    icon_128,
     COALESCE(ad_creative_count, 0) AS ad_creative_count,
     COALESCE(ad_mon_creatives, 0) AS ad_monetized_creative_count
 FROM

@@ -155,7 +155,7 @@ def _check_apps_freshness(
             apps_row = (
                 conn.execute(
                     text(
-                        "SELECT max(updated_at) AS last_apps_updated_at "
+                        "SELECT max(last_crawled_at) AS last_apps_updated_at "
                         "FROM frontend.store_apps_overview"
                     )
                 )

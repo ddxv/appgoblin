@@ -59,7 +59,7 @@
 									<a href="/apps/{app.store_id}" style="cursor: pointer;">
 										<div class="flex items-center gap-2">
 											<img
-												src={`https://media.appgoblin.info/app-icons/${app.store_id}/${app.icon_url_100}`}
+												src={`https://media.appgoblin.info/app-icons/${app.store_id}/${app.icon_64}`}
 												alt={app.name}
 												class="w-8 h-8"
 											/>
@@ -157,7 +157,7 @@
 									<a href="/apps/{app.store_id}" style="cursor: pointer;">
 										<div class="flex items-center gap-2">
 											<img
-												src={`https://media.appgoblin.info/app-icons/${app.store_id}/${app.icon_url_100}`}
+												src={`https://media.appgoblin.info/app-icons/${app.store_id}/${app.icon_64}`}
 												alt={app.name}
 												class="w-8 h-8"
 											/>

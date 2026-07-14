@@ -14,7 +14,7 @@ SELECT
     ra.store_id,
     ra.app_company_rank AS rank,
     ra.installs_d30,
-    ra.icon_url_100,
+    ra.icon_64,
     ra.sdk,
     ra.api_call,
     false AS publisher,

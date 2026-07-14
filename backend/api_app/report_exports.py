@@ -183,8 +183,8 @@ def create_crossfilter_export_csv(state: State, payload: dict) -> tuple[bytes, i
     apps_df = extend_app_icon_url(apps_df)
     _normalize_export_frame_columns(apps_df)
 
-    if "icon_url_100" in apps_df.columns:
-        apps_df = apps_df.drop(columns=["icon_url_100"])
+    if "icon_64" in apps_df.columns:
+        apps_df = apps_df.drop(columns=["icon_64"])
 
     buffer = io.StringIO()
     apps_df.to_csv(buffer, index=False)

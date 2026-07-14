@@ -129,7 +129,7 @@
 							<a href="/apps/{row.original.store_id}" style="cursor: pointer;">
 								<div class="flex items-center gap-2">
 									<img
-										src={`https://media.appgoblin.info/app-icons/${row.original.store_id}/${row.original.icon_url_100}`}
+										src={`https://media.appgoblin.info/app-icons/${row.original.store_id}/${row.original.icon_64}`}
 										alt={row.original.name}
 										class="w-8 h8"
 									/>

@@ -10,7 +10,7 @@ SELECT
     ac.response_mime_type,
     ca.md5_hash AS creative_md5_hash,
     saa.store_id AS advertiser_store_id,
-    saa.icon_url_100 AS advertiser_icon_url_100
+    saa.icon_64 AS advertiser_icon_url_100
 FROM
     api_calls AS ac
 LEFT JOIN store_apps AS sa ON ac.store_app = sa.id

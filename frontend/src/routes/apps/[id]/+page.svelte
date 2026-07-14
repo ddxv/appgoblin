@@ -129,7 +129,7 @@
 							</div>
 							<div class="flex items-center gap-2">
 								<span class="font-medium">AppGoblin Last Crawled:</span>
-								<span class="">{data.myapp.updated_at}</span>
+								<span class="">{data.myapp.last_crawled_at}</span>
 							</div>
 						</div>
 					</WhiteCard>

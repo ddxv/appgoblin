@@ -112,7 +112,14 @@
 				<!-- COL 1  -->
 				<div class="grid grid-cols-3 gap-0">
 					<div class="col-span-1">
-						{#if data.myapp.app_icon_url}
+						{#if data.myapp.icon_128}
+							<img
+								src={`https://media.appgoblin.info/app-icons/${data.myapp.store_id}/${data.myapp.icon_128}`}
+								alt={data.myapp.name}
+								class="w-32 sm:w-40 md:w-48 h-auto"
+								referrerpolicy="no-referrer"
+							/>
+						{:else if data.myapp.app_icon_url}
 							<img
 								src={data.myapp.app_icon_url}
 								alt={data.myapp.name}

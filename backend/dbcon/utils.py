@@ -84,7 +84,7 @@ def clean_app_df(df: pd.DataFrame) -> pd.DataFrame:
     date_cols = [
         "created_at",
         "store_last_updated",
-        "updated_at",
+        "last_crawled_at",
         "adstxt_last_crawled",
         "sdk_last_crawled",
         "sdk_successful_last_crawled",
