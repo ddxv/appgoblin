@@ -5,7 +5,7 @@ SELECT
     app_category,
     in_app_purchases,
     ad_supported,
-    icon_url_100,
+    icon_64,
     installs,
     rating_count,
     installs_sum_1w,

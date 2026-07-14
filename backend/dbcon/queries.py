@@ -483,7 +483,7 @@ def get_company_app_changes(
     df["name"] = df["name"].astype(str)
     df["store_id"] = df["store_id"].astype(str)
     df["developer_name"] = df["developer_name"].fillna("")
-    df["icon_url_100"] = df["icon_url_100"].fillna("")
+    df["icon_64"] = df["icon_64"].fillna("")
     df["rank"] = pd.to_numeric(df["rank"], errors="coerce")
     df["installs_d30"] = pd.to_numeric(df["installs_d30"], errors="coerce").fillna(0)
     if limit is not None:

@@ -39,13 +39,13 @@ SELECT
     sa.installs,
     sa.rating_count,
     CASE
-        WHEN sa.icon_url_100 IS NOT NULL
+        WHEN sa.icon_64 IS NOT NULL
             THEN
                 CONCAT(
                     'https://media.appgoblin.info/app-icons/',
                     sa.store_id,
                     '/',
-                    sa.icon_url_100
+                    sa.icon_64
                 )
         ELSE sa.icon_url_512
     END AS app_icon_url,

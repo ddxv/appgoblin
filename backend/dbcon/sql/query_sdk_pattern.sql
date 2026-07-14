@@ -10,7 +10,7 @@ SELECT
         'https://media.appgoblin.info/app-icons/',
         sa.store_id,
         '/',
-        sa.icon_url_100
+        sa.icon_64
     ) AS app_icon_url
 FROM
     adtech.store_app_sdk_strings AS sass

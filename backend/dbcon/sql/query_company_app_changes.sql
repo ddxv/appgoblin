@@ -3,7 +3,7 @@ SELECT
     sa.name,
     sa.store_id,
     sa.developer_name,
-    sa.icon_url_100,
+    sa.icon_64,
     sa.installs_sum_4w AS rank,
     sa.installs_sum_4w AS installs_d30,
     dac.status

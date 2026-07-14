@@ -37,7 +37,7 @@ SELECT
     sao.in_app_purchases,
     sao.ad_supported,
     sao.store,
-    sao.icon_url_100,
+    sao.icon_64,
     sao.monthly_ad_revenue
     + sao.monthly_iap_revenue AS estimated_monthly_revenue
 FROM frontend.store_apps_overview AS sao

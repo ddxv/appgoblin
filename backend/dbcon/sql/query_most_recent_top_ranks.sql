@@ -14,7 +14,7 @@ SELECT
         'https://media.appgoblin.info/app-icons/',
         store_id,
         '/',
-        icon_url_100
+        icon_64
     ) AS app_icon_url
 FROM
     frontend.store_app_ranks_latest

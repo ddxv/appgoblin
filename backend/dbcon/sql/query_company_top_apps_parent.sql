@@ -13,7 +13,7 @@ SELECT
     ra.name,
     ra.store_id,
     ra.developer_name,
-    ra.icon_url_100,
+    ra.icon_64,
     ra.app_company_rank AS rank,
     ra.installs_d30,
     ra.sdk,

@@ -177,7 +177,7 @@ export interface RankedApps {
 	name: string;
 	developer_name?: string;
 	store_id: string;
-	icon_url_100?: string;
+	icon_64?: string;
 	store: number;
 	installs: number;
 	rating_count: number;
@@ -370,7 +370,7 @@ export interface CompanyOverviewApps {
 	store: string | number;
 	rank?: number | null;
 	developer_name: string;
-	icon_url_100: string;
+	icon_64: string;
 	installs_d30: number;
 	status?: string;
 	sdk: boolean;
@@ -619,15 +619,15 @@ export interface CompanyCategoryOverview {
 	domain_overview?: CompanyOverviewScope | null;
 	parent_overview?: CompanyOverviewScope | null;
 	mediation_adapters:
-		| {
-				adapter_string: string;
-				adapter_company_domain: string;
-				adapter_company_name: string;
-				adapter_logo_url: string;
-				app_category: string;
-				app_count: number;
-		  }[]
-		| null;
+	| {
+		adapter_string: string;
+		adapter_company_domain: string;
+		adapter_company_name: string;
+		adapter_logo_url: string;
+		app_category: string;
+		app_count: number;
+	}[]
+	| null;
 	categories: {
 		[key: string]: CategoryAppStats;
 	};
@@ -974,7 +974,7 @@ export interface AppFullDetail {
 	store_link: string;
 	store_developer_link?: string;
 	developer_url?: string;
-	updated_at: string;
+	last_crawled_at: string;
 	rating?: number;
 	rating_count: number;
 	installs_sum_1w: number;
@@ -1000,6 +1000,7 @@ export interface AppFullDetail {
 	store_last_updated: string;
 	created_at: string;
 	featured_image_url?: string;
+	icon_128?: string;
 	phone_image_url_1?: string;
 	phone_image_url_2?: string;
 	phone_image_url_3?: string;
