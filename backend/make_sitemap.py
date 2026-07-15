@@ -23,6 +23,7 @@ BLOG_DIR = MODULE_DIR.parent / pathlib.Path("frontend/src/content/blog")
 STATIC_URLS = [
     "https://appgoblin.info",
     "https://appgoblin.info/about",
+    "https://appgoblin.info/api-docs",
     "https://appgoblin.info/ad-creatives",
     "https://appgoblin.info/top-mobile-advertisers",
     "https://appgoblin.info/app-explorer",
@@ -183,12 +184,10 @@ def create_paginated_sitemaps(
 dbcon = get_db_connection("madrone")
 
 apps = get_sitemap_apps(dbcon)
-apps = apps.head(10000)
 
 
 cdf = get_sitemap_companies(dbcon)
 
-MIN_APP_COUNT = 10000
 
 # Companies with URL slugs are more likely to be relevant
 # (ie not typos from app-ads.txt)
@@ -197,6 +196,8 @@ is_ad_network = cdf["type_url_slug"].notna() & cdf["type_url_slug"].isin(
     ["ad-networks"]
 )
 is_not_ad_network = ~(is_ad_network) & cdf["type_url_slug"].notna()
+
+MIN_APP_COUNT = 10000
 cdf = cdf[((cdf["app_count"] > MIN_APP_COUNT) & is_ad_network) | is_not_ad_network]
 
 
@@ -241,7 +242,7 @@ company_type_categories["url"] = (
 company_type_categories = set_df_sitemap_columns(company_type_categories, 0.7)
 
 
-# about 700
+# about 93k
 companies = (
     cdf.groupby("company_domain")["app_count"]
     .sum()
