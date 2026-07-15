@@ -6,9 +6,6 @@
 
 	type LiveUser = { username: string; emailVerified: boolean };
 
-	// `page.data.user` is baked into the static `__data.json` of prerendered pages
-	// (always null), so on those pages it can't be trusted. Fetch the live session
-	// from a non-prerendered endpoint and prefer that result.
 	let liveUser = $state<LiveUser | null | undefined>(undefined);
 
 	// Until the live fetch resolves, fall back to page data (correct for SSR pages).
@@ -22,10 +19,6 @@
 			: '/auth/login'
 	);
 
-	// `$effect` only runs in the browser (never during SSR), so this replaces both
-	// `onMount` and the `{#if browser}` guard. Reading `page.url.pathname` makes the
-	// effect re-run on every client-side navigation (e.g. the redirect after login
-	// or logout), so the button reflects the current session instead of a stale one.
 	$effect(() => {
 		// Reactive dependency: re-fetch auth state whenever the route changes.
 		void page.url.pathname;
