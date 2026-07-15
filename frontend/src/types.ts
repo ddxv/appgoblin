@@ -1020,6 +1020,7 @@ export interface AppFullDetail {
 	run_result?: number;
 	ad_creative_count?: number;
 	ad_monetized_creative_count?: number;
+	is_removed?: string;
 }
 
 export type CategoryRanks = {

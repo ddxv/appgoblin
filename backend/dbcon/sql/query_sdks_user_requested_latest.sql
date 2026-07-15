@@ -45,7 +45,7 @@ SELECT
                     'https://media.appgoblin.info/app-icons/',
                     sa.store_id,
                     '/',
-                    sa.icon_64
+                    COALESCE(sa.icon_64, sa.icon_128)
                 )
         ELSE sa.icon_url_512
     END AS app_icon_url,
