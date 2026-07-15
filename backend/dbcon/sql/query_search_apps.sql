@@ -30,7 +30,7 @@ SELECT
     store_id,
     name,
     developer_name,
-    icon_64,
+    icon_128,
     featured_image_url,
     installs,
     rating,

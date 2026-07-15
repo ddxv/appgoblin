@@ -158,13 +158,6 @@
 		</div>
 	</div>
 
-	<div class="card preset-filled-surface-100-900 {cardPadding}">
-		<h2 class="h2 {titlePadding}">About the Founder & Architect</h2>
-		<div class={contentPadding}>
-			<p>AppGoblin was founded and engineered by James O'Claire.</p>
-		</div>
-	</div>
-
 	<div class="card preset-filled-surface-100-900 p-2 md:p-8">
 		<h2 class="h2 p-2 md:p-4">Community & Feedback</h2>
 		<div class="p-2 space-y-4">
@@ -243,6 +236,16 @@
 	</div>
 	<br />
 	<div class="card preset-filled-surface-100-900 {cardPadding}">
+		<h2 class="h2 {titlePadding}">Who created AppGoblin?</h2>
+		<div class={contentPadding}>
+			<p>
+				AppGoblin is maintained open source by James O'Claire. Large portions of the data processing
+				are done self hosted.
+			</p>
+		</div>
+	</div>
+	<br />
+	<div class="card preset-filled-surface-100-900 {cardPadding}">
 		<h2 class="h2 {titlePadding}">Check the Trackers on Your Android Device</h2>
 		<div class={contentPadding}>
 			<p>AppGoblin has an Android app which can be used to check the trackers on your device.</p>
@@ -257,4 +260,9 @@
 			</a>
 		</div>
 	</div>
+
+	<p class="text-sm opacity-80 text-center">
+		If you'd like to support AppGoblin, please help to share. Links / socials / mentions are all
+		appreciated.
+	</p>
 </div>

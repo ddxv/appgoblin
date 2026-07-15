@@ -1,7 +1,7 @@
 import type { PageServerLoad } from './$types';
 import { createApiClient } from '$lib/server/api';
 import { getAppCategories } from '$lib/server/appCategories';
-import { requireFullAuth } from '$lib/server/auth/auth';
+import { requireAuthOr401 } from '$lib/server/auth/auth';
 import { db } from '$lib/server/auth/db';
 import { STRIPE_PRICES, getStripePriceIds } from '$lib/server/stripe';
 import { getCachedData } from '../../hooks.server';
@@ -155,7 +155,7 @@ export const actions = {
 		}
 	},
 	emailCsv: async (event) => {
-		const { user } = requireFullAuth(event);
+		const { user } = requireAuthOr401(event);
 		const { request, fetch } = event;
 		const data = await request.formData();
 		const api = createApiClient(fetch);

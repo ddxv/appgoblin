@@ -1,5 +1,5 @@
 import { fail } from '@sveltejs/kit';
-import { requireFullAuth } from '$lib/server/auth/auth';
+import { requireAuthOr401 } from '$lib/server/auth/auth';
 import { db } from '$lib/server/auth/db';
 import { encodeBase32, encodeHexLowerCase, sha256 } from '$lib/server/auth/utils';
 
@@ -37,7 +37,7 @@ function generateApiKey(): string {
 
 export const actions: Actions = {
 	create: async (event: RequestEvent) => {
-		const { user } = requireFullAuth(event);
+		const { user } = requireAuthOr401(event);
 		const data = await event.request.formData();
 
 		const name = data.get('name')?.toString().trim() ?? '';
@@ -68,7 +68,7 @@ export const actions: Actions = {
 	},
 
 	revoke: async (event: RequestEvent) => {
-		const { user } = requireFullAuth(event);
+		const { user } = requireAuthOr401(event);
 		const data = await event.request.formData();
 		const idRaw = data.get('id')?.toString() ?? '';
 		const id = Number.parseInt(idRaw, 10);

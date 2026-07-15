@@ -1,11 +1,11 @@
 import type { PageServerLoad } from './$types';
 import { createApiClient } from '$lib/server/api';
 import { db } from '$lib/server/auth/db';
-import { requireAuth } from '$lib/server/auth/auth';
+import { requireAuthOr401 } from '$lib/server/auth/auth';
 
 export const load: PageServerLoad = async (event) => {
 	const { fetch, url, parent } = event;
-	const { user } = requireAuth(event);
+	const { user } = requireAuthOr401(event);
 	const api = createApiClient(fetch);
 	const { myapp } = await parent();
 	const storeId = myapp.store_id as string;

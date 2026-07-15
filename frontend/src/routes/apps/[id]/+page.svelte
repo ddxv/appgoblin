@@ -35,6 +35,12 @@
 </script>
 
 <section class="grid grid-flow-cols-1 md:grid-cols-2 md:gap-4 p-2">
+	{#if data.myapp.is_removed}
+		<div class="col-span-full bg-outline-900-100 border text-error-900-100 p-2 my-4">
+			⚠ This app was removed from the US App Store and is no longer live.
+		</div>
+	{/if}
+
 	<!-- App Overview Summary - Full Width -->
 	<div class="col-span-full p-0 md:p-2">
 		<AppOverviewSummary
@@ -89,6 +95,10 @@
 							<div class="flex items-center gap-2">
 								<span class="font-medium">Ads:</span>
 								<span class="">{data.myapp.ad_supported ? 'Yes' : 'No'}</span>
+							</div>
+							<div class="flex items-center gap-2">
+								<span class="font-medium">Price:</span>
+								<span class="">{data.myapp.free === 'true' ? 'Free' : 'Paid'}</span>
 							</div>
 
 							{#if data.myapp.developer_url}

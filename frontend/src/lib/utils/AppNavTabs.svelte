@@ -52,7 +52,8 @@
 				slug: 'keywords',
 				label: 'Keywords',
 				href: `/apps/${page.params.id}/keywords`,
-				icon: Key
+				icon: Key,
+				authRequired: true
 			},
 			{
 				slug: 'ranks',

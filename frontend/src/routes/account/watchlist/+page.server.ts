@@ -1,5 +1,5 @@
 import { fail } from '@sveltejs/kit';
-import { requireFullAuth } from '$lib/server/auth/auth';
+import { requireAuthOr401 } from '$lib/server/auth/auth';
 import { db } from '$lib/server/auth/db';
 import { createApiClient } from '$lib/server/api';
 
@@ -193,7 +193,7 @@ function isUniqueViolation(error: unknown): boolean {
 
 export const actions: Actions = {
 	addFollowedApp: async (event: RequestEvent) => {
-		const { user } = requireFullAuth(event);
+		const { user } = requireAuthOr401(event);
 		const data = await event.request.formData();
 
 		let storeId = '';
@@ -217,7 +217,7 @@ export const actions: Actions = {
 		return { section: 'tracked-apps', success: true, message: 'App added to quick access' };
 	},
 	updateFollowedApp: async (event: RequestEvent) => {
-		const { user } = requireFullAuth(event);
+		const { user } = requireAuthOr401(event);
 		const data = await event.request.formData();
 		const idRaw = data.get('id')?.toString() ?? '';
 		const id = Number.parseInt(idRaw, 10);
@@ -255,7 +255,7 @@ export const actions: Actions = {
 		return { section: 'tracked-apps', success: true, message: 'Tracked app updated' };
 	},
 	deleteFollowedApp: async (event: RequestEvent) => {
-		const { user } = requireFullAuth(event);
+		const { user } = requireAuthOr401(event);
 		const data = await event.request.formData();
 		const idRaw = data.get('id')?.toString() ?? '';
 		const id = Number.parseInt(idRaw, 10);
@@ -276,7 +276,7 @@ export const actions: Actions = {
 		return { section: 'tracked-apps', success: true, message: 'Tracked app removed' };
 	},
 	addFollowedCompany: async (event: RequestEvent) => {
-		const { user } = requireFullAuth(event);
+		const { user } = requireAuthOr401(event);
 		const data = await event.request.formData();
 		const companyIdRaw = data.get('company_id')?.toString() ?? '';
 		const companyId = Number.parseInt(companyIdRaw, 10);
@@ -310,7 +310,7 @@ export const actions: Actions = {
 		};
 	},
 	updateFollowedCompany: async (event: RequestEvent) => {
-		const { user } = requireFullAuth(event);
+		const { user } = requireAuthOr401(event);
 		const data = await event.request.formData();
 		const idRaw = data.get('id')?.toString() ?? '';
 		const id = Number.parseInt(idRaw, 10);
@@ -359,7 +359,7 @@ export const actions: Actions = {
 		return { section: 'tracked-companies', success: true, message: 'Tracked company updated' };
 	},
 	deleteFollowedCompany: async (event: RequestEvent) => {
-		const { user } = requireFullAuth(event);
+		const { user } = requireAuthOr401(event);
 		const data = await event.request.formData();
 		const idRaw = data.get('id')?.toString() ?? '';
 		const id = Number.parseInt(idRaw, 10);
@@ -383,7 +383,7 @@ export const actions: Actions = {
 		return { section: 'tracked-companies', success: true, message: 'Tracked company removed' };
 	},
 	addTrackedKeyword: async (event: RequestEvent) => {
-		const { user } = requireFullAuth(event);
+		const { user } = requireAuthOr401(event);
 		const data = await event.request.formData();
 
 		let storeId = '';
@@ -420,7 +420,7 @@ export const actions: Actions = {
 		};
 	},
 	updateTrackedKeyword: async (event: RequestEvent) => {
-		const { user } = requireFullAuth(event);
+		const { user } = requireAuthOr401(event);
 		const data = await event.request.formData();
 		const idRaw = data.get('id')?.toString() ?? '';
 		const id = Number.parseInt(idRaw, 10);
@@ -472,7 +472,7 @@ export const actions: Actions = {
 		return { section: 'tracked-keywords', success: true, message: 'Tracked keyword updated' };
 	},
 	deleteTrackedKeyword: async (event: RequestEvent) => {
-		const { user } = requireFullAuth(event);
+		const { user } = requireAuthOr401(event);
 		const data = await event.request.formData();
 		const idRaw = data.get('id')?.toString() ?? '';
 		const id = Number.parseInt(idRaw, 10);
@@ -496,7 +496,7 @@ export const actions: Actions = {
 		return { section: 'tracked-keywords', success: true, message: 'Tracked keyword removed' };
 	},
 	addRequestedSdkScan: async (event: RequestEvent) => {
-		const { user } = requireFullAuth(event);
+		const { user } = requireAuthOr401(event);
 		const data = await event.request.formData();
 
 		let storeId = '';

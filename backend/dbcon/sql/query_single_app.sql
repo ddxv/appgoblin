@@ -11,6 +11,8 @@ SELECT
     monthly_active_users,
     monthly_ad_revenue,
     monthly_iap_revenue,
+    free,
+    is_removed,
     installs_sum_1w,
     installs_sum_4w,
     ratings_sum_1w,
@@ -44,17 +46,16 @@ SELECT
     run_result AS api_crawl_result,
     api_successful_last_crawled,
     CASE
-        WHEN icon_64 IS NOT NULL
+        WHEN icon_128 IS NOT NULL
             THEN
                 CONCAT(
                     'https://media.appgoblin.info/app-icons/',
                     store_id,
                     '/',
-                    icon_64
+                    icon_128
                 )
         ELSE icon_url_512
     END AS app_icon_url,
-    icon_128,
     COALESCE(ad_creative_count, 0) AS ad_creative_count,
     COALESCE(ad_mon_creatives, 0) AS ad_monetized_creative_count
 FROM

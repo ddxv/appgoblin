@@ -1,12 +1,12 @@
 import { fail, redirect } from '@sveltejs/kit';
-import { requireFullAuth } from '$lib/server/auth/auth';
+import { requireAuthOr401 } from '$lib/server/auth/auth';
 import { db } from '$lib/server/auth/db';
 import { createPortalSession } from '$lib/server/stripe';
 import type { Actions, RequestEvent } from './$types';
 
 export const actions: Actions = {
 	portal: async (event: RequestEvent) => {
-		const { user } = requireFullAuth(event);
+		const { user } = requireAuthOr401(event);
 
 		const subscription = await db.queryOne<{ provider_name: string; status: string }>(
 			`SELECT provider_name, status

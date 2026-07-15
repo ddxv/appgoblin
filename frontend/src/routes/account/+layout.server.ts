@@ -1,11 +1,10 @@
-import { requireFullAuth } from '$lib/server/auth/auth';
+import { requireAuthOr401 } from '$lib/server/auth/auth';
 import { db } from '$lib/server/auth/db';
 import { getStripePriceIds, STRIPE_PLAN_LABELS, type StripePriceKey } from '$lib/server/stripe';
 import type { LayoutServerLoadEvent } from './$types';
 
 export async function load(event: LayoutServerLoadEvent) {
-	// This route requires full authentication (opt-in protection)
-	const { user } = requireFullAuth(event);
+	const { user } = requireAuthOr401(event);
 
 	interface Subscription {
 		status: string;
