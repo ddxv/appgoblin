@@ -110,6 +110,7 @@
 			<a
 				class="btn preset-tonal w-full sm:w-auto"
 				href="/auth/signup?redirectTo={encodeURIComponent(redirectTo)}"
+				rel="nofollow"
 			>
 				Create Free Account
 			</a>
