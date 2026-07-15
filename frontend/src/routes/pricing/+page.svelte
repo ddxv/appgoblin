@@ -448,6 +448,11 @@
 										{loading && activePriceKey === plan.key ? 'Redirecting...' : 'Get ' + plan.name}
 									</button>
 								</form>
+							{:else}
+								<p class="text-xs opacity-70 text-center px-2">
+									If you'd like to support AppGoblin, please help to share. Links / socials /
+									mentions are all appreciated.
+								</p>
 							{/if}
 						</div>
 					</div>
