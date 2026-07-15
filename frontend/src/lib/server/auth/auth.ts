@@ -1,4 +1,4 @@
-import { redirect } from '@sveltejs/kit';
+import { error, redirect } from '@sveltejs/kit';
 import type { RequestEvent } from '@sveltejs/kit';
 import { db } from './db';
 
@@ -22,6 +22,21 @@ export function requireAuth(event: RequestEvent) {
 	if (event.locals.session === null || event.locals.user === null) {
 		const returnTo = event.url.pathname + event.url.search;
 		throw redirect(302, loginUrl(returnTo));
+	}
+	return {
+		session: event.locals.session,
+		user: event.locals.user
+	};
+}
+
+/**
+ * Require authentication, returning HTTP 401 instead of redirecting.
+ * Use this for routes that should signal "this page needs auth"
+ * to crawlers rather than bouncing them through a redirect chain.
+ */
+export function requireAuthOr401(event: RequestEvent) {
+	if (event.locals.session === null || event.locals.user === null) {
+		throw error(401, 'Authentication required');
 	}
 	return {
 		session: event.locals.session,

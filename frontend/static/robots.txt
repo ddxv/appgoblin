@@ -5,6 +5,16 @@ Disallow: /apps/*.jpg
 Disallow: /apps/*.jpeg
 Disallow: /apps/*.png
 Disallow: /auth/*
+Disallow: /account/
+Disallow: /apps/comparison/
+Disallow: /apps/*/keywords/
+Disallow: /apps/*/monetized-ads/
+Disallow: /apps/*/sdks/
+Disallow: /apps/*/trends/
+Disallow: /apps/*/ranks/
+Disallow: /sdks/*/
+Disallow: /companies/*/app-adstxt/
+Disallow: /companies/*/data-exports/
 Allow: /
 Allow: /.well-known/
 Allow: /api-docs

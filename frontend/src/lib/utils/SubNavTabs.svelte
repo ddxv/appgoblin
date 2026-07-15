@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Crown from 'lucide-svelte/icons/crown';
+	import LogIn from 'lucide-svelte/icons/log-in';
 	import Menu from 'lucide-svelte/icons/menu';
 	import X from 'lucide-svelte/icons/x';
 
@@ -28,6 +29,10 @@
 		 * Adds left padding to indent this item under a section header.
 		 */
 		indent?: boolean;
+		/**
+		 * When true, shows a lock icon next to the label to indicate the page requires authentication.
+		 */
+		authRequired?: boolean;
 	}
 
 	let {
@@ -145,6 +150,9 @@
 								{tab.label}
 								{#if tab.b2b}
 									<Crown size={12} class="shrink-0 text-primary-900-100" aria-hidden="true" />
+								{/if}
+								{#if tab.authRequired}
+									<LogIn size={12} class="shrink-0 text-surface-400" aria-hidden="true" />
 								{/if}
 							</span>
 							{#if tab.count}

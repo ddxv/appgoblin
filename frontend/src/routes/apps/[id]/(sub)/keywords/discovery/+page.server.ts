@@ -1,7 +1,10 @@
 import type { PageServerLoad } from './$types';
 import { createApiClient } from '$lib/server/api';
+import { requireAuthOr401 } from '$lib/server/auth/auth';
 
-export const load: PageServerLoad = async ({ fetch, params, parent }) => {
+export const load: PageServerLoad = async (event) => {
+	const { fetch, params, parent } = event;
+	requireAuthOr401(event);
 	const api = createApiClient(fetch);
 	const id = params.id;
 	const { myapp } = await parent();
