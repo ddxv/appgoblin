@@ -619,15 +619,15 @@ export interface CompanyCategoryOverview {
 	domain_overview?: CompanyOverviewScope | null;
 	parent_overview?: CompanyOverviewScope | null;
 	mediation_adapters:
-	| {
-		adapter_string: string;
-		adapter_company_domain: string;
-		adapter_company_name: string;
-		adapter_logo_url: string;
-		app_category: string;
-		app_count: number;
-	}[]
-	| null;
+		| {
+				adapter_string: string;
+				adapter_company_domain: string;
+				adapter_company_name: string;
+				adapter_logo_url: string;
+				app_category: string;
+				app_count: number;
+		  }[]
+		| null;
 	categories: {
 		[key: string]: CategoryAppStats;
 	};
