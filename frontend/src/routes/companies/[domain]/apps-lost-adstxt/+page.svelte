@@ -1,7 +1,8 @@
 <script lang="ts">
 	import Crown from 'lucide-svelte/icons/crown';
 	import CompanyAppChangesTable from '$lib/CompanyAppChangesTable.svelte';
-	import type { CompanyOverviewApps } from '../../../../types';
+	import type { CompanyOverviewApps, CompanyTabIndicators } from '../../../../types';
+	import { formatNumber } from '$lib/utils/formatNumber';
 
 	type MergedAppChanges = {
 		android: CompanyOverviewApps[];
@@ -13,10 +14,13 @@
 			appChanges: MergedAppChanges;
 			companyName: string;
 			hasB2BSdkAccess: boolean;
+			tabIndicators: CompanyTabIndicators | null;
 		};
 	}
 
 	let { data }: Props = $props();
+
+	let lostCount = $derived(data.tabIndicators?.apps_adstxt_direct_lost_count ?? 0);
 </script>
 
 <section class="mb-4 space-y-2">
@@ -27,6 +31,11 @@
 		Store removals, app publishers changing domain names as well as a developer removing lines from
 		their App-Ads.txt. As such the churn on these lists can be much higher and less deterministic
 		than the SDK & API apps loss list.
+		{#if lostCount > 0}
+			<span class="opacity-70">
+				{formatNumber(lostCount)} app{lostCount === 1 ? '' : 's'} lost across the latest two quarters.
+			</span>
+		{/if}
 	</p>
 	<p class="text-sm opacity-70">
 		This data is also available via the <a
@@ -61,16 +70,10 @@
 	</div>
 {/if}
 
-{#if data.appChanges.android.length > 0 || data.appChanges.ios.length > 0}
-	<CompanyAppChangesTable
-		android={data.appChanges.android}
-		ios={data.appChanges.ios}
-		companyName={data.companyName}
-		previewMode={!data.hasB2BSdkAccess}
-		statusLabel="removed"
-	/>
-{:else}
-	<p class="text-center p-4">
-		No recently lost app-ads.txt apps found for this company in the latest two quarters.
-	</p>
-{/if}
+<CompanyAppChangesTable
+	android={data.appChanges.android}
+	ios={data.appChanges.ios}
+	companyName={data.companyName}
+	previewMode={!data.hasB2BSdkAccess}
+	statusLabel="removed"
+/>
