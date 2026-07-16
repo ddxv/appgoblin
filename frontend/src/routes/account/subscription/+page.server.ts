@@ -9,14 +9,15 @@ export const actions: Actions = {
 		const { user } = requireAuthOr401(event);
 
 		const subscription = await db.queryOne<{ provider_name: string; status: string }>(
-			`SELECT provider_name, status
-			 FROM subscriptions
-			 WHERE user_id = $1
+			`SELECT tp.provider_name, s.status
+			 FROM subscriptions s
+			 LEFT JOIN tier_prices tp ON tp.id = s.tier_price_id
+			 WHERE s.user_id = $1
 			 AND (
-			 	(cancel_at IS NOT NULL AND cancel_at > NOW())
-			 	OR (cancel_at IS NULL AND status IN ('active', 'trialing'))
+			   (s.cancel_at IS NOT NULL AND s.cancel_at > NOW())
+			   OR (s.cancel_at IS NULL AND s.status IN ('active', 'trialing'))
 			 )
-			 ORDER BY updated_at DESC LIMIT 1`,
+			 ORDER BY s.updated_at DESC LIMIT 1`,
 			[user.id]
 		);
 

@@ -3,12 +3,9 @@ import { createApiClient } from '$lib/server/api';
 import { getAppCategories } from '$lib/server/appCategories';
 import { requireAuthOr401 } from '$lib/server/auth/auth';
 import { db } from '$lib/server/auth/db';
-import { STRIPE_PRICES, getStripePriceIds } from '$lib/server/stripe';
+import { userHasTierAccess } from '$lib/server/subscription';
 import { getCachedData } from '../../hooks.server';
 
-interface ActiveSubscriptionRow {
-	provider_price_id: string;
-}
 
 interface CrossfilterPayload {
 	include_domains: string[];
@@ -93,19 +90,16 @@ function hasExportFilters(payload: CrossfilterPayload): boolean {
 }
 
 async function getSubscriptionAccess(userId: number) {
-	const row = await db.queryOne<ActiveSubscriptionRow>(
-		`SELECT provider_price_id FROM subscriptions
+	const row = await db.queryOne<{ id: number }>(
+		`SELECT id FROM subscriptions
 		 WHERE user_id = $1
 		 AND status IN ('active', 'trialing')
 		 AND (cancel_at IS NULL OR cancel_at > NOW())
-		 ORDER BY created_at DESC LIMIT 1`,
+		 LIMIT 1`,
 		[userId]
 	);
-
 	const hasPaidAccess = !!row;
-	const hasB2BSdkAccess =
-		!!row && getStripePriceIds('b2b_sdk', 'b2b_premium').includes(row.provider_price_id);
-
+	const hasB2BSdkAccess = await userHasTierAccess(userId, 'b2b_sdk', 'b2b_premium');
 	return { hasPaidAccess, hasB2BSdkAccess };
 }
 
