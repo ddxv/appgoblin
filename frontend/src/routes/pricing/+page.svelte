@@ -444,7 +444,14 @@
 								>
 									<input type="hidden" name="priceKey" value={plan.key} />
 									<input type="hidden" name="billingCycle" value={billingCycle} />
-									<button type="submit" disabled={loading} class="btn preset-tonal-primary w-full">
+									<button
+										type="submit"
+										disabled={loading}
+										class="btn preset-tonal-primary w-full"
+										data-umami-event="pricing-plan-select"
+										data-umami-event-tier={plan.key}
+										data-umami-event-cycle={billingCycle}
+									>
 										{loading && activePriceKey === plan.key ? 'Redirecting...' : 'Get ' + plan.name}
 									</button>
 								</form>
@@ -567,7 +574,14 @@
 								>
 									<input type="hidden" name="priceKey" value={plan.key} />
 									<input type="hidden" name="billingCycle" value={billingCycle} />
-									<button type="submit" disabled={loading} class="btn preset-tonal-primary w-full">
+									<button
+										type="submit"
+										disabled={loading}
+										class="btn preset-tonal-primary w-full"
+										data-umami-event="pricing-plan-select"
+										data-umami-event-tier={plan.key}
+										data-umami-event-cycle={billingCycle}
+									>
 										{loading && activePriceKey === plan.key ? 'Redirecting...' : 'Get ' + plan.name}
 									</button>
 								</form>
