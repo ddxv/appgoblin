@@ -1,7 +1,8 @@
 <script lang="ts">
 	import Crown from 'lucide-svelte/icons/crown';
 	import CompanyAppChangesTable from '$lib/CompanyAppChangesTable.svelte';
-	import type { CompanyOverviewApps } from '../../../../types';
+	import type { CompanyOverviewApps, CompanyTabIndicators } from '../../../../types';
+	import { formatNumber } from '$lib/utils/formatNumber';
 
 	type MergedAppChanges = {
 		android: CompanyOverviewApps[];
@@ -13,10 +14,13 @@
 			appChanges: MergedAppChanges;
 			companyName: string;
 			hasB2BSdkAccess: boolean;
+			tabIndicators: CompanyTabIndicators | null;
 		};
 	}
 
 	let { data }: Props = $props();
+
+	let addedCount = $derived(data.tabIndicators?.apps_adstxt_direct_added_count ?? 0);
 </script>
 
 <section class="mb-4 space-y-2">
@@ -24,6 +28,11 @@
 	<p class="text-sm mb-3">
 		This view tracks the quarterly adoption of app-ads.txt DIRECT signals for this company across
 		the latest available quarter and the quarter before it.
+		{#if addedCount > 0}
+			<span class="opacity-70">
+				{formatNumber(addedCount)} app{addedCount === 1 ? '' : 's'} added across the latest two quarters.
+			</span>
+		{/if}
 	</p>
 	<p class="text-sm opacity-70">
 		This data is also available via the <a
@@ -58,16 +67,10 @@
 	</div>
 {/if}
 
-{#if data.appChanges.android.length > 0 || data.appChanges.ios.length > 0}
-	<CompanyAppChangesTable
-		android={data.appChanges.android}
-		ios={data.appChanges.ios}
-		companyName={data.companyName}
-		previewMode={!data.hasB2BSdkAccess}
-		statusLabel="Added"
-	/>
-{:else}
-	<p class="text-center p-4">
-		No recently added app-ads.txt apps found for this company in the latest two quarters.
-	</p>
-{/if}
+<CompanyAppChangesTable
+	android={data.appChanges.android}
+	ios={data.appChanges.ios}
+	companyName={data.companyName}
+	previewMode={!data.hasB2BSdkAccess}
+	statusLabel="Added"
+/>

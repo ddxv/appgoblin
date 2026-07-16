@@ -2,7 +2,7 @@ import type { RequestEvent } from '@sveltejs/kit';
 import { error } from '@sveltejs/kit';
 import { requireFullAuth } from '$lib/server/auth/auth';
 import { db } from '$lib/server/auth/db';
-import { getStripePriceIds } from '$lib/server/stripe';
+import { userHasTierAccess } from '$lib/server/subscription';
 
 const reportJsonModules = import.meta.glob('../*.json', {
 	eager: true,
@@ -104,17 +104,7 @@ function toCsvRow(values: unknown[]): string {
 // ---- Subscription check ----
 
 async function userHasB2BAccess(userId: number): Promise<boolean> {
-	const row = await db.queryOne<{ provider_price_id: string }>(
-		`SELECT provider_price_id FROM subscriptions
-		 WHERE user_id = $1
-		 AND status IN ('active', 'trialing')
-		 AND (cancel_at IS NULL OR cancel_at > NOW())
-		 ORDER BY created_at DESC LIMIT 1`,
-		[userId]
-	);
-	if (!row) return false;
-	const b2bIds = getStripePriceIds('b2b_sdk', 'b2b_appads', 'b2b_premium');
-	return b2bIds.includes(row.provider_price_id);
+	return userHasTierAccess(userId, 'b2b_sdk', 'b2b_appads', 'b2b_premium');
 }
 
 // ---- Build advertiser CSV ----

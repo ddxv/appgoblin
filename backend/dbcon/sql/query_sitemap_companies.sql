@@ -10,6 +10,5 @@ WHERE
     app_count > 2 AND (company_name IS NOT NULL OR installs_d30 > 10000000)
 GROUP BY
     company_domain,
-     company_name,
-    type_url_slug
-;
+    company_name,
+    type_url_slug;

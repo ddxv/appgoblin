@@ -28,13 +28,11 @@ from api_app.controllers.public.v1.keywords import V1KeywordsController
 from api_app.controllers.rankings import RankingsController
 from api_app.controllers.scry import ScryController
 from api_app.controllers.sdks import SdksController
-from api_app.guards import configure_tier_mapping, validate_tier_mapping_config
 from api_app.mcp.controller import (
     fastmcp_asgi_app,
     protected_mcp_app,
     set_mcp_engine,
 )
-from config import CONFIG
 from dbcon.connections import get_db_connection
 from dbcon.static import load_static_data
 
@@ -198,32 +196,8 @@ async def db_lifespan(app: Litestar) -> AsyncGenerator[None]:
     """
     logger.info("Starting database connections...")
 
-    # Load Stripe price → tier mapping from config
-    tier_prices_raw = CONFIG.get("tier_prices")
-    tier_prices: dict[str, str] | None = None
-
-    if tier_prices_raw is None:
-        tier_prices = None
-    elif not isinstance(tier_prices_raw, dict) or not all(
-        isinstance(key, str) and isinstance(value, str)
-        for key, value in tier_prices_raw.items()
-    ):
-        logger.exception("Invalid API tier pricing config")
-        raise RuntimeError("Invalid API tier pricing config in config.toml")
-    else:
-        tier_prices = {key: value for key, value in tier_prices_raw.items()}
-
-    try:
-        validate_tier_mapping_config(tier_prices)
-    except ValueError as exc:
-        logger.exception("Invalid API tier pricing config")
-        raise RuntimeError("Invalid API tier pricing config in config.toml") from exc
-
-    if tier_prices is None:
-        raise RuntimeError("Invalid API tier pricing config in config.toml")
-
-    configure_tier_mapping(tier_prices)
-    logger.info(f"Loaded {len(tier_prices)} tier price mappings")
+    # Tier prices are now resolved at query time through the
+    # tier_prices → tiers JOIN. No startup config needed.
 
     # Initialize connections
     try:

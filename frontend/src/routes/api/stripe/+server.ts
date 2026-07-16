@@ -74,14 +74,8 @@ async function handleSubscriptionUpdated(subscription: any, eventCreatedAt?: num
 	const cancelAtPeriodEnd = Boolean(subscription.cancel_at_period_end);
 	const lineItem = subscription.items?.data?.[0];
 	const priceId = lineItem?.price?.id;
-	const productField = lineItem?.price?.product;
-	const productId =
-		typeof productField === 'string'
-			? productField
-			: ((productField as { id?: string })?.id ?? null);
-
-	if (!priceId || !productId) {
-		console.error('Subscription missing price/product', { priceId, productId });
+	if (!priceId) {
+		console.error('Subscription missing price ID');
 		return;
 	}
 
@@ -115,7 +109,6 @@ async function handleSubscriptionUpdated(subscription: any, eventCreatedAt?: num
 			: null;
 	const cancelAt = cancelAtUnix ? new Date(cancelAtUnix * 1000) : null;
 	const cancelRequestedAt = cancelRequestedAtUnix ? new Date(cancelRequestedAtUnix * 1000) : null;
-	const trialEnd = subscription.trial_end ? new Date(subscription.trial_end * 1000) : null;
 
 	console.log('Looking up user for customer', customerId);
 	// Find user by provider_customer_id
@@ -160,39 +153,44 @@ async function handleSubscriptionUpdated(subscription: any, eventCreatedAt?: num
 		return;
 	}
 
+	// Resolve the tier_price_id from the Stripe price ID
+	const tierPriceRow = await db.queryOne<{ id: number }>(
+		`SELECT id FROM public.tier_prices WHERE provider_price_id = $1`,
+		[priceId]
+	);
+	if (!tierPriceRow) {
+		console.error('Unknown Stripe price ID — add to tier_prices table:', priceId);
+	}
+	const tierPriceId = tierPriceRow?.id ?? null;
+
 	console.log('Upserting subscription for user', user.id);
-	// Upsert subscription
+	// Upsert subscription (provider_price_id/product_id live on tier_prices now)
 	await db.execute(
 		`
         INSERT INTO subscriptions (
-            user_id, provider_name, provider_subscription_id, provider_customer_id, provider_price_id,
-            provider_product_id, status, current_period_start, current_period_end, cancel_at, cancel_requested_at,
-            trial_end, seats_total, updated_at
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, 1, NOW())
-        ON CONFLICT (provider_name, provider_subscription_id) DO UPDATE SET
+            user_id, provider_subscription_id, provider_customer_id,
+            status, current_period_start, current_period_end, cancel_at, cancel_requested_at,
+            seats_total, updated_at, tier_price_id
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, 1, NOW(), $9)
+        ON CONFLICT (provider_subscription_id) DO UPDATE SET
             status = EXCLUDED.status,
-            provider_price_id = EXCLUDED.provider_price_id,
-            provider_product_id = EXCLUDED.provider_product_id,
             current_period_start = EXCLUDED.current_period_start,
             current_period_end = EXCLUDED.current_period_end,
             cancel_at = EXCLUDED.cancel_at,
             cancel_requested_at = EXCLUDED.cancel_requested_at,
-            trial_end = EXCLUDED.trial_end,
+            tier_price_id = COALESCE(EXCLUDED.tier_price_id, subscriptions.tier_price_id),
             updated_at = NOW();
     `,
 		[
 			user.id,
-			'stripe',
 			subscription.id,
 			customerId,
-			priceId,
-			productId,
 			status,
 			currentPeriodStart,
 			currentPeriodEnd,
 			cancelAt,
 			cancelRequestedAt,
-			trialEnd
+			tierPriceId
 		]
 	);
 	console.log('Subscription upserted');

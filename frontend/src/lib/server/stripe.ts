@@ -2,16 +2,7 @@ import Stripe from 'stripe';
 import { db } from '$lib/server/auth/db';
 import { error } from '@sveltejs/kit';
 
-import {
-	STRIPE_SECRET_KEY,
-	STRIPE_PRICE_B2B_SDK_MO,
-	STRIPE_PRICE_B2B_SDK_YR,
-	STRIPE_PRICE_B2B_APPADS_ID_MO,
-	STRIPE_PRICE_B2B_APPADS_ID_YR,
-	STRIPE_PRICE_B2B_PREMIUM_MO,
-	STRIPE_PRICE_B2B_PREMIUM_YR,
-	APPGOBLIN_ENDPOINT_URL
-} from '$env/static/private';
+import { STRIPE_SECRET_KEY, APPGOBLIN_ENDPOINT_URL } from '$env/static/private';
 
 export const stripe = new Stripe(STRIPE_SECRET_KEY, {
 	apiVersion: '2026-06-24.dahlia'
@@ -19,27 +10,8 @@ export const stripe = new Stripe(STRIPE_SECRET_KEY, {
 
 export type BillingCycle = 'monthly' | 'yearly';
 
-export const STRIPE_PRICES = {
-	b2b_sdk: { monthly: STRIPE_PRICE_B2B_SDK_MO, yearly: STRIPE_PRICE_B2B_SDK_YR },
-	b2b_appads: {
-		monthly: STRIPE_PRICE_B2B_APPADS_ID_MO,
-		yearly: STRIPE_PRICE_B2B_APPADS_ID_YR
-	},
-	b2b_premium: {
-		monthly: STRIPE_PRICE_B2B_PREMIUM_MO,
-		yearly: STRIPE_PRICE_B2B_PREMIUM_YR
-	}
-} as const satisfies Record<string, Record<BillingCycle, string>>;
-
-export type StripePriceKey = keyof typeof STRIPE_PRICES;
-
-/** Flatten one or more plan keys into their full list of price IDs (both cycles). */
-export function getStripePriceIds(...keys: StripePriceKey[]): string[] {
-	return keys.flatMap((key) => {
-		const entry = STRIPE_PRICES[key];
-		return [entry.monthly, entry.yearly];
-	});
-}
+/** Known tier slugs that can be subscribed to. */
+export type StripePriceKey = 'b2b_sdk' | 'b2b_appads' | 'b2b_premium';
 
 /** Human-readable label for a plan, useful for account/receipt pages. */
 export const STRIPE_PLAN_LABELS: Record<StripePriceKey, string> = {
@@ -79,11 +51,22 @@ export async function createCheckoutSession(
 			]);
 		}
 
-		const priceId = STRIPE_PRICES[priceKey]?.[billingCycle];
+		// Look up the active Stripe price ID from the DB instead of hardcoded env vars.
+		// This automatically picks up new prices and tolerates retired IDs
+		// as long as they exist in tier_prices with is_current = TRUE.
+		const priceRow = await db.queryOne<{ provider_price_id: string }>(
+			`SELECT tp.provider_price_id
+		 FROM public.tier_prices tp
+		 JOIN public.tiers t ON t.id = tp.tier_id
+		 WHERE t.slug = $1 AND tp.billing_cycle = $2
+		   AND tp.provider_name = 'stripe' AND tp.is_current = TRUE`,
+			[priceKey, billingCycle]
+		);
 
-		if (!priceId) {
-			throw error(400, 'Invalid Stripe price key or billing cycle');
+		if (!priceRow) {
+			throw error(400, 'No active Stripe price found for this plan');
 		}
+		const priceId = priceRow.provider_price_id;
 
 		const session = await stripe.checkout.sessions.create({
 			customer: stripeCustomerId,

@@ -41,68 +41,10 @@ LEGACY_TIER_LIMITS: dict[str, TierLimits] = {
 
 TIER_LIMITS: dict[str, TierLimits] = {**PUBLIC_TIER_LIMITS, **LEGACY_TIER_LIMITS}
 
-REQUIRED_PRICE_MAPPED_TIERS = frozenset(
-    tier for tier in PUBLIC_TIER_LIMITS if tier != "free"
-)
-
-PRICE_ID_TO_TIER: dict[str, str] = {}
-
-
-def validate_tier_mapping_config(price_map: dict[str, str] | None) -> None:
-    """Validate the required Stripe price to tier mapping config."""
-    if not price_map:
-        raise ValueError(
-            "Missing required [tier_prices] section in config.toml. "
-            f"Expected mappings for: {', '.join(sorted(REQUIRED_PRICE_MAPPED_TIERS))}"
-        )
-
-    configured_tiers = set(price_map.values())
-    unknown_tiers = sorted(configured_tiers - set(TIER_LIMITS))
-    if unknown_tiers:
-        raise ValueError(
-            "Unknown tier label(s) in [tier_prices]: " + ", ".join(unknown_tiers)
-        )
-
-    missing_tiers = sorted(REQUIRED_PRICE_MAPPED_TIERS - configured_tiers)
-    if missing_tiers:
-        raise ValueError(
-            "Missing required tier mapping(s) in [tier_prices]: "
-            + ", ".join(missing_tiers)
-        )
-
-
-def configure_tier_mapping(price_map: dict[str, str]) -> None:
-    """Call at startup with {stripe_price_id: tier_label} mapping.
-
-    This is populated from the SvelteKit stripe.ts constant values so we
-    don't duplicate them.  The keys come from ``STRIPE_PRICES`` in
-    ``frontend/src/lib/server/stripe.ts``.
-    """
-    PRICE_ID_TO_TIER.update(price_map)
-
 
 def get_tier_limits(tier: str) -> TierLimits:
     """Get limits for a tier, defaulting to free."""
     return TIER_LIMITS.get(tier, TIER_LIMITS["free"])
-
-
-def _resolve_tier(price_id: str | None) -> str:
-    """Resolve a subscription price identifier to a configured tier label."""
-    if not price_id:
-        return "free"
-
-    if price_id in TIER_LIMITS:
-        return price_id
-
-    mapped_tier = PRICE_ID_TO_TIER.get(price_id)
-    if mapped_tier in TIER_LIMITS:
-        return mapped_tier
-
-    logger.warning(
-        "Unknown subscription price id %r for API rate limiting; defaulting to free",
-        price_id,
-    )
-    return "free"
 
 
 # ---------------------------------------------------------------------------
@@ -247,26 +189,28 @@ class ApiKeyContext:
 
 
 def _query_key(engine: Engine, key_hash: str) -> _CachedKey | None:
-    """Look up an API key and its owner's subscription tier."""
+    """Look up an API key and its owner's subscription tier.
+
+    Resolves the tier through the tier_prices → tiers JOIN.
+    """
     query = text("""
         SELECT ak.user_id,
-               COALESCE(s.provider_price_id, 'free') AS price_id
+               COALESCE(t.slug, 'free') AS tier
         FROM public.api_keys ak
         JOIN public.users u ON u.id = ak.user_id
         LEFT JOIN LATERAL (
-            SELECT provider_price_id
+            SELECT sub.tier_price_id
             FROM public.subscriptions sub
             WHERE sub.user_id = ak.user_id
-                            AND (
-                                    (sub.cancel_at IS NOT NULL AND sub.cancel_at > now())
-                                    OR (
-                                            sub.cancel_at IS NULL
-                                            AND sub.status IN ('active', 'trialing')
-                                    )
-                            )
-                        ORDER BY sub.updated_at DESC
+              AND (
+                    (sub.cancel_at IS NOT NULL AND sub.cancel_at > now())
+                    OR (sub.cancel_at IS NULL AND sub.status IN ('active', 'trialing'))
+              )
+            ORDER BY sub.updated_at DESC
             LIMIT 1
         ) s ON TRUE
+        LEFT JOIN public.tier_prices tp ON tp.id = s.tier_price_id
+        LEFT JOIN public.tiers t ON t.id = tp.tier_id
         WHERE ak.key_hash = :key_hash
           AND ak.is_active = true
           AND (ak.expires_at IS NULL OR ak.expires_at > now())
@@ -278,8 +222,7 @@ def _query_key(engine: Engine, key_hash: str) -> _CachedKey | None:
     if row is None:
         return None
 
-    price_id = row.price_id or "free"
-    tier = _resolve_tier(price_id)
+    tier = row.tier or "free"
 
     return _CachedKey(
         user_id=row.user_id,

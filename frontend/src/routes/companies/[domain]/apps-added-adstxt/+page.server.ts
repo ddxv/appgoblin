@@ -1,18 +1,7 @@
 import type { PageServerLoad } from './$types';
 import { createApiClient } from '$lib/server/api';
-import { db } from '$lib/server/auth/db';
-import { getStripePriceIds } from '$lib/server/stripe';
+import { userHasTierAccess } from '$lib/server/subscription';
 import type { CompanyAppChangesOverview, CompanyOverviewApps } from '../../../../types';
-
-type ActiveSubscriptionRow = {
-	provider_price_id: string;
-};
-
-type CompanyDetailsWithTrends = {
-	trends_summary?: {
-		latest_period?: string | null;
-	} | null;
-};
 
 type MergedAppChanges = {
 	android: CompanyOverviewApps[];
@@ -36,47 +25,8 @@ function getPreviousQuarter(year: number, quarter: number) {
 	return { year, quarter: quarter - 1 };
 }
 
-function getFallbackCurrentQuarter() {
-	const now = new Date();
-	return {
-		year: now.getUTCFullYear(),
-		quarter: Math.floor(now.getUTCMonth() / 3) + 1
-	};
-}
-
-function parseLatestPeriod(latestPeriod: string | null | undefined) {
-	if (!latestPeriod) {
-		return getFallbackCurrentQuarter();
-	}
-
-	const match = latestPeriod.match(/(\d{4})-?Q([1-4])/i);
-	if (!match) {
-		return getFallbackCurrentQuarter();
-	}
-
-	return {
-		year: Number.parseInt(match[1], 10),
-		quarter: Number.parseInt(match[2], 10)
-	};
-}
-
-function buildPreviewMerged(latestPeriod: string | null | undefined): MergedAppChanges {
-	return { android: [], ios: [] };
-}
-
 async function getSubscriptionAccess(userId: number) {
-	const row = await db.queryOne<ActiveSubscriptionRow>(
-		`SELECT provider_price_id FROM subscriptions
-		 WHERE user_id = $1
-		 AND status IN ('active', 'trialing')
-		 AND (cancel_at IS NULL OR cancel_at > NOW())
-		 ORDER BY created_at DESC LIMIT 1`,
-		[userId]
-	);
-
-	const hasB2BSdkAccess =
-		!!row && getStripePriceIds('b2b_sdk', 'b2b_premium').includes(row.provider_price_id);
-
+	const hasB2BSdkAccess = await userHasTierAccess(userId, 'b2b_sdk', 'b2b_premium');
 	return { hasB2BSdkAccess };
 }
 
@@ -132,7 +82,6 @@ function mergeQuadrantAppChanges(
 export const load: PageServerLoad = async ({ fetch, locals, params, parent }) => {
 	const api = createApiClient(fetch);
 	const parentData = await parent();
-	const companyDetails = parentData.companyDetails as CompanyDetailsWithTrends | undefined;
 
 	let hasB2BSdkAccess = false;
 	if (locals.user) {
@@ -145,36 +94,31 @@ export const load: PageServerLoad = async ({ fetch, locals, params, parent }) =>
 	const companyName =
 		tree?.company_name ?? tree?.company_domain ?? tree?.queried_domain ?? params.domain ?? '';
 
-	let appChanges: MergedAppChanges;
+	const currentQuarterAppChanges = await loadCompanyAppChanges(
+		api,
+		`/companies/${params.domain}/apps-added-adstxt`,
+		'Company apps added (adstxt)'
+	);
 
-	if (!hasB2BSdkAccess) {
-		appChanges = buildPreviewMerged(companyDetails?.trends_summary?.latest_period);
-	} else {
-		const currentQuarterAppChanges = await loadCompanyAppChanges(
-			api,
-			`/companies/${params.domain}/apps-added-adstxt`,
-			'Company apps added (adstxt)'
+	let previousQuarterAppChanges: CompanyAppChangesOverview | null = null;
+	if (currentQuarterAppChanges) {
+		const previousQuarter = getPreviousQuarter(
+			currentQuarterAppChanges.year,
+			currentQuarterAppChanges.quarter
 		);
-
-		let previousQuarterAppChanges: CompanyAppChangesOverview | null = null;
-		if (currentQuarterAppChanges) {
-			const previousQuarter = getPreviousQuarter(
-				currentQuarterAppChanges.year,
-				currentQuarterAppChanges.quarter
-			);
-			previousQuarterAppChanges = await loadCompanyAppChanges(
-				api,
-				`/companies/${params.domain}/apps-added-adstxt?year=${previousQuarter.year}&quarter=${previousQuarter.quarter}`,
-				'Company apps added adstxt previous quarter'
-			);
-		}
-
-		appChanges = mergeQuadrantAppChanges(currentQuarterAppChanges, previousQuarterAppChanges);
+		previousQuarterAppChanges = await loadCompanyAppChanges(
+			api,
+			`/companies/${params.domain}/apps-added-adstxt?year=${previousQuarter.year}&quarter=${previousQuarter.quarter}`,
+			'Company apps added adstxt previous quarter'
+		);
 	}
+
+	const appChanges = mergeQuadrantAppChanges(currentQuarterAppChanges, previousQuarterAppChanges);
 
 	return {
 		appChanges,
 		companyName,
-		hasB2BSdkAccess
+		hasB2BSdkAccess,
+		tabIndicators: parentData.tabIndicators
 	};
 };
