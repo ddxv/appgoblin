@@ -6,7 +6,6 @@ import { db } from '$lib/server/auth/db';
 import { userHasTierAccess } from '$lib/server/subscription';
 import { getCachedData } from '../../hooks.server';
 
-
 interface CrossfilterPayload {
 	include_domains: string[];
 	exclude_domains: string[];

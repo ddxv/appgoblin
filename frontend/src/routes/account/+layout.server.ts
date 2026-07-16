@@ -60,9 +60,7 @@ export async function load(event: LayoutServerLoadEvent) {
 	);
 
 	const resolvePlanName = (slug: string | null): string | null =>
-		slug && slug in STRIPE_PLAN_LABELS
-			? STRIPE_PLAN_LABELS[slug as StripePriceKey]
-			: slug; // fallback to raw slug if unknown
+		slug && slug in STRIPE_PLAN_LABELS ? STRIPE_PLAN_LABELS[slug as StripePriceKey] : slug; // fallback to raw slug if unknown
 
 	return {
 		user,

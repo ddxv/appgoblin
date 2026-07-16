@@ -25,8 +25,6 @@ function getPreviousQuarter(year: number, quarter: number) {
 	return { year, quarter: quarter - 1 };
 }
 
-
-
 async function getSubscriptionAccess(userId: number) {
 	const hasB2BSdkAccess = await userHasTierAccess(userId, 'b2b_sdk', 'b2b_premium');
 	return { hasB2BSdkAccess };

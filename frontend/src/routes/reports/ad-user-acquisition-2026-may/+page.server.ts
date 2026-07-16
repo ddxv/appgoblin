@@ -329,7 +329,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 	const avgGrowth =
 		appsWithWowGrowth.length > 0
 			? appsWithWowGrowth.reduce((sum, app) => sum + app.wow_growth_pct, 0) /
-			appsWithWowGrowth.length
+				appsWithWowGrowth.length
 			: 0;
 	const totalCreatives = apps.reduce((sum, app) => sum + app.creative_count, 0);
 
@@ -361,10 +361,10 @@ export const load: PageServerLoad = async ({ locals }) => {
 			avgPubCount:
 				reachTiers.elite.length > 0
 					? Math.round(
-						(reachTiers.elite.reduce((sum, app) => sum + app.pub_count, 0) /
-							reachTiers.elite.length) *
-						10
-					) / 10
+							(reachTiers.elite.reduce((sum, app) => sum + app.pub_count, 0) /
+								reachTiers.elite.length) *
+								10
+						) / 10
 					: 0,
 			totalInstalls: reachTiers.elite.reduce((sum, app) => sum + app.weekly_installs, 0)
 		},
@@ -373,10 +373,10 @@ export const load: PageServerLoad = async ({ locals }) => {
 			avgPubCount:
 				reachTiers.wide.length > 0
 					? Math.round(
-						(reachTiers.wide.reduce((sum, app) => sum + app.pub_count, 0) /
-							reachTiers.wide.length) *
-						10
-					) / 10
+							(reachTiers.wide.reduce((sum, app) => sum + app.pub_count, 0) /
+								reachTiers.wide.length) *
+								10
+						) / 10
 					: 0,
 			totalInstalls: reachTiers.wide.reduce((sum, app) => sum + app.weekly_installs, 0)
 		},
@@ -385,10 +385,10 @@ export const load: PageServerLoad = async ({ locals }) => {
 			avgPubCount:
 				reachTiers.targeted.length > 0
 					? Math.round(
-						(reachTiers.targeted.reduce((sum, app) => sum + app.pub_count, 0) /
-							reachTiers.targeted.length) *
-						10
-					) / 10
+							(reachTiers.targeted.reduce((sum, app) => sum + app.pub_count, 0) /
+								reachTiers.targeted.length) *
+								10
+						) / 10
 					: 0,
 			totalInstalls: reachTiers.targeted.reduce((sum, app) => sum + app.weekly_installs, 0)
 		},

@@ -28,13 +28,11 @@ from api_app.controllers.public.v1.keywords import V1KeywordsController
 from api_app.controllers.rankings import RankingsController
 from api_app.controllers.scry import ScryController
 from api_app.controllers.sdks import SdksController
-from api_app.guards import get_tier_limits
 from api_app.mcp.controller import (
     fastmcp_asgi_app,
     protected_mcp_app,
     set_mcp_engine,
 )
-from config import CONFIG
 from dbcon.connections import get_db_connection
 from dbcon.static import load_static_data
 

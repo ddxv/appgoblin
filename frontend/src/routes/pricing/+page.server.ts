@@ -95,11 +95,11 @@ export async function load(event: PageServerLoadEvent) {
 	const currentPlan = event.locals.user ? await getCurrentPlan(event.locals.user.id) : null;
 	const currentSubscription = currentPlan
 		? {
-			status: currentPlan.status,
-			provider_name: 'stripe' as const,
-			current_period_end: currentPlan.current_period_end,
-			cancel_at: currentPlan.cancel_at
-		}
+				status: currentPlan.status,
+				provider_name: 'stripe' as const,
+				current_period_end: currentPlan.current_period_end,
+				cancel_at: currentPlan.cancel_at
+			}
 		: null;
 
 	const currentPlanLabel = currentPlan?.slug
@@ -171,7 +171,11 @@ export const actions: Actions = {
 
 		// Check existing — short-circuit if already on this exact plan+cycle
 		const existingPlan = await getCurrentPlan(user.id);
-		if (existingPlan && existingPlan.slug === normalizedKey && existingPlan.billing_cycle === billingCycle) {
+		if (
+			existingPlan &&
+			existingPlan.slug === normalizedKey &&
+			existingPlan.billing_cycle === billingCycle
+		) {
 			return redirect(303, '/account/subscription');
 		}
 
