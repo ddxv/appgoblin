@@ -9,6 +9,7 @@
 	import AvailableOniOs from '$lib/svg/AvailableOniOS.svelte';
 	import AppNavTabs from '$lib/utils/AppNavTabs.svelte';
 	import MainContent from '$lib/MainContent.svelte';
+	import { countryCodeToEmoji } from '$lib/utils/countryCodeToEmoji';
 
 	let {
 		data,
@@ -160,13 +161,18 @@
 									<span class="flex items-center gap-1 md:gap-2 text-sm md:text-base">
 										<svg
 											xmlns="http://www.w3.org/2000/svg"
-											class="h-5 w-5"
+											class="h-5 w-5 shrink-0"
 											viewBox="0 0 20 20"
 											fill="currentColor"
 										>
 											<path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" />
 										</svg>
-										Developer: {data.myapp.developer_name?.split(' ').slice(0, 3).join(' ') ||
+										Developer:
+										{#if data.myapp.country_code}
+											{countryCodeToEmoji(data.myapp.country_code)}
+										{/if}
+
+										{data.myapp.developer_name?.split(' ').slice(0, 3).join(' ') ||
 											data.myapp.developer_id}
 									</span>
 								</div>
