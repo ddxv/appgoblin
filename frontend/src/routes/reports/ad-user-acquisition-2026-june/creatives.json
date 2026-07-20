@@ -1,0 +1,112 @@
+[
+  {
+    "phash": "6b842f953e61",
+    "md5_hash": "b7729426d524a3400f695d743c576974",
+    "file_extension": "mp4",
+    "advertiser_count": 1,
+    "publisher_count": 71,
+    "first_seen": "2026-06-01T01:49:55.526",
+    "last_seen": "2026-06-30T05:16:40.844",
+    "advertiser_store_id": "com.logoquiz.triviagame",
+    "advertiser_icon_128": null
+  },
+  {
+    "phash": "2acaf57cdcdc",
+    "md5_hash": "002a9525ec8409c779cdaf879039e4da",
+    "file_extension": "mp4",
+    "advertiser_count": 1,
+    "publisher_count": 41,
+    "first_seen": "2026-06-04T00:43:14.527",
+    "last_seen": "2026-06-30T22:34:30.645",
+    "advertiser_store_id": "com.lionroar.puppydaycare",
+    "advertiser_icon_128": null
+  },
+  {
+    "phash": "7b9e3fc6e561",
+    "md5_hash": "f4995255d0090c1da33469fd09d91377",
+    "file_extension": "mp4",
+    "advertiser_count": 1,
+    "publisher_count": 40,
+    "first_seen": "2026-06-09T19:43:45.917",
+    "last_seen": "2026-06-22T08:01:56.302",
+    "advertiser_store_id": "com.awesome.puzzlehexasort",
+    "advertiser_icon_128": "94eb686c5a179393_128.png"
+  },
+  {
+    "phash": "ce37cccf7fee",
+    "md5_hash": "7dc6977525c6eb5eaad4b21681ae635f",
+    "file_extension": "mp4",
+    "advertiser_count": 1,
+    "publisher_count": 39,
+    "first_seen": "2026-06-15T23:19:54.366",
+    "last_seen": "2026-06-27T04:31:42.205",
+    "advertiser_store_id": "com.snaptravel.core",
+    "advertiser_icon_128": null
+  },
+  {
+    "phash": "5bbf3e6eb9ff",
+    "md5_hash": "5cc59df306cdbcc208831b3607deb4ad",
+    "file_extension": "webm",
+    "advertiser_count": 1,
+    "publisher_count": 38,
+    "first_seen": "2026-06-07T08:07:05.361",
+    "last_seen": "2026-06-30T14:00:38.604",
+    "advertiser_store_id": "com.trace.art.draw.drawing.paint",
+    "advertiser_icon_128": null
+  },
+  {
+    "phash": "7f6d959a7bed",
+    "md5_hash": "67f606adf38e2f3482ed1b98325be698",
+    "file_extension": "webm",
+    "advertiser_count": 1,
+    "publisher_count": 36,
+    "first_seen": "2026-06-01T06:26:19.499",
+    "last_seen": "2026-06-30T15:37:02.977",
+    "advertiser_store_id": "word.search.cross.games",
+    "advertiser_icon_128": "c060753b1f0e374f_128.png"
+  },
+  {
+    "phash": "66b93398ce66",
+    "md5_hash": "d734ac5d2cb0659760294de911e17cbe",
+    "file_extension": "mp4",
+    "advertiser_count": 1,
+    "publisher_count": 34,
+    "first_seen": "2026-06-10T18:52:23.121",
+    "last_seen": "2026-06-22T04:12:26.471",
+    "advertiser_store_id": "com.awesome.puzzlehexasort",
+    "advertiser_icon_128": "94eb686c5a179393_128.png"
+  },
+  {
+    "phash": "c01fa3c19c6e",
+    "md5_hash": "e8d3ff60135c9cdd3ca0cd9856234830",
+    "file_extension": "webm",
+    "advertiser_count": 1,
+    "publisher_count": 32,
+    "first_seen": "2026-06-02T21:41:20.284",
+    "last_seen": "2026-06-30T04:59:41.689",
+    "advertiser_store_id": "com.pixel.art.coloring.color.number",
+    "advertiser_icon_128": null
+  },
+  {
+    "phash": "9ffafbbdc6e1",
+    "md5_hash": "12a80ba342ea67522aafc060152e2076",
+    "file_extension": "webm",
+    "advertiser_count": 1,
+    "publisher_count": 32,
+    "first_seen": "2026-06-02T04:32:22.759",
+    "last_seen": "2026-06-30T14:55:07.602",
+    "advertiser_store_id": "com.pixel.art.coloring.color.number",
+    "advertiser_icon_128": null
+  },
+  {
+    "phash": "12949d9ff95e",
+    "md5_hash": "19abdd9a1e9eb789a92a0e6045bb41cf",
+    "file_extension": "webm",
+    "advertiser_count": 1,
+    "publisher_count": 30,
+    "first_seen": "2026-06-01T03:03:50.010",
+    "last_seen": "2026-06-30T01:45:51.279",
+    "advertiser_store_id": "com.sprunki.piano.mod.fnf.beats.music.game",
+    "advertiser_icon_128": "c3243c1e66f81ee3_128.png"
+  }
+]
