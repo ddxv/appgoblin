@@ -1,8 +1,8 @@
 [
   {
     "phash": "6b842f953e61",
-    "md5_hash": "b7729426d524a3400f695d743c576974",
-    "file_extension": "mp4",
+    "md5_hash": "a8614b8cdfe843712efc89b32d4efbb8",
+    "file_extension": "webm",
     "advertiser_count": 1,
     "publisher_count": 71,
     "first_seen": "2026-06-01T01:49:55.526",
@@ -12,8 +12,8 @@
   },
   {
     "phash": "2acaf57cdcdc",
-    "md5_hash": "002a9525ec8409c779cdaf879039e4da",
-    "file_extension": "mp4",
+    "md5_hash": "fc5db0672aed471b0bb0db29aec33cdd",
+    "file_extension": "webm",
     "advertiser_count": 1,
     "publisher_count": 41,
     "first_seen": "2026-06-04T00:43:14.527",
@@ -23,7 +23,7 @@
   },
   {
     "phash": "7b9e3fc6e561",
-    "md5_hash": "f4995255d0090c1da33469fd09d91377",
+    "md5_hash": "9a6f5d03587ec338068c18115f942972",
     "file_extension": "mp4",
     "advertiser_count": 1,
     "publisher_count": 40,
@@ -34,7 +34,7 @@
   },
   {
     "phash": "ce37cccf7fee",
-    "md5_hash": "7dc6977525c6eb5eaad4b21681ae635f",
+    "md5_hash": "9e9ee043342ea67da8d5354af94b165e",
     "file_extension": "mp4",
     "advertiser_count": 1,
     "publisher_count": 39,
@@ -45,7 +45,7 @@
   },
   {
     "phash": "5bbf3e6eb9ff",
-    "md5_hash": "5cc59df306cdbcc208831b3607deb4ad",
+    "md5_hash": "3a535ee6097bb3412db8b92da240f866",
     "file_extension": "webm",
     "advertiser_count": 1,
     "publisher_count": 38,
@@ -56,7 +56,7 @@
   },
   {
     "phash": "7f6d959a7bed",
-    "md5_hash": "67f606adf38e2f3482ed1b98325be698",
+    "md5_hash": "b245912cf3f4c926835e332a02368578",
     "file_extension": "webm",
     "advertiser_count": 1,
     "publisher_count": 36,
@@ -78,7 +78,7 @@
   },
   {
     "phash": "c01fa3c19c6e",
-    "md5_hash": "e8d3ff60135c9cdd3ca0cd9856234830",
+    "md5_hash": "a35f8142a61c5924ea37c67e0d36f2af",
     "file_extension": "webm",
     "advertiser_count": 1,
     "publisher_count": 32,
@@ -89,7 +89,7 @@
   },
   {
     "phash": "9ffafbbdc6e1",
-    "md5_hash": "12a80ba342ea67522aafc060152e2076",
+    "md5_hash": "169328b689a45d31f4959e95b8dce8ad",
     "file_extension": "webm",
     "advertiser_count": 1,
     "publisher_count": 32,

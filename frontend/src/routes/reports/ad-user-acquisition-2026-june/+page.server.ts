@@ -13,6 +13,7 @@ interface SummaryData {
 	api_domains: number;
 	adtech_companies: number;
 	advertisers: number;
+	advertisers_all: number;
 	creative_count: number;
 }
 
@@ -322,14 +323,14 @@ export const load: PageServerLoad = async ({ locals }) => {
 		readReportJson<NewAdvertiserData[]>('new_advertisers.json', [])
 	]);
 
-	const apps = processData(adImpactGrowthData);
+	const apps = processData(adImpactGrowthData).filter((app) => (app.wow_growth_pct ?? 0) > 0);
 
 	const totalInstalls = apps.reduce((sum, app) => sum + app.weekly_installs, 0);
 	const appsWithWowGrowth = apps.filter((app) => app.wow_growth_pct != null);
 	const avgGrowth =
 		appsWithWowGrowth.length > 0
 			? appsWithWowGrowth.reduce((sum, app) => sum + app.wow_growth_pct, 0) /
-				appsWithWowGrowth.length
+			appsWithWowGrowth.length
 			: 0;
 	const totalCreatives = apps.reduce((sum, app) => sum + app.creative_count, 0);
 
@@ -361,10 +362,10 @@ export const load: PageServerLoad = async ({ locals }) => {
 			avgPubCount:
 				reachTiers.elite.length > 0
 					? Math.round(
-							(reachTiers.elite.reduce((sum, app) => sum + app.pub_count, 0) /
-								reachTiers.elite.length) *
-								10
-						) / 10
+						(reachTiers.elite.reduce((sum, app) => sum + app.pub_count, 0) /
+							reachTiers.elite.length) *
+						10
+					) / 10
 					: 0,
 			totalInstalls: reachTiers.elite.reduce((sum, app) => sum + app.weekly_installs, 0)
 		},
@@ -373,10 +374,10 @@ export const load: PageServerLoad = async ({ locals }) => {
 			avgPubCount:
 				reachTiers.wide.length > 0
 					? Math.round(
-							(reachTiers.wide.reduce((sum, app) => sum + app.pub_count, 0) /
-								reachTiers.wide.length) *
-								10
-						) / 10
+						(reachTiers.wide.reduce((sum, app) => sum + app.pub_count, 0) /
+							reachTiers.wide.length) *
+						10
+					) / 10
 					: 0,
 			totalInstalls: reachTiers.wide.reduce((sum, app) => sum + app.weekly_installs, 0)
 		},
@@ -385,10 +386,10 @@ export const load: PageServerLoad = async ({ locals }) => {
 			avgPubCount:
 				reachTiers.targeted.length > 0
 					? Math.round(
-							(reachTiers.targeted.reduce((sum, app) => sum + app.pub_count, 0) /
-								reachTiers.targeted.length) *
-								10
-						) / 10
+						(reachTiers.targeted.reduce((sum, app) => sum + app.pub_count, 0) /
+							reachTiers.targeted.length) *
+						10
+					) / 10
 					: 0,
 			totalInstalls: reachTiers.targeted.reduce((sum, app) => sum + app.weekly_installs, 0)
 		},
@@ -493,7 +494,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 			totalInstalls,
 			avgGrowth: Math.round(avgGrowth * 10) / 10,
 			totalCreatives: exec?.creative_count ?? totalCreatives,
-			advertisers: exec?.advertisers ?? null,
+			advertisers: exec?.advertisers_all ?? exec?.advertisers ?? null,
 			adtechCompanies: exec?.adtech_companies ?? null,
 			httpsTracked: exec?.https_tracked ?? null,
 			apiDomains: exec?.api_domains ?? null,

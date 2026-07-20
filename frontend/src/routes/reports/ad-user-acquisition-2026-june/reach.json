@@ -12,7 +12,7 @@
     "ad_network_domains": [
       "google.com"
     ],
-    "avg_publisher_installs": 12074264.536687631,
+    "avg_publisher_installs": 12073945.03144654,
     "mmp_domains": [
       "adjust.com",
       "appmetrica.yandex.com",
@@ -39,7 +39,7 @@
     "ad_network_domains": [
       "google.com"
     ],
-    "avg_publisher_installs": 47832669.07473309,
+    "avg_publisher_installs": 47831739.91103203,
     "mmp_domains": [
       "adjust.com",
       "appsflyer.com"
@@ -69,7 +69,7 @@
       "google.com",
       "unity.com"
     ],
-    "avg_publisher_installs": 27445502.921875,
+    "avg_publisher_installs": 27444262.21875,
     "mmp_domains": [
       "appsflyer.com",
       "onelink.me"
@@ -87,7 +87,7 @@
     "advertiser_store_id": "com.logoquiz.triviagame",
     "advertiser_icon_128": null,
     "advertiser_category": "game_trivia",
-    "advertiser_installs": 14677547,
+    "advertiser_installs": 14671499,
     "unique_creatives": 18,
     "unique_publishers": 120,
     "first_seen": "2026-06-01T01:49:55.526",
@@ -95,7 +95,7 @@
     "ad_network_domains": [
       "google.com"
     ],
-    "avg_publisher_installs": 21492984.38970588,
+    "avg_publisher_installs": 21492771.875,
     "mmp_domains": null,
     "top_md5_hashes": [
       "33f495dc22e2616c803c149cf7e5d89f",
@@ -110,7 +110,7 @@
     "advertiser_store_id": "onetap.game.tictactoe",
     "advertiser_icon_128": "c868b5574a1f1a1f_128.png",
     "advertiser_category": "game_puzzle",
-    "advertiser_installs": 132616208,
+    "advertiser_installs": 132545293,
     "unique_creatives": 25,
     "unique_publishers": 113,
     "first_seen": "2026-06-01T00:02:03.542",
@@ -118,7 +118,7 @@
     "ad_network_domains": [
       "google.com"
     ],
-    "avg_publisher_installs": 17371023.043165468,
+    "avg_publisher_installs": 17370489.395683452,
     "mmp_domains": [
       "adjust.com"
     ],
@@ -143,7 +143,7 @@
     "ad_network_domains": [
       "google.com"
     ],
-    "avg_publisher_installs": 7914584.128,
+    "avg_publisher_installs": 7913474.76,
     "mmp_domains": [
       "adjust.com"
     ],
@@ -171,7 +171,7 @@
       "liftoff.io",
       "unity.com"
     ],
-    "avg_publisher_installs": 17911173.32773109,
+    "avg_publisher_installs": 17910969.2605042,
     "mmp_domains": [
       "adjust.com",
       "branch.io"
@@ -197,7 +197,7 @@
     "ad_network_domains": [
       "google.com"
     ],
-    "avg_publisher_installs": 7733139.090909091,
+    "avg_publisher_installs": 7732722.561983471,
     "mmp_domains": [
       "adjust.com",
       "appmetrica.yandex.com",
@@ -226,7 +226,7 @@
       "google.com",
       "toponad.com"
     ],
-    "avg_publisher_installs": 31804091.129496403,
+    "avg_publisher_installs": 31803757.201438848,
     "mmp_domains": [
       "adjust.com"
     ],
@@ -251,7 +251,7 @@
     "ad_network_domains": [
       "google.com"
     ],
-    "avg_publisher_installs": 7689502.147058823,
+    "avg_publisher_installs": 7689476.990196078,
     "mmp_domains": [
       "adjust.com",
       "appmetrica.yandex.com",
@@ -280,7 +280,7 @@
       "google.com",
       "vk.com"
     ],
-    "avg_publisher_installs": 9251195.868852459,
+    "avg_publisher_installs": 9251171.409836065,
     "mmp_domains": [
       "appsflyer.com"
     ],
@@ -305,7 +305,7 @@
     "ad_network_domains": [
       "google.com"
     ],
-    "avg_publisher_installs": 10063768.99074074,
+    "avg_publisher_installs": 10063625.277777778,
     "mmp_domains": [
       "appmetrica.yandex.com",
       "appsflyer.com",
@@ -334,7 +334,7 @@
       "affle.com",
       "google.com"
     ],
-    "avg_publisher_installs": 12729274.486486487,
+    "avg_publisher_installs": 12727912.081081081,
     "mmp_domains": [
       "appsflyer.com",
       "onelink.me"
@@ -360,7 +360,7 @@
     "ad_network_domains": [
       "google.com"
     ],
-    "avg_publisher_installs": 7657824.938461538,
+    "avg_publisher_installs": 7657792.846153846,
     "mmp_domains": [
       "adjust.com",
       "appmetrica.yandex.com",
@@ -387,7 +387,7 @@
     "ad_network_domains": [
       "google.com"
     ],
-    "avg_publisher_installs": 22756161.493975904,
+    "avg_publisher_installs": 22755290.95180723,
     "mmp_domains": [
       "adjust.com"
     ],
@@ -404,7 +404,7 @@
     "advertiser_store_id": "com.ebook.reader.pdf.book.ebookreader",
     "advertiser_icon_128": "b19183399d633c67_128.png",
     "advertiser_category": "books_and_reference",
-    "advertiser_installs": 4545060,
+    "advertiser_installs": 4544152,
     "unique_creatives": 19,
     "unique_publishers": 72,
     "first_seen": "2026-06-17T20:58:05.237",
@@ -412,7 +412,7 @@
     "ad_network_domains": [
       "google.com"
     ],
-    "avg_publisher_installs": 23396062.329113923,
+    "avg_publisher_installs": 23394791.06329114,
     "mmp_domains": [
       "appsflyer.com"
     ],
@@ -437,7 +437,7 @@
     "ad_network_domains": [
       "google.com"
     ],
-    "avg_publisher_installs": 14118908.42857143,
+    "avg_publisher_installs": 14118828.506493507,
     "mmp_domains": [
       "appsflyer.com"
     ],
@@ -462,7 +462,7 @@
     "ad_network_domains": [
       "google.com"
     ],
-    "avg_publisher_installs": 10110254.708860759,
+    "avg_publisher_installs": 10110118.734177215,
     "mmp_domains": [
       "adjust.com"
     ],
@@ -487,7 +487,7 @@
     "ad_network_domains": [
       "google.com"
     ],
-    "avg_publisher_installs": 12942014.270833334,
+    "avg_publisher_installs": 12940600.25,
     "mmp_domains": [
       "adjust.com"
     ],
@@ -519,7 +519,7 @@
       "remerge.io",
       "unity.com"
     ],
-    "avg_publisher_installs": 23601222.012987014,
+    "avg_publisher_installs": 23601136.506493505,
     "mmp_domains": [
       "appmetrica.yandex.com",
       "appsflyer.com",
@@ -546,7 +546,7 @@
     "ad_network_domains": [
       "google.com"
     ],
-    "avg_publisher_installs": 24285212.52631579,
+    "avg_publisher_installs": 24284938.565789472,
     "mmp_domains": null,
     "top_md5_hashes": [
       "5cc59df306cdbcc208831b3607deb4ad",
@@ -569,7 +569,7 @@
     "ad_network_domains": [
       "google.com"
     ],
-    "avg_publisher_installs": 7349871.059701492,
+    "avg_publisher_installs": 7349183.373134328,
     "mmp_domains": [
       "appmetrica.yandex.com",
       "appsflyer.com",
@@ -601,7 +601,7 @@
       "liftoff.io",
       "unity.com"
     ],
-    "avg_publisher_installs": 19733914.672131147,
+    "avg_publisher_installs": 19733841.393442623,
     "mmp_domains": [
       "kochava.com"
     ],
@@ -626,7 +626,7 @@
     "ad_network_domains": [
       "yandex.com"
     ],
-    "avg_publisher_installs": 9349132.88167939,
+    "avg_publisher_installs": 9349061.496183205,
     "mmp_domains": [
       "appmetrica.yandex.com",
       "appsflyer.com",
@@ -653,7 +653,7 @@
     "ad_network_domains": [
       "google.com"
     ],
-    "avg_publisher_installs": 15237218.45,
+    "avg_publisher_installs": 15236928.85,
     "mmp_domains": null,
     "top_md5_hashes": [
       "e70999972b5adaf919ff0675888c67c9",
@@ -681,7 +681,7 @@
       "toponad.com",
       "unity.com"
     ],
-    "avg_publisher_installs": 13487358.156626506,
+    "avg_publisher_installs": 13487331.156626506,
     "mmp_domains": [
       "adjust.com"
     ],
@@ -707,7 +707,7 @@
       "bidease.com",
       "google.com"
     ],
-    "avg_publisher_installs": 6384149.846153846,
+    "avg_publisher_installs": 6383834.692307692,
     "mmp_domains": null,
     "top_md5_hashes": [
       "c26b8c4c4cf77fa09ef2d024b164a3b2",
@@ -734,7 +734,7 @@
       "unity.com",
       "vk.com"
     ],
-    "avg_publisher_installs": 18258213.39285714,
+    "avg_publisher_installs": 18258209.07142857,
     "mmp_domains": [
       "singular.net"
     ],
@@ -760,7 +760,7 @@
       "bidease.com",
       "google.com"
     ],
-    "avg_publisher_installs": 29509621.0,
+    "avg_publisher_installs": 29509437.652173914,
     "mmp_domains": [
       "appmetrica.yandex.com",
       "appsflyer.com",
@@ -794,7 +794,7 @@
       "toponad.com",
       "unity.com"
     ],
-    "avg_publisher_installs": 52578896.0,
+    "avg_publisher_installs": 52578697.39622641,
     "mmp_domains": [
       "adj.st",
       "adjust.com",
@@ -822,7 +822,7 @@
     "ad_network_domains": [
       "google.com"
     ],
-    "avg_publisher_installs": 4568534.30909091,
+    "avg_publisher_installs": 4568491.545454546,
     "mmp_domains": [
       "adjust.com",
       "appsflyer.com"
@@ -848,7 +848,7 @@
     "ad_network_domains": [
       "google.com"
     ],
-    "avg_publisher_installs": 3002565.4814814813,
+    "avg_publisher_installs": 3002413.3518518517,
     "mmp_domains": [
       "adjust.com",
       "appsflyer.com"
@@ -874,7 +874,7 @@
     "ad_network_domains": [
       "google.com"
     ],
-    "avg_publisher_installs": 18320800.431034483,
+    "avg_publisher_installs": 18318576.637931034,
     "mmp_domains": [
       "appsflyer.com"
     ],
@@ -899,7 +899,7 @@
     "ad_network_domains": [
       "google.com"
     ],
-    "avg_publisher_installs": 9106503.725490196,
+    "avg_publisher_installs": 9106327.490196079,
     "mmp_domains": null,
     "top_md5_hashes": [
       "ed70cc2a196dbe552d8ebb9616153c2e",
@@ -927,7 +927,7 @@
       "unity.com",
       "vk.com"
     ],
-    "avg_publisher_installs": 21158311.0,
+    "avg_publisher_installs": 21153906.56,
     "mmp_domains": [
       "appsflyer.com"
     ],
@@ -952,7 +952,7 @@
     "ad_network_domains": [
       "google.com"
     ],
-    "avg_publisher_installs": 4616434.893617021,
+    "avg_publisher_installs": 4616342.191489362,
     "mmp_domains": [
       "appsflyer.com"
     ],
@@ -982,7 +982,7 @@
       "unity.com",
       "vk.com"
     ],
-    "avg_publisher_installs": 8124143.017857143,
+    "avg_publisher_installs": 8123749.107142857,
     "mmp_domains": [
       "kochava.com"
     ],
@@ -1007,7 +1007,7 @@
     "ad_network_domains": [
       "google.com"
     ],
-    "avg_publisher_installs": 9171770.767441861,
+    "avg_publisher_installs": 9171736.069767442,
     "mmp_domains": [
       "adjust.com"
     ],
@@ -1032,7 +1032,7 @@
     "ad_network_domains": [
       "google.com"
     ],
-    "avg_publisher_installs": 10915117.914893618,
+    "avg_publisher_installs": 10914925.319148935,
     "mmp_domains": [
       "adjust.com"
     ],
@@ -1058,7 +1058,7 @@
       "bidease.com",
       "google.com"
     ],
-    "avg_publisher_installs": 33300229.84090909,
+    "avg_publisher_installs": 33299450.772727273,
     "mmp_domains": [
       "singular.net"
     ],
@@ -1083,7 +1083,7 @@
     "ad_network_domains": [
       "google.com"
     ],
-    "avg_publisher_installs": 10026951.877551021,
+    "avg_publisher_installs": 10025848.367346939,
     "mmp_domains": [
       "adjust.com",
       "appsflyer.com"
@@ -1101,7 +1101,7 @@
     "advertiser_store_id": "io.supercent.linkedcubic",
     "advertiser_icon_128": null,
     "advertiser_category": "game_arcade",
-    "advertiser_installs": 184132126,
+    "advertiser_installs": 184015469,
     "unique_creatives": 20,
     "unique_publishers": 41,
     "first_seen": "2026-06-17T02:27:03.064",
@@ -1113,7 +1113,7 @@
       "remerge.io",
       "unity.com"
     ],
-    "avg_publisher_installs": 87789312.16831683,
+    "avg_publisher_installs": 87785075.21782178,
     "mmp_domains": [
       "adjust.com",
       "appmetrica.yandex.com",
@@ -1140,7 +1140,7 @@
     "ad_network_domains": [
       "google.com"
     ],
-    "avg_publisher_installs": 6546614.5625,
+    "avg_publisher_installs": 6546120.1875,
     "mmp_domains": [
       "appmetrica.yandex.com",
       "appsflyer.com",
@@ -1167,7 +1167,7 @@
     "ad_network_domains": [
       "google.com"
     ],
-    "avg_publisher_installs": 21270708.89285714,
+    "avg_publisher_installs": 21270315.55357143,
     "mmp_domains": [
       "appsflyer.com"
     ],
@@ -1192,7 +1192,7 @@
     "ad_network_domains": [
       "google.com"
     ],
-    "avg_publisher_installs": 12867491.581395349,
+    "avg_publisher_installs": 12867163.0,
     "mmp_domains": null,
     "top_md5_hashes": [
       "5e2fedb79ae0d4e71de0bd43d4c059d9",
@@ -1215,7 +1215,7 @@
     "ad_network_domains": [
       "google.com"
     ],
-    "avg_publisher_installs": 44275506.11111111,
+    "avg_publisher_installs": 44271881.11111111,
     "mmp_domains": [
       "adjust.com",
       "appsflyer.com"
@@ -1241,7 +1241,7 @@
     "ad_network_domains": [
       "google.com"
     ],
-    "avg_publisher_installs": 20336366.093023255,
+    "avg_publisher_installs": 20336072.81395349,
     "mmp_domains": [
       "adjust.com"
     ],
@@ -1266,7 +1266,7 @@
     "ad_network_domains": [
       "google.com"
     ],
-    "avg_publisher_installs": 6003135.725,
+    "avg_publisher_installs": 6003088.4,
     "mmp_domains": [
       "appmetrica.yandex.com",
       "appsflyer.com",
@@ -1293,7 +1293,7 @@
     "ad_network_domains": [
       "google.com"
     ],
-    "avg_publisher_installs": 5462921.925,
+    "avg_publisher_installs": 5463091.825,
     "mmp_domains": [
       "appsflyer.com"
     ],
@@ -1318,7 +1318,7 @@
     "ad_network_domains": [
       "google.com"
     ],
-    "avg_publisher_installs": 66012986.82608695,
+    "avg_publisher_installs": 66012102.0,
     "mmp_domains": [
       "adjust.com",
       "appsflyer.com"

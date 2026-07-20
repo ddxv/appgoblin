@@ -454,13 +454,13 @@
     "store_id": "city.hero.adventure.simulation3d",
     "store": 1,
     "category": "game_action",
-    "installs": 3219853,
-    "rating": 4.4240193,
-    "rating_count": 1114,
-    "installs_sum_1w": 234094,
-    "installs_sum_4w": 703684.0,
-    "installs_z_score_2w": 0.6850706598,
-    "installs_z_score_4w": 0.325307844,
+    "installs": 3187364,
+    "rating": 4.434734,
+    "rating_count": 1107,
+    "installs_sum_1w": 201605,
+    "installs_sum_4w": 671195.0,
+    "installs_z_score_2w": 0.5573223225,
+    "installs_z_score_4w": 0.2614336753,
     "release_date": "2026-05-07T00:00:00.000",
     "icon_128": null,
     "developer_name": "Galaxy Legend Game Studio",
@@ -539,13 +539,13 @@
     "store_id": "spm.shineit.cleaning.asmr",
     "store": 1,
     "category": "game_casual",
-    "installs": 2613389,
-    "rating": 4.6655703,
-    "rating_count": 9550,
-    "installs_sum_1w": 521,
-    "installs_sum_4w": 423666.0,
-    "installs_z_score_2w": -2.0800535309,
-    "installs_z_score_4w": -1.8789602088,
+    "installs": 2613373,
+    "rating": 4.661991,
+    "rating_count": 9545,
+    "installs_sum_1w": 505,
+    "installs_sum_4w": 423650.0,
+    "installs_z_score_2w": -2.0800875766,
+    "installs_z_score_4w": -1.8789772317,
     "release_date": "2026-05-19T00:00:00.000",
     "icon_128": null,
     "developer_name": "Funkedenic",
@@ -780,48 +780,6 @@
     ]
   },
   {
-    "name": "Game of Thrones: Dragonfire",
-    "store_id": "com.wb.goog.hotd.socialstrategy",
-    "store": 1,
-    "category": "game_strategy",
-    "installs": 2232276,
-    "rating": 4.5152397,
-    "rating_count": 21307,
-    "installs_sum_1w": 185693,
-    "installs_sum_4w": 412101.0,
-    "installs_z_score_2w": -0.0690977821,
-    "installs_z_score_4w": -0.4096002593,
-    "release_date": "2026-05-28T00:00:00.000",
-    "icon_128": null,
-    "developer_name": "Warner Bros. International Enterprises",
-    "developer_id": "Warner+Bros.+International+Enterprises",
-    "ad_supported": false,
-    "in_app_purchases": true,
-    "ad_network_names": [
-      "Appier",
-      "Google"
-    ],
-    "ad_network_domains": [
-      "appier.com",
-      "google.com"
-    ],
-    "ad_network_logo_urls": [
-      "company-logos/appier.com/logo_200x200.jpeg",
-      "company-logos/google.com/logo_200x200.jpeg"
-    ],
-    "mmp_domains": [
-      "sng.link"
-    ],
-    "creative_count": 2,
-    "md5_hashes": [
-      "5bd606937cf455f9284bcfe31b06145f",
-      "6d95bccb99e6d7c61a914f597e50cbc1"
-    ],
-    "md5_file_extensions": [
-      "jpeg"
-    ]
-  },
-  {
     "name": "Rope Flying Hero Prime",
     "store_id": "flying.rope.hero.prime.simulator3d",
     "store": 1,
@@ -863,6 +821,48 @@
     "md5_file_extensions": [
       "jpeg",
       "webm"
+    ]
+  },
+  {
+    "name": "Game of Thrones: Dragonfire",
+    "store_id": "com.wb.goog.hotd.socialstrategy",
+    "store": 1,
+    "category": "game_strategy",
+    "installs": 2215568,
+    "rating": 4.5208654,
+    "rating_count": 21395,
+    "installs_sum_1w": 168985,
+    "installs_sum_4w": 395393.0,
+    "installs_z_score_2w": -0.1443242621,
+    "installs_z_score_4w": -0.4472134992,
+    "release_date": "2026-05-28T00:00:00.000",
+    "icon_128": null,
+    "developer_name": "Warner Bros. International Enterprises",
+    "developer_id": "Warner+Bros.+International+Enterprises",
+    "ad_supported": false,
+    "in_app_purchases": true,
+    "ad_network_names": [
+      "Appier",
+      "Google"
+    ],
+    "ad_network_domains": [
+      "appier.com",
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/appier.com/logo_200x200.jpeg",
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": [
+      "sng.link"
+    ],
+    "creative_count": 2,
+    "md5_hashes": [
+      "5bd606937cf455f9284bcfe31b06145f",
+      "6d95bccb99e6d7c61a914f597e50cbc1"
+    ],
+    "md5_file_extensions": [
+      "jpeg"
     ]
   },
   {
@@ -1036,13 +1036,13 @@
     "store_id": "com.hl.livetv.movies.player",
     "store": 1,
     "category": "entertainment",
-    "installs": 1518208,
-    "rating": 4.355159,
-    "rating_count": 2148,
-    "installs_sum_1w": 665282,
-    "installs_sum_4w": 1440679.0,
-    "installs_z_score_2w": 34.0749556427,
-    "installs_z_score_4w": 21.4458795634,
+    "installs": 1431298,
+    "rating": 4.31746,
+    "rating_count": 2155,
+    "installs_sum_1w": 578372,
+    "installs_sum_4w": 1353769.0,
+    "installs_z_score_2w": 31.2874709547,
+    "installs_z_score_4w": 20.0521372194,
     "release_date": "2026-05-06T00:00:00.000",
     "icon_128": "94db6b653824f09e_128.png",
     "developer_name": "Skyline Techs",
@@ -1114,13 +1114,13 @@
     "store_id": "com.realcar.openworld.simulation",
     "store": 1,
     "category": "game_racing",
-    "installs": 1057448,
+    "installs": 1040924,
     "rating": 5.0,
-    "rating_count": 964,
-    "installs_sum_1w": 149387,
-    "installs_sum_4w": 431068.0,
-    "installs_z_score_2w": 0.0010976657,
-    "installs_z_score_4w": -0.1501486648,
+    "rating_count": 951,
+    "installs_sum_1w": 132863,
+    "installs_sum_4w": 414544.0,
+    "installs_z_score_2w": -0.0697532263,
+    "installs_z_score_4w": -0.1855741108,
     "release_date": "2026-05-17T00:00:00.000",
     "icon_128": "a9e151b3a86e1e5c_128.png",
     "developer_name": "SKYVERTY COMPANY LIMITED",
@@ -1289,11 +1289,11 @@
     "store_id": "com.yoyogames.love.makeover.dressup.dating.crush.game",
     "store": 1,
     "category": "game_simulation",
-    "installs": 776744,
-    "rating": 4.7799973,
-    "rating_count": 9249,
-    "installs_sum_1w": 547182,
-    "installs_sum_4w": 776744.0,
+    "installs": 749772,
+    "rating": 4.7710176,
+    "rating_count": 8921,
+    "installs_sum_1w": 520210,
+    "installs_sum_4w": 749772.0,
     "installs_z_score_2w": null,
     "installs_z_score_4w": null,
     "release_date": "2026-06-12T00:00:00.000",
