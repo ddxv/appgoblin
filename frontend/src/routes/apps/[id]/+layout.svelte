@@ -116,14 +116,14 @@
 							<img
 								src={`https://media.appgoblin.info/app-icons/${data.myapp.store_id}/${data.myapp.icon_128}`}
 								alt={data.myapp.name}
-								class="w-32 sm:w-40 md:w-48 h-auto"
+								class="w-32 sm:w-40 h-auto"
 								referrerpolicy="no-referrer"
 							/>
 						{:else if data.myapp.app_icon_url}
 							<img
 								src={data.myapp.app_icon_url}
 								alt={data.myapp.name}
-								class="w-32 sm:w-40 md:w-48 h-auto"
+								class="w-32 sm:w-40 h-auto"
 								referrerpolicy="no-referrer"
 							/>
 						{/if}
@@ -132,7 +132,7 @@
 							<StarsRating total={5} size={20} rating={data.myapp.rating} />
 						</div>
 						<div class="hidden md:inline-flex">
-							<StarsRating total={5} size={40} rating={data.myapp.rating} />
+							<StarsRating total={5} size={35} rating={data.myapp.rating} />
 						</div>
 					</div>
 
@@ -145,12 +145,12 @@
 							>
 								{#if data.myapp.store.includes('Google')}
 									<img
-										class="w-32 md:w-48 md:w-64"
+										class="w-32 md:w-48"
 										src="/gp_en_badge_web_generic.png"
 										alt={data.myapp.name}
 									/>
 								{:else if data.myapp.store.includes('Apple')}
-									<AvailableOniOs size={180} />
+									<AvailableOniOs size={120} />
 								{/if}
 							</a>
 						</div>
