@@ -200,7 +200,6 @@ is_not_ad_network = ~(is_ad_network) & cdf["type_url_slug"].notna()
 MIN_APP_COUNT = 10000
 cdf = cdf[((cdf["app_count"] > MIN_APP_COUNT) & is_ad_network) | is_not_ad_network]
 
-
 # about 6
 company_types = (
     cdf.groupby("type_url_slug")["app_count"]
@@ -213,7 +212,7 @@ company_types["url"] = (
 )
 company_types = set_df_sitemap_columns(company_types, 0.9)
 
-# about 50
+# about 1
 cdf["app_category"] = "games"
 company_categories = (
     cdf.groupby("app_category")["app_count"]
@@ -242,7 +241,7 @@ company_type_categories["url"] = (
 company_type_categories = set_df_sitemap_columns(company_type_categories, 0.7)
 
 
-# about 93k
+# about 1.43k
 companies = (
     cdf.groupby("company_domain")["app_count"]
     .sum()
@@ -253,7 +252,8 @@ companies["url"] = "https://appgoblin.info/companies/" + companies["company_doma
 companies = set_df_sitemap_columns(companies, 0.8)
 
 
-# about 5k
+
+# about 15k
 apps["url"] = "https://appgoblin.info/apps/" + apps["store_id"]
 apps = set_df_sitemap_columns(apps, 0.5, "monthly")
 

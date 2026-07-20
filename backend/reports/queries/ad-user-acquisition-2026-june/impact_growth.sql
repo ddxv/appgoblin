@@ -195,7 +195,7 @@ SELECT
     best_week,
     app_name,
     store_id,
-    icon_url_100 as icon_128,
+    icon_url_100 AS icon_128,
     in_app_purchases,
     ad_supported,
     weekly_installs,
