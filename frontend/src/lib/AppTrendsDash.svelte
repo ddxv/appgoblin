@@ -462,7 +462,7 @@
 								y="weekly_installs"
 								yDomain={weeklyInstallsYDomain}
 								props={{
-									svg: { clip: true },
+									svg: { clip: false },
 									xAxis: {
 										format: (d) => format(d, PeriodType.Day, { variant: 'short' }),
 										ticks: 5
@@ -482,7 +482,7 @@
 								y="weekly_installs_rate_of_change"
 								yDomain={installGrowthYDomain}
 								props={{
-									svg: { clip: true },
+									svg: { clip: false },
 									xAxis: {
 										format: (d) => format(d, PeriodType.Day, { variant: 'short' }),
 										ticks: 5

@@ -1,0 +1,1702 @@
+[
+  {
+    "name": "Meowdoku: Brain Puzzle Games",
+    "store_id": "com.oakever.meowdoku",
+    "store": 1,
+    "category": "game_puzzle",
+    "installs": 7867937,
+    "rating": 4.5651474,
+    "rating_count": 136869,
+    "installs_sum_1w": 2192351,
+    "installs_sum_4w": 5675014.0,
+    "installs_z_score_2w": 3.2019795863,
+    "installs_z_score_4w": 2.294151242,
+    "release_date": "2026-04-24T00:00:00.000",
+    "icon_128": "8c65a29338f9967a_128.png",
+    "developer_name": "Oakever Games",
+    "developer_id": "9154199097976797965",
+    "ad_supported": true,
+    "in_app_purchases": false,
+    "ad_network_names": [
+      "BidEase",
+      "Google",
+      "Unity"
+    ],
+    "ad_network_domains": [
+      "bidease.com",
+      "google.com",
+      "unity.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/bidease.com/logo_200x200.jpeg",
+      "company-logos/google.com/logo_200x200.jpeg",
+      "company-logos/unity.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": [
+      "appsflyer.com"
+    ],
+    "creative_count": 6,
+    "md5_hashes": [
+      "0bcd0424aa6b83d9c0cb82d3d8d3ed57",
+      "0e8e363923f3a4c424595d515835c613",
+      "3de5cbada138ca1953b18b14b3a54197",
+      "7b37c835ead5f9096ba762f601137ce4",
+      "871b475915fdc23ae5d4f912a5f9240f",
+      "c54a88df397ac3fb7c95d3c1d58f83f3",
+      "f4276b9254a3bd5972df2026f65b09e6"
+    ],
+    "md5_file_extensions": [
+      "mp4"
+    ]
+  },
+  {
+    "name": "Rebel Glam: Dress Up Games",
+    "store_id": "dress.up.fashion.makeup.style.makeover.girl.rebel.queen",
+    "store": 1,
+    "category": "game_simulation",
+    "installs": 7193951,
+    "rating": 4.682363,
+    "rating_count": 18411,
+    "installs_sum_1w": 1429424,
+    "installs_sum_4w": 3203467.0,
+    "installs_z_score_2w": 2.2180991928,
+    "installs_z_score_4w": 1.175722673,
+    "release_date": "2026-04-23T00:00:00.000",
+    "icon_128": "b3a4a89165dec23d_128.png",
+    "developer_name": "31 Dress up Games",
+    "developer_id": "5843604371215345798",
+    "ad_supported": true,
+    "in_app_purchases": true,
+    "ad_network_names": [
+      "Google"
+    ],
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": [
+      "appmetrica.yandex.com",
+      "appsflyer.com",
+      "metrica.yandex.com"
+    ],
+    "creative_count": 1,
+    "md5_hashes": [
+      "857c8ae92ff00b0524f819c619524123"
+    ],
+    "md5_file_extensions": [
+      "webm"
+    ]
+  },
+  {
+    "name": "Hero Flying City Simulator",
+    "store_id": "hero.city.action.simulator",
+    "store": 1,
+    "category": "game_action",
+    "installs": 6383936,
+    "rating": 4.1896553,
+    "rating_count": 1651,
+    "installs_sum_1w": 520750,
+    "installs_sum_4w": 1519034.0,
+    "installs_z_score_2w": -0.5029257705,
+    "installs_z_score_4w": -0.6223933469,
+    "release_date": "2026-05-18T00:00:00.000",
+    "icon_128": "cfa0f8fd042ec964_128.png",
+    "developer_name": "BROWNE CURTIS HENRY",
+    "developer_id": "6952595285728195841",
+    "ad_supported": true,
+    "in_app_purchases": false,
+    "ad_network_names": [
+      "Google"
+    ],
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": [
+      "adjust.com"
+    ],
+    "creative_count": 3,
+    "md5_hashes": [
+      "0781221b3ddda1256f932ec650d798af",
+      "1fa0ec53f62832b9d47357210e9a89b2",
+      "a005e8cb1927a9d43f55e1556a57f783"
+    ],
+    "md5_file_extensions": [
+      "webm"
+    ]
+  },
+  {
+    "name": "Buns and Bounce Home Screen",
+    "store_id": "com.mrbunn.buns.and.bounce",
+    "store": 1,
+    "category": "tools",
+    "installs": 5023962,
+    "rating": 4.4159045,
+    "rating_count": 12626,
+    "installs_sum_1w": 1634710,
+    "installs_sum_4w": 4623591.0,
+    "installs_z_score_2w": 18.6856780484,
+    "installs_z_score_4w": 13.3798250559,
+    "release_date": "2026-05-17T00:00:00.000",
+    "icon_128": "d34e2c31d38e932b_128.png",
+    "developer_name": "Mr.Bunn",
+    "developer_id": "Mr.Bunn",
+    "ad_supported": true,
+    "in_app_purchases": false,
+    "ad_network_names": null,
+    "ad_network_domains": null,
+    "ad_network_logo_urls": null,
+    "mmp_domains": [
+      "adjust.com"
+    ],
+    "creative_count": 1,
+    "md5_hashes": [
+      "97d6c544c30324e1bbf4c75742a5d0d5"
+    ],
+    "md5_file_extensions": [
+      "mp4"
+    ]
+  },
+  {
+    "name": "Car Driving City: StreetPro",
+    "store_id": "com.streetpro.real3d.cardriving",
+    "store": 1,
+    "category": "game_racing",
+    "installs": 4947685,
+    "rating": 4.7444363,
+    "rating_count": 14601,
+    "installs_sum_1w": 1124430,
+    "installs_sum_4w": 2359601.0,
+    "installs_z_score_2w": 4.5863665362,
+    "installs_z_score_4w": 2.008005933,
+    "release_date": "2026-04-21T00:00:00.000",
+    "icon_128": "9e9d944a9fa1c16a_128.png",
+    "developer_name": "BROWNE CURTIS HENRY",
+    "developer_id": "6952595285728195841",
+    "ad_supported": true,
+    "in_app_purchases": false,
+    "ad_network_names": [
+      "Google"
+    ],
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": [
+      "adjust.com"
+    ],
+    "creative_count": 17,
+    "md5_hashes": [
+      "0370a8e485824b0c7795a0e357f158cb",
+      "486749cd28a0019b16c35cc92a066759",
+      "496610ee53d253feb28e1821cdbb7dc7",
+      "5f1e2f16cd3e68dafbe845bcf97b56b9",
+      "6f90e3effe095aa24a5719c6bb5dce74",
+      "6fc7c9b2af2e628a6cf8218ebda8c6cf",
+      "74c0446abdbe8c547340f2e9cf9021ea",
+      "7ab31ca66feb182e3f7d7d8e0a809385",
+      "80496990640b985927db36847b0eb508",
+      "955e852d1e9c0767cfce53862cf62c90",
+      "95c984d8913dc848c03c7c029c91a2b7",
+      "b601ca58d115c8fa4296ee0af5f833b8",
+      "b81421d6138afdf56fb7c45469380141",
+      "c0bc204fe12c857c2e38116e2f2695f6",
+      "cbca9af2b5bd205cd9f7dc6738617c1f",
+      "d86bbab94dc84f433fa890e5496d92ad",
+      "de790d3e8b6958c3c5c612b932f61df5",
+      "e5aba8d121214a34349a6e2c33666e34",
+      "f5c7f816749f22f2fd64d162a3c2108a"
+    ],
+    "md5_file_extensions": [
+      "jpeg",
+      "webm"
+    ]
+  },
+  {
+    "name": "Zoo Prank: Crazy Animals",
+    "store_id": "com.h.zoo.prank",
+    "store": 1,
+    "category": "game_simulation",
+    "installs": 4944752,
+    "rating": 4.5439425,
+    "rating_count": 7229,
+    "installs_sum_1w": 1792270,
+    "installs_sum_4w": 4478365.0,
+    "installs_z_score_2w": null,
+    "installs_z_score_4w": null,
+    "release_date": "2026-06-11T00:00:00.000",
+    "icon_128": "b966b8e9e2c02d39_128.png",
+    "developer_name": "Unicorn Studio Official",
+    "developer_id": "8100784998940834902",
+    "ad_supported": true,
+    "in_app_purchases": true,
+    "ad_network_names": [
+      "Google"
+    ],
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": [
+      "adjust.com",
+      "appmetrica.yandex.com",
+      "appsflyer.com",
+      "metrica.yandex.com"
+    ],
+    "creative_count": 1,
+    "md5_hashes": [
+      "855cb0a19cc38dad564897a028db754f"
+    ],
+    "md5_file_extensions": [
+      "webm"
+    ]
+  },
+  {
+    "name": "Nitro Car Driving Master",
+    "store_id": "nitro.speed.driving.car3d",
+    "store": 1,
+    "category": "game_racing",
+    "installs": 4626176,
+    "rating": 4.7959175,
+    "rating_count": 3904,
+    "installs_sum_1w": 265899,
+    "installs_sum_4w": 1200022.0,
+    "installs_z_score_2w": 0.596259852,
+    "installs_z_score_4w": 0.6134395585,
+    "release_date": "2026-05-11T00:00:00.000",
+    "icon_128": "bbc003ebc1c3f368_128.png",
+    "developer_name": "NitroTech Studio",
+    "developer_id": "7485378759718327537",
+    "ad_supported": true,
+    "in_app_purchases": false,
+    "ad_network_names": [
+      "Google"
+    ],
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": [
+      "adjust.com"
+    ],
+    "creative_count": 12,
+    "md5_hashes": [
+      "5357a98cdd91c743fd3b55f464053876",
+      "5770e63d5495377e60c90c6696cce3f5",
+      "6533b85346cd3a85ea196aff50f32d56",
+      "69fa89310be4d5a7534503886ae532b7",
+      "726f62e58da600f556b097a1f994e983",
+      "8e0dd06ffb3ea9ead91ad3100bccc5d4",
+      "955e852d1e9c0767cfce53862cf62c90",
+      "adf6c6b4c8ebf89b74306d2fc76b221d",
+      "c60f9d559278ffc262e4e19277b405ff",
+      "c66db0c85dd326b1e09ed1f4df55d9e6",
+      "ce54fd735cc4d55a773e2083affd0186",
+      "cf8222140412eaeec8bdfc6415633140",
+      "edf681b755c508b55029883a52f7417d",
+      "fd4d092b440e7b86cb58f4dba5c1d9a5",
+      "ff1d7655384d038ee35a741940445e37"
+    ],
+    "md5_file_extensions": [
+      "jpeg",
+      "webm"
+    ]
+  },
+  {
+    "name": "UFL - Soccer Game 2026",
+    "store_id": "com.xten.ufl",
+    "store": 1,
+    "category": "game_sports",
+    "installs": 4378176,
+    "rating": 4.1576724,
+    "rating_count": 45061,
+    "installs_sum_1w": 588792,
+    "installs_sum_4w": 1421702.0,
+    "installs_z_score_2w": 0.9661703354,
+    "installs_z_score_4w": 0.4371233303,
+    "release_date": "2026-05-21T00:00:00.000",
+    "icon_128": "9246f88c5b733536_128.png",
+    "developer_name": "XTEN LIMITED",
+    "developer_id": "XTEN+LIMITED",
+    "ad_supported": true,
+    "in_app_purchases": true,
+    "ad_network_names": [
+      "Google"
+    ],
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": [
+      "appsflyer.com"
+    ],
+    "creative_count": 1,
+    "md5_hashes": [
+      "03c839c94be4d04c4936f7dc06c622a1"
+    ],
+    "md5_file_extensions": [
+      "webm"
+    ]
+  },
+  {
+    "name": "ASMR Makeup: Beauty Salon",
+    "store_id": "com.happygogame.ASMRMakeupBeautySalon",
+    "store": 1,
+    "category": "game_casual",
+    "installs": 3623454,
+    "rating": 3.7329671,
+    "rating_count": 678,
+    "installs_sum_1w": 162901,
+    "installs_sum_4w": 788327.0,
+    "installs_z_score_2w": -0.8515980905,
+    "installs_z_score_4w": -0.6344870531,
+    "release_date": "2026-04-23T00:00:00.000",
+    "icon_128": "e4c09387db3a6ce4_128.png",
+    "developer_name": "Happy Go Game",
+    "developer_id": "5236783802658963899",
+    "ad_supported": true,
+    "in_app_purchases": true,
+    "ad_network_names": [
+      "Google"
+    ],
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": [
+      "tenjin.com"
+    ],
+    "creative_count": 1,
+    "md5_hashes": [
+      "06cd1ab709634178019c140dd478c6f2"
+    ],
+    "md5_file_extensions": [
+      "webm"
+    ]
+  },
+  {
+    "name": "Wheelie Life: Moto Stunt",
+    "store_id": "com.moto.wheelie.balance",
+    "store": 1,
+    "category": "game_racing",
+    "installs": 3562668,
+    "rating": 4.5265636,
+    "rating_count": 1941,
+    "installs_sum_1w": 783924,
+    "installs_sum_4w": 2011729.0,
+    "installs_z_score_2w": 1.5242979871,
+    "installs_z_score_4w": 0.8812727363,
+    "release_date": "2026-06-04T00:00:00.000",
+    "icon_128": "a689d1c34956bab3_128.png",
+    "developer_name": "iJ Sound",
+    "developer_id": "iJ+Sound",
+    "ad_supported": true,
+    "in_app_purchases": false,
+    "ad_network_names": [
+      "Google"
+    ],
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": [
+      "adjust.com",
+      "appmetrica.yandex.com",
+      "metrica.yandex.com"
+    ],
+    "creative_count": 2,
+    "md5_hashes": [
+      "2b96ed70a337cd99adb3f64ddbd0fa59",
+      "aa7cbc3d5641108d285837441331ed7d"
+    ],
+    "md5_file_extensions": [
+      "webm"
+    ]
+  },
+  {
+    "name": "Flying Warrior: City Legends",
+    "store_id": "city.hero.adventure.simulation3d",
+    "store": 1,
+    "category": "game_action",
+    "installs": 3187364,
+    "rating": 4.434734,
+    "rating_count": 1107,
+    "installs_sum_1w": 201605,
+    "installs_sum_4w": 671195.0,
+    "installs_z_score_2w": 0.5573223225,
+    "installs_z_score_4w": 0.2614336753,
+    "release_date": "2026-05-07T00:00:00.000",
+    "icon_128": "cfa0f93d2486d964_128.png",
+    "developer_name": "Galaxy Legend Game Studio",
+    "developer_id": "6570679666030073615",
+    "ad_supported": true,
+    "in_app_purchases": false,
+    "ad_network_names": [
+      "Google"
+    ],
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": [
+      "adjust.com"
+    ],
+    "creative_count": 6,
+    "md5_hashes": [
+      "414de736d4aa00e52ac73a10a2cc5ad9",
+      "462944fcf2737aa154ab695eaef675ea",
+      "6af822d169e9a6ecdf7d8f76b0d1232f",
+      "75413ef49dc7cf0857d49bf35a1d68c7",
+      "cf73e2feeea63dfdf6d6055e0fd4bd4c",
+      "f042e66fe6279178c097093bd7b0f276",
+      "fb66c0830142f523645247ccf0ee49ce"
+    ],
+    "md5_file_extensions": [
+      "jpeg",
+      "mp4",
+      "webm"
+    ]
+  },
+  {
+    "name": "US Mega Truck Driving Games 3D",
+    "store_id": "com.cc.mega.truck.simulator.driving.games",
+    "store": 1,
+    "category": "game_simulation",
+    "installs": 3148900,
+    "rating": 1.8636364,
+    "rating_count": 592,
+    "installs_sum_1w": 97226,
+    "installs_sum_4w": 265289.0,
+    "installs_z_score_2w": -1.9717060559,
+    "installs_z_score_4w": -2.092246647,
+    "release_date": "2026-06-06T00:00:00.000",
+    "icon_128": "e787d2083bd05f58_128.png",
+    "developer_name": "Clever Crabs",
+    "developer_id": "8973445487971490520",
+    "ad_supported": true,
+    "in_app_purchases": false,
+    "ad_network_names": [
+      "Google"
+    ],
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": [
+      "appmetrica.yandex.com",
+      "metrica.yandex.com"
+    ],
+    "creative_count": 1,
+    "md5_hashes": [
+      "d8d3ed2755d347b2ee1362f9126b9d36"
+    ],
+    "md5_file_extensions": [
+      "webm"
+    ]
+  },
+  {
+    "name": "Home Clean: Makeover ASMR",
+    "store_id": "homecleaning.makeover.asmr",
+    "store": 1,
+    "category": "game_simulation",
+    "installs": 2759239,
+    "rating": 4.32375,
+    "rating_count": 3340,
+    "installs_sum_1w": 1393002,
+    "installs_sum_4w": 2083856.0,
+    "installs_z_score_2w": 21.4048381994,
+    "installs_z_score_4w": 12.0247879761,
+    "release_date": "2026-04-18T00:00:00.000",
+    "icon_128": "81bf7bd22607a43a_128.png",
+    "developer_name": "BLACKGEMS GLOBAL JOINT STOCK COMPANY",
+    "developer_id": "6335415397396475534",
+    "ad_supported": true,
+    "in_app_purchases": true,
+    "ad_network_names": [
+      "Google"
+    ],
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": [
+      "adjust.com",
+      "appsflyer.com"
+    ],
+    "creative_count": 14,
+    "md5_hashes": [
+      "0f93d5cfbb24e29c2cda761bb1fae799",
+      "1b4751bac4c0196e1bac4dc439150b4f",
+      "1d36032abcfb285bcf2a278fcb8e0611",
+      "4ff6a8dd5b51af354ffb89e2e78160d2",
+      "574f76c57dfcac5648d89539754494d3",
+      "7605e040b6ee8fcb31614b99a7a56c25",
+      "855f24b212a5b31c2e5880e12cf376cb",
+      "86d7b9021f1b2d7db481666db9ac9492",
+      "a6f8473b7ee6f8a4973cdf45a3f434a9",
+      "b2449a8c175f7c1f3339bb20b33efe99",
+      "dff9da470401b98a5daf805fb6fae3c0",
+      "eb86b2c56a1d49e488035e6e35f3447c",
+      "f2f62529d961e88a49f748844f0a241d",
+      "f4a82010fd3fd4fe01f810bf1652e455",
+      "ff7bf53fd8482b658cd6c137e943b7a4"
+    ],
+    "md5_file_extensions": [
+      "jpeg",
+      "mp4",
+      "webm",
+      "webp"
+    ]
+  },
+  {
+    "name": "Shine It: ASMR Cleaning",
+    "store_id": "spm.shineit.cleaning.asmr",
+    "store": 1,
+    "category": "game_casual",
+    "installs": 2613373,
+    "rating": 4.661991,
+    "rating_count": 9545,
+    "installs_sum_1w": 505,
+    "installs_sum_4w": 423650.0,
+    "installs_z_score_2w": -2.0800875766,
+    "installs_z_score_4w": -1.8789772317,
+    "release_date": "2026-05-19T00:00:00.000",
+    "icon_128": "b5b56b65644a9961_128.png",
+    "developer_name": "Funkedenic",
+    "developer_id": "Funkedenic",
+    "ad_supported": true,
+    "in_app_purchases": true,
+    "ad_network_names": [
+      "Google"
+    ],
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": [
+      "adjust.com"
+    ],
+    "creative_count": 2,
+    "md5_hashes": [
+      "05c7f0518a31d68123db0b81e5a13c89",
+      "84818dfc601150fec4c95e6230662a63"
+    ],
+    "md5_file_extensions": [
+      "jpeg",
+      "webm"
+    ]
+  },
+  {
+    "name": "Super Rope Hero: Crime City",
+    "store_id": "flying.crime.city.simulator",
+    "store": 1,
+    "category": "game_action",
+    "installs": 2573736,
+    "rating": 4.394891,
+    "rating_count": 647,
+    "installs_sum_1w": 148172,
+    "installs_sum_4w": 309767.0,
+    "installs_z_score_2w": -0.7029202731,
+    "installs_z_score_4w": -0.8105597926,
+    "release_date": "2026-05-05T00:00:00.000",
+    "icon_128": "c5d0da393ce6c076_128.png",
+    "developer_name": "CORGY TECH COMPANY LIMITED",
+    "developer_id": "CORGY+TECH+COMPANY+LIMITED",
+    "ad_supported": true,
+    "in_app_purchases": false,
+    "ad_network_names": [
+      "Google"
+    ],
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": [
+      "adjust.com"
+    ],
+    "creative_count": 3,
+    "md5_hashes": [
+      "1f0094253b19429151210c98fae9404e",
+      "2f2eb9b8833de2dab515711129fb195b",
+      "da2f2e41ccc21bc07ce8a11a54487a63"
+    ],
+    "md5_file_extensions": [
+      "webm"
+    ]
+  },
+  {
+    "name": "Dynamic Wallpaper - HD & Live",
+    "store_id": "com.nova.software.dynamic.wallpaper",
+    "store": 1,
+    "category": "tools",
+    "installs": 2404584,
+    "rating": 3.8131819,
+    "rating_count": 1484,
+    "installs_sum_1w": 588230,
+    "installs_sum_4w": 1378819.0,
+    "installs_z_score_2w": 5.2948129063,
+    "installs_z_score_4w": 3.5386331333,
+    "release_date": "2026-06-08T00:00:00.000",
+    "icon_128": "896266d97099d5ec_128.png",
+    "developer_name": "Nova Software Tools",
+    "developer_id": "Nova+Software+Tools",
+    "ad_supported": true,
+    "in_app_purchases": false,
+    "ad_network_names": [
+      "BidEase",
+      "Digital Turbine",
+      "Google",
+      "LiftOff",
+      "Mobvista",
+      "TopOn",
+      "Unity"
+    ],
+    "ad_network_domains": [
+      "bidease.com",
+      "digitalturbine.com",
+      "google.com",
+      "liftoff.io",
+      "mobvista.com",
+      "toponad.com",
+      "unity.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/bidease.com/logo_200x200.jpeg",
+      "company-logos/digitalturbine.com/logo_200x200.jpeg",
+      "company-logos/google.com/logo_200x200.jpeg",
+      "company-logos/liftoff.io/logo_200x200.jpeg",
+      "company-logos/mobvista.com/logo_200x200.jpeg",
+      "company-logos/toponad.com/logo_200x200.jpeg",
+      "company-logos/unity.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": [
+      "adjust.com"
+    ],
+    "creative_count": 29,
+    "md5_hashes": [
+      "14cbff7d768938633fb581dc61afbde7",
+      "56893108a433aef4348bd4a075aeb511",
+      "58ef576e7a0d50b471297aed9be6f24e",
+      "6460c94e1ca78a023553d700044d8f68",
+      "680ad6cb570dc63c4ea560cc62ba3c9f",
+      "72e59bf5248d7fcd5581f9897fb52f65",
+      "84f6fcab922ad01e034826390b6acd4c",
+      "878f66d93a782a893ab6c3a1fa778633",
+      "8aa15aa6a585a87c10671f149bd95c52",
+      "8dab85eb56ccf9738ac1775aa329c75d",
+      "993b4ea701ac044c111cb1201a550a43",
+      "a717bdb183cb7679f3d1036848bc9092",
+      "ad7bd268eb6fd6da62b4429144cc66e8",
+      "b025d504f3eb8ac825cbd1d0e9603e90",
+      "b86ced09cf372b4670103d2e80992659",
+      "bf360a4ec168285116204f0f65007fe0",
+      "bf93e5f4329a4129e0f696ee3daf186b",
+      "c33052e55859c503d8518bbfe8aeb2b4",
+      "c99ee83195687cd00932d4664bdba01d",
+      "d18dcfb29c10d2f95264e178b9aaf094",
+      "d4f96f18f4eae8288ee031590090af83",
+      "dc258c80557d1dd983d5d981287be893",
+      "e0dd37190d880ba9be087ed4ddea576d",
+      "e25de33bf705e2e0c3fd2359da431877",
+      "e2b55d13ad47898d7996873d36fbcd56",
+      "e5b6fa392b89d40d13b84de08c9a3f55",
+      "e6dd3379a43da609f6b0eb6a7aba4ece",
+      "e76fb33202da0e51490d5a5569892c36",
+      "eef5d301c34fee949a372d0c5cdb0a53",
+      "fa40b7c72c4f461c67a661acd5e3a9c8",
+      "fd99d2ff13c3dfc13d088efdd0b4c5f4"
+    ],
+    "md5_file_extensions": [
+      "jpeg",
+      "mp4",
+      "png",
+      "webp"
+    ]
+  },
+  {
+    "name": "CleanBoost - Junk Cleaner",
+    "store_id": "com.novabrain.tool.cleanboost",
+    "store": 1,
+    "category": "tools",
+    "installs": 2353136,
+    "rating": 3.621186,
+    "rating_count": 3048,
+    "installs_sum_1w": 1005714,
+    "installs_sum_4w": 1763989.0,
+    "installs_z_score_2w": 7.0913685866,
+    "installs_z_score_4w": 3.6614049238,
+    "release_date": "2026-06-04T00:00:00.000",
+    "icon_128": "9b3226ccc93171cf_128.png",
+    "developer_name": "Fadilo Studio",
+    "developer_id": "Fadilo+Studio",
+    "ad_supported": true,
+    "in_app_purchases": false,
+    "ad_network_names": [
+      "LiftOff"
+    ],
+    "ad_network_domains": [
+      "liftoff.io"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/liftoff.io/logo_200x200.jpeg"
+    ],
+    "mmp_domains": [
+      "adjust.com"
+    ],
+    "creative_count": 1,
+    "md5_hashes": [
+      "75179b1b220011f40863beaaafd5a6b7"
+    ],
+    "md5_file_extensions": [
+      "mp4"
+    ]
+  },
+  {
+    "name": "Rope Flying Hero Prime",
+    "store_id": "flying.rope.hero.prime.simulator3d",
+    "store": 1,
+    "category": "game_action",
+    "installs": 2216768,
+    "rating": 4.3524013,
+    "rating_count": 826,
+    "installs_sum_1w": 505655,
+    "installs_sum_4w": 1021086.0,
+    "installs_z_score_2w": 0.975223429,
+    "installs_z_score_4w": 0.1083859987,
+    "release_date": "2026-05-14T00:00:00.000",
+    "icon_128": "b3e01dcc6718f3c1_128.png",
+    "developer_name": "AN NGUYEN AUTO",
+    "developer_id": "7962846905423311959",
+    "ad_supported": true,
+    "in_app_purchases": false,
+    "ad_network_names": [
+      "Google"
+    ],
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": [
+      "adjust.com"
+    ],
+    "creative_count": 6,
+    "md5_hashes": [
+      "1f0094253b19429151210c98fae9404e",
+      "2f2eb9b8833de2dab515711129fb195b",
+      "341e0f0c895eb3dd4e6bb5597808f994",
+      "a3c4cdbc7045ccfa68dd1cf70bd21601",
+      "da2f2e41ccc21bc07ce8a11a54487a63",
+      "def18fe583920307259ccf47406457e0"
+    ],
+    "md5_file_extensions": [
+      "jpeg",
+      "webm"
+    ]
+  },
+  {
+    "name": "FIFA Panini Collection 2026",
+    "store_id": "com.am.blocky.shooter.survival.game",
+    "store": 1,
+    "category": "game_simulation",
+    "installs": 2006301,
+    "rating": 2.1666667,
+    "rating_count": 238,
+    "installs_sum_1w": 78501,
+    "installs_sum_4w": 1266748.0,
+    "installs_z_score_2w": -0.0664910734,
+    "installs_z_score_4w": 0.5749875726,
+    "release_date": "2026-06-10T00:00:00.000",
+    "icon_128": "8915adb5692475ab.png",
+    "developer_name": "Developr",
+    "developer_id": "Developr",
+    "ad_supported": true,
+    "in_app_purchases": true,
+    "ad_network_names": [
+      "Google"
+    ],
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": [
+      "appsflyer.com"
+    ],
+    "creative_count": 4,
+    "md5_hashes": [
+      "88fc353ef0f357a284eaf1a07bfeb81a",
+      "b3595137e1be2ae43e32f8913e7f5601",
+      "c029f7090eadc9cca35b0f910ffc967b",
+      "cac0554b6662dcdc6dcdfb08e3cf707f"
+    ],
+    "md5_file_extensions": [
+      "jpeg",
+      "webm"
+    ]
+  },
+  {
+    "name": "Titan Rope Hero: Vice City",
+    "store_id": "bg.rope.hero.vicecity.action.simulation3d",
+    "store": 1,
+    "category": "game_action",
+    "installs": 1953847,
+    "rating": 4.474583,
+    "rating_count": 478,
+    "installs_sum_1w": 490778,
+    "installs_sum_4w": 1004703.0,
+    "installs_z_score_2w": 1.5264994946,
+    "installs_z_score_4w": 0.1837584781,
+    "release_date": "2026-05-14T00:00:00.000",
+    "icon_128": "85c13832f0cfba73_128.png",
+    "developer_name": "SKYVERTY COMPANY LIMITED",
+    "developer_id": "7179750041029932842",
+    "ad_supported": true,
+    "in_app_purchases": false,
+    "ad_network_names": [
+      "Google"
+    ],
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": [
+      "adjust.com"
+    ],
+    "creative_count": 2,
+    "md5_hashes": [
+      "3867bf10626a6df4ccb21ba520f586ea",
+      "a8cb13675266a2491aab4716c21a1119"
+    ],
+    "md5_file_extensions": [
+      "webm"
+    ]
+  },
+  {
+    "name": "Drift Pro Car Driving",
+    "store_id": "car.drift.pro.traffic.simulation3d",
+    "store": 1,
+    "category": "game_racing",
+    "installs": 1874084,
+    "rating": 4.4920216,
+    "rating_count": 2347,
+    "installs_sum_1w": 322273,
+    "installs_sum_4w": 701845.0,
+    "installs_z_score_2w": 0.8014034475,
+    "installs_z_score_4w": 0.3567508034,
+    "release_date": "2026-05-13T00:00:00.000",
+    "icon_128": "fa9c842b8d68d3e2_128.png",
+    "developer_name": "Galaxy Legend Game Studio",
+    "developer_id": "6570679666030073615",
+    "ad_supported": true,
+    "in_app_purchases": false,
+    "ad_network_names": [
+      "Google"
+    ],
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": [
+      "adjust.com"
+    ],
+    "creative_count": 1,
+    "md5_hashes": [
+      "adf6c6b4c8ebf89b74306d2fc76b221d"
+    ],
+    "md5_file_extensions": [
+      "jpeg"
+    ]
+  },
+  {
+    "name": "Puppet Smash",
+    "store_id": "com.puppet.smash.bang.stress.clam",
+    "store": 1,
+    "category": "game_casual",
+    "installs": 1674156,
+    "rating": 2.5845866,
+    "rating_count": 733,
+    "installs_sum_1w": 632444,
+    "installs_sum_4w": 1234606.0,
+    "installs_z_score_2w": 7.0498305185,
+    "installs_z_score_4w": 4.2768165161,
+    "release_date": "2026-04-21T00:00:00.000",
+    "icon_128": "a7964cc83332d9c7_128.png",
+    "developer_name": "Binary app solution",
+    "developer_id": "Binary+app+solution",
+    "ad_supported": true,
+    "in_app_purchases": false,
+    "ad_network_names": [
+      "Google"
+    ],
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": [
+      "adjust.com"
+    ],
+    "creative_count": 1,
+    "md5_hashes": [
+      "05a38d0cb538defced9614b4aa91166d"
+    ],
+    "md5_file_extensions": [
+      "webm"
+    ]
+  },
+  {
+    "name": "Live TV: TV Shows & Movies",
+    "store_id": "com.hl.livetv.movies.player",
+    "store": 1,
+    "category": "entertainment",
+    "installs": 1431298,
+    "rating": 4.31746,
+    "rating_count": 2155,
+    "installs_sum_1w": 578372,
+    "installs_sum_4w": 1353769.0,
+    "installs_z_score_2w": 31.2874709547,
+    "installs_z_score_4w": 20.0521372194,
+    "release_date": "2026-05-06T00:00:00.000",
+    "icon_128": "94db6b653824f09e_128.png",
+    "developer_name": "Skyline Techs",
+    "developer_id": "Skyline+Techs",
+    "ad_supported": true,
+    "in_app_purchases": true,
+    "ad_network_names": [
+      "Google"
+    ],
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": [
+      "adjust.com",
+      "appsflyer.com"
+    ],
+    "creative_count": 1,
+    "md5_hashes": [
+      "0e27aabbaf15fa06c8cd6874c415b2b0"
+    ],
+    "md5_file_extensions": [
+      "webm"
+    ]
+  },
+  {
+    "name": "Moto Wheelie: Traffic Bike 3D",
+    "store_id": "bike.wheelie.driving.simulator3d",
+    "store": 1,
+    "category": "game_racing",
+    "installs": 1195662,
+    "rating": 4.6076517,
+    "rating_count": 1096,
+    "installs_sum_1w": 91855,
+    "installs_sum_4w": 510648.0,
+    "installs_z_score_2w": null,
+    "installs_z_score_4w": null,
+    "release_date": "2026-06-04T00:00:00.000",
+    "icon_128": "a1af97b74e082ca5_128.png",
+    "developer_name": "KangBang Games",
+    "developer_id": "9053561858172625117",
+    "ad_supported": true,
+    "in_app_purchases": false,
+    "ad_network_names": [
+      "Google"
+    ],
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": [
+      "adjust.com"
+    ],
+    "creative_count": 2,
+    "md5_hashes": [
+      "13642f0e1d094757f0415b743b39e3c3",
+      "ad64b85b6a51dbc25236f47b5ab6f92a"
+    ],
+    "md5_file_extensions": [
+      "webm"
+    ]
+  },
+  {
+    "name": "Drift Racer: Real Car Driving",
+    "store_id": "com.realcar.openworld.simulation",
+    "store": 1,
+    "category": "game_racing",
+    "installs": 1040924,
+    "rating": 5.0,
+    "rating_count": 951,
+    "installs_sum_1w": 132863,
+    "installs_sum_4w": 414544.0,
+    "installs_z_score_2w": -0.0697532263,
+    "installs_z_score_4w": -0.1855741108,
+    "release_date": "2026-05-17T00:00:00.000",
+    "icon_128": "a9e151b3a86e1e5c_128.png",
+    "developer_name": "SKYVERTY COMPANY LIMITED",
+    "developer_id": "7179750041029932842",
+    "ad_supported": true,
+    "in_app_purchases": false,
+    "ad_network_names": [
+      "Google"
+    ],
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": [
+      "adjust.com"
+    ],
+    "creative_count": 1,
+    "md5_hashes": [
+      "1c25618eba979333a103ce938f1e1dcd"
+    ],
+    "md5_file_extensions": [
+      "webm"
+    ]
+  },
+  {
+    "name": "Cooking ASMR: Cozy Kitchen",
+    "store_id": "com.cookingdom.cozy.kitchen",
+    "store": 1,
+    "category": "game_simulation",
+    "installs": 1021628,
+    "rating": 4.0251784,
+    "rating_count": 997,
+    "installs_sum_1w": 248276,
+    "installs_sum_4w": 606357.0,
+    "installs_z_score_2w": 4.465026357,
+    "installs_z_score_4w": 3.1759219951,
+    "release_date": "2026-06-04T00:00:00.000",
+    "icon_128": "bcc750e13d311ecc_128.png",
+    "developer_name": "RACOM STUDIO",
+    "developer_id": "4860586356834215499",
+    "ad_supported": true,
+    "in_app_purchases": true,
+    "ad_network_names": [
+      "Google"
+    ],
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": [
+      "adjust.com",
+      "appsflyer.com"
+    ],
+    "creative_count": 14,
+    "md5_hashes": [
+      "0ec62242151a8d080fae10ff5870f87b",
+      "18f71429598dcde2f20dcd387e1802e0",
+      "20a92d70e2fbb1e794bcabfd952e1bb0",
+      "283bcade2c1cfc0d3c949580dcf1396a",
+      "33e121d6f04c21825249c82415c17e26",
+      "43f610cae8087e9c18fb20eafec8f7f1",
+      "4b8965a0311a80b0c2b6c180beea006f",
+      "4ebf06295ec5acb75d99c25e8f1f662a",
+      "62dc88ed80705dc47819864aac1e9970",
+      "7ba4d5c552257598f762eda0a1599bbf",
+      "8a4bdd3b57245adbf0daec86f62117cd",
+      "917251223759fa478486c3950a8e24e9",
+      "a4eccc9da9ef1d7ad0b1a03f44e2a1a9",
+      "b65a4d55a29e7f754e58a36a395e7696",
+      "bcb8446b587ce3e13366ad5d0514e291",
+      "c4c2e2b8c334aaf0c31efb08d3a7eb00",
+      "e895d3dea57498064c359b351ca73b1c"
+    ],
+    "md5_file_extensions": [
+      "jpeg",
+      "webm"
+    ]
+  },
+  {
+    "name": "AR Filter: FYP Dogy Filter",
+    "store_id": "com.filter.ar.effect.camera3d.fyp.meme",
+    "store": 1,
+    "category": "entertainment",
+    "installs": 953790,
+    "rating": 4.789514,
+    "rating_count": 2076,
+    "installs_sum_1w": 198791,
+    "installs_sum_4w": 365095.0,
+    "installs_z_score_2w": 0.9124730206,
+    "installs_z_score_4w": -0.1612206633,
+    "release_date": "2026-05-15T00:00:00.000",
+    "icon_128": "f9b9e4e2c631a194_128.png",
+    "developer_name": "Mobile Innovate X",
+    "developer_id": "Mobile+Innovate+X",
+    "ad_supported": true,
+    "in_app_purchases": true,
+    "ad_network_names": [
+      "Google"
+    ],
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": [
+      "appsflyer.com"
+    ],
+    "creative_count": 2,
+    "md5_hashes": [
+      "07524cfa1c6b159308c5d7fa2d931027",
+      "d4ef0bd9c64200af2100af62b606c32b"
+    ],
+    "md5_file_extensions": [
+      "jpeg"
+    ]
+  },
+  {
+    "name": "ZombieCraft: Zombie Apocalypse",
+    "store_id": "com.craft.zombie.apocalypse.survival.mod",
+    "store": 1,
+    "category": "game_simulation",
+    "installs": 800192,
+    "rating": 1.58,
+    "rating_count": 799,
+    "installs_sum_1w": 12720,
+    "installs_sum_4w": 110729.0,
+    "installs_z_score_2w": -2.3250053597,
+    "installs_z_score_4w": -1.9586054811,
+    "release_date": "2026-04-21T00:00:00.000",
+    "icon_128": "85961ae96a5c7553_128.png",
+    "developer_name": "Logic Apz",
+    "developer_id": "4892452792969495132",
+    "ad_supported": true,
+    "in_app_purchases": false,
+    "ad_network_names": [
+      "Google"
+    ],
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": [
+      "appsflyer.com"
+    ],
+    "creative_count": 1,
+    "md5_hashes": [
+      "ec7e63adb542a9d798e1a89c81d6f0e3"
+    ],
+    "md5_file_extensions": [
+      "webm"
+    ]
+  },
+  {
+    "name": "Love Makeover: Dress Up Game",
+    "store_id": "com.yoyogames.love.makeover.dressup.dating.crush.game",
+    "store": 1,
+    "category": "game_simulation",
+    "installs": 749772,
+    "rating": 4.7710176,
+    "rating_count": 8921,
+    "installs_sum_1w": 520210,
+    "installs_sum_4w": 749772.0,
+    "installs_z_score_2w": null,
+    "installs_z_score_4w": null,
+    "release_date": "2026-06-12T00:00:00.000",
+    "icon_128": "ea9661ceb16c9a25_128.png",
+    "developer_name": "YoYo Dress Up Games",
+    "developer_id": "6729294730944113170",
+    "ad_supported": true,
+    "in_app_purchases": true,
+    "ad_network_names": [
+      "Google"
+    ],
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": [
+      "appmetrica.yandex.com",
+      "appsflyer.com",
+      "metrica.yandex.com"
+    ],
+    "creative_count": 1,
+    "md5_hashes": [
+      "d899c87b55001596bb8cda5376b9ff5f"
+    ],
+    "md5_file_extensions": [
+      "jpeg"
+    ]
+  },
+  {
+    "name": "Open World Sim Car Driving 3D",
+    "store_id": "com.frg.open.world.car.driving.game",
+    "store": 1,
+    "category": "game_strategy",
+    "installs": 714500,
+    "rating": null,
+    "rating_count": 0,
+    "installs_sum_1w": 134852,
+    "installs_sum_4w": 381304.0,
+    "installs_z_score_2w": 1.9474354802,
+    "installs_z_score_4w": 1.4996629842,
+    "release_date": "2026-05-20T00:00:00.000",
+    "icon_128": "bb14d468c939eb13_128.png",
+    "developer_name": "FalcoRush Games",
+    "developer_id": "FalcoRush+Games",
+    "ad_supported": true,
+    "in_app_purchases": false,
+    "ad_network_names": [
+      "Google"
+    ],
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": null,
+    "creative_count": 1,
+    "md5_hashes": [
+      "5c96e1fd0a69ed71cc84e7f79b23052f"
+    ],
+    "md5_file_extensions": [
+      "webm"
+    ]
+  },
+  {
+    "name": "Craft Builder: Dream World",
+    "store_id": "com.klt.craftbuilder.buildingcity.blockcity.dreamworld",
+    "store": 1,
+    "category": "game_simulation",
+    "installs": 690080,
+    "rating": null,
+    "rating_count": 0,
+    "installs_sum_1w": 183647,
+    "installs_sum_4w": 615472.0,
+    "installs_z_score_2w": 13.9368678567,
+    "installs_z_score_4w": 11.1500935731,
+    "release_date": "2026-05-25T00:00:00.000",
+    "icon_128": "abb390cc6e6b7910_128.png",
+    "developer_name": "KANG LONG TRADING",
+    "developer_id": "KANG+LONG+TRADING",
+    "ad_supported": true,
+    "in_app_purchases": false,
+    "ad_network_names": [
+      "Google"
+    ],
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": [
+      "adjust.com"
+    ],
+    "creative_count": 1,
+    "md5_hashes": [
+      "7ace9e003fc166f014fbe4f0acbe0f10"
+    ],
+    "md5_file_extensions": [
+      "webm"
+    ]
+  },
+  {
+    "name": "Beauty Cam: AI Image Generator",
+    "store_id": "com.editor.aiphoto.generator.beautycam",
+    "store": 1,
+    "category": "photo_and_video",
+    "installs": 680024,
+    "rating": 4.1804814,
+    "rating_count": 784,
+    "installs_sum_1w": 157306,
+    "installs_sum_4w": 251565.0,
+    "installs_z_score_2w": 2.9508194936,
+    "installs_z_score_4w": 0.9794199923,
+    "release_date": "2026-05-14T00:00:00.000",
+    "icon_128": "c58e1b316ec69339_128.png",
+    "developer_name": "ngaoschos",
+    "developer_id": "ngaoschos",
+    "ad_supported": true,
+    "in_app_purchases": false,
+    "ad_network_names": [
+      "Google"
+    ],
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": [
+      "adjust.com",
+      "appsflyer.com"
+    ],
+    "creative_count": 1,
+    "md5_hashes": [
+      "743190eb51182db89e8409f44eea4e0d"
+    ],
+    "md5_file_extensions": [
+      "webm"
+    ]
+  },
+  {
+    "name": "Dynasty Match: Brain Puzzle",
+    "store_id": "com.luminous.Dynastybrainmatch",
+    "store": 1,
+    "category": "game_trivia",
+    "installs": 668340,
+    "rating": 4.568915,
+    "rating_count": 1455,
+    "installs_sum_1w": 83824,
+    "installs_sum_4w": 282875.0,
+    "installs_z_score_2w": -0.1957383734,
+    "installs_z_score_4w": -0.3789902751,
+    "release_date": "2026-05-27T00:00:00.000",
+    "icon_128": "e82127d69d929ba3_128.png",
+    "developer_name": "Luminous Arc Studios",
+    "developer_id": "Luminous+Arc+Studios",
+    "ad_supported": true,
+    "in_app_purchases": true,
+    "ad_network_names": [
+      "Google"
+    ],
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": [
+      "tenjin.com"
+    ],
+    "creative_count": 1,
+    "md5_hashes": [
+      "d56bf1826ff979a2fb9b669b52038cb1"
+    ],
+    "md5_file_extensions": [
+      "webm"
+    ]
+  },
+  {
+    "name": "Arrow Puzzle Master",
+    "store_id": "com.autoall.arrowpm",
+    "store": 1,
+    "category": "game_puzzle",
+    "installs": 641440,
+    "rating": 4.5243626,
+    "rating_count": 14448,
+    "installs_sum_1w": 159689,
+    "installs_sum_4w": 411636.0,
+    "installs_z_score_2w": 0.2278795214,
+    "installs_z_score_4w": -0.2210953078,
+    "release_date": "2026-06-22T00:00:00.000",
+    "icon_128": "fecde1369049c4e4_128.png",
+    "developer_name": "mecca inc",
+    "developer_id": "mecca+inc",
+    "ad_supported": true,
+    "in_app_purchases": false,
+    "ad_network_names": [
+      "Google",
+      "Mobvista"
+    ],
+    "ad_network_domains": [
+      "google.com",
+      "mobvista.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg",
+      "company-logos/mobvista.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": [
+      "adjust.com"
+    ],
+    "creative_count": 2,
+    "md5_hashes": [
+      "0f27c3c1119b50216813182dcffce578",
+      "a8b29c39a4addc1b48c795fa54942c31"
+    ],
+    "md5_file_extensions": [
+      "mp4"
+    ]
+  },
+  {
+    "name": "GPocket: GBA Emulator",
+    "store_id": "com.tranquil.gba",
+    "store": 1,
+    "category": "entertainment",
+    "installs": 553542,
+    "rating": null,
+    "rating_count": 11,
+    "installs_sum_1w": 15806,
+    "installs_sum_4w": 39066.0,
+    "installs_z_score_2w": -1.5121194639,
+    "installs_z_score_4w": -1.6437954339,
+    "release_date": "2026-06-16T00:00:00.000",
+    "icon_128": "a56843969a3dcdb8_128.png",
+    "developer_name": "Minh Tam Nguyen",
+    "developer_id": "Minh+Tam+Nguyen",
+    "ad_supported": true,
+    "in_app_purchases": true,
+    "ad_network_names": [
+      "Google"
+    ],
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": null,
+    "creative_count": 1,
+    "md5_hashes": [
+      "5ed9bbcbe2913e39da1a52d6275adc80"
+    ],
+    "md5_file_extensions": [
+      "webm"
+    ]
+  },
+  {
+    "name": "Rhythm Shooter: Phonk Rush",
+    "store_id": "com.music.edm.shooter.game",
+    "store": 1,
+    "category": "game_music",
+    "installs": 537634,
+    "rating": 4.3443017,
+    "rating_count": 464,
+    "installs_sum_1w": 149617,
+    "installs_sum_4w": 401492.0,
+    "installs_z_score_2w": 2.1465020292,
+    "installs_z_score_4w": 1.0193218157,
+    "release_date": "2026-06-04T00:00:00.000",
+    "icon_128": "91e16a3f1c9761d8_128.png",
+    "developer_name": "CodiPlayer",
+    "developer_id": "CodiPlayer",
+    "ad_supported": true,
+    "in_app_purchases": false,
+    "ad_network_names": [
+      "Google"
+    ],
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": [
+      "adjust.com"
+    ],
+    "creative_count": 2,
+    "md5_hashes": [
+      "0b15e7d39360ac1e050ab5ab238fafa4",
+      "efc5ae4e29a216bf61f23304bb93f1f2"
+    ],
+    "md5_file_extensions": [
+      "webm"
+    ]
+  },
+  {
+    "name": "Hidden Quest:Seek & Spot Pro",
+    "store_id": "hidden.objects.spot.find.it.real.picture.out.seek.puzzle.games.free",
+    "store": 1,
+    "category": "game_puzzle",
+    "installs": 524670,
+    "rating": 4.918642,
+    "rating_count": 22532,
+    "installs_sum_1w": 71631,
+    "installs_sum_4w": 172729.0,
+    "installs_z_score_2w": 0.527684725,
+    "installs_z_score_4w": -0.5917204318,
+    "release_date": "2026-04-17T00:00:00.000",
+    "icon_128": "ba5861ee43b91a87_128.png",
+    "developer_name": "UniccPlay",
+    "developer_id": "UniccPlay",
+    "ad_supported": true,
+    "in_app_purchases": true,
+    "ad_network_names": [
+      "Google"
+    ],
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": [
+      "adjust.com",
+      "appmetrica.yandex.com",
+      "appsflyer.com",
+      "metrica.yandex.com"
+    ],
+    "creative_count": 4,
+    "md5_hashes": [
+      "1285cd277b7235fc19f7f589b8057e27",
+      "b0efd89615775a8e9fd304593b111c92",
+      "d417258e5d6a66175554f51521cc4434",
+      "fb6654d066d929080cf3ca76991df778"
+    ],
+    "md5_file_extensions": [
+      "jpeg",
+      "webm"
+    ]
+  },
+  {
+    "name": "Traffic Bike: Wheelie Stunt",
+    "store_id": "moto.wheelie.stunt.driving3d",
+    "store": 1,
+    "category": "game_racing",
+    "installs": 482698,
+    "rating": null,
+    "rating_count": 426,
+    "installs_sum_1w": 239808,
+    "installs_sum_4w": 482698.0,
+    "installs_z_score_2w": null,
+    "installs_z_score_4w": null,
+    "release_date": "2026-06-12T00:00:00.000",
+    "icon_128": "e3cc96b068f94c8e_128.png",
+    "developer_name": "SIXEI LIMITED COMPANY",
+    "developer_id": "8609303915456961157",
+    "ad_supported": true,
+    "in_app_purchases": false,
+    "ad_network_names": [
+      "Google"
+    ],
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": [
+      "adjust.com"
+    ],
+    "creative_count": 2,
+    "md5_hashes": [
+      "cac43ada36459d291dbed72612eb6690",
+      "d2c86976179d5c0af778be306110240c"
+    ],
+    "md5_file_extensions": [
+      "webm"
+    ]
+  },
+  {
+    "name": "Themes Launcher: Walls&Icons",
+    "store_id": "com.theme.icons.wallpaper.ios",
+    "store": 1,
+    "category": "personalization",
+    "installs": 397682,
+    "rating": 4.4886036,
+    "rating_count": 10404,
+    "installs_sum_1w": 202166,
+    "installs_sum_4w": 397682.0,
+    "installs_z_score_2w": null,
+    "installs_z_score_4w": null,
+    "release_date": "2026-05-27T00:00:00.000",
+    "icon_128": "dea169c8c19ccf32_128.png",
+    "developer_name": "BAOXINGYUNCONG",
+    "developer_id": "BAOXINGYUNCONG",
+    "ad_supported": true,
+    "in_app_purchases": false,
+    "ad_network_names": [
+      "Google"
+    ],
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": [
+      "appsflyer.com"
+    ],
+    "creative_count": 1,
+    "md5_hashes": [
+      "273e82b8c7b961155f4429c66433de32"
+    ],
+    "md5_file_extensions": [
+      "jpeg"
+    ]
+  },
+  {
+    "name": "Super Recovery - Photo & Video",
+    "store_id": "com.veyro.digital.super.recovery",
+    "store": 1,
+    "category": "tools",
+    "installs": 390692,
+    "rating": 3.7250001,
+    "rating_count": 150,
+    "installs_sum_1w": 71465,
+    "installs_sum_4w": 223577.0,
+    "installs_z_score_2w": 2.1483069422,
+    "installs_z_score_4w": 1.1298113057,
+    "release_date": "2026-06-17T00:00:00.000",
+    "icon_128": "ce9a3564989bc36c_128.png",
+    "developer_name": "Veyro Digital",
+    "developer_id": "Veyro+Digital",
+    "ad_supported": true,
+    "in_app_purchases": false,
+    "ad_network_names": [
+      "Google",
+      "Mobvista"
+    ],
+    "ad_network_domains": [
+      "google.com",
+      "mobvista.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg",
+      "company-logos/mobvista.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": [
+      "adjust.com"
+    ],
+    "creative_count": 2,
+    "md5_hashes": [
+      "4b041c1036a34a39550b2661d8b434d8",
+      "7bf3447634575b06fc6d0b70782fe1f8"
+    ],
+    "md5_file_extensions": [
+      "mp4"
+    ]
+  }
+]

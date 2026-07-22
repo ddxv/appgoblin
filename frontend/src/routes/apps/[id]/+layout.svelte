@@ -9,6 +9,7 @@
 	import AvailableOniOs from '$lib/svg/AvailableOniOS.svelte';
 	import AppNavTabs from '$lib/utils/AppNavTabs.svelte';
 	import MainContent from '$lib/MainContent.svelte';
+	import { countryCodeToEmoji } from '$lib/utils/countryCodeToEmoji';
 
 	let {
 		data,
@@ -116,14 +117,14 @@
 							<img
 								src={`https://media.appgoblin.info/app-icons/${data.myapp.store_id}/${data.myapp.icon_128}`}
 								alt={data.myapp.name}
-								class="w-32 sm:w-40 md:w-48 h-auto"
+								class="w-32 sm:w-40 h-auto"
 								referrerpolicy="no-referrer"
 							/>
 						{:else if data.myapp.app_icon_url}
 							<img
 								src={data.myapp.app_icon_url}
 								alt={data.myapp.name}
-								class="w-32 sm:w-40 md:w-48 h-auto"
+								class="w-32 sm:w-40 h-auto"
 								referrerpolicy="no-referrer"
 							/>
 						{/if}
@@ -132,7 +133,7 @@
 							<StarsRating total={5} size={20} rating={data.myapp.rating} />
 						</div>
 						<div class="hidden md:inline-flex">
-							<StarsRating total={5} size={40} rating={data.myapp.rating} />
+							<StarsRating total={5} size={35} rating={data.myapp.rating} />
 						</div>
 					</div>
 
@@ -145,12 +146,12 @@
 							>
 								{#if data.myapp.store.includes('Google')}
 									<img
-										class="w-32 md:w-48 md:w-64"
+										class="w-32 md:w-48"
 										src="/gp_en_badge_web_generic.png"
 										alt={data.myapp.name}
 									/>
 								{:else if data.myapp.store.includes('Apple')}
-									<AvailableOniOs size={180} />
+									<AvailableOniOs size={120} />
 								{/if}
 							</a>
 						</div>
@@ -160,13 +161,18 @@
 									<span class="flex items-center gap-1 md:gap-2 text-sm md:text-base">
 										<svg
 											xmlns="http://www.w3.org/2000/svg"
-											class="h-5 w-5"
+											class="h-5 w-5 shrink-0"
 											viewBox="0 0 20 20"
 											fill="currentColor"
 										>
 											<path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" />
 										</svg>
-										Developer: {data.myapp.developer_name?.split(' ').slice(0, 3).join(' ') ||
+										Developer:
+										{#if data.myapp.country_code}
+											{countryCodeToEmoji(data.myapp.country_code)}
+										{/if}
+
+										{data.myapp.developer_name?.split(' ').slice(0, 3).join(' ') ||
 											data.myapp.developer_id}
 									</span>
 								</div>

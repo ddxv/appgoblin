@@ -1,5 +1,5 @@
 SELECT
-    id,
+    sao.id,
     name,
     store_id,
     store,
@@ -45,6 +45,7 @@ SELECT
     api_last_crawled,
     run_result AS api_crawl_result,
     api_successful_last_crawled,
+    c.alpha2 AS country_code,
     CASE
         WHEN icon_128 IS NOT NULL
             THEN
@@ -59,6 +60,7 @@ SELECT
     COALESCE(ad_creative_count, 0) AS ad_creative_count,
     COALESCE(ad_mon_creatives, 0) AS ad_monetized_creative_count
 FROM
-    frontend.store_apps_overview
+    frontend.store_apps_overview AS sao
+LEFT JOIN countries AS c ON sao.country_id = c.id
 WHERE
-    store_id = :store_id;
+    sao.store_id = :store_id;
