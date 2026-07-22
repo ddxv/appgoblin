@@ -122,14 +122,23 @@
 	<meta property="og:title" content={data.title} />
 	<meta property="og:description" content={data.description} />
 	<meta property="og:url" content={reportUrl} />
-	<meta property="og:image" content="https://appgoblin.info/appgoblin_screenshot.png" />
-	<meta property="og:image:alt" content="AppGoblin mobile UA intelligence report dashboard" />
+	<meta
+		property="og:image"
+		content="https://appgoblin.info/previews/appgoblin_user_acquisition_report_june_2026.png"
+	/>
+	<meta
+		property="og:image:alt"
+		content="AppGoblin June 2026 mobile UA intelligence report preview"
+	/>
 	<meta property="article:published_time" content={reportPublishedDate} />
 	<meta property="article:modified_time" content={new Date().toISOString().split('T')[0]} />
 	<meta name="twitter:card" content="summary_large_image" />
 	<meta name="twitter:title" content={data.title} />
 	<meta name="twitter:description" content={data.description} />
-	<meta name="twitter:image" content="https://appgoblin.info/appgoblin_screenshot.png" />
+	<meta
+		name="twitter:image"
+		content="https://appgoblin.info/previews/appgoblin_user_acquisition_report_june_2026.png"
+	/>
 
 	<!-- Structured Data for Report and NewsArticle -->
 	{@html `<script type="application/ld+json">${JSON.stringify({
@@ -160,7 +169,7 @@
 				},
 				image: {
 					'@type': 'ImageObject',
-					url: 'https://appgoblin.info/appgoblin_screenshot.png'
+					url: 'https://appgoblin.info/previews/appgoblin_user_acquisition_report_june_2026.png'
 				},
 				audience: [
 					{
