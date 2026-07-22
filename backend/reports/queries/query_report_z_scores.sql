@@ -13,6 +13,7 @@ WITH my_advs AS (
         AND vcasr.run_at <= CAST(:target_week AS date)
         AND hcc.category_id = 1 AND cr.advertiser_store_app_id IS NOT NULL
 ),
+
 windowed_metrics AS (
     SELECT
         ga.store_app,
@@ -88,6 +89,7 @@ windowed_metrics AS (
             ROWS BETWEEN CURRENT ROW AND 1 FOLLOWING
         )
 ),
+
 final_calculation AS (
     SELECT
         wm.*,
@@ -150,6 +152,7 @@ final_calculation AS (
     INNER JOIN store_apps AS sa ON wm.store_app = sa.id
     WHERE wm.week_start = wm.target_week
 )
+
 SELECT
     target_week,
     store,
@@ -169,5 +172,4 @@ SELECT
     two_week_growth_pct,
     momentum_pct,
     has_reliable_baseline
-FROM final_calculation
-;
+FROM final_calculation;
