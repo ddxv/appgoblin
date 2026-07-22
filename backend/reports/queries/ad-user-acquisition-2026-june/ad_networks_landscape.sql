@@ -33,7 +33,6 @@ WITH creative_ad_networks AS (
         AND had.domain_name IS NOT NULL
         AND cc.category_id = 1
         AND hc.id != 48
-        AND cr.advertiser_store_app_id IS NOT NULL
     UNION ALL
     SELECT DISTINCT
         cr.id AS creative_record_id,

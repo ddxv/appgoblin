@@ -22,9 +22,12 @@ interface AppAdImpactGrowthData {
 	app_name: string;
 	store_id: string;
 	icon_128: string;
+	category: string;
 	in_app_purchases: boolean;
 	ad_supported: boolean;
 	weekly_installs: number;
+	weekly_revenue_estimate: number;
+	monthly_active_users: number;
 	weekly_percent_increase: number;
 	baseline_installs: number;
 	baseline_installs_pct: number;
@@ -131,6 +134,8 @@ interface AppReachData {
 	advertiser_installs: number | null;
 	unique_creatives: number;
 	unique_publishers: number;
+	estimated_buying_size_score: number;
+	buying_size_tier: string;
 	first_seen: string;
 	last_seen: string;
 	ad_network_domains: string;
@@ -142,9 +147,12 @@ interface AppReachData {
 interface ProcessedApp {
 	app_name: string;
 	store_id: string;
+	category: string;
 	best_week: string;
 	icon_128: string;
 	weekly_installs: number;
+	weekly_revenue_estimate: number;
+	monthly_active_users: number;
 	weekly_percent_increase: number;
 	baseline_installs: number;
 	baseline_installs_pct: number;
@@ -221,9 +229,12 @@ function processData(data: AppAdImpactGrowthData[]): ProcessedApp[] {
 			appsMap.set(row.store_id, {
 				app_name: row.app_name,
 				store_id: row.store_id,
+				category: row.category,
 				best_week: row.best_week,
 				icon_128: row.icon_128,
 				weekly_installs: row.weekly_installs,
+				weekly_revenue_estimate: row.weekly_revenue_estimate,
+				monthly_active_users: row.monthly_active_users,
 				weekly_percent_increase: row.weekly_percent_increase,
 				baseline_installs: row.baseline_installs,
 				baseline_installs_pct: row.baseline_installs_pct,
@@ -330,7 +341,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 	const avgGrowth =
 		appsWithWowGrowth.length > 0
 			? appsWithWowGrowth.reduce((sum, app) => sum + app.wow_growth_pct, 0) /
-				appsWithWowGrowth.length
+			appsWithWowGrowth.length
 			: 0;
 	const totalCreatives = apps.reduce((sum, app) => sum + app.creative_count, 0);
 
@@ -362,10 +373,10 @@ export const load: PageServerLoad = async ({ locals }) => {
 			avgPubCount:
 				reachTiers.elite.length > 0
 					? Math.round(
-							(reachTiers.elite.reduce((sum, app) => sum + app.pub_count, 0) /
-								reachTiers.elite.length) *
-								10
-						) / 10
+						(reachTiers.elite.reduce((sum, app) => sum + app.pub_count, 0) /
+							reachTiers.elite.length) *
+						10
+					) / 10
 					: 0,
 			totalInstalls: reachTiers.elite.reduce((sum, app) => sum + app.weekly_installs, 0)
 		},
@@ -374,10 +385,10 @@ export const load: PageServerLoad = async ({ locals }) => {
 			avgPubCount:
 				reachTiers.wide.length > 0
 					? Math.round(
-							(reachTiers.wide.reduce((sum, app) => sum + app.pub_count, 0) /
-								reachTiers.wide.length) *
-								10
-						) / 10
+						(reachTiers.wide.reduce((sum, app) => sum + app.pub_count, 0) /
+							reachTiers.wide.length) *
+						10
+					) / 10
 					: 0,
 			totalInstalls: reachTiers.wide.reduce((sum, app) => sum + app.weekly_installs, 0)
 		},
@@ -386,10 +397,10 @@ export const load: PageServerLoad = async ({ locals }) => {
 			avgPubCount:
 				reachTiers.targeted.length > 0
 					? Math.round(
-							(reachTiers.targeted.reduce((sum, app) => sum + app.pub_count, 0) /
-								reachTiers.targeted.length) *
-								10
-						) / 10
+						(reachTiers.targeted.reduce((sum, app) => sum + app.pub_count, 0) /
+							reachTiers.targeted.length) *
+						10
+					) / 10
 					: 0,
 			totalInstalls: reachTiers.targeted.reduce((sum, app) => sum + app.weekly_installs, 0)
 		},
@@ -401,7 +412,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 	};
 
 	const topReachApps = [...rawAppReachData]
-		.sort((a, b) => b.unique_publishers - a.unique_publishers)
+		.sort((a, b) => (b.estimated_buying_size_score ?? 0) - (a.estimated_buying_size_score ?? 0))
 		.map((app) => ({
 			...app,
 			ad_networks: parsePgArray(app.ad_network_domains).map((domain) => ({

@@ -1,8 +1,8 @@
 [
   {
     "phash": "6b842f953e61",
-    "md5_hash": "b563584f9ded7d5b44ad9f483c1c9c02",
-    "file_extension": "webm",
+    "md5_hash": "deb7492162db33f4f4e945ee2a187f36",
+    "file_extension": "mp4",
     "advertiser_count": 1,
     "publisher_count": 71,
     "first_seen": "2026-06-01T01:49:55.526",
@@ -12,8 +12,8 @@
   },
   {
     "phash": "2acaf57cdcdc",
-    "md5_hash": "2056a2dde0d46dd7bbcdaa708d2ad5fa",
-    "file_extension": "webm",
+    "md5_hash": "4433b95958a07ca7613ba1941e50cac4",
+    "file_extension": "mp4",
     "advertiser_count": 1,
     "publisher_count": 41,
     "first_seen": "2026-06-04T00:43:14.527",
@@ -23,7 +23,7 @@
   },
   {
     "phash": "7b9e3fc6e561",
-    "md5_hash": "828181b2ac43b934f9564592a7779e02",
+    "md5_hash": "f4995255d0090c1da33469fd09d91377",
     "file_extension": "mp4",
     "advertiser_count": 1,
     "publisher_count": 40,
@@ -34,7 +34,7 @@
   },
   {
     "phash": "ce37cccf7fee",
-    "md5_hash": "9e9ee043342ea67da8d5354af94b165e",
+    "md5_hash": "7dc6977525c6eb5eaad4b21681ae635f",
     "file_extension": "mp4",
     "advertiser_count": 1,
     "publisher_count": 39,
@@ -67,7 +67,7 @@
   },
   {
     "phash": "66b93398ce66",
-    "md5_hash": "23fd2763511a32aec31e89e2c4aa4bb9",
+    "md5_hash": "32fc55702c1910822fed6f819a7569c6",
     "file_extension": "mp4",
     "advertiser_count": 1,
     "publisher_count": 34,
@@ -89,7 +89,7 @@
   },
   {
     "phash": "9ffafbbdc6e1",
-    "md5_hash": "12a80ba342ea67522aafc060152e2076",
+    "md5_hash": "169328b689a45d31f4959e95b8dce8ad",
     "file_extension": "webm",
     "advertiser_count": 1,
     "publisher_count": 32,
@@ -100,7 +100,7 @@
   },
   {
     "phash": "12949d9ff95e",
-    "md5_hash": "9762735e93ebf0d1782eb4df11aaea18",
+    "md5_hash": "19abdd9a1e9eb789a92a0e6045bb41cf",
     "file_extension": "webm",
     "advertiser_count": 1,
     "publisher_count": 30,

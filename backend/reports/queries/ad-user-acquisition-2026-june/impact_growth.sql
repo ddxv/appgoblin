@@ -8,6 +8,9 @@ WITH advertiser_z_scores AS (
             sazh.app_name,
             sazh.store_id,
             sazh.target_week_installs,
+            sazh.target_week_ad_revenue,
+            sazh.target_week_iap_revenue,
+            sazh.target_week_mau,
             sazh.weekly_installs_pct,
             sazh.baseline_installs,
             sazh.baseline_installs_pct,
@@ -73,9 +76,11 @@ main_results AS (
         adv.store_app,
         adv.store_id,
         adv_app.icon_128,
+        adv_app.category,
         adv.in_app_purchases,
         adv.ad_supported,
         adv.target_week_installs AS weekly_installs,
+        adv.target_week_mau AS monthly_active_users,
         adv.weekly_installs_pct AS weekly_percent_increase,
         adv.baseline_installs,
         adv.baseline_installs_pct,
@@ -91,6 +96,8 @@ main_results AS (
         hc.logo_url AS host_company_logo_url,
         iad.domain_name AS initial_ad_domain,
         ic.logo_url AS initial_company_logo_url,
+        coalesce(adv.target_week_iap_revenue, 0)
+        + coalesce(adv.target_week_ad_revenue, 0) AS weekly_revenue_estimate,
         nullif(
             array_agg(DISTINCT am.mmp_domain) FILTER (
                 WHERE am.mmp_domain IS NOT NULL
@@ -112,7 +119,9 @@ main_results AS (
         count(DISTINCT pub.id) AS pub_count
     FROM creative_records AS cr
     LEFT JOIN creative_assets AS ca ON cr.creative_asset_id = ca.id
-    LEFT JOIN store_apps AS adv_app ON cr.advertiser_store_app_id = adv_app.id
+    LEFT JOIN
+        frontend.store_apps_overview AS adv_app
+        ON cr.advertiser_store_app_id = adv_app.id
     INNER JOIN advertiser_z_scores AS adv ON adv_app.id = adv.store_app
     LEFT JOIN api_calls AS ac ON cr.api_call_id = ac.id
     LEFT JOIN version_code_api_scan_results AS pub
@@ -137,9 +146,13 @@ main_results AS (
         adv.store_app,
         adv.store_id,
         adv_app.icon_128,
+        adv_app.category,
         adv.in_app_purchases,
         adv.ad_supported,
         adv.target_week_installs,
+        adv.target_week_ad_revenue,
+        adv.target_week_iap_revenue,
+        adv.target_week_mau,
         adv.weekly_installs_pct,
         adv.baseline_installs,
         adv.baseline_installs_pct,
@@ -165,9 +178,12 @@ best_week_results AS (
         app_name,
         store_id,
         icon_128,
+        category,
         in_app_purchases,
         ad_supported,
         weekly_installs,
+        weekly_revenue_estimate,
+        monthly_active_users,
         weekly_percent_increase,
         baseline_installs,
         baseline_installs_pct,
@@ -195,9 +211,12 @@ SELECT
     app_name,
     store_id,
     icon_128,
+    category,
     in_app_purchases,
     ad_supported,
     weekly_installs,
+    weekly_revenue_estimate,
+    monthly_active_users,
     weekly_percent_increase,
     baseline_installs,
     baseline_installs_pct,

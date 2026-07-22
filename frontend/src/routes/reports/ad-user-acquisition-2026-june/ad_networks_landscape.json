@@ -6,9 +6,20 @@
     "all_domains": [
       "google.com"
     ],
-    "publisher_count": 7425,
+    "publisher_count": 8520,
     "advertiser_count": 1242,
-    "creatives_count": 5862
+    "creatives_count": 6835
+  },
+  {
+    "ad_network_name": "AppLovin",
+    "ad_network_domain": "applovin.com",
+    "company_logo_url": "company-logos/applovin.com/logo_200x200.jpeg",
+    "all_domains": [
+      "applovin.com"
+    ],
+    "publisher_count": 1780,
+    "advertiser_count": 0,
+    "creatives_count": 1425
   },
   {
     "ad_network_name": "BidEase",
@@ -17,9 +28,20 @@
     "all_domains": [
       "bidease.com"
     ],
-    "publisher_count": 627,
+    "publisher_count": 1158,
     "advertiser_count": 25,
-    "creatives_count": 172
+    "creatives_count": 281
+  },
+  {
+    "ad_network_name": "Yandex",
+    "ad_network_domain": "yandex.com",
+    "company_logo_url": "company-logos/yandex.com/logo_200x200.jpeg",
+    "all_domains": [
+      "yandex.com"
+    ],
+    "publisher_count": 776,
+    "advertiser_count": 55,
+    "creatives_count": 1504
   },
   {
     "ad_network_name": "Unity",
@@ -29,9 +51,9 @@
       "unity.com",
       "unity3d.com"
     ],
-    "publisher_count": 562,
+    "publisher_count": 565,
     "advertiser_count": 82,
-    "creatives_count": 285
+    "creatives_count": 288
   },
   {
     "ad_network_name": "Criteo",
@@ -40,54 +62,9 @@
     "all_domains": [
       "criteo.com"
     ],
-    "publisher_count": 412,
+    "publisher_count": 547,
     "advertiser_count": 0,
-    "creatives_count": 211
-  },
-  {
-    "ad_network_name": "Yandex",
-    "ad_network_domain": "yandex.com",
-    "company_logo_url": "company-logos/yandex.com/logo_200x200.jpeg",
-    "all_domains": [
-      "yandex.com"
-    ],
-    "publisher_count": 266,
-    "advertiser_count": 55,
-    "creatives_count": 514
-  },
-  {
-    "ad_network_name": "InMobi",
-    "ad_network_domain": "inmobi.com",
-    "company_logo_url": "company-logos/inmobi.com/logo_200x200.jpeg",
-    "all_domains": [
-      "inmobi.com"
-    ],
-    "publisher_count": 239,
-    "advertiser_count": 7,
-    "creatives_count": 123
-  },
-  {
-    "ad_network_name": "Digital Turbine",
-    "ad_network_domain": "digitalturbine.com",
-    "company_logo_url": "company-logos/digitalturbine.com/logo_200x200.jpeg",
-    "all_domains": [
-      "appreciate.mobi",
-      "fyber.com"
-    ],
-    "publisher_count": 171,
-    "advertiser_count": 25,
-    "creatives_count": 192
-  },
-  {
-    "ad_network_name": "Remerge",
-    "ad_network_domain": "remerge.io",
-    "company_logo_url": "company-logos/remerge.io/logo_200x200.jpeg",
-    "all_domains": [
-      "remerge.io"
-    ],
-    "publisher_count": 115,
-    "advertiser_count": 3,
-    "creatives_count": 56
+    "creatives_count": 273
   },
   {
     "ad_network_name": "Affle",
@@ -98,9 +75,20 @@
       "revx.io",
       "youappi.com"
     ],
-    "publisher_count": 102,
+    "publisher_count": 514,
     "advertiser_count": 4,
-    "creatives_count": 30
+    "creatives_count": 165
+  },
+  {
+    "ad_network_name": "Remerge",
+    "ad_network_domain": "remerge.io",
+    "company_logo_url": "company-logos/remerge.io/logo_200x200.jpeg",
+    "all_domains": [
+      "remerge.io"
+    ],
+    "publisher_count": 488,
+    "advertiser_count": 3,
+    "creatives_count": 126
   },
   {
     "ad_network_name": "Mobvista",
@@ -109,9 +97,55 @@
     "all_domains": [
       "mintegral.com"
     ],
-    "publisher_count": 93,
+    "publisher_count": 268,
     "advertiser_count": 40,
-    "creatives_count": 86
+    "creatives_count": 222
+  },
+  {
+    "ad_network_name": "InMobi",
+    "ad_network_domain": "inmobi.com",
+    "company_logo_url": "company-logos/inmobi.com/logo_200x200.jpeg",
+    "all_domains": [
+      "inmobi.com"
+    ],
+    "publisher_count": 240,
+    "advertiser_count": 7,
+    "creatives_count": 124
+  },
+  {
+    "ad_network_name": "Digital Turbine",
+    "ad_network_domain": "digitalturbine.com",
+    "company_logo_url": "company-logos/digitalturbine.com/logo_200x200.jpeg",
+    "all_domains": [
+      "adcolony.com",
+      "appreciate.mobi",
+      "fyber.com"
+    ],
+    "publisher_count": 183,
+    "advertiser_count": 25,
+    "creatives_count": 201
+  },
+  {
+    "ad_network_name": "Mediaocean",
+    "ad_network_domain": "mediaocean.com",
+    "company_logo_url": "company-logos/mediaocean.com/logo_200x200.jpeg",
+    "all_domains": [
+      "innovid.com"
+    ],
+    "publisher_count": 123,
+    "advertiser_count": 0,
+    "creatives_count": 46
+  },
+  {
+    "ad_network_name": "Opera",
+    "ad_network_domain": "opera.com",
+    "company_logo_url": "company-logos/opera.com/logo_200x200.jpeg",
+    "all_domains": [
+      "opera.com"
+    ],
+    "publisher_count": 102,
+    "advertiser_count": 1,
+    "creatives_count": 32
   },
   {
     "ad_network_name": "Adikteev",
@@ -120,64 +154,30 @@
     "all_domains": [
       "adikteev.com"
     ],
-    "publisher_count": 84,
+    "publisher_count": 99,
     "advertiser_count": 1,
-    "creatives_count": 11
+    "creatives_count": 14
   },
   {
-    "ad_network_name": "Appodeal",
-    "ad_network_domain": "appodeal.com",
-    "company_logo_url": "company-logos/appodeal.com/logo_200x200.jpeg",
+    "ad_network_name": "Bigabid",
+    "ad_network_domain": "bigabid.com",
+    "company_logo_url": "company-logos/bigabid.com/logo_200x200.jpeg",
     "all_domains": [
-      "appodeal.com",
-      "bidmachine.io"
+      "bigabid.com"
     ],
-    "publisher_count": 64,
-    "advertiser_count": 5,
-    "creatives_count": 73
+    "publisher_count": 80,
+    "advertiser_count": 3,
+    "creatives_count": 27
   },
   {
-    "ad_network_name": "TutoADS",
-    "ad_network_domain": "tutoads.tv",
-    "company_logo_url": "company-logos/tutoads.tv/logo_200x200.jpeg",
+    "ad_network_name": "One Signal",
+    "ad_network_domain": "onesignal.com",
+    "company_logo_url": "company-logos/onesignal.com/logo_200x200.jpeg",
     "all_domains": [
-      "tutoads.tv"
+      "onesignal.com"
     ],
-    "publisher_count": 64,
-    "advertiser_count": 23,
-    "creatives_count": 127
-  },
-  {
-    "ad_network_name": "Moloco",
-    "ad_network_domain": "moloco.com",
-    "company_logo_url": "company-logos/moloco.com/logo_200x200.jpeg",
-    "all_domains": [
-      "moloco.com"
-    ],
-    "publisher_count": 52,
-    "advertiser_count": 22,
-    "creatives_count": 43
-  },
-  {
-    "ad_network_name": "AppNexus",
-    "ad_network_domain": "appnexus.app",
-    "company_logo_url": "company-logos/appnexus.app/logo_200x200.jpeg",
-    "all_domains": [
-      "appnexus.app"
-    ],
-    "publisher_count": 37,
-    "advertiser_count": 0,
-    "creatives_count": 13
-  },
-  {
-    "ad_network_name": "Amazon",
-    "ad_network_domain": "amazon.com",
-    "company_logo_url": "company-logos/amazon.com/logo_200x200.jpeg",
-    "all_domains": [
-      "amazon.com"
-    ],
-    "publisher_count": 36,
-    "advertiser_count": 4,
-    "creatives_count": 35
+    "publisher_count": 68,
+    "advertiser_count": 2,
+    "creatives_count": 24
   }
 ]

@@ -344,7 +344,7 @@ def _estimate_buying_size(row: pd.Series) -> float:
     """Compute a rough ad buying size score for a single advertiser row."""
     import math
 
-    installs = _safe_float(row.get("weekly_installs"))
+    installs = _safe_float(row.get("weekly_installs") or row.get("advertiser_installs"))
     publishers = _safe_float(row.get("unique_publishers"))
     creatives = _safe_float(row.get("unique_creatives"))
     networks = len(
@@ -360,6 +360,36 @@ def _estimate_buying_size(row: pd.Series) -> float:
     creative_score = creatives * 5
     network_score = networks * 10
     return round(install_score + publisher_score + creative_score + network_score)
+
+
+def _maybe_add_buying_size(frame: pd.DataFrame) -> pd.DataFrame:
+    """Add ``estimated_buying_size_score`` (0–100 normalised) if the frame has the expected columns."""
+    needed = {"unique_publishers", "unique_creatives", "ad_network_domains"}
+    has_installs = (
+        "weekly_installs" in frame.columns or "advertiser_installs" in frame.columns
+    )
+    if needed.issubset(frame.columns) and has_installs:
+        raw = frame.apply(_estimate_buying_size, axis=1)
+        raw_min = raw.min()
+        raw_max = raw.max()
+        if raw_max > raw_min:
+            normalized = (
+                ((raw - raw_min) / (raw_max - raw_min) * 100).round(0).astype(int)
+            )
+            frame["estimated_buying_size_score"] = normalized
+        else:
+            frame["estimated_buying_size_score"] = 0
+            normalized = pd.Series(0, index=frame.index)
+
+        def _tier(score: int) -> str:
+            if score >= 50:
+                return "Top"
+            if score >= 20:
+                return "Big"
+            return "Medium"
+
+        frame["buying_size_tier"] = normalized.apply(_tier)
+    return frame
 
 
 def build_advertiser_csv(frame: pd.DataFrame, report_period: str) -> bytes:
@@ -434,10 +464,13 @@ def run_report(
     logger.info("Using query directory %s", context.query_dir)
     logger.info("Writing JSON into %s", context.route_dir)
 
-    try:
-        # --- Step 0: pre-compute weekly z-scores for the month ---
+    # --- Step 0: pre-compute weekly z-scores for the month ---
+    if len(selected_sections) == 1:
+        pass
+    else:
         run_z_scores_step(context, engine=dbcon.engine)
 
+    try:
         for sql_path in sql_files:
             section_name = sql_path.stem
 
@@ -458,6 +491,7 @@ def run_report(
             # --- default: JSON into route directory ---
             logger.info("Executing %s", sql_path.name)
             frame = execute_query(sql_path, params=params, engine=dbcon.engine)
+            frame = _maybe_add_buying_size(frame)
             output_path = context.route_dir / f"{section_name}.json"
             records = dataframe_to_records(frame)
             write_json_output(output_path, records)

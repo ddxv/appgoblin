@@ -4,16 +4,21 @@
 	import PopularCreativeCard from '$lib/PopularCreativeCard.svelte';
 	import Crown from 'lucide-svelte/icons/crown';
 	import Lock from 'lucide-svelte/icons/lock';
+	import RankBadge from '$lib/RankBadge.svelte';
 	import { createCreativeModal } from '$lib/stores/creativeModal.svelte';
 
 	import { formatNumber } from '$lib/utils/formatNumber.js';
 
 	let { data } = $props();
 
+	// Derived splits
+	const topGames = $derived(data.apps.filter((a) => a.category?.startsWith('game_')).slice(0, 10));
+	const topApps = $derived(data.apps.filter((a) => !a.category?.startsWith('game_')).slice(0, 10));
+
 	// Creative modal state
 	const creativeModal = createCreativeModal();
 	const reportUrl = 'https://appgoblin.info/reports/ad-user-acquisition-2026-june';
-	const reportPublishedDate = '2026-07-20';
+	const reportPublishedDate = '2026-07-22';
 	const reportTemporalCoverage = '2026-06-01/2026-06-30';
 
 	function formatPercent(num: number): string {
@@ -38,21 +43,14 @@
 
 	function getWoWGrowthColor(value?: number | null): string {
 		if (value == null) return 'text-surface-400';
-		if (value > 500) return 'text-amber-400';
-		if (value > 0) return 'text-emerald-400';
+		if (value > 500) return 'text-success-600-400';
+		if (value > 0) return 'text-success-800-200';
 		if (value < 0) return 'text-rose-400';
 		return 'text-surface-500';
 	}
 
 	function formatDecimal(num?: number | null, digits = 2): string {
 		return num == null ? '—' : num.toFixed(digits);
-	}
-
-	function getTrendColor(value?: number | null): string {
-		if (value == null) return 'text-surface-400';
-		if (value > 0) return 'text-emerald-400';
-		if (value < 0) return 'text-rose-400';
-		return 'text-surface-500';
 	}
 
 	function formatOptional(num?: number | null): string {
@@ -63,30 +61,41 @@
 		return num == null ? '—' : String(formatNumber(Math.round(num)));
 	}
 
+	function formatCurrency(num?: number | null): string {
+		return num == null ? '—' : '$' + formatNumber(Math.round(num));
+	}
+
 	function formatWeekDate(dateStr?: string | null): string {
 		if (!dateStr) return '—';
 		if (dateStr.includes('T')) return dateStr.split('T')[0];
 		return dateStr;
 	}
 
+	function getTierClass(tier: string): string {
+		if (tier === 'Top') return 'bg-amber-100 dark:bg-amber-900 text-amber-700 dark:text-amber-300';
+		if (tier === 'Big')
+			return 'bg-surface-200 dark:bg-surface-700 text-surface-600 dark:text-surface-300';
+		return 'bg-transparent text-surface-400';
+	}
+
 	const sectionTitleClass = 'text-2xl md:text-3xl font-bold text-surface-900-200';
 	const sectionContainerClass = 'mb-20 pt-10 md:pt-12 border-t border-surface-200-800';
-	const sectionHeaderSubtitleClass = 'text-sm md:text-base ml-3 md:ml-4 text-surface-600-400';
-	const sectionHeaderBaseClass = 'my-6 md:my-8 p-3 md:p-4 border-t border-l-4';
-	const sectionDescriptionClass = 'text-base md:text-lg space-y-3 md:space-y-4 mb-6';
+	const sectionHeaderSubtitleClass = 'text-sm md:text-base text-surface-600-400';
+	const sectionHeaderBaseClass = 'my-4 md:my-6 p-3 md:p-4 border-t border-l-1';
+	const sectionDescriptionClass = 'text-base md:text-lg space-y-3 md:space-y-4 mb-4 md:px-4';
 	const sectionIntroRowClass = 'flex items-center gap-2 mb-4 md:mb-6';
 
-	const publisherTextColor = 'text-base md:text-xl font-bold text-primary-500-600';
-	const creativesTextColor = 'text-base md:text-xl font-bold text-secondary-500-600';
-	const advertisersTextColor = 'text-base md:text-xl font-bold text-success-500-600';
-	const simpleMetricColor = 'text-base md:text-xl font-bold text-surface-900-200';
+	const publisherTextColor = 'font-bold text-primary-900-100';
+	const creativesTextColor = 'font-bold text-secondary-900-100';
+	const advertisersTextColor = 'font-bold text-success-900-100';
+	const simpleMetricColor = 'text-base md:text-large text-surface-900-200';
 	const sectionBodyClass = 'max-w-none mb-6';
 	const paragraphClass = 'text-base md:text-lg leading-relaxed text-surface-800-300';
 	const textMutedXsClass = 'text-xs text-surface-500-500';
 	const textMutedXsCapClass = `${textMutedXsClass} capitalize`;
 	const storeIdClass = `${textMutedXsClass} truncate max-w-[10rem] md:max-w-[16rem]`;
 	const appLinkClass =
-		'block text-sm md:text-base font-semibold truncate max-w-[10rem] md:max-w-[16rem] text-surface-900-200';
+		'block text-xs md:text-lg font-semibold truncate max-w-[10rem] md:max-w-[16rem] text-surface-900-200';
 	const tableRowClass =
 		'border-b border-surface-200-800 hover:bg-surface-100-900 transition-colors';
 	const tableAppIconClass =
@@ -94,14 +103,12 @@
 	const cardTableWrapperClass = 'card overflow-hidden';
 	const tableWrapperClass = 'report-table-shell report-table-scroll';
 	const tableHeaderText = 'text-xs md:text-sm font-bold text-surface-900-200';
-	const tableHeaderLeftClass = `px-1 md:px-2 py-2 text-left ${tableHeaderText}`;
-	const tableHeaderCenterClass = `px-1 md:px-2 py-2 text-center ${tableHeaderText}`;
-	const tableHeaderRightClass = `px-1 md:px-2 py-2 text-right ${tableHeaderText}`;
+	const tableHeaderLeftClass = `px-1 md:px-2 py-2 ${tableHeaderText}`;
+	const tableHeaderCenterClass = `px-1 md:px-2 py-2 ${tableHeaderText}`;
+	const tableHeaderRightClass = `px-1 md:px-2 py-2 ${tableHeaderText}`;
 	const companyButtonListClass = 'flex flex-wrap gap-0.5 md:gap-1';
-	const rankPillBaseClass =
-		'inline-flex items-center justify-center w-6 h-6 md:w-8 md:h-8 rounded-full font-bold text-xs md:text-sm';
 
-	const metricGridClass = 'p-4 bg-surface-100-900 rounded-lg border border-surface-200-800';
+	const metricGridClass = 'p-4 ';
 	const subCardTextClass = 'text-surface-600-400';
 	const tHeadClass = 'bg-surface-100-900';
 </script>
@@ -339,13 +346,14 @@
 			Mobile UA Report - {data.summary.reportPeriod}
 		</h1>
 		<p class="text-base sm:text-lg md:text-xl max-w-3xl mx-auto text-surface-700-400">
-			The ad campaigns behind June's fastest growing mobile apps. AppGoblin breaks the best
-			creatives we tracked in app ad campaigns.
+			AppGoblin's free report shares the top mobile app's buying ads in June 2026. See which mobile
+			ad networks were most popular for user acquisiton. See the video and image ads that were
+			performing best for the top advertisers.
 		</p>
 	</div>
 
 	<!-- Top CSV Download Banner -->
-	<div class="mb-10 rounded-xl border border-primary-500/30 bg-surface-100-900 p-4 md:p-5">
+	<div class="mb-10 border border-primary-500 p-4 md:p-5">
 		<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
 			<div class="flex items-center gap-2 min-w-0">
 				<Crown class="w-5 h-5 shrink-0 text-primary-600-400" aria-hidden="true" />
@@ -361,6 +369,7 @@
 					href="/reports/ad-user-acquisition-2026-june/advertisers-csv"
 					class="btn preset-filled-primary-500 inline-flex items-center gap-2 p-2 text-sm shrink-0"
 				>
+					<Crown class="w-5 h-5 shrink-0" aria-hidden="true" />
 					<span class="text-black">Download CSV</span>
 					<span class="text-black">↓</span>
 				</a>
@@ -376,31 +385,32 @@
 		</div>
 	</div>
 
-	<!-- May Snapshot -->
-	<div
-		class="mb-12 rounded-2xl border border-surface-200-800 bg-surface-100-900 p-5 md:p-7 shadow-sm"
-	>
-		<div class="flex flex-col md:flex-row md:items-center md:justify-between gap-2 md:gap-3 mb-5">
-			<h2 class="text-2xl md:text-3xl font-bold text-surface-900-200">
-				App advertising overview - June 2026
-			</h2>
-			<div class="text-sm md:text-base text-surface-600-400">What stood out this month</div>
-		</div>
-
+	<div class="mb-12 p-5">
 		<div class="grid grid-cols-1 xl:grid-cols-12 gap-5 md:gap-6 xl:items-stretch">
 			<div class="space-y-4 xl:col-span-4">
-				<div class="rounded-xl bg-primary-500-600 text-primary-contrast-500 p-5">
-					<div class="text-xl md:text-2xl font-bold leading-tight">
-						Dig into June 2026's biggest mobile apps and games ad buyers.
-					</div>
+				<div class="rounded-lg bg-primary-100-900 p-5">
+					<h2 class="text-xl md:text-3xl font-bold leading-tight">June 2026's top ad buyers</h2>
 				</div>
 
-				<div
-					class="rounded-xl border border-surface-200 dark:border-surface-700 p-4 md:p-5 bg-white/80 dark:bg-surface-900/80"
-				>
-					<div class="text-base md:text-lg font-semibold mb-3">Top Advertising Apps</div>
+				<div class="rounded-lg border border-surface-200-800 p-4 md:p-5">
+					<div class="text-base md:text-lg font-semibold mb-3">Top Games</div>
 					<div class="grid grid-cols-5 sm:grid-cols-10 xl:grid-cols-5 gap-2 md:gap-3 mb-4">
-						{#each data.apps.slice(0, 10) as app}
+						{#each topGames as app}
+							<a href="/apps/{app.store_id}" class="group" title={app.app_name}>
+								<img
+									src="https://media.appgoblin.info/app-icons/{app.store_id}/{app.icon_128}"
+									alt={app.app_name}
+									class="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-xl border border-surface-200 dark:border-surface-700 shadow-sm group-hover:scale-105 transition-transform"
+									onerror={(e) =>
+										((e.currentTarget as HTMLImageElement).src = '/default_company_logo.png')}
+								/>
+							</a>
+						{/each}
+					</div>
+
+					<div class="text-base md:text-lg font-semibold mb-3">Top Apps</div>
+					<div class="grid grid-cols-5 sm:grid-cols-10 xl:grid-cols-5 gap-2 md:gap-3 mb-4">
+						{#each topApps as app}
 							<a href="/apps/{app.store_id}" class="group" title={app.app_name}>
 								<img
 									src="https://media.appgoblin.info/app-icons/{app.store_id}/{app.icon_128}"
@@ -427,19 +437,19 @@
 				</div>
 
 				<div class="grid grid-cols-3 gap-3 text-center">
-					<div class="rounded-lg bg-primary-500-600 p-3 shadow-sm">
+					<div class="rounded-lg bg-primary-100-900 p-3 shadow-sm">
 						<div class="text-xl md:text-2xl font-bold text-primary-contrast-500">
 							{formatOptional(data.summary.totalApps)}
 						</div>
 						<div class="text-sm font-bold text-primary-contrast-500">Apps</div>
 					</div>
-					<div class="rounded-lg bg-secondary-500-600 p-3 shadow-sm">
+					<div class="rounded-lg bg-secondary-100-900 p-3 shadow-sm">
 						<div class="text-xl md:text-2xl font-bold text-secondary-contrast-500">
 							{formatOptional(data.summary.advertisers)}
 						</div>
 						<div class="text-sm font-bold text-secondary-contrast-500">Advertisers</div>
 					</div>
-					<div class="rounded-lg bg-success-500-600 p-3 shadow-sm">
+					<div class="rounded-lg bg-primary-100-900 p-3 shadow-sm">
 						<div class="text-xl md:text-2xl font-bold text-success-contrast-500">
 							{formatOptional(data.summary.adtechCompanies)}
 						</div>
@@ -448,8 +458,8 @@
 				</div>
 			</div>
 
-			<div class="xl:col-span-8 xl:h-full xl:flex xl:flex-col">
-				<div class="featured-creatives-strip xl:flex-1">
+			<div class="xl:col-span-6">
+				<div class="featured-creatives-strip">
 					{#each [data.popularCreatives[2], data.popularCreatives[8], data.popularCreatives[5]] as creative, index}
 						<div class="featured-creative-slide">
 							<PopularCreativeCard
@@ -474,7 +484,7 @@
 	<div class={sectionContainerClass}>
 		<div class="mb-16">
 			<!-- Section Header -->
-			<div class={`${sectionHeaderBaseClass} border-l-primary-500-600`}>
+			<div class={`${sectionHeaderBaseClass}`}>
 				<h2 class={sectionTitleClass}>Summary</h2>
 				<p class={sectionHeaderSubtitleClass}>
 					Key findings and performance overview for {data.summary.reportPeriod}
@@ -482,7 +492,7 @@
 			</div>
 
 			<!-- Content -->
-			<div>
+			<div class="px-2 md:px-4">
 				<div class="max-w-none">
 					<p class={paragraphClass}>
 						In {data.summary.reportPeriod}, AppGoblin analyzed
@@ -523,7 +533,7 @@
 	<!-- SECTION 2: AD IMPACT ON INSTALLS -->
 	<!-- ========================================= -->
 	<div class={sectionContainerClass}>
-		<div class={`${sectionHeaderBaseClass} border-l-success-500-600`}>
+		<div class={`${sectionHeaderBaseClass}`}>
 			<h2 class={sectionTitleClass}>Advertising Apps that saw the Best Weekly Install Growth</h2>
 			<p class={sectionHeaderSubtitleClass}>
 				These apps saw the best week on week install growth while at the same time running ad
@@ -540,7 +550,7 @@
 				advertising via Google's ad network and using AppMetrica and AppsFlyer for attribution.
 			</p>
 			<p>
-				A smaller app that saw big % gains in June 2026 was <span class={publisherTextColor}
+				A newer app that exploded in June 2026 was <span class={publisherTextColor}
 					>{data.apps[1].app_name}</span
 				>
 				with
@@ -564,6 +574,8 @@
 							<th class={`${tableHeaderLeftClass} hidden md:table-cell`}>Best Week</th>
 							<th class={tableHeaderRightClass}>Installs (week)</th>
 							<th class={`${tableHeaderRightClass} hidden lg:table-cell`}>WoW Growth</th>
+							<th class={`${tableHeaderRightClass} hidden xl:table-cell`}>Rev. Est.</th>
+							<th class={`${tableHeaderRightClass} hidden xl:table-cell`}>MAU</th>
 							<th class={tableHeaderCenterClass}>Ad Creatives</th>
 							<th class={tableHeaderCenterClass}>Ad Networks</th>
 							<th class={`${tableHeaderCenterClass} hidden lg:table-cell`}>MMP</th>
@@ -572,12 +584,8 @@
 					<tbody>
 						{#each data.apps as app, index}
 							<tr class={tableRowClass}>
-								<td class="px-1 md:px-4 py-2 md:py-4">
-									<span
-										class={`${rankPillBaseClass} bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300`}
-									>
-										{index + 1}
-									</span>
+								<td class="px-1 md:px-4 py-2 md:py-4 text-center">
+									<RankBadge rank={index + 1} />
 								</td>
 								<td class="px-1 md:px-4 py-2 md:py-4">
 									<a href="/apps/{app.store_id}" class="flex items-center gap-2 md:gap-3 min-w-0">
@@ -601,12 +609,12 @@
 								<td
 									class="hidden md:table-cell px-1 md:px-4 py-2 md:py-4 text-right whitespace-nowrap"
 								>
-									<div class="text-xs md:text-lg font-semibold">
+									<div class={`text-xs md:text-lg ${simpleMetricColor}`}>
 										{formatWeekDate(app.best_week)}
 									</div>
 								</td>
 								<td class="px-1 md:px-4 py-2 md:py-4 text-right">
-									<div class={`text-xs md:text-lg font-bold ${simpleMetricColor}`}>
+									<div class={`text-xs md:text-lg ${simpleMetricColor}`}>
 										{formatNumber(app.weekly_installs)}
 									</div>
 									<div class={textMutedXsClass}>
@@ -616,10 +624,22 @@
 								<td
 									class="hidden lg:table-cell px-1 md:px-4 py-2 md:py-4 text-right whitespace-nowrap"
 								>
-									<div
-										class={`text-xs md:text-base font-bold ${getWoWGrowthColor(app.wow_growth_pct)}`}
-									>
+									<div class={`text-xs md:text-lg ${getWoWGrowthColor(app.wow_growth_pct)}`}>
 										{formatWoWGrowth(app.wow_growth_pct)}
+									</div>
+								</td>
+								<td
+									class="hidden xl:table-cell px-1 md:px-4 py-2 md:py-4 text-right whitespace-nowrap"
+								>
+									<div class={`text-xs md:text-lg ${simpleMetricColor}`}>
+										{formatCurrency(app.weekly_revenue_estimate)}
+									</div>
+								</td>
+								<td
+									class="hidden xl:table-cell px-1 md:px-4 py-2 md:py-4 text-right whitespace-nowrap"
+								>
+									<div class={`text-xs md:text-lg ${simpleMetricColor}`}>
+										{formatOptional(app.monthly_active_users)}
 									</div>
 								</td>
 								<td class="px-1 md:px-4 py-2 md:py-4 text-center">
@@ -695,7 +715,7 @@
 	<!-- ========================================= -->
 	<div class={sectionContainerClass}>
 		<!-- Section Header -->
-		<div class={`${sectionHeaderBaseClass} border-l-warning-500-600`}>
+		<div class={`${sectionHeaderBaseClass}`}>
 			<h2 class={sectionTitleClass}>Most Popular Video Creatives</h2>
 			<p class={sectionHeaderSubtitleClass}>
 				Video ads with the widest mobile app distribution during {data.summary.reportPeriod}
@@ -742,7 +762,7 @@
 	<!-- ========================================= -->
 	<div class={sectionContainerClass}>
 		<!-- Section Header -->
-		<div class={`${sectionHeaderBaseClass} border-l-secondary-500-600`}>
+		<div class={`${sectionHeaderBaseClass}`}>
 			<h2 class={sectionTitleClass}>Ad Network Landscape</h2>
 			<p class={sectionHeaderSubtitleClass}>
 				The advertising platforms that powered {data.summary.reportPeriod} user acquisition campaigns
@@ -751,38 +771,33 @@
 		<!-- Network Metrics Grid -->
 		<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
 			<div class={metricGridClass}>
-				<div class={`${subCardTextClass} mb-1`}>Publishers Apps That Ran Ads</div>
-				<div class="text-3xl font-bold text-emerald-400">
+				<div class={`mb-1`}>Publishers Apps That Ran Ads</div>
+				<div class="text-3xl font-bold">
 					{data.networkStats.totalPublishers.toLocaleString()}
 				</div>
 			</div>
 			<div class={metricGridClass}>
 				<div class={`${subCardTextClass} mb-1`}>App Advertisers</div>
-				<div class="text-3xl font-bold text-purple-400">
+				<div class="text-3xl font-bold">
 					{data.summary.advertisers.toLocaleString()}
 				</div>
 			</div>
 			<div class={metricGridClass}>
 				<div class={`${subCardTextClass} mb-1`}>Ad Creatives (video & images)</div>
-				<div class="text-3xl font-bold text-pink-600">
+				<div class="text-3xl font-bold">
 					{data.networkStats.totalNetworkCreatives.toLocaleString()}
 				</div>
 			</div>
 		</div>
 		<!-- Content -->
-		<div class={sectionIntroRowClass}>
-			<span class="text-3xl">🌐</span>
-			<h3 class="text-xl font-bold text-indigo-900 dark:text-indigo-100">Network Distribution</h3>
-		</div>
 		<div class={sectionDescriptionClass}>
 			<p>
-				June 2026 shows a mix of SDK inventory and programmatic distribution. In this sample,
-				<a href="/companies/{data.adNetworks[0].ad_network_domain}"
-					>{data.adNetworks[0].ad_network_name}</a
-				>
-				led the network table with {data.adNetworks[0].publisher_count.toLocaleString()} publisher apps
-				and
-				{data.adNetworks[0].advertiser_count.toLocaleString()} advertisers.
+				June 2026 shows <a href="/companies/bidease.com">BidEase</a> rising to with a huge 627 apps found
+				publishing their ads.
+			</p>
+			<p>
+				Another noteable rising ad network this month was <a href="/companies/criteo.com">Criteo</a> who
+				saw a rise in mobile gaming ads.
 			</p>
 			<div class="list-disc list-inside space-y-1 px-8">
 				<li>
@@ -791,8 +806,8 @@
 				</li>
 			</div>
 		</div>
-		<h4 class="text-large font-bold text-indigo-900 dark:text-indigo-100">Note on Methodology</h4>
 		<div class={sectionDescriptionClass}>
+			<p>Note on Methodology</p>
 			<p class="text-sm">
 				When looking at this data its important to keep the context of how it was collected. The
 				data is aggregated from API calls made by opening apps and watching the ad network
@@ -806,7 +821,7 @@
 			{#each data.adNetworks as network, index}
 				<a
 					href="/companies/{network.ad_network_domain}"
-					class="card p-4 border border-surface-200-800 hover:border-primary-500-600 transition-all duration-200 hover:shadow-lg flex flex-col"
+					class="card p-4 border border-surface-200-800 hover:border-primary-400-600 transition-all duration-200 hover:shadow-lg flex flex-col"
 				>
 					<!-- Network Header -->
 					<div class="flex items-center gap-3 mb-4">
@@ -834,50 +849,42 @@
 								</div>
 							{/if}
 						</div>
-						{#if index < 3}
-							<div
-								class={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
-									index === 0
-										? 'bg-warning-500-600 text-warning-contrast-500'
-										: index === 1
-											? 'bg-surface-400-600 text-surface-contrast-400'
-											: 'bg-secondary-500-600 text-secondary-contrast-500'
-								}`}
-							>
-								{index + 1}
-							</div>
-						{/if}
+						<RankBadge
+							rank={index + 1}
+							class="shrink-0"
+							numberClass="text-sm font-semibold text-surface-500-400"
+						/>
 					</div>
 
 					<!-- Stats Grid -->
 					<div class="grid grid-cols-2 gap-3 mb-3">
 						<div class="flex flex-col">
-							<div class="text-xs text-surface-500-500 mb-1">Publishers</div>
-							<div class="text-lg font-bold text-primary-600-400">
+							<div class="text-sm mb-1">Publishers</div>
+							<div>
 								{network.publisher_count.toLocaleString()}
 							</div>
 						</div>
 						<div class="flex flex-col">
-							<div class="text-xs text-surface-500-500 mb-1">Advertisers</div>
-							<div class="text-lg font-bold text-secondary-600-400">
+							<div class="text-sm mb-1">Advertisers Tracked</div>
+							<div>
 								{network.advertiser_count.toLocaleString()}
 							</div>
 						</div>
 					</div>
 
 					<!-- Market Share -->
-					<div class="pt-3 border-t border-surface-200-800">
+					<div class="pt-3 border-t border-surface-200-800 text-sm">
 						<div class="flex items-center justify-between mb-2">
-							<span class="text-sm text-surface-500-500">Market Share</span>
-							<span class="text-sm font-bold text-surface-900-200">
+							<span>Market Share</span>
+							<span>
 								{((network.publisher_count / data.networkStats.totalPublishers) * 100).toFixed(1)}%
 							</span>
 						</div>
 
 						<!-- Creatives Count -->
-						<div class="mt-3 flex items-center justify-between text-sm">
-							<span class="text-surface-500-500">Ad Creatives</span>
-							<span class="font-semibold text-success-600-400">
+						<div class="mt-3 flex items-center justify-between">
+							<span class="">Ad Creatives</span>
+							<span class="">
 								{network.creatives_count.toLocaleString()}
 							</span>
 						</div>
@@ -892,7 +899,7 @@
 	<!-- ========================================= -->
 	<div class={sectionContainerClass}>
 		<!-- Section Header -->
-		<div class={`${sectionHeaderBaseClass} border-l-primary-500-600`}>
+		<div class={`${sectionHeaderBaseClass}`}>
 			<h2 class={sectionTitleClass}>Campaign Reach Analysis</h2>
 			<p class={sectionHeaderSubtitleClass}>
 				Publisher distribution strategies and market penetration insights
@@ -927,6 +934,7 @@
 							<th class={tableHeaderLeftClass}>Advertising App</th>
 							<th class={tableHeaderRightClass}>Count of Apps with their Ads</th>
 							<th class={tableHeaderRightClass}>Ad Creatives</th>
+							<th class={`${tableHeaderRightClass} hidden lg:table-cell`}>Buying Power</th>
 							<th class={tableHeaderLeftClass}>Ad Networks</th>
 							<th class={`${tableHeaderCenterClass} hidden lg:table-cell`}>MMP</th>
 						</tr>
@@ -934,20 +942,8 @@
 					<tbody>
 						{#each data.appReachData.slice(0, 10) as app, index}
 							<tr class={tableRowClass}>
-								<td class="px-1 md:px-2 py-2 md:py-4">
-									<span
-										class={`${rankPillBaseClass} ${
-											index === 0
-												? 'bg-gradient-to-br from-yellow-400 to-yellow-600 text-white'
-												: index === 1
-													? 'bg-gradient-to-br from-gray-300 to-gray-500 text-white'
-													: index === 2
-														? 'bg-gradient-to-br from-orange-400 to-orange-600 text-white'
-														: 'bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300'
-										}`}
-									>
-										{index + 1}
-									</span>
+								<td class="px-1 md:px-2 py-2 md:py-4 text-center">
+									<RankBadge rank={index + 1} />
 								</td>
 								<td class="px-1 md:px-2 py-2 md:py-4">
 									<a
@@ -979,6 +975,17 @@
 								<td class="px-1 md:px-2 py-2 md:py-4 text-right">
 									<span class={creativesTextColor}>
 										{app.unique_creatives}
+									</span>
+								</td>
+								<td
+									class="hidden lg:table-cell px-1 md:px-2 py-2 md:py-4 text-center whitespace-nowrap"
+								>
+									<span
+										class="inline-block px-2 py-0.5 rounded text-xs font-bold {getTierClass(
+											app.buying_size_tier
+										)}"
+									>
+										{app.buying_size_tier}
 									</span>
 								</td>
 								<td class="px-1 md:px-2 py-2 md:py-4 min-w-[8rem]">
@@ -1028,7 +1035,7 @@
 	<!-- SECTION 6: NEW APPS THIS MONTH -->
 	<!-- ========================================= -->
 	<div class={sectionContainerClass}>
-		<div class={`${sectionHeaderBaseClass} border-l-secondary-500-600`}>
+		<div class={`${sectionHeaderBaseClass}`}>
 			<h2 class={sectionTitleClass}>Newly Released Apps that were Buying Ads in June 2026</h2>
 			<p class={sectionHeaderSubtitleClass}>
 				Brand new apps starting off running ad campaigns during {data.summary.reportPeriod}
@@ -1066,7 +1073,7 @@
 				<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
 					{#each data.newGames.slice(0, 10) as app (app.store_id)}
 						<div
-							class="card p-4 md:p-5 border border-surface-200-800 hover:border-primary-500-600 transition-all duration-200 hover:shadow-lg flex flex-col"
+							class="card p-4 md:p-5 border border-surface-200-800 hover:border-primary-400-600 transition-all duration-200 hover:shadow-lg flex flex-col"
 						>
 							<!-- Card Header -->
 							<a href="/apps/{app.store_id}" class="flex items-center gap-3 mb-3 group">
@@ -1202,7 +1209,7 @@
 				<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
 					{#each data.newApps.slice(0, 5) as app (app.store_id)}
 						<div
-							class="card p-4 md:p-5 border border-surface-200-800 hover:border-secondary-500-600 transition-all duration-200 hover:shadow-lg flex flex-col"
+							class="card p-4 md:p-5 border border-surface-200-800 hover:border-secondary-400-600 transition-all duration-200 hover:shadow-lg flex flex-col"
 						>
 							<!-- Card Header -->
 							<a href="/apps/{app.store_id}" class="flex items-center gap-3 mb-3 group">
@@ -1329,9 +1336,7 @@
 
 	<!-- CTA Section -->
 	<div class={sectionContainerClass}>
-		<div
-			class={`${sectionHeaderBaseClass} border-purple-200 dark:border-purple-800 pl-4 border-l-4 border-l-purple-500`}
-		>
+		<div class={`${sectionHeaderBaseClass} pl-4 border-l-1`}>
 			<h2 class={sectionTitleClass}>Want to leverage AppGoblin's insights?</h2>
 			<p class={sectionHeaderSubtitleClass}>Choose the next step that fits your team</p>
 		</div>

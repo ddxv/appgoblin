@@ -20,8 +20,14 @@ windowed_metrics AS (
         ga.week_start,
         ga.weekly_installs,
         ga.weekly_ratings,
+        ga.monthly_active_users,
+        ga.weekly_iap_revenue,
+        ga.weekly_ad_revenue,
         CAST(:target_week AS date) AS target_week,
         ga.weekly_installs AS target_week_installs,
+        ga.monthly_active_users AS target_week_mau,
+        ga.weekly_iap_revenue AS target_week_iap_revenue,
+        ga.weekly_ad_revenue AS target_week_ad_revenue,
         -- 2-Week and 4-Week Averages
         AVG(ga.weekly_installs) OVER w_2w AS installs_avg_2w,
         AVG(ga.weekly_installs) OVER w_4w AS installs_avg_4w,
@@ -140,14 +146,7 @@ final_calculation AS (
         END AS momentum_pct,
         -- Reliability
         b_std_installs IS NOT NULL
-        AND b_avg_installs > 0 AS has_reliable_baseline,
-        -- Ranking
-        ROW_NUMBER() OVER (
-            PARTITION BY sa.store
-            ORDER BY
-                (installs_avg_2w - b_avg_installs)::numeric
-                / NULLIF(b_std_installs, 0::numeric) DESC NULLS LAST
-        ) AS rn
+        AND b_avg_installs > 0 AS has_reliable_baseline
     FROM windowed_metrics AS wm
     INNER JOIN store_apps AS sa ON wm.store_app = sa.id
     WHERE wm.week_start = wm.target_week
@@ -162,6 +161,9 @@ SELECT
     in_app_purchases,
     ad_supported,
     target_week_installs,
+    target_week_mau,
+    target_week_iap_revenue,
+    target_week_ad_revenue,
     baseline_installs,
     baseline_installs_pct,
     weekly_installs_pct,
