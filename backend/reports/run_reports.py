@@ -38,6 +38,15 @@ REPORT_ROUTE_ROOT = MODULE_DIR.parent / "frontend" / "src" / "routes" / "reports
 DEFAULT_REPORT_PREFIX = "ad-user-acquisition-"
 MIN_SLUG_PARTS = 2
 
+# Z-score pre-computation step (runs before individual report SQL files)
+Z_SCORE_SQL_PATH = QUERY_ROOT / "query_report_z_scores.sql"
+Z_SCORE_TABLE = "store_app_z_scores_history_2026"
+
+# SQL section that generates the premium advertiser CSV (not committed to git)
+ADVERTISER_CSV_SECTION = "all_advertisers"
+# S3 prefix under PUBLIC_DATA_URL for report advertiser CSVs
+REPORTS_S3_PREFIX = "downloads/reports"
+
 
 @dataclass(frozen=True)
 class ReportContext:
@@ -168,6 +177,41 @@ def build_report_context(report_value: str) -> ReportContext:
     )
 
 
+def run_z_scores_step(context: ReportContext, engine: Engine) -> None:
+    """Delete and repopulate z-score history for every Monday in the report month.
+
+    Runs *before* individual report SQL files so that downstream queries
+    (``impact_growth``, ``new_advertisers``, etc.) see fresh data for the
+    ``store_app_z_scores_history_2026`` table.
+    """
+    if not Z_SCORE_SQL_PATH.is_file():
+        logger.warning("Z-score SQL file not found at %s — skipping", Z_SCORE_SQL_PATH)
+        return
+
+    sql_text = Z_SCORE_SQL_PATH.read_text(encoding="utf-8")
+    last_day = context.next_month_start_date - timedelta(days=1)
+
+    with engine.begin() as conn:
+        for week_ts in pd.date_range(
+            start=context.start_date, end=last_day, freq="W-MON"
+        ):
+            week_date: date = week_ts.date()
+            logger.info("Computing z-scores for target_week %s", week_date)
+
+            conn.execute(
+                text(f"DELETE FROM {Z_SCORE_TABLE} WHERE target_week = :week"),
+                {"week": week_date},
+            )
+
+            frame = pd.read_sql(text(sql_text), conn, params={"target_week": week_date})
+            if frame.empty:
+                logger.info("No z-score rows for week %s", week_date)
+                continue
+
+            frame.to_sql(Z_SCORE_TABLE, conn, if_exists="append", index=False)
+            logger.info("Inserted %s z-score rows for week %s", len(frame), week_date)
+
+
 def get_sql_files(
     query_dir: pathlib.Path, selected_sections: list[str]
 ) -> list[pathlib.Path]:
@@ -223,10 +267,165 @@ def write_json_output(output_path: pathlib.Path, records: list[dict[str, Any]]) 
     output_path.write_text(f"{json.dumps(records, indent=2)}\n", encoding="utf-8")
 
 
+def _build_advertiser_csv_s3_key(slug: str) -> str:
+    """Build the S3 object key for a report's advertiser CSV."""
+    return f"{REPORTS_S3_PREFIX}/{slug}/advertisers.csv"
+
+
+def upload_advertiser_csv(csv_bytes: bytes, slug: str) -> str:
+    """Upload the all-advertisers CSV to S3.
+
+    Returns the public download URL for logging.
+    """
+    import boto3
+
+    try:
+        from config import CONFIG  # noqa: PLC0415
+    except ModuleNotFoundError:
+        backend_dir = pathlib.Path(__file__).resolve().parents[1]
+        backend_dir_text = str(backend_dir)
+        if backend_dir_text not in sys.path:
+            sys.path.insert(0, backend_dir_text)
+        CONFIG = importlib.import_module("config").CONFIG  # noqa: N806
+
+    s3_config = CONFIG.get("digi-cloud")
+    if not s3_config:
+        message = (
+            "S3 upload requested but [public-s3] section is missing from config.toml"
+        )
+        raise RuntimeError(message)
+
+    s3_key = _build_advertiser_csv_s3_key(slug)
+    session = boto3.session.Session()
+    s3_client = session.client(
+        "s3",
+        region_name=s3_config["region_name"],
+        endpoint_url="https://" + s3_config["host"],
+        aws_access_key_id=s3_config["access_key_id"],
+        aws_secret_access_key=s3_config["secret_key"],
+    )
+    s3_client.put_object(
+        Bucket=s3_config["bucket"],
+        Key=s3_key,
+        Body=csv_bytes,
+        ContentType="text/csv; charset=utf-8",
+    )
+
+    # Build public URL for logging (assumes PUBLIC_DATA_URL + key pattern)
+    try:
+        from config import PUBLIC_DATA_URL  # noqa: PLC0415
+    except ModuleNotFoundError:
+        PUBLIC_DATA_URL = importlib.import_module(  # noqa: N806
+            "config"
+        ).PUBLIC_DATA_URL
+    return f"{PUBLIC_DATA_URL}{s3_key}"
+
+
+def _pg_array_to_semicolons(value: Any) -> str:
+    """Convert a PostgreSQL array string ``{a,b,c}`` to ``a; b``."""
+    if value is None:
+        return ""
+    text = str(value)
+    return text.strip("{}").replace(",", ";")
+
+
+def _safe_float(value: Any) -> float:
+    """Coerce *value* to float, treating NaN / None as 0."""
+    if value is None:
+        return 0.0
+    try:
+        result = float(value)
+    except (ValueError, TypeError):
+        return 0.0
+    return 0.0 if result != result else result  # NaN check
+
+
+def _estimate_buying_size(row: pd.Series) -> float:
+    """Compute a rough ad buying size score for a single advertiser row."""
+    import math
+
+    installs = _safe_float(row.get("weekly_installs"))
+    publishers = _safe_float(row.get("unique_publishers"))
+    creatives = _safe_float(row.get("unique_creatives"))
+    networks = len(
+        [
+            x
+            for x in str(row.get("ad_network_domains", "") or "").split(",")
+            if x.strip()
+        ]
+    )
+
+    install_score = math.log2(max(installs, 1)) * 2
+    publisher_score = publishers * 3
+    creative_score = creatives * 5
+    network_score = networks * 10
+    return round(install_score + publisher_score + creative_score + network_score)
+
+
+def build_advertiser_csv(frame: pd.DataFrame, report_period: str) -> bytes:
+    """Convert the raw ``all_advertisers`` DataFrame into the premium CSV format.
+
+    Expects columns matching the SQL query and returns UTF-8 CSV bytes with the
+    column schema shown on the report page (store_id, app_name, category, …).
+    """
+    if frame.empty:
+        return b""
+
+    out = frame.rename(
+        columns={
+            "advertiser_store_id": "store_id",
+            "advertiser_name": "app_name",
+            "advertiser_category": "category",
+            "advertiser_installs": "total_estimated_installs",
+            "developer_name": "developer",
+            "ad_network_domains": "ad_networks",
+            "mmp_domains": "mmp_providers",
+            "unique_creatives": "unique_creatives_count",
+        }
+    )
+
+    # Normalise PostgreSQL array columns to semicolon-separated strings
+    for col in ("ad_networks", "mmp_providers"):
+        if col in out.columns:
+            out[col] = out[col].apply(_pg_array_to_semicolons)
+
+    # Add computed columns
+    out["report_period"] = report_period
+    out["estimated_buying_size_score"] = out.apply(_estimate_buying_size, axis=1)
+
+    # Keep only the columns expected by consumers
+    csv_columns = [
+        "store_id",
+        "app_name",
+        "category",
+        "developer",
+        "report_period",
+        "weekly_installs",
+        "total_estimated_installs",
+        "unique_publishers",
+        "unique_creatives_count",
+        "ad_networks",
+        "mmp_providers",
+        "estimated_buying_size_score",
+    ]
+    out = out[[c for c in csv_columns if c in out.columns]]
+
+    # Sort by buying size descending
+    out = out.sort_values("estimated_buying_size_score", ascending=False)
+
+    return out.to_csv(index=False).encode("utf-8")
+
+
 def run_report(
-    context: ReportContext, server_name: str, selected_sections: list[str]
+    context: ReportContext,
+    server_name: str,
+    selected_sections: list[str],
 ) -> int:
-    """Execute all selected report queries and write JSON artifacts."""
+    """Execute all selected report queries and write JSON artifacts.
+
+    The ``all_advertisers`` section is uploaded as a CSV to S3 instead of
+    being written as JSON into the route directory.
+    """
     params = build_query_params(context)
     sql_files = get_sql_files(context.query_dir, selected_sections)
     dbcon = get_db_connection(server_name)
@@ -236,10 +435,30 @@ def run_report(
     logger.info("Writing JSON into %s", context.route_dir)
 
     try:
+        # --- Step 0: pre-compute weekly z-scores for the month ---
+        run_z_scores_step(context, engine=dbcon.engine)
+
         for sql_path in sql_files:
+            section_name = sql_path.stem
+
+            # --- all_advertisers: CSV path via S3 ---
+            if section_name == ADVERTISER_CSV_SECTION:
+                logger.info("Executing %s (CSV → S3)", sql_path.name)
+                frame = execute_query(sql_path, params=params, engine=dbcon.engine)
+                report_period = (
+                    calendar.month_name[context.start_date.month]
+                    + " "
+                    + str(context.start_date.year)
+                )
+                csv_bytes = build_advertiser_csv(frame, report_period)
+                public_url = upload_advertiser_csv(csv_bytes, context.slug)
+                logger.info("Uploaded %s rows to %s", len(frame), public_url)
+                continue
+
+            # --- default: JSON into route directory ---
             logger.info("Executing %s", sql_path.name)
             frame = execute_query(sql_path, params=params, engine=dbcon.engine)
-            output_path = context.route_dir / f"{sql_path.stem}.json"
+            output_path = context.route_dir / f"{section_name}.json"
             records = dataframe_to_records(frame)
             write_json_output(output_path, records)
             logger.info("Wrote %s rows to %s", len(records), output_path)
@@ -253,7 +472,11 @@ def main() -> int:
     """CLI entrypoint."""
     args = parse_args()
     context = build_report_context(args.report)
-    return run_report(context, server_name=args.server, selected_sections=args.sections)
+    return run_report(
+        context,
+        server_name=args.server,
+        selected_sections=args.sections,
+    )
 
 
 if __name__ == "__main__":

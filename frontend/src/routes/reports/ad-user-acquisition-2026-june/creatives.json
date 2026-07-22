@@ -1,29 +1,29 @@
 [
   {
     "phash": "6b842f953e61",
-    "md5_hash": "a8614b8cdfe843712efc89b32d4efbb8",
+    "md5_hash": "b563584f9ded7d5b44ad9f483c1c9c02",
     "file_extension": "webm",
     "advertiser_count": 1,
     "publisher_count": 71,
     "first_seen": "2026-06-01T01:49:55.526",
     "last_seen": "2026-06-30T05:16:40.844",
     "advertiser_store_id": "com.logoquiz.triviagame",
-    "advertiser_icon_128": null
+    "advertiser_icon_128": "98ca66846df36336_128.png"
   },
   {
     "phash": "2acaf57cdcdc",
-    "md5_hash": "fc5db0672aed471b0bb0db29aec33cdd",
+    "md5_hash": "2056a2dde0d46dd7bbcdaa708d2ad5fa",
     "file_extension": "webm",
     "advertiser_count": 1,
     "publisher_count": 41,
     "first_seen": "2026-06-04T00:43:14.527",
     "last_seen": "2026-06-30T22:34:30.645",
     "advertiser_store_id": "com.lionroar.puppydaycare",
-    "advertiser_icon_128": null
+    "advertiser_icon_128": "c12d054e377734f8_128.png"
   },
   {
     "phash": "7b9e3fc6e561",
-    "md5_hash": "9a6f5d03587ec338068c18115f942972",
+    "md5_hash": "828181b2ac43b934f9564592a7779e02",
     "file_extension": "mp4",
     "advertiser_count": 1,
     "publisher_count": 40,
@@ -41,7 +41,7 @@
     "first_seen": "2026-06-15T23:19:54.366",
     "last_seen": "2026-06-27T04:31:42.205",
     "advertiser_store_id": "com.snaptravel.core",
-    "advertiser_icon_128": null
+    "advertiser_icon_128": "cc993366cc99ce98_128.png"
   },
   {
     "phash": "5bbf3e6eb9ff",
@@ -52,7 +52,7 @@
     "first_seen": "2026-06-07T08:07:05.361",
     "last_seen": "2026-06-30T14:00:38.604",
     "advertiser_store_id": "com.trace.art.draw.drawing.paint",
-    "advertiser_icon_128": null
+    "advertiser_icon_128": "eaeca513d63c6944_128.png"
   },
   {
     "phash": "7f6d959a7bed",
@@ -67,7 +67,7 @@
   },
   {
     "phash": "66b93398ce66",
-    "md5_hash": "d734ac5d2cb0659760294de911e17cbe",
+    "md5_hash": "23fd2763511a32aec31e89e2c4aa4bb9",
     "file_extension": "mp4",
     "advertiser_count": 1,
     "publisher_count": 34,
@@ -85,22 +85,22 @@
     "first_seen": "2026-06-02T21:41:20.284",
     "last_seen": "2026-06-30T04:59:41.689",
     "advertiser_store_id": "com.pixel.art.coloring.color.number",
-    "advertiser_icon_128": null
+    "advertiser_icon_128": "f094cd1c9cfc318b_128.png"
   },
   {
     "phash": "9ffafbbdc6e1",
-    "md5_hash": "169328b689a45d31f4959e95b8dce8ad",
+    "md5_hash": "12a80ba342ea67522aafc060152e2076",
     "file_extension": "webm",
     "advertiser_count": 1,
     "publisher_count": 32,
     "first_seen": "2026-06-02T04:32:22.759",
     "last_seen": "2026-06-30T14:55:07.602",
     "advertiser_store_id": "com.pixel.art.coloring.color.number",
-    "advertiser_icon_128": null
+    "advertiser_icon_128": "f094cd1c9cfc318b_128.png"
   },
   {
     "phash": "12949d9ff95e",
-    "md5_hash": "19abdd9a1e9eb789a92a0e6045bb41cf",
+    "md5_hash": "9762735e93ebf0d1782eb4df11aaea18",
     "file_extension": "webm",
     "advertiser_count": 1,
     "publisher_count": 30,

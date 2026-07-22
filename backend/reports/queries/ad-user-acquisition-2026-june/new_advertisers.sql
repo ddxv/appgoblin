@@ -20,8 +20,9 @@ WITH new_apps AS (
         sao.in_app_purchases
     FROM frontend.store_apps_overview AS sao
     WHERE
-        sao.release_date >= :start_date - INTERVAL '30 days'
+        sao.release_date >= :start_date - INTERVAL '45 days'
         AND sao.release_date < :next_month_start_date
+        AND sao.created_at >= :start_date - INTERVAL '200 days'
 ),
 
 new_apps_with_ads AS (
