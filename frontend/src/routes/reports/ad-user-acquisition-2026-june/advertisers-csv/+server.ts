@@ -3,15 +3,10 @@ import { error } from '@sveltejs/kit';
 import { requireFullAuth } from '$lib/server/auth/auth';
 import { userHasTierAccess } from '$lib/server/subscription';
 
-/** Base URL of the public data bucket where run_reports.py uploads CSVs. */
 const PUBLIC_DATA_URL = 'https://data.appgoblin.info';
 
-/**
- * Build the S3 URL for a report's premium advertiser CSV.
- * Must match the key pattern in run_reports.py's _build_advertiser_csv_s3_key().
- */
 function buildCsvUrl(slug: string): string {
-	return `${PUBLIC_DATA_URL}/reports/${slug}/advertisers.csv`;
+	return `${PUBLIC_DATA_URL}/downloads/reports/${slug}/advertisers.csv`;
 }
 
 export async function GET(event: RequestEvent) {
@@ -22,11 +17,7 @@ export async function GET(event: RequestEvent) {
 		throw error(403, 'A B2B Intelligence subscription is required to download this CSV.');
 	}
 
-	// Derive the report slug from the request path:
-	//   /reports/ad-user-acquisition-2026-june/advertisers-csv
-	//   → slug = "ad-user-acquisition-2026-june"
 	const pathParts = event.url.pathname.split('/').filter(Boolean);
-	// pathParts = ["reports", "<slug>", "advertisers-csv"]
 	const reportsIdx = pathParts.indexOf('reports');
 	if (reportsIdx === -1 || reportsIdx + 1 >= pathParts.length) {
 		throw error(500, 'Could not determine report slug from request path.');
