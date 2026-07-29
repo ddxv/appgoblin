@@ -30,10 +30,12 @@
 </script>
 
 <section class="mb-4 space-y-2">
-	<h2 class="text-xl font-semibold">Creative Signals</h2>
-	<p class="text-sm mb-3">
-		Creative monitoring helps identify active campaigns, ad formats, and publisher reach connected
-		to this company in near real-time market activity.
+	<h2 class="text-xl font-semibold">Creatives</h2>
+	<p class="mb-3">These are some of the recent creatives tracked by AppGoblin.</p>
+	<p class="text-base">
+		Full creatives for a company are available on
+		<a href="/pricing">B2B plans</a>. Some additional creatives can be browsed free on AppGoblin's
+		<a href="/ad-creatives">ad creatives explorer</a>.
 	</p>
 </section>
 
