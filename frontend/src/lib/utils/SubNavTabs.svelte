@@ -129,9 +129,7 @@
 		>
 			{#each tabs as tab (tab.slug || tab.sectionLabel)}
 				{#if tab.sectionLabel}
-					<p
-						class="mt-3 first:mt-0 text-[11px] font-semibold uppercase tracking-[0.12em] text-surface-500"
-					>
+					<p class="mt-3 first:mt-0 text-[11px] font-semibold uppercase tracking-[0.12em]">
 						{tab.sectionLabel}
 					</p>
 				{:else}

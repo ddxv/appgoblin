@@ -16,16 +16,9 @@
 
 	let sorting = $state<SortingState>([]);
 
-	let dataMetric = $state<string>('installs');
-
 	let { data }: DataTableProps<CompaniesSearchEntries, TValue> = $props();
 
 	const columns = genericColumns([
-		{
-			title: 'Servers',
-			accessorKey: 'country_code',
-			isSortable: true
-		},
 		{
 			title: 'Matched Company or Domain',
 			accessorKey: 'company_name',
@@ -109,16 +102,6 @@
 			<tbody>
 				{#each table.getRowModel().rows as row (row.id)}
 					<tr class="px-0">
-						<td class="text-center">
-							{#if row.original.api_ip_resolved_country}
-								<span
-									class="text-xs md:text-sm"
-									title={`API IP addresses for this domain commonly resolve to: ${row.original.api_ip_resolved_country}`}
-								>
-									{countryCodeToEmoji(row.original.api_ip_resolved_country)}
-								</span>
-							{/if}
-						</td>
 						<td class="w-0">
 							<a
 								href="/companies/{row.original.company_domain}"

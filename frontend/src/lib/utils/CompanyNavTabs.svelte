@@ -194,7 +194,7 @@
 		const bottomSections: SubNavTabItem[] = [
 			...(hasAnyAppsAdded
 				? [
-						{ slug: '_section-apps-added', sectionLabel: 'Apps Added' } as SubNavTabItem,
+						{ slug: '_section-apps-added', sectionLabel: 'Apps Recently Added' } as SubNavTabItem,
 						...(tabHasData('apps-added')
 							? [
 									{
@@ -226,7 +226,7 @@
 				: []),
 			...(hasAnyAppsLost
 				? [
-						{ slug: '_section-apps-lost', sectionLabel: 'Apps Lost' } as SubNavTabItem,
+						{ slug: '_section-apps-lost', sectionLabel: 'Apps Recently Lost' } as SubNavTabItem,
 						...(tabHasData('apps-lost')
 							? [
 									{

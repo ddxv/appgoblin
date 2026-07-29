@@ -77,6 +77,16 @@ def get_company_creatives(
     return df
 
 
+def get_advertiser_creatives_by_host(state: State, host_domain: str) -> pd.DataFrame:
+    """Get advertiser creatives for a host domain (public v1 endpoint)."""
+    df = pd.read_sql(
+        sql.advertiser_creatives_by_host,
+        con=state.dbcon.engine,
+        params={"host_domain": host_domain},
+    )
+    return df
+
+
 def get_growth_apps(
     state: State, store: int, app_category: str | None = None
 ) -> pd.DataFrame:

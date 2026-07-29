@@ -2555,7 +2555,12 @@ class CompaniesController(Controller):
         company_logos_df = get_company_logos_df(state).drop_duplicates(
             subset=["company_domain"], keep="first"
         )
+        logger.info(
+            f"get_companies_shortlist_top: company_logos_df took "
+            f"{round((time.perf_counter() * 1000 - start), 2)}ms"
+        )
 
+        adnetworks_start = time.perf_counter() * 1000
         adnetworks = get_companies_top(
             state=state, type_slug="ad-networks", category=None, limit=5
         )
@@ -2565,6 +2570,12 @@ class CompaniesController(Controller):
             how="left",
             validate="m:1",
         )
+        logger.info(
+            f"get_companies_shortlist_top: adnetworks took "
+            f"{round((time.perf_counter() * 1000 - adnetworks_start), 2)}ms"
+        )
+
+        mmps_start = time.perf_counter() * 1000
         mmps = get_companies_top(
             state=state, type_slug="ad-attribution", category=None, limit=5
         )
@@ -2574,6 +2585,12 @@ class CompaniesController(Controller):
             how="left",
             validate="m:1",
         )
+        logger.info(
+            f"get_companies_shortlist_top: mmps took "
+            f"{round((time.perf_counter() * 1000 - mmps_start), 2)}ms"
+        )
+
+        analytics_start = time.perf_counter() * 1000
         analytics = get_companies_top(
             state=state, type_slug="product-analytics", category=None, limit=5
         )
@@ -2583,6 +2600,11 @@ class CompaniesController(Controller):
             how="left",
             validate="m:1",
         )
+        logger.info(
+            f"get_companies_shortlist_top: analytics took "
+            f"{round((time.perf_counter() * 1000 - analytics_start), 2)}ms"
+        )
+
         top_ad_networks = top_companies_by_tag_source(adnetworks)
         top_mmps = top_companies_by_tag_source(mmps)
         top_analytics = top_companies_by_tag_source(analytics)

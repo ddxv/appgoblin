@@ -131,7 +131,7 @@
 									<img
 										src={`https://media.appgoblin.info/app-icons/${row.original.store_id}/${row.original.icon_64}`}
 										alt={row.original.name}
-										class="w-8 h8"
+										class="w-8 h-8"
 									/>
 									<div class="flex flex-col">
 										{row.original.name}

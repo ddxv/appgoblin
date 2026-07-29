@@ -753,7 +753,7 @@
 
 		<div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
 			<a href="/companies" class="btn preset-filled-primary-200-800">
-				Find SDK Clients by Category →</a
+				Browse Top B2B Mobile Companies by Category →</a
 			>
 		</div>
 	</section>

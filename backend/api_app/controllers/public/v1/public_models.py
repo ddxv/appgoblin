@@ -235,3 +235,27 @@ class PublicKeywordRanks:
     country: str
     android: list[PublicKeywordRankedApp] = field(default_factory=list)
     ios: list[PublicKeywordRankedApp] = field(default_factory=list)
+
+
+@dataclass
+class PublicAdvertiserCreative:
+    """Public advertiser creative row surfaced by host-domain lookup."""
+
+    created_at: str | None = None
+    ad_domain: str | None = None
+    host_domain_company_name: str | None = None
+    pub_store_id: str | None = None
+    pub_name: str | None = None
+    vhash: str | None = None
+    md5_hash: str | None = None
+    file_extension: str | None = None
+    mmp_domain: str | None = None
+    creative_url: str | None = None
+
+
+@dataclass
+class PublicAdvertiserCreatives:
+    """Public advertiser creatives payload returned by the v1 API."""
+
+    host_domain: str
+    creatives: list[PublicAdvertiserCreative] = field(default_factory=list)
