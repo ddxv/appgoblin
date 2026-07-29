@@ -249,6 +249,7 @@ class PublicAdvertiserCreative:
     vhash: str | None = None
     md5_hash: str | None = None
     file_extension: str | None = None
+    adv_store_id: str | None = None
     mmp_domain: str | None = None
     creative_url: str | None = None
 
