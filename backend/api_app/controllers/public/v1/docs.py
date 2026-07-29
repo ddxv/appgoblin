@@ -186,6 +186,27 @@ KEYWORD_RANKS_EXAMPLE_RESPONSE = {
         }
     ],
 }
+ADVERTISER_CREATIVES_EXAMPLE_HOST_DOMAIN = "applovin.com"
+ADVERTISER_CREATIVES_EXAMPLE_RESPONSE = {
+    "host_domain": ADVERTISER_CREATIVES_EXAMPLE_HOST_DOMAIN,
+    "creatives": [
+        {
+            "created_at": "2026-07-21T14:32:08.000Z",
+            "ad_domain": "applovin.com",
+            "host_domain_company_name": "AppLovin",
+            "pub_store_id": "com.example.publisher",
+            "pub_name": "Example Publisher",
+            "vhash": "a1b2c3d4e5f6",
+            "md5_hash": "9f8e7d6c5b4a39281827364554637281",
+            "file_extension": "mp4",
+            "mmp_domain": "appsflyer.com",
+            "creative_url": (
+                "https://media.appgoblin.info/creatives/raw/9f8/"
+                "9f8e7d6c5b4a39281827364554637281.mp4"
+            ),
+        }
+    ],
+}
 V1_OPERATION_DOCS = {
     "/api/v1/companies": {
         "get": {
@@ -277,6 +298,19 @@ V1_OPERATION_DOCS = {
                 "Endpoint: `GET /api/v1/keywords/{keyword}/ranks`\n\n"
                 "Returns grouped latest top-ranked Android and iOS apps for an exact "
                 "keyword lookup in the US storefront dataset."
+            ),
+        }
+    },
+    "/api/v1/advertisers/{host_domain}/creatives": {
+        "get": {
+            "summary": "[Paid] /advertisers/{host_domain}/creatives",
+            "description": (
+                "Endpoint: `GET /api/v1/advertisers/{host_domain}/creatives`\n\n"
+                "Access: Paid tiers only.\n\n"
+                "Returns advertiser creatives recorded for a host domain, including "
+                "the creative's MD5 hash, file extension, ad domain, hosting company "
+                "name, publisher store ID and name, vhash, MMP domain, capture "
+                "timestamp, and a direct media URL for the raw creative asset."
             ),
         }
     },
@@ -546,6 +580,40 @@ def _set_keyword_ranks_example(schema: dict[str, Any]) -> None:
     }
 
 
+def _set_advertiser_creatives_example(schema: dict[str, Any]) -> None:
+    """Attach a concrete example to the public advertiser creatives endpoint."""
+    path_item = schema.get("paths", {}).get(
+        "/api/v1/advertisers/{host_domain}/creatives"
+    )
+    if not isinstance(path_item, dict):
+        return
+
+    get_operation = path_item.get("get")
+    if not isinstance(get_operation, dict):
+        return
+
+    for parameter in get_operation.get("parameters", []):
+        if parameter.get("name") == "host_domain":
+            parameter["example"] = ADVERTISER_CREATIVES_EXAMPLE_HOST_DOMAIN
+
+    responses = get_operation.get("responses", {})
+    response_200 = responses.get("200")
+    if not isinstance(response_200, dict):
+        return
+
+    content = response_200.get("content", {})
+    json_content = content.get("application/json")
+    if not isinstance(json_content, dict):
+        return
+
+    json_content["examples"] = {
+        "advertiser_creatives": {
+            "summary": "Advertiser creatives recorded for the AppLovin host domain",
+            "value": ADVERTISER_CREATIVES_EXAMPLE_RESPONSE,
+        }
+    }
+
+
 def _set_operation_docs(schema: dict[str, Any]) -> None:
     """Set stable Scalar-friendly summaries and descriptions for public v1 routes."""
     paths = schema.get("paths", {})
@@ -630,6 +698,7 @@ def build_v1_openapi_schema(request: Request) -> dict[str, Any]:
     _set_company_app_changes_examples(schema)
     _set_keyword_metrics_example(schema)
     _set_keyword_ranks_example(schema)
+    _set_advertiser_creatives_example(schema)
     return schema
 
 
