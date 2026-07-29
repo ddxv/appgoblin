@@ -89,6 +89,7 @@ def _to_public_advertiser_creative(row: dict) -> PublicAdvertiserCreative:
         vhash=_optional_string(row.get("vhash")),
         md5_hash=_optional_string(row.get("md5_hash")),
         file_extension=_optional_string(row.get("file_extension")),
+        adv_store_id=_optional_string(row.get("adv_store_id")),
         mmp_domain=_optional_string(row.get("mmp_domain")),
         creative_url=_build_creative_url(
             _optional_string(row.get("md5_hash")),

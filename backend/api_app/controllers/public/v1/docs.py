@@ -199,6 +199,7 @@ ADVERTISER_CREATIVES_EXAMPLE_RESPONSE = {
             "vhash": "a1b2c3d4e5f6",
             "md5_hash": "9f8e7d6c5b4a39281827364554637281",
             "file_extension": "mp4",
+            "adv_store_id": "com.applovin.app",
             "mmp_domain": "appsflyer.com",
             "creative_url": (
                 "https://media.appgoblin.info/creatives/raw/9f8/"
@@ -309,8 +310,9 @@ V1_OPERATION_DOCS = {
                 "Access: Paid tiers only.\n\n"
                 "Returns advertiser creatives recorded for a host domain, including "
                 "the creative's MD5 hash, file extension, ad domain, hosting company "
-                "name, publisher store ID and name, vhash, MMP domain, capture "
-                "timestamp, and a direct media URL for the raw creative asset."
+                "name, advertiser store ID, publisher store ID and name, vhash, MMP "
+                "domain, capture timestamp, and a direct media URL for the raw "
+                "creative asset."
             ),
         }
     },

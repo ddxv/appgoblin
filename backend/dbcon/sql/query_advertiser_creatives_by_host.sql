@@ -7,6 +7,7 @@ SELECT
     ac.vhash,
     ac.md5_hash,
     ac.file_extension,
+    ac.adv_store_id,
     ac.mmp_domain
 FROM
     frontend.advertiser_creatives AS ac
