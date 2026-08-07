@@ -379,6 +379,8 @@ export interface CompanyOverviewApps {
 	app_ads_direct: boolean;
 	year?: number;
 	quarter?: number;
+	is_removed?: boolean | null;
+	country?: string | null;
 }
 
 export interface CompanyAppChangesOverview {

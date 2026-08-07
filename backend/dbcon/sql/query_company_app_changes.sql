@@ -6,11 +6,14 @@ SELECT
     sa.icon_64,
     sa.installs_sum_4w AS rank,
     sa.installs_sum_4w AS installs_d30,
-    dac.status
+    dac.status,
+    sa.is_removed,
+    c.alpha2 AS country
 FROM
     adtech.domain_app_changes_quarterly AS dac
 LEFT JOIN domains AS d ON dac.domain_id = d.id
 LEFT JOIN frontend.store_apps_overview AS sa ON dac.store_app = sa.id
+LEFT JOIN countries AS c ON sa.country_id = c.id
 WHERE
     dac.year = :myyear
     AND dac.quarter = :myquarter

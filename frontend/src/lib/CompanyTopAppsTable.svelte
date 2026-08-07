@@ -15,6 +15,7 @@
 	import { createSvelteTable } from '$lib/components/data-table/index.js';
 
 	import { genericColumns } from '$lib/components/data-table/generic-column';
+	import { countryCodeToEmoji } from '$lib/utils/countryCodeToEmoji';
 
 	type DataTableProps<RankedApps, TValue> = {
 		data: CompanyOverviewApps[];
@@ -29,6 +30,16 @@
 
 	function tableHasPublisher(table: CompanyOverviewApps[]) {
 		return !table.every((row) => row.publisher == false);
+	}
+
+	function tableHasIsRemoved(table: CompanyOverviewApps[]) {
+		if (table.length === 0) return false;
+		const removedCount = table.filter((row) => row.is_removed === true).length;
+		return removedCount / table.length >= 0.2;
+	}
+
+	function tableHasCountry(table: CompanyOverviewApps[]) {
+		return table.some((row) => row.country != null);
 	}
 
 	const checkIconClass = 'w-4 h-4 text-success-700-300';
@@ -71,6 +82,16 @@
 			title: 'App-Ads.txt',
 			accessorKey: 'app_ads_direct',
 			isSortable: true
+		},
+		{
+			title: 'Removed',
+			accessorKey: 'is_removed',
+			isSortable: true
+		},
+		{
+			title: 'Country',
+			accessorKey: 'country',
+			isSortable: true
 		}
 	];
 
@@ -85,6 +106,12 @@
 				baseColumns.filter((column) => {
 					if (column.accessorKey === 'publisher') {
 						return tableHasPublisher(data);
+					}
+					if (column.accessorKey === 'is_removed') {
+						return tableHasIsRemoved(data);
+					}
+					if (column.accessorKey === 'country') {
+						return tableHasCountry(data);
 					}
 					return true;
 				})
@@ -106,6 +133,9 @@
 				<tr>
 					<th class="table-cell-fit"></th>
 					<th class="table-cell-fit">App</th>
+					{#if tableHasCountry(data)}
+						<th class="table-cell-fit">HQ</th>
+					{/if}
 					<th class="table-cell-fit">Monthly Installs</th>
 					<th class="table-cell-fit">SDK</th>
 					{#if tableHasPublisher(data)}
@@ -116,6 +146,9 @@
 					{/if}
 					{#if tableHasAdsTxt(data)}
 						<th class="table-cell-fit">App-Ads.txt</th>
+					{/if}
+					{#if tableHasIsRemoved(data)}
+						<th class="table-cell-fit">Removed</th>
 					{/if}
 				</tr>
 			</thead>
@@ -140,7 +173,11 @@
 								</div>
 							</a>
 						</td>
-
+						{#if tableHasCountry(data)}
+							<td class="table-cell-fit">
+								{row.original.country ? `${countryCodeToEmoji(row.original.country)} ${row.original.country}` : '-'}
+							</td>
+						{/if}
 						<td class="table-cell-fit">
 							{formatNumber(row.original.installs_d30)}
 						</td>
@@ -186,6 +223,13 @@
 								{/if}
 							</td>
 						{/if}
+						{#if tableHasIsRemoved(data)}
+							<td class="table-cell-fit">
+								{#if row.original.is_removed == true}
+									<Check class={xIconClass} />
+								{/if}
+							</td>
+						{/if}
 					</tr>
 				{/each}
 				{#if previewMode && data.length > 3}
@@ -201,6 +245,11 @@
 									</div>
 								</div>
 							</td>
+							{#if tableHasCountry(data)}
+								<td class="table-cell-fit"
+									><div class="h-3 w-10 rounded bg-surface-200-800"></div></td
+								>
+							{/if}
 							<td class="table-cell-fit"><div class="h-3 w-16 rounded bg-surface-200-800"></div></td
 							>
 							<td class="table-cell-fit"><div class="h-3 w-4 rounded bg-surface-200-800"></div></td>
@@ -215,6 +264,11 @@
 								>
 							{/if}
 							{#if tableHasAdsTxt(data)}
+								<td class="table-cell-fit"
+									><div class="h-3 w-4 rounded bg-surface-200-800"></div></td
+								>
+							{/if}
+							{#if tableHasIsRemoved(data)}
 								<td class="table-cell-fit"
 									><div class="h-3 w-4 rounded bg-surface-200-800"></div></td
 								>

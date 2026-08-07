@@ -415,6 +415,16 @@ def load_s3_datasets() -> list[dict]:
                         "size_bytes": obj["Size"],
                         "last_modified": obj["LastModified"].isoformat(),
                         "download_url": f"{PUBLIC_DATA_URL}{key}",
+                        "license_url": "https://creativecommons.org/licenses/by/4.0/",
+                        "license_name": "CC BY 4.0",
+                        "attribution_html": (
+                            'Data provided by <a href="https://appgoblin.info">AppGoblin</a> '
+                            'under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.'
+                        ),
+                        "attribution_text": (
+                            "Data provided by AppGoblin (https://appgoblin.info) under CC BY 4.0"
+                            " (https://creativecommons.org/licenses/by/4.0/)."
+                        ),
                     }
                 )
         logger.info(f"Loaded {len(datasets)} S3 export datasets")

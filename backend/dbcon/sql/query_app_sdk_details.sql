@@ -5,7 +5,7 @@ SELECT
     d.domain_name AS company_domain,
     c2.url_slug AS category_slug
 FROM
-    adtech.store_app_sdk_strings AS sass
+    adtech.app_sdk_strings AS sass
 LEFT JOIN store_apps AS sa ON sass.store_app = sa.id
 LEFT JOIN
     version_strings AS vs
