@@ -64,7 +64,13 @@
 				href: `/apps/${page.params.id}/sdks`,
 				icon: Boxes,
 				dimmed: isSdkDimmed(),
-				matchSlugs: ['sdks-history', 'sdks-unknowns', 'sdks-permissions', 'sdks-queries', 'sdks-skadnetwork'],
+				matchSlugs: [
+					'sdks-history',
+					'sdks-unknowns',
+					'sdks-permissions',
+					'sdks-queries',
+					'sdks-skadnetwork'
+				],
 				indent: true
 			},
 			{

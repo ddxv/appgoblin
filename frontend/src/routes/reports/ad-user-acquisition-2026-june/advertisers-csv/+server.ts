@@ -4,7 +4,6 @@ import { error } from '@sveltejs/kit';
 import { requireFullAuth } from '$lib/server/auth/auth';
 import { userHasTierAccess } from '$lib/server/subscription';
 
-
 function buildCsvUrl(slug: string): string {
 	return `${APPGOBLIN_DOWNLOADS_BASE}downloads/reports/${slug}/advertisers.csv`;
 }
@@ -38,9 +37,7 @@ export async function GET(event: RequestEvent) {
 		if (s3Response.status === 404) {
 			throw error(404, 'The advertiser CSV for this report has not been published yet.');
 		}
-		console.error(
-			`S3 returned ${s3Response.status} for advertiser CSV: ${csvUrl}`
-		);
+		console.error(`S3 returned ${s3Response.status} for advertiser CSV: ${csvUrl}`);
 		throw error(502, 'Failed to retrieve the CSV from storage.');
 	}
 

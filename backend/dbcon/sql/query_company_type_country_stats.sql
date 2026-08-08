@@ -7,7 +7,7 @@ WHERE
     type_url_slug = :type_url_slug
     AND country IS NOT NULL
     AND country != ''
-    AND (cast(:app_category AS TEXT) IS NULL OR app_category = :app_category)
+    AND (CAST(:app_category AS TEXT) IS NULL OR app_category = :app_category)
 GROUP BY
     country
 ORDER BY

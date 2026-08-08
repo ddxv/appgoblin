@@ -175,7 +175,9 @@
 						</td>
 						{#if tableHasCountry(data)}
 							<td class="table-cell-fit">
-								{row.original.country ? `${countryCodeToEmoji(row.original.country)} ${row.original.country}` : '-'}
+								{row.original.country
+									? `${countryCodeToEmoji(row.original.country)} ${row.original.country}`
+									: '-'}
 							</td>
 						{/if}
 						<td class="table-cell-fit">

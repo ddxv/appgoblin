@@ -36,5 +36,5 @@ SELECT
     co.linkedin_url,
     co.github_user,
     co.api_ip_resolved_country
-FROM frontend.companies_overview co
+FROM frontend.companies_overview AS co
 WHERE co.company_domain = :company_domain;
