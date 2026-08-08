@@ -16,7 +16,7 @@ FROM
     adtech.app_sdk_strings AS sass
 INNER JOIN version_strings AS vs
     ON
-        sass.version_string_id = vs.id
+        sass.string_id = vs.id
 LEFT JOIN frontend.store_apps_overview AS sa
     ON
         sass.store_app = sa.id

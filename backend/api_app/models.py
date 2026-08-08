@@ -614,6 +614,7 @@ class CompaniesOverview:
     companies_overview: list[dict[str, object]]
     top: TopCompaniesShort
     categories: CompaniesCategoryOverview
+    country_stats: list[dict[str, object]] = field(default_factory=list)
 
 
 @dataclass

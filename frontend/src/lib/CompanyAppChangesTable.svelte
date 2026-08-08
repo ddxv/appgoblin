@@ -90,6 +90,11 @@
 										</div>
 									</a>
 								</td>
+								{#if tableHasCountry(android)}
+									<td class="table-cell-fit">
+										{app.country ? `${countryCodeToEmoji(app.country)} ${app.country}` : '-'}
+									</td>
+								{/if}
 								<td class="table-cell-fit">Q{app.quarter} {app.year}</td>
 								<td class="table-cell-fit">{formatNumber(app.installs_d30)}</td>
 								<td class="table-cell-fit">
@@ -130,11 +135,6 @@
 										{:else}
 											-
 										{/if}
-									</td>
-								{/if}
-								{#if tableHasCountry(android)}
-									<td class="table-cell-fit">
-										{app.country ? `${countryCodeToEmoji(app.country)} ${app.country}` : '-'}
 									</td>
 								{/if}
 								{#if tableHasIsRemoved(android)}

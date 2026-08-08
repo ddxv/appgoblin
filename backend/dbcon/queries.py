@@ -702,7 +702,6 @@ def get_company_categories_topn(
 
         if group_mode == "none":
             # Raw categories — no grouping or top-N truncation.
-            # The frontend handles grouping/truncation client-side.
             store_df = store_df.sort_values(by="app_count", ascending=False)
             result = store_df.rename(
                 columns={"app_category": "category", "app_count": "value"}
@@ -1100,6 +1099,25 @@ def search_companies(state: State, search_input: str, limit: int = 10) -> pd.Dat
         state.dbcon.engine,
         params={"searchinput": search_input, "mylimit": limit},
     )
+    return df
+
+
+def get_company_type_country_stats(
+    state: State,
+    type_url_slug: str,
+    app_category: str | None = None,
+) -> pd.DataFrame:
+    """Get company count per country for a company type, optionally filtered by app category."""
+    if app_category == "games":
+        app_category = "game%"
+    logger.info(f"query company type country stats: {type_url_slug=} {app_category=}")
+    df = pd.read_sql(
+        sql.company_type_country_stats,
+        state.dbcon.engine,
+        params={"type_url_slug": type_url_slug, "app_category": app_category},
+    )
+    if app_category == "game%":
+        df = df.groupby(["country"], as_index=False)["company_count"].sum()
     return df
 
 

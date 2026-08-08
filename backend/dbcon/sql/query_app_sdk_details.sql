@@ -10,7 +10,7 @@ LEFT JOIN store_apps AS sa ON sass.store_app = sa.id
 LEFT JOIN
     version_strings AS vs
     ON
-        sass.version_string_id = vs.id
+        sass.string_id = vs.id
 LEFT JOIN adtech.sdks AS sd ON sass.sdk_id = sd.id
 LEFT JOIN adtech.sdk_categories AS sc ON sd.id = sc.sdk_id
 LEFT JOIN adtech.companies AS c ON sd.company_id = c.id

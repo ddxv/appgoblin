@@ -2,8 +2,14 @@
 	import { page } from '$app/state';
 	import CompaniesOverviewTable from '$lib/CompaniesOverviewTable.svelte';
 	import CompaniesTableGrid from '$lib/CompaniesTableGrid.svelte';
+	import WhiteCard from '$lib/WhiteCard.svelte';
+	import CompanyCountryPie from '$lib/CompanyCountryPie.svelte';
 
 	let { data } = $props();
+
+	let hasCountryStats = $derived(
+		data.companiesOverview.country_stats && data.companiesOverview.country_stats.length > 0
+	);
 
 	let typeName = $derived(
 		page.data.companyTypes?.types?.find((t: any) => t.url_slug === page.params.type)?.name ||
@@ -34,6 +40,16 @@
 		{#snippet mainTable()}
 			{#if data.companiesOverview && data.companiesOverview.companies_overview.length > 0}
 				<CompaniesOverviewTable data={data.companiesOverview.companies_overview} />
+			{/if}
+		{/snippet}
+		{#snippet countryChart()}
+			{#if hasCountryStats}
+				<WhiteCard>
+					{#snippet title()}
+						<span>{typeName} by Country</span>
+					{/snippet}
+					<CompanyCountryPie plotData={data.companiesOverview.country_stats} />
+				</WhiteCard>
 			{/if}
 		{/snippet}
 	</CompaniesTableGrid>

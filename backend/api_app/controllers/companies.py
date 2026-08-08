@@ -75,6 +75,7 @@ from dbcon.queries import (
     get_company_tab_indicators,
     get_company_tree_base,
     get_company_tree_related_domains,
+    get_company_type_country_stats,
     get_mediation_adapters,
     get_tag_source_category_totals,
     get_tag_source_company_counts,
@@ -827,10 +828,20 @@ def get_overviews(
         type_slug=type_slug,
     )
 
+    # Fetch country distribution stats when viewing a type
+    country_stats: list[dict[str, object]] = []
+    if type_slug:
+        country_df = get_company_type_country_stats(
+            state=state, type_url_slug=type_slug, app_category=category
+        )
+        if not country_df.empty:
+            country_stats = country_df.to_dict(orient="records")
+
     results = CompaniesOverview(
         companies_overview=companies_df.to_dict(orient="records"),
         top=top_companies_short,
         categories=category_overview_stats,
+        country_stats=country_stats,
     )
 
     return results
