@@ -742,6 +742,13 @@ class SdkOverview:
 
 
 @dataclass
+class AppSdkHistory:
+    """Historical SDK changes (additions/removals) for an app."""
+
+    history: list[dict]
+
+
+@dataclass
 class SdkCompanies:
     """Contains a list of sdk companies objects."""
 

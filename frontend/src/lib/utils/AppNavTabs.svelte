@@ -10,6 +10,11 @@
 	import TrendingUp from 'lucide-svelte/icons/trending-up';
 	import FileText from 'lucide-svelte/icons/file-text';
 	import Image from 'lucide-svelte/icons/image';
+	import History from 'lucide-svelte/icons/history';
+	import HelpCircle from 'lucide-svelte/icons/help-circle';
+	import Shield from 'lucide-svelte/icons/shield';
+	import Search from 'lucide-svelte/icons/search';
+	import RadioReceiver from 'lucide-svelte/icons/radio-receiver';
 
 	let { isAndroidApp, myapp }: { isAndroidApp: boolean; myapp: AppFullDetail } = $props();
 
@@ -22,7 +27,16 @@
 	function getSlugFromPath(pathname: string): string {
 		const path = pathname.replace(`/apps/${page.params.id}`, '') || '/';
 		if (path === '/') return 'overview';
-		return path.replace(/^\//, '');
+		const clean = path.replace(/^\//, '');
+		// Map nested sub-paths like sdks/history -> sdks-history
+		if (clean.includes('/')) {
+			return clean.replace(/\//g, '-');
+		}
+		return clean;
+	}
+
+	function isSdkDimmed(): boolean {
+		return !myapp.sdk_successful_last_crawled;
 	}
 
 	let currentSlug = $derived(getSlugFromPath(page.url.pathname));
@@ -42,12 +56,62 @@
 				icon: TrendingUp
 			},
 			{
+				sectionLabel: 'SDKs'
+			},
+			{
 				slug: 'sdks',
-				label: 'SDKs',
+				label: 'Latest SDKs',
 				href: `/apps/${page.params.id}/sdks`,
 				icon: Boxes,
-				dimmed: isTabDimmed('sdks')
+				dimmed: isSdkDimmed(),
+				matchSlugs: ['sdks-history', 'sdks-unknowns', 'sdks-permissions', 'sdks-queries', 'sdks-skadnetwork'],
+				indent: true
 			},
+			{
+				slug: 'sdks-history',
+				label: 'SDK History',
+				href: `/apps/${page.params.id}/sdks/history`,
+				icon: History,
+				dimmed: isSdkDimmed(),
+				indent: true
+			},
+			{
+				slug: 'sdks-unknowns',
+				label: 'Unmapped SDKs',
+				href: `/apps/${page.params.id}/sdks/unknowns`,
+				icon: HelpCircle,
+				dimmed: isSdkDimmed(),
+				indent: true
+			},
+			...(isAndroidApp
+				? [
+						{
+							slug: 'sdks-queries' as const,
+							label: 'App Queries',
+							href: `/apps/${page.params.id}/sdks/queries`,
+							icon: Search,
+							dimmed: isSdkDimmed(),
+							indent: true
+						},
+						{
+							slug: 'sdks-permissions' as const,
+							label: 'Permissions',
+							href: `/apps/${page.params.id}/sdks/permissions`,
+							icon: Shield,
+							dimmed: isSdkDimmed(),
+							indent: true
+						}
+					]
+				: [
+						{
+							slug: 'sdks-skadnetwork' as const,
+							label: 'SKAdNetwork',
+							href: `/apps/${page.params.id}/sdks/skadnetwork`,
+							icon: RadioReceiver,
+							dimmed: isSdkDimmed(),
+							indent: true
+						}
+					]),
 			{
 				slug: 'keywords',
 				label: 'Keywords',

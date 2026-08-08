@@ -1285,6 +1285,16 @@ def get_sdk_pattern_companies(state: State, value_pattern: str) -> pd.DataFrame:
     return df
 
 
+def get_app_sdk_history(state: State, store_id: str) -> pd.DataFrame:
+    """Get historical SDK changes (additions/removals) for an app."""
+    df = pd.read_sql(
+        sql.app_sdk_history,
+        state.dbcon.engine,
+        params={"store_id": store_id},
+    )
+    return df
+
+
 def get_sitemap_companies(dbcon: PostgresCon) -> pd.DataFrame:
     """Get sitemap companies."""
     df = pd.read_sql(sql.sitemap_companies, dbcon.engine)

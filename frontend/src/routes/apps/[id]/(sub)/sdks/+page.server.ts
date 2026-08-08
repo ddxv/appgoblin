@@ -1,18 +1,7 @@
-import type { PageServerLoad } from './$types.js';
-import { createApiClient } from '$lib/server/api';
+import type { PageServerLoad } from './$types';
 
-export const load: PageServerLoad = async ({ fetch, params, parent }) => {
-	const { companyTypes } = await parent();
-	const { myapp } = await parent();
-	const api = createApiClient(fetch);
-
-	const id = params.id;
-	const versionTimeline = await api.get(`/apps/${id}/versions`, 'App Version Timeline');
-
-	let myPackageInfo = {};
-	if (myapp.sdk_successful_last_crawled) {
-		myPackageInfo = await api.get(`/apps/${id}/sdks`, 'App Package Info');
-	}
+export const load: PageServerLoad = async ({ parent }) => {
+	const { myapp, companyTypes, versionTimeline, myPackageInfo } = await parent();
 
 	return {
 		myPackageInfo,
