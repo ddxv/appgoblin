@@ -1,4 +1,6 @@
 <script lang="ts">
+	import DataExportColumnDocs from '$lib/components/docs/DataExportColumnDocs.svelte';
+
 	interface Props {
 		data: {
 			canDownload: boolean;
@@ -20,7 +22,7 @@
 		[
 			{
 				key: 'appAdsTxt',
-				label: 'App-Ads.txt Supply Network',
+				label: 'App-Ads.txt Data',
 				platform: 'Cross-Platform',
 				signalDepth: 'Direct & Reseller Publisher IDs',
 				url: data.downloadUrls?.appAdsTxt ?? null,
@@ -58,11 +60,15 @@
 </svelte:head>
 
 <section class="mx-2 md:mx-auto md:max-w-4xl space-y-8">
-	<h1 class="h1">{data.companyName} Raw Client App Lists</h1>
+	<h1 class="h1">{data.companyName} Client App Downloads</h1>
 
 	<p class="text-base md:text-lg max-w-3xl">
-		Export the market footprint of {data.companyName}. Identify publishers and build high-value
-		prospecting pipelines with raw, analysis-ready data.
+		Download all client apps data for {data.companyName}. Data comes in two styles: App-Ads.txt and
+		SDK/API Verified. App-Ads.txt data is fuzzier and covers all known apps and domains, this is
+		useful for fraud tracking. SDK/API verified apps are a smaller subset of the apps among the top
+		200k apps that were verified to be using {data.companyName} via the presence of their SDK or via API
+		calls to domains they own. SDK/API data is much more deterministic though it by it's nature covers
+		a smaller portion of the whole. Please feel free to reach out if you have questions.
 	</p>
 
 	<!-- Value Propositions -->
@@ -102,16 +108,16 @@
 			<li class="pl-2">
 				<p class="font-semibold">Corporate Development, VC and Hedge Funds</p>
 				<p class="text-sm opacity-80">
-					Run longitudinal tracking on {data.companyName}'s market share growth or contraction
-					across specific app categories to validate investment theses.
+					Run tracking on {data.companyName}'s market share growth or contraction across specific
+					app categories to validate investment theses.
 				</p>
 			</li>
 			<li class="pl-2">
 				<p class="font-semibold">Data Products & Analytics Platforms</p>
 				<p class="text-sm opacity-80">
-					Feed this raw footprint into your own proprietary enterprise dashboards or enrichment
-					engines via the <a href="/api-docs" class="underline hover:text-primary-600-400"
-						>AppGoblin API</a
+					Feed this into your own proprietary enterprise dashboards or enrichment engines via the <a
+						href="/api-docs"
+						class="underline hover:text-primary-600-400">AppGoblin API</a
 					>.
 				</p>
 			</li>
@@ -183,4 +189,17 @@
 			</div>
 		{/if}
 	{/if}
+
+	<!-- Column reference documentation -->
+	<section class="space-y-8">
+		<h2 class="text-xl font-bold">CSV Column References</h2>
+
+		{#if data.hasAndroidData || data.hasIosData}
+			<DataExportColumnDocs variant="verified-apps" companyName={data.companyName} />
+		{/if}
+
+		{#if data.hasAdstxtData}
+			<DataExportColumnDocs variant="app-ads-txt" companyName={data.companyName} />
+		{/if}
+	</section>
 </section>

@@ -120,14 +120,8 @@
 
 			<!-- RESOURCES group -->
 			<p class={sectionLabel}>Resources</p>
-			<a href="/blog" class={isHighlighted('/blog') ? topBarHighlightedFont : topBarFont}>Blog</a>
-			<div class={myDivider}></div>
-			<a href="/api-docs" class={isHighlighted('/api-docs') ? topBarHighlightedFont : topBarFont}
-				>API & MCP Docs</a
-			>
-			<div class={myDivider}></div>
 			<a href="/reports" class={isHighlighted('/reports') ? topBarHighlightedFont : topBarFont}
-				>Reports</a
+				>Free Reports</a
 			>
 			<div class={myDivider}></div>
 			<a
@@ -136,6 +130,18 @@
 			>
 				Free Datasets</a
 			>
+			<div class={myDivider}></div>
+			<a href="/api-docs" class={isHighlighted('/api-docs') ? topBarHighlightedFont : topBarFont}
+				>Docs: API & MCP</a
+			>
+			<div class={myDivider}></div>
+			<a
+				href="/docs/data-exports"
+				class={isHighlighted('/docs/data-exports') ? topBarHighlightedFont : topBarFont}
+				>Docs: Paid Datasets</a
+			>
+			<div class={myDivider}></div>
+			<a href="/blog" class={isHighlighted('/blog') ? topBarHighlightedFont : topBarFont}>Blog</a>
 			<div class={myDivider}></div>
 		{/if}
 		<a href="/pricing" class={isHighlighted('/pricing') ? topBarHighlightedFont : topBarFont}
@@ -292,6 +298,7 @@
 				class="flex items-center gap-0.5 {isHighlighted(
 					'/blog',
 					'/api-docs',
+					'/docs',
 					'/reports',
 					'/free-app-datasets'
 				)
@@ -302,22 +309,28 @@
 			</button>
 			<div class="absolute left-0 top-full pt-1 hidden group-hover:block z-50 min-w-max">
 				<div class="card bg-surface-50-950 shadow-xl rounded-md py-1">
-					<a href="/blog" class={isHighlighted('/blog') ? dropdownHighlightedItem : dropdownItem}
-						>Blog</a
-					>
-					<a
-						href="/api-docs"
-						class={isHighlighted('/api-docs') ? dropdownHighlightedItem : dropdownItem}
-						>API & MCP Docs</a
-					>
 					<a
 						href="/reports"
-						class={isHighlighted('/reports') ? dropdownHighlightedItem : dropdownItem}>Reports</a
+						class={isHighlighted('/reports') ? dropdownHighlightedItem : dropdownItem}
+						>Free Reports</a
 					>
 					<a
 						href="/free-app-datasets"
 						class={isHighlighted('/free-app-datasets') ? dropdownHighlightedItem : dropdownItem}
 						>Free Datasets</a
+					>
+					<a
+						href="/api-docs"
+						class={isHighlighted('/api-docs') ? dropdownHighlightedItem : dropdownItem}
+						>Docs: API & MCP</a
+					>
+					<a
+						href="/docs/data-exports"
+						class={isHighlighted('/docs/data-exports') ? dropdownHighlightedItem : dropdownItem}
+						>Docs: Paid Datasets</a
+					>
+					<a href="/blog" class={isHighlighted('/blog') ? dropdownHighlightedItem : dropdownItem}
+						>Blog</a
 					>
 				</div>
 			</div>
