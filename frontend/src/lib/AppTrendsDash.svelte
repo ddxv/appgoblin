@@ -5,8 +5,8 @@
 	import { countryCodeToEmoji } from './utils/countryCodeToEmoji';
 	import { Switch } from '@skeletonlabs/skeleton-svelte';
 	import { goto } from '$app/navigation';
-	import ChartLine from 'lucide-svelte/icons/chart-line';
-	import Star from 'lucide-svelte/icons/star';
+	import ChartLine from '@lucide/svelte/icons/chart-line';
+	import Star from '@lucide/svelte/icons/star';
 
 	// Star rating colors (1-star to 5-star order)
 	const red = '#E53935';

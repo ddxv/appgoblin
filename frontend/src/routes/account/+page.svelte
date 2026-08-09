@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import type { PageData } from './$types';
-	import CreditCard from 'lucide-svelte/icons/credit-card';
-	import Crown from 'lucide-svelte/icons/crown';
-	import LogOut from 'lucide-svelte/icons/log-out';
-	import ShieldCheck from 'lucide-svelte/icons/shield-check';
+	import CreditCard from '@lucide/svelte/icons/credit-card';
+	import Crown from '@lucide/svelte/icons/crown';
+	import LogOut from '@lucide/svelte/icons/log-out';
+	import ShieldCheck from '@lucide/svelte/icons/shield-check';
 	import { getPlanSummary } from '$lib/account/subscription';
 
 	let { data }: { data: PageData } = $props();

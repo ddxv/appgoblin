@@ -1,19 +1,19 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import Check from 'lucide-svelte/icons/check';
-	import Crown from 'lucide-svelte/icons/crown';
-	import X from 'lucide-svelte/icons/x';
-	import ChevronDown from 'lucide-svelte/icons/chevron-down';
-	import ChevronUp from 'lucide-svelte/icons/chevron-up';
-	import Sparkles from 'lucide-svelte/icons/sparkles';
+	import Check from '@lucide/svelte/icons/check';
+	import Crown from '@lucide/svelte/icons/crown';
+	import X from '@lucide/svelte/icons/x';
+	import ChevronDown from '@lucide/svelte/icons/chevron-down';
+	import ChevronUp from '@lucide/svelte/icons/chevron-up';
+	import Sparkles from '@lucide/svelte/icons/sparkles';
 	import type { BillingCycle } from '$lib/server/stripe';
 	import type { PageData } from './$types';
 	import type { ActionResult } from '@sveltejs/kit';
 
 	let { data }: { data: PageData } = $props();
 
-	let titlePadding = 'p-2 md:p-4';
-	let contentPadding = 'p-2 md:p-4';
+	let titlePadding = 'px-2 md:mt-4';
+	let contentPadding = 'px-2 md:px-2';
 
 	let loading = $state(false);
 	let activePriceKey: string | null = $state(null);
@@ -74,7 +74,11 @@
 			period: '/mo',
 			description: 'Ad networks, DSPs, SSPs',
 			b2b: true,
-			highlights: ['Everything in Free, plus...', 'Bulk app-ads.txt datasets']
+			highlights: [
+				'Everything in Free, plus...',
+				'Download bulk app-ads.txt datasets',
+				'App-ads.txt data updated daily'
+			]
 		},
 		{
 			key: 'b2b_sdk',
@@ -87,8 +91,9 @@
 			featured: true,
 			highlights: [
 				'Everything in Free, plus...',
-				'SDK client app data for all companies',
-				'Company apps added/lost report',
+				'Download verified client apps for all companies',
+				'Bulk CSV reports updated daily',
+				'Company apps added & lost reports',
 				'All B2B company API endpoints',
 				'Higher API rate limits',
 				'App Explorer & B2B filters'
@@ -131,13 +136,14 @@
 		sdk: boolean;
 		appads: boolean;
 		b2b: boolean;
+		link?: string;
 	}
 
 	/** Features that differentiate the plans */
 	const comparisonFeatures: ComparisonFeature[] = [
 		{
 			category: 'API Access',
-			name: 'API /companies + churn endpoints',
+			name: 'API /companies + apps added/lost endpoints',
 			free: false,
 			sdk: true,
 			appads: true,
@@ -165,7 +171,8 @@
 			free: false,
 			sdk: true,
 			appads: false,
-			b2b: true
+			b2b: true,
+			link: '/docs/data-exports'
 		},
 		{
 			category: 'Data Export',
@@ -257,15 +264,16 @@
 </svelte:head>
 
 <div class="px-2 lg:px-4 xl:px-16 grid grid-cols-1 gap-4 md:gap-4 lg:gap-8">
-	<h1 class="h1 {titlePadding}">Plans & Pricing</h1>
+	<h1 class="h2 {titlePadding}">AppGoblin B2B Pricing</h1>
 	<div class={contentPadding}>
 		<p>
-			For Invoices, PayPal or Crypto, please reach out to us at <a
+			For paying via PayPal or crypto please reach out to us at <a
 				href="mailto:contact@appgoblin.info">contact@appgoblin.info</a
-			>. Yearly invoices receive an additional +5% discount.
+			>. Yearly invoices receive an additional +5% discount. NET30 invoices are available for the
+			premium B2B.
 		</p>
 
-		<p class="text-sm opacity-80 mt-3 max-w-3xl">
+		<p class="mt-3">
 			Paid plans are billed monthly. You can cancel anytime, and your access will remain active
 			through the end of your current billing period. Payments already made are non-refundable.
 		</p>
@@ -317,7 +325,7 @@
 		<br />
 
 		<!-- Billing cycle toggle -->
-		<div class="flex items-center justify-center gap-3 my-4">
+		<div class="flex items-center justify-center gap-3 mt-4 md:mt-8">
 			<span
 				class="text-sm font-semibold transition-opacity {billingCycle === 'monthly'
 					? 'opacity-100'
@@ -358,14 +366,11 @@
 
 		<!-- Included in all plans -->
 		<div class="p-5">
-			<h3 class="text-sm font-semibold mb-2 flex items-center gap-2">
-				<Check class="w-4 h-4 text-success-700-300" aria-hidden="true" />
-				Included in all plans
-			</h3>
-			<div class="flex flex-wrap gap-x-6 gap-y-1.5 text-xs opacity-80">
+			<h3 class="font-semibold mb-2 flex items-center gap-2">Included in all plans</h3>
+			<div class="flex flex-wrap gap-x-6 gap-y-1.5 opacity-80">
 				{#each commonFeatures as feature}
 					<span class="inline-flex items-center gap-1">
-						<Check class="w-2.5 h-2.5 text-success-700-300 shrink-0" aria-hidden="true" />
+						<Check class="w-4 h-4 text-success-700-300 shrink-0" aria-hidden="true" />
 						{feature}
 					</span>
 				{/each}
@@ -533,7 +538,15 @@
 					<!-- Feature rows -->
 					{#each comparisonFeatures as feature}
 						<!-- Feature name cell -->
-						<div class="p-2 bg-surface-50-950 text-xs md:text-sm">{feature.name}</div>
+						<div class="p-2 bg-surface-50-950 text-xs md:text-sm">
+							{#if feature.link}
+								<a href={feature.link} class="underline hover:text-primary-600-400">
+									{feature.name} →
+								</a>
+							{:else}
+								{feature.name}
+							{/if}
+						</div>
 
 						<!-- Feature checkmark cells -->
 						{#each plans as plan (plan.key)}

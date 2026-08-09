@@ -252,7 +252,6 @@ companies["url"] = "https://appgoblin.info/companies/" + companies["company_doma
 companies = set_df_sitemap_columns(companies, 0.8)
 
 
-
 # about 15k
 apps["url"] = "https://appgoblin.info/apps/" + apps["store_id"]
 apps = set_df_sitemap_columns(apps, 0.5, "monthly")

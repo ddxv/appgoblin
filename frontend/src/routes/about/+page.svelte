@@ -1,8 +1,7 @@
 <script>
 	import discordIcon from '$lib/svg/discord-mark-black.svg?raw';
-	let titlePadding = 'p-2 md:p-4';
 	let contentPadding = 'p-2 md:p-4';
-	let cardPadding = 'p-2 md:p-4';
+	let cardPadding = 'p-2 mx:p-4';
 </script>
 
 <svelte:head>
@@ -34,62 +33,33 @@
 	<link rel="canonical" href="https://appgoblin.info/about" />
 </svelte:head>
 
-<div class="p-2 px-2 md:px-16 xl:px-32 grid grid-cols-1 gap-4 md:gap-8">
-	<h1 class="text-3xl font-bold">Welcome to AppGoblin</h1>
-	<p>
-		AppGoblin has marketing and advertising tools to help illuminate the world of in app advertising
-		and marketing. AppGoblin has many <strong class="">free mobile app marketing resources</strong> as
-		well as some paid datasets like competitor analysis and SDK client lists. The goal is to provide as
-		much free and reproducible open source app analytics for the community as possible.
-	</p>
-	<p>
-		See the <a
-			href="/pricing"
-			class="underline decoration-primary-500/60 hover:decoration-primary-500">pricing page</a
-		>
-		for plan details. We offer Free access for exploration plus B2B tiers for SDK intelligence, app-ads.txt
-		datasets, and combined access.
-	</p>
-	<p>
-		Looking for open app data? Browse our
-		<a
-			href="/free-app-datasets"
-			class="underline decoration-primary-500/60 hover:decoration-primary-500"
-			>free app datasets page</a
-		>
-		for app metrics and app descriptions available with a free account.
-	</p>
-
-	<div class="items-center">
-		<div class="flex flex-col gap-4 items-center">
-			<div class="flex flex-wrap gap-3 justify-center">
-				<a
-					href="/account"
-					class="btn preset-filled-primary-500 inline-flex items-center gap-2 px-6 py-3"
-				>
-					<span class="text-black font-bold">Create Free Account</span>
-				</a>
-				<a
-					href="/pricing"
-					class="btn preset-filled-primary-100-900 inline-flex items-center gap-2 px-6 py-3 rounded-lg"
-				>
-					Get premium data access →
-				</a>
-			</div>
-			<a href="/contact" class="btn preset-outlined inline-flex items-center gap-2 px-6 py-3">
-				<span>Get in Touch</span>
-			</a>
-
-			<div class="text-primary-900-100 text-sm pt-1">
-				<p>contact@appgoblin.info</p>
-			</div>
+<div class="p-2 px-2 md:px-32 xl:px-32 grid grid-cols-1 gap-4 md:gap-8">
+	<h1 class="text-3xl font-bold p-2">About AppGoblin</h1>
+	<div class={cardPadding}>
+		<h2 class="h4">Contact</h2>
+		<div class={contentPadding}>
+			<p>
+				Hi, my name is James O'Claire. To get in touch email me at james@appgoblin.info or reach out
+				via any of the Community links below.
+			</p>
+		</div>
+	</div>
+	<div class={cardPadding}>
+		<h2 class="h4">Background</h2>
+		<div class={contentPadding}>
+			<p>
+				AppGoblin was started in 2023 by James O'Claire and is operated by Open Attribution LLC.
+				AppGoblin has many free mobile app marketing resources as well as B2B paid datasets for
+				competitor analysis, fraud analysis and app market research.
+			</p>
+			<p>AppGoblin supports journalists and researchers. Please feel free to reach out.</p>
 		</div>
 	</div>
 
-	<div class="card preset-filled-surface-100-900 {cardPadding}">
-		<h2 class="h2 {titlePadding}">Features</h2>
+	<div class={cardPadding}>
+		<h2 class="h4">Features</h2>
 		<div class={contentPadding}>
-			<ul class="space-y-4">
+			<ul class="space-y-2">
 				<li>
 					<strong>App Intelligence</strong> — Data on 6M+ iOS and Android apps (updated daily): keywords,
 					trends, rankings, new apps discovery, and growth metrics
@@ -122,10 +92,10 @@
 		</div>
 	</div>
 
-	<div class="card preset-filled-surface-100-900 {cardPadding}">
-		<h2 class="h2 {titlePadding}">Who It's For</h2>
+	<div class={cardPadding}>
+		<h2 class="h4">Who It's For</h2>
 		<div class={contentPadding}>
-			<ul class="space-y-3">
+			<ul class="space-y-2">
 				<li>
 					<strong>App & Game Developers</strong> — Grow your app with free ASO tools, keyword tracking,
 					rankings data, and competitor SDK analysis
@@ -158,9 +128,9 @@
 		</div>
 	</div>
 
-	<div class="card preset-filled-surface-100-900 p-2 md:p-8">
-		<h2 class="h2 p-2 md:p-4">Community & Feedback</h2>
-		<div class="p-2 space-y-4">
+	<div class={cardPadding}>
+		<h2 class="h4 p-2 md:p-4">Community & Feedback</h2>
+		<div class="p-2 space-y-3">
 			<div class="flex flex-wrap gap-2">
 				<a
 					class="btn preset-tonal"
@@ -200,8 +170,8 @@
 			</p>
 		</div>
 	</div>
-	<div class="card preset-filled-surface-100-900 {cardPadding}">
-		<h2 class="h2 {titlePadding}">Free Resources</h2>
+	<div class={cardPadding}>
+		<h2 class="h4">Free Resources</h2>
 		<div class={contentPadding}>
 			<p>
 				The majority of AppGoblin's marketing data and ASO features are free to browse. You can also
@@ -234,19 +204,9 @@
 			</p>
 		</div>
 	</div>
-	<br />
-	<div class="card preset-filled-surface-100-900 {cardPadding}">
-		<h2 class="h2 {titlePadding}">Who created AppGoblin?</h2>
-		<div class={contentPadding}>
-			<p>
-				AppGoblin is maintained open source by James O'Claire. Large portions of the data processing
-				are done self hosted.
-			</p>
-		</div>
-	</div>
-	<br />
-	<div class="card preset-filled-surface-100-900 {cardPadding}">
-		<h2 class="h2 {titlePadding}">Check the Trackers on Your Android Device</h2>
+
+	<div class={cardPadding}>
+		<h2 class="h4">Check the Trackers on Your Android Device</h2>
 		<div class={contentPadding}>
 			<p>AppGoblin has an Android app which can be used to check the trackers on your device.</p>
 			<br />

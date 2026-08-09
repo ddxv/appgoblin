@@ -75,6 +75,7 @@ from dbcon.queries import (
     get_company_tab_indicators,
     get_company_tree_base,
     get_company_tree_related_domains,
+    get_company_type_country_stats,
     get_mediation_adapters,
     get_tag_source_category_totals,
     get_tag_source_company_counts,
@@ -305,32 +306,40 @@ def _shape_company_app_changes_df(
                 "publisher",
                 "api_call",
                 "app_ads_direct",
+                "is_removed",
+                "country",
             ]
         )
 
+    is_removed_col = "is_removed" in app_changes_df.columns
+    country_col = "country" in app_changes_df.columns
+
+    groupby_cols = [
+        "store",
+        "name",
+        "store_id",
+        "developer_name",
+        "icon_64",
+        "status",
+    ]
+
+    agg_dict: dict[str, object] = {
+        "rank": pd.NamedAgg(column="rank", aggfunc="min"),
+        "installs_d30": pd.NamedAgg(column="installs_d30", aggfunc="max"),
+        "tag_sources": pd.NamedAgg(
+            column="tag_source",
+            aggfunc=lambda values: {
+                str(value) for value in values.tolist() if pd.notna(value)
+            },
+        ),
+    }
+    if is_removed_col:
+        agg_dict["is_removed"] = pd.NamedAgg(column="is_removed", aggfunc="first")
+    if country_col:
+        agg_dict["country"] = pd.NamedAgg(column="country", aggfunc="first")
+
     grouped = (
-        app_changes_df.groupby(
-            [
-                "store",
-                "name",
-                "store_id",
-                "developer_name",
-                "icon_64",
-                "status",
-            ],
-            dropna=False,
-        )
-        .agg(
-            rank=pd.NamedAgg(column="rank", aggfunc="min"),
-            installs_d30=pd.NamedAgg(column="installs_d30", aggfunc="max"),
-            tag_sources=pd.NamedAgg(
-                column="tag_source",
-                aggfunc=lambda values: {
-                    str(value) for value in values.tolist() if pd.notna(value)
-                },
-            ),
-        )
-        .reset_index()
+        app_changes_df.groupby(groupby_cols, dropna=False).agg(**agg_dict).reset_index()  # type: ignore[arg-type]
     )
 
     grouped["sdk"] = grouped["tag_sources"].apply(lambda values: "sdk" in values)
@@ -819,10 +828,20 @@ def get_overviews(
         type_slug=type_slug,
     )
 
+    # Fetch country distribution stats when viewing a type
+    country_stats: list[dict[str, object]] = []
+    if type_slug:
+        country_df = get_company_type_country_stats(
+            state=state, type_url_slug=type_slug, app_category=category
+        )
+        if not country_df.empty:
+            country_stats = country_df.to_dict(orient="records")
+
     results = CompaniesOverview(
         companies_overview=companies_df.to_dict(orient="records"),
         top=top_companies_short,
         categories=category_overview_stats,
+        country_stats=country_stats,
     )
 
     return results

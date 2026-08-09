@@ -1,6 +1,5 @@
 import { APPGOBLIN_DOWNLOADS_BASE } from '$env/static/private';
 
-
 function getDownloadsBaseUrl(): string {
 	const base = APPGOBLIN_DOWNLOADS_BASE?.trim();
 	if (base) return base.endsWith('/') ? base : `${base}/`;

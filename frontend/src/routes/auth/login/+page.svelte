@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Crown from 'lucide-svelte/icons/crown';
+	import Crown from '@lucide/svelte/icons/crown';
 	import { enhance } from '$app/forms';
 
 	import type { ActionData, PageData } from './$types';

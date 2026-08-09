@@ -4,19 +4,17 @@
 	import CompaniesBarChart from '$lib/CompaniesBarChart.svelte';
 	import AdvertiserCreativeRankingsTableTop from '$lib/AdvertiserCreativeRankingsTableTop.svelte';
 	import { formatNumber } from '$lib/utils/formatNumber.js';
-	import {
-		ClipboardList,
-		TrendingUp,
-		Layers,
-		ChartNoAxesColumnIncreasing,
-		Smartphone,
-		Gamepad2,
-		Sparkles,
-		Zap,
-		Calendar,
-		Star,
-		FileText
-	} from 'lucide-svelte';
+	import ClipboardList from '@lucide/svelte/icons/clipboard-list';
+	import TrendingUp from '@lucide/svelte/icons/trending-up';
+	import Layers from '@lucide/svelte/icons/layers';
+	import ChartNoAxesColumnIncreasing from '@lucide/svelte/icons/chart-no-axes-column-increasing';
+	import Smartphone from '@lucide/svelte/icons/smartphone';
+	import Gamepad2 from '@lucide/svelte/icons/gamepad-2';
+	import Sparkles from '@lucide/svelte/icons/sparkles';
+	import Zap from '@lucide/svelte/icons/zap';
+	import Calendar from '@lucide/svelte/icons/calendar';
+	import Star from '@lucide/svelte/icons/star';
+	import FileText from '@lucide/svelte/icons/file-text';
 
 	let { data } = $props();
 

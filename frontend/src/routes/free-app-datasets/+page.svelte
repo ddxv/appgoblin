@@ -1,6 +1,12 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import { Download, Copy, Check, Database, FileText, FlaskConical } from 'lucide-svelte';
+
+	import Download from '@lucide/svelte/icons/download';
+	import Copy from '@lucide/svelte/icons/copy';
+	import Check from '@lucide/svelte/icons/check';
+	import Database from '@lucide/svelte/icons/database';
+	import FileText from '@lucide/svelte/icons/file-text';
+	import FlaskConical from '@lucide/svelte/icons/flask-conical';
 
 	let { data } = $props();
 
@@ -9,6 +15,10 @@
 		size_bytes: number;
 		last_modified: string;
 		download_url: string;
+		license_url?: string;
+		license_name?: string;
+		attribution_html?: string;
+		attribution_text?: string;
 	}
 
 	interface ColumnDef {
@@ -291,8 +301,8 @@
 		name: 'AppGoblin Free App Data Exports',
 		description: 'Free mobile app datasets for researchers, data scientists, and marketers',
 		url: 'https://appgoblin.info/free-app-datasets',
-		imageName: 'AppGoblin Logo',
-		imageUrl: 'https://appgoblin.info/goblin_purple_hat_250.png',
+		license: 'https://creativecommons.org/licenses/by/4.0/',
+		image: 'https://appgoblin.info/goblin_purple_hat_250.png',
 		creator: {
 			'@type': 'Organization',
 			name: 'AppGoblin',
@@ -305,6 +315,7 @@
 				description:
 					'App store metrics and metadata for 5+ million apps covering installs, ratings, categories, pricing, and more',
 				keyword: ['app metrics', 'app store data', 'market research'],
+				license: 'https://creativecommons.org/licenses/by/4.0/',
 				distribution: {
 					'@type': 'DataDownload',
 					encodingFormat: 'TSV',
@@ -317,6 +328,7 @@
 				description:
 					'English-language app store descriptions from Google Play and Apple App Store for NLP, text analysis, and market research',
 				keyword: ['app descriptions', 'text data', 'NLP dataset'],
+				license: 'https://creativecommons.org/licenses/by/4.0/',
 				distribution: {
 					'@type': 'DataDownload',
 					encodingFormat: 'TSV',
@@ -334,6 +346,38 @@
 		<h1 class="text-3xl md:text-4xl font-black">
 			Free App Data Exports for Researchers & Data Scientists
 		</h1>
+		<!-- License & attribution -->
+		<div
+			class="preset-outlined-surface-100-900 p-4 md:p-5"
+			itemscope
+			itemtype="http://schema.org/Dataset"
+		>
+			<meta itemprop="name" content="AppGoblin Free App Store Analytics Data" />
+			<link itemprop="license" href="https://creativecommons.org/licenses/by/4.0/" />
+			<link itemprop="isBasedOn" href="https://appgoblin.info" />
+			<div class="grid gap-2">
+				<p class="leading-relaxed">
+					<strong>License:</strong> This dataset is made available under the
+					<a
+						href="https://creativecommons.org/licenses/by/4.0/"
+						target="_blank"
+						rel="license"
+						class="underline font-semibold"
+						>Creative Commons Attribution 4.0 International License (CC BY 4.0)</a
+					>.
+				</p>
+				<p class="leading-relaxed">
+					<strong>How to Attribute:</strong> You are free to share and adapt this data for any purpose,
+					including commercial use. If you publish, redistribute, or build products using this dataset,
+					you must include the following citation and backlink:
+				</p>
+				<blockquote class="border-l-4 border-primary-500 pl-4 italic text-sm">
+					Data provided by <a href="https://appgoblin.info" class="underline font-semibold"
+						>AppGoblin</a
+					>.
+				</blockquote>
+			</div>
+		</div>
 		<p class="text-lg max-w-2xl">
 			High-quality, regularly updated app store datasets from Google Play and Apple App Store for
 			researchers, data scientists, and marketers. Downloads are free with a free AppGoblin account.
@@ -373,8 +417,8 @@
 							{@const isCopied = copiedKey === dataset.key}
 							<div class="preset-outlined-surface-100-900 p-5 flex flex-col gap-4">
 								<div class="flex items-start gap-3">
-									<div class="p-2 rounded-lg bg-primary-500/10 shrink-0">
-										<Icon class="h-6 w-6 text-primary-500" />
+									<div class="p-2 rounded-lg shrink-0">
+										<Icon class="h-6 w-6 " />
 									</div>
 									<div class="flex-1 min-w-0">
 										<h3 class="text-xl font-bold">{meta.name}</h3>
@@ -434,6 +478,14 @@
 										<strong class="text-gray-400">Updated:</strong>
 										{formatDate(dataset.last_modified)}
 									</span>
+									{#if dataset.license_name}
+										<span>
+											<strong class="text-gray-400">License:</strong>
+											<a href={dataset.license_url} target="_blank" rel="license" class="underline">
+												{dataset.license_name}
+											</a>
+										</span>
+									{/if}
 								</div>
 
 								<div class="flex flex-wrap gap-2 mt-auto pt-1">
@@ -441,7 +493,7 @@
 										<a
 											href={dataset.download_url}
 											download
-											class="btn preset-filled-primary-500 flex items-center gap-2 text-sm"
+											class="btn preset-filled-primary-100-900 flex items-center gap-2 text-sm"
 										>
 											<Download class="h-4 w-4" />
 											Download
@@ -463,7 +515,7 @@
 										<a
 											href="/auth/signup"
 											title={signupTooltip}
-											class="btn preset-filled-primary-500 flex items-center gap-2 text-sm"
+											class="btn preset-filled-primary-100-900 flex items-center gap-2 text-sm"
 										>
 											<Download class="h-4 w-4" />
 											Create Free Account
@@ -501,8 +553,8 @@
 							{@const isCopied = copiedKey === dataset.key}
 							<div class="preset-outlined-surface-100-900 p-5 flex flex-col gap-4">
 								<div class="flex items-start gap-3">
-									<div class="p-2 rounded-lg bg-primary-500/10 shrink-0">
-										<Icon class="h-6 w-6 text-primary-500" />
+									<div class="p-2 rounded-lg shrink-0">
+										<Icon class="h-6 w-6" />
 									</div>
 									<div class="flex-1 min-w-0">
 										<h3 class="text-xl font-bold">{meta.name}</h3>
@@ -562,6 +614,14 @@
 										<strong class="text-gray-400">Updated:</strong>
 										{formatDate(dataset.last_modified)}
 									</span>
+									{#if dataset.license_name}
+										<span>
+											<strong class="text-gray-400">License:</strong>
+											<a href={dataset.license_url} target="_blank" rel="license" class="underline">
+												{dataset.license_name}
+											</a>
+										</span>
+									{/if}
 								</div>
 
 								<div class="flex flex-wrap gap-2 mt-auto pt-1">
@@ -569,7 +629,7 @@
 										<a
 											href={dataset.download_url}
 											download
-											class="btn preset-filled-primary-500 flex items-center gap-2 text-sm"
+											class="btn flex items-center gap-2 text-sm"
 										>
 											<Download class="h-4 w-4" />
 											Download
@@ -591,7 +651,7 @@
 										<a
 											href="/auth/signup"
 											title={signupTooltip}
-											class="btn preset-filled-primary-500 flex items-center gap-2 text-sm"
+											class="btn preset-filled-primary-100-900 flex items-center gap-2 text-sm"
 										>
 											<Download class="h-4 w-4" />
 											Create Free Account
@@ -637,7 +697,7 @@
 			</div>
 		</div>
 		<div class="mt-4">
-			<a href="/pricing" class="btn preset-filled-primary-500 text-sm"
+			<a href="/pricing" class="btn preset-filled-primary-100-900 text-sm"
 				>View Premium Dataset Pricing</a
 			>
 		</div>

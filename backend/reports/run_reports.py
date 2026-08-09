@@ -444,7 +444,13 @@ def build_advertiser_csv(frame: pd.DataFrame, report_period: str) -> bytes:
     # Sort by buying size descending
     out = out.sort_values("estimated_buying_size_score", ascending=False)
 
-    return out.to_csv(index=False).encode("utf-8")
+    # Prepend license header as CSV comment line (Step 3: embed license metadata)
+    csv_content = out.to_csv(index=False)
+    license_header = (
+        "# Data provided by AppGoblin (https://appgoblin.info) under CC BY 4.0"
+        " (https://creativecommons.org/licenses/by/4.0/)\n"
+    )
+    return (license_header + csv_content).encode("utf-8")
 
 
 def run_report(

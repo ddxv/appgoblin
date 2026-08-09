@@ -1,214 +1,34 @@
 <script lang="ts">
-	import WhiteCard from '$lib/WhiteCard.svelte';
 	import ManifestItemList from '$lib/ManifestItemList.svelte';
-	import ManifestItemUnknownsList from '$lib/ManifestItemUnknownsList.svelte';
-	import { Tabs } from '@skeletonlabs/skeleton-svelte';
 
-	import type { AppSDKs } from '../../../../../types';
-
-	let { data }: { data: AppSDKs } = $props();
-
-	function resultToString(result: number | null) {
-		switch (result) {
-			case 1:
-				return 'Success';
-			case 3:
-				return 'Failed';
-			default:
-				return 'Unknown';
-		}
-	}
-	function formatDateTime(date: string | null) {
-		if (!date) return '—';
-		return new Date(date).toLocaleDateString('en-US', {
-			year: 'numeric',
-			month: 'long',
-			day: 'numeric',
-			hour: '2-digit',
-			minute: '2-digit',
-			second: '2-digit',
-			hour12: false
-		});
-	}
+	let { data }: { data: any } = $props();
 </script>
 
 <div class="p-2 md:p-16 mt-2 md:mt-4">
 	<section class="space-y-6">
-		<h2 class="h1 md:h3 p-2">SDKs, Trackers & Permissions for {data.myapp.name || ''}</h2>
-		{#if data.myapp.sdk_last_crawled}
-			<div class="flex items-center gap-2">
-				<span class="font-medium">Last Successful SDK Scan:</span>
-				<span class="">{data.myapp.sdk_successful_last_crawled}</span>
-			</div>
-			<div class="flex items-center gap-2">
-				<span class="font-medium">Lastest Attempt:</span>
-				<span class="">{data.myapp.sdk_last_crawled}</span>
-			</div>
-			<div class="flex items-center gap-2">
-				<span class="font-medium">Last Attempt Status:</span>
-				<span
-					class={data.myapp.sdk_last_crawl_result == 1
-						? 'text-success-900-100'
-						: 'text-error-900-100'}
-				>
-					{data.myapp.sdk_last_crawl_result == 1 ? 'Success' : 'Failed'}
-				</span>
-			</div>
-		{/if}
-		<Tabs defaultValue="sdks">
-			<Tabs.List>
-				<Tabs.Trigger value="sdks" class="p-0 md:p-8"
-					><p class="text-xs md:text-base">SDKs</p></Tabs.Trigger
-				>
-				<Tabs.Trigger value="unknowns" class="p-0 md:p-8"
-					><p class="text-xs md:text-base">Unmapped SDKs / Unknown</p></Tabs.Trigger
-				>
-				{#if data.myapp.store.startsWith('Apple')}
-					<Tabs.Trigger value="SKAdNetwork" class="p-0 md:p-8"
-						><p class="text-xs md:text-base">SKAdNetwork</p></Tabs.Trigger
-					>
-				{/if}
-				{#if data.myapp.store.startsWith('Google')}
-					<Tabs.Trigger value="permissions" class="p-0 md:p-8"
-						><p class="text-xs md:text-base">Permissions</p></Tabs.Trigger
-					>
-					<Tabs.Trigger value="queries" class="p-0 md:p-8"
-						><p class="text-xs md:text-base">App Queries</p></Tabs.Trigger
-					>
-				{/if}
-			</Tabs.List>
+		<h2 class="h1 md:h3 p-2">SDKs in {data.myapp.name || ''}</h2>
 
-			<Tabs.Content value="sdks">
-				{#if typeof data.myPackageInfo == 'string'}
-					<p>Permissions, SDKs and trackers info not yet available for this app.</p>
-				{:else}
-					<section class="grid grid-cols-1 gap-4">
-						{#if data.myPackageInfo.company_categories && Object.keys(data.myPackageInfo.company_categories).length > 0}
-							{#await data.companyTypes}
-								Loading company types...
-							{:then myCompanyTypes}
-								{#each Object.keys(data.myPackageInfo.company_categories) as category}
-									<h3 class="h3">
-										{myCompanyTypes.types.find((x: { url_slug: string }) => x.url_slug === category)
-											?.name || category}
-									</h3>
-									<div class="p-2 lg:p-4">
-										<ManifestItemList items={data.myPackageInfo.company_categories[category]}
-										></ManifestItemList>
-									</div>
-								{/each}
-							{/await}
-						{/if}
-					</section>
-				{/if}
-			</Tabs.Content>
-
-			<Tabs.Content value="unknowns">
-				<section class="grid grid-cols-1 gap-4">
-					{#if typeof data.myPackageInfo == 'string'}
-						<p>Permissions, SDKs and trackers info not yet available for this app.</p>
-					{:else}
-						{#if data.myPackageInfo.leftovers && Object.keys(data.myPackageInfo.leftovers).length > 0}
-							<div class="p-2">
-								<p>If you recognize any of these please reach out to have it added.</p>
+		{#if typeof data.myPackageInfo == 'string'}
+			<p>Permissions, SDKs and trackers info not yet available for this app.</p>
+		{:else}
+			<section class="grid grid-cols-1 gap-4">
+				{#if data.myPackageInfo.company_categories && Object.keys(data.myPackageInfo.company_categories).length > 0}
+					{#await data.companyTypes}
+						Loading company types...
+					{:then myCompanyTypes}
+						{#each Object.keys(data.myPackageInfo.company_categories) as category}
+							<h3 class="h3">
+								{myCompanyTypes.types.find((x: { url_slug: string }) => x.url_slug === category)
+									?.name || category}
+							</h3>
+							<div class="p-2 lg:p-4">
+								<ManifestItemList items={data.myPackageInfo.company_categories[category]}
+								></ManifestItemList>
 							</div>
-							<ManifestItemUnknownsList items={data.myPackageInfo.leftovers}
-							></ManifestItemUnknownsList>
-						{:else}
-							<p>No unknown SDKs found.</p>
-						{/if}
-					{/if}
-				</section>
-			</Tabs.Content>
-			<Tabs.Content value="queries">
-				<section class="grid grid-cols-1">
-					{#if data.myPackageInfo.app_queries && data.myPackageInfo.app_queries.length > 0}
-						<h3 class="h4 md:h3 p-2 md:p-4 mt-4">App Queries</h3>
-						<p>
-							These are the other apps that {data.myapp.name} requests to know other apps are also installed:
-						</p>
-						<div class="px-4 md:px-8 max-w-sm md:max-w-md lg:max-w-full overflow-x-scroll">
-							{#each data.myPackageInfo.app_queries as app_query}
-								<p><a href="/apps/{app_query}" rel="nofollow">{app_query}</a></p>
-							{/each}
-						</div>
-					{/if}
-				</section>
-			</Tabs.Content>
-
-			<Tabs.Content value="permissions">
-				<section class="grid grid-cols-1 md:grid-cols-2 gap-4">
-					{#if data.myPackageInfo.permissions && data.myPackageInfo.permissions.length > 0}
-						<div class="px-4 md:px-8 max-w-sm md:max-w-md lg:max-w-full overflow-x-scroll">
-							<h3 class="h4 md:h3 p-2 md:p-4 mt-4">Permissions</h3>
-							{#each data.myPackageInfo.permissions as permission}
-								<p>{permission}</p>
-							{/each}
-						</div>
-					{/if}
-				</section>
-			</Tabs.Content>
-
-			<Tabs.Content value="skadnetwork">
-				<section class="grid grid-cols-1 md:grid-cols-2 gap-4">
-					{#if data.myPackageInfo.skadnetwork && data.myPackageInfo.skadnetwork.length > 0}
-						<h3 class="h4 md:h3 p-2 md:p-4 mt-4">SKAdNetwork</h3>
-						<div class="px-4 md:px-8 max-w-sm md:max-w-md lg:max-w-full overflow-x-scroll">
-							{#each data.myPackageInfo.skadnetwork as skadnetwork}
-								<p>{skadnetwork}</p>
-							{/each}
-						</div>
-					{/if}
-				</section>
-			</Tabs.Content>
-		</Tabs>
+						{/each}
+					{/await}
+				{/if}
+			</section>
+		{/if}
 	</section>
 </div>
-
-<section class="gap-4 mt-8">
-	SDK Scans History
-	<div class="space-y-2 p-2">
-		{#if data.myapp.sdk_last_crawled}
-			<div class="flex items-center gap-2">
-				<span class="font-medium">Last Successful SDK Scan:</span>
-				<span class="">{data.myapp.sdk_successful_last_crawled}</span>
-			</div>
-			<div class="flex items-center gap-2">
-				<span class="font-medium">Lastest Attempt:</span>
-				<span class="">{data.myapp.sdk_last_crawled}</span>
-			</div>
-			<div class="flex items-center gap-2">
-				<span class="font-medium">Last Attempt Status:</span>
-				<span
-					class={data.myapp.sdk_last_crawl_result == 1
-						? 'text-success-900-100'
-						: 'text-error-900-100'}
-				>
-					{data.myapp.sdk_last_crawl_result == 1 ? 'Success' : 'Failed'}
-				</span>
-			</div>
-			<table class="table">
-				<thead>
-					<tr>
-						<th class="text-left p-2">SDKs Last Scanned</th>
-						<th class="text-left p-2">Version</th>
-						<th class="text-left p-2">Scan Result</th>
-						<th class="text-left p-2">First Downloaded</th>
-					</tr>
-				</thead>
-				<tbody>
-					{#each data.versionTimeline as version}
-						<tr>
-							<td class="p-2">{formatDateTime(version.sdks_last_scanned_at)}</td>
-							<td class="p-2">{version.app_version_code}</td>
-							<td class="p-2">{resultToString(version.sdk_scan_result)}</td>
-							<td class="p-2">{formatDateTime(version.downloaded_at)}</td>
-						</tr>
-					{/each}
-				</tbody>
-			</table>
-		{:else}
-			App not yet analyzed for SDKs.
-		{/if}
-	</div>
-</section>

@@ -16,9 +16,9 @@
 	import { createSvelteTable, FlexRender } from '$lib/components/data-table/index.js';
 
 	import { genericColumns } from '$lib/components/data-table/generic-column';
-	import Shield from 'lucide-svelte/icons/shield';
-	import CircleHalf from 'lucide-svelte/icons/shield-half';
-	import Eye from 'lucide-svelte/icons/eye';
+	import Shield from '@lucide/svelte/icons/shield';
+	import CircleHalf from '@lucide/svelte/icons/shield-half';
+	import Eye from '@lucide/svelte/icons/eye';
 
 	import { formatNumber } from '$lib/utils/formatNumber';
 	import { countryCodeToEmoji } from '$lib/utils/countryCodeToEmoji';

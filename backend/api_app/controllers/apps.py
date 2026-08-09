@@ -24,6 +24,7 @@ from api_app.models import (
     AppGroupByStore,
     AppRank,
     AppRankOverview,
+    AppSdkHistory,
     AppSDKsOverview,
     SDKsDetails,
 )
@@ -41,6 +42,7 @@ from dbcon.queries import (
     get_app_global_metrics_history,
     get_app_rating_histogram,
     get_app_sdk_details,
+    get_app_sdk_history,
     get_app_sdk_overview,
     get_app_version_timeline,
     get_growth_apps,
@@ -702,6 +704,48 @@ class AppController(Controller):
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(f"{self.path}/{store_id}/sdks took {duration}ms")
         return trackers_dict
+
+    @get(path="/{store_id:str}/sdks/history", cache=3600)
+    async def get_sdk_history(self: Self, state: State, store_id: str) -> AppSdkHistory:
+        """Handle GET request for SDK change history for a specific app.
+
+        Returns a list of SDK additions/removals across versions,
+        ordered most recent first.
+
+        Args:
+        ----
+            state: Application state
+            store_id: The id of the app to retrieve
+
+        Returns:
+        -------
+            AppSdkHistory
+
+        """
+        start = time.perf_counter() * 1000
+
+        df = get_app_sdk_history(state, store_id)
+
+        if not df.empty:
+            # Merge cached company logos for better coverage
+            company_logos_df = get_company_logos_df(state).drop_duplicates(
+                subset=["company_domain"], keep="first"
+            )
+            df = df.merge(
+                company_logos_df,
+                on="company_domain",
+                how="left",
+                validate="m:1",
+            )
+
+            df = df.replace({pd.NaT: None})
+            df = df.where(pd.notna(df), None)
+
+        history = df.to_dict(orient="records")
+
+        duration = round((time.perf_counter() * 1000 - start), 2)
+        logger.info(f"{self.path}/{store_id}/sdks/history took {duration}ms")
+        return AppSdkHistory(history=history)
 
     @get(path="/{store_id:str}/ranks/overview", cache=3600)
     async def app_ranks_overview(

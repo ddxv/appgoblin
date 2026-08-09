@@ -2,8 +2,8 @@
 	import type { PageData } from './$types';
 	import AdCard from '$lib/AdCard.svelte';
 	import WhiteCard from '$lib/WhiteCard.svelte';
-	import ChevronLeft from 'lucide-svelte/icons/chevron-left';
-	import ChevronRight from 'lucide-svelte/icons/chevron-right';
+	import ChevronLeft from '@lucide/svelte/icons/chevron-left';
+	import ChevronRight from '@lucide/svelte/icons/chevron-right';
 
 	interface Props {
 		data: PageData;

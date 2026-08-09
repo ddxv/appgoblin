@@ -1,8 +1,8 @@
 <script lang="ts">
-	import TrendingUpIcon from 'lucide-svelte/icons/trending-up';
-	import TrendingDownIcon from 'lucide-svelte/icons/trending-down';
-	import UsersIcon from 'lucide-svelte/icons/users';
-	import DollarSignIcon from 'lucide-svelte/icons/dollar-sign';
+	import TrendingUpIcon from '@lucide/svelte/icons/trending-up';
+	import TrendingDownIcon from '@lucide/svelte/icons/trending-down';
+	import UsersIcon from '@lucide/svelte/icons/users';
+	import DollarSignIcon from '@lucide/svelte/icons/dollar-sign';
 
 	import IconDownload from '$lib/svg/IconDownload.svelte';
 	import Star from './Star.svelte';

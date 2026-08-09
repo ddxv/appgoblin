@@ -18,8 +18,8 @@
 
 	import { genericColumns } from '$lib/components/data-table/generic-column';
 
-	import Check from 'lucide-svelte/icons/check';
-	import X from 'lucide-svelte/icons/x';
+	import Check from '@lucide/svelte/icons/check';
+	import X from '@lucide/svelte/icons/x';
 
 	import { formatNumber, getRevenueBucket } from '$lib/utils/formatNumber';
 	import ZScoreMeter from '$lib/components/ZScoreMeter.svelte';

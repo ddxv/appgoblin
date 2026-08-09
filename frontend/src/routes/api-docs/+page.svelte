@@ -30,6 +30,18 @@
 	<meta name="twitter:card" content="summary" />
 </svelte:head>
 <div class="space-y-4 py-4 md:py-6">
+	<!-- Cross-link to data exports docs -->
+	<div class="px-4 md:px-6">
+		<div class="preset-tonal p-3 rounded-lg flex flex-wrap items-center gap-2">
+			<p class="text-sm flex-1">
+				Looking for CSV column definitions?
+				<a href="/docs/data-exports" class="underline font-semibold whitespace-nowrap"
+					>View the Data Exports Guide →</a
+				>
+			</p>
+		</div>
+	</div>
+
 	<div class="px-4 md:px-6">
 		<h1 class="text-2xl font-bold md:text-3xl">API Documentation</h1>
 	</div>

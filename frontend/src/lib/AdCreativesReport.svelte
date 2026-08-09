@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { LayoutGrid, Lock, RectangleHorizontal, RectangleVertical } from 'lucide-svelte';
+	import LayoutGrid from '@lucide/svelte/icons/layout-grid';
+	import RectangleHorizontal from '@lucide/svelte/icons/rectangle-horizontal';
+	import RectangleVertical from '@lucide/svelte/icons/rectangle-vertical';
 	import AdCreativeCard from '$lib/AdCreativeCard.svelte';
 	import {
 		type AdCreativeCategoryOption,
@@ -417,9 +419,9 @@
 							{#if !allowAdvancedFilters}
 								<a
 									href={signInUrl}
-									class="inline-flex items-center gap-2 self-start rounded-full bg-primary-600 px-4 py-1.5 text-xs font-semibold text-white transition hover:bg-primary-700"
+									class="btn preset-filled-primary-100-900 inline-flex items-center gap-2 p-2 text-xs"
 								>
-									Create free account
+									<span>Create free account</span>
 								</a>
 							{/if}
 						</div>
@@ -598,9 +600,9 @@
 								</div>
 								<a
 									href={signInUrl}
-									class="inline-flex items-center gap-2 rounded-full bg-primary-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-primary-700"
+									class="btn preset-filled-primary-100-900 inline-flex items-center gap-2 p-3"
 								>
-									Create free account
+									<span class="text-black">Create free account</span>
 								</a>
 							</div>
 							<div class="relative">
@@ -616,22 +618,17 @@
 								<div
 									class="absolute inset-0 flex items-center justify-center rounded-2xl bg-gradient-to-b from-surface-50/10 via-surface-50/55 to-surface-50/85 dark:from-surface-900/10 dark:via-surface-900/50 dark:to-surface-900/80"
 								>
-									<div
-										class="mx-4 max-w-md rounded-2xl border border-primary-300/60 bg-white/88 p-5 text-center shadow-lg backdrop-blur-sm dark:bg-surface-900/88"
-									>
-										<h4 class="text-lg font-bold text-primary-700">Unlock full access for free</h4>
-										<p class="mt-2 text-sm font-medium opacity-80">
-											Sign up for a free account to view the complete creative library, unlock
-											advanced filters, and more.
+									<div class="flex flex-col items-center gap-4 text-center bg-surface-50-950/50">
+										<h4 class="text-lg font-bold text-primary-800-200">Sign in for more</h4>
+										<p class="max-w-xs font-medium">
+											Sign up for a free account to view more creatives, unlock filters, and more.
 										</p>
-										<div class="mt-5 flex justify-center gap-3">
-											<a
-												href={signInUrl}
-												class="inline-flex items-center justify-center rounded-full bg-primary-600 px-6 py-2.5 text-sm font-bold text-white transition hover:bg-primary-700"
-											>
-												Create Free Account
-											</a>
-										</div>
+										<a
+											href={signInUrl}
+											class="btn preset-filled-primary-100-900 inline-flex items-center gap-2 p-3"
+										>
+											<span class="text-black">Create Free Account</span>
+										</a>
 									</div>
 								</div>
 							</div>
@@ -647,5 +644,21 @@
 				</div>
 			{/if}
 		</div>
+	</div>
+
+	<div
+		class="mt-8 border-t border-surface-200 pt-6 text-center text-sm text-surface-500 dark:border-surface-700 dark:text-surface-400"
+	>
+		<p class="max-w-2xl mx-auto leading-6">
+			This is a subset of the available ad creatives. Full creative access is available for
+			<a href="/pricing" class="font-semibold underline underline-offset-2 hover:text-primary-600"
+				>B2B plans</a
+			>
+			via API.
+			<a href="/contact" class="font-semibold underline underline-offset-2 hover:text-primary-600"
+				>Please reach out</a
+			>
+			if you have any questions.
+		</p>
 	</div>
 </div>

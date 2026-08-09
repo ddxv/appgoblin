@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import LogIn from 'lucide-svelte/icons/log-in';
+	import LogIn from '@lucide/svelte/icons/log-in';
 
 	type Props = {
 		storeId: string;

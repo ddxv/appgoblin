@@ -1,8 +1,9 @@
 <script lang="ts">
-	import Check from 'lucide-svelte/icons/check';
-	import X from 'lucide-svelte/icons/x';
+	import Check from '@lucide/svelte/icons/check';
+	import X from '@lucide/svelte/icons/x';
 	import type { CompanyOverviewApps } from '../types';
 	import { formatNumber } from '$lib/utils/formatNumber';
+	import { countryCodeToEmoji } from '$lib/utils/countryCodeToEmoji';
 
 	type Props = {
 		android: CompanyOverviewApps[];
@@ -27,6 +28,16 @@
 	function tableHasPublisher(table: CompanyOverviewApps[]) {
 		return !table.every((row) => row.publisher == false);
 	}
+
+	function tableHasIsRemoved(table: CompanyOverviewApps[]) {
+		if (table.length === 0) return false;
+		const removedCount = table.filter((row) => row.is_removed === true).length;
+		return removedCount / table.length >= 0.2;
+	}
+
+	function tableHasCountry(table: CompanyOverviewApps[]) {
+		return table.some((row) => row.country != null);
+	}
 </script>
 
 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -42,6 +53,9 @@
 						<tr>
 							<th class="table-cell-fit"></th>
 							<th class="table-cell-fit">App</th>
+							{#if tableHasCountry(android)}
+								<th class="table-cell-fit">HQ</th>
+							{/if}
 							<th class="table-cell-fit">Quarter</th>
 							<th class="table-cell-fit">Monthly Installs</th>
 							<th class="table-cell-fit">SDK</th>
@@ -51,6 +65,9 @@
 							<th class="table-cell-fit">API Calls</th>
 							{#if tableHasAdsTxt(android)}
 								<th class="table-cell-fit">App-Ads.txt</th>
+							{/if}
+							{#if tableHasIsRemoved(android)}
+								<th class="table-cell-fit">Removed</th>
 							{/if}
 						</tr>
 					</thead>
@@ -73,6 +90,11 @@
 										</div>
 									</a>
 								</td>
+								{#if tableHasCountry(android)}
+									<td class="table-cell-fit">
+										{app.country ? `${countryCodeToEmoji(app.country)} ${app.country}` : '-'}
+									</td>
+								{/if}
 								<td class="table-cell-fit">Q{app.quarter} {app.year}</td>
 								<td class="table-cell-fit">{formatNumber(app.installs_d30)}</td>
 								<td class="table-cell-fit">
@@ -115,6 +137,13 @@
 										{/if}
 									</td>
 								{/if}
+								{#if tableHasIsRemoved(android)}
+									<td class="table-cell-fit">
+										{#if app.is_removed == true}
+											<Check class={xIconClass} />
+										{/if}
+									</td>
+								{/if}
 							</tr>
 						{/each}
 						{#if previewMode && android.length > 3}
@@ -130,6 +159,11 @@
 											</div>
 										</div>
 									</td>
+									{#if tableHasCountry(android)}
+										<td class="table-cell-fit"
+											><div class="h-3 w-10 rounded bg-surface-200-800"></div></td
+										>
+									{/if}
 									<td class="table-cell-fit"
 										><div class="h-3 w-16 rounded bg-surface-200-800"></div></td
 									>
@@ -148,6 +182,11 @@
 										><div class="h-3 w-4 rounded bg-surface-200-800"></div></td
 									>
 									{#if tableHasAdsTxt(android)}
+										<td class="table-cell-fit"
+											><div class="h-3 w-4 rounded bg-surface-200-800"></div></td
+										>
+									{/if}
+									{#if tableHasIsRemoved(android)}
 										<td class="table-cell-fit"
 											><div class="h-3 w-4 rounded bg-surface-200-800"></div></td
 										>
@@ -189,6 +228,9 @@
 						<tr>
 							<th class="table-cell-fit"></th>
 							<th class="table-cell-fit">App</th>
+							{#if tableHasCountry(ios)}
+								<th class="table-cell-fit">HQ</th>
+							{/if}
 							<th class="table-cell-fit">Quarter</th>
 							<th class="table-cell-fit">Monthly Installs</th>
 							<th class="table-cell-fit">SDK</th>
@@ -197,6 +239,9 @@
 							{/if}
 							{#if tableHasAdsTxt(ios)}
 								<th class="table-cell-fit">App-Ads.txt</th>
+							{/if}
+							{#if tableHasIsRemoved(ios)}
+								<th class="table-cell-fit">Removed</th>
 							{/if}
 						</tr>
 					</thead>
@@ -219,6 +264,11 @@
 										</div>
 									</a>
 								</td>
+								{#if tableHasCountry(ios)}
+									<td class="table-cell-fit">
+										{app.country ? `${countryCodeToEmoji(app.country)} ${app.country}` : '-'}
+									</td>
+								{/if}
 								<td class="table-cell-fit">Q{app.quarter} {app.year}</td>
 								<td class="table-cell-fit">{formatNumber(app.installs_d30)}</td>
 								<td class="table-cell-fit">
@@ -252,6 +302,13 @@
 										{/if}
 									</td>
 								{/if}
+								{#if tableHasIsRemoved(ios)}
+									<td class="table-cell-fit">
+										{#if app.is_removed == true}
+											<Check class={xIconClass} />
+										{/if}
+									</td>
+								{/if}
 							</tr>
 						{/each}
 						{#if previewMode && ios.length > 3}
@@ -267,6 +324,11 @@
 											</div>
 										</div>
 									</td>
+									{#if tableHasCountry(ios)}
+										<td class="table-cell-fit"
+											><div class="h-3 w-10 rounded bg-surface-200-800"></div></td
+										>
+									{/if}
 									<td class="table-cell-fit"
 										><div class="h-3 w-16 rounded bg-surface-200-800"></div></td
 									>
@@ -277,6 +339,11 @@
 										><div class="h-3 w-4 rounded bg-surface-200-800"></div></td
 									>
 									{#if tableHasPublisher(ios)}
+										<td class="table-cell-fit"
+											><div class="h-3 w-4 rounded bg-surface-200-800"></div></td
+										>
+									{/if}
+									{#if tableHasIsRemoved(ios)}
 										<td class="table-cell-fit"
 											><div class="h-3 w-4 rounded bg-surface-200-800"></div></td
 										>

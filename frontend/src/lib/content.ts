@@ -10,7 +10,6 @@ export const blogPosts = import.meta.glob('/src/content/blog/*.mdx', {
 	eager: true
 });
 
-const reportModules = import.meta.glob('/src/routes/reports/*/+page.svelte');
 const reportSourceModules = import.meta.glob('/src/routes/reports/*/+page.svelte', {
 	eager: true,
 	query: '?raw',

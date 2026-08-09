@@ -3,15 +3,15 @@
 	import type { CompanyTabIndicators } from '../../types';
 	import SubNavTabs from './SubNavTabs.svelte';
 	import type { SubNavTabItem } from './SubNavTabs.svelte';
-	import Home from 'lucide-svelte/icons/home';
-	import Image from 'lucide-svelte/icons/image';
-	import TrendingUp from 'lucide-svelte/icons/trending-up';
-	import PlusCircle from 'lucide-svelte/icons/plus-circle';
-	import MinusCircle from 'lucide-svelte/icons/minus-circle';
-	import Boxes from 'lucide-svelte/icons/boxes';
-	import Puzzle from 'lucide-svelte/icons/puzzle';
-	import FileText from 'lucide-svelte/icons/file-text';
-	import Download from 'lucide-svelte/icons/download';
+	import Home from '@lucide/svelte/icons/home';
+	import Image from '@lucide/svelte/icons/image';
+	import TrendingUp from '@lucide/svelte/icons/trending-up';
+	import PlusCircle from '@lucide/svelte/icons/plus-circle';
+	import MinusCircle from '@lucide/svelte/icons/minus-circle';
+	import Boxes from '@lucide/svelte/icons/boxes';
+	import Puzzle from '@lucide/svelte/icons/puzzle';
+	import FileText from '@lucide/svelte/icons/file-text';
+	import Download from '@lucide/svelte/icons/download';
 
 	let {
 		tabIndicators,
@@ -194,7 +194,7 @@
 		const bottomSections: SubNavTabItem[] = [
 			...(hasAnyAppsAdded
 				? [
-						{ slug: '_section-apps-added', sectionLabel: 'Apps Recently Added' } as SubNavTabItem,
+						{ sectionLabel: 'Apps Recently Added' } as SubNavTabItem,
 						...(tabHasData('apps-added')
 							? [
 									{
@@ -226,7 +226,7 @@
 				: []),
 			...(hasAnyAppsLost
 				? [
-						{ slug: '_section-apps-lost', sectionLabel: 'Apps Recently Lost' } as SubNavTabItem,
+						{ sectionLabel: 'Apps Recently Lost' } as SubNavTabItem,
 						...(tabHasData('apps-lost')
 							? [
 									{

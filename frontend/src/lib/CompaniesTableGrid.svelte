@@ -6,10 +6,12 @@
 
 	let {
 		mainTable,
-		showIntro = true
+		showIntro = true,
+		countryChart
 	}: {
 		mainTable: Snippet;
 		showIntro?: boolean;
+		countryChart?: Snippet;
 	} = $props();
 
 	const typeName = $derived(
@@ -66,44 +68,51 @@
 </script>
 
 {#if showIntro}
-	<div class="text-sm md:text-base leading-relaxed space-y-4 mb-6">
-		{#if isFiltered}
-			<p>{filteredLead}</p>
-			<p class="text-surface-600-400">{introText}</p>
-		{:else}
-			<p>
-				Explore the top 1,000 companies and domains powering the mobile ecosystem. Updated
-				continuously with SDK, API, and app-ads.txt intelligence, this free dashboard helps
-				researchers, growth teams, and fraud analysts compare market presence and technical
-				footprints across millions of iOS and Android apps.
-			</p>
-		{/if}
+	<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+		<div class="lg:col-span-2 text-sm md:text-base leading-relaxed space-y-4">
+			{#if isFiltered}
+				<p>{filteredLead}</p>
+				<p class="text-surface-600-400">{introText}</p>
+			{:else}
+				<p>
+					Explore the top 1,000 companies and domains powering the mobile ecosystem. Updated
+					continuously with SDK, API, and app-ads.txt intelligence, this free dashboard helps
+					researchers, growth teams, and fraud analysts compare market presence and technical
+					footprints across millions of iOS and Android apps.
+				</p>
+			{/if}
 
-		<div>
-			<h2 class="text-lg md:text-xl font-semibold mb-2">Features</h2>
-			<ul class="list-disc list-outside ml-5 space-y-1">
-				{#if !isFiltered}
+			<div>
+				<h2 class="text-lg md:text-xl font-semibold mb-2">Features</h2>
+				<ul class="list-disc list-outside ml-5 space-y-1">
+					{#if !isFiltered}
+						<li>
+							<span class="font-semibold">Categorization:</span> Browse top players across Ad Networks,
+							Trackers, MMPs, Business Tools, and Development Tools.
+						</li>
+					{/if}
 					<li>
-						<span class="font-semibold">Categorization:</span> Browse top players across Ad Networks,
-						Trackers, MMPs, Business Tools, and Development Tools.
+						<span class="font-semibold">More Insights:</span> Click any company to view detailed historical
+						data, quarterly market share changes, and top app clients.
 					</li>
-				{/if}
-				<li>
-					<span class="font-semibold">More Insights:</span> Click any company to view detailed historical
-					data, quarterly market share changes, and top app clients.
-				</li>
-				<li>
-					<span class="font-semibold">Free Export:</span> Download the dataset as a CSV.
-				</li>
-			</ul>
-		</div>
+					<li>
+						<span class="font-semibold">Free Export:</span> Download the dataset as a CSV.
+					</li>
+				</ul>
+			</div>
 
-		{#if !isFiltered}
-			<blockquote class="border-l-4 border-surface-300-700 pl-4 italic">
-				<span class="font-semibold not-italic">Can't find a specific company?</span> The table below features
-				the top 1,000 domains across all categories. Use the site-wide search bar at the top of the page
-				to find specific or long-tail companies or domains.
-			</blockquote>
+			{#if !isFiltered}
+				<blockquote class="border-l-4 border-surface-300-700 pl-4 italic">
+					<span class="font-semibold not-italic">Can't find a specific company?</span> The table below
+					features the top 1,000 domains across all categories. Use the site-wide search bar at the top
+					of the page to find specific or long-tail companies or domains.
+				</blockquote>
+			{/if}
+		</div>
+		{#if countryChart}
+			<div class="lg:col-span-1">
+				{@render countryChart()}
+			</div>
 		{/if}
 	</div>
 {/if}

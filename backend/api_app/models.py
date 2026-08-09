@@ -614,6 +614,7 @@ class CompaniesOverview:
     companies_overview: list[dict[str, object]]
     top: TopCompaniesShort
     categories: CompaniesCategoryOverview
+    country_stats: list[dict[str, object]] = field(default_factory=list)
 
 
 @dataclass
@@ -738,6 +739,13 @@ class SdkOverview:
 
     ios_overview: list[dict]
     android_overview: list[dict]
+
+
+@dataclass
+class AppSdkHistory:
+    """Historical SDK changes (additions/removals) for an app."""
+
+    history: list[dict]
 
 
 @dataclass

@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import type { LayoutData } from './$types';
-	import UserRound from 'lucide-svelte/icons/user-round';
-	import Settings from 'lucide-svelte/icons/settings';
-	import ShieldCheck from 'lucide-svelte/icons/shield-check';
-	import CreditCard from 'lucide-svelte/icons/credit-card';
-	import LayoutDashboard from 'lucide-svelte/icons/layout-dashboard';
-	import ListTodo from 'lucide-svelte/icons/list-todo';
-	import Code from 'lucide-svelte/icons/code';
+	import UserRound from '@lucide/svelte/icons/user-round';
+	import Settings from '@lucide/svelte/icons/settings';
+	import ShieldCheck from '@lucide/svelte/icons/shield-check';
+	import CreditCard from '@lucide/svelte/icons/credit-card';
+	import LayoutDashboard from '@lucide/svelte/icons/layout-dashboard';
+	import ListTodo from '@lucide/svelte/icons/list-todo';
+	import Code from '@lucide/svelte/icons/code';
 	import MainContent from '$lib/MainContent.svelte';
 
 	let { data, children }: { data: LayoutData; children: any } = $props();

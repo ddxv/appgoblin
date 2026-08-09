@@ -2,7 +2,7 @@
 	import { enhance } from '$app/forms';
 	import type { PageData } from './$types';
 	import { getPlanSummary } from '$lib/account/subscription';
-	import Crown from 'lucide-svelte/icons/crown';
+	import Crown from '@lucide/svelte/icons/crown';
 
 	let { data }: { data: PageData } = $props();
 	let planSummary = $derived(getPlanSummary(data.subscriptionTier));

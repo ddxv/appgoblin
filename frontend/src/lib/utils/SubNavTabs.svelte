@@ -1,14 +1,14 @@
 <script lang="ts">
-	import Crown from 'lucide-svelte/icons/crown';
-	import LogIn from 'lucide-svelte/icons/log-in';
-	import Menu from 'lucide-svelte/icons/menu';
-	import X from 'lucide-svelte/icons/x';
+	import Crown from '@lucide/svelte/icons/crown';
+	import LogIn from '@lucide/svelte/icons/log-in';
+	import Menu from '@lucide/svelte/icons/menu';
+	import X from '@lucide/svelte/icons/x';
 
-	export interface SubNavTabItem {
+	export interface SubNavTabItemBase {
 		slug: string;
 		label: string;
 		href: string;
-		icon?: typeof import('lucide-svelte').ChartLine;
+		icon?: new (...args: any[]) => any;
 		count?: number | null;
 		b2b?: boolean;
 		/**
@@ -24,7 +24,7 @@
 		/**
 		 * When set, renders as a non-clickable section heading instead of a link.
 		 */
-		sectionLabel?: string;
+		sectionLabel?: never;
 		/**
 		 * Adds left padding to indent this item under a section header.
 		 */
@@ -34,6 +34,22 @@
 		 */
 		authRequired?: boolean;
 	}
+
+	export interface SubNavTabSection {
+		sectionLabel: string;
+		slug?: never;
+		label?: never;
+		href?: never;
+		icon?: never;
+		count?: never;
+		b2b?: never;
+		matchSlugs?: never;
+		dimmed?: never;
+		indent?: never;
+		authRequired?: never;
+	}
+
+	export type SubNavTabItem = SubNavTabItemBase | SubNavTabSection;
 
 	let {
 		tabs,
