@@ -1,8 +1,8 @@
 <script lang="ts">
-	import Crown from 'lucide-svelte/icons/crown';
-	import LogIn from 'lucide-svelte/icons/log-in';
-	import Menu from 'lucide-svelte/icons/menu';
-	import X from 'lucide-svelte/icons/x';
+	import Crown from '@lucide/svelte/icons/crown';
+	import LogIn from '@lucide/svelte/icons/log-in';
+	import Menu from '@lucide/svelte/icons/menu';
+	import X from '@lucide/svelte/icons/x';
 
 	export interface SubNavTabItemBase {
 		slug: string;

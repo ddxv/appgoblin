@@ -4,7 +4,7 @@
 	import StarsRating from '$lib/StarsRating.svelte';
 	import FollowToggleButton from '$lib/components/follows/FollowToggleButton.svelte';
 	import RequestSDKScanButton from '$lib/RequestSDKScanButton.svelte';
-	import LogIn from 'lucide-svelte/icons/log-in';
+	import LogIn from '@lucide/svelte/icons/log-in';
 	import type { CompanyTypes, AppFullDetail, CatData } from '../../../types';
 	import AvailableOniOs from '$lib/svg/AvailableOniOS.svelte';
 	import AppNavTabs from '$lib/utils/AppNavTabs.svelte';

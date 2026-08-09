@@ -1,6 +1,6 @@
 <script lang="ts">
-	import Check from 'lucide-svelte/icons/check';
-	import X from 'lucide-svelte/icons/x';
+	import Check from '@lucide/svelte/icons/check';
+	import X from '@lucide/svelte/icons/x';
 	import type { CompanyOverviewApps } from '../types';
 	import { formatNumber } from '$lib/utils/formatNumber';
 	import { countryCodeToEmoji } from '$lib/utils/countryCodeToEmoji';

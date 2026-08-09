@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { PageData } from './$types';
-	import ShieldCheck from 'lucide-svelte/icons/shield-check';
-	import KeyRound from 'lucide-svelte/icons/key-round';
+	import ShieldCheck from '@lucide/svelte/icons/shield-check';
+	import KeyRound from '@lucide/svelte/icons/key-round';
 
 	let { data }: { data: PageData } = $props();
 </script>

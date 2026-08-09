@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { LayoutGrid, Lock, RectangleHorizontal, RectangleVertical } from 'lucide-svelte';
+	import LayoutGrid from '@lucide/svelte/icons/layout-grid';
+	import RectangleHorizontal from '@lucide/svelte/icons/rectangle-horizontal';
+	import RectangleVertical from '@lucide/svelte/icons/rectangle-vertical';
 	import AdCreativeCard from '$lib/AdCreativeCard.svelte';
 	import {
 		type AdCreativeCategoryOption,

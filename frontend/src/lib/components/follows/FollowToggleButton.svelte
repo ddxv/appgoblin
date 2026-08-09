@@ -1,5 +1,5 @@
 <script lang="ts">
-	import LogIn from 'lucide-svelte/icons/log-in';
+	import LogIn from '@lucide/svelte/icons/log-in';
 	type FollowEntity = 'app' | 'company';
 
 	let {

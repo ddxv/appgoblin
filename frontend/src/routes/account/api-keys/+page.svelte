@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import type { PageData, ActionData } from './$types';
-	import KeyRound from 'lucide-svelte/icons/key-round';
-	import Plus from 'lucide-svelte/icons/plus';
-	import Trash2 from 'lucide-svelte/icons/trash-2';
-	import Copy from 'lucide-svelte/icons/copy';
-	import Check from 'lucide-svelte/icons/check';
-	import ExternalLink from 'lucide-svelte/icons/external-link';
-	import Crown from 'lucide-svelte/icons/crown';
+	import KeyRound from '@lucide/svelte/icons/key-round';
+	import Plus from '@lucide/svelte/icons/plus';
+	import Trash2 from '@lucide/svelte/icons/trash-2';
+	import Copy from '@lucide/svelte/icons/copy';
+	import Check from '@lucide/svelte/icons/check';
+	import ExternalLink from '@lucide/svelte/icons/external-link';
+	import Crown from '@lucide/svelte/icons/crown';
 	import { getPlanSummary } from '$lib/account/subscription';
 
 	let { data, form }: { data: PageData; form?: ActionData | null } = $props();

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import ChevronDown from 'lucide-svelte/icons/chevron-down';
+	import ChevronDown from '@lucide/svelte/icons/chevron-down';
 
 	const topBarFont = 'text-xs md:text-base hover:';
 	const topBarHighlightedFont = 'text-xs md:text-base ';

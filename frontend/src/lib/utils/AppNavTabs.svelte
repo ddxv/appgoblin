@@ -3,18 +3,18 @@
 	import type { AppFullDetail } from '../../types';
 	import SubNavTabs from './SubNavTabs.svelte';
 	import type { SubNavTabItem } from './SubNavTabs.svelte';
-	import ChartLine from 'lucide-svelte/icons/chart-line';
-	import ChartBar from 'lucide-svelte/icons/chart-bar';
-	import Boxes from 'lucide-svelte/icons/boxes';
-	import Key from 'lucide-svelte/icons/key';
-	import TrendingUp from 'lucide-svelte/icons/trending-up';
-	import FileText from 'lucide-svelte/icons/file-text';
-	import Image from 'lucide-svelte/icons/image';
-	import History from 'lucide-svelte/icons/history';
-	import HelpCircle from 'lucide-svelte/icons/help-circle';
-	import Shield from 'lucide-svelte/icons/shield';
-	import Search from 'lucide-svelte/icons/search';
-	import RadioReceiver from 'lucide-svelte/icons/radio-receiver';
+	import ChartLine from '@lucide/svelte/icons/chart-line';
+	import ChartBar from '@lucide/svelte/icons/chart-bar';
+	import Boxes from '@lucide/svelte/icons/boxes';
+	import Key from '@lucide/svelte/icons/key';
+	import TrendingUp from '@lucide/svelte/icons/trending-up';
+	import FileText from '@lucide/svelte/icons/file-text';
+	import Image from '@lucide/svelte/icons/image';
+	import History from '@lucide/svelte/icons/history';
+	import HelpCircle from '@lucide/svelte/icons/help-circle';
+	import Shield from '@lucide/svelte/icons/shield';
+	import Search from '@lucide/svelte/icons/search';
+	import RadioReceiver from '@lucide/svelte/icons/radio-receiver';
 
 	let { isAndroidApp, myapp }: { isAndroidApp: boolean; myapp: AppFullDetail } = $props();
 

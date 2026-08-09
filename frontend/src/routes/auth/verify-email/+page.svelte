@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import LogOut from 'lucide-svelte/icons/log-out';
+	import LogOut from '@lucide/svelte/icons/log-out';
 
 	import type { ActionData, PageData } from './$types';
 

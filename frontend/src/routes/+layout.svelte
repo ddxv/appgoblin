@@ -6,9 +6,9 @@
 	import { Menu, Portal } from '@skeletonlabs/skeleton-svelte';
 
 	import IconSearch from '$lib/svg/IconSearch.svelte';
-	import MenuIcon from 'lucide-svelte/icons/menu';
-	import MoonIcon from 'lucide-svelte/icons/moon';
-	import SunIcon from 'lucide-svelte/icons/sun';
+	import MenuIcon from '@lucide/svelte/icons/menu';
+	import MoonIcon from '@lucide/svelte/icons/moon';
+	import SunIcon from '@lucide/svelte/icons/sun';
 
 	import { AppBar } from '@skeletonlabs/skeleton-svelte';
 

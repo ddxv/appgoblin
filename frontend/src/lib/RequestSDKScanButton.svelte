@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import ScanText from 'lucide-svelte/icons/scan-text';
+	import ScanText from '@lucide/svelte/icons/scan-text';
 
 	let {
 		compact = false,

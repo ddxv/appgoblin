@@ -1,11 +1,11 @@
 <script lang="ts">
-	import Crown from 'lucide-svelte/icons/crown';
-	import X from 'lucide-svelte/icons/x';
-	import Filter from 'lucide-svelte/icons/filter';
-	import Search from 'lucide-svelte/icons/search';
-	import Mail from 'lucide-svelte/icons/mail';
-	import Loader2 from 'lucide-svelte/icons/loader-2';
-	import RotateCcw from 'lucide-svelte/icons/rotate-ccw';
+	import Crown from '@lucide/svelte/icons/crown';
+	import X from '@lucide/svelte/icons/x';
+	import Filter from '@lucide/svelte/icons/filter';
+	import Search from '@lucide/svelte/icons/search';
+	import Mail from '@lucide/svelte/icons/mail';
+	import Loader2 from '@lucide/svelte/icons/loader-2';
+	import RotateCcw from '@lucide/svelte/icons/rotate-ccw';
 	import { countryCodeToEmoji } from '$lib/utils/countryCodeToEmoji';
 	import { applyAction, enhance } from '$app/forms';
 	import {

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import ExternalLink from 'lucide-svelte/icons/external-link';
+	import ExternalLink from '@lucide/svelte/icons/external-link';
 
 	let {
 		title,

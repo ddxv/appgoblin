@@ -6,8 +6,8 @@
 		getFilteredRowModel
 	} from '@tanstack/table-core';
 
-	import Check from 'lucide-svelte/icons/check';
-	import X from 'lucide-svelte/icons/x';
+	import Check from '@lucide/svelte/icons/check';
+	import X from '@lucide/svelte/icons/x';
 
 	import ExportAsCSV from '$lib/components/data-table/ExportAsCSV.svelte';
 	import type { CompanyOverviewApps } from '../types';

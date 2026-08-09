@@ -1,6 +1,12 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import { Download, Copy, Check, Database, FileText, FlaskConical } from 'lucide-svelte';
+
+	import Download from '@lucide/svelte/icons/download';
+	import Copy from '@lucide/svelte/icons/copy';
+	import Check from '@lucide/svelte/icons/check';
+	import Database from '@lucide/svelte/icons/database';
+	import FileText from '@lucide/svelte/icons/file-text';
+	import FlaskConical from '@lucide/svelte/icons/flask-conical';
 
 	let { data } = $props();
 

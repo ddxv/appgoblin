@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import type { PageData } from './$types';
-	import Mail from 'lucide-svelte/icons/mail';
-	import KeyRound from 'lucide-svelte/icons/key-round';
-	import LogOut from 'lucide-svelte/icons/log-out';
+	import Mail from '@lucide/svelte/icons/mail';
+	import KeyRound from '@lucide/svelte/icons/key-round';
+	import LogOut from '@lucide/svelte/icons/log-out';
 
 	let { data }: { data: PageData } = $props();
 </script>

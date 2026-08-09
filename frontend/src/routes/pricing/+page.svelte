@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import Check from 'lucide-svelte/icons/check';
-	import Crown from 'lucide-svelte/icons/crown';
-	import X from 'lucide-svelte/icons/x';
-	import ChevronDown from 'lucide-svelte/icons/chevron-down';
-	import ChevronUp from 'lucide-svelte/icons/chevron-up';
-	import Sparkles from 'lucide-svelte/icons/sparkles';
+	import Check from '@lucide/svelte/icons/check';
+	import Crown from '@lucide/svelte/icons/crown';
+	import X from '@lucide/svelte/icons/x';
+	import ChevronDown from '@lucide/svelte/icons/chevron-down';
+	import ChevronUp from '@lucide/svelte/icons/chevron-up';
+	import Sparkles from '@lucide/svelte/icons/sparkles';
 	import type { BillingCycle } from '$lib/server/stripe';
 	import type { PageData } from './$types';
 	import type { ActionResult } from '@sveltejs/kit';

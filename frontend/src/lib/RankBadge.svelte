@@ -1,6 +1,6 @@
 <script lang="ts">
-	import Trophy from 'lucide-svelte/icons/trophy';
-	import Award from 'lucide-svelte/icons/award';
+	import Trophy from '@lucide/svelte/icons/trophy';
+	import Award from '@lucide/svelte/icons/award';
 
 	interface Props {
 		rank: number; // 1-based

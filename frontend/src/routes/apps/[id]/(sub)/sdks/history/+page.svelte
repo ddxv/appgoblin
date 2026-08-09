@@ -1,8 +1,8 @@
 <script lang="ts">
-	import History from 'lucide-svelte/icons/history';
-	import Plus from 'lucide-svelte/icons/plus';
-	import Minus from 'lucide-svelte/icons/minus';
-	import X from 'lucide-svelte/icons/x';
+	import History from '@lucide/svelte/icons/history';
+	import Plus from '@lucide/svelte/icons/plus';
+	import Minus from '@lucide/svelte/icons/minus';
+	import X from '@lucide/svelte/icons/x';
 
 	let { data }: { data: { sdkHistory: { history: Record<string, any>[] }; myapp: any } } = $props();
 

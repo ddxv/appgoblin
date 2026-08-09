@@ -1,9 +1,9 @@
 <script lang="ts">
 	import DataExportColumnDocs from '$lib/components/docs/DataExportColumnDocs.svelte';
-	import BookOpen from 'lucide-svelte/icons/book-open';
-	import Database from 'lucide-svelte/icons/database';
-	import ArrowRight from 'lucide-svelte/icons/arrow-right';
-	import Shield from 'lucide-svelte/icons/shield';
+	import BookOpen from '@lucide/svelte/icons/book-open';
+	import Database from '@lucide/svelte/icons/database';
+	import ArrowRight from '@lucide/svelte/icons/arrow-right';
+	import Shield from '@lucide/svelte/icons/shield';
 </script>
 
 <svelte:head>

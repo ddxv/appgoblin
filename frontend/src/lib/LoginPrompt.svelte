@@ -11,7 +11,7 @@
 -->
 <script lang="ts">
 	import { page } from '$app/state';
-	import Crown from 'lucide-svelte/icons/crown';
+	import Crown from '@lucide/svelte/icons/crown';
 
 	const redirectTo = $derived(page.url.pathname + page.url.search);
 
