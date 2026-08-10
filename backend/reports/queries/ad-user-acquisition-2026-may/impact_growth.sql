@@ -73,7 +73,7 @@ main_results AS (
         adv.store_app,
         adv.store_id,
         adv_app.icon_url_128,
-        cc.alpha2 as country,
+        cc.alpha2 AS country,
         adv.in_app_purchases,
         adv.ad_supported,
         adv.target_week_installs AS weekly_installs,
@@ -113,8 +113,10 @@ main_results AS (
         count(DISTINCT pub.id) AS pub_count
     FROM creative_records AS cr
     LEFT JOIN creative_assets AS ca ON cr.creative_asset_id = ca.id
-    LEFT JOIN frontend.store_apps_overview AS adv_app ON cr.advertiser_store_app_id = adv_app.id
-    left join countries cc on adv_app.country_id = cc.id
+    LEFT JOIN
+        frontend.store_apps_overview AS adv_app
+        ON cr.advertiser_store_app_id = adv_app.id
+    LEFT JOIN countries AS cc ON adv_app.country_id = cc.id
     INNER JOIN advertiser_z_scores AS adv ON adv_app.id = adv.store_app
     LEFT JOIN api_calls AS ac ON cr.api_call_id = ac.id
     LEFT JOIN version_code_api_scan_results AS pub
@@ -198,7 +200,7 @@ SELECT
     best_week,
     app_name,
     store_id,
-    icon_url_128 as icon_url_100,
+    icon_url_128 AS icon_url_100,
     country,
     in_app_purchases,
     ad_supported,
