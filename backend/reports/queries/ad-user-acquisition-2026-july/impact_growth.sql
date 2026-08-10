@@ -8,6 +8,9 @@ WITH advertiser_z_scores AS (
             sazh.app_name,
             sazh.store_id,
             sazh.target_week_installs,
+            sazh.target_week_ad_revenue,
+            sazh.target_week_iap_revenue,
+            sazh.target_week_mau,
             sazh.weekly_installs_pct,
             sazh.baseline_installs,
             sazh.baseline_installs_pct,
@@ -72,11 +75,14 @@ main_results AS (
         adv.app_name,
         adv.store_app,
         adv.store_id,
-        adv_app.icon_url_128,
-        cc.alpha2 as country,
+        adv_app.icon_128,
+        adv_app.category,
+        adv_app.country_id AS advertiser_country_id,
+        cc.alpha2 AS advertiser_country,
         adv.in_app_purchases,
         adv.ad_supported,
         adv.target_week_installs AS weekly_installs,
+        adv.target_week_mau AS monthly_active_users,
         adv.weekly_installs_pct AS weekly_percent_increase,
         adv.baseline_installs,
         adv.baseline_installs_pct,
@@ -92,6 +98,8 @@ main_results AS (
         hc.logo_url AS host_company_logo_url,
         iad.domain_name AS initial_ad_domain,
         ic.logo_url AS initial_company_logo_url,
+        coalesce(adv.target_week_iap_revenue, 0)
+        + coalesce(adv.target_week_ad_revenue, 0) AS weekly_revenue_estimate,
         nullif(
             array_agg(DISTINCT am.mmp_domain) FILTER (
                 WHERE am.mmp_domain IS NOT NULL
@@ -113,8 +121,9 @@ main_results AS (
         count(DISTINCT pub.id) AS pub_count
     FROM creative_records AS cr
     LEFT JOIN creative_assets AS ca ON cr.creative_asset_id = ca.id
-    LEFT JOIN frontend.store_apps_overview AS adv_app ON cr.advertiser_store_app_id = adv_app.id
-    left join countries cc on adv_app.country_id = cc.id
+    LEFT JOIN
+        frontend.store_apps_overview AS adv_app
+        ON cr.advertiser_store_app_id = adv_app.id
     INNER JOIN advertiser_z_scores AS adv ON adv_app.id = adv.store_app
     LEFT JOIN api_calls AS ac ON cr.api_call_id = ac.id
     LEFT JOIN version_code_api_scan_results AS pub
@@ -131,6 +140,7 @@ main_results AS (
     LEFT JOIN adtech.companies AS hc ON hcdm.company_id = hc.id
     LEFT JOIN domains AS had ON hc.domain_id = had.id
     LEFT JOIN adv_mmp AS am ON adv_app.id = am.advertiser_store_app_id
+    LEFT JOIN countries AS cc ON adv_app.country_id = cc.id
     WHERE cr.advertiser_store_app_id IS NOT NULL
     GROUP BY
         adv.target_week,
@@ -138,11 +148,16 @@ main_results AS (
         adv.app_name,
         adv.store_app,
         adv.store_id,
-        adv_app.icon_url_128,
+        adv_app.icon_128,
+        adv_app.category,
+        adv_app.country_id,
         cc.alpha2,
         adv.in_app_purchases,
         adv.ad_supported,
         adv.target_week_installs,
+        adv.target_week_ad_revenue,
+        adv.target_week_iap_revenue,
+        adv.target_week_mau,
         adv.weekly_installs_pct,
         adv.baseline_installs,
         adv.baseline_installs_pct,
@@ -167,11 +182,13 @@ best_week_results AS (
         store_app,
         app_name,
         store_id,
-        icon_url_128,
-        country,
+        icon_128,
+        category,
         in_app_purchases,
         ad_supported,
         weekly_installs,
+        weekly_revenue_estimate,
+        monthly_active_users,
         weekly_percent_increase,
         baseline_installs,
         baseline_installs_pct,
@@ -189,7 +206,8 @@ best_week_results AS (
         initial_company_logo_url,
         mmp_domains,
         md5_hash,
-        pub_count
+        pub_count,
+        advertiser_country
     FROM main_results
     ORDER BY store_app ASC, composite_score DESC
 )
@@ -198,11 +216,13 @@ SELECT
     best_week,
     app_name,
     store_id,
-    icon_url_128 as icon_url_100,
-    country,
+    icon_128,
+    category,
     in_app_purchases,
     ad_supported,
     weekly_installs,
+    weekly_revenue_estimate,
+    monthly_active_users,
     weekly_percent_increase,
     baseline_installs,
     baseline_installs_pct,
@@ -220,6 +240,7 @@ SELECT
     initial_company_logo_url,
     mmp_domains,
     md5_hash,
-    pub_count
+    pub_count,
+    advertiser_country
 FROM best_week_results
 ORDER BY composite_score DESC, store_id ASC;

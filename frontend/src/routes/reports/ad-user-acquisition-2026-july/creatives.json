@@ -1,0 +1,112 @@
+[
+  {
+    "phash": "e7adf992cdf5",
+    "md5_hash": "9d0c732571fa7fe8156076874afd2b0a",
+    "file_extension": "mp4",
+    "advertiser_count": 1,
+    "publisher_count": 128,
+    "first_seen": "2026-07-08T05:11:14.519",
+    "last_seen": "2026-07-18T15:32:00.859",
+    "advertiser_store_id": "com.tencent.ig",
+    "advertiser_icon_128": "cae44e9a718f256a_128.png"
+  },
+  {
+    "phash": "e7adf992cdf4",
+    "md5_hash": "1090bd21d22ba60e8f364b46d0bfd55b",
+    "file_extension": "mp4",
+    "advertiser_count": 1,
+    "publisher_count": 90,
+    "first_seen": "2026-07-12T01:52:38.064",
+    "last_seen": "2026-07-20T14:45:59.686",
+    "advertiser_store_id": "com.tencent.ig",
+    "advertiser_icon_128": "cae44e9a718f256a_128.png"
+  },
+  {
+    "phash": "523fdb3cd7e5",
+    "md5_hash": "6a911631da3e0d9d7f88cdd843b1ef94",
+    "file_extension": "mp4",
+    "advertiser_count": 1,
+    "publisher_count": 56,
+    "first_seen": "2026-07-14T22:39:59.114",
+    "last_seen": "2026-07-24T21:40:32.193",
+    "advertiser_store_id": "com.fugo.wow",
+    "advertiser_icon_128": "80f43f52ac6cb2d6_128.png"
+  },
+  {
+    "phash": "d485f102f17c",
+    "md5_hash": "eb8b86261598ac11d33450a0baf72eb6",
+    "file_extension": "mp4",
+    "advertiser_count": 1,
+    "publisher_count": 48,
+    "first_seen": "2026-07-01T03:50:57.396",
+    "last_seen": "2026-07-27T21:02:43.099",
+    "advertiser_store_id": "com.pixel.art.coloring.color.number",
+    "advertiser_icon_128": "f094cd1c9cfc318b_128.png"
+  },
+  {
+    "phash": "e48ca69db1b0",
+    "md5_hash": "c401dccf8f6d3c857871280385479738",
+    "file_extension": "mp4",
+    "advertiser_count": 1,
+    "publisher_count": 47,
+    "first_seen": "2026-07-10T11:46:10.542",
+    "last_seen": "2026-07-28T03:31:41.017",
+    "advertiser_store_id": "com.fugo.wow",
+    "advertiser_icon_128": "80f43f52ac6cb2d6_128.png"
+  },
+  {
+    "phash": "6b842f953e61",
+    "md5_hash": "a8614b8cdfe843712efc89b32d4efbb8",
+    "file_extension": "webm",
+    "advertiser_count": 1,
+    "publisher_count": 37,
+    "first_seen": "2026-07-01T05:28:05.824",
+    "last_seen": "2026-07-26T18:58:26.060",
+    "advertiser_store_id": "com.logoquiz.triviagame",
+    "advertiser_icon_128": "98ca66846df36336_128.png"
+  },
+  {
+    "phash": "7f1f3ffc7e67",
+    "md5_hash": "f24acdf7cc0e21fea00f59eb1b22de78",
+    "file_extension": "webm",
+    "advertiser_count": 1,
+    "publisher_count": 36,
+    "first_seen": "2026-07-03T02:07:34.103",
+    "last_seen": "2026-07-27T09:44:45.592",
+    "advertiser_store_id": "com.trace.art.draw.drawing.paint",
+    "advertiser_icon_128": "eaeca513d63c6944_128.png"
+  },
+  {
+    "phash": "bd6b699bb39b",
+    "md5_hash": "2a9e834e6bae9ea904ad92eee436d9dc",
+    "file_extension": "mp4",
+    "advertiser_count": 1,
+    "publisher_count": 36,
+    "first_seen": "2026-07-24T07:28:48.837",
+    "last_seen": "2026-07-28T04:28:52.639",
+    "advertiser_store_id": "de.empfohlen",
+    "advertiser_icon_128": "eaecea45b9433630_128.png"
+  },
+  {
+    "phash": "55bb13d6ffdd",
+    "md5_hash": "c26b8c4c4cf77fa09ef2d024b164a3b2",
+    "file_extension": "mp4",
+    "advertiser_count": 1,
+    "publisher_count": 35,
+    "first_seen": "2026-07-02T13:57:50.520",
+    "last_seen": "2026-07-27T15:23:35.758",
+    "advertiser_store_id": "com.rovio.baba",
+    "advertiser_icon_128": "b0638fb95c6421ed_128.png"
+  },
+  {
+    "phash": "a637b53366ca",
+    "md5_hash": "96667b6ed4f8e8dafeead8a7b6d503ee",
+    "file_extension": "mp4",
+    "advertiser_count": 1,
+    "publisher_count": 33,
+    "first_seen": "2026-07-10T13:14:38.114",
+    "last_seen": "2026-07-28T06:39:05.532",
+    "advertiser_store_id": "de.empfohlen",
+    "advertiser_icon_128": "eaecea45b9433630_128.png"
+  }
+]

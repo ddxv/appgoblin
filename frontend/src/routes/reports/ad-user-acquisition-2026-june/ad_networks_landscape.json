@@ -6,9 +6,9 @@
     "all_domains": [
       "google.com"
     ],
-    "publisher_count": 8520,
-    "advertiser_count": 1242,
-    "creatives_count": 6835
+    "publisher_count": 8541,
+    "advertiser_count": 1268,
+    "creatives_count": 6852
   },
   {
     "ad_network_name": "AppLovin",
@@ -40,7 +40,7 @@
       "yandex.com"
     ],
     "publisher_count": 776,
-    "advertiser_count": 55,
+    "advertiser_count": 58,
     "creatives_count": 1504
   },
   {

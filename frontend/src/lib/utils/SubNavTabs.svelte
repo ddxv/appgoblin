@@ -67,7 +67,8 @@
 	let isExpanded = $state(false);
 
 	const activeTab = $derived(
-		tabs.find((t) => t.slug === currentSlug || t.matchSlugs?.includes(currentSlug))
+		tabs.find((t) => t.slug === currentSlug) ??
+			tabs.find((t) => t.matchSlugs?.includes(currentSlug))
 	);
 
 	function formatCount(n: number | undefined | null): string {
@@ -79,7 +80,12 @@
 
 	function isTabActive(tab: SubNavTabItem): boolean {
 		if (tab.slug === currentSlug) return true;
-		if (tab.matchSlugs?.includes(currentSlug)) return true;
+		// Only fall back to matchSlugs when no other tab has an exact slug match,
+		// so subsection tabs (e.g. sdks-history) take priority over the parent tab's matchSlugs.
+		const exactMatchExists = tabs.some(
+			(t) => 'slug' in t && t.slug === currentSlug
+		);
+		if (!exactMatchExists && tab.matchSlugs?.includes(currentSlug)) return true;
 		return false;
 	}
 
