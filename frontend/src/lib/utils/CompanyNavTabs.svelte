@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
+
 	import type { CompanyTabIndicators } from '../../types';
 	import SubNavTabs from './SubNavTabs.svelte';
 	import type { SubNavTabItem } from './SubNavTabs.svelte';

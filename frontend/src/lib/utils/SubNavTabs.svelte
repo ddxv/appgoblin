@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { Component } from 'svelte';
 	import Crown from '@lucide/svelte/icons/crown';
 	import LogIn from '@lucide/svelte/icons/log-in';
 	import Menu from '@lucide/svelte/icons/menu';
@@ -8,7 +9,7 @@
 		slug: string;
 		label: string;
 		href: string;
-		icon?: new (...args: any[]) => any;
+		icon?: Component<any, any, any>;
 		count?: number | null;
 		b2b?: boolean;
 		/**
