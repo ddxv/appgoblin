@@ -5,7 +5,6 @@ WITH new_apps AS (
         sao.store_id,
         sao.store,
         sao.category,
-        cc.alpha2 as country,
         sao.installs,
         sao.rating,
         sao.rating_count,
@@ -14,16 +13,17 @@ WITH new_apps AS (
         sao.installs_z_score_2w,
         sao.installs_z_score_4w,
         sao.release_date,
-        sao.icon_url_100,
+        sao.icon_128,
         sao.developer_name,
         sao.developer_id,
         sao.ad_supported,
-        sao.in_app_purchases
+        sao.in_app_purchases,
+        sao.country_id
     FROM frontend.store_apps_overview AS sao
-    LEFT JOIN countries cc ON sao.country_id = cc.id
     WHERE
-        sao.release_date >= :start_date - INTERVAL '30 days'
+        sao.release_date >= :start_date - INTERVAL '45 days'
         AND sao.release_date < :next_month_start_date
+        AND sao.created_at >= :start_date - INTERVAL '200 days'
 ),
 
 new_apps_with_ads AS (
@@ -33,7 +33,6 @@ new_apps_with_ads AS (
         na.store_id,
         na.store,
         na.category,
-        na.country,
         na.installs,
         na.rating,
         na.rating_count,
@@ -42,11 +41,12 @@ new_apps_with_ads AS (
         na.installs_z_score_2w,
         na.installs_z_score_4w,
         na.release_date,
-        na.icon_url_100,
+        na.icon_128,
         na.developer_name,
         na.developer_id,
         na.ad_supported,
         na.in_app_purchases,
+        na.country_id,
         cr.id AS creative_record_id
     FROM new_apps AS na
     INNER JOIN creative_records AS cr
@@ -162,7 +162,6 @@ SELECT
     naw.store_id,
     naw.store,
     naw.category,
-    naw.country,
     naw.installs,
     naw.rating,
     naw.rating_count,
@@ -171,11 +170,12 @@ SELECT
     naw.installs_z_score_2w,
     naw.installs_z_score_4w,
     naw.release_date,
-    naw.icon_url_100,
+    naw.icon_128,
     naw.developer_name,
     naw.developer_id,
     naw.ad_supported,
     naw.in_app_purchases,
+    cc.alpha2 AS advertiser_country,
     nullif(
         array_agg(DISTINCT nana.ad_network_name::TEXT) FILTER (
             WHERE nana.ad_network_name IS NOT NULL
@@ -217,13 +217,13 @@ FROM new_apps_with_ads AS naw
 LEFT JOIN new_app_ad_networks AS nana ON naw.id = nana.id
 LEFT JOIN new_app_mmps AS nam ON naw.id = nam.id
 LEFT JOIN new_app_creatives AS nac ON naw.id = nac.id
+LEFT JOIN countries AS cc ON naw.country_id = cc.id
 GROUP BY
     naw.id,
     naw.name,
     naw.store_id,
     naw.store,
     naw.category,
-    naw.country,
     naw.installs,
     naw.rating,
     naw.rating_count,
@@ -232,10 +232,12 @@ GROUP BY
     naw.installs_z_score_2w,
     naw.installs_z_score_4w,
     naw.release_date,
-    naw.icon_url_100,
+    naw.icon_128,
     naw.developer_name,
     naw.developer_id,
     naw.ad_supported,
-    naw.in_app_purchases
+    naw.in_app_purchases,
+    naw.country_id,
+    cc.alpha2
 ORDER BY naw.installs DESC NULLS LAST, naw.name ASC
 LIMIT 40;

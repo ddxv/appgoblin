@@ -481,7 +481,7 @@ def run_report(
         for sql_path in sql_files:
             section_name = sql_path.stem
 
-            # --- all_advertisers: CSV path via S3 ---
+            # --- all_advertisers: CSV path via S3 + free sample ---
             if section_name == ADVERTISER_CSV_SECTION:
                 logger.info("Executing %s (CSV → S3)", sql_path.name)
                 frame = execute_query(sql_path, params=params, engine=dbcon.engine)
@@ -493,6 +493,38 @@ def run_report(
                 csv_bytes = build_advertiser_csv(frame, report_period)
                 public_url = upload_advertiser_csv(csv_bytes, context.slug)
                 logger.info("Uploaded %s rows to %s", len(frame), public_url)
+
+                # Free sample: top 20 rows as JSON in the route directory
+                logger.info("Writing free sample (top 20) to route directory")
+                sample_top = frame.copy()
+                sample_top["estimated_buying_size_score"] = sample_top.apply(
+                    _estimate_buying_size, axis=1
+                )
+                sample_top = sample_top.sort_values(
+                    "estimated_buying_size_score", ascending=False
+                ).head(20)
+                sample_top = sample_top.rename(
+                    columns={
+                        "advertiser_store_id": "store_id",
+                        "advertiser_name": "app_name",
+                        "advertiser_category": "category",
+                        "advertiser_installs": "total_estimated_installs",
+                        "developer_name": "developer",
+                        "ad_network_domains": "ad_networks",
+                        "mmp_domains": "mmp_providers",
+                        "unique_creatives": "unique_creatives_count",
+                    }
+                )
+                for col in ("ad_networks", "mmp_providers"):
+                    if col in sample_top.columns:
+                        sample_top[col] = sample_top[col].apply(_pg_array_to_semicolons)
+                sample_top["report_period"] = report_period
+                sample_records = dataframe_to_records(sample_top)
+                sample_path = context.route_dir / "advertisers_sample.json"
+                write_json_output(sample_path, sample_records)
+                logger.info(
+                    "Wrote %s sample rows to %s", len(sample_records), sample_path
+                )
                 continue
 
             # --- default: JSON into route directory ---

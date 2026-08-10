@@ -23,6 +23,6 @@
 	<span
 		class={`${numberClass || 'text-xs md:text-lg font-semibold text-surface-500-400'} ${extraClass}`}
 	>
-		{rank}
+		#{rank}
 	</span>
 {/if}
