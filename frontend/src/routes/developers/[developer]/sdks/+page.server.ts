@@ -1,5 +1,5 @@
 import type { PageServerLoad } from './$types';
-
+import { requireAuthOr401 } from '$lib/server/auth/auth';
 import { getCachedData } from '../../../../hooks.server';
 
 export const ssr: boolean = true;
@@ -19,7 +19,9 @@ function checkStatus(resp: Response, name: string) {
 	}
 }
 
-export const load: PageServerLoad = async ({ parent, fetch }) => {
+export const load: PageServerLoad = async (event) => {
+	requireAuthOr401(event);
+	const { parent, fetch } = event;
 	const { devs } = await parent();
 
 	const google_store_ids = devs.google.apps.apps.map((app: any) => app.store_id);
