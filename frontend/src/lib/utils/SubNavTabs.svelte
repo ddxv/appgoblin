@@ -82,9 +82,7 @@
 		if (tab.slug === currentSlug) return true;
 		// Only fall back to matchSlugs when no other tab has an exact slug match,
 		// so subsection tabs (e.g. sdks-history) take priority over the parent tab's matchSlugs.
-		const exactMatchExists = tabs.some(
-			(t) => 'slug' in t && t.slug === currentSlug
-		);
+		const exactMatchExists = tabs.some((t) => 'slug' in t && t.slug === currentSlug);
 		if (!exactMatchExists && tab.matchSlugs?.includes(currentSlug)) return true;
 		return false;
 	}

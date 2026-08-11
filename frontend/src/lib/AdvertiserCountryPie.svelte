@@ -33,11 +33,14 @@
 		if (raw.length === 0) return [];
 
 		const entries = raw
-			.map((d) => ({
-				key: d.country_code || 'Unknown',
-				label: d.country_code || 'Unknown',
-				value: d.advertiser_count
-			}))
+			.map((d) => {
+				const code = d.country_code || 'Unknown';
+				return {
+					key: code,
+					label: code === 'Unknown' ? code : `${countryFlag(code)} ${code}`,
+					value: d.advertiser_count
+				};
+			})
 			.sort((a, b) => b.value - a.value);
 
 		if (entries.length > MAX_SLICES) {
@@ -92,11 +95,7 @@
 		height={plotHeightPx}
 		legend={{
 			orientation: 'vertical',
-			placement: 'left',
-			formatLabel: (label: string) => {
-				if (label === 'Others') return 'Others';
-				return `${countryFlag(label)} ${label}`;
-			}
+			placement: 'left'
 		}}
 	>
 		{#snippet aboveMarks()}

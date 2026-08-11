@@ -5,7 +5,7 @@ WITH new_apps AS (
         sao.store_id,
         sao.store,
         sao.category,
-        cc.alpha2 as country,
+        cc.alpha2 AS country,
         sao.installs,
         sao.rating,
         sao.rating_count,
@@ -20,7 +20,7 @@ WITH new_apps AS (
         sao.ad_supported,
         sao.in_app_purchases
     FROM frontend.store_apps_overview AS sao
-    LEFT JOIN countries cc ON sao.country_id = cc.id
+    LEFT JOIN countries AS cc ON sao.country_id = cc.id
     WHERE
         sao.release_date >= :start_date - INTERVAL '30 days'
         AND sao.release_date < :next_month_start_date

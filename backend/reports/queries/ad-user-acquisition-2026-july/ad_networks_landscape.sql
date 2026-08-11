@@ -15,6 +15,7 @@ WITH cr_advertisers_raw AS (
     FROM creative_records AS cr
     WHERE cr.advertiser_store_app_ids IS NOT NULL
 ),
+
 cr_advertisers AS MATERIALIZED (
     -- one row per (creative, advertiser); strong wins if both exist,
     -- but flag it. See prior query for why this collapse matters --
@@ -27,6 +28,7 @@ cr_advertisers AS MATERIALIZED (
     FROM cr_advertisers_raw
     GROUP BY creative_record_id, advertiser_store_app_id
 ),
+
 creative_ad_networks AS (
     SELECT DISTINCT
         cr.id AS creative_record_id,
@@ -114,9 +116,9 @@ SELECT
     count(DISTINCT phash) AS creatives_count,
     count(DISTINCT advertiser_store_app_id) AS advertiser_count,
     count(DISTINCT advertiser_store_app_id)
-        FILTER (WHERE NOT is_weak_signal) AS advertiser_count_strong,
+    FILTER (WHERE NOT is_weak_signal) AS advertiser_count_strong,
     count(DISTINCT advertiser_store_app_id)
-        FILTER (WHERE is_weak_signal) AS advertiser_count_weak
+    FILTER (WHERE is_weak_signal) AS advertiser_count_weak
 FROM creative_ad_networks
 GROUP BY
     parent_ad_network_name,

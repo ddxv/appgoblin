@@ -109,12 +109,12 @@
 						<div class="flex items-center gap-2 mt-1">
 							<div class="flex-1 flex h-2 rounded-full overflow-hidden bg-primary-200-800">
 								<div
-									class="bg-success-800-200"
+									class="bg-primary-700-300"
 									style="width: {monthlyIapRevenueShare}%"
 									title="IAP {monthlyIapRevenueShare}%"
 								></div>
 								<div
-									class="bg-primary-800-200"
+									class="bg-secondary-800-200"
 									style="width: {monthlyAdRevenueShare}%"
 									title="Ad {monthlyAdRevenueShare}%"
 								></div>
@@ -122,13 +122,13 @@
 						</div>
 						<div class="text-xs ml-0.5 flex flex-wrap items-center gap-x-2 gap-y-1 mt-0.5">
 							<span class="flex items-center gap-1">
-								<span class="w-2 h-2 rounded-full bg-success-800-200"></span>
-								<span class="text-success-800-200">IAP {monthlyIapRevenueShare}%</span>
+								<span class="w-2 h-2 rounded-full bg-primary-700-300"></span>
+								<span>IAP {monthlyIapRevenueShare}%</span>
 							</span>
 							<span class="">·</span>
 							<span class="flex items-center gap-1">
-								<span class="w-2 h-2 rounded-full bg-primary-800-200"></span>
-								<span class="-200">Ad {monthlyAdRevenueShare}%</span>
+								<span class="w-2 h-2 rounded-full bg-secondary-800-200"></span>
+								<span>Ad {monthlyAdRevenueShare}%</span>
 							</span>
 						</div>
 					</div>
@@ -153,7 +153,7 @@
 								<span class="font-medium text-sm">+{formatNumber(app.installs_sum_1w)}</span>
 							</div>
 							{#if app.installs_z_score_2w > 1}
-								<div class="flex items-center gap-1 text-success-600">
+								<div class="flex items-center gap-1 text-success-900-100">
 									<TrendingUpIcon class="w-4 h-4" />
 									<span class="text-xs font-medium">Trending</span>
 								</div>
@@ -176,7 +176,7 @@
 								<span class="font-medium text-sm">+{formatNumber(app.installs_sum_4w)}</span>
 							</div>
 							{#if app.installs_z_score_4w > 1}
-								<div class="flex items-center gap-1 text-success-600">
+								<div class="flex items-center gap-1 text-success-900-100">
 									<TrendingUpIcon class="w-4 h-4" />
 									<span class="text-xs font-medium">Trending</span>
 								</div>

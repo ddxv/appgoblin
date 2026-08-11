@@ -11,10 +11,15 @@ dependencies = [
     "numpy",
     "sqlalchemy",
     "boto3",
+    "fastmcp",
+    "asyncssh",
 ]
 
 [project.optional-dependencies]
-dev = ["pre-commit", "git+https://github.com/ddxv/umami-python.git#subdirectory=umami"]
+dev = [
+    "pre-commit",
+    "git+https://github.com/ddxv/umami-python.git#subdirectory=umami",
+]
 
 [tool.ruff]
 target-version = 'py313'

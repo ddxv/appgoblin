@@ -127,7 +127,6 @@
 				</a>
 			</p>
 			<p class="mt-3 flex items-center justify-center gap-1">
-				<Crown class="w-4 h-4 text-primary-900-100" aria-hidden="true" />
 				<span>It is free to create an account. No credit card required.</span>
 			</p>
 		</div>
