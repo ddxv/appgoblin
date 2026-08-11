@@ -71,7 +71,8 @@
 					'sdks-queries',
 					'sdks-skadnetwork'
 				],
-				indent: true
+				indent: true,
+				authRequired: true
 			},
 			{
 				slug: 'sdks-history',
@@ -79,7 +80,9 @@
 				href: `/apps/${page.params.id}/sdks/history`,
 				icon: History,
 				dimmed: isSdkDimmed(),
-				indent: true
+				indent: true,
+				authRequired: true,
+				b2b: true
 			},
 			{
 				slug: 'sdks-unknowns',
@@ -87,7 +90,8 @@
 				href: `/apps/${page.params.id}/sdks/unknowns`,
 				icon: HelpCircle,
 				dimmed: isSdkDimmed(),
-				indent: true
+				indent: true,
+				authRequired: true
 			},
 			...(isAndroidApp
 				? [
@@ -97,7 +101,8 @@
 							href: `/apps/${page.params.id}/sdks/queries`,
 							icon: Search,
 							dimmed: isSdkDimmed(),
-							indent: true
+							indent: true,
+							authRequired: true
 						},
 						{
 							slug: 'sdks-permissions' as const,
@@ -105,7 +110,8 @@
 							href: `/apps/${page.params.id}/sdks/permissions`,
 							icon: Shield,
 							dimmed: isSdkDimmed(),
-							indent: true
+							indent: true,
+							authRequired: true
 						}
 					]
 				: [
@@ -115,7 +121,8 @@
 							href: `/apps/${page.params.id}/sdks/skadnetwork`,
 							icon: RadioReceiver,
 							dimmed: isSdkDimmed(),
-							indent: true
+							indent: true,
+							authRequired: true
 						}
 					]),
 			{
