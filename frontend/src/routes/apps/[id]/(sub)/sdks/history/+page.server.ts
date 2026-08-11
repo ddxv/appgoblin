@@ -1,11 +1,9 @@
 import type { PageServerLoad } from './$types';
 import { createApiClient } from '$lib/server/api';
-import { requireAuthOr401 } from '$lib/server/auth/auth';
 import { userHasTierAccess } from '$lib/server/subscription';
 
 export const load: PageServerLoad = async (event) => {
 	const { fetch, params, parent, locals } = event;
-	requireAuthOr401(event);
 	const parentData = await parent();
 	const { myapp, versionTimeline } = parentData;
 	const api = createApiClient(fetch);
@@ -17,7 +15,8 @@ export const load: PageServerLoad = async (event) => {
 
 	const id = params.id;
 	let sdkHistory: Record<string, any> = { history: [] };
-	if (myapp.sdk_successful_last_crawled) {
+	// Only fetch SDK history data if user has B2B access — avoids unnecessary backend queries
+	if (hasB2BSdkAccess && myapp.sdk_successful_last_crawled) {
 		sdkHistory = await api.get(`/apps/${id}/sdks/history`, 'App SDK History');
 	}
 

@@ -13,6 +13,7 @@
 			hasAdstxtData: boolean;
 			hasAndroidData: boolean;
 			hasIosData: boolean;
+			userId: number | null;
 		};
 	}
 
@@ -157,6 +158,11 @@
 											class="btn preset-filled-primary-500 p-3 text-sm"
 											target="_blank"
 											rel="noopener noreferrer"
+											data-umami-event="data-export-download"
+											data-umami-event-company={data.companyName}
+											data-umami-event-type={row.key}
+											data-umami-event-platform={row.platform}
+											data-umami-event-userid={data.userId}
 										>
 											Download CSV
 										</a>
