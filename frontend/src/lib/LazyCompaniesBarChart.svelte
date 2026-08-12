@@ -17,4 +17,13 @@
 
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	let ChartComponent: any = $state(undefined);
+
+	onMount(async () => {
+		const mod = await import('./CompaniesBarChart.svelte');
+		ChartComponent = mod.default;
+	});
 </script>
+
+{#if ChartComponent}
+	<ChartComponent {plotData} />
+{/if}
