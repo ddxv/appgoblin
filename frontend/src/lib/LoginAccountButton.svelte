@@ -15,8 +15,8 @@
 	// `redirectTo` in the browser. During SSR/prerender we link to plain /auth/login.
 	let loginHref = $derived(
 		browser
-			? `/auth/login?redirectTo=${encodeURIComponent(page.url.pathname + page.url.search)}`
-			: '/auth/login'
+			? `/auth/signup?redirectTo=${encodeURIComponent(page.url.pathname + page.url.search)}`
+			: '/auth/signup'
 	);
 
 	$effect(() => {
