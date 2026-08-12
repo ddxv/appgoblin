@@ -392,7 +392,7 @@
 		<div class="preset-outlined-surface-100-900 flex items-center flex-col p-0 md:p-2">
 			<input
 				placeholder="Filter top companies..."
-				value={globalFilter}
+				value={globalFilter()}
 				oninput={(e) => {
 					const value = e.currentTarget.value;
 					table.setGlobalFilter(value);

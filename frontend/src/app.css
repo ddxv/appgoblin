@@ -10,6 +10,11 @@
 
 @custom-variant dark (&:where([data-mode=dark], [data-mode=dark] *));
 
+.btn,
+button:not(:disabled) {
+	cursor: pointer;
+}
+
 a:not(.btn) {
 	color: var(--color-tertiary-950-50);
 }

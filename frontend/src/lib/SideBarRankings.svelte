@@ -54,7 +54,7 @@
 		{/snippet}
 		<nav class="list-nav">
 			<ul>
-				{#each Object.entries(storeIDLookup) as [_prop, values]}
+				{#each Object.entries(storeIDLookup) as [_prop, values] (_prop)}
 					<li>
 						<a
 							href={`/rankings/store/${values.store_id}${
@@ -82,7 +82,7 @@
 		{/snippet}
 		<nav class="list-nav">
 			<ul>
-				{#each Object.entries(collectionIDLookup[store] ?? {}) as [id, values]}
+				{#each Object.entries(collectionIDLookup[store] ?? {}) as [id, values] (id)}
 					<li>
 						<a
 							href={`/rankings/store/${store}/collection/${values.collection_id}/category/${category}/${country}`}
@@ -108,7 +108,7 @@
 		{/snippet}
 		<nav class="list-nav">
 			<ul>
-				{#each Object.entries(categoryIDLookup[collection] ?? {}) as [id, values]}
+				{#each Object.entries(categoryIDLookup[collection] ?? {}) as [id, values] (id)}
 					<li>
 						<a
 							href={`/rankings/store/${store}/collection/${collection}/category/${values.category_id}/${country}`}

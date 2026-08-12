@@ -21,9 +21,6 @@
 
 	let { data }: { data: TrackedPageData } = $props();
 
-	let trackedKeywordRows = $state<
-		Array<{ id: number; keyword_text: string; created_at: string | Date }>
-	>([]);
 	let newKeywordText = $state('');
 	let keywordTrackerMessage = $state('');
 	let keywordTrackerLoading = $state(false);
@@ -62,9 +59,7 @@
 		)
 	);
 
-	$effect(() => {
-		trackedKeywordRows = data.userTrackedKeywordsForApp ?? [];
-	});
+	let trackedKeywordRows = $derived(data.userTrackedKeywordsForApp ?? []);
 
 	function normalizeKeyword(value: string): string {
 		return value.trim().toLowerCase();

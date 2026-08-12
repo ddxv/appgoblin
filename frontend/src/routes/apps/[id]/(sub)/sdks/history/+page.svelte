@@ -120,7 +120,7 @@
 						</tr>
 					</thead>
 					<tbody>
-						{#each sortedHistory as entry}
+						{#each sortedHistory as entry (entry.version_code_created_at + (entry.sdk_name ?? ''))}
 							{#if isScanStatusRow(entry)}
 								<!-- Scan status row: no change or failed -->
 								<tr class="border-b border-surface-100-900 hover:bg-surface-50-950 transition">
@@ -165,11 +165,11 @@
 												<img
 													src="https://media.appgoblin.info/{entry.company_logo_url}"
 													alt={entry.company_name ?? ''}
-													class="w-5 h-5 rounded-full object-contain shrink-0"
+													class="w-10 h-10 rounded-full object-contain shrink-0"
 												/>
 											{/if}
 											<div class="flex flex-col">
-												<span class="font-medium text-sm leading-tight"
+												<span class="font-medium text-sm md:text-base leading-tight"
 													>{entry.sdk_name ?? 'Unknown SDK'}</span
 												>
 												{#if entry.company_domain}

@@ -1,9 +1,15 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import AppRankTableShort from '$lib/AppRankTableShort.svelte';
-	import CompaniesBarChart from '$lib/CompaniesBarChart.svelte';
+	import LazyCompaniesBarChart from '$lib/LazyCompaniesBarChart.svelte';
 	import AdvertiserCreativeRankingsTableTop from '$lib/AdvertiserCreativeRankingsTableTop.svelte';
 	import { formatNumber } from '$lib/utils/formatNumber.js';
+	import appPageLight from '$lib/assets/frontpage/app_page_light.png?enhanced';
+	import appPageDark from '$lib/assets/frontpage/app_page_dark.png?enhanced';
+	import creativeExplorerLight from '$lib/assets/frontpage/creative_explorer_light.png?enhanced';
+	import creativeExplorerDark from '$lib/assets/frontpage/creative_explorer_dark.png?enhanced';
+	import companyOverviewLight from '$lib/assets/frontpage/app_intelligence_company_overview_light.png?enhanced';
+	import companyOverviewDark from '$lib/assets/frontpage/app_intelligence_company_overview_dark.png?enhanced';
 	import ClipboardList from '@lucide/svelte/icons/clipboard-list';
 	import TrendingUp from '@lucide/svelte/icons/trending-up';
 	import Layers from '@lucide/svelte/icons/layers';
@@ -41,6 +47,8 @@
 	const now = new Date();
 	const monthYear = now.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
 
+	import type { Picture } from '@sveltejs/enhanced-img';
+
 	type DashboardHighlight = {
 		kicker: string;
 		title: string;
@@ -48,8 +56,8 @@
 		points: string[];
 		href: string;
 		cta: string;
-		imageLight: string;
-		imageDark: string;
+		imageLight: Picture;
+		imageDark: Picture;
 		imageAlt: string;
 	};
 
@@ -66,8 +74,8 @@
 			],
 			href: '/apps/com.rovio.baba',
 			cta: 'Analyze a Competitor App',
-			imageLight: '/frontpage/app_page_light.png',
-			imageDark: '/frontpage/app_page_dark.png',
+			imageLight: appPageLight,
+			imageDark: appPageDark,
 			imageAlt:
 				'App intelligence dashboard preview showing app overview, installs, ratings, and monetization data.'
 		},
@@ -83,8 +91,8 @@
 			],
 			href: '/ad-creatives',
 			cta: 'Browse Live Creatives',
-			imageLight: '/frontpage/creative_explorer_light.png',
-			imageDark: '/frontpage/creative_explorer_dark.png',
+			imageLight: creativeExplorerLight,
+			imageDark: creativeExplorerDark,
 			imageAlt:
 				'Ad creative explorer preview showing network filters and a feed of advertiser creatives.'
 		},
@@ -100,8 +108,8 @@
 			],
 			href: '/companies/google.com',
 			cta: 'Explore SDK Market Share',
-			imageLight: '/frontpage/app_intelligence_company_overview_light.png',
-			imageDark: '/frontpage/app_intelligence_company_overview_dark.png',
+			imageLight: companyOverviewLight,
+			imageDark: companyOverviewDark,
 			imageAlt:
 				'Company intelligence dashboard preview showing category breakdowns, related entities, and top customer apps.'
 		}
@@ -404,17 +412,20 @@
 					Preview
 				</div>
 				<div class="aspect-[16/11] overflow-hidden rounded-[1rem]">
-					<img
+					<enhanced:img
 						src={dashboardHighlights[activeDashboardIndex].imageLight}
 						alt={dashboardHighlights[activeDashboardIndex].imageAlt}
 						class="block h-full w-full object-cover object-top-left opacity-90 saturate-[0.92] transition-transform duration-500 group-hover:scale-[1.015] dark:hidden"
 						loading="eager"
+						sizes="min(800px, 100vw)"
+						fetchpriority="high"
 					/>
-					<img
+					<enhanced:img
 						src={dashboardHighlights[activeDashboardIndex].imageDark}
 						alt={dashboardHighlights[activeDashboardIndex].imageAlt}
 						class="hidden h-full w-full object-cover object-top-left opacity-90 saturate-[0.92] transition-transform duration-500 group-hover:scale-[1.015] dark:block"
 						loading="eager"
+						sizes="min(800px, 100vw)"
 					/>
 				</div>
 			</a>
@@ -729,7 +740,7 @@
 					Top MMPs and mobile app tracking companies in Android and iOS apps.
 				</p>
 				{#if data.topCompanies.attribution}
-					<CompaniesBarChart plotData={data.topCompanies.attribution.sdk_ios} />
+					<LazyCompaniesBarChart plotData={data.topCompanies.attribution.sdk_ios} />
 				{/if}
 			</div>
 			<div class={subSectionClass}>
@@ -743,7 +754,7 @@
 					and Android apps.
 				</p>
 				{#if data.topCompanies.analytics}
-					<CompaniesBarChart plotData={data.topCompanies.analytics.sdk_ios} />
+					<LazyCompaniesBarChart plotData={data.topCompanies.analytics.sdk_ios} />
 				{/if}
 			</div>
 		</div>

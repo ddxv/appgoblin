@@ -35,7 +35,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				{#each entries_table as row, index}
+				{#each entries_table as row, index (row.store_id)}
 					<tr class="px-0">
 						<td class="table-cell-fit">
 							{index + 1}

@@ -9,22 +9,11 @@
 		baseUrl: string;
 		storeIDLookup: StoreIDLookup;
 	}
-	let store = $state('google');
 
-	$effect(() => {
-		store = page.params.store!;
-	});
 	let { myCatData, baseUrl, storeIDLookup }: Props = $props();
 
-	let selectedCategory = $state('overall');
-
-	$effect(() => {
-		if (page.params.category) {
-			selectedCategory = page.params.category;
-		} else {
-			selectedCategory = 'overall';
-		}
-	});
+	let store = $derived(page.params.store ?? 'google');
+	let selectedCategory = $derived(page.params.category ? page.params.category : 'overall');
 
 	const buttonSelectedClass = 'p-1 preset-filled-secondary-100-900';
 	const buttonDeselectedClass = 'p-1';
@@ -43,7 +32,7 @@
 		{/snippet}
 		<nav class="list-nav">
 			<ul>
-				{#each Object.entries(storeIDLookup) as [_prop, values]}
+				{#each Object.entries(storeIDLookup) as [_prop, values] (_prop)}
 					<li>
 						<a href={`${baseUrl}/${values.store_name.toLowerCase()}/${selectedCategory}`}>
 							<p class={classesActiveStore(values.store_name)}>
@@ -63,7 +52,7 @@
 			<h4 class="h5 md:h4">App Categories</h4>
 		{/snippet}
 		{#if myCatData && myCatData.categories}
-			{#each Object.entries(myCatData.categories) as [_prop, values]}
+			{#each Object.entries(myCatData.categories) as [_prop, values] (values.id)}
 				{#if values.id && (values.android || values.name == 'Games')}
 					<a href="{baseUrl}/{store}/{values.id}" class="text-tertiary-900-100 hover:underline">
 						<SideBarCatsListBoxItem {values} {selectedCategory} />

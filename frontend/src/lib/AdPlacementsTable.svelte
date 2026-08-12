@@ -87,7 +87,7 @@
 	<div class="flex items-center p-2">
 		<input
 			placeholder="Filter apps..."
-			value={globalFilter}
+			value={globalFilter()}
 			oninput={(e) => {
 				const value = e.currentTarget.value;
 				table.setGlobalFilter(value);

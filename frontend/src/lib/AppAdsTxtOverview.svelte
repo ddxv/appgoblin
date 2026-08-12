@@ -27,7 +27,7 @@
 				{/snippet}
 				<div class="grid grid-cols-1 md:grid-cols-2 gap-2 p-4">
 					{#if adsTxt.direct_entries && adsTxt.direct_entries.length > 0}
-						{#each adsTxt.direct_entries as company}
+						{#each adsTxt.direct_entries as company (company.ad_domain)}
 							<CompanyButton
 								companyName={company.name ? company.name : company.company_domain}
 								companyDomain={company.company_domain}

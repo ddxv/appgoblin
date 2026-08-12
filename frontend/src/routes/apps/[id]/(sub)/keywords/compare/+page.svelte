@@ -20,11 +20,9 @@
 
 	// ── Active keyword set (drives the URL) ───────────────────────────────────
 	// Start from the server-resolved set so the chip list is always in sync.
-	let activeKeywords = $state<string[]>([]);
-
-	$effect(() => {
-		activeKeywords = data.resolvedKeywords.map((keyword) => keyword.keyword_text);
-	});
+	let activeKeywords = $derived(
+		data.resolvedKeywords.map((keyword: { keyword_text: string }) => keyword.keyword_text)
+	);
 
 	// Search / picker state
 	let searchQuery = $state('');

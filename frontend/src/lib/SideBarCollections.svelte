@@ -11,27 +11,12 @@
 		baseUrl: string;
 		storeIDLookup: Record<number, any>;
 	}
-	let store = $state('google');
 
-	$effect(() => {
-		store = page.params.store!;
-	});
 	let { myCatData, baseUrl, storeIDLookup }: Props = $props();
 
-	let selectedStore = $state('google');
-	let selectedCategory = $state('overall');
-
-	$effect(() => {
-		selectedStore = page.params.store!;
-	});
-
-	$effect(() => {
-		if (page.params.category) {
-			selectedCategory = page.params.category;
-		} else {
-			selectedCategory = 'overall';
-		}
-	});
+	let store = $derived(page.params.store ?? 'google');
+	let selectedStore = $derived(page.params.store ?? 'google');
+	let selectedCategory = $derived(page.params.category ? page.params.category : 'overall');
 
 	const buttonSelectedClass = 'preset-outlined-primary-900-100 text-left relative  rounded-md p-2';
 	const buttonDeselectedClass = 'p-1 md:p-2 text-tertiary-900-100 text-left hover:';
@@ -56,7 +41,7 @@
 		{/snippet}
 		<nav class="list-nav">
 			<ul>
-				{#each Object.entries(storeIDLookup) as [_prop, values]}
+				{#each Object.entries(storeIDLookup) as [_prop, values] (_prop)}
 					<li>
 						<a
 							href={`${baseUrl}/${page.params.period}/${values.store_name.toLowerCase()}/${selectedCategory}`}

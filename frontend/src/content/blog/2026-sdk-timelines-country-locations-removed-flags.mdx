@@ -1,0 +1,82 @@
+---
+title: "New features! SDK timelines, app country data, and removed-from-store flags — three new features for serious app intelligence"
+description: "AppGoblin now lets you track SDK changes over time per app, see country-level locations for company app portfolios, and distinguish store removals from SDK removals."
+pubDate: "August 12 2026"
+heroImage: "/blog-images/appgoblin_app_explorer.png"
+---
+
+## Three features that make the dataset more useful
+
+App intelligence is about understanding *what changed*, *where* an app comes from, and *why* it disappeared from a vendor portfolio. Starting today, AppGoblin ships three new features that answer those questions.
+
+---
+
+## 1. SDK Timelines — see how an app's SDK stack evolved
+
+Knowing which SDKs an app currently uses is useful and already provided free on AppGoblin. Knowing which SDKs it *added* or *removed* — and when — is the kind of information everyone from academics to adtech security researchers have been asking for.
+
+The new **SDK History** tab on each app page tracks SDK addition and removal across app versions, ordered most recent first. Each entry shows:
+
+- The date Appgoblin detected the SDK change
+- The app version that introduced or removed the SDK
+- Whether the SDK was added, removed, or initially detected
+- SDK and company name
+
+### Why SDK timelines matter
+
+- **App / B2B Sales teams** can see when a rival adopted a new ad mediation SDK or dropped an analytics provider — and correlate that with version release dates.
+- **Privacy and compliance analysts** can verify that sunset SDKs were actually removed in a specific version, rather than just abandoned.
+- **Academics & Security Research** gets a historical record of a target company's SDK relationships, revealing churn patterns that a single snapshot hides.
+
+### Example: Tracking an SDK removal
+
+On any app page, navigate to the **SDK History** tab to see the full timeline. Removals are clearly marked in red, additions in green, and scan-status rows show when the app was rescanned with no changes — so you can distinguish "still actively maintained" from "not rechecked."
+
+![SDK change history timeline showing additions and removals across app versions](/blog-images/sdk_history_changes_over_time.webp)
+
+---
+
+## 2. Country locations for every app — on company pages and in API responses
+
+This was probably the most requested feature, and I'm very happy to be able to release it. This is also going to unlock many new ways to dissect data about B2B companies not just the apps.
+
+### On company pages
+
+Each company's app portfolio — both the top apps list and the app-changes (added/lost) tables — now includes a **Country** column showing the headquarters country of each app's developer. This turns a flat list of apps into a geographic heatmap of where their clients reside.
+
+![Company recently added apps table with country and removed flags](/blog-images/company_recently_added_apps.webp)
+
+- See at a glance which markets a company's SDK has penetrated
+- Get a percentage breakdown that shows what share of a vendor's app portfolio comes from each country
+
+
+
+### Ad Networks broken down by Country
+
+![Ad networks by country — geographic breakdown of SDK adoption across markets](/blog-images/ad_networks_by_country.webp)
+
+**Investment analysts** can map a vendor's customer concentration risk by geography.
+
+---
+
+## 3. Removed-from-store flags — know when an app is gone, not just churned
+
+Many not so good apps come and go, especially from large programmatic datasets like App-ads.txt, but when an app disappears from a company's list. Did the developer intentionally remove the SDK or App-ads.txt, or did the app get pulled from the App Store entirely?
+
+The new **Removed** flag answers that question.
+
+When you see the Removed column checked on a company's top-apps or app-changes table, that app was **removed from the App Store or Google Play** — it is no longer live on the store. Thus that removal was not a business decision against the vendor just the app simply no longer exists.
+
+
+### Why this is critical for B2B teams
+
+- **Sales teams** can subtract store-removed apps from their churn reports, giving leadership accurate retention numbers.
+- **Data analysts** can filter `is_removed=true` out of pipeline calculations instead of manually cross-referencing store status.
+
+---
+
+They're all live in the AppGoblin UI today.
+
+- Browse app pages to see SDK history and country data in context
+- Visit company pages to see the country breakdown and removed flags in top-apps and app-changes tables
+

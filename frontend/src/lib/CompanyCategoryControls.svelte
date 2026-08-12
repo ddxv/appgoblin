@@ -99,7 +99,7 @@
 				value={selectedCategory}
 				onchange={handleCategoryChange}
 			>
-				{#each categoryOptions as option}
+				{#each categoryOptions as option (option.value)}
 					<option value={option.value} disabled={option.locked}
 						>{option.label}{option.locked ? ' 🔒 B2B' : ''}</option
 					>
@@ -131,7 +131,7 @@
 						value={selectedCategory}
 						onchange={handleCategoryChange}
 					>
-						{#each categoryOptions as option}
+						{#each categoryOptions as option (option.value)}
 							<option value={option.value} disabled={option.locked}
 								>{option.label}{option.locked ? ' 🔒 B2B' : ''}</option
 							>

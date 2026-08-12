@@ -1,42 +1,64 @@
 <script lang="ts">
-	export let creative: {
-		md5_hash: string;
-		file_extension: string;
-		advertiser_store_id: string;
-		advertiser_icon_url_100: string;
-		advertiser_name?: string | null;
-		publisher_count: number;
-		first_seen: string;
-		last_seen: string;
-	};
-	export let index: number;
-	export let titlePrefix = 'Popular Creative';
-	export let badgeLabel = 'Most Popular';
-	export let compact = false;
-	export let dense = false;
-	export let onOpen: (rawUrl: string, title: string) => void;
+	interface Props {
+		creative: {
+			md5_hash: string;
+			file_extension: string;
+			advertiser_store_id: string;
+			advertiser_icon_url_100: string;
+			advertiser_name?: string | null;
+			publisher_count: number;
+			first_seen: string;
+			last_seen: string;
+		};
+		index: number;
+		titlePrefix?: string;
+		badgeLabel?: string;
+		compact?: boolean;
+		dense?: boolean;
+		onOpen: (rawUrl: string, title: string) => void;
+	}
 
-	const mediaFill = dense && compact;
-	const mediaAspectClass = mediaFill
-		? 'flex-1 min-h-0'
-		: dense
-			? 'aspect-[4/3]'
+	let {
+		creative,
+		index,
+		titlePrefix = 'Popular Creative',
+		badgeLabel = 'Most Popular',
+		compact = false,
+		dense = false,
+		onOpen
+	}: Props = $props();
+
+	let mediaFill = $derived(dense && compact);
+	let mediaAspectClass = $derived(
+		mediaFill
+			? 'flex-1 min-h-0'
+			: dense
+				? 'aspect-[4/3]'
+				: compact
+					? 'aspect-square'
+					: 'aspect-video'
+	);
+	let bodyPaddingClass = $derived(dense ? 'p-3 md:p-4' : compact ? 'p-4 md:p-5' : 'p-4');
+	let badgeClass = $derived(dense ? 'px-3 py-1 text-xs' : 'px-3 py-1 text-sm');
+	let playButtonClass = $derived(
+		dense ? 'w-11 h-11 md:w-12 md:h-12' : compact ? 'w-14 h-14' : 'w-12 h-12'
+	);
+	let playIconClass = $derived(dense ? 'w-6 h-6 md:w-7 md:h-7' : compact ? 'w-9 h-9' : 'w-8 h-8');
+	let appIconClass = $derived(
+		dense ? 'w-12 h-12 md:w-14 md:h-14' : compact ? 'w-16 h-16' : 'w-14 h-14'
+	);
+	let titleClass = $derived(
+		compact
+			? 'text-sm md:text-base font-semibold truncate hover:underline'
+			: 'text-sm font-semibold truncate hover:underline'
+	);
+	let statValueClass = $derived(
+		dense
+			? 'text-base md:text-xl font-bold text-emerald-400'
 			: compact
-				? 'aspect-square'
-				: 'aspect-video';
-	const bodyPaddingClass = dense ? 'p-3 md:p-4' : compact ? 'p-4 md:p-5' : 'p-4';
-	const badgeClass = dense ? 'px-3 py-1 text-xs' : 'px-3 py-1 text-sm';
-	const playButtonClass = dense ? 'w-11 h-11 md:w-12 md:h-12' : compact ? 'w-14 h-14' : 'w-12 h-12';
-	const playIconClass = dense ? 'w-6 h-6 md:w-7 md:h-7' : compact ? 'w-9 h-9' : 'w-8 h-8';
-	const appIconClass = dense ? 'w-12 h-12 md:w-14 md:h-14' : compact ? 'w-16 h-16' : 'w-14 h-14';
-	const titleClass = compact
-		? 'text-sm md:text-base font-semibold truncate hover:underline'
-		: 'text-sm font-semibold truncate hover:underline';
-	const statValueClass = dense
-		? 'text-base md:text-xl font-bold text-emerald-400'
-		: compact
-			? 'text-lg md:text-2xl font-bold text-emerald-400'
-			: 'text-sm md:text-xl font-bold text-emerald-400';
+				? 'text-lg md:text-2xl font-bold text-emerald-400'
+				: 'text-sm md:text-xl font-bold text-emerald-400'
+	);
 
 	function formatDate(dateStr: string): string {
 		const date = new Date(dateStr);

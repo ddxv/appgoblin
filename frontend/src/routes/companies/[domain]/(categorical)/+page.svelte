@@ -41,11 +41,9 @@
 	);
 	let associatedDomains = $derived(data.companyTree?.domains ?? []);
 	type OverviewTab = 'domain' | 'parent';
-	let selectedOverview = $state<OverviewTab>('domain');
-	$effect(() => {
-		data.companyTree.queried_domain;
-		selectedOverview = data.companyDetails.parent_overview ? 'parent' : 'domain';
-	});
+	let selectedOverview = $derived<OverviewTab>(
+		data.companyDetails.parent_overview ? 'parent' : 'domain'
+	);
 	let fallbackOverview = $derived({
 		categories: data.companyDetails.categories,
 		adstxt_ad_domain_overview: data.companyDetails.adstxt_ad_domain_overview,

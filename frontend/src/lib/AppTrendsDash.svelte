@@ -243,9 +243,9 @@
 
 	<!-- Summary Cards -->
 	<div
-		class="grid grid-cols-1 gap-4 md:grid-cols-2"
-		class:lg:grid-cols-5={hasInstallMetrics}
-		class:lg:grid-cols-4={!hasInstallMetrics}
+		class="grid grid-cols-1 gap-4 md:grid-cols-2 {hasInstallMetrics
+			? 'lg:grid-cols-5'
+			: 'lg:grid-cols-4'}"
 	>
 		<!-- Date Range Card -->
 		<div class="rounded-lg border p-5">

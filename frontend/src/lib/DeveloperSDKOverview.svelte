@@ -41,7 +41,7 @@
 			Loading company types...
 		{:then myCompanyTypes}
 			<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-				{#each Object.keys(packageInfo.sdks) as category}
+				{#each Object.keys(packageInfo.sdks) as category (category)}
 					<WhiteCard>
 						{#snippet title()}
 							{myCompanyTypes.types.find((x: { url_slug: string }) => x.url_slug === category)
