@@ -46,12 +46,12 @@ export const load: PageServerLoad = async ({ locals, params, parent }) => {
 
 	const downloadUrls = canDownload
 		? {
-			appAdsTxt: hasAdstxtData ? buildAppAdsTxtUrl(domain) : null,
-			companyVerifiedAndroid: hasAndroidData
-				? buildCompanyVerifiedAppsUrl(domain, 'android')
-				: null,
-			companyVerifiedIos: hasIosData ? buildCompanyVerifiedAppsUrl(domain, 'ios') : null
-		}
+				appAdsTxt: hasAdstxtData ? buildAppAdsTxtUrl(domain) : null,
+				companyVerifiedAndroid: hasAndroidData
+					? buildCompanyVerifiedAppsUrl(domain, 'android')
+					: null,
+				companyVerifiedIos: hasIosData ? buildCompanyVerifiedAppsUrl(domain, 'ios') : null
+			}
 		: null;
 
 	return {
