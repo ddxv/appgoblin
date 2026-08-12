@@ -3,11 +3,15 @@
 	import { AreaChart, LineChart, BarChart } from 'layerchart';
 	import AppSdkOverview from '$lib/AppSDKOverview.svelte';
 
-	export let app: any;
-	export let history: any;
-	export let histogram: any;
-	export let sdks: any;
-	export let companyTypes: any;
+	interface Props {
+		app: any;
+		history: any;
+		histogram: any;
+		sdks: any;
+		companyTypes: any;
+	}
+
+	let { app, history, histogram, sdks, companyTypes }: Props = $props();
 
 	// Helper to safely format numbers
 	const formatNumber = (num: number | null | undefined): string => {
@@ -37,7 +41,7 @@
 		];
 	};
 
-	$: hist = processHistogram(histogram);
+	let hist = $derived(processHistogram(histogram));
 </script>
 
 <div class="space-y-6">

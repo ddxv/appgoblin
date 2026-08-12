@@ -16,37 +16,12 @@
 
 	let { myCatData, storeIDLookup, collectionIDLookup, categoryIDLookup }: Props = $props();
 
-	let store = $state(1);
-	$effect(() => {
-		store = +page.params.store!;
+	let store = $derived.by(() => {
+		const val = +(page.params.store ?? 1);
+		return isNaN(val) ? 1 : val;
 	});
-	let collection = $state(1);
-	$effect(() => {
-		collection = +page.params.collection!;
-	});
-	let category = $state(1);
-	$effect(() => {
-		category = +page.params.category!;
-	});
-	// Logic to adjust collection and category based on the store's value
-	$effect(() => {
-		// If store is not a number (NaN), default it to 1
-		if (isNaN(store)) {
-			store = 1;
-		}
-
-		switch (store) {
-			case 2:
-				collection = 4;
-				category = 120;
-				break;
-			case 1:
-			default: // Defaults for store=1 or any other value not explicitly handled
-				collection = 1;
-				category = 1;
-				break;
-		}
-	});
+	let collection = $derived(store === 2 ? 4 : 1);
+	let category = $derived(store === 2 ? 120 : 1);
 </script>
 
 {#if page.url.pathname.startsWith('/collections')}

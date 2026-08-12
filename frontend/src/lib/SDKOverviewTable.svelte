@@ -23,7 +23,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				{#each entries_table as row}
+				{#each entries_table as row (row.store_id + row.value_name)}
 					<tr class="px-0">
 						<td class="truncate">
 							{#if row.value_name != pattern}

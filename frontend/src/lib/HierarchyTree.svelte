@@ -60,7 +60,7 @@
 			<span class="text-xs">Company</span>
 		</div>
 		{#if associatedDomains.length > 0}
-			{#each getDomainSlice(associatedDomains) as relatedDomain}
+			{#each getDomainSlice(associatedDomains) as relatedDomain (relatedDomain.domain_name)}
 				<div class="ml-8 text-gray-500">
 					└─ <a class="font-semibold" href="/companies/{relatedDomain.domain_name}"
 						>{relatedDomain.domain_name}</a
@@ -71,7 +71,7 @@
 					<div class="ml-12 text-xs text-gray-500">
 						{#if relatedDomain.country.length > 0}
 							<span class="mr-2">
-								{#each relatedDomain.country as country}
+								{#each relatedDomain.country as country (country)}
 									<span class="mr-1">{countryCodeToEmoji(country)}</span>
 								{/each}
 							</span>
@@ -89,7 +89,7 @@
 			{/if}
 		{/if}
 		{#if companyTree.children.length > 0}
-			{#each getChildrenSlice(companyTree.children) as child}
+			{#each getChildrenSlice(companyTree.children) as child (child.company_domain)}
 				<div class="ml-8 flex items-center gap-2">
 					{#if child.company_logo_url}
 						<img
@@ -104,7 +104,7 @@
 					>
 				</div>
 				{#if child.domains.length > 0}
-					{#each getChildDomainsSlice(child.domains) as childDomain}
+					{#each getChildDomainsSlice(child.domains) as childDomain (childDomain.domain_name)}
 						<div class="ml-12 text-gray-500">
 							└─ <a class="font-semibold" href="/companies/{childDomain.domain_name}"
 								>{childDomain.domain_name}</a

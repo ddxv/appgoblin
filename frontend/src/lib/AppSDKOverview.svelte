@@ -37,7 +37,7 @@
 	</div>
 	{#if Object.keys(myPackageInfo.company_categories).length > 0}
 		<div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-1 md:gap-4">
-			{#each Object.keys(myPackageInfo.company_categories) as category}
+			{#each Object.keys(myPackageInfo.company_categories) as category (category)}
 				<WhiteCard>
 					{#snippet title()}
 						<span class="text-base">

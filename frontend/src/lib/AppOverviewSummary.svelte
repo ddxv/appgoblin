@@ -234,7 +234,7 @@
 		<p>
 			<span class="font-medium -200">SDK intelligence:</span>
 			AppGoblin detected
-			{#each sdkCategories as cat, i}
+			{#each sdkCategories as cat, i (cat.label)}
 				{#if i > 0 && i === sdkCategories.length - 1}
 					and
 				{/if}

@@ -24,7 +24,12 @@
 		return normalizedCode;
 	}
 
-	let country = $state(page.url.searchParams.get('country') || 'US');
+	let countryUrlParam = $derived(page.url.searchParams.get('country'));
+	let country = $derived(
+		countryUrlParam
+			? countryUrlParam.toUpperCase()
+			: (data.myranksOverview?.countries?.[0]?.toUpperCase() ?? 'US')
+	);
 	let countryTitle = $derived(getCountryName(country));
 	let isLoadingRanks = $state(false);
 	const dataMyranks = $derived(data.myranks);
@@ -32,19 +37,11 @@
 	const currentRanks = $derived(overrideRanks ?? dataMyranks);
 	let formElement = $state<HTMLFormElement | undefined>(undefined);
 
-	$effect(() => setDefaultCountry(data.myranksOverview));
-
 	// Clear override when data changes (e.g. navigation to another app)
 	$effect(() => {
 		data.myranks;
 		overrideRanks = null;
 	});
-
-	function setDefaultCountry(ranks: { countries: string[] }) {
-		if (country == '' && ranks.countries && ranks.countries.length > 0) {
-			country = ranks.countries[0].toUpperCase();
-		}
-	}
 
 	function handleCountryChange(newCountry: string) {
 		country = newCountry.toUpperCase();

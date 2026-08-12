@@ -1,24 +1,29 @@
 <script lang="ts">
 	import generateId from '$lib/utils/generateIds';
 
-	export let fillPercent: number = 100;
-	export let fillColor: string = '#F5CA14';
-	export let strokeColor: string = '#F5CA14';
-	export let size: number = 24;
-	export let ariaLabel: string = 'star';
-	export let id: string = generateId();
-	export let role = 'img';
+	let {
+		fillPercent = 100,
+		fillColor = '#F5CA14',
+		strokeColor = '#F5CA14',
+		size = 24,
+		ariaLabel = 'star',
+		id = generateId(),
+		role = 'img',
+		class: className = '',
+		onclick = undefined,
+		...restProps
+	} = $props();
 </script>
 
 <svg
 	width={size}
 	height={size}
-	{...$$restProps}
-	class={$$props.class}
+	{...restProps}
+	class={className}
 	aria-label={ariaLabel}
 	viewBox="100 100 120 120"
 	{role}
-	on:click
+	{onclick}
 >
 	<defs>
 		<linearGradient {id}>
@@ -46,12 +51,12 @@
 <!--
   @component
   [Go to docs](https://flowbite-svelte.com/)
-  ## Props
-  @prop export let fillPercent: number = 100;
-  @prop export let fillColor: string = '#F5CA14';
-  @prop export let strokeColor: string = '#F5CA14';
-  @prop export let size: number = 24;
-  @prop export let ariaLabel: string = 'star';
-  @prop export let id: string = generateId();
-  @prop export let role = 'img';
+  ## Props (Svelte 5 runes)
+  @prop fillPercent: number = 100;
+  @prop fillColor: string = '#F5CA14';
+  @prop strokeColor: string = '#F5CA14';
+  @prop size: number = 24;
+  @prop ariaLabel: string = 'star';
+  @prop id: string = generateId();
+  @prop role = 'img';
   -->

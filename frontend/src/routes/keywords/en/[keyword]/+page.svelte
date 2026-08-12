@@ -176,8 +176,7 @@
 	const googleCount = $derived(keywordApps.google?.ranks?.length ?? 0);
 	const appleCount = $derived(keywordApps.apple?.ranks?.length ?? 0);
 
-	let summarySentences = $state<string[]>([]);
-	$effect(() => {
+	let summarySentences = $derived.by((): string[] => {
 		const sentences: string[] = [];
 		const parts: string[] = [];
 
@@ -228,7 +227,7 @@
 			);
 		}
 
-		summarySentences = sentences;
+		return sentences;
 	});
 
 	type MetricCard = {
@@ -237,62 +236,58 @@
 		helper?: string;
 	};
 
-	let keywordPerformanceCards = $state<MetricCard[]>([]);
-	let keywordBenchmarkCards = $state<MetricCard[]>([]);
-	$effect(() => {
-		keywordPerformanceCards = [
-			{
-				label: 'Opportunity Score',
-				value: formatNumeric(opportunityAvg, 1),
-				helper: opportunityDescriptor
-					? `Signals ${opportunityDescriptor} if rankings improve.`
-					: 'Signals upside potential if rankings improve.'
-			},
-			{
-				label: 'Keyword Difficulty',
-				value: formatNumeric(difficultyAvg, 1),
-				helper: difficultyDescriptor
-					? `${difficultyDescriptor} level of competition.`
-					: 'Indicates how contested this keyword is.'
-			},
-			{
-				label: 'Competitiveness',
-				value: formatNumeric(competitivenessAvg, 1),
-				helper: 'Blend of rank positions across leading apps.'
-			},
-			{
-				label: 'Volume Score',
-				value: formatNumeric(volumeAvg, 1),
-				helper: 'Demand proxy for search impressions.'
-			}
-		];
+	let keywordPerformanceCards = $derived<MetricCard[]>([
+		{
+			label: 'Opportunity Score',
+			value: formatNumeric(opportunityAvg, 1),
+			helper: opportunityDescriptor
+				? `Signals ${opportunityDescriptor} if rankings improve.`
+				: 'Signals upside potential if rankings improve.'
+		},
+		{
+			label: 'Keyword Difficulty',
+			value: formatNumeric(difficultyAvg, 1),
+			helper: difficultyDescriptor
+				? `${difficultyDescriptor} level of competition.`
+				: 'Indicates how contested this keyword is.'
+		},
+		{
+			label: 'Competitiveness',
+			value: formatNumeric(competitivenessAvg, 1),
+			helper: 'Blend of rank positions across leading apps.'
+		},
+		{
+			label: 'Volume Score',
+			value: formatNumeric(volumeAvg, 1),
+			helper: 'Demand proxy for search impressions.'
+		}
+	]);
 
-		keywordBenchmarkCards = [
-			{
-				label: 'Tracked Apps',
-				value: formatCount(appCountValue),
-				helper:
-					totalAppsValue !== null
-						? `Out of ${formatCount(totalAppsValue)} total apps.`
-						: 'Coverage within our dataset.'
-			},
-			{
-				label: 'Major Competitors',
-				value: formatCount(majorCompetitors),
-				helper: 'Consistently ranking apps for this keyword.'
-			},
-			{
-				label: 'Median Competitor Installs',
-				value: formatCount(medianInstalls),
-				helper: 'Typical install base among the leaders.'
-			},
-			{
-				label: 'Average Competitor Rating',
-				value: formatNumeric(avgRating, 1),
-				helper: 'Quality benchmark across the top cohort.'
-			}
-		];
-	});
+	let keywordBenchmarkCards = $derived<MetricCard[]>([
+		{
+			label: 'Tracked Apps',
+			value: formatCount(appCountValue),
+			helper:
+				totalAppsValue !== null
+					? `Out of ${formatCount(totalAppsValue)} total apps.`
+					: 'Coverage within our dataset.'
+		},
+		{
+			label: 'Major Competitors',
+			value: formatCount(majorCompetitors),
+			helper: 'Consistently ranking apps for this keyword.'
+		},
+		{
+			label: 'Median Competitor Installs',
+			value: formatCount(medianInstalls),
+			helper: 'Typical install base among the leaders.'
+		},
+		{
+			label: 'Average Competitor Rating',
+			value: formatNumeric(avgRating, 1),
+			helper: 'Quality benchmark across the top cohort.'
+		}
+	]);
 
 	type StoreSnapshot = {
 		title: string;
@@ -300,8 +295,7 @@
 		competitiveness: string;
 	};
 
-	let storeSnapshots = $state<StoreSnapshot[]>([]);
-	$effect(() => {
+	let storeSnapshots = $derived.by((): StoreSnapshot[] => {
 		const snapshots: StoreSnapshot[] = [];
 		for (const record of keywordRecords) {
 			const storeKey = record.store ?? `store-${snapshots.length}`;
@@ -314,7 +308,7 @@
 				appCount: storeAppCount
 			});
 		}
-		storeSnapshots = snapshots;
+		return snapshots;
 	});
 
 	const cardBaseClass = 'rounded-xl border border-surface-300-700 bg-surface-100-900 shadow-sm';

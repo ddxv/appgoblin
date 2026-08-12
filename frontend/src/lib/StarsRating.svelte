@@ -8,7 +8,7 @@
 		total?: number;
 		rating?: number;
 		partialId?: string;
-		icon?: Component;
+		icon?: Component<any>;
 		count?: boolean;
 		children?: import('svelte').Snippet;
 		text?: import('svelte').Snippet;
@@ -62,12 +62,11 @@
 <!--
   @component
   [Go to docs](https://flowbite-svelte.com/)
-  ## Props
-  @prop export let divClass: string = 'flex items-center';
-  @prop export let size: number = 24;
-  @prop export let total: number = 5;
-  @prop export let rating: number = 4;
-  @prop export let partialId: string = 'partialStar' + generateId();
-  @prop export let icon: ComponentType = Star;
-  @prop export let count: boolean = false;
+  ## Props (Svelte 5 runes)
+  @prop size: number = 24;
+  @prop total: number = 5;
+  @prop rating: number = 4;
+  @prop partialId: string = 'partialStar' + generateId();
+  @prop icon: ComponentType = Star;
+  @prop count: boolean = false;
   -->

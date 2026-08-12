@@ -49,7 +49,7 @@
 			>
 		{/snippet}
 		<div class="grid grid-cols-3 gap-2 p-2">
-			{#each paginatedCreatives as creative}
+			{#each paginatedCreatives as creative (creative.md5_hash)}
 				<div class="card p-2">
 					<AdCard {creative} />
 				</div>
