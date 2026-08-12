@@ -1,34 +1,29 @@
-<script lang="ts" generics="TData, TValue">
-	import {
-		type PaginationState,
-		type SortingState,
-		type ColumnFiltersState,
-		getCoreRowModel,
-		getPaginationRowModel,
-		getSortedRowModel,
-		getFilteredRowModel
-	} from '@tanstack/table-core';
+<script lang="ts">
+	import type { ColumnFiltersState, SortingState } from '@tanstack/svelte-table';
 
 	import Pagination from '$lib/components/data-table/Pagination.svelte';
 	import ExportAsCSV from '$lib/components/data-table/ExportAsCSV.svelte';
 	import type { RankedApps } from '../types';
 	import AppCard from './AppCard.svelte';
 
-	import { createSvelteTable, FlexRender } from '$lib/components/data-table/index.js';
+	import {
+		createAppTable,
+		createTableState,
+		FlexRender
+	} from '$lib/components/data-table/index.js';
 
 	import { genericColumns } from '$lib/components/data-table/generic-column';
 
-	type DataTableProps<RankedApps, TValue> = {
+	type DataTableProps = {
 		data: RankedApps[];
 	};
 
-	let pagination = $state<PaginationState>({ pageIndex: 0, pageSize: 25 });
-	let sorting = $state<SortingState>([]);
-	let columnFilters = $state<ColumnFiltersState>([]);
+	const [pagination, onPaginationChange] = createTableState({ pageIndex: 0, pageSize: 25 });
+	const [sorting, onSortingChange] = createTableState<SortingState>([]);
+	const [columnFilters, onColumnFiltersChange] = createTableState<ColumnFiltersState>([]);
+	const [globalFilter, onGlobalFilterChange] = createTableState('');
 
-	let globalFilter = $state<string>('');
-
-	let { data }: DataTableProps<RankedApps, TValue> = $props();
+	let { data }: DataTableProps = $props();
 
 	const columns = genericColumns([
 		{
@@ -49,58 +44,30 @@
 		return name.includes(query);
 	};
 
-	const table = createSvelteTable({
+	const table = createAppTable({
 		get data() {
 			return data;
 		},
 		columns,
 		state: {
 			get pagination() {
-				return pagination;
+				return pagination();
 			},
 			get sorting() {
-				return sorting;
+				return sorting();
 			},
 			get columnFilters() {
-				return columnFilters;
+				return columnFilters();
 			},
 			get globalFilter() {
-				return globalFilter;
+				return globalFilter();
 			}
 		},
-
-		getSortedRowModel: getSortedRowModel(),
-
 		globalFilterFn,
-
-		onSortingChange: (updater) => {
-			if (typeof updater === 'function') {
-				sorting = updater(sorting);
-			} else {
-				sorting = updater;
-			}
-		},
-		onColumnFiltersChange: (updater) => {
-			if (typeof updater === 'function') {
-				columnFilters = updater(columnFilters);
-			} else {
-				columnFilters = updater;
-			}
-		},
-
-		onPaginationChange: (updater) => {
-			if (typeof updater === 'function') {
-				pagination = updater(pagination);
-			} else {
-				pagination = updater;
-			}
-		},
-		onGlobalFilterChange: (updater) => {
-			globalFilter = typeof updater === 'function' ? updater(globalFilter) : updater;
-		},
-		getCoreRowModel: getCoreRowModel(),
-		getPaginationRowModel: getPaginationRowModel(),
-		getFilteredRowModel: getFilteredRowModel()
+		onSortingChange,
+		onColumnFiltersChange,
+		onPaginationChange,
+		onGlobalFilterChange
 	});
 </script>
 
@@ -124,10 +91,7 @@
 						{#each headerGroup.headers as header (header.id)}
 							<th class="">
 								{#if !header.isPlaceholder}
-									<FlexRender
-										content={header.column.columnDef.header}
-										context={header.getContext()}
-									/>
+									<FlexRender {header} />
 								{/if}
 							</th>
 						{/each}

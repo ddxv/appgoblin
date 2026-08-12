@@ -1,16 +1,8 @@
-<script lang="ts" generics="TValue">
-	import {
-		type PaginationState,
-		getCoreRowModel,
-		getPaginationRowModel,
-		getSortedRowModel,
-		getFilteredRowModel
-	} from '@tanstack/table-core';
-
+<script lang="ts">
 	import ExportAsCSV from '$lib/components/data-table/ExportAsCSV.svelte';
 	import Pagination from '$lib/components/data-table/Pagination.svelte';
 	import { formatNumberLocale } from '$lib/utils/formatNumber';
-	import { createSvelteTable } from '$lib/components/data-table/index.js';
+	import { createAppTable, createTableState } from '$lib/components/data-table/index.js';
 	import { genericColumns } from '$lib/components/data-table/generic-column';
 
 	import CompanyButton from './CompanyButton.svelte';
@@ -24,12 +16,12 @@
 		app_count: number;
 	}
 
-	type DataTableProps<TValue> = {
+	type DataTableProps = {
 		adapters: MediationAdapter[];
 	};
 
-	let { adapters }: DataTableProps<TValue> = $props();
-	let pagination = $state<PaginationState>({ pageIndex: 0, pageSize: 10 });
+	let { adapters }: DataTableProps = $props();
+	const [pagination, onPaginationChange] = createTableState({ pageIndex: 0, pageSize: 10 });
 
 	const columns = genericColumns([
 		{
@@ -44,7 +36,7 @@
 		}
 	]);
 
-	const table = createSvelteTable({
+	const table = createAppTable({
 		get data() {
 			return adapters;
 		},
@@ -55,20 +47,10 @@
 		},
 		state: {
 			get pagination() {
-				return pagination;
+				return pagination();
 			}
 		},
-		getSortedRowModel: getSortedRowModel(),
-		getCoreRowModel: getCoreRowModel(),
-		getPaginationRowModel: getPaginationRowModel(),
-		getFilteredRowModel: getFilteredRowModel(),
-		onPaginationChange: (updater) => {
-			if (typeof updater === 'function') {
-				pagination = updater(pagination);
-			} else {
-				pagination = updater;
-			}
-		}
+		onPaginationChange
 	});
 </script>
 

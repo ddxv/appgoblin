@@ -49,10 +49,14 @@
 		<div class={contentPadding}>
 			<p>
 				AppGoblin was started in 2023 by James O'Claire and is operated by Open Attribution LLC.
-				AppGoblin has many free mobile app marketing resources as well as B2B paid datasets for
-				competitor analysis, fraud analysis and app market research.
+				AppGoblin provides both free mobile app marketing tools for indie devs as well as paid B2B
+				competitor analysis and data for adtech security, sales, ad networks and financial
+				institutions doing fundamentals research.
 			</p>
-			<p>AppGoblin supports journalists and researchers. Please feel free to reach out.</p>
+			<p>
+				AppGoblin also supports journalists, researchers and students. Please feel free to reach
+				out.
+			</p>
 		</div>
 	</div>
 

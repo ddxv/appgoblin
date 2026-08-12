@@ -1,14 +1,12 @@
 <script lang="ts">
+	import type { SortingState } from '@tanstack/svelte-table';
 	import Check from '@lucide/svelte/icons/check';
 	import X from '@lucide/svelte/icons/x';
 	import {
-		type PaginationState,
-		type SortingState,
-		getCoreRowModel,
-		getPaginationRowModel,
-		getSortedRowModel
-	} from '@tanstack/table-core';
-	import { createSvelteTable, FlexRender } from '$lib/components/data-table/index.js';
+		createAppTable,
+		createTableState,
+		FlexRender
+	} from '$lib/components/data-table/index.js';
 	import { genericColumns } from '$lib/components/data-table/generic-column';
 	import Pagination from '$lib/components/data-table/Pagination.svelte';
 	import ExportAsCSV from '$lib/components/data-table/ExportAsCSV.svelte';
@@ -25,7 +23,7 @@
 
 	let { apps, filename, sorting = $bindable() }: CrossfilterAppsTableProps = $props();
 
-	let pagination = $state<PaginationState>({ pageIndex: 0, pageSize: 50 });
+	const [pagination, onPaginationChange] = createTableState({ pageIndex: 0, pageSize: 50 });
 
 	const myColumns = [
 		{
@@ -79,30 +77,21 @@
 
 	const columns = genericColumns(myColumns);
 
-	const table = createSvelteTable({
+	const table = createAppTable({
 		get data() {
 			return apps;
 		},
 		columns,
 		state: {
 			get pagination() {
-				return pagination;
+				return pagination();
 			},
 			get sorting() {
 				return sorting;
 			}
 		},
-		getCoreRowModel: getCoreRowModel(),
-		getPaginationRowModel: getPaginationRowModel(),
-		getSortedRowModel: getSortedRowModel(),
-		onPaginationChange: (updater) => {
-			if (typeof updater === 'function') {
-				pagination = updater(pagination);
-			} else {
-				pagination = updater;
-			}
-		},
-		onSortingChange: (updater) => {
+		onPaginationChange,
+		onSortingChange: (updater: any) => {
 			if (typeof updater === 'function') {
 				sorting = updater(sorting);
 			} else {
@@ -111,22 +100,19 @@
 		}
 	});
 
-	const headerGroups = $derived(() => table.getHeaderGroups());
-	const tableRows = $derived(() => table.getRowModel().rows);
+	const headerGroups = $derived(table.getHeaderGroups());
+	const tableRows = $derived(table.getRowModel().rows);
 </script>
 
 <div class="table-container overflow-x-auto">
 	<table class="table table-hover table-auto w-full text-xs md:text-sm">
 		<thead>
-			{#each headerGroups() as headerGroup (headerGroup.id)}
+			{#each headerGroups as headerGroup (headerGroup.id)}
 				<tr>
 					{#each headerGroup.headers as header (header.id)}
 						{#if !header.isPlaceholder}
 							<th class="p-2">
-								<FlexRender
-									content={header.column.columnDef.header}
-									context={header.getContext()}
-								/>
+								<FlexRender {header} />
 							</th>
 						{/if}
 					{/each}
@@ -134,7 +120,7 @@
 			{/each}
 		</thead>
 		<tbody>
-			{#each tableRows() as row (row.id)}
+			{#each tableRows as row (row.id)}
 				<tr class="hover:bg-surface-100-900">
 					{#each row.getVisibleCells() as cell (cell.id)}
 						<td class="p-2">
