@@ -7,6 +7,9 @@
 	let { tableModel } = $props();
 	const buttonSize = 16;
 	const buttonPreset = 'btn btn-sm preset-outlined-primary-100-900 p-0';
+
+	let pageIndex = $derived(tableModel.atoms.pagination.get().pageIndex);
+	let pageSize = $derived(tableModel.atoms.pagination.get().pageSize);
 </script>
 
 <div class="flex items-center justify-between px-2">
@@ -31,7 +34,7 @@
 				<ChevronLeft size={buttonSize} />
 			</button>
 			<div class="items-center justify-center text-sm font-medium">
-				{tableModel.getState().pagination.pageIndex + 1} of {tableModel.getPageCount()}
+				{pageIndex + 1} of {tableModel.getPageCount()}
 			</div>
 			<button
 				type="button"
@@ -57,7 +60,7 @@
 			<!-- <p class="text-sm font-medium">Rows</p> -->
 			<select
 				class="select select-sm preset-outlined-primary-100-900 p-1"
-				value={String(tableModel.getState().pagination.pageSize)}
+				value={String(pageSize)}
 				onchange={(e) => tableModel.setPageSize(e.currentTarget.value)}
 			>
 				<option value="10">10 Rows</option>

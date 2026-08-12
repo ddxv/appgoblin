@@ -76,7 +76,7 @@
 />
 
 <div
-	class="card card-hover overflow-hidden rounded-xl border shadow-sm transition-all flex h-full flex-col"
+	class="card overflow-hidden rounded-xl border shadow-sm transition-all flex h-full flex-col"
 	role="group"
 	onmouseenter={() => (isHovered = true)}
 	onmouseleave={() => (isHovered = false)}

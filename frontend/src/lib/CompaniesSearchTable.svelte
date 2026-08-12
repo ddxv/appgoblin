@@ -1,22 +1,26 @@
-<script lang="ts" generics="TData, TValue">
-	import { type SortingState, getCoreRowModel, getSortedRowModel } from '@tanstack/table-core';
-
+<script lang="ts">
 	import type { CompaniesSearchEntries } from '../types';
 
-	import { createSvelteTable, FlexRender } from '$lib/components/data-table/index.js';
+	import type { SortingState } from '@tanstack/svelte-table';
+
+	import {
+		createAppTable,
+		createTableState,
+		FlexRender
+	} from '$lib/components/data-table/index.js';
 
 	import { genericColumns } from '$lib/components/data-table/generic-column';
 
 	import { formatNumber } from '$lib/utils/formatNumber';
 	import { countryCodeToEmoji } from '$lib/utils/countryCodeToEmoji';
 
-	type DataTableProps<CompaniesSearchEntries, TValue> = {
+	type DataTableProps = {
 		data: CompaniesSearchEntries[];
 	};
 
-	let sorting = $state<SortingState>([]);
+	const [sorting, onSortingChange] = createTableState<SortingState>([]);
 
-	let { data }: DataTableProps<CompaniesSearchEntries, TValue> = $props();
+	let { data }: DataTableProps = $props();
 
 	const columns = genericColumns([
 		{
@@ -48,28 +52,17 @@
 		}
 	]);
 
-	const table = createSvelteTable({
+	const table = createAppTable({
 		get data() {
 			return data;
 		},
 		columns,
 		state: {
 			get sorting() {
-				return sorting;
+				return sorting();
 			}
 		},
-
-		getSortedRowModel: getSortedRowModel(),
-
-		onSortingChange: (updater) => {
-			if (typeof updater === 'function') {
-				sorting = updater(sorting);
-			} else {
-				sorting = updater;
-			}
-		},
-
-		getCoreRowModel: getCoreRowModel()
+		onSortingChange
 	});
 
 	function getCompanyNameColumnWidth(header: any) {
@@ -89,10 +82,7 @@
 						{#each headerGroup.headers as header (header.id)}
 							<th class={getCompanyNameColumnWidth(header)}>
 								{#if !header.isPlaceholder}
-									<FlexRender
-										content={header.column.columnDef.header}
-										context={header.getContext()}
-									/>
+									<FlexRender {header} />
 								{/if}
 							</th>
 						{/each}

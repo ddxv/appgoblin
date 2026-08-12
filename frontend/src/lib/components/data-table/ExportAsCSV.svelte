@@ -12,7 +12,7 @@
 		})
 	);
 
-	const exportDataCSV = (rows: Row<any>[]) => {
+	const exportDataCSV = (rows: Row<any, any>[]) => {
 		const rowData = rows.map((row) => row.original);
 		const csv = generateCsv(csvConfig)(rowData);
 		download(csvConfig)(csv);

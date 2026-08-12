@@ -1,18 +1,14 @@
-<script lang="ts" generics="TData, TValue">
-	import {
-		type PaginationState,
-		type SortingState,
-		type ColumnFiltersState,
-		getCoreRowModel,
-		getPaginationRowModel,
-		getSortedRowModel,
-		getFilteredRowModel
-	} from '@tanstack/table-core';
+<script lang="ts">
+	import type { ColumnFiltersState, SortingState } from '@tanstack/svelte-table';
 
 	import Pagination from '$lib/components/data-table/Pagination.svelte';
 	import ExportAsCSV from '$lib/components/data-table/ExportAsCSV.svelte';
 
-	import { createSvelteTable, FlexRender } from '$lib/components/data-table/index.js';
+	import {
+		createAppTable,
+		createTableState,
+		FlexRender
+	} from '$lib/components/data-table/index.js';
 
 	import { genericColumns } from '$lib/components/data-table/generic-column';
 
@@ -57,19 +53,18 @@
 		apple_app_ads_direct_latest_apps_lost?: number | null;
 	};
 
-	type DataTableProps<TValue> = {
+	type DataTableProps = {
 		data: ReportCompaniesOverviewEntry[];
 		viewMode?: ViewMode;
 	};
 
-	let pagination = $state<PaginationState>({ pageIndex: 0, pageSize: 50 });
-	let sorting = $state<SortingState>([]);
-	let columnFilters = $state<ColumnFiltersState>([]);
-
-	let globalFilter = $state<string>('');
+	const [pagination, onPaginationChange] = createTableState({ pageIndex: 0, pageSize: 50 });
+	const [sorting, onSortingChange] = createTableState<SortingState>([]);
+	const [columnFilters, onColumnFiltersChange] = createTableState<ColumnFiltersState>([]);
+	const [globalFilter, onGlobalFilterChange] = createTableState('');
 	let dataMetric = $state<MetricValue>('market_share');
 
-	let { data, viewMode = 'auto' }: DataTableProps<TValue> = $props();
+	let { data, viewMode = 'auto' }: DataTableProps = $props();
 
 	import { page } from '$app/state';
 
@@ -207,58 +202,30 @@
 		);
 	};
 
-	const table = createSvelteTable({
+	const table = createAppTable({
 		get data() {
 			return data;
 		},
 		columns,
 		state: {
 			get pagination() {
-				return pagination;
+				return pagination();
 			},
 			get sorting() {
-				return sorting;
+				return sorting();
 			},
 			get columnFilters() {
-				return columnFilters;
+				return columnFilters();
 			},
 			get globalFilter() {
-				return globalFilter;
+				return globalFilter();
 			}
 		},
-
-		getSortedRowModel: getSortedRowModel(),
-
 		globalFilterFn,
-
-		onSortingChange: (updater) => {
-			if (typeof updater === 'function') {
-				sorting = updater(sorting);
-			} else {
-				sorting = updater;
-			}
-		},
-		onColumnFiltersChange: (updater) => {
-			if (typeof updater === 'function') {
-				columnFilters = updater(columnFilters);
-			} else {
-				columnFilters = updater;
-			}
-		},
-
-		onPaginationChange: (updater) => {
-			if (typeof updater === 'function') {
-				pagination = updater(pagination);
-			} else {
-				pagination = updater;
-			}
-		},
-		onGlobalFilterChange: (updater) => {
-			globalFilter = typeof updater === 'function' ? updater(globalFilter) : updater;
-		},
-		getCoreRowModel: getCoreRowModel(),
-		getPaginationRowModel: getPaginationRowModel(),
-		getFilteredRowModel: getFilteredRowModel()
+		onSortingChange,
+		onColumnFiltersChange,
+		onPaginationChange,
+		onGlobalFilterChange
 	});
 
 	function formatPercentage(num: number) {
@@ -440,10 +407,7 @@
 							{#if shouldShowHeader(header)}
 								<th class={getCompanyNameColumnWidth(header)}>
 									{#if !header.isPlaceholder}
-										<FlexRender
-											content={header.column.columnDef.header}
-											context={header.getContext()}
-										/>
+										<FlexRender {header} />
 									{/if}
 								</th>
 							{/if}

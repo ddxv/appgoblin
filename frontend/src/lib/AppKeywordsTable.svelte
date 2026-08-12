@@ -1,16 +1,13 @@
 <script lang="ts">
-	import {
-		type PaginationState,
-		type SortingState,
-		getCoreRowModel,
-		getPaginationRowModel,
-		getSortedRowModel
-	} from '@tanstack/table-core';
-
 	import Pagination from '$lib/components/data-table/Pagination.svelte';
 	import ExportAsCSV from '$lib/components/data-table/ExportAsCSV.svelte';
 
-	import { createSvelteTable, FlexRender } from '$lib/components/data-table/index.js';
+	import {
+		createAppTable,
+		createTableState,
+		FlexRender
+	} from '$lib/components/data-table/index.js';
+	import type { SortingState } from '@tanstack/svelte-table';
 	import type { KeywordScore } from '../types';
 
 	import { genericColumns } from '$lib/components/data-table/generic-column';
@@ -21,8 +18,8 @@
 		linkMode?: 'app' | 'global';
 	};
 
-	let pagination = $state<PaginationState>({ pageIndex: 0, pageSize: 25 });
-	let sorting = $state<SortingState>([]);
+	const [pagination, onPaginationChange] = createTableState({ pageIndex: 0, pageSize: 25 });
+	const [sorting, onSortingChange] = createTableState<SortingState>([]);
 
 	let { data, storeId, linkMode = 'app' }: DataTableProps = $props();
 
@@ -103,38 +100,21 @@
 		}
 	]);
 
-	const table = createSvelteTable({
+	const table = createAppTable({
 		get data() {
 			return data;
 		},
 		columns,
 		state: {
 			get pagination() {
-				return pagination;
+				return pagination();
 			},
 			get sorting() {
-				return sorting;
+				return sorting();
 			}
 		},
-
-		getSortedRowModel: getSortedRowModel(),
-		onSortingChange: (updater) => {
-			if (typeof updater === 'function') {
-				sorting = updater(sorting);
-			} else {
-				sorting = updater;
-			}
-		},
-
-		onPaginationChange: (updater) => {
-			if (typeof updater === 'function') {
-				pagination = updater(pagination);
-			} else {
-				pagination = updater;
-			}
-		},
-		getCoreRowModel: getCoreRowModel(),
-		getPaginationRowModel: getPaginationRowModel()
+		onSortingChange,
+		onPaginationChange
 	});
 </script>
 
@@ -147,10 +127,7 @@
 						{#each headerGroup.headers as header (header.id)}
 							<th class="px-4 py-3 text-left text-xs font-semibold md:tracking-wide">
 								{#if !header.isPlaceholder}
-									<FlexRender
-										content={header.column.columnDef.header}
-										context={header.getContext()}
-									/>
+									<FlexRender {header} />
 								{/if}
 							</th>
 						{/each}
@@ -240,7 +217,7 @@
 	<footer class="flex items-center justify-end gap-3">
 		<div class="flex items-center gap-3">
 			<div class="text-xs text-primary-700-300">
-				{table.getPrePaginationRowModel().rows.length.toLocaleString()} keywords
+				{table.getPrePaginatedRowModel().rows.length.toLocaleString()} keywords
 			</div>
 			<div class="flex items-center gap-2">
 				<Pagination tableModel={table} />

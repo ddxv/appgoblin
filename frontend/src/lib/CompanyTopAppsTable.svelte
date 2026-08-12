@@ -1,23 +1,16 @@
-<script lang="ts" generics="TValue">
-	import {
-		getCoreRowModel,
-		getPaginationRowModel,
-		getSortedRowModel,
-		getFilteredRowModel
-	} from '@tanstack/table-core';
-
+<script lang="ts">
 	import Check from '@lucide/svelte/icons/check';
 	import X from '@lucide/svelte/icons/x';
 
 	import ExportAsCSV from '$lib/components/data-table/ExportAsCSV.svelte';
 	import type { CompanyOverviewApps } from '../types';
 	import { formatNumber } from '$lib/utils/formatNumber';
-	import { createSvelteTable } from '$lib/components/data-table/index.js';
+	import { createAppTable } from '$lib/components/data-table/index.js';
 
 	import { genericColumns } from '$lib/components/data-table/generic-column';
 	import { countryCodeToEmoji } from '$lib/utils/countryCodeToEmoji';
 
-	type DataTableProps<RankedApps, TValue> = {
+	type DataTableProps = {
 		data: CompanyOverviewApps[];
 		isiOS: boolean;
 		companyName?: string;
@@ -45,12 +38,7 @@
 	const checkIconClass = 'w-4 h-4 text-success-700-300';
 	const xIconClass = 'w-4 h-4 text-error-200';
 
-	let {
-		data,
-		isiOS,
-		companyName = '',
-		previewMode = true
-	}: DataTableProps<CompanyOverviewApps, TValue> = $props();
+	let { data, isiOS, companyName = '', previewMode = true }: DataTableProps = $props();
 
 	const baseColumns = [
 		{
@@ -97,7 +85,7 @@
 
 	const visibleData = $derived(previewMode ? data.slice(0, 3) : data.slice(0, 10));
 
-	const table = createSvelteTable({
+	const table = createAppTable({
 		get data() {
 			return visibleData;
 		},
@@ -116,13 +104,7 @@
 					return true;
 				})
 			);
-		},
-
-		getSortedRowModel: getSortedRowModel(),
-
-		getCoreRowModel: getCoreRowModel(),
-		getPaginationRowModel: getPaginationRowModel(),
-		getFilteredRowModel: getFilteredRowModel()
+		}
 	});
 </script>
 

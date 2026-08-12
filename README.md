@@ -11,7 +11,8 @@
   - **Trends** — Track installs and ratings over time
   - **Rankings** — Daily tracking of top apps from Google Play and Apple App Store
   - **New Apps Discovery** — Surfaces newly released apps often buried by official store algorithms
-  - **Growth Metrics** — Daily install estimates and rating change tracking
+  - **Growth Metrics** — Daily install estimates, app ratings, ad revenue and IAP revenue estimates
+
 
 - **[SDK Analysis](https://appgoblin.info/sdks)** — Detailed breakdown of SDKs found in decompiled 200k+ Android and iOS apps, including advertising, analytics, and open-source libraries
 
@@ -22,9 +23,9 @@
 - **Company Intelligence** — See the top client apps for any mobile SDK or services company
   - Example: [Salesforce Clients](https://appgoblin.info/companies/salesforce.com)
   - Example: [AppsFlyer Top Apps](https://appgoblin.info/companies/appsflyer.com)
-  - Track quarterly app adoption and churn for a known company through added and lost app-change views
+  - Track quarterly app adoption and churn for companies. See which apps they recently added or lost based on SDK or App-Ads.txt datasets
 
-- **Ad Tech Insights** — Tracks live ad campaigns and the ad tech domains apps communicate with
+- **Ad Tech Insights** — Track ad campaingns, ad creatives and explore the top advertising apps
 
 - **ASO Tools** — Free keyword research tools and data dumps to optimize app store visibility
 
@@ -38,7 +39,7 @@
 - **Researchers & journalists** needing deep technical analysis across millions of apps
 - **Data scientists & marketers** needing reproducible app datasets for modeling, market mapping, and analysis
 - **Ad sales teams** prospecting clients by analyzing competitor app portfolios and recent company churn
-- **Ad networks & DSPs** doing fraud detection
+- **Ad networks & DSPs** doing fraud detection and competitor analysis
 - **DSPs** needing App-Ads.txt tied to real app store IDs (e.g. `com.example.app`) rather than just domain names
 - **Competitor researchers** tracking SDK adoption, quarterly app churn, and growth trends
 - **Privacy advocates** identifying hidden trackers and ad-tech domains in popular apps

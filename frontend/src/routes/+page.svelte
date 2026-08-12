@@ -355,7 +355,6 @@
 						onclick={showPreviousDashboard}
 						aria-label="Show previous dashboard"
 					>
-						&lt;
 					</button>
 
 					<div class="flex items-center gap-2">
@@ -381,7 +380,7 @@
 						onclick={showNextDashboard}
 						aria-label="Show next dashboard"
 					>
-						&gt;
+						>
 					</button>
 				</div>
 			</div>
@@ -431,7 +430,7 @@
 				<FileText class="h-8 w-8 text-white" />
 			</div>
 			<div>
-				<h2 class={sectionTitleClass}>Latest Insights &amp; Free Reports</h2>
+				<h2 class={sectionTitleClass}>Latest Insights & Free Reports</h2>
 				<p class={sectionSubtitleClass}>Blog posts, market reports, and product updates</p>
 			</div>
 		</div>
@@ -669,7 +668,7 @@
 			</div>
 			<div>
 				<h2 class={sectionTitleClass}>Live Mobile Ad Intelligence — Who's Buying Ads Right Now</h2>
-				<p class={sectionSubtitleClass}>{monthYear} top advertisers &amp; creatives</p>
+				<p class={sectionSubtitleClass}>{monthYear} top advertisers & creatives</p>
 			</div>
 		</div>
 
@@ -707,7 +706,7 @@
 			</div>
 			<div>
 				<h2 class={sectionTitleClass}>
-					Mobile SDK Market Share — Top Ad Networks, MMPs &amp; Analytics
+					Mobile SDK Market Share — Top Ad Networks, MMPs & Analytics
 				</h2>
 				<p class={sectionSubtitleClass}>See which SDKs power the app ecosystem</p>
 			</div>
@@ -765,9 +764,7 @@
 				<ChartNoAxesColumnIncreasing class="h-8 w-8 text-white" />
 			</div>
 			<div>
-				<h2 class={sectionTitleClass}>
-					Live App Store Rankings — Google Play &amp; iOS Top Charts
-				</h2>
+				<h2 class={sectionTitleClass}>Live App Store Rankings — Google Play & iOS Top Charts</h2>
 				<p class={sectionSubtitleClass}>Updated daily — free to browse</p>
 			</div>
 		</div>

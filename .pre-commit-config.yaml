@@ -48,7 +48,6 @@ repos:
           - typescript
           - eslint-plugin-svelte
           - "@typescript-eslint/eslint-plugin"
-          - "@typescript-eslint/parser"
           - svelte-eslint-parser
   - repo: local
     hooks:

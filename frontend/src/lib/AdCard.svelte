@@ -8,7 +8,7 @@
 	let { creative: creative }: Props = $props();
 </script>
 
-<div class="card card-hover overflow-hidden">
+<div class="card overflow-hidden">
 	<!-- Creative Preview -->
 	<div class="relative">
 		<img

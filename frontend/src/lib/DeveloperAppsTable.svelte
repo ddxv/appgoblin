@@ -1,14 +1,7 @@
 <script lang="ts">
 	import type { AppFullDetail } from '../types';
 	import { formatNumber } from '$lib/utils/formatNumber';
-	import {
-		type PaginationState,
-		getCoreRowModel,
-		getPaginationRowModel,
-		getSortedRowModel,
-		getFilteredRowModel
-	} from '@tanstack/table-core';
-	import { createSvelteTable } from '$lib/components/data-table/index.js';
+	import { createAppTable, createTableState } from '$lib/components/data-table/index.js';
 	import { genericColumns } from '$lib/components/data-table/generic-column';
 	import Pagination from '$lib/components/data-table/Pagination.svelte';
 	import ExportAsCSV from '$lib/components/data-table/ExportAsCSV.svelte';
@@ -18,7 +11,7 @@
 		isiOS: boolean;
 	};
 
-	let pagination = $state<PaginationState>({ pageIndex: 0, pageSize: 10 });
+	const [pagination, onPaginationChange] = createTableState({ pageIndex: 0, pageSize: 10 });
 
 	let { data, isiOS }: DataTableProps = $props();
 
@@ -40,27 +33,17 @@
 		}
 	]);
 
-	const table = createSvelteTable({
+	const table = createAppTable({
 		get data() {
 			return data;
 		},
 		columns,
 		state: {
 			get pagination() {
-				return pagination;
+				return pagination();
 			}
 		},
-		onPaginationChange: (updater) => {
-			if (typeof updater === 'function') {
-				pagination = updater(pagination);
-			} else {
-				pagination = updater;
-			}
-		},
-		getSortedRowModel: getSortedRowModel(),
-		getCoreRowModel: getCoreRowModel(),
-		getPaginationRowModel: getPaginationRowModel(),
-		getFilteredRowModel: getFilteredRowModel()
+		onPaginationChange
 	});
 </script>
 
@@ -85,7 +68,7 @@
 				{#each table.getRowModel().rows as row (row.id)}
 					<tr class="px-0">
 						<td class="table-cell-fit text-gray-500 text-xs md:text-sm">
-							{row.index + 1 + pagination.pageIndex * pagination.pageSize}
+							{row.index + 1 + pagination().pageIndex * pagination().pageSize}
 						</td>
 						<td class="table-cell-fit">
 							<a href="/apps/{row.original.store_id}" style="cursor: pointer;">

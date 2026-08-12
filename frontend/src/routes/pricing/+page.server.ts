@@ -6,7 +6,7 @@ import {
 	type StripePriceKey,
 	type BillingCycle
 } from '$lib/server/stripe';
-import { requireFullAuth, loginUrl, isSafeRedirect } from '$lib/server/auth/auth';
+import { requireFullAuth, isSafeRedirect } from '$lib/server/auth/auth';
 import { db } from '$lib/server/auth/db';
 
 const allowedKeys: StripePriceKey[] = ['b2b_sdk', 'b2b_appads', 'b2b_premium'];
@@ -52,9 +52,7 @@ export async function load(event: PageServerLoadEvent) {
 		if (event.locals.session === null || event.locals.user === null) {
 			return redirect(
 				302,
-				loginUrl(
-					`/pricing?subscribe=${encodeURIComponent(subscribe)}&cycle=${encodeURIComponent(billingCycle)}`
-				)
+				`/auth/signup?redirectTo=${encodeURIComponent('/pricing?subscribe=' + encodeURIComponent(subscribe) + '&cycle=' + encodeURIComponent(billingCycle))}`
 			);
 		}
 		if (!event.locals.user.emailVerified) {
@@ -129,12 +127,10 @@ export const actions: Actions = {
 			if (typeof priceKey === 'string' && allowedKeys.includes(priceKey as StripePriceKey)) {
 				return redirect(
 					302,
-					loginUrl(
-						`/pricing?subscribe=${encodeURIComponent(priceKey)}&cycle=${encodeURIComponent(cycle)}`
-					)
+					`/auth/signup?redirectTo=${encodeURIComponent('/pricing?subscribe=' + encodeURIComponent(priceKey) + '&cycle=' + encodeURIComponent(cycle))}`
 				);
 			}
-			return redirect(302, loginUrl('/pricing'));
+			return redirect(302, '/auth/signup?redirectTo=' + encodeURIComponent('/pricing'));
 		}
 		if (!event.locals.user.emailVerified) {
 			const formData = await event.request.formData();

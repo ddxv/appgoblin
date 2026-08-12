@@ -131,4 +131,44 @@
 			</p>
 		</div>
 	</div>
+
+	<!-- Features list -->
+	<div class="mt-8 space-y-0.5 text-sm text-surface-600-400 max-w-md mx-auto">
+		<p class="leading-relaxed">
+			<strong class="text-surface-800-200">App Intelligence</strong> — AppGoblin provides keywords, trends,
+			rankings, and growth metrics for 6M+ iOS and Android apps.
+		</p>
+		<p class="leading-relaxed">
+			<strong class="text-surface-800-200">SDK Analysis</strong> — AppGoblin's detailed breakdown of SDKs
+			found in 200k+ decompiled apps — advertising, analytics, and open-source libraries.
+		</p>
+		<p class="leading-relaxed">
+			<strong class="text-surface-800-200">Companies Directory</strong> — Rankings of mobile app companies
+			by SDK integration frequency, filterable by category on AppGoblin.
+		</p>
+		<p class="leading-relaxed">
+			<strong class="text-surface-800-200">Company Intelligence</strong> — Top client apps for any SDK
+			or service provider. Track quarterly app adoption and churn with AppGoblin.
+		</p>
+		<p class="leading-relaxed">
+			<strong class="text-surface-800-200">Ad Tech Insights</strong> — Ad campaigns, ad creatives, and
+			programmatic supply chain analysis via app-ads.txt on AppGoblin.
+		</p>
+		<p class="leading-relaxed">
+			<strong class="text-surface-800-200">Free App Datasets</strong> — Free TSV exports of app metrics
+			and descriptions for researchers and data scientists from AppGoblin.
+		</p>
+		<p class="leading-relaxed">
+			<strong class="text-surface-800-200">ASO Tools</strong> — AppGoblin's free keyword research tools
+			and data dumps to optimize app store visibility.
+		</p>
+		<p class="leading-relaxed">
+			<strong class="text-surface-800-200">Public API &amp; MCP</strong> — AppGoblin's REST API and MCP
+			server for AI agents. Access apps, companies, SDKs, and rankings programmatically.
+		</p>
+		<p class="leading-relaxed">
+			<strong class="text-surface-800-200">App-Ads.txt</strong> — Daily-updated records tying apps to
+			their DIRECT and RESELLER ad networks on AppGoblin.
+		</p>
+	</div>
 </div>
