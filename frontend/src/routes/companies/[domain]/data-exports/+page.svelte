@@ -188,7 +188,7 @@
 				</p>
 				<div class="flex flex-wrap gap-3">
 					<a href="/pricing" class="btn preset-filled-primary-500 p-3 font-semibold">
-						See Plans &amp; Pricing
+						See Plans & Pricing
 					</a>
 					<a href="/contact" class="btn preset-outlined-surface-100-900 p-3"> Contact Sales </a>
 				</div>

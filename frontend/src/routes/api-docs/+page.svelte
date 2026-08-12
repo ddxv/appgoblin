@@ -47,14 +47,14 @@
 	</div>
 
 	<div class="px-4 md:px-6">
-		<h2 class="mb-2 text-lg font-semibold">AI Agents &amp; MCP Setup</h2>
+		<h2 class="mb-2 text-lg font-semibold">AI Agents & MCP Setup</h2>
 		<p class="mb-1">Connect your AI agent using the MCP Streamable HTTP endpoint:</p>
 		<code class="mb-2 block px-3 py-2 font-mono text-sm break-all"
 			>https://appgoblin.info/api/v1/mcp</code
 		>
 		<p>
 			Authenticate with your API key via the <code class="px-1"
-				>Authorization: Bearer &lt;token&gt;</code
+				>Authorization: Bearer <token></token></code
 			>
 			header.
 		</p>

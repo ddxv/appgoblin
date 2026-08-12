@@ -267,7 +267,7 @@
 	<h1 class="h2 {titlePadding}">AppGoblin B2B Pricing</h1>
 	<div class={contentPadding}>
 		<p>
-			For paying via PayPal or crypto please reach out to us at <a
+			For paying via bank transfers, PayPal or crypto please reach out to us at <a
 				href="mailto:contact@appgoblin.info">contact@appgoblin.info</a
 			>. Yearly invoices receive an additional +5% discount. NET30 invoices are available for the
 			premium B2B.

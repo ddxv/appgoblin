@@ -7,7 +7,7 @@
 </script>
 
 <svelte:head>
-	<title>SDK &amp; API Verified Apps CSV Column Reference — AppGoblin</title>
+	<title>SDK & API Verified Apps CSV Column Reference — AppGoblin</title>
 	<meta
 		name="description"
 		content="Complete column reference for AppGoblin's SDK & API Verified Apps CSV exports. Understand every data field including installs, revenue estimates, SDK crawl timestamps, and market status."
@@ -36,7 +36,7 @@
 			<BookOpen class="h-4 w-4" />
 			Documentation
 		</p>
-		<h1 class="text-2xl md:text-3xl font-bold">SDK &amp; API Verified Apps — Data Export Guide</h1>
+		<h1 class="text-2xl md:text-3xl font-bold">SDK & API Verified Apps — Data Export Guide</h1>
 		<p class="text-base md:text-lg">
 			Everything you need to know about the CSV exports available on company pages. AppGoblin
 			provides two types of data exports — <strong>SDK & API Verified Apps</strong>
@@ -48,12 +48,12 @@
 	<section class="space-y-4">
 		<h2 class="text-xl font-bold flex items-center gap-2">
 			<Database class="h-5 w-5" />
-			SDK &amp; API Verified Apps
+			SDK & API Verified Apps
 		</h2>
 		<p class="text-sm">
-			The SDK &amp; API Verified Apps CSV contains every mobile app that AppGoblin has detected
-			using a particular company's SDK or making API calls to that company's servers. This is the
-			same data powering the SDK and API sections on company profile pages.
+			The SDK & API Verified Apps CSV contains every mobile app that AppGoblin has detected using a
+			particular company's SDK or making API calls to that company's servers. This is the same data
+			powering the SDK and API sections on company profile pages.
 		</p>
 		<p class="text-sm">
 			Each row represents a single app on a single platform. The dataset includes currently-listed
@@ -93,7 +93,7 @@
 			</p>
 			<div class="flex flex-wrap gap-3">
 				<a href="/pricing" class="btn preset-filled-primary-500 p-3 text-sm font-semibold">
-					See Plans &amp; Pricing
+					See Plans & Pricing
 					<ArrowRight class="h-4 w-4" />
 				</a>
 				<a href="/companies" class="btn preset-outlined-surface-100-900 p-3 text-sm">
@@ -114,7 +114,7 @@
 				href="/api-docs"
 				class="btn preset-outlined-surface-100-900 p-2.5 text-sm whitespace-nowrap"
 			>
-				API &amp; MCP Docs
+				API & MCP Docs
 				<ArrowRight class="h-4 w-4" />
 			</a>
 		</div>

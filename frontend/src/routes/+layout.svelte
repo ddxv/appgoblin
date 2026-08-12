@@ -140,13 +140,13 @@
 					</div>
 
 					<form
-						class="input-group grid-cols-[1fr_auto]"
+						class="field-group grid-cols-[1fr_auto] gap-0 border-surface-50-950"
 						role="search"
 						aria-busy={isSearchStarting}
 						onsubmit={handleSearchSubmit}
 					>
 						<input
-							class="ig-input"
+							class="input"
 							type="search"
 							name="term"
 							placeholder="Search Apps & Companies"
@@ -154,7 +154,7 @@
 							required
 						/>
 						<button
-							class="ig-cell preset-tonal inline-flex items-center justify-center p-2 md:p-4"
+							class="btn bg-surface-100-900 border-t border-surface-300-700 border-b border-t border-r inline-flex items-center justify-center p-2 md:p-3 cursor-pointer"
 							type="submit"
 							disabled={isSearchStarting}
 							aria-label={isSearchStarting ? 'Searching' : 'Search'}
@@ -228,19 +228,19 @@
 
 					<div class="flex flex-wrap items-center justify-center gap-x-2 gap-y-3 text-center">
 						<a href="/about" class="underline hover:">About AppGoblin</a>
-						&nbsp;|&nbsp;
+						 | 
 						<a href="/contact" class="underline hover:">Contact</a>
-						&nbsp;|&nbsp;
+						 | 
 						<a href="/blog" class="underline hover:">Blog</a>
-						&nbsp;|&nbsp;
+						 | 
 						<a href="/reports" class="underline hover:">Reports</a>
-						&nbsp;|&nbsp;
+						 | 
 						<a href="/pricing" class="underline hover:">Pricing</a>
-						&nbsp;|&nbsp;
+						 | 
 						<a href="/privacy_policy.html" class="underline hover:">Privacy Policy</a>
-						&nbsp;|&nbsp;
+						 | 
 						<a href="https://github.com/appgoblin-dev/appgoblin" class="underline hover:">GitHub</a>
-						&nbsp;|&nbsp;
+						 | 
 						<a href="https://linkedin.com/companies/AppGoblin" class="underline hover:">LinkedIn</a>
 					</div>
 				</div>

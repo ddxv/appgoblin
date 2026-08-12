@@ -9,7 +9,7 @@
 	>
 		{#each data.top_md5_hashes.slice(0, 4) as md5_hash}
 			<a href="/apps/{data.store_id}/ad-placements" class="snap-start shrink-0">
-				<card class="card-hover">
+				<card class="">
 					<div class="card-header justify-center">
 						<img
 							src="https://media.appgoblin.info/creatives/thumbs/{md5_hash}.jpg"

@@ -333,7 +333,7 @@
 </script>
 
 <svelte:head>
-	<title>ASO Keyword: &ldquo;{keywordDisplay}&rdquo; Scores &amp; Rankings | AppGoblin</title>
+	<title>ASO Keyword: “{keywordDisplay}” Scores & Rankings | AppGoblin</title>
 	<meta
 		name="description"
 		content="ASO analysis for {keywordDisplay} keyword — opportunity score, keyword difficulty, competitiveness, and top-ranked Android & iOS apps. Free app store keyword research by AppGoblin."
@@ -344,7 +344,7 @@
 	/>
 	<meta
 		property="og:title"
-		content="ASO Keyword: &ldquo;{keywordDisplay}&rdquo; Scores &amp; Rankings | AppGoblin"
+		content="ASO Keyword: “{keywordDisplay}” Scores & Rankings | AppGoblin"
 	/>
 	<meta
 		property="og:description"
@@ -356,7 +356,7 @@
 	<meta name="twitter:card" content="summary_large_image" />
 	<meta
 		name="twitter:title"
-		content="ASO Keyword: &ldquo;{keywordDisplay}&rdquo; Scores &amp; Rankings | AppGoblin"
+		content="ASO Keyword: “{keywordDisplay}” Scores & Rankings | AppGoblin"
 	/>
 	<meta
 		name="twitter:description"

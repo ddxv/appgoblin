@@ -55,7 +55,7 @@
 		<p class="text-sm opacity-80">
 			Results are split into <span class="font-medium">iOS App Store</span>,
 			<span class="font-medium">Android Google Play</span>, and
-			<span class="font-medium">Companies &amp; Domains</span>. Only tabs with results are shown.
+			<span class="font-medium">Companies & Domains</span>. Only tabs with results are shown.
 		</p>
 	</div>
 
@@ -97,7 +97,7 @@
 					{#if showCompanies}
 						<Tabs.Trigger value="companies" class="p-0 md:p-8">
 							<p class="text-xs md:text-xl">
-								Companies &amp; Domains
+								Companies & Domains
 								<span class="ml-2 px-2 py-0.5 text-xs rounded-full bg-primary-100-900">
 									{companiesCount}
 								</span>
