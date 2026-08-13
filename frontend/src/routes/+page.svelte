@@ -33,7 +33,7 @@
 	const sectionTitleClass = 'text-2xl transition-colors';
 	const sectionSubtitleClass = 'text-primary-800-200 font-medium';
 	const sectionDescriptionClass = 'mb-6';
-	const subSectionClass = 'p-4';
+	const subSectionClass = 'p-0 md:p-4';
 	const cardTitleClass = 'text-lg font-bold transition-colors';
 	const cardDescriptionClass = 'text-sm text-gray-400 mb-4';
 	const coreFeatureBulletSpanClass = 'text-primary-900-100/80 font-medium';
@@ -41,7 +41,7 @@
 	const exampleAnchorClass =
 		'text-xs md:text-md px-2 py-1 rounded-md bg-secondary-900-100/10 hover:bg-secondary-50-950/50';
 	const mainSectionClass =
-		'card p-4 md:p-8 rounded-2xl shadow-xl border border-secondary-900-100/20';
+		'card p-2 md:p-8 rounded-2xl shadow-xl border border-secondary-900-100/20';
 
 	// Get current month and year for display
 	const now = new Date();
@@ -66,7 +66,7 @@
 			kicker: 'For ASO & competitor research',
 			title: 'See Competitor Growth Strategies',
 			description:
-				'See exactly how rival apps acquire users, which keywords they rank for, what SDKs they depend on, and how their install and rating trajectory is trending — all in one dashboard.',
+				'See exactly how rival apps acquire users, which keywords they rank for, what SDKs they depend on, and how their install and rating trajectory is trending.',
 			points: [
 				'Track install estimates and rating changes week over week',
 				'Discover which keywords drive their store traffic',
@@ -121,17 +121,6 @@
 
 	function showDashboard(index: number) {
 		activeDashboardIndex = index;
-		restartDashboardAutoplay();
-	}
-
-	function showPreviousDashboard() {
-		activeDashboardIndex =
-			(activeDashboardIndex - 1 + dashboardHighlights.length) % dashboardHighlights.length;
-		restartDashboardAutoplay();
-	}
-
-	function showNextDashboard() {
-		advanceDashboard();
 		restartDashboardAutoplay();
 	}
 
@@ -289,7 +278,7 @@
 			>
 		</div>
 		<p class="text-base md:text-lg max-w-2xl mx-auto">
-			Track competitor app growth, analyze SDK reports, monitor live ad creatives.
+			Track competitor app growth, analyze SDK reports, browse ad creatives.
 		</p>
 		<p>
 			Browse
@@ -321,10 +310,8 @@
 		</div>
 	</section>
 
-	<section
-		class="relative overflow-hidden rounded-[2rem] border border-secondary-900-100/20 bg-surface-100-900/40 px-4 py-6 shadow-2xl md:px-8 md:py-10"
-	>
-		<div class="grid gap-6 p-4 md:grid-cols-[minmax(0,0.78fr)_minmax(0,1.22fr)] md:p-6">
+	<section class="relative overflow-hidden rounded-xl border border-secondary-900-100/20">
+		<div class="grid gap-6 p-4 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] md:p-6">
 			<div class="flex flex-col justify-between gap-6">
 				<div>
 					<p class="mb-3 text-xs font-bold uppercase tracking-[0.28em] text-primary-800-200">
@@ -340,7 +327,7 @@
 					<ul class="mb-6 space-y-2 text-sm md:text-base">
 						{#each dashboardHighlights[activeDashboardIndex].points as point}
 							<li class="flex items-start gap-3">
-								<span class="mt-1 h-2.5 w-2.5 shrink-0 rounded-full bg-success-500"></span>
+								<span class="mt-2.5 h-2 w-2 shrink-0 rounded-full bg-surface-900-100"></span>
 								<span>{point}</span>
 							</li>
 						{/each}
@@ -356,79 +343,56 @@
 					</div>
 				</div>
 
-				<div class="flex items-center gap-3">
-					<button
-						type="button"
-						class="flex h-10 w-10 items-center justify-center rounded-full border border-surface-100-900/60 bg-surface-50-950/35 text-lg font-bold transition-colors hover:border-secondary-600/60 hover:bg-surface-50-950/55"
-						onclick={showPreviousDashboard}
-						aria-label="Show previous dashboard"
-					>
-					</button>
-
-					<div class="flex items-center gap-2">
-						{#each dashboardHighlights as _, index}
-							<button
-								type="button"
-								class={[
-									'h-3 w-3 rounded-full transition-all',
-									activeDashboardIndex === index
-										? 'bg-primary-500 shadow-[0_0_0_4px_rgba(125,211,252,0.12)]'
-										: 'bg-surface-500/40 hover:bg-surface-500/70'
-								].join(' ')}
-								onclick={() => showDashboard(index)}
-								aria-label={`Show dashboard ${index + 1}`}
-								aria-pressed={activeDashboardIndex === index}
-							></button>
-						{/each}
-					</div>
-
-					<button
-						type="button"
-						class="flex h-10 w-10 items-center justify-center rounded-full border border-surface-100-900/60 bg-surface-50-950/35 text-lg font-bold transition-colors hover:border-secondary-600/60 hover:bg-surface-50-950/55"
-						onclick={showNextDashboard}
-						aria-label="Show next dashboard"
-					>
-						>
-					</button>
+				<div class="flex items-center gap-2">
+					{#each dashboardHighlights as _, index}
+						<button
+							type="button"
+							class={[
+								'h-3 w-3 rounded-full transition-all',
+								activeDashboardIndex === index
+									? 'bg-primary-500 shadow-[0_0_0_4px_rgba(125,211,252,0.12)]'
+									: 'bg-surface-500/40 hover:bg-surface-500/70'
+							].join(' ')}
+							onclick={() => showDashboard(index)}
+							aria-label={`Show dashboard ${index + 1}`}
+							aria-pressed={activeDashboardIndex === index}
+						></button>
+					{/each}
 				</div>
 			</div>
 
-			<a
-				href={dashboardHighlights[activeDashboardIndex].href}
-				class="group relative block overflow-hidden rounded-[1.5rem] border border-secondary-900-100/20 bg-surface-50-950/70 p-2 shadow-xl"
-			>
-				<div
-					class="absolute inset-0 z-10 bg-gradient-to-tr from-surface-950/35 via-transparent to-primary-500/15"
-				></div>
-				<div
-					class="absolute inset-x-0 bottom-0 z-10 h-28 bg-gradient-to-t from-surface-950/45 to-transparent"
-				></div>
-				<div
-					class="absolute inset-y-0 left-0 z-10 hidden w-24 bg-gradient-to-r from-surface-950/25 to-transparent md:block"
-				></div>
-				<div
-					class="absolute right-4 top-4 z-20 rounded-full border border-white/20 bg-surface-950/55 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.2em] text-white/90 backdrop-blur-sm"
+			<div>
+				<a
+					href={dashboardHighlights[activeDashboardIndex].href}
+					class="group relative block overflow-hidden rounded-lg border border-secondary-900-100/20 p-2"
 				>
-					Preview
-				</div>
-				<div class="aspect-[16/11] overflow-hidden rounded-[1rem]">
-					<enhanced:img
-						src={dashboardHighlights[activeDashboardIndex].imageLight}
-						alt={dashboardHighlights[activeDashboardIndex].imageAlt}
-						class="block h-full w-full object-cover object-top-left opacity-90 saturate-[0.92] transition-transform duration-500 group-hover:scale-[1.015] dark:hidden"
-						loading="eager"
-						sizes="min(800px, 100vw)"
-						fetchpriority="high"
-					/>
-					<enhanced:img
-						src={dashboardHighlights[activeDashboardIndex].imageDark}
-						alt={dashboardHighlights[activeDashboardIndex].imageAlt}
-						class="hidden h-full w-full object-cover object-top-left opacity-90 saturate-[0.92] transition-transform duration-500 group-hover:scale-[1.015] dark:block"
-						loading="eager"
-						sizes="min(800px, 100vw)"
-					/>
-				</div>
-			</a>
+					<div
+						class="absolute inset-0 z-10 bg-gradient-to-tr from-surface-950/35 via-transparent to-primary-500/15"
+					></div>
+					<div
+						class="absolute right-4 top-4 z-11 rounded-full border border-white/20 bg-surface-950/55 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.2em] text-white/90 backdrop-blur-sm"
+					>
+						Preview
+					</div>
+					<div class="overflow-hidden">
+						<enhanced:img
+							src={dashboardHighlights[activeDashboardIndex].imageLight}
+							alt={dashboardHighlights[activeDashboardIndex].imageAlt}
+							class="block dark:hidden"
+							loading="eager"
+							// sizes="min(800px, 100vw)"
+							fetchpriority="high"
+						/>
+						<enhanced:img
+							src={dashboardHighlights[activeDashboardIndex].imageDark}
+							alt={dashboardHighlights[activeDashboardIndex].imageAlt}
+							class="hidden dark:block"
+							loading="eager"
+							// sizes="min(800px, 100vw)"
+						/>
+					</div>
+				</a>
+			</div>
 		</div>
 	</section>
 
@@ -557,7 +521,7 @@
 				<p class="text-xs text-surface-500/60 mt-3 mb-1">Who it's for:</p>
 				<p class="text-sm">App marketers, ASO teams, and competitor researchers.</p>
 				<p class="text-xs text-surface-500/60 mt-3 mb-2">Examples:</p>
-				<div class="flex justify-between items-end gap-2 mb-0">
+				<div class="md:flex justify-between items-end gap-2 mb-0">
 					<div class="flex flex-wrap gap-2">
 						<a href="/apps/com.rovio.baba" class={exampleAnchorClass}>Angry Birds 2 App</a>
 					</div>
@@ -589,10 +553,10 @@
 				<p class="text-sm">Developers, technical researchers, and security analysts.</p>
 				<p class="text-sm mt-3 mb-3">Free: request any app for analysis.</p>
 				<p class="text-xs text-white/60 mb-2">Examples:</p>
-				<div class="flex justify-between items-end gap-2 mb-0">
-					<div class="flex flex-wrap gap-2">
-						<a href="/sdks" class={exampleAnchorClass}>Recently Requested SDK Scans</a>
-					</div>
+				<div class="md:flex justify-between items-end gap-2 mb-0">
+					<!-- <div class="md:flex flex-wrap gap-2"> -->
+					<a href="/sdks" class={exampleAnchorClass}>Recently Requested SDK Scans</a>
+					<!-- </div> -->
 					<a href="/sdks" class={featureCtaClass}>Request a Free SDK Scan →</a>
 				</div>
 			</div>
@@ -618,8 +582,8 @@
 				<p class="text-xs text-white/60 mb-1">Who it's for:</p>
 				<p class="text-sm mb-3">Ad sales teams, partner teams, and market intelligence analysts.</p>
 				<p class="text-xs text-white/60 mb-2">Examples:</p>
-				<div class="flex justify-between items-end gap-2 mb-0">
-					<div class="flex flex-wrap gap-2">
+				<div class="md:flex justify-between items-end gap-2 mb-0">
+					<div class="md:flex flex-wrap gap-2">
 						<a href="/companies/types/ad-networks/game_casino" class={exampleAnchorClass}
 							>Ad Networks for Casino Games</a
 						>
@@ -652,15 +616,15 @@
 				<p class="text-xs text-surface-500/60 mt-3 mb-1">Who it's for:</p>
 				<p class="text-sm">Ad networks, DSP teams, and fraud detection analysts.</p>
 				<p class="text-xs text-surface-500/60 mt-3 mb-2">Examples:</p>
-				<div class="flex justify-between items-end gap-2 mb-0">
-					<div class="flex flex-wrap gap-2">
+				<div class="md:flex justify-between items-end gap-2 mb-0 space-y-2">
+					<div class="md:flex md:flex-wrap gap-2">
 						<a href="/top-mobile-advertisers" class={exampleAnchorClass}>Top Mobile Advertisers</a>
 						<a href="/ad-creatives" class={exampleAnchorClass}>Browse Thousands of Ad-Creatives</a>
 						<a href="/companies/applovin.com/app-adstxt" class={exampleAnchorClass}
 							>AppLovin App-Ads.txt Entries</a
 						>
 						<a href="/apps/com.rovio.baba/ads-txt" class={exampleAnchorClass}
-							>Angry Birds 2 App Example</a
+							>Angry Birds 2 App-ads.txt</a
 						>
 					</div>
 					<a href="/top-mobile-advertisers" class={featureCtaClass}>View Live Campaigns →</a>
@@ -710,9 +674,7 @@
 	<!-- Popular Companies/SDKs Section -->
 	<section class={mainSectionClass}>
 		<div class="flex items-center mb-6">
-			<div
-				class="bg-gradient-to-br from-primary-900-100 to-primary-600 rounded-2xl p-1 shadow-lg mr-4"
-			>
+			<div class="bg-gradient-to-br from-primary-900-100 to-primary-600 rounded-2xl shadow-lg mr-4">
 				<Layers class="h-8 w-8 text-white" />
 			</div>
 			<div>
@@ -761,7 +723,7 @@
 
 		<div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
 			<a href="/companies" class="btn preset-filled-primary-200-800">
-				Browse Top B2B Mobile Companies by Category →</a
+				Browse B2B App Companies by Category →</a
 			>
 		</div>
 	</section>

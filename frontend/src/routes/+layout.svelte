@@ -88,7 +88,7 @@
 </script>
 
 <div class="grid h-screen grid grid-rows-[auto_1fr_auto]">
-	<AppBar class="sticky top-0 z-10 bg-surface-50-950 border-b border-surface-100-900">
+	<AppBar class="sticky top-0 z-90 bg-surface-50-950 border-b border-surface-100-900">
 		<AppBar.Toolbar class="grid-cols-[auto_1fr_auto]">
 			<AppBar.Lead class="shrink-0 min-w-fit">
 				<a href="/" class="flex items-center shrink-0">
