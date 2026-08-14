@@ -81,7 +81,7 @@
 		'store-apps-descriptions': {
 			name: 'App Descriptions',
 			description:
-				'English-language app store descriptions for apps in our database. Useful for NLP, topic modelling, keyword extraction, and market research.',
+				'English language app store descriptions for apps in our database. Useful for NLP, topic modelling, keyword extraction, and market research.',
 			rows: 'Millions of apps',
 			icon: FileText,
 			fileFormat: '.tsv.xz',
@@ -110,7 +110,7 @@
 		descriptions: {
 			name: 'App Descriptions',
 			description:
-				'English-language app store descriptions for apps in our database. Useful for NLP, topic modelling, keyword extraction, and market research.',
+				'English language app store descriptions for apps in our database. Useful for NLP, topic modelling, keyword extraction, and market research.',
 			rows: 'Millions of apps',
 			icon: FileText,
 			fileFormat: '.tsv.xz',
@@ -326,7 +326,7 @@
 				'@type': 'Dataset',
 				name: 'App Descriptions',
 				description:
-					'English-language app store descriptions from Google Play and Apple App Store for NLP, text analysis, and market research',
+					'English language app store descriptions from Google Play and Apple App Store for NLP, text analysis, and market research',
 				keyword: ['app descriptions', 'text data', 'NLP dataset'],
 				license: 'https://creativecommons.org/licenses/by/4.0/',
 				distribution: {
@@ -343,9 +343,13 @@
 <div class="px-2 md:px-8 xl:px-24 grid grid-cols-1 gap-6 md:gap-10 py-4 md:py-8">
 	<!-- Hero -->
 	<div class="grid gap-2">
-		<h1 class="text-3xl md:text-4xl font-black">
-			Free App Data Exports for Researchers & Data Scientists
-		</h1>
+		<h1 class="text-3xl md:text-4xl">Free App Data for Researchers & Data Scientists</h1>
+		<p class="text-lg">
+			AppGoblin provides regularly updated app store datasets from Google Play and Apple App Store
+			for researchers, data scientists, and marketers. Downloads are free with a free AppGoblin
+			account. Please reach out if you have quesitons.
+		</p>
+
 		<!-- License & attribution -->
 		<div
 			class="preset-outlined-surface-100-900 p-4 md:p-5"
@@ -357,40 +361,39 @@
 			<link itemprop="isBasedOn" href="https://appgoblin.info" />
 			<div class="grid gap-2">
 				<p class="leading-relaxed">
-					<strong>License:</strong> This dataset is made available under the
-					<a
-						href="https://creativecommons.org/licenses/by/4.0/"
-						target="_blank"
-						rel="license"
-						class="underline font-semibold"
-						>Creative Commons Attribution 4.0 International License (CC BY 4.0)</a
-					>.
+					<strong>How to Use:</strong> You are free to share and adapt this data for any purpose, including
+					commercial use.
 				</p>
 				<p class="leading-relaxed">
-					<strong>How to Attribute:</strong> You are free to share and adapt this data for any purpose,
-					including commercial use. If you publish, redistribute, or build products using this dataset,
-					you must include the following citation and backlink:
+					<strong>Attribution required:</strong> If you publish, redistribute, or build products using
+					this dataset, you must include a citation and backlink to 'https://appgoblin.info':
 				</p>
+
 				<blockquote class="border-l-4 border-primary-500 pl-4 italic text-sm">
 					Data provided by <a href="https://appgoblin.info" class="underline font-semibold"
 						>AppGoblin</a
 					>.
 				</blockquote>
+
+				<p class="leading-relaxed">
+					<strong>License:</strong> AppGoblin datasets are available under the
+					<a
+						href="https://creativecommons.org/licenses/by/4.0/"
+						target="_blank"
+						rel="license"
+						class="underline font-semibold">Creative Commons Attribution 4.0 License (CC BY 4.0)</a
+					>.
+				</p>
+
+				<p>
+					<strong class="">File formats:</strong> The larger file exports are
+					<code class="font-mono text-primary-800-200">.tsv.xz</code>, while the smaller smaller
+					reports are regular
+					<code class="font-mono text-primary-800-200">.csv</code>
+					files.
+				</p>
 			</div>
 		</div>
-		<p class="text-lg max-w-2xl">
-			High-quality, regularly updated app store datasets from Google Play and Apple App Store for
-			researchers, data scientists, and marketers. Downloads are free with a free AppGoblin account.
-		</p>
-	</div>
-
-	<!-- Format callout -->
-	<div class="text-base">
-		<strong class="">File formats:</strong> Core catalog exports are
-		<code class="font-mono text-primary-800-200">.tsv.xz</code> files for large-scale datasets,
-		while report-based snapshots are smaller raw
-		<code class="font-mono text-primary-800-200">.csv</code>
-		files.
 	</div>
 
 	<!-- Dataset cards -->
@@ -403,9 +406,9 @@
 			{#if rawDatasets.length > 0}
 				<section class="grid gap-3">
 					<div class="grid gap-1">
-						<h2 class="text-2xl font-bold">Raw Datasets</h2>
-						<p class="text-sm max-w-3xl">
-							Large-scale exports for full-database analysis. These are the heavier source files,
+						<h2 class="text-2xl font-bold">Raw App Datasets</h2>
+						<p class="text-sm">
+							Large scale data dumps for big data analysis. These are the heavier source files,
 							typically compressed TSV datasets.
 						</p>
 					</div>
@@ -433,13 +436,13 @@
 								{#if meta.columns.length > 0}
 									<details class="group">
 										<summary
-											class="cursor-pointer text-xs font-semibold select-none list-none flex items-center gap-1"
+											class="cursor-pointer font-semibold select-none list-none flex items-center gap-1"
 										>
 											<span class="transition-transform group-open:rotate-90 inline-block">▶</span>
 											Column definitions ({meta.columns.length})
 										</summary>
 										<div class="mt-2 overflow-x-auto">
-											<table class="w-full text-xs border-collapse">
+											<table class="w-full border-collapse">
 												<thead>
 													<tr class="border-b border-surface-300-700">
 														<th class="text-left py-1 pr-4 font-semibold w-40">Column</th>
@@ -450,7 +453,7 @@
 													{#each meta.columns as col}
 														<tr class="border-b border-surface-200-800 last:border-0">
 															<td class="py-1.5 pr-4 align-top">
-																<code class="font-mono">{col.name}</code>
+																<p class="font-mono bg-surface-100-900">{col.name}</p>
 															</td>
 															<td class="py-1.5 text-align-top">{col.description}</td>
 														</tr>
@@ -461,26 +464,28 @@
 									</details>
 								{/if}
 
-								<div class="flex flex-wrap gap-3 text-xs text-gray-500">
+								<div class="flex flex-wrap gap-3">
+									<div class="grid-col-1">
+										<strong>File:</strong>
+										<p class="font-mono bg-surface-100-900">{getFileName(dataset.key)}</p>
+									</div>
+									<div class="grid-col-1">
+										<strong>Format:</strong>
+										<p>
+											{meta.fileFormat}
+										</p>
+									</div>
+									<div class="grid-col-1">
+										<strong>Size:</strong>
+										<p>{formatBytes(dataset.size_bytes)}</p>
+									</div>
 									<span>
-										<strong class="text-gray-400">File:</strong>
-										<code class="font-mono">{getFileName(dataset.key)}</code>
-									</span>
-									<span>
-										<strong class="text-gray-400">Format:</strong>
-										{meta.fileFormat}
-									</span>
-									<span>
-										<strong class="text-gray-400">Size:</strong>
-										{formatBytes(dataset.size_bytes)}
-									</span>
-									<span>
-										<strong class="text-gray-400">Updated:</strong>
+										<strong>Updated:</strong>
 										{formatDate(dataset.last_modified)}
 									</span>
 									{#if dataset.license_name}
 										<span>
-											<strong class="text-gray-400">License:</strong>
+											<strong>License:</strong>
 											<a href={dataset.license_url} target="_blank" rel="license" class="underline">
 												{dataset.license_name}
 											</a>
@@ -542,9 +547,9 @@
 			{#if overviewDatasets.length > 0}
 				<section class="grid gap-3">
 					<div class="grid gap-1">
-						<h2 class="text-2xl font-bold">High-Level Overview Datasets</h2>
-						<p class="text-sm max-w-3xl">
-							Smaller report-derived CSV snapshots that summarize trends and ecosystem structure
+						<h2 class="text-2xl font-bold">High Level Overview Datasets</h2>
+						<p>
+							Smaller report derived CSV snapshots that summarize trends and ecosystem structure
 							without requiring the full raw exports.
 						</p>
 					</div>
@@ -572,13 +577,13 @@
 								{#if meta.columns.length > 0}
 									<details class="group">
 										<summary
-											class="cursor-pointer text-xs font-semibold select-none list-none flex items-center gap-1"
+											class="cursor-pointer font-semibold select-none list-none flex items-center gap-1"
 										>
 											<span class="transition-transform group-open:rotate-90 inline-block">▶</span>
 											Column definitions ({meta.columns.length})
 										</summary>
 										<div class="mt-2 overflow-x-auto">
-											<table class="w-full text-xs border-collapse">
+											<table class="w-full border-collapse">
 												<thead>
 													<tr class="border-b border-surface-300-700">
 														<th class="text-left py-1 pr-4 font-semibold w-40">Column</th>
@@ -589,7 +594,7 @@
 													{#each meta.columns as col}
 														<tr class="border-b border-surface-200-800 last:border-0">
 															<td class="py-1.5 pr-4 align-top">
-																<code class="font-mono">{col.name}</code>
+																<p class="font-mono bg-surface-100-900">{col.name}</p>
 															</td>
 															<td class="py-1.5 text-align-top">{col.description}</td>
 														</tr>
@@ -600,26 +605,28 @@
 									</details>
 								{/if}
 
-								<div class="flex flex-wrap gap-3 text-xs text-gray-500">
-									<span>
-										<strong class="text-gray-400">File:</strong>
-										<code class="font-mono">{getFileName(dataset.key)}</code>
-									</span>
-									<span>
-										<strong class="text-gray-400">Format:</strong>
-										{meta.fileFormat}
-									</span>
-									<span>
-										<strong class="text-gray-400">Size:</strong>
-										{formatBytes(dataset.size_bytes)}
-									</span>
-									<span>
-										<strong class="text-gray-400">Updated:</strong>
-										{formatDate(dataset.last_modified)}
-									</span>
+								<div class="flex flex-wrap gap-3">
+									<div class="grid-col-1">
+										<strong>File:</strong>
+										<p class="font-mono bg-surface-100-900">{getFileName(dataset.key)}</p>
+									</div>
+									<div class="grid-col-1">
+										<strong>Format:</strong>
+										<p>
+											{meta.fileFormat}
+										</p>
+									</div>
+									<div class="grid-col-1">
+										<strong>Size:</strong>
+										<p>{formatBytes(dataset.size_bytes)}</p>
+									</div>
+									<div class="grid-col-1">
+										<strong>Updated:</strong>
+										<p>{formatDate(dataset.last_modified)}</p>
+									</div>
 									{#if dataset.license_name}
 										<span>
-											<strong class="text-gray-400">License:</strong>
+											<strong>License:</strong>
 											<a href={dataset.license_url} target="_blank" rel="license" class="underline">
 												{dataset.license_name}
 											</a>
@@ -680,39 +687,42 @@
 		</div>
 	{/if}
 
-	<div class="preset-outlined-surface-100-900 p-5 md:p-6">
-		<h2 class="text-xl md:text-2xl font-bold mb-3">Premium Datasets Available</h2>
-		<p class="text-sm md:text-base mb-3 max-w-3xl">
-			Beyond the free exports on this page, AppGoblin already provides premium datasets for teams
-			who need deeper app monetization and company relationship data.
-		</p>
-		<div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
-			<div class="rounded-lg border border-surface-300-700 p-3">
-				<p class="font-semibold mb-1">App-ads.txt Datasets</p>
-				<p>
-					Comprehensive app-ads.txt coverage for supply path analysis, fraud checks, and inventory
-					quality workflows.
+	<section class="grid gap-3">
+		<div class="grid gap-1">
+			<h2 class="text-xl md:text-2xl font-bold">Premium Datasets Available</h2>
+			<div class="preset-outlined-surface-100-900 p-5 md:p-6">
+				<p class="text-sm md:text-base mb-3">
+					AppGoblin also provides premium datasets for all mobile apps and companies. These include
+					App-Ads.txt, SDK based app client lists, market reports and the latest apps lost and added
+					for each company.
 				</p>
-			</div>
-			<div class="rounded-lg border border-surface-300-700 p-3">
-				<p class="font-semibold mb-1">Company SDK & App Lists</p>
-				<p>
-					Relationship datasets mapping companies to the apps that use their SDKs, built for market
-					mapping, prospecting, and competitive analysis.
+				<p class="max-w-2xl">
+					For high frequency data needs, bulk exports, or custom dataset requests
+					<a href="/contact" class="underline">contact us</a>.
 				</p>
-			</div>
-		</div>
-		<div class="mt-4">
-			<a href="/pricing" class="btn preset-filled-primary-100-900 text-sm"
-				>View Premium Dataset Pricing</a
-			>
-		</div>
-	</div>
 
-	<!-- Footer note -->
-	<p class="text-xs text-gray-500 max-w-2xl">
-		These datasets are updated periodically. For high-frequency data needs, bulk exports, or custom
-		dataset requests, see the <a href="/pricing" class="underline">pricing page</a>
-		or <a href="/contact" class="underline">contact us</a>.
-	</p>
+				<div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-2">
+					<div class="rounded-lg border border-surface-300-700 p-3">
+						<p class="font-semibold mb-1">App-ads.txt Datasets</p>
+						<p>
+							Comprehensive app-ads.txt coverage for supply path analysis, fraud checks, and
+							inventory quality workflows.
+						</p>
+					</div>
+					<div class="rounded-lg border border-surface-300-700 p-3">
+						<p class="font-semibold mb-1">Company SDK & App Lists</p>
+						<p>
+							Relationship datasets mapping companies to the apps that use their SDKs, built for
+							market mapping, prospecting, and competitive analysis.
+						</p>
+					</div>
+				</div>
+				<div class="mt-4">
+					<a href="/pricing" class="btn preset-filled-primary-100-900 text-sm"
+						>View Premium Dataset Pricing</a
+					>
+				</div>
+			</div>
+		</div>
+	</section>
 </div>
