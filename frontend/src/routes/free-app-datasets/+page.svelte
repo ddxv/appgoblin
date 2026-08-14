@@ -494,6 +494,9 @@
 											href={dataset.download_url}
 											download
 											class="btn preset-filled-primary-100-900 flex items-center gap-2 text-sm"
+											data-umami-event="free-dataset-download"
+											data-umami-event-dataset={dataset.key}
+											data-umami-event-name={meta.name}
 										>
 											<Download class="h-4 w-4" />
 											Download
@@ -630,6 +633,9 @@
 											href={dataset.download_url}
 											download
 											class="btn flex items-center gap-2 text-sm"
+											data-umami-event="free-dataset-download"
+											data-umami-event-dataset={dataset.key}
+											data-umami-event-name={meta.name}
 										>
 											<Download class="h-4 w-4" />
 											Download
