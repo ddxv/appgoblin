@@ -36,8 +36,8 @@
 	const subSectionClass = 'p-0 md:p-4';
 	const cardTitleClass = 'text-lg font-bold transition-colors';
 	const cardDescriptionClass = 'text-sm text-gray-400 mb-4';
-	const coreFeatureBulletSpanClass = 'text-primary-900-100/80 font-medium';
-	const featureCtaClass = 'btn px-3 py-1.5 bg-primary-300-700 font-medium';
+	const coreFeatureBulletSpanClass = 'text-primary-900-100';
+	const featureCtaClass = 'btn px-3 py-1.5 bg-primary-300-700';
 	const exampleAnchorClass =
 		'text-xs md:text-md px-2 py-1 rounded-md bg-secondary-900-100/10 hover:bg-secondary-50-950/50';
 	const mainSectionClass =
@@ -405,8 +405,10 @@
 				<FileText class="h-8 w-8 text-white" />
 			</div>
 			<div>
-				<h2 class={sectionTitleClass}>Latest Insights & Free Reports</h2>
-				<p class={sectionSubtitleClass}>Blog posts, market reports, and product updates</p>
+				<h2 class={sectionTitleClass}>Latest Blogs & Reports</h2>
+				<p class={sectionSubtitleClass}>
+					Free App market ecosystem reports, and AppGoblin product updates
+				</p>
 			</div>
 		</div>
 
@@ -418,17 +420,16 @@
 		{#if data.latestContent && data.latestContent.length > 0}
 			<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
 				{#each data.latestContent as entry}
-					<div class="rounded-md border border-surface-100-900 p-4 bg-surface-100-900/50">
+					<div class="rounded-md border border-surface-100-900 p-4">
 						<div class="flex flex-wrap items-center gap-2 mb-2">
 							<span
-								class="text-[11px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full {entry.kind ===
-								'report'
-									? 'bg-purple-900-100/10 text-purple-800-200'
-									: 'bg-primary-900-100/10 text-primary-800-200'}"
+								class="text-sm uppercase px-2 py-0.5 rounded-full {entry.kind === 'report'
+									? 'bg-secondary-50-950'
+									: 'bg-tertiary-50-950'}"
 							>
 								{entry.kind === 'report' ? 'Report' : 'Blog'}
 							</span>
-							<span class="text-xs text-surface-500">
+							<span class="text-xs text-surface-900-100">
 								<time datetime={entry.pubDate.toISOString()}>
 									{entry.pubDate.toLocaleDateString('en-us', {
 										year: 'numeric',
@@ -439,11 +440,11 @@
 							</span>
 						</div>
 						<h4 class="font-bold mb-2">
-							<a href={entry.relativeURL} class="hover:text-primary-600-400">
+							<a href={entry.relativeURL}>
 								{entry.title}
 							</a>
 						</h4>
-						<p class="text-sm text-surface-500 mb-3 line-clamp-2">
+						<p class="text-sm text-surface-900-100 mb-3 line-clamp-2">
 							{entry.description}
 						</p>
 						<div class="flex justify-between items-end gap-2">
@@ -518,9 +519,9 @@
 						each app is using
 					</li>
 				</ul>
-				<p class="text-xs text-surface-500/60 mt-3 mb-1">Who it's for:</p>
+				<p class="text-xs mt-3 mb-1">Who it's for:</p>
 				<p class="text-sm">App marketers, ASO teams, and competitor researchers.</p>
-				<p class="text-xs text-surface-500/60 mt-3 mb-2">Examples:</p>
+				<p class="text-xs mt-3 mb-2">Examples:</p>
 				<div class="md:flex justify-between items-end gap-2 mb-0">
 					<div class="flex flex-wrap gap-2">
 						<a href="/apps/com.rovio.baba" class={exampleAnchorClass}>Angry Birds 2 App</a>
@@ -549,10 +550,10 @@
 						review newly processed results
 					</li>
 				</ul>
-				<p class="text-xs text-white/60 mt-3 mb-1">Who it's for:</p>
+				<p class="text-xs mt-3 mb-1">Who it's for:</p>
 				<p class="text-sm">Developers, technical researchers, and security analysts.</p>
 				<p class="text-sm mt-3 mb-3">Free: request any app for analysis.</p>
-				<p class="text-xs text-white/60 mb-2">Examples:</p>
+				<p class="text-xs mb-2">Examples:</p>
 				<div class="md:flex justify-between items-end gap-2 mb-0">
 					<!-- <div class="md:flex flex-wrap gap-2"> -->
 					<a href="/sdks" class={exampleAnchorClass}>Recently Requested SDK Scans</a>
@@ -579,9 +580,9 @@
 						to each provider
 					</li>
 				</ul>
-				<p class="text-xs text-white/60 mb-1">Who it's for:</p>
+				<p class="text-xs mb-1">Who it's for:</p>
 				<p class="text-sm mb-3">Ad sales teams, partner teams, and market intelligence analysts.</p>
-				<p class="text-xs text-white/60 mb-2">Examples:</p>
+				<p class="text-xs mb-2">Examples:</p>
 				<div class="md:flex justify-between items-end gap-2 mb-0">
 					<div class="md:flex flex-wrap gap-2">
 						<a href="/companies/types/ad-networks/game_casino" class={exampleAnchorClass}
@@ -613,9 +614,9 @@
 						to real app IDs for verification
 					</li>
 				</ul>
-				<p class="text-xs text-surface-500/60 mt-3 mb-1">Who it's for:</p>
+				<p class="text-xs mt-3 mb-1">Who it's for:</p>
 				<p class="text-sm">Ad networks, DSP teams, and fraud detection analysts.</p>
-				<p class="text-xs text-surface-500/60 mt-3 mb-2">Examples:</p>
+				<p class="text-xs mt-3 mb-2">Examples:</p>
 				<div class="md:flex justify-between items-end gap-2 mb-0 space-y-2">
 					<div class="md:flex md:flex-wrap gap-2">
 						<a href="/top-mobile-advertisers" class={exampleAnchorClass}>Top Mobile Advertisers</a>
