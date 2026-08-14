@@ -74,11 +74,11 @@ export async function _loadAdCreativesPage({
 	const allowAdvancedFilters = isSignedIn;
 
 	if (!allowAdvancedFilters && primaryFilter === 'app-category') {
-		throw redirect(308, '/ad-creatives');
+		redirect(308, '/ad-creatives');
 	}
 
 	if (primaryFilter === 'base' && (queryCategory || queryCompany)) {
-		throw redirect(
+		redirect(
 			308,
 			buildAdCreativesUrl({
 				category: allowAdvancedFilters ? queryCategory : null,
@@ -200,7 +200,7 @@ function validateCategory(category: string, appCats: CatData) {
 	const isValidCategory = appCats.categories.some((item) => item.id === category);
 
 	if (!isValidCategory) {
-		throw error(404, {
+		error(404, {
 			message: `Category "${category}" not found`
 		});
 	}

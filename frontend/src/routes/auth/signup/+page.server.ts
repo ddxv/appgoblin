@@ -155,7 +155,7 @@ async function action(event: RequestEvent) {
 	const redirectDest =
 		typeof redirectToParam === 'string' && isSafeRedirect(redirectToParam) ? redirectToParam : '';
 	if (redirectDest) {
-		throw redirect(302, `/auth/verify-email?redirectTo=${encodeURIComponent(redirectDest)}`);
+		redirect(302, `/auth/verify-email?redirectTo=${encodeURIComponent(redirectDest)}`);
 	}
-	throw redirect(302, '/auth/verify-email');
+	redirect(302, '/auth/verify-email');
 }

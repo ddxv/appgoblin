@@ -9,6 +9,6 @@ export const load: PageServerLoad = async (event) => {
 	}
 	const domain = event.params.domain || '';
 	const downloadUrl = buildAppAdsTxtUrl(domain);
-	if (downloadUrl) throw redirect(302, downloadUrl);
+	if (downloadUrl) redirect(302, downloadUrl);
 	return { downloadUrl: null };
 };

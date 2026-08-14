@@ -21,7 +21,7 @@ export function loginUrl(redirectTo?: string): string {
 export function requireAuth(event: RequestEvent) {
 	if (event.locals.session === null || event.locals.user === null) {
 		const returnTo = event.url.pathname + event.url.search;
-		throw redirect(302, loginUrl(returnTo));
+		redirect(302, loginUrl(returnTo));
 	}
 	return {
 		session: event.locals.session,
@@ -36,7 +36,7 @@ export function requireAuth(event: RequestEvent) {
  */
 export function requireAuthOr401(event: RequestEvent) {
 	if (event.locals.session === null || event.locals.user === null) {
-		throw error(401, 'Authentication required');
+		error(401, 'Authentication required');
 	}
 	return {
 		session: event.locals.session,
@@ -50,7 +50,7 @@ export function requireAuthOr401(event: RequestEvent) {
  */
 export function requireEmailVerified(user: { emailVerified: boolean }) {
 	if (!user.emailVerified) {
-		throw redirect(302, '/auth/verify-email');
+		redirect(302, '/auth/verify-email');
 	}
 }
 
@@ -60,7 +60,7 @@ export function requireEmailVerified(user: { emailVerified: boolean }) {
  */
 export function require2FASetup(user: { registered2FA: boolean }) {
 	if (!user.registered2FA) {
-		throw redirect(302, '/auth/2fa/setup');
+		redirect(302, '/auth/2fa/setup');
 	}
 }
 
@@ -70,7 +70,7 @@ export function require2FASetup(user: { registered2FA: boolean }) {
  */
 export function require2FAVerified(session: { twoFactorVerified: boolean }) {
 	if (!session.twoFactorVerified) {
-		throw redirect(302, '/auth/2fa');
+		redirect(302, '/auth/2fa');
 	}
 }
 
@@ -92,7 +92,7 @@ export function requireFullAuth(event: RequestEvent) {
  */
 export async function requirePaidSubscription(event: RequestEvent) {
 	if (!event.locals.user) {
-		throw redirect(302, '/pricing');
+		redirect(302, '/pricing');
 	}
 	const row = await db.queryOne<{ status: string }>(
 		`SELECT status FROM subscriptions
@@ -103,7 +103,7 @@ export async function requirePaidSubscription(event: RequestEvent) {
 		[event.locals.user.id]
 	);
 	if (!row) {
-		throw redirect(302, '/pricing');
+		redirect(302, '/pricing');
 	}
 }
 
@@ -116,15 +116,15 @@ export function redirectIfAuthenticated(event: RequestEvent) {
 		if (event.locals.user.emailVerified) {
 			const redirectTo = event.url.searchParams.get('redirectTo');
 			const target = isSafeRedirect(redirectTo) ? redirectTo : '/';
-			throw redirect(302, target);
+			redirect(302, target);
 		}
 		if (!event.locals.user.emailVerified) {
 			const redirectTo = event.url.searchParams.get('redirectTo');
 			const target = isSafeRedirect(redirectTo) ? redirectTo : '';
 			if (target) {
-				throw redirect(302, `/auth/verify-email?redirectTo=${encodeURIComponent(target)}`);
+				redirect(302, `/auth/verify-email?redirectTo=${encodeURIComponent(target)}`);
 			}
-			throw redirect(302, '/auth/verify-email');
+			redirect(302, '/auth/verify-email');
 		}
 	}
 }

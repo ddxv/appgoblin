@@ -303,7 +303,7 @@ export async function GET(event: RequestEvent) {
 
 	const hasB2B = await userHasB2BAccess(user.id);
 	if (!hasB2B) {
-		throw error(403, 'A B2B Intelligence subscription is required to download this CSV.');
+		error(403, 'A B2B Intelligence subscription is required to download this CSV.');
 	}
 
 	const csv = await buildAdvertiserCsv();
