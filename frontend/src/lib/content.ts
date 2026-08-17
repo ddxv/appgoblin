@@ -1,8 +1,7 @@
 import matter from 'gray-matter';
 import * as v from 'valibot';
 
-// import { BASE_URL } from './constants';
-const BASE_URL = 'http://localhost:5173';
+const BASE_URL = 'https://appgoblin.info';
 
 export const blogPosts = import.meta.glob('/src/content/blog/*.mdx', {
 	query: '?raw',
