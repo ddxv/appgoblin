@@ -535,7 +535,7 @@
 			<div class="max-w-4xl">
 				<div class="mb-4 flex flex-wrap items-center gap-3">
 					<div class={brandLockupClass}>
-						<img src="/goblin_purple_hat_60.png" alt="AppGoblin" class="h-8 w-8" />
+						<img src="/appgoblin_100.webp" alt="AppGoblin" class="h-8 w-8" />
 						<div>
 							<p class="text-sm font-semibold text-surface-900 dark:text-surface-50">AppGoblin</p>
 							<p class="text-[11px] uppercase tracking-[0.18em] text-surface-500">
@@ -769,7 +769,7 @@
 									<div class="flex flex-col gap-4">
 										<div class="flex flex-col gap-3 md:items-start">
 											<div class={reportBadgeClass}>
-												<img src="/goblin_purple_hat_60.png" alt="AppGoblin" class="h-7 w-7" />
+												<img src="/appgoblin_100.webp" alt="AppGoblin" class="h-7 w-7" />
 												<div>
 													<p class="text-xs font-semibold text-surface-900 dark:text-surface-50">
 														AppGoblin

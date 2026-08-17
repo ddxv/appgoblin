@@ -94,7 +94,7 @@
 				<a href="/" class="flex items-center shrink-0">
 					<img
 						class="h-8 w-8 shrink-0 lg:ml-2 lg:h-12 lg:w-12"
-						src="/goblin_purple_hat_60.png"
+						src="/appgoblin_100.webp"
 						alt="AppGoblin Icon"
 					/>
 					<strong
