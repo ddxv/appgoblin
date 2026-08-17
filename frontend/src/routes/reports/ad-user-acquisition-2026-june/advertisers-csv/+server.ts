@@ -13,13 +13,13 @@ export async function GET(event: RequestEvent) {
 
 	const hasB2B = await userHasTierAccess(user.id, 'b2b_sdk', 'b2b_appads', 'b2b_premium');
 	if (!hasB2B) {
-		throw error(403, 'A B2B Intelligence subscription is required to download this CSV.');
+		error(403, 'A B2B Intelligence subscription is required to download this CSV.');
 	}
 
 	const pathParts = event.url.pathname.split('/').filter(Boolean);
 	const reportsIdx = pathParts.indexOf('reports');
 	if (reportsIdx === -1 || reportsIdx + 1 >= pathParts.length) {
-		throw error(500, 'Could not determine report slug from request path.');
+		error(500, 'Could not determine report slug from request path.');
 	}
 	const slug = pathParts[reportsIdx + 1];
 
@@ -30,15 +30,15 @@ export async function GET(event: RequestEvent) {
 		s3Response = await fetch(csvUrl);
 	} catch (err) {
 		console.error('S3 fetch failed for advertiser CSV:', err);
-		throw error(502, 'Unable to reach the CSV storage. Please try again later.');
+		error(502, 'Unable to reach the CSV storage. Please try again later.');
 	}
 
 	if (!s3Response.ok) {
 		if (s3Response.status === 404) {
-			throw error(404, 'The advertiser CSV for this report has not been published yet.');
+			error(404, 'The advertiser CSV for this report has not been published yet.');
 		}
 		console.error(`S3 returned ${s3Response.status} for advertiser CSV: ${csvUrl}`);
-		throw error(502, 'Failed to retrieve the CSV from storage.');
+		error(502, 'Failed to retrieve the CSV from storage.');
 	}
 
 	// Stream the CSV back to the client

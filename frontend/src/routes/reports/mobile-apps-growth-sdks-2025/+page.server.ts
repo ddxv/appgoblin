@@ -50,7 +50,7 @@ export const load: PageServerLoad = async ({ fetch }) => {
 	);
 
 	if (!csvResponse.ok) {
-		throw error(500, 'CSV not available');
+		error(500, 'CSV not available');
 	}
 
 	const csvContent = await csvResponse.text();

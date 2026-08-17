@@ -64,7 +64,7 @@ export async function createCheckoutSession(
 		);
 
 		if (!priceRow) {
-			throw error(400, 'No active Stripe price found for this plan');
+			error(400, 'No active Stripe price found for this plan');
 		}
 		const priceId = priceRow.provider_price_id;
 
@@ -85,7 +85,7 @@ export async function createCheckoutSession(
 		return session.url;
 	} catch (e) {
 		console.error('Error creating checkout session:', e);
-		throw error(500, 'Error creating checkout session');
+		error(500, 'Error creating checkout session');
 	}
 }
 
@@ -97,7 +97,7 @@ export async function createPortalSession(userId: number) {
 		);
 
 		if (!user?.provider_customer_id) {
-			throw error(400, 'User does not have a Stripe customer ID');
+			error(400, 'User does not have a Stripe customer ID');
 		}
 
 		const session = await stripe.billingPortal.sessions.create({
@@ -108,6 +108,6 @@ export async function createPortalSession(userId: number) {
 		return session.url;
 	} catch (e) {
 		console.error('Error creating portal session:', e);
-		throw error(500, 'Error creating portal session');
+		error(500, 'Error creating portal session');
 	}
 }

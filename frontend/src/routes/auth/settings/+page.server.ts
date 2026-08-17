@@ -32,7 +32,7 @@ export async function load(event: RequestEvent) {
 
 	// If 2FA is set up, require it to be verified
 	if (user.registered2FA && !session.twoFactorVerified) {
-		throw redirect(302, '/auth/2fa');
+		redirect(302, '/auth/2fa');
 	}
 
 	let recoveryCode: string | null = null;
