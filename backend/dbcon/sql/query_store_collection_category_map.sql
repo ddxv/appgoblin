@@ -10,5 +10,7 @@ FROM
 LEFT JOIN store_collections AS sc
     ON
         s.id = sc.store
-LEFT JOIN store_categories AS sca ON
-    s.id = sca.store
+LEFT JOIN store_categories AS sca
+    ON
+        s.id = sca.store
+WHERE sc.collection NOT IN ('NEW_IOS', 'NEW_PAID_IOS', 'NEW_FREE_IOS');
