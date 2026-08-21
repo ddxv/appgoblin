@@ -1,4 +1,6 @@
-SELECT store, app_category,
+SELECT
+    store,
+    app_category,
     tag_source,
     total_active_scanned_apps_with_tag AS app_count,
     total_scanned_installs_d30_with_tag AS installs_d30,

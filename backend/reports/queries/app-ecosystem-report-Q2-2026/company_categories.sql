@@ -1,4 +1,5 @@
-SELECT DISTINCT c2.name AS company_type,
+SELECT DISTINCT
+    c2.name AS company_type,
     c2.url_slug AS company_type_slug,
     d.domain_name AS company_domain
 FROM adtech.company_categories AS cc

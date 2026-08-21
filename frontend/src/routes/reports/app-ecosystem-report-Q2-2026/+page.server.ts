@@ -338,18 +338,12 @@ function parseCSV(csvContent: string): EcosystemCompanyData[] {
 				record,
 				'apple_app_ads_direct_pct_market_share'
 			),
-			apple_sdk_percentage: getPercentageAsRatio(
-				record,
-				'apple_sdk_pct_market_share'
-			),
+			apple_sdk_percentage: getPercentageAsRatio(record, 'apple_sdk_pct_market_share'),
 			google_app_ads_direct_percentage: getPercentageAsRatio(
 				record,
 				'google_app_ads_direct_pct_market_share'
 			),
-			google_sdk_percentage: getPercentageAsRatio(
-				record,
-				'google_sdk_pct_market_share'
-			),
+			google_sdk_percentage: getPercentageAsRatio(record, 'google_sdk_pct_market_share'),
 			apple_app_ads_direct_installs_d30: getNumberByKeys(
 				record,
 				'apple_app_ads_direct_installs_d30'
@@ -386,34 +380,22 @@ function parseCSV(csvContent: string): EcosystemCompanyData[] {
 				record,
 				'apple_app_ads_direct_apps_added'
 			),
-			apple_sdk_latest_apps_added: getNumberByKeys(
-				record,
-				'apple_sdk_apps_added'
-			),
+			apple_sdk_latest_apps_added: getNumberByKeys(record, 'apple_sdk_apps_added'),
 			google_app_ads_direct_latest_apps_added: getNumberByKeys(
 				record,
 				'google_app_ads_direct_apps_added'
 			),
-			google_sdk_latest_apps_added: getNumberByKeys(
-				record,
-				'google_sdk_apps_added'
-			),
+			google_sdk_latest_apps_added: getNumberByKeys(record, 'google_sdk_apps_added'),
 			apple_app_ads_direct_latest_apps_lost: getNumberByKeys(
 				record,
 				'apple_app_ads_direct_apps_lost'
 			),
-			apple_sdk_latest_apps_lost: getNumberByKeys(
-				record,
-				'apple_sdk_apps_lost'
-			),
+			apple_sdk_latest_apps_lost: getNumberByKeys(record, 'apple_sdk_apps_lost'),
 			google_app_ads_direct_latest_apps_lost: getNumberByKeys(
 				record,
 				'google_app_ads_direct_apps_lost'
 			),
-			google_sdk_latest_apps_lost: getNumberByKeys(
-				record,
-				'google_sdk_apps_lost'
-			),
+			google_sdk_latest_apps_lost: getNumberByKeys(record, 'google_sdk_apps_lost'),
 			tag_source: 'report',
 			store: 'all',
 			app_count: totalAppCount,
@@ -542,9 +524,9 @@ function buildSingleSurfacePanel(
 		.sort(
 			(a, b) =>
 				getShareWeightedImpact(b, surface, section.metricKey) -
-				getShareWeightedImpact(a, surface, section.metricKey) ||
+					getShareWeightedImpact(a, surface, section.metricKey) ||
 				(getSurfaceMetricValue(b, surface, section.metricKey) ?? Number.NEGATIVE_INFINITY) -
-				(getSurfaceMetricValue(a, surface, section.metricKey) ?? Number.NEGATIVE_INFINITY)
+					(getSurfaceMetricValue(a, surface, section.metricKey) ?? Number.NEGATIVE_INFINITY)
 		);
 
 	return {
