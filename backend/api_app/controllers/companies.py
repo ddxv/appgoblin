@@ -69,6 +69,7 @@ from dbcon.queries import (
     get_company_adstxt_publishers_overview,
     get_company_app_changes,
     get_company_categories_topn,
+    get_company_country_apps,
     get_company_follow_lookup,
     get_company_sdks,
     get_company_stats,
@@ -747,25 +748,25 @@ def prep_companies_overview_df(
                 how="left",
                 validate="1:1",
             )
-            # base_cols = [
-            #     "company_domain",
-            #     "company_name",
-            #     "company_category",
-            #     "parent_company_domain",
-            #     "parent_company_name",
-            #     "company_logo_url",
-            #     "parent_company_logo_url",
-            # ]
-            # inscols = [x for x in overview_df.columns if "installs_d30" in x]
-            # csv_df = overview_df[
-            #     base_cols + inscols + [tcol for tcol in tcols if tcol not in base_cols]
-            # ]
-            # csv_df.rename(
-            #     columns={tcol: tcol.replace("_latest_", "_") for tcol in tcols},
-            #     inplace=True,
-            # )
-            # logger.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX NEW CSV")
-            # csv_df.to_csv("AppGoblin Mobile Ecosystem 2026 Q1.csv", index=False)
+            logger.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX NEW CSV")
+            base_cols = [
+                "company_domain",
+                "company_name",
+                "company_category",
+                "parent_company_domain",
+                "parent_company_name",
+                "company_logo_url",
+                "parent_company_logo_url",
+            ]
+            inscols = [x for x in overview_df.columns if "installs_d30" in x]
+            csv_df = overview_df[
+                base_cols + inscols + [tcol for tcol in tcols if tcol not in base_cols]
+            ]
+            csv_df.rename(
+                columns={tcol: tcol.replace("_latest_", "_") for tcol in tcols},
+                inplace=True,
+            )
+            csv_df.to_csv("AppGoblin Mobile Ecosystem 2026 Q2.csv", index=False)
 
     return overview_df
 
@@ -2339,6 +2340,58 @@ class CompaniesController(Controller):
             store: df.to_dict(orient="records") if not df.empty else []
             for store, df in dfs.items()
         }
+
+    @get(
+        path="/companies/{company_domain:str}/countries",
+        cache=86400,
+    )
+    async def company_countries(
+        self: Self,
+        state: State,
+        company_domain: str,
+        category: str | None = None,
+    ) -> dict[str, list[dict[str, object]]]:
+        """Handle GET request for a company's app counts by country.
+
+        Returns a dict keyed by store ('android' and 'ios'), each containing
+        rows with 'country' and 'app_count'. The top 5 countries per store are
+        kept individually; the remainder are rolled up into an 'Others' row.
+
+        Not all companies will have this data — stores without any rows are
+        returned as empty lists.
+
+        Args:
+        ----
+        company_domain : str
+            The domain of the company to retrieve country data for.
+        category : str | None
+            Optional category to filter the country data by.
+
+        Returns:
+        -------
+        dict
+            A dictionary with 'android' and 'ios' keys containing country data.
+
+        """
+        start = time.perf_counter() * 1000
+
+        df = get_company_country_apps(
+            state=state,
+            company_domain=company_domain,
+            app_category=category,
+        )
+
+        duration = round((time.perf_counter() * 1000 - start), 2)
+        logger.info(
+            f"GET /api/companies/{company_domain}/countries took {duration}ms"
+        )
+        store_map = {1: "android", 2: "ios"}
+        result: dict[str, list[dict[str, object]]] = {}
+        for store, store_df in df.groupby("store", sort=True):
+            result[store_map.get(int(store), str(store))] = (
+                store_df.to_dict(orient="records") if not store_df.empty else []
+            )
+        return result
 
     @get(
         path="/companies/{queried_domain:str}/tree",

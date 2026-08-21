@@ -771,6 +771,25 @@ def get_company_categories_topn(
     }
 
 
+def get_company_country_apps(
+    state: State, company_domain: str, app_category: str | None = None
+) -> pd.DataFrame:
+    """Get a company's app counts by country, split by store (1=Android, 2=iOS).
+
+    Returns rows with columns: store, country, app_count. The top 5 countries
+    per store are kept individually; the remainder are rolled up into an
+    'Others' row at the bottom of each store group.
+
+    If app_category is provided, results are filtered to that category.
+    """
+    logger.info(f"query company country apps: {company_domain=} {app_category=}")
+    return pd.read_sql(
+        sql.company_country_apps,
+        state.dbcon.engine,
+        params={"company_domain": company_domain, "app_category": app_category},
+    )
+
+
 @cache_by_params
 def get_category_type_stats(
     state: State, type_slug: str, category: str | None = None
