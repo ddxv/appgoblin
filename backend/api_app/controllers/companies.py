@@ -748,26 +748,6 @@ def prep_companies_overview_df(
                 how="left",
                 validate="1:1",
             )
-            logger.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX NEW CSV")
-            base_cols = [
-                "company_domain",
-                "company_name",
-                "company_category",
-                "parent_company_domain",
-                "parent_company_name",
-                "company_logo_url",
-                "parent_company_logo_url",
-            ]
-            inscols = [x for x in overview_df.columns if "installs_d30" in x]
-            csv_df = overview_df[
-                base_cols + inscols + [tcol for tcol in tcols if tcol not in base_cols]
-            ]
-            csv_df.rename(
-                columns={tcol: tcol.replace("_latest_", "_") for tcol in tcols},
-                inplace=True,
-            )
-            csv_df.to_csv("AppGoblin Mobile Ecosystem 2026 Q2.csv", index=False)
-
     return overview_df
 
 
@@ -2382,9 +2362,7 @@ class CompaniesController(Controller):
         )
 
         duration = round((time.perf_counter() * 1000 - start), 2)
-        logger.info(
-            f"GET /api/companies/{company_domain}/countries took {duration}ms"
-        )
+        logger.info(f"GET /api/companies/{company_domain}/countries took {duration}ms")
         store_map = {1: "android", 2: "ios"}
         result: dict[str, list[dict[str, object]]] = {}
         for store, store_df in df.groupby("store", sort=True):
