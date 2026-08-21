@@ -12,6 +12,7 @@ from dataclasses import dataclass
 from datetime import date, timedelta
 from typing import TYPE_CHECKING, Any
 
+import numpy as np
 import pandas as pd
 from sqlalchemy import text
 
@@ -21,6 +22,7 @@ if TYPE_CHECKING:
 try:
     from config import MODULE_DIR, get_logger
     from dbcon.connections import get_db_connection
+    from dbcon.static import build_company_trends_static_data
 except ModuleNotFoundError:
     backend_dir = pathlib.Path(__file__).resolve().parents[1]
     backend_dir_text = str(backend_dir)
@@ -31,12 +33,26 @@ except ModuleNotFoundError:
     MODULE_DIR = config_module.MODULE_DIR
     get_logger = config_module.get_logger
     get_db_connection = importlib.import_module("dbcon.connections").get_db_connection
+    build_company_trends_static_data = importlib.import_module(
+        "dbcon.static"
+    ).build_company_trends_static_data
 
 logger = get_logger(__name__, log_name="reports")
 QUERY_ROOT = MODULE_DIR / "reports" / "queries"
 REPORT_ROUTE_ROOT = MODULE_DIR.parent / "frontend" / "src" / "routes" / "reports"
+REPORT_STATIC_ROOT = (
+    MODULE_DIR.parent
+    / "frontend"
+    / "static"
+    / "reports"
+    / "mobile-apps-growth-sdks-q2-2026"
+)
 DEFAULT_REPORT_PREFIX = "ad-user-acquisition-"
 MIN_SLUG_PARTS = 2
+ECOSYSTEM_REPORT_SLUG = "app-ecosystem-report-Q2-2026"
+ECOSYSTEM_REPORT_ALIASES = {
+    "app-ecosystem-report-Q2": ECOSYSTEM_REPORT_SLUG,
+}
 
 # Z-score pre-computation step (runs before individual report SQL files)
 Z_SCORE_SQL_PATH = QUERY_ROOT / "query_report_z_scores.sql"
@@ -93,6 +109,8 @@ def normalize_report_slug(report_value: str) -> str:
     """Resolve a CLI report argument to a report slug."""
     if report_value.startswith("report="):
         report_value = report_value.split("=", maxsplit=1)[1]
+
+    report_value = ECOSYSTEM_REPORT_ALIASES.get(report_value, report_value)
 
     query_candidate = QUERY_ROOT / report_value
     route_candidate = REPORT_ROUTE_ROOT / report_value
@@ -161,8 +179,11 @@ def build_report_context(report_value: str) -> ReportContext:
         message = f"Missing frontend report directory: {route_dir}"
         raise FileNotFoundError(message)
 
-    year, month = parse_month_from_slug(slug)
-    start_date = date(year, month, 1)
+    if slug == ECOSYSTEM_REPORT_SLUG:
+        start_date = date(2026, 4, 1)
+    else:
+        year, month = parse_month_from_slug(slug)
+        start_date = date(year, month, 1)
     next_month_start_date = add_months(start_date, 1)
     # First Monday of month
     first_target_week = start_date + timedelta(days=(-start_date.weekday()) % 7)
@@ -265,6 +286,256 @@ def dataframe_to_records(frame: pd.DataFrame) -> list[dict[str, Any]]:
 def write_json_output(output_path: pathlib.Path, records: list[dict[str, Any]]) -> None:
     """Write JSON records with stable pretty formatting."""
     output_path.write_text(f"{json.dumps(records, indent=2)}\n", encoding="utf-8")
+
+
+def build_ecosystem_report_csv(
+    company_stats: pd.DataFrame,
+    category_totals: pd.DataFrame,
+    open_source: pd.DataFrame,
+    countries: pd.DataFrame,
+    logos: pd.DataFrame,
+    categories: pd.DataFrame,
+    trends: pd.DataFrame,
+) -> pd.DataFrame:
+    """Rebuild the Q2 2026 company ecosystem export from frozen query results."""
+
+    def normalize_store_column(frame: pd.DataFrame) -> pd.DataFrame:
+        """Normalize PostgreSQL store IDs and labels to one joinable string type."""
+        normalized = frame.copy()
+        normalized["store"] = (
+            normalized["store"]
+            .astype("string")
+            .str.strip()
+            .replace(
+                {
+                    "1": "Google Play",
+                    "2": "Apple App Store",
+                }
+            )
+        )
+        return normalized
+
+    company_stats = normalize_store_column(company_stats)
+    category_totals = normalize_store_column(category_totals)
+    category_totals = (
+        category_totals.groupby(["store", "tag_source"], dropna=False)
+        .agg(
+            cat_total_app_count=("app_count", "sum"),
+            cat_total_installs_d30=("installs_d30", "sum"),
+        )
+        .reset_index()
+    )
+    category_totals["app_category"] = "all"
+    overview_df = (
+        company_stats.merge(
+            category_totals,
+            on=["app_category", "store", "tag_source"],
+            validate="m:1",
+        )
+        .groupby(
+            [
+                "company_name",
+                "company_domain",
+                "parent_company_domain",
+                "parent_company_name",
+                "store",
+                "tag_source",
+            ],
+            dropna=False,
+        )[["app_count", "cat_total_app_count", "installs_d30"]]
+        .sum()
+        .reset_index()
+    )
+    company_keys = [
+        "company_name",
+        "company_domain",
+        "parent_company_domain",
+        "parent_company_name",
+    ]
+    total_apps = (
+        overview_df.groupby(company_keys, dropna=False)[["app_count"]]
+        .sum()
+        .rename(columns={"app_count": "total_app_count"})
+        .reset_index()
+    )
+    total_installs = overview_df.groupby(company_keys, dropna=False)[
+        ["installs_d30"]
+    ].sum()
+    overview_df["percentage"] = (
+        overview_df["app_count"] / overview_df["cat_total_app_count"]
+    )
+    overview_df["store_tag"] = np.where(
+        overview_df["store"].str.contains("Google"), "google", "apple"
+    )
+    overview_df["store_tag_source"] = (
+        overview_df["store_tag"] + "_" + overview_df["tag_source"]
+    )
+
+    store_totals = (
+        overview_df.groupby([*company_keys, "store_tag"], dropna=False)[
+            ["app_count", "installs_d30"]
+        ]
+        .sum()
+        .reset_index()
+        .pivot(
+            index=company_keys,
+            columns="store_tag",
+            values=["app_count", "installs_d30"],
+        )
+    )
+    store_totals.columns = [
+        f"{column[1]}_{column[0]}" for column in store_totals.columns
+    ]
+    store_totals = store_totals.reset_index()
+    pivoted = overview_df.pivot(
+        index=company_keys,
+        columns="store_tag_source",
+        values=["app_count", "percentage", "installs_d30"],
+    )
+    pivoted.columns = [f"{column[1]}_{column[0]}" for column in pivoted.columns]
+    overview_df = pivoted.reset_index().merge(
+        total_apps, on=company_keys, validate="1:1"
+    )
+    overview_df = overview_df.merge(
+        total_installs.rename(columns={"installs_d30": "installs_d30"}).reset_index(),
+        on=company_keys,
+        validate="1:1",
+    )
+    overview_df = overview_df.merge(store_totals, on=company_keys, validate="1:1")
+    overview_df["tempsort"] = (
+        overview_df[
+            [
+                column
+                for column in overview_df.columns
+                if "sdk_percentage" in column or "app_ads_direct_percentage" in column
+            ]
+        ]
+        .fillna(0)
+        .mean(axis=1)
+    )
+    overview_df = (
+        overview_df.sort_values("tempsort", ascending=False)
+        .drop(columns="tempsort")
+        .head(1000)
+    )
+
+    overview_df = overview_df.merge(
+        open_source, on="company_domain", how="left", validate="m:1"
+    )
+    overview_df["percent_open_source"] = overview_df["percent_open_source"].fillna(0)
+    overview_df = overview_df.merge(
+        countries, on="company_domain", how="left", validate="m:1"
+    )
+    overview_df["country"] = overview_df["hq_country"].fillna(
+        overview_df["api_ip_resolved_country"]
+    )
+    logos = logos.drop_duplicates("company_domain", keep="first")
+    overview_df = overview_df.merge(
+        logos, on="company_domain", how="left", validate="1:1"
+    )
+    parent_logos = logos.rename(
+        columns={
+            "company_domain": "parent_company_domain",
+            "company_logo_url": "parent_company_logo_url",
+        }
+    )
+    overview_df = overview_df.merge(
+        parent_logos, on="parent_company_domain", how="left", validate="m:1"
+    )
+    company_categories = (
+        categories[categories["company_type_slug"] != "mediation"]
+        .dropna(subset=["company_domain", "company_type"])
+        .drop_duplicates("company_domain", keep="first")
+        .rename(columns={"company_type": "company_category"})[
+            ["company_domain", "company_category"]
+        ]
+    )
+    overview_df = overview_df.merge(
+        company_categories, on="company_domain", how="left", validate="1:1"
+    )
+    trend_summaries, trend_overview = build_company_trends_static_data(trends)
+    del trend_summaries
+    overview_df = overview_df.merge(
+        trend_overview, on="company_domain", how="left", validate="1:1"
+    )
+
+    # Keep the export limited to fields consumed by the Q2 report page. The
+    # source overview contains additional API-call, publisher, and reseller
+    # fields, but the page only presents SDK and direct app-ads.txt metrics.
+    frontend_columns = [
+        "company_domain",
+        "company_name",
+        "company_category",
+        "parent_company_domain",
+        "parent_company_name",
+        "company_logo_url",
+        "parent_company_logo_url",
+        "apple_app_ads_direct_installs_d30",
+        "apple_sdk_installs_d30",
+        "google_app_ads_direct_installs_d30",
+        "google_sdk_installs_d30",
+        "installs_d30",
+        "apple_app_ads_direct_percentage",
+        "apple_sdk_percentage",
+        "google_app_ads_direct_percentage",
+        "google_sdk_percentage",
+        "apple_app_ads_direct_app_count",
+        "apple_sdk_app_count",
+        "google_app_ads_direct_app_count",
+        "google_sdk_app_count",
+        "trends_period",
+        "apple_app_ads_direct_pct_market_share_change",
+        "apple_sdk_pct_market_share_change",
+        "google_app_ads_direct_pct_market_share_change",
+        "google_sdk_pct_market_share_change",
+        "apple_app_ads_direct_apps_added",
+        "apple_sdk_apps_added",
+        "google_app_ads_direct_apps_added",
+        "google_sdk_apps_added",
+        "apple_app_ads_direct_apps_lost",
+        "apple_sdk_apps_lost",
+        "google_app_ads_direct_apps_lost",
+        "google_sdk_apps_lost",
+    ]
+    csv_df = overview_df.rename(
+        columns={
+            column: column.replace("_latest_", "_") for column in trend_overview.columns
+        }
+    )
+    missing_columns = [
+        column for column in frontend_columns if column not in csv_df.columns
+    ]
+    if missing_columns:
+        raise KeyError(
+            "Ecosystem report is missing frontend columns: "
+            + ", ".join(missing_columns)
+        )
+    csv_df = csv_df[frontend_columns].copy()
+    return csv_df
+
+
+def run_ecosystem_report(context: ReportContext, engine: Engine) -> int:
+    """Run the frozen Q2 2026 mobile ecosystem report export."""
+    query_dir = context.query_dir
+    params = {"app_category": None}
+    frames = {
+        path.stem: execute_query(path, params=params, engine=engine)
+        for path in sorted(query_dir.glob("*.sql"))
+    }
+    output = build_ecosystem_report_csv(
+        company_stats=frames["companies_tag_stats"],
+        category_totals=frames["category_totals"],
+        open_source=frames["company_open_source"],
+        countries=frames["company_countries"],
+        logos=frames["company_logos"],
+        categories=frames["company_categories"],
+        trends=frames["trends_static"],
+    )
+    REPORT_STATIC_ROOT.mkdir(parents=True, exist_ok=True)
+    output_path = REPORT_STATIC_ROOT / "AppGoblin Mobile Ecosystem 2026 Q2.csv"
+    output.to_csv(output_path, index=False)
+    logger.info("Wrote %s rows to %s", len(output), output_path)
+    return 0
 
 
 def _build_advertiser_csv_s3_key(slug: str) -> str:
@@ -470,6 +741,12 @@ def run_report(
     logger.info("Running report %s", context.slug)
     logger.info("Using query directory %s", context.query_dir)
     logger.info("Writing JSON into %s", context.route_dir)
+
+    if context.slug == ECOSYSTEM_REPORT_SLUG:
+        try:
+            return run_ecosystem_report(context, engine=dbcon.engine)
+        finally:
+            dbcon.engine.dispose()
 
     # --- Step 0: pre-compute weekly z-scores for the month ---
     if len(selected_sections) == 1:
