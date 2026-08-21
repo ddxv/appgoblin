@@ -288,16 +288,10 @@ function getNumberByKeys(
 	return null;
 }
 
-function getMarketShareRatio(
+function getPercentageAsRatio(
 	record: Record<string, string | number | null>,
-	legacyKey: string,
 	percentKey: string
 ): number | null {
-	const legacyValue = getNumberByKeys(record, legacyKey);
-	if (legacyValue !== null) {
-		return legacyValue;
-	}
-
 	const percentValue = getNumberByKeys(record, percentKey);
 	if (percentValue === null) {
 		return null;
@@ -323,22 +317,10 @@ function parseCSV(csvContent: string): EcosystemCompanyData[] {
 			record[header] = coerceValue(values[index] ?? '');
 		});
 
-		const appleDirectAppCount = getNumberByKeys(
-			record,
-			'apple_app_ads_direct_app_count',
-			'apple_app_ads_direct_total_apps'
-		);
-		const appleSdkAppCount = getNumberByKeys(record, 'apple_sdk_app_count', 'apple_sdk_total_apps');
-		const googleDirectAppCount = getNumberByKeys(
-			record,
-			'google_app_ads_direct_app_count',
-			'google_app_ads_direct_total_apps'
-		);
-		const googleSdkAppCount = getNumberByKeys(
-			record,
-			'google_sdk_app_count',
-			'google_sdk_total_apps'
-		);
+		const appleDirectAppCount = getNumberByKeys(record, 'apple_app_ads_direct_total_apps');
+		const appleSdkAppCount = getNumberByKeys(record, 'apple_sdk_total_apps');
+		const googleDirectAppCount = getNumberByKeys(record, 'google_app_ads_direct_total_apps');
+		const googleSdkAppCount = getNumberByKeys(record, 'google_sdk_total_apps');
 		const totalAppCount =
 			getNumberByKeys(record, 'total_app_count') ??
 			sumNullable([appleDirectAppCount, appleSdkAppCount, googleDirectAppCount, googleSdkAppCount]);
@@ -352,24 +334,20 @@ function parseCSV(csvContent: string): EcosystemCompanyData[] {
 			apple_sdk_app_count: appleSdkAppCount,
 			google_app_ads_direct_app_count: googleDirectAppCount,
 			google_sdk_app_count: googleSdkAppCount,
-			apple_app_ads_direct_percentage: getMarketShareRatio(
+			apple_app_ads_direct_percentage: getPercentageAsRatio(
 				record,
-				'apple_app_ads_direct_percentage',
 				'apple_app_ads_direct_pct_market_share'
 			),
-			apple_sdk_percentage: getMarketShareRatio(
+			apple_sdk_percentage: getPercentageAsRatio(
 				record,
-				'apple_sdk_percentage',
 				'apple_sdk_pct_market_share'
 			),
-			google_app_ads_direct_percentage: getMarketShareRatio(
+			google_app_ads_direct_percentage: getPercentageAsRatio(
 				record,
-				'google_app_ads_direct_percentage',
 				'google_app_ads_direct_pct_market_share'
 			),
-			google_sdk_percentage: getMarketShareRatio(
+			google_sdk_percentage: getPercentageAsRatio(
 				record,
-				'google_sdk_percentage',
 				'google_sdk_pct_market_share'
 			),
 			apple_app_ads_direct_installs_d30: getNumberByKeys(
@@ -387,65 +365,53 @@ function parseCSV(csvContent: string): EcosystemCompanyData[] {
 			company_logo_url: getStringByKeys(record, 'company_logo_url'),
 			parent_company_logo_url: getStringByKeys(record, 'parent_company_logo_url'),
 			company_category: getStringByKeys(record, 'company_category'),
-			trends_latest_period: getStringByKeys(record, 'trends_latest_period', 'trends_period'),
+			trends_latest_period: getStringByKeys(record, 'trends_period'),
 			apple_app_ads_direct_latest_pct_market_share_change: getNumberByKeys(
 				record,
-				'apple_app_ads_direct_latest_pct_market_share_change',
 				'apple_app_ads_direct_pct_market_share_change'
 			),
 			apple_sdk_latest_pct_market_share_change: getNumberByKeys(
 				record,
-				'apple_sdk_latest_pct_market_share_change',
 				'apple_sdk_pct_market_share_change'
 			),
 			google_app_ads_direct_latest_pct_market_share_change: getNumberByKeys(
 				record,
-				'google_app_ads_direct_latest_pct_market_share_change',
 				'google_app_ads_direct_pct_market_share_change'
 			),
 			google_sdk_latest_pct_market_share_change: getNumberByKeys(
 				record,
-				'google_sdk_latest_pct_market_share_change',
 				'google_sdk_pct_market_share_change'
 			),
 			apple_app_ads_direct_latest_apps_added: getNumberByKeys(
 				record,
-				'apple_app_ads_direct_latest_apps_added',
 				'apple_app_ads_direct_apps_added'
 			),
 			apple_sdk_latest_apps_added: getNumberByKeys(
 				record,
-				'apple_sdk_latest_apps_added',
 				'apple_sdk_apps_added'
 			),
 			google_app_ads_direct_latest_apps_added: getNumberByKeys(
 				record,
-				'google_app_ads_direct_latest_apps_added',
 				'google_app_ads_direct_apps_added'
 			),
 			google_sdk_latest_apps_added: getNumberByKeys(
 				record,
-				'google_sdk_latest_apps_added',
 				'google_sdk_apps_added'
 			),
 			apple_app_ads_direct_latest_apps_lost: getNumberByKeys(
 				record,
-				'apple_app_ads_direct_latest_apps_lost',
 				'apple_app_ads_direct_apps_lost'
 			),
 			apple_sdk_latest_apps_lost: getNumberByKeys(
 				record,
-				'apple_sdk_latest_apps_lost',
 				'apple_sdk_apps_lost'
 			),
 			google_app_ads_direct_latest_apps_lost: getNumberByKeys(
 				record,
-				'google_app_ads_direct_latest_apps_lost',
 				'google_app_ads_direct_apps_lost'
 			),
 			google_sdk_latest_apps_lost: getNumberByKeys(
 				record,
-				'google_sdk_latest_apps_lost',
 				'google_sdk_apps_lost'
 			),
 			tag_source: 'report',

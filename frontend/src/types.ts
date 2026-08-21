@@ -748,7 +748,18 @@ export interface CompanyFullDetails {
 	companyAppCategories: AppCategoriesByStore;
 	parentAppCategories: AppCategoriesByStore | null;
 	companyCreatives: CompanyCreative[];
+	companyCountryApps?: CompanyCountryAppsByStore;
 	hasB2BSdkAccess?: boolean;
+}
+
+export interface CompanyCountryAppItem {
+	country: string;
+	app_count: number;
+}
+
+export interface CompanyCountryAppsByStore {
+	android: CompanyCountryAppItem[];
+	ios: CompanyCountryAppItem[];
 }
 
 export interface CompanyTrendsDetails {
@@ -766,6 +777,7 @@ export interface CompanyCategoryDetails {
 	companyDetails: CompanyCategoryOverview;
 	companyCategoryApps: CompanyOverviewSections;
 	companyTree: CompanyTree;
+	companyCountryApps?: CompanyCountryAppsByStore;
 	hasB2BSdkAccess?: boolean;
 }
 
