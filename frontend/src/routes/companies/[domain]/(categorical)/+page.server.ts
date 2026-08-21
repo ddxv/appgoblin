@@ -15,16 +15,20 @@ export const load: PageServerLoad = async ({ fetch, parent, params, locals }) =>
 		hasB2BSdkAccess = await userHasTierAccess(user.id, 'b2b_sdk', 'b2b_premium');
 	}
 
-	const [companyAppCategories, companyTopApps, { companyDetails, companyTree }] = await Promise.all(
-		[
-			api.get(
-				`/companies/${companyDomain}/parentcategories?rollup=false&group_mode=none`,
-				'Company App Categories'
-			),
-			api.get(`/companies/${companyDomain}/topapps`, 'Company Top Apps'),
-			parent()
-		]
-	);
+	const [
+		companyAppCategories,
+		companyTopApps,
+		companyCountryApps,
+		{ companyDetails, companyTree }
+	] = await Promise.all([
+		api.get(
+			`/companies/${companyDomain}/parentcategories?rollup=false&group_mode=none`,
+			'Company App Categories'
+		),
+		api.get(`/companies/${companyDomain}/topapps`, 'Company Top Apps'),
+		api.get(`/companies/${companyDomain}/countries`, 'Company Country Apps'),
+		parent()
+	]);
 
 	const parentAppCategories = companyDetails.parent_overview
 		? await api.get(
@@ -39,6 +43,7 @@ export const load: PageServerLoad = async ({ fetch, parent, params, locals }) =>
 		companyAppCategories,
 		parentAppCategories,
 		companyTopApps,
+		companyCountryApps,
 		companySdks: { companies: {} },
 		companyCreatives: [],
 		hasB2BSdkAccess

@@ -178,7 +178,7 @@
 	<div class="grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-8 m-2">
 		<Popover>
 			<Popover.Trigger>
-				<button class="btn preset-tonal">Show/Hide Columns</button>
+				<span class="btn preset-tonal" role="button" tabindex="0">Show/Hide Columns</span>
 			</Popover.Trigger>
 			<Portal>
 				<Popover.Positioner>

@@ -57,11 +57,10 @@
 		</div>
 
 		<div class="flex items-center space-x-2">
-			<!-- <p class="text-sm font-medium">Rows</p> -->
 			<select
 				class="select preset-outlined-primary-100-900"
 				value={String(pageSize)}
-				onchange={(e) => tableModel.setPageSize(e.currentTarget.value)}
+				onchange={(e) => tableModel.setPageSize(Number(e.currentTarget.value))}
 			>
 				<option value="10">10 Rows</option>
 				<option value="25">25 Rows</option>
