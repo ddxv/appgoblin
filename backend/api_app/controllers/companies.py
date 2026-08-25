@@ -320,9 +320,10 @@ def _shape_company_app_changes_df(
         "name",
         "store_id",
         "developer_name",
-        "icon_64",
         "status",
     ]
+    icon_col = "icon_64" if "icon_64" in app_changes_df.columns else "icon_url_100"
+    groupby_cols.insert(4, icon_col)
 
     agg_dict: dict[str, object] = {
         "rank": pd.NamedAgg(column="rank", aggfunc="min"),
@@ -357,6 +358,8 @@ def _shape_company_app_changes_df(
         ascending=[False, True],
         na_position="last",
     ).head(limit)
+    if icon_col != "icon_64":
+        grouped = grouped.rename(columns={icon_col: "icon_64"})
     return grouped
 
 
@@ -1805,7 +1808,15 @@ def _build_company_overview_scope(
         app_category=category,
         include_parent_rollup=include_parent_rollup,
     )
-    category_totals = get_tag_source_category_totals(state, category)
+    # Lightweight callers (including the public/MCP adapters) may provide the
+    # legacy company-stat shape without category denominator columns. In that
+    # case market-share denominators cannot be computed and no category-total
+    # query is needed.
+    category_totals = (
+        get_tag_source_category_totals(state, category)
+        if {"cat_total_app_count", "cat_total_installs_d30"}.issubset(df.columns)
+        else None
+    )
     stats_overview = make_company_stats(df=df, category_totals=category_totals)
 
     if df.empty or not df["tag_source"].str.contains("app_ads").any():

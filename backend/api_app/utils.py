@@ -12,7 +12,7 @@ def extend_app_icon_url(df: pd.DataFrame) -> pd.DataFrame:
     df["app_icon_url"] = None
     prefix = "https://media.appgoblin.info/app-icons/"
 
-    for col in ("icon_128", "icon_64"):
+    for col in ("icon_128", "icon_64", "icon_url_100"):
         if col not in df.columns:
             continue
         mask = df[col].notna()

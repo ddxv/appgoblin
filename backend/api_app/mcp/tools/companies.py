@@ -46,9 +46,7 @@ async def list_companies(ctx: Context) -> str:
 
 
 @mcp_server.tool()
-async def get_company_overview(  # noqa: D417
-    company_domain: str, ctx: Context
-) -> str:
+async def get_company_overview(company_domain: str, ctx: Context) -> str:  # noqa: D417
     """Fetch comprehensive market metrics, trends, and data for a company domain.
 
     Parameters

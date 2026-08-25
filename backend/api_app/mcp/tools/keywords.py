@@ -27,9 +27,7 @@ logger = get_logger(__name__)
 
 
 @mcp_server.tool()
-async def get_keyword_metrics(  # noqa: D417
-    keyword: str, ctx: Context
-) -> str:
+async def get_keyword_metrics(keyword: str, ctx: Context) -> str:  # noqa: D417
     """Return keyword difficulty, competition, and opportunity scores.
 
     Parameters
