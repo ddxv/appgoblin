@@ -56,13 +56,13 @@ type SurfaceConfig = {
 };
 
 type MetricValueKey = 'shareChangeKey' | 'appsAddedKey' | 'appsLostKey';
+type PanelSignal = 'sdk' | 'adstxt';
 
 type SingleSectionConfig = {
 	id: string;
-	title: string;
-	basisLabel: string;
-	description: string;
-	descriptionHtml?: string;
+	companyCategory?: string;
+	companyCategories?: string[];
+	signal?: PanelSignal;
 	presentation: 'single';
 	metricKey: Extract<MetricValueKey, 'shareChangeKey' | 'appsAddedKey' | 'appsLostKey'>;
 	primaryMetricLabel: string;
@@ -102,10 +102,9 @@ type MetricSurfacePanel = {
 
 type MetricSection = {
 	id: string;
-	title: string;
-	basisLabel: string;
-	description: string;
-	descriptionHtml?: string;
+	companyCategory?: string;
+	companyCategories?: string[];
+	signal?: PanelSignal;
 	presentation: 'signed' | 'single';
 	primaryMetricLabel: string;
 	primaryFormat: 'signedPercent' | 'count';
@@ -180,15 +179,45 @@ const SURFACE_CONFIGS: SurfaceConfig[] = [
 
 const SECTION_CONFIGS: MetricSectionConfig[] = [
 	{
-		id: 'qoq-share-change',
-		title: 'Fastest growing mobile companies',
-		basisLabel: 'Based on Q/Q market share change',
-		description:
-			'Standout quarter-over-quarter market share breakouts across ad networks, business tools, analytics, and development tools.',
-		descriptionHtml: `<p>Ad Networks were led by <a href="/companies/verve.com">Verve</a> once again after its strong Q4 2025, with other notable breakouts from <a href="/companies/snapchat.com">Snap</a>, <a href="/companies/taurusx.com">TaurusX</a>, <a href="/companies/adjoe-programmatic.com">AdJoe</a>, and <a href="/companies/moloco.com">Moloco</a>.</p><p>Business Tools were driven by smaller but fast-growing names like <a href="/companies/luciq.ai">Luciq</a>. <a href="/companies/paypal.com">PayPal</a> also posted strong mobile growth, while emerging companies like <a href="/companies/appharbr.com">AppHarbr</a> and <a href="/companies/getthinkup.com">ThinkUp</a> stood out.</p><p>In attribution analytics, growth was broadly healthy across the category and was led by <a href="/companies/tenjin.com">Tenjin</a>. One notable absence from the growth list was <a href="/companies/appsflyer.com">AppsFlyer</a>, which has historically been one of the category's largest and most consistent performers.</p><p>For Development Tools, <a href="/companies/divkit.tech">Divkit</a> posted solid growth. The framework launched in 2025 and is backed by <a href="/companies/yandex.com">Yandex</a>.</p>`,
+		id: 'qoq-share-change-ad-networks',
+		companyCategory: 'Ad Networks',
 		presentation: 'single',
 		metricKey: 'shareChangeKey',
-		primaryMetricLabel: 'Q/Q Market Share Change',
+		primaryMetricLabel: '2026 Q2 Market Share Growth',
+		listLabel: 'Breakouts',
+		activeMetaLabel: 'share breakouts',
+		tone: 'positive',
+		primaryFormat: 'signedPercent'
+	},
+	{
+		id: 'qoq-share-change-programmatic-ad-networks',
+		companyCategory: 'Ad Networks',
+		signal: 'adstxt',
+		presentation: 'single',
+		metricKey: 'shareChangeKey',
+		primaryMetricLabel: '2026 Q2 Market Share Growth',
+		listLabel: 'Breakouts',
+		activeMetaLabel: 'share breakouts',
+		tone: 'positive',
+		primaryFormat: 'signedPercent'
+	},
+	...['Business Tools', 'Development Tools'].map((companyCategory) => ({
+		id: `qoq-share-change-${(companyCategory as string).toLowerCase().replace(/[^a-z0-9]+/g, '-')}`,
+		companyCategory: companyCategory as string,
+		presentation: 'single' as const,
+		metricKey: 'shareChangeKey' as const,
+		primaryMetricLabel: '2026 Q2 Market Share Growth',
+		listLabel: 'Breakouts',
+		activeMetaLabel: 'share breakouts',
+		tone: 'positive' as const,
+		primaryFormat: 'signedPercent' as const
+	})),
+	{
+		id: 'qoq-share-change-analytics',
+		companyCategories: ['Analytics: Attribution', 'Analytics: Product'],
+		presentation: 'single',
+		metricKey: 'shareChangeKey',
+		primaryMetricLabel: '2026 Q2 Market Share Growth',
 		listLabel: 'Breakouts',
 		activeMetaLabel: 'share breakouts',
 		tone: 'positive',
@@ -196,10 +225,6 @@ const SECTION_CONFIGS: MetricSectionConfig[] = [
 	},
 	{
 		id: 'apps-lost',
-		title: 'Apps lost',
-		basisLabel: 'Largest companies churning client apps',
-		description:
-			'These are the companies that saw the most apps leave their platforms. Many of these companies still saw growth, just that they also churned some client apps at the same time.',
 		presentation: 'single',
 		metricKey: 'appsLostKey',
 		primaryMetricLabel: 'Apps lost',
@@ -524,9 +549,9 @@ function buildSingleSurfacePanel(
 		.sort(
 			(a, b) =>
 				getShareWeightedImpact(b, surface, section.metricKey) -
-					getShareWeightedImpact(a, surface, section.metricKey) ||
+				getShareWeightedImpact(a, surface, section.metricKey) ||
 				(getSurfaceMetricValue(b, surface, section.metricKey) ?? Number.NEGATIVE_INFINITY) -
-					(getSurfaceMetricValue(a, surface, section.metricKey) ?? Number.NEGATIVE_INFINITY)
+				(getSurfaceMetricValue(a, surface, section.metricKey) ?? Number.NEGATIVE_INFINITY)
 		);
 
 	return {
@@ -549,10 +574,9 @@ function buildMetricSection(
 ): MetricSection {
 	return {
 		id: section.id,
-		title: section.title,
-		basisLabel: section.basisLabel,
-		description: section.description,
-		descriptionHtml: section.descriptionHtml,
+		companyCategory: section.companyCategory,
+		companyCategories: section.companyCategories,
+		signal: section.signal,
 		presentation: section.presentation,
 		primaryMetricLabel: section.primaryMetricLabel,
 		primaryFormat: section.primaryFormat,
@@ -560,20 +584,40 @@ function buildMetricSection(
 		badLabel: undefined,
 		listLabel: section.listLabel,
 		tone: section.tone,
-		panels: SURFACE_CONFIGS.map((surface) => buildSingleSurfacePanel(rows, surface, section))
+		panels: SURFACE_CONFIGS.filter(
+			(surface) => (section.signal ?? 'sdk') === (surface.id.includes('adstxt') ? 'adstxt' : 'sdk')
+		).map((surface) => buildSingleSurfacePanel(rows, surface, section))
 	};
 }
 
+function getRowsForSection(rows: EcosystemCompanyData[], section: MetricSectionConfig) {
+	if (section.companyCategories) {
+		return rows.filter((row) => section.companyCategories?.includes(getCompanyTypeValue(row)));
+	}
+
+	return section.companyCategory
+		? rows.filter((row) => getCompanyTypeValue(row) === section.companyCategory)
+		: rows;
+}
+
 function buildMetricSections(rows: EcosystemCompanyData[]): MetricSection[] {
-	return SECTION_CONFIGS.map((section) => buildMetricSection(rows, section));
+	return SECTION_CONFIGS.map((section) => buildMetricSection(getRowsForSection(rows, section), section));
 }
 
 function buildMetricSectionsByCompanyType(
 	rows: EcosystemCompanyData[],
 	options: CompanyTypeOption[]
 ): Record<string, MetricSection[]> {
+	const buildSectionsForCompanyType = (companyTypeRows: EcosystemCompanyData[]) =>
+		SECTION_CONFIGS.map((section) =>
+			buildMetricSection(
+				getRowsForSection(section.companyCategory || section.companyCategories ? rows : companyTypeRows, section),
+				section
+			)
+		);
+
 	const sectionsByCompanyType: Record<string, MetricSection[]> = {
-		[ALL_MAPPED_COMPANY_TYPE]: buildMetricSections(
+		[ALL_MAPPED_COMPANY_TYPE]: buildSectionsForCompanyType(
 			rows.filter((row) => getCompanyTypeValue(row) !== UNMAPPED_COMPANY_TYPE)
 		)
 	};
@@ -583,7 +627,7 @@ function buildMetricSectionsByCompanyType(
 			continue;
 		}
 
-		sectionsByCompanyType[option.value] = buildMetricSections(
+		sectionsByCompanyType[option.value] = buildSectionsForCompanyType(
 			rows.filter((row) => getCompanyTypeValue(row) === option.value)
 		);
 	}
@@ -591,7 +635,8 @@ function buildMetricSectionsByCompanyType(
 	return sectionsByCompanyType;
 }
 
-export const load: PageServerLoad = async ({ fetch }) => {
+export const load: PageServerLoad = async ({ fetch, locals, depends }) => {
+	depends('app:user');
 	const csvResponse = await fetch(
 		'/reports/mobile-apps-growth-sdks-q2-2026/AppGoblin Mobile Ecosystem 2026 Q2.csv'
 	);
@@ -606,26 +651,14 @@ export const load: PageServerLoad = async ({ fetch }) => {
 	const companyTypeOptions = buildCompanyTypeOptions(allData);
 	const metricSections = buildMetricSections(allData);
 	const metricSectionsByCompanyType = buildMetricSectionsByCompanyType(allData, companyTypeOptions);
-	const trackedSdkCompanies = allData.filter(
-		(row) => hasValue(row.google_sdk_percentage) || hasValue(row.apple_sdk_percentage)
-	).length;
-	const trackedAdCompanies = allData.filter(
-		(row) =>
-			hasValue(row.google_app_ads_direct_percentage) ||
-			hasValue(row.apple_app_ads_direct_percentage)
-	).length;
-
 	return {
 		allData,
+		isLoggedIn: Boolean(locals.user),
 		metricSections,
 		metricSectionsByCompanyType,
 		companyTypeOptions,
 		summary: {
 			totalCompanies: allData.length,
-			trackedSdkCompanies,
-			trackedAdCompanies,
-			companyAppFootprint: sumNullable(allData.map((row) => row.total_app_count)),
-			installsFootprint: sumNullable(allData.map((row) => row.installs_d30)),
 			reportPeriod
 		},
 		title: 'AppGoblin Mobile Ecosystem Report Q2 2026 | AppGoblin',

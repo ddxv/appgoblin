@@ -22,7 +22,7 @@ export const load: PageServerLoad = async ({ fetch, parent, params, locals }) =>
 		{ companyDetails, companyTree }
 	] = await Promise.all([
 		api.get(
-			`/companies/${companyDomain}/parentcategories?rollup=false&group_mode=none`,
+			`/companies/${companyDomain}/parentcategories?rollup=false`,
 			'Company App Categories'
 		),
 		api.get(`/companies/${companyDomain}/topapps`, 'Company Top Apps'),
@@ -32,9 +32,9 @@ export const load: PageServerLoad = async ({ fetch, parent, params, locals }) =>
 
 	const parentAppCategories = companyDetails.parent_overview
 		? await api.get(
-				`/companies/${companyDomain}/parentcategories?rollup=true&group_mode=none`,
-				'Parent Company App Categories'
-			)
+			`/companies/${companyDomain}/parentcategories?rollup=true`,
+			'Parent Company App Categories'
+		)
 		: null;
 
 	return {

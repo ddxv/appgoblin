@@ -66,7 +66,7 @@
 
 <div class="table-container p-4">
 	<div class={titleFont}>
-		App API Call Activity
+		Android API Call Activity
 		<p class="text-xs text-surface-500">
 			Apps detected making API calls associated with {companyName}.
 		</p>
@@ -81,24 +81,20 @@
 				<tr>
 					<th class="text-left py-2 px-1"></th>
 					<th class="text-left py-2 px-1">Android</th>
-					<th class="text-left py-2 px-1">iOS</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr>
 					<td class="py-2 px-1 {rowTitleFont}">Apps</td>
 					<td class="py-2 px-1">{formatNumberLocale(myTotals.api_android_total_apps ?? 0)}</td>
-					<td class="py-2 px-1">—</td>
 				</tr>
 				<tr>
 					<td class="py-2 px-1 {rowTitleFont}">API Call Penetration</td>
 					<td class="py-2 px-1">{formatPct(apiAndroidPenetration)}</td>
-					<td class="py-2 px-1">—</td>
 				</tr>
 				<tr>
 					<td class="py-2 px-1 {rowTitleFont}">Monthly Share of Installs</td>
 					<td class="py-2 px-1">{formatPct(apiAndroidShareInstalls)}</td>
-					<td class="py-2 px-1">—</td>
 				</tr>
 				{#if trendsSummary}
 					<tr>
@@ -107,9 +103,6 @@
 							class={`py-2 px-1 ${toneClass(apiAndroidTrend?.latest_pct_market_share_change_pct)}`}
 						>
 							{formatRelativeChange(apiAndroidTrend?.latest_pct_market_share_change_pct)}
-						</td>
-						<td class={`py-2 px-1 ${toneClass(apiIosTrend?.latest_pct_market_share_change_pct)}`}>
-							{formatRelativeChange(apiIosTrend?.latest_pct_market_share_change_pct)}
 						</td>
 					</tr>
 				{/if}

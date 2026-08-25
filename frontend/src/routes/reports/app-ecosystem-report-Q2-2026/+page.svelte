@@ -1,5 +1,9 @@
 <script lang="ts">
 	import CompaniesOverviewTable from './ReportCompaniesOverviewTable.svelte';
+	import ReportSectionEditorial from './ReportSectionEditorial.svelte';
+	import StoreIcon from '$lib/StoreIcon.svelte';
+	import Download from '@lucide/svelte/icons/download';
+	import Lock from '@lucide/svelte/icons/lock';
 
 	let { data } = $props();
 
@@ -19,6 +23,7 @@
 		installs: number | null;
 		totalAppCount: number | null;
 		qoqShareChange: number | null;
+		appsAdded: number | null;
 	};
 
 	type PanelView = 'good' | 'bad' | 'single';
@@ -37,10 +42,9 @@
 
 	type ReportSection = {
 		id: string;
-		title: string;
-		basisLabel: string;
-		description: string;
-		descriptionHtml?: string;
+		companyCategory?: string;
+		companyCategories?: string[];
+		signal?: PanelSignal;
 		presentation: 'signed' | 'single';
 		primaryMetricLabel: string;
 		primaryFormat: 'signedPercent' | 'count';
@@ -63,36 +67,68 @@
 
 	const DEFAULT_COMPANY_TYPE = 'Ad Networks';
 	const FALLBACK_COMPANY_TYPE = 'all_mapped';
-	const QOQ_MARKET_SHARE_CHANGE_LABEL = 'Q/Q Market Share Change';
+	const QOQ_MARKET_SHARE_CHANGE_LABEL = '2026 Q2 Market Share Growth';
 
 	const breakoutSectionClass = 'border-t border-surface-200 py-8 dark:border-surface-700';
-	const breakoutPanelClass =
-		'rounded-md border border-surface-200 bg-white dark:border-surface-700 dark:bg-surface-900';
+	const reportContainerClass = 'container mx-auto max-w-7xl px-4 py-10';
+	const reportCardBaseClass =
+		'border border-surface-200 bg-white dark:border-surface-700 dark:bg-surface-900';
+	const reportCardBorderClass = 'border border-surface-200 dark:border-surface-700';
+	const reportHeadingClass = 'font-bold';
+	const reportBrandNameClass = `text-sm font-semibold ${reportHeadingClass}`;
+	const reportEyebrowClass = `text-[11px] uppercase tracking-[0.18em] `;
+	const reportBadgeNameClass = `text-xs font-semibold ${reportHeadingClass}`;
+	const reportBadgeEyebrowClass = `text-[10px] uppercase tracking-[0.16em] `;
+	const breakoutPanelClass = `rounded-md ${reportCardBaseClass}`;
+	const sectionHeaderClass = 'mb-4 flex flex-col gap-2';
+	const sectionTitleClass = `text-2xl md:text-3xl ${reportHeadingClass}`;
+	const sectionDescriptionClass = `max-w-3xl `;
+	const richSectionDescriptionClass = `max-w-3xl [&_a]:font-semibold [&_a]:text-primary-700 [&_a:hover]:underline dark:[&_a]:text-primary-300 [&_p+p]:mt-3`;
+	const panelHeaderClass = 'border-b border-surface-200 p-4 dark:border-surface-700 md:p-5';
+	const panelDescriptionClass = `text-sm leading-6 `;
+	const panelControlsClass =
+		'mt-4 grid gap-2 md:grid-cols-[minmax(0,1.15fr)_minmax(11rem,0.75fr)_minmax(9rem,0.65fr)] md:items-end';
 	const controlGroupClass = 'rounded-xl bg-white/90 p-2.5 md:w-full dark:bg-surface-900/85';
-	const controlGroupLabelClass =
-		'mb-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-surface-500';
+	const controlGroupLabelClass = `mb-1.5 text-[11px] font-semibold uppercase tracking-[0.18em]`;
 	const breakoutMetaPillClass =
-		'rounded-md bg-surface-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.12em] whitespace-nowrap text-surface-500 dark:bg-surface-800 dark:text-surface-300';
+		'rounded-md bg-surface-50-950 px-3 py-1 text-xs font-semibold uppercase tracking-[0.12em] whitespace-nowrap';
 	const detailStatCardClass = 'rounded-md bg-surface-50 p-4 text-center dark:bg-surface-800';
 	const brandLockupClass = 'inline-flex items-center gap-3 px-1 py-1';
 	const reportBadgeClass = 'inline-flex items-center gap-2';
 	const selectControlClass =
-		'w-full min-w-0 rounded-xl border border-surface-200 bg-white px-3 py-2.5 text-sm font-medium text-surface-700 shadow-sm transition focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-200 dark:border-surface-700 dark:bg-surface-900 dark:text-surface-100 dark:focus:ring-primary-900';
-	const logoBadgeRailClass = 'flex flex-wrap gap-2';
+		'w-full min-w-0 rounded-xl border border-surface-200 bg-white px-3 py-2.5 text-sm font-medium shadow-sm transition focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-200 dark:border-surface-700 dark:bg-surface-900 dark:focus:ring-primary-900';
+	const storeButtonBaseClass =
+		'group relative inline-flex flex-1 items-center justify-center rounded-xl border px-3 py-2.5 text-sm font-semibold shadow-sm transition duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-500';
+	const logoBadgeRailClass = 'flex flex-wrap gap-2 md:gap-4';
+	const featuredShellClass = 'p-4 md:p-5';
+	const featuredCardClass = 'rounded-xl bg-white p-4 dark:bg-surface-900 md:p-5';
+	const featuredHeaderClass = 'flex flex-col gap-4';
+	const featuredIdentityClass = 'flex flex-col gap-3 md:items-start';
+	const metadataRailClass = 'flex flex-wrap gap-2 md:flex-nowrap';
+	const featuredCompanyLinkClass =
+		'inline-flex items-center gap-4 rounded-2xl px-4 py-4 transition';
+	const companyLogoClass = 'h-24 w-24 rounded-xl border border-surface-200-800';
+	const companyNameClass = 'text-2xl font-black leading-tight md:text-3xl';
+	const companyDomainClass = 'mt-1 text-sm font-medium';
+	const trendLabelClass = 'text-xs font-semibold uppercase tracking-[0.14em]';
+	const detailMetricsGridClass = 'mt-3 grid gap-3 md:mx-auto md:max-w-4xl md:grid-cols-3';
+	const detailMetricLabelClass = `text-sm `;
+	const detailSummaryClass = `mt-5 max-w-2xl text-sm leading-7 `;
+	const shortlistHeaderClass = 'mb-3 flex items-center justify-between gap-3';
+	const emptyPanelClass = 'p-5 text-sm';
+	const heroLayoutClass = 'flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between';
+	const heroIntroClass = 'max-w-4xl';
+	const heroEyebrowRowClass = 'mb-4 flex flex-wrap items-center gap-3';
+	const heroDescriptionClass = `mt-4 max-w-3xl space-y-3 text-base leading-7  md:text-lg md:leading-8`;
+	const heroActionsClass = 'flex flex-col gap-3 lg:min-w-72';
+	const reportButtonClass = 'btn inline-flex items-center justify-center gap-2 rounded-xl p-3';
+	const reportBodyClass = `text-base leading-7`;
 
 	function formatCompactNumber(value: number | null | undefined): string {
 		if (typeof value !== 'number' || Number.isNaN(value)) {
 			return '—';
 		}
 		return Intl.NumberFormat('en', { notation: 'compact', maximumFractionDigits: 1 }).format(value);
-	}
-
-	function formatRoundedK(value: number | null | undefined): string {
-		if (typeof value !== 'number' || Number.isNaN(value)) {
-			return '—';
-		}
-
-		return `${Math.round(value / 1000).toLocaleString()}k`;
 	}
 
 	function formatShare(value: number | null | undefined): string {
@@ -134,9 +170,7 @@
 
 	function getMetricSection(sectionId: string, companyType: string): ReportSection {
 		const typedSections = data.metricSectionsByCompanyType?.[companyType] ?? data.metricSections;
-		const fallbackSection = data.metricSections.find(
-			(section: ReportSection) => section.id === sectionId
-		);
+		const fallbackSection = data.metricSections.find((section) => section.id === sectionId);
 
 		if (!fallbackSection) {
 			throw new Error(`Missing metric section: ${sectionId}`);
@@ -145,6 +179,14 @@
 		return (
 			typedSections.find((section: ReportSection) => section.id === sectionId) ?? fallbackSection
 		);
+	}
+
+	function getSectionCompanyType(section: ReportSection): string {
+		return section.companyCategory ?? getSelectedCompanyType(section.id);
+	}
+
+	function getSectionCategoryLabel(section: ReportSection, companyType: string): string {
+		return section.companyCategories ? 'Analytics' : getCompanyTypeLabel(section.id, companyType);
 	}
 
 	function setSelectedCompanyType(sectionId: string, companyType: string): void {
@@ -276,7 +318,7 @@
 		const selectedIndex = selectedCompanyIndex[panelId] ?? 0;
 		const isSelected = selectedIndex === index;
 		const base =
-			'group relative inline-flex min-h-[6.25rem] w-24 flex-col items-center justify-center gap-2 rounded-2xl border bg-white px-2 py-2 shadow-sm transition duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-500 dark:bg-surface-900';
+			'group relative inline-flex min-h-[6.25rem] w-24 flex-col items-center justify-center gap-2 rounded-xl border bg-white px-2 py-2 shadow-sm transition duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-500 dark:bg-surface-900';
 
 		if (isSelected) {
 			return `${base} scale-[1.06] border-primary-500 bg-primary-50 shadow-md ring-2 ring-primary-200 dark:border-primary-400 dark:bg-primary-950/40 dark:ring-primary-900`;
@@ -287,14 +329,14 @@
 
 	function getCompanyBadgeMetricClass(value: number | null | undefined): string {
 		if (typeof value !== 'number' || Number.isNaN(value)) {
-			return 'text-surface-500 dark:text-surface-400';
+			return 'text-surface-500';
 		}
 
 		if (value < 0) {
 			return 'text-red-600 dark:text-red-300';
 		}
 
-		return 'text-emerald-600 dark:text-emerald-300';
+		return 'text-primary-600-400';
 	}
 
 	function getPlatformLabel(platform: PanelPlatform): string {
@@ -303,10 +345,6 @@
 
 	function getSignalLabel(signal: PanelSignal): string {
 		return signal === 'sdk' ? 'SDK' : 'Direct app-ads.txt';
-	}
-
-	function getAvailableSignals(companyType: string): PanelSignal[] {
-		return supportsAdstxt(companyType) ? ['sdk', 'adstxt'] : ['sdk'];
 	}
 
 	function getPanelCompanies(panel: ReportPanel, view: PanelView): LeaderboardCompany[] {
@@ -371,20 +409,18 @@
 		value: number | null
 	): string {
 		if (typeof value !== 'number' || Number.isNaN(value)) {
-			return 'text-surface-900 dark:text-surface-50';
+			return '';
 		}
 
 		if (presentation === 'signed') {
-			return value < 0
-				? 'text-red-600 dark:text-red-300'
-				: 'text-emerald-600 dark:text-emerald-300';
+			return value < 0 ? 'text-error-500' : 'text-primary-600-400';
 		}
 
 		if (tone === 'negative') {
-			return 'text-red-600 dark:text-red-300';
+			return 'text-error-500';
 		}
 
-		return 'text-surface-900 dark:text-surface-50';
+		return '';
 	}
 
 	function getDetailMetricTone(metric: SupportMetric): string {
@@ -396,7 +432,7 @@
 			return 'text-red-600 dark:text-red-300';
 		}
 
-		return 'text-surface-900 dark:text-surface-50';
+		return '';
 	}
 
 	function getDetailMetrics(section: ReportSection, company: LeaderboardCompany): SupportMetric[] {
@@ -406,9 +442,9 @@
 			format: 'signedPercent'
 		};
 
-		if (section.id === 'qoq-share-change') {
+		if (section.id.startsWith('qoq-share-change-')) {
 			return [
-				{ label: 'Current share', value: company.share, format: 'share' },
+				{ label: 'Apps Detected', value: company.appsAdded, format: 'count' },
 				qoqMetric,
 				{ label: '30-day installs', value: company.installs, format: 'compact' }
 			];
@@ -423,7 +459,7 @@
 					tone: 'negative'
 				},
 				qoqMetric,
-				{ label: 'Current share', value: company.share, format: 'share' }
+				{ label: 'Apps Detected', value: company.appsAdded, format: 'count' }
 			];
 		}
 
@@ -434,25 +470,8 @@
 				format: section.primaryFormat
 			},
 			qoqMetric,
-			{ label: 'Current share', value: company.share, format: 'share' }
+			{ label: 'Apps Detected', value: company.appsAdded, format: 'count' }
 		];
-	}
-
-	function getDetailSummary(
-		sectionId: string,
-		panelTitle: string,
-		company: LeaderboardCompany
-	): string {
-		switch (sectionId) {
-			case 'qoq-share-change':
-				return `${company.companyName} posted one of the largest quarter-over-quarter share breakouts in ${panelTitle.toLowerCase()}.`;
-			case 'apps-added':
-				return `${company.companyName} added one of the largest share-weighted app footprints in ${panelTitle.toLowerCase()}.`;
-			case 'apps-lost':
-				return `${company.companyName} lost one of the largest share-weighted app footprints in ${panelTitle.toLowerCase()}.`;
-			default:
-				return `${company.companyName} stands out in this quarter's ${panelTitle.toLowerCase()} slice.`;
-		}
 	}
 
 	function getTrendIcon(isNegative: boolean): string {
@@ -460,7 +479,7 @@
 	}
 
 	function getTrendIconClass(isNegative: boolean): string {
-		return isNegative ? 'text-red-600 dark:text-red-300' : 'text-emerald-600 dark:text-emerald-300';
+		return isNegative ? 'text-error-500' : 'text-primary-600-400';
 	}
 
 	const structuredData = $derived({
@@ -484,15 +503,13 @@
 			'@type': 'Organization',
 			name: 'AppGoblin Intelligence'
 		},
-		keywords: data.keywords
+		keywords: data.keywords,
+		license: 'https://creativecommons.org/licenses/by/4.0/',
+		isBasedOn: 'https://appgoblin.info'
 	});
 
-	const heroCardClass =
-		'rounded-3xl border border-surface-200 bg-white/90 p-8 shadow-xl dark:border-surface-700 dark:bg-surface-900/90';
-	const kpiCardClass =
-		'rounded-2xl border border-surface-200 bg-white p-5 shadow-sm dark:border-surface-700 dark:bg-surface-900';
-	const panelCardClass =
-		'rounded-3xl border border-surface-200 bg-white p-6 shadow-sm dark:border-surface-700 dark:bg-surface-900';
+	const heroCardClass = `rounded-3xl ${reportCardBorderClass} bg-white/90 p-8 shadow-xl dark:bg-surface-900/90`;
+	const panelCardClass = `rounded-3xl ${reportCardBaseClass} p-6 shadow-sm`;
 </script>
 
 <svelte:head>
@@ -516,128 +533,101 @@
 	{@html `<script type="application/ld+json">${JSON.stringify(structuredData)}<\/script>`}
 </svelte:head>
 
-<div class="container mx-auto max-w-7xl px-4 py-10">
+<div class={reportContainerClass}>
 	<section
 		class={`${heroCardClass} mb-8 overflow-hidden bg-gradient-to-br from-white via-primary-50 to-secondary-50 dark:from-surface-900 dark:via-surface-900 dark:to-surface-800`}
 	>
-		<div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-			<div class="max-w-4xl">
-				<div class="mb-4 flex flex-wrap items-center gap-3">
+		<div class={`${heroLayoutClass} relative`}>
+			<div class={heroIntroClass}>
+				<div class={heroEyebrowRowClass}>
 					<div class={brandLockupClass}>
-						<img src="/appgoblin_100.webp" alt="AppGoblin" class="h-8 w-8" />
+						<img src="/appgoblin_100.webp" alt="AppGoblin" class="h-8 w-8 md:h-12 md:w-12" />
 						<div>
-							<p class="text-sm font-semibold text-surface-900 dark:text-surface-50">AppGoblin</p>
-							<p class="text-[11px] uppercase tracking-[0.18em] text-surface-500">
-								Intelligence Report
-							</p>
+							<p class={reportBrandNameClass}>AppGoblin</p>
+							<p class={reportEyebrowClass}>Intelligence Report</p>
 						</div>
 					</div>
-					<div
-						class="inline-flex rounded-full border border-primary-200 bg-primary-50 px-4 py-2 text-sm font-semibold text-primary-700 dark:border-primary-800 dark:bg-primary-950/40 dark:text-primary-300"
-					>
-						{data.summary.reportPeriod} mobile ecosystem snapshot
-					</div>
 				</div>
-				<h1
-					class="text-4xl font-black tracking-tight text-surface-900 dark:text-surface-50 md:text-6xl"
-				>
-					AppGoblin Mobile Ecosystem Report Q2 2026
+				<h1 class={`text-4xl font-black tracking-tight ${reportHeadingClass} md:text-6xl`}>
+					App Ecosystem Report Q2 2026
 				</h1>
-				<div
-					class="mt-4 max-w-3xl space-y-3 text-base leading-7 text-surface-600 dark:text-surface-300 md:text-lg md:leading-8"
-				>
+				<div class={heroDescriptionClass}>
 					<p>
-						This quarter-over-quarter report tracks changes from 2025 Q4 to {data.summary
-							.reportPeriod}
-						across app SDKs, API calls, and direct app-ads.txt files.
+						This report tracks changes from 2026-Q1 through {data.summary.reportPeriod}
+						based on app SDKs, API calls, and app-ads.txt files.
 					</p>
 					<p>
-						Use it to see which mobile service companies are gaining ground across Ad Networks,
-						Analytics, Development Tools, and Business Services.
+						This report is free and shows which mobile app companies are gaining or losing apps as
+						tracked by AppGoblin. Companies are brokend down by Ad Networks, Analytics, Development
+						Tools, and Business Services.
 					</p>
-					<p>
-						The raw report data is available as a free download, and questions or comments are
-						welcome via email or Discord.
-					</p>
+					<p>The raw report data is available as a free CSV download.</p>
 				</div>
 			</div>
+			<div
+				class="absolute right-0 top-0 inline-flex w-fit rounded-full preset-outlined-primary-800-200 p-2"
+			>
+				Top {data.summary.totalCompanies.toLocaleString()} mobile app company trends
+			</div>
 
-			<div class="flex flex-col gap-3 lg:min-w-72">
-				<a
-					href="/reports/app-ecosystem-report-Q2-2026/download"
-					class="btn preset-filled-primary-500 inline-flex items-center justify-center gap-2 rounded-2xl p-3 shadow-sm"
-				>
-					<span class="text-black">Download CSV</span>
-				</a>
-				<a
-					href="/contact"
-					class="btn preset-outlined-primary-500 inline-flex items-center justify-center gap-2 rounded-2xl p-3"
-				>
+			<div class={heroActionsClass}>
+				{#if data.isLoggedIn}
+					<a
+						href="/reports/app-ecosystem-report-Q2-2026/download"
+						class={`${reportButtonClass} preset-filled-primary-500 shadow-sm`}
+					>
+						<Download class="h-4 w-4" aria-hidden="true" />
+						<span class="text-black">Download CSV</span>
+					</a>
+				{:else}
+					<a
+						href="/auth/signup"
+						title="Create a free account to download this CSV."
+						class={`${reportButtonClass} preset-filled-primary-500 shadow-sm`}
+					>
+						<Lock class="h-4 w-4" aria-hidden="true" />
+						<span class="text-black">Create Free Account to Download</span>
+					</a>
+				{/if}
+				<a href="/contact" class={`${reportButtonClass} preset-outlined-primary-500`}>
 					<span>Contact & Questions</span>
 				</a>
 			</div>
 		</div>
 	</section>
 
-	<section class="mb-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-		<div class={kpiCardClass}>
-			<p class="text-sm font-medium text-surface-500">Companies tracked</p>
-			<p class="mt-2 text-3xl font-bold text-surface-900 dark:text-surface-50">
-				{data.summary.totalCompanies.toLocaleString()}
-			</p>
-		</div>
-		<div class={kpiCardClass}>
-			<p class="text-sm font-medium text-surface-500">SDK-tracked companies</p>
-			<p class="mt-2 text-3xl font-bold text-surface-900 dark:text-surface-50">
-				{data.summary.trackedSdkCompanies.toLocaleString()}
-			</p>
-		</div>
-		<div class={kpiCardClass}>
-			<p class="text-sm font-medium text-surface-500">Direct app-ads.txt companies</p>
-			<p class="mt-2 text-3xl font-bold text-surface-900 dark:text-surface-50">
-				{data.summary.trackedAdCompanies.toLocaleString()}
-			</p>
-		</div>
-		<div class={kpiCardClass}>
-			<p class="text-sm font-medium text-surface-500">Apps analyzed</p>
-			<p class="mt-2 text-3xl font-bold text-surface-900 dark:text-surface-50">
-				{formatRoundedK(data.summary.companyAppFootprint)}
-			</p>
-		</div>
-	</section>
-
 	<section class={`${panelCardClass} mb-8`}>
 		<div>
-			<h2 class="text-2xl font-bold text-surface-900 dark:text-surface-50">
-				How to read this report
-			</h2>
-			<div
-				class="mt-4 max-w-4xl space-y-4 text-base leading-7 text-surface-600 dark:text-surface-300"
-			>
+			<h2 class={`text-2xl ${reportHeadingClass}`}>How to read this report</h2>
+			<div class={`mt-4 max-w-4xl space-y-4 ${reportBodyClass}`}>
 				<p>
-					<span class="font-semibold text-surface-900 dark:text-surface-50">What's included.</span>
-					The quarter-over-quarter metrics compare company footprint changes from the previous period
-					to {data.summary.reportPeriod} for SDK and direct app-ads.txt coverage on both stores. SDK and
-					API observations are grouped together as "SDK", while direct app-ads.txt is tracked as a separate
-					signal.
+					<span class={`font-semibold ${reportHeadingClass}`}>What's included</span>
+					The quarter over quarter metrics compare company footprint changes from the previous period
+					to {data.summary.reportPeriod}. SDK and API observations are grouped together as "SDK". Ad
+					Networks have SDK and direct app-ads.txt separated into their own sections.
 				</p>
 				<p>
-					<span class="font-semibold text-surface-900 dark:text-surface-50">Accuracy.</span>
-					Mapped SDK data is generally the most reliable. API calls are definitive when observed, but
-					may understate providers that are not initialized on launch. App-ads.txt is broad and covers
-					millions of apps, but it is also the noisiest signal because it depends on linking app store
-					listings back to websites.
+					<span class={`font-semibold ${reportHeadingClass}`}>Accuracy</span>
+					AppGoblin SDK and API verified apps are the most deterministic way of knowing if an app is using
+					a tool. Whilte calls are definitive when observed, they may understate APIs that are not initialized
+					on launch and have no (known) SDK. App-ads.txt is broad and covers millions of apps, but is
+					also depends on linking app store listings back to websites and thus is less deterministic.
 				</p>
 				<p>
-					<span class="font-semibold text-surface-900 dark:text-surface-50">Aggregation.</span>
+					<span class={`font-semibold ${reportHeadingClass}`}>Aggregation.</span>
 					Distinct subcompanies are broken out separately. Some companies have multiple SDK and API domains
 					that roll up to the same parent, and fully aggregated data is available on AppGoblin company
 					pages along with hierarchy maps.
 				</p>
 				<p>
-					<span class="font-semibold text-surface-900 dark:text-surface-50"
-						>What's not included.</span
-					>
+					<span class={`font-semibold ${reportHeadingClass}`}>Q/Q Market Share Calculation</span>
+					The quarter on share market share change here is each companies market share of all apps tracked
+					on AppGoblin. Their quarterly change is compared to their previous quarter's market share. This
+					helps surface smaller companies and avoid showing the usual largest Market Share companies ie
+					Google/Facebook etc. Full market share is available in the table below.
+				</p>
+				<p>
+					<span class={`font-semibold ${reportHeadingClass}`}>What's not included.</span>
 					Unmapped ad and API domains appear in the table below without company-level aggregation. Unmapped
 					SDKs are too numerous to list in this report. If there are specific cuts you'd like to see in
 					future versions, reach out.
@@ -649,7 +639,7 @@
 	<section class="mb-10">
 		<div class="space-y-6">
 			{#each data.metricSections as baseSection}
-				{@const companyType = getSelectedCompanyType(baseSection.id)}
+				{@const companyType = getSectionCompanyType(baseSection)}
 				{@const section = getMetricSection(baseSection.id, companyType)}
 				{@const activePanel = getSelectedPanel(section, companyType)}
 				{@const activeView = getPanelView(section, activePanel)}
@@ -659,116 +649,77 @@
 				{@const featuredCompany = getSelectedCompany(activePanel.id, shortlist)}
 				{@const negativeDisplay = isNegativeDisplay(section, activeView)}
 				<article class={breakoutSectionClass}>
-					<div class="mb-4 flex flex-col gap-2">
-						<div class="flex flex-col gap-2">
-							<p
-								class="text-sm font-semibold uppercase tracking-[0.18em] text-primary-700 dark:text-primary-300"
-							>
-								{section.basisLabel}
-							</p>
-							<h2 class="text-2xl font-bold text-surface-900 dark:text-surface-50 md:text-3xl">
-								{section.title}
-							</h2>
-							{#if section.descriptionHtml}
-								<div
-									class="max-w-3xl text-surface-600 dark:text-surface-300 [&_a]:font-semibold [&_a]:text-primary-700 [&_a:hover]:underline dark:[&_a]:text-primary-300 [&_p+p]:mt-3"
-								>
-									{@html section.descriptionHtml}
-								</div>
-							{:else}
-								<p class="max-w-3xl text-surface-600 dark:text-surface-300">
-									{section.description}
-								</p>
-							{/if}
-						</div>
+					<div class={sectionHeaderClass}>
+						<ReportSectionEditorial sectionId={section.id} />
 					</div>
 
 					<section class={breakoutPanelClass}>
-						<div class="border-b border-surface-200 p-4 dark:border-surface-700 md:p-5">
+						<div class={panelHeaderClass}>
 							<div class="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
 								<div class="min-w-0 flex-1">
-									<p class="text-sm leading-6 text-surface-600 dark:text-surface-300">
+									<p class={panelDescriptionClass}>
 										{activePanel.description}
 									</p>
 								</div>
 							</div>
 
-							<div
-								class="mt-4 grid gap-2 md:grid-cols-[minmax(0,1.15fr)_minmax(11rem,0.75fr)_minmax(9rem,0.65fr)] md:items-end"
-							>
-								<div class={controlGroupClass}>
-									<p class={controlGroupLabelClass}>Company Category</p>
-									<select
-										class={selectControlClass}
-										value={companyType}
-										onchange={(event) =>
-											setSelectedCompanyType(
-												baseSection.id,
-												(event.currentTarget as HTMLSelectElement).value
-											)}
-									>
-										{#each getCompanyTypeOptions(baseSection.id) as option}
-											<option value={option.value}>{option.label}</option>
-										{/each}
-									</select>
-								</div>
+							<div class={panelControlsClass}>
+								{#if !baseSection.companyCategory && !baseSection.companyCategories}
+									<div class={controlGroupClass}>
+										<p class={controlGroupLabelClass}>Company Category</p>
+										<select
+											class={selectControlClass}
+											value={companyType}
+											onchange={(event) =>
+												setSelectedCompanyType(
+													baseSection.id,
+													(event.currentTarget as HTMLSelectElement).value
+												)}
+										>
+											{#each getCompanyTypeOptions(baseSection.id) as option}
+												<option value={option.value}>{option.label}</option>
+											{/each}
+										</select>
+									</div>
+								{/if}
 
 								<div class={controlGroupClass}>
 									<p class={controlGroupLabelClass}>Store</p>
-									<select
-										class={selectControlClass}
-										value={activePlatform}
-										onchange={(event) =>
-											setSelectedPlatform(
-												section,
-												activePanel,
-												(event.currentTarget as HTMLSelectElement).value as PanelPlatform
-											)}
-									>
+									<div class="flex gap-2">
 										{#each ['google', 'apple'] as platform}
-											<option value={platform}>{getPlatformLabel(platform as PanelPlatform)}</option
+											<button
+												type="button"
+												class={`${storeButtonBaseClass} ${activePlatform === platform ? 'scale-[1.02] border-primary-500 bg-primary-50 shadow-md ring-2 ring-primary-200 dark:border-primary-400 dark:bg-primary-950/40 dark:ring-primary-900' : 'border-surface-200 bg-surface-100 text-surface-700 hover:border-primary-300 hover:bg-primary-50/70 dark:border-surface-700 dark:bg-surface-800 dark:text-surface-200 dark:hover:border-primary-700 dark:hover:bg-primary-950/30'}`}
+												onclick={() =>
+													setSelectedPlatform(section, activePanel, platform as PanelPlatform)}
+												aria-pressed={activePlatform === platform}
 											>
+												<span class="inline-flex items-center justify-center gap-2">
+													<StoreIcon
+														store={platform === 'google' ? 'Google Play' : 'Apple App Store'}
+													/>
+													{platform === 'google' ? 'Google Play' : 'iOS'}
+												</span>
+											</button>
 										{/each}
-									</select>
-								</div>
-
-								<div class={controlGroupClass}>
-									<p class={controlGroupLabelClass}>Signal</p>
-									<select
-										class={selectControlClass}
-										value={activeSignal}
-										onchange={(event) =>
-											setSelectedSignal(
-												section,
-												activePanel,
-												(event.currentTarget as HTMLSelectElement).value as PanelSignal
-											)}
-									>
-										{#each getAvailableSignals(companyType) as signal}
-											<option value={signal}>{getSignalLabel(signal)}</option>
-										{/each}
-									</select>
+									</div>
 								</div>
 							</div>
 						</div>
 
 						{#if featuredCompany}
-							<div class="p-4 md:p-5">
-								<div class="rounded-2xl bg-white p-4 dark:bg-surface-900 md:p-5">
-									<div class="flex flex-col gap-4">
-										<div class="flex flex-col gap-3 md:items-start">
+							<div class={featuredShellClass}>
+								<div class={featuredCardClass}>
+									<div class={featuredHeaderClass}>
+										<div class={featuredIdentityClass}>
 											<div class={reportBadgeClass}>
 												<img src="/appgoblin_100.webp" alt="AppGoblin" class="h-7 w-7" />
 												<div>
-													<p class="text-xs font-semibold text-surface-900 dark:text-surface-50">
-														AppGoblin
-													</p>
-													<p class="text-[10px] uppercase tracking-[0.16em] text-surface-500">
-														Mobile ecosystem report
-													</p>
+													<p class={reportBadgeNameClass}>AppGoblin</p>
+													<p class={reportBadgeEyebrowClass}>2026 Q2 Mobile ecosystem report</p>
 												</div>
 											</div>
-											<div class="flex flex-wrap gap-2 md:flex-nowrap">
+											<div class={metadataRailClass}>
 												<p class={breakoutMetaPillClass}>
 													{getCompanyTypeLabel(section.id, companyType)}
 												</p>
@@ -779,38 +730,32 @@
 										<div class="flex justify-center">
 											<a
 												href={`/companies/${featuredCompany.companyDomain}`}
-												class="inline-flex items-center gap-4 rounded-3xl bg-white/95 px-4 py-4 shadow-sm transition hover:bg-primary-50/70 dark:bg-surface-900/95 dark:hover:bg-primary-950/30"
+												class={featuredCompanyLinkClass}
 											>
 												<img
 													src={getCompanyLogoUrl(featuredCompany.companyLogoUrl)}
 													alt={featuredCompany.companyName}
-													class="h-20 w-20 rounded-2xl border border-surface-200 object-cover dark:border-surface-700"
+													class={companyLogoClass}
 													onerror={(event) =>
 														((event.currentTarget as HTMLImageElement).src =
 															'/default_company_logo.png')}
 												/>
 												<div class="min-w-0 text-center">
-													<p
-														class="text-2xl font-black leading-tight text-surface-900 dark:text-surface-50 md:text-3xl"
-													>
+													<p class={companyNameClass}>
 														{featuredCompany.companyName}
 													</p>
-													<p
-														class="mt-1 text-sm font-medium text-surface-500 dark:text-surface-400"
-													>
+													<p class={companyDomainClass}>
 														/{featuredCompany.companyDomain}
 													</p>
 													<div
 														class="mt-3 flex flex-wrap items-center justify-center gap-2 text-center"
 													>
 														<span
-															class={`inline-flex items-center justify-center text-3xl leading-none ${getTrendIconClass(negativeDisplay)}`}
+															class={`inline-flex items-center justify-center md:text-lg leading-none ${getTrendIconClass(negativeDisplay)}`}
 														>
 															{getTrendIcon(negativeDisplay)}
 														</span>
-														<span
-															class="text-xs font-semibold uppercase tracking-[0.14em] text-surface-500"
-														>
+														<span class={trendLabelClass}>
 															{section.primaryMetricLabel}
 														</span>
 													</div>
@@ -819,10 +764,10 @@
 										</div>
 									</div>
 
-									<div class="mt-3 grid gap-3 md:mx-auto md:max-w-4xl md:grid-cols-3">
+									<div class={detailMetricsGridClass}>
 										{#each getDetailMetrics(section, featuredCompany) as metric}
 											<div class={detailStatCardClass}>
-												<p class="	text-sm text-surface-500">
+												<p class={detailMetricLabelClass}>
 													{metric.label}
 												</p>
 												<p class={`mt-2 text-3xl font-bold ${getDetailMetricTone(metric)}`}>
@@ -832,15 +777,11 @@
 										{/each}
 									</div>
 
-									<p
-										class="mt-5 max-w-2xl text-sm leading-7 text-surface-600 dark:text-surface-300"
-									>
-										{getDetailSummary(section.id, activePanel.title, featuredCompany)}
-									</p>
-
-									<div class="mt-6">
-										<div class="mb-3 flex items-center justify-between gap-3">
-											<p class={controlGroupLabelClass}>Top companies</p>
+									<div class="mt-6 md:mt-16">
+										<div class={shortlistHeaderClass}>
+											<p class={controlGroupLabelClass}>
+												Top {getSectionCategoryLabel(section, companyType)}
+											</p>
 										</div>
 										<div class={logoBadgeRailClass}>
 											{#each shortlist as company, index}
@@ -854,7 +795,7 @@
 													<img
 														src={getCompanyLogoUrl(company.companyLogoUrl)}
 														alt={company.companyName}
-														class="h-12 w-12 rounded-xl object-cover"
+														class="h-8 w-8 md:h-12 md:w-12 xl:h-20 xl:w-20 rounded-xl object-cover"
 														onerror={(event) =>
 															((event.currentTarget as HTMLImageElement).src =
 																'/default_company_logo.png')}
@@ -871,9 +812,7 @@
 								</div>
 							</div>
 						{:else}
-							<div class="p-5 text-sm text-surface-500 dark:text-surface-400">
-								No companies crossed the threshold in this slice.
-							</div>
+							<div class={emptyPanelClass}>No companies crossed the threshold in this slice.</div>
 						{/if}
 					</section>
 				</article>
@@ -883,15 +822,41 @@
 
 	<section class={panelCardClass}>
 		<div class="mb-5 flex flex-col gap-2">
-			<h2 class="text-3xl font-bold text-surface-900 dark:text-surface-50">
-				Full company explorer
-			</h2>
-			<p class="text-surface-600 dark:text-surface-300">
+			<h2 class={`text-3xl ${reportHeadingClass}`}>2026 Q2 Company explorer</h2>
+			<p>
 				Search any company and switch the metric selector to compare installs, share, Q/Q share
 				change, apps lost, and company app counts across SDK and direct app-ads.txt columns side by
 				side.
 			</p>
 		</div>
 		<CompaniesOverviewTable data={data.allData} viewMode="both" />
+	</section>
+
+	<section class={`${panelCardClass} mt-8`} itemscope itemtype="https://schema.org/Dataset">
+		<meta itemprop="name" content="AppGoblin Mobile Ecosystem Report Q2 2026" />
+		<link itemprop="license" href="https://creativecommons.org/licenses/by/4.0/" />
+		<link itemprop="isBasedOn" href="https://appgoblin.info" />
+		<h2 class={`text-2xl ${reportHeadingClass}`}>Data attribution and license</h2>
+		<div class={`mt-4 max-w-4xl space-y-3 ${reportBodyClass}`}>
+			<p>
+				<strong>Attribution required:</strong> If you publish, redistribute, or build products using
+				this report data, include a backlink to
+				<a href="https://appgoblin.info" class="font-semibold underline">AppGoblin</a>.
+			</p>
+			<p>
+				Suggested citation: <span class="italic">Data provided by AppGoblin.</span>
+			</p>
+			<p>
+				<strong>License:</strong> This dataset is available under the
+				<a
+					href="https://creativecommons.org/licenses/by/4.0/"
+					target="_blank"
+					rel="license"
+					class="font-semibold underline"
+				>
+					Creative Commons Attribution 4.0 License (CC BY 4.0)
+				</a>.
+			</p>
+		</div>
 	</section>
 </div>

@@ -655,24 +655,12 @@ def _format_category_name(category: str) -> str:
     )
 
 
-def get_company_categories_topn(
+def get_company_categories_counts(
     state: State,
     company_domain: str,
-    num_categories: int = 9,
     include_parent_rollup: bool = True,
-    group_mode: str = "auto",
 ) -> dict[str, pd.DataFrame]:
-    """Get a company parent categories, split by store (1=Android, 2=iOS).
-
-    Parameters
-    ----------
-    group_mode : str
-        - 'auto' — existing heuristic (buckets games or non-games based on dominance)
-        - 'none' — raw categories, no grouping (includes original category field)
-        - 'group_games' — force lump all game_* categories into "Games"
-        - 'group_apps' — force lump all non-game categories into "Apps"
-
-    """
+    """Get raw company categories plus Games and Apps aggregate rows."""
     logger.info(f"query company parent categories: {company_domain=}")
     parent_companies = get_parent_companies(state)
     secondary_domains = get_company_secondary_domains(state)
@@ -691,79 +679,40 @@ def get_company_categories_topn(
     )
     df.loc[df["app_category"].isna(), "app_category"] = "None"
 
-    def _is_game(cat: str) -> bool:
-        return isinstance(cat, str) and cat.startswith("game_")
-
     def _process_store(store_df: pd.DataFrame) -> pd.DataFrame:
         if store_df.empty:
             return pd.DataFrame()
 
         store_df = store_df.copy()
 
-        if group_mode == "none":
-            # Raw categories — no grouping or top-N truncation.
-            store_df = store_df.sort_values(by="app_count", ascending=False)
-            result = store_df.rename(
-                columns={"app_category": "category", "app_count": "value"}
-            )
-            result["group"] = result["category"].apply(_format_category_name)
-            result["category"] = result["category"]
-            return result[["group", "category", "value"]]
-
-        if group_mode == "group_games":
-            # Lump all game subcategories into a single "Games" slice
-            store_df.loc[store_df["app_category"].apply(_is_game), "app_category"] = (
-                "Games"
+        def _is_game(category: object) -> bool:
+            return category == "games" or (
+                isinstance(category, str) and category.startswith("game_")
             )
 
-        elif group_mode == "group_apps":
-            # Lump all non-game categories into a single "Apps" slice
-            store_df.loc[~store_df["app_category"].apply(_is_game), "app_category"] = (
-                "Apps"
-            )
+        game_mask = store_df["app_category"].apply(_is_game)
+        aggregate_rows = pd.DataFrame(
+            [
+                {
+                    "group": "Games",
+                    "category": "all_games",
+                    "value": store_df.loc[game_mask, "app_count"].sum(),
+                },
+                {
+                    "group": "Apps",
+                    "category": "all_apps",
+                    "value": store_df.loc[~game_mask, "app_count"].sum(),
+                },
+            ]
+        )
 
-        else:  # 'auto' — existing heuristic
-            top_cats = (
-                store_df.sort_values(by="app_count", ascending=False)
-                .head(num_categories)
-                .app_category.tolist()
-            )
-            game_cat_count = sum(1 for c in top_cats if _is_game(c))
-            is_mostly_games = game_cat_count > num_categories / 2
-            is_mostly_non_games = game_cat_count <= 1
-
-            if is_mostly_games:
-                store_df.loc[
-                    ~store_df["app_category"].apply(_is_game), "app_category"
-                ] = "apps"
-            if is_mostly_non_games:
-                store_df.loc[
-                    store_df["app_category"].apply(_is_game), "app_category"
-                ] = "games"
-
-        # For non-none modes: top-N truncation, groupby, and format
-        if group_mode != "none":
-            top_cats = (
-                store_df.sort_values(by="app_count", ascending=False)
-                .head(num_categories)
-                .app_category.tolist()
-            )
-            store_df.loc[~store_df["app_category"].isin(top_cats), "app_category"] = (
-                "others"
-            )
-            store_df = (
-                store_df.groupby(["app_category"])["app_count"].sum().reset_index()
-            )
-            store_df["name"] = store_df["app_category"].apply(_format_category_name)
-            result = store_df.rename(columns={"name": "group", "app_count": "value"})
-        else:
-            result = store_df.rename(
-                columns={"app_category": "category", "app_count": "value"}
-            )
-            result["group"] = result["category"].apply(_format_category_name)
-            result = result[["group", "category", "value"]]
-
-        return result
+        store_df = store_df.sort_values(by="app_count", ascending=False)
+        result = store_df.rename(
+            columns={"app_category": "category", "app_count": "value"}
+        )
+        result["group"] = result["category"].apply(_format_category_name)
+        raw_result = result[["group", "category", "value"]]
+        return pd.concat([aggregate_rows, raw_result], ignore_index=True)
 
     return {
         "android": _process_store(df[df["store"] == 1]),

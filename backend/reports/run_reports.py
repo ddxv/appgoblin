@@ -53,6 +53,8 @@ ECOSYSTEM_REPORT_SLUG = "app-ecosystem-report-Q2-2026"
 ECOSYSTEM_REPORT_ALIASES = {
     "app-ecosystem-report-Q2": ECOSYSTEM_REPORT_SLUG,
 }
+ECOSYSTEM_REPORT_TREND_YEAR = 2026
+ECOSYSTEM_REPORT_TREND_QUARTERS = (1, 2)
 
 # Z-score pre-computation step (runs before individual report SQL files)
 Z_SCORE_SQL_PATH = QUERY_ROOT / "query_report_z_scores.sql"
@@ -453,7 +455,11 @@ def build_ecosystem_report_csv(
     overview_df = overview_df.merge(
         company_categories, on="company_domain", how="left", validate="1:1"
     )
-    trend_summaries, trend_overview = build_company_trends_static_data(trends)
+    report_trends = trends.loc[
+        (trends["year"] == ECOSYSTEM_REPORT_TREND_YEAR)
+        & trends["quarter"].isin(ECOSYSTEM_REPORT_TREND_QUARTERS)
+    ].copy()
+    trend_summaries, trend_overview = build_company_trends_static_data(report_trends)
     del trend_summaries
     overview_df = overview_df.merge(
         trend_overview, on="company_domain", how="left", validate="1:1"
@@ -479,10 +485,10 @@ def build_ecosystem_report_csv(
         "apple_sdk_percentage",
         "google_app_ads_direct_percentage",
         "google_sdk_percentage",
-        "apple_app_ads_direct_app_count",
-        "apple_sdk_app_count",
-        "google_app_ads_direct_app_count",
-        "google_sdk_app_count",
+        "apple_app_ads_direct_total_apps",
+        "apple_sdk_total_apps",
+        "google_app_ads_direct_total_apps",
+        "google_sdk_total_apps",
         "trends_period",
         "apple_app_ads_direct_pct_market_share_change",
         "apple_sdk_pct_market_share_change",

@@ -68,7 +68,7 @@ from dbcon.queries import (
     get_company_adstxt_publisher_id_apps_raw,
     get_company_adstxt_publishers_overview,
     get_company_app_changes,
-    get_company_categories_topn,
+    get_company_categories_counts,
     get_company_country_apps,
     get_company_follow_lookup,
     get_company_sdks,
@@ -2283,7 +2283,6 @@ class CompaniesController(Controller):
         state: State,
         company_domain: str,
         rollup: bool = True,
-        group_mode: str = "auto",
     ) -> dict:
         """Handle GET request for a specific company parent categories.
 
@@ -2293,9 +2292,6 @@ class CompaniesController(Controller):
             The domain of the company to retrieve apps for.
         rollup : bool
             Whether to include parent company rollup data.
-        group_mode : str
-            Category grouping strategy: 'auto' (default heuristic),
-            'none' (raw categories), 'group_games', or 'group_apps'.
 
         Returns:
         -------
@@ -2305,11 +2301,10 @@ class CompaniesController(Controller):
         """
         start = time.perf_counter() * 1000
 
-        dfs = get_company_categories_topn(
+        dfs = get_company_categories_counts(
             state=state,
             company_domain=company_domain,
             include_parent_rollup=rollup,
-            group_mode=group_mode,
         )
 
         duration = round((time.perf_counter() * 1000 - start), 2)

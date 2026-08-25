@@ -1,8 +1,8 @@
 <script lang="ts">
 	import type { ColumnFiltersState, SortingState } from '@tanstack/svelte-table';
+	import { createAtom } from '@tanstack/svelte-store';
 
 	import Pagination from '$lib/components/data-table/Pagination.svelte';
-	import ExportAsCSV from '$lib/components/data-table/ExportAsCSV.svelte';
 
 	import {
 		createAppTable,
@@ -14,7 +14,7 @@
 
 	import { formatNumber } from '$lib/utils/formatNumber';
 
-	type MetricValue = 'installs' | 'market_share' | 'qoq_share' | 'apps_lost' | 'app_count';
+	type MetricValue = 'installs' | 'qoq_share' | 'apps_lost' | 'app_count';
 
 	type MetricOption = {
 		value: MetricValue;
@@ -58,11 +58,11 @@
 		viewMode?: ViewMode;
 	};
 
-	const [pagination, onPaginationChange] = createTableState({ pageIndex: 0, pageSize: 50 });
+	const paginationAtom = createAtom({ pageIndex: 0, pageSize: 50 });
 	const [sorting, onSortingChange] = createTableState<SortingState>([]);
 	const [columnFilters, onColumnFiltersChange] = createTableState<ColumnFiltersState>([]);
 	const [globalFilter, onGlobalFilterChange] = createTableState('');
-	let dataMetric = $state<MetricValue>('market_share');
+	let dataMetric = $state<MetricValue>('qoq_share');
 
 	let { data, viewMode = 'auto' }: DataTableProps = $props();
 
@@ -208,9 +208,6 @@
 		},
 		columns,
 		state: {
-			get pagination() {
-				return pagination();
-			},
 			get sorting() {
 				return sorting();
 			},
@@ -224,8 +221,10 @@
 		globalFilterFn,
 		onSortingChange,
 		onColumnFiltersChange,
-		onPaginationChange,
-		onGlobalFilterChange
+		onGlobalFilterChange,
+		atoms: {
+			pagination: paginationAtom
+		}
 	});
 
 	function formatPercentage(num: number) {
@@ -290,22 +289,16 @@
 	const QOQ_METRICS: MetricValue[] = ['qoq_share', 'apps_lost'];
 	const BASE_METRIC_OPTIONS: MetricOption[] = [
 		{ value: 'installs', label: 'Installs (Last 30 Days)' },
-		{ value: 'market_share', label: 'Market Share' },
 		{ value: 'app_count', label: 'Company App Counts' }
 	];
 	const QOQ_METRIC_OPTIONS: MetricOption[] = [
-		{ value: 'qoq_share', label: 'Q/Q Market Share Change %' },
+		{ value: 'qoq_share', label: '2026 Q2 Market Share Growth %' },
 		{ value: 'apps_lost', label: 'Q/Q Apps Lost' }
 	];
 	let metricOptions = $derived(
 		hasCategorySelected
 			? BASE_METRIC_OPTIONS
-			: [
-					BASE_METRIC_OPTIONS[0],
-					BASE_METRIC_OPTIONS[1],
-					...QOQ_METRIC_OPTIONS,
-					BASE_METRIC_OPTIONS[2]
-				]
+			: [BASE_METRIC_OPTIONS[0], ...QOQ_METRIC_OPTIONS, BASE_METRIC_OPTIONS[1]]
 	);
 
 	$effect(() => {
@@ -332,8 +325,6 @@
 		}
 
 		if (dataMetric === 'installs' && headerHasInstall) {
-			return headerIsAds ? showsAdsColumns : showsSdkColumns;
-		} else if (dataMetric === 'market_share' && headerHasPercent) {
 			return headerIsAds ? showsAdsColumns : showsSdkColumns;
 		} else if (dataMetric === 'qoq_share' && headerHasShareChange) {
 			return headerIsAds ? showsAdsColumns : showsSdkColumns;
@@ -369,7 +360,7 @@
 
 <div class="table-container p-0 md:p-2">
 	<div class="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-8 m-2">
-		<div class="preset-outlined-surface-100-900 flex items-center flex-col p-0 md:p-2">
+		<div class="preset-outlined-surface-100-900 flex flex-col items-center p-0 md:p-2">
 			<input
 				placeholder="Filter companies..."
 				value={globalFilter()}
@@ -377,7 +368,7 @@
 					const value = e.currentTarget.value;
 					table.setGlobalFilter(value);
 				}}
-				class="max-w-sm p-1"
+				class="bg-surface-50-950 max-w-sm p-1"
 			/>
 		</div>
 		<div class="flex flex-col justify-center gap-1 p-2 md:items-start">
@@ -392,9 +383,7 @@
 				{/each}
 			</select>
 			{#if hasCategorySelected}
-				<p class="px-1 text-xs text-surface-500-400">
-					Q/Q metrics are only available on the all-companies overview.
-				</p>
+				<p class="px-1 text-xs">Q/Q metrics are only available on the all-companies overview.</p>
 			{/if}
 		</div>
 	</div>
@@ -481,7 +470,7 @@
 									</div>
 								</a>
 							{:else}
-								<span class="text-xs text-surface-500-400">-</span>
+								<span class="text-xs">-</span>
 							{/if}
 						</td>
 						{#if dataMetric == 'app_count'}
@@ -539,36 +528,6 @@
 								<td class="table-cell-fit">
 									<p class="text-xs md:text-sm">
 										{formatNumber(row.original.apple_app_ads_direct_installs_d30)}
-									</p>
-								</td>
-							{/if}
-						{/if}
-
-						{#if dataMetric == 'market_share'}
-							{#if showsSdkColumns}
-								<td class="table-cell-fit">
-									<p class="text-xs md:text-sm">
-										{formatPercentage(row.original.google_sdk_percentage)}
-									</p>
-								</td>
-
-								<td class="table-cell-fit">
-									<p class="text-xs md:text-sm">
-										{formatPercentage(row.original.apple_sdk_percentage)}
-									</p>
-								</td>
-							{/if}
-
-							{#if showsAdsColumns}
-								<td class="table-cell-fit">
-									<p class="text-xs md:text-sm">
-										{formatPercentage(row.original.google_app_ads_direct_percentage)}
-									</p>
-								</td>
-
-								<td class="table-cell-fit">
-									<p class="text-xs md:text-sm">
-										{formatPercentage(row.original.apple_app_ads_direct_percentage)}
 									</p>
 								</td>
 							{/if}
@@ -646,7 +605,6 @@
 		<footer class="flex justify-between">
 			<div class="flex items-center justify-end space-x-2 py-4">
 				<Pagination tableModel={table} />
-				<ExportAsCSV {table} filename="appgoblin_companies" />
 			</div>
 		</footer>
 	</div>
