@@ -6,9 +6,9 @@ receive a descriptive access-denied message rather than data.
 
 from __future__ import annotations
 
-# `Context` must be importable at runtime in FastMCP 3.x — the framework
+# `Context` must be importable at runtime — the framework
 # uses it for dependency injection into tool functions, not just typing.
-from fastmcp import Context  # noqa: TC002
+from mcp.server.mcpserver import Context  # noqa: TC002
 
 from api_app.controllers.companies import get_overviews
 from api_app.controllers.public.v1.companies import (

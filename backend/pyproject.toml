@@ -11,7 +11,7 @@ dependencies = [
     "numpy",
     "sqlalchemy",
     "boto3",
-    "fastmcp",
+    "mcp>=2,<3",
     "asyncssh",
 ]
 

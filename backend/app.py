@@ -5,7 +5,6 @@ from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 from datetime import UTC, datetime, timedelta
 
-from fastmcp.utilities.lifespan import combine_lifespans
 from litestar import Litestar, Request, asgi
 from litestar.config.cors import CORSConfig
 from litestar.logging import LoggingConfig
@@ -30,7 +29,7 @@ from api_app.controllers.rankings import RankingsController
 from api_app.controllers.scry import ScryController
 from api_app.controllers.sdks import SdksController
 from api_app.mcp.controller import (
-    fastmcp_asgi_app,
+    mcp_server,
     protected_mcp_app,
     set_mcp_engine,
 )
@@ -232,14 +231,11 @@ async def db_lifespan(app: Litestar) -> AsyncGenerator[None]:
         logger.exception("Failed to initialize database connections")
         raise
 
-    # --- Run the app + FastMCP lifespans together.
-    #     Litestar does NOT forward lifecycle events to mounted ASGI apps,
-    #     so the FastMCP lifespan has to be entered manually.  The MCP
-    #     lifespan must run AFTER ``set_mcp_engine()`` above so the tool
-    #     registry can resolve the database engine.
+    # --- Run the MCP session manager after database initialization.
+    #     Litestar does NOT forward lifecycle events to mounted ASGI apps.
     try:
-        # Application runs here
-        yield
+        async with mcp_server.session_manager.run():
+            yield
     finally:
         # Cleanup - always runs, even if there's an error
         logger.info("Closing database connections...")
@@ -262,16 +258,16 @@ async def db_lifespan(app: Litestar) -> AsyncGenerator[None]:
 # ---------------------------------------------------------------------------
 # Registered ASGI route for the authenticated MCP (Streamable HTTP) server
 # ---------------------------------------------------------------------------
-# FastMCP generates a Starlette ASGI app internally.  Litestar mounts
+# MCPServer generates a Starlette ASGI app internally.  Litestar mounts
 # external ASGI applications via ``@asgi(is_mount=True)`` route handlers
 # rather than a ``mount()`` method (which is Starlette-specific).
-# The AuthenticatedMCPMiddleware wraps the raw FastMCP app with API-key
+# The AuthenticatedMCPMiddleware wraps the raw MCP app with API-key
 # authentication and rate limiting (same tier rules as the REST endpoints).
 
 
 @asgi(path="/api/v1/mcp", is_mount=True, copy_scope=True)
 async def mcp_asgi_handler(scope: Scope, receive: Receive, send: Send) -> None:
-    """Route all ``/api/v1/mcp`` requests through the protected FastMCP app.
+    """Route all ``/api/v1/mcp`` requests through the protected MCP app.
 
     ``copy_scope=True`` is required: the auth middleware mutates ``scope``
     (sets ``scope["user"]``); without copying, those mutations leak into
@@ -306,10 +302,10 @@ app = Litestar(
         version="0.0.1",
         openapi_controller=MyOpenAPIController,
     ),
-    # Combine Litestar's db_lifespan with FastMCP's lifespan so the
-    # StreamableHTTPSessionManager is initialised alongside the app.
-    # Entered in order, exited in reverse order (LIFO).
-    lifespan=[combine_lifespans(db_lifespan, fastmcp_asgi_app.lifespan)],
+    # The mounted ASGI app does not receive Litestar lifecycle events;
+    # db_lifespan explicitly starts the MCP session manager after injecting
+    # the database engine.
+    lifespan=[db_lifespan],
     logging_config=logging_config,
     after_response=cleanup_expired_responses,
     middleware=[DefineMiddleware(RateLimitMiddleware)],

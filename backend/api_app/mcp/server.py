@@ -1,13 +1,13 @@
-"""Central FastMCP instance for the AppGoblin MCP server.
+"""Central MCPServer instance for the AppGoblin MCP server.
 
 All tools register themselves against this shared ``mcp_server`` instance.
 Importing this module from ``controller.py`` and the tool modules never causes
-circular imports because ``FastMCP`` does not depend on any Litestar or
+circular imports because ``MCPServer`` does not depend on any Litestar or
 controller-layer code.
 """
 
-from fastmcp import FastMCP
+from mcp.server.mcpserver import MCPServer
 
-mcp_server = FastMCP(
+mcp_server = MCPServer(
     "AppGoblin Intelligence Server",
 )

@@ -20,7 +20,7 @@ from typing import TYPE_CHECKING
 from api_app.mcp.engine import get_engine
 
 if TYPE_CHECKING:
-    from fastmcp import Context
+    from mcp.server.mcpserver import Context
     from sqlalchemy import Engine
 
 
@@ -72,7 +72,7 @@ def get_mcp_state() -> _MCPState:
 class MCPAuthError(RuntimeError):
     """Raised when a tool's tier requirement is not met.
 
-    FastMCP catches raised exceptions and returns a proper ``isError=true``
+    MCPServer catches raised exceptions and returns a proper ``isError=true``
     MCP response, which clients display as tool execution failures rather
     than successful results.
     """

@@ -7,13 +7,13 @@ without duplicating the logic.
 
 from __future__ import annotations
 
-from fastmcp import Context
+from mcp.server.mcpserver import Context
 
 
 class MCPAuthError(RuntimeError):
     """Raised when a tool's tier requirement is not met.
 
-    FastMCP catches this and returns a proper ``isError=true`` MCP
+    MCPServer catches this and returns a proper ``isError=true`` MCP
     response, which clients display as tool execution failures rather
     than successful results.
     """
