@@ -7,7 +7,6 @@ from unittest.mock import MagicMock
 import pytest
 
 from api_app.guards import (
-    REQUIRED_PRICE_MAPPED_TIERS,
     TIER_LIMITS,
     ApiKeyContext,
     TierLimits,
@@ -30,9 +29,6 @@ class TestTierConfig:
     def test_all_tiers_have_limits(self):
         for tier in ("free", "premium_access", "b2b_sdk", "b2b_appads", "b2b_premium"):
             assert tier in TIER_LIMITS
-
-    def test_legacy_tiers_are_not_required_in_price_mapping(self):
-        assert "premium_access" not in REQUIRED_PRICE_MAPPED_TIERS
 
     def test_tiers_are_frozen(self):
         limits = TIER_LIMITS["free"]
@@ -95,13 +91,6 @@ class TestValidateTierMappingConfig:
                     "price_premium": "b2b_premium",
                 }
             )
-
-    def test_complete_paid_tier_mapping_passes(self):
-        price_map = {
-            f"price_{tier}": tier for tier in sorted(REQUIRED_PRICE_MAPPED_TIERS)
-        }
-
-        validate_tier_mapping_config(price_map)
 
 
 class TestResolveTier:

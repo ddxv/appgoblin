@@ -47,18 +47,18 @@ UNMAPPED_COMPANY_NOTICE = (
     "additions are usually completed within 1-2 business days."
 )
 VALID_COMPANY_APP_CHANGE_TAG_SOURCES = {"sdk", "api_call", "app_ads_direct"}
-VALID_COMPANY_APP_CHANGE_STATUSES = {"added", "lost"}
+VALID_COMPANY_APP_CHANGE_STATUSES = {"added", "lost", "removed"}
 
 
 def _validate_company_app_changes_query(
     *, tag_source: str, quarter: int, status: str
 ) -> None:
     """Validate public app-change request filters."""
-    if status not in VALID_COMPANY_APP_CHANGE_STATUSES:
-        msg = "status must be one of: added, lost"
-        raise NotFoundException(msg, status_code=400)
     if tag_source not in VALID_COMPANY_APP_CHANGE_TAG_SOURCES:
         msg = "tag_source must be one of: sdk, api_call, app_ads_direct"
+        raise NotFoundException(msg, status_code=400)
+    if status not in VALID_COMPANY_APP_CHANGE_STATUSES:
+        msg = "status must be one of: added, lost, removed"
         raise NotFoundException(msg, status_code=400)
     if quarter not in {1, 2, 3, 4}:
         msg = "quarter must be one of: 1, 2, 3, 4"
@@ -378,7 +378,7 @@ def _build_public_company_app_change_payload(
             tag_source=tag_source,
             year=year,
             quarter=quarter,
-            status=status,
+            status="lost" if status == "removed" else status,
         ),
     )
 

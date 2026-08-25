@@ -25,7 +25,7 @@
 	const MAX_SLICES = 9;
 
 	function isGame(category: string): boolean {
-		return category.startsWith('game_');
+		return category === 'games' || category.startsWith('game_');
 	}
 
 	/** Apply client-side filtering to the raw category data. */
@@ -35,14 +35,24 @@
 
 		let filtered = raw.map((d) => ({ ...d }));
 
-		if (groupMode === 'games') {
-			// Show only game subcategories
-			filtered = filtered.filter((item) => isGame(item.category));
+		if (groupMode === 'all') {
+			// Use backend aggregates so raw categories are not double-counted.
+			filtered = filtered.filter(
+				(item) => item.category === 'all_games' || item.category === 'all_apps'
+			);
+		} else if (groupMode === 'games') {
+			// Show raw game categories, including Apple's exact `games` category.
+			filtered = filtered.filter(
+				(item) =>
+					item.category !== 'all_games' && item.category !== 'all_apps' && isGame(item.category)
+			);
 		} else if (groupMode === 'apps') {
-			// Show only non-game app categories
-			filtered = filtered.filter((item) => !isGame(item.category) || item.category === 'None');
+			// Show raw non-game categories.
+			filtered = filtered.filter(
+				(item) =>
+					item.category !== 'all_games' && item.category !== 'all_apps' && !isGame(item.category)
+			);
 		}
-		// 'all' mode — keep all raw categories
 
 		// Sum values by category key (in case of duplicates after filtering)
 		const merged = new Map<string, { label: string; value: number }>();

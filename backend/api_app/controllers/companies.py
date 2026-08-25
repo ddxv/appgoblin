@@ -68,7 +68,8 @@ from dbcon.queries import (
     get_company_adstxt_publisher_id_apps_raw,
     get_company_adstxt_publishers_overview,
     get_company_app_changes,
-    get_company_categories_topn,
+    get_company_categories_counts,
+    get_company_country_apps,
     get_company_follow_lookup,
     get_company_sdks,
     get_company_stats,
@@ -319,9 +320,10 @@ def _shape_company_app_changes_df(
         "name",
         "store_id",
         "developer_name",
-        "icon_64",
         "status",
     ]
+    icon_col = "icon_64" if "icon_64" in app_changes_df.columns else "icon_url_100"
+    groupby_cols.insert(4, icon_col)
 
     agg_dict: dict[str, object] = {
         "rank": pd.NamedAgg(column="rank", aggfunc="min"),
@@ -356,6 +358,8 @@ def _shape_company_app_changes_df(
         ascending=[False, True],
         na_position="last",
     ).head(limit)
+    if icon_col != "icon_64":
+        grouped = grouped.rename(columns={icon_col: "icon_64"})
     return grouped
 
 
@@ -747,26 +751,6 @@ def prep_companies_overview_df(
                 how="left",
                 validate="1:1",
             )
-            # base_cols = [
-            #     "company_domain",
-            #     "company_name",
-            #     "company_category",
-            #     "parent_company_domain",
-            #     "parent_company_name",
-            #     "company_logo_url",
-            #     "parent_company_logo_url",
-            # ]
-            # inscols = [x for x in overview_df.columns if "installs_d30" in x]
-            # csv_df = overview_df[
-            #     base_cols + inscols + [tcol for tcol in tcols if tcol not in base_cols]
-            # ]
-            # csv_df.rename(
-            #     columns={tcol: tcol.replace("_latest_", "_") for tcol in tcols},
-            #     inplace=True,
-            # )
-            # logger.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX NEW CSV")
-            # csv_df.to_csv("AppGoblin Mobile Ecosystem 2026 Q1.csv", index=False)
-
     return overview_df
 
 
@@ -1824,7 +1808,15 @@ def _build_company_overview_scope(
         app_category=category,
         include_parent_rollup=include_parent_rollup,
     )
-    category_totals = get_tag_source_category_totals(state, category)
+    # Lightweight callers (including the public/MCP adapters) may provide the
+    # legacy company-stat shape without category denominator columns. In that
+    # case market-share denominators cannot be computed and no category-total
+    # query is needed.
+    category_totals = (
+        get_tag_source_category_totals(state, category)
+        if {"cat_total_app_count", "cat_total_installs_d30"}.issubset(df.columns)
+        else None
+    )
     stats_overview = make_company_stats(df=df, category_totals=category_totals)
 
     if df.empty or not df["tag_source"].str.contains("app_ads").any():
@@ -2302,7 +2294,6 @@ class CompaniesController(Controller):
         state: State,
         company_domain: str,
         rollup: bool = True,
-        group_mode: str = "auto",
     ) -> dict:
         """Handle GET request for a specific company parent categories.
 
@@ -2312,9 +2303,6 @@ class CompaniesController(Controller):
             The domain of the company to retrieve apps for.
         rollup : bool
             Whether to include parent company rollup data.
-        group_mode : str
-            Category grouping strategy: 'auto' (default heuristic),
-            'none' (raw categories), 'group_games', or 'group_apps'.
 
         Returns:
         -------
@@ -2324,11 +2312,10 @@ class CompaniesController(Controller):
         """
         start = time.perf_counter() * 1000
 
-        dfs = get_company_categories_topn(
+        dfs = get_company_categories_counts(
             state=state,
             company_domain=company_domain,
             include_parent_rollup=rollup,
-            group_mode=group_mode,
         )
 
         duration = round((time.perf_counter() * 1000 - start), 2)
@@ -2339,6 +2326,56 @@ class CompaniesController(Controller):
             store: df.to_dict(orient="records") if not df.empty else []
             for store, df in dfs.items()
         }
+
+    @get(
+        path="/companies/{company_domain:str}/countries",
+        cache=86400,
+    )
+    async def company_countries(
+        self: Self,
+        state: State,
+        company_domain: str,
+        category: str | None = None,
+    ) -> dict[str, list[dict[str, object]]]:
+        """Handle GET request for a company's app counts by country.
+
+        Returns a dict keyed by store ('android' and 'ios'), each containing
+        rows with 'country' and 'app_count'. The top 5 countries per store are
+        kept individually; the remainder are rolled up into an 'Others' row.
+
+        Not all companies will have this data — stores without any rows are
+        returned as empty lists.
+
+        Args:
+        ----
+        company_domain : str
+            The domain of the company to retrieve country data for.
+        category : str | None
+            Optional category to filter the country data by.
+
+        Returns:
+        -------
+        dict
+            A dictionary with 'android' and 'ios' keys containing country data.
+
+        """
+        start = time.perf_counter() * 1000
+
+        df = get_company_country_apps(
+            state=state,
+            company_domain=company_domain,
+            app_category=category,
+        )
+
+        duration = round((time.perf_counter() * 1000 - start), 2)
+        logger.info(f"GET /api/companies/{company_domain}/countries took {duration}ms")
+        store_map = {1: "android", 2: "ios"}
+        result: dict[str, list[dict[str, object]]] = {}
+        for store, store_df in df.groupby("store", sort=True):
+            result[store_map.get(int(store), str(store))] = (
+                store_df.to_dict(orient="records") if not store_df.empty else []
+            )
+        return result
 
     @get(
         path="/companies/{queried_domain:str}/tree",

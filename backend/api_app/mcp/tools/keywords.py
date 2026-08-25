@@ -5,9 +5,9 @@ Keyword tools are **paid-tier only**.
 
 from __future__ import annotations
 
-# `Context` must be importable at runtime in FastMCP 3.x — the framework
+# `Context` must be importable at runtime — the framework
 # uses it for dependency injection into tool functions, not just typing.
-from fastmcp import Context  # noqa: TC002
+from mcp.server.mcpserver import Context  # noqa: TC002
 
 from api_app.controllers.public.v1.keywords import (
     _build_keyword_metrics_payload,
@@ -27,9 +27,7 @@ logger = get_logger(__name__)
 
 
 @mcp_server.tool()
-async def get_keyword_metrics(  # noqa: D417
-    keyword: str, ctx: Context
-) -> str:
+async def get_keyword_metrics(keyword: str, ctx: Context) -> str:  # noqa: D417
     """Return keyword difficulty, competition, and opportunity scores.
 
     Parameters

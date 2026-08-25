@@ -1,5 +1,11 @@
 <script lang="ts">
-	import type { ColumnFiltersState, SortingState } from '@tanstack/svelte-table';
+	import type {
+		ColumnFiltersState,
+		ColumnVisibilityState,
+		SortingState
+	} from '@tanstack/svelte-table';
+	import { createAtom } from '@tanstack/svelte-store';
+	import { Popover, Portal } from '@skeletonlabs/skeleton-svelte';
 
 	import Pagination from '$lib/components/data-table/Pagination.svelte';
 	import ExportAsCSV from '$lib/components/data-table/ExportAsCSV.svelte';
@@ -19,13 +25,6 @@
 	import { formatNumber } from '$lib/utils/formatNumber';
 	import { countryCodeToEmoji } from '$lib/utils/countryCodeToEmoji';
 
-	type MetricValue = 'installs' | 'market_share' | 'qoq_share' | 'apps_lost' | 'app_count';
-
-	type MetricOption = {
-		value: MetricValue;
-		label: string;
-	};
-
 	type ViewMode = 'auto' | 'sdk' | 'ads' | 'both' | 'api';
 
 	type DataTableProps = {
@@ -34,7 +33,30 @@
 		showLimitNote?: boolean;
 	};
 
-	const [pagination, onPaginationChange] = createTableState({ pageIndex: 0, pageSize: 50 });
+	const paginationAtom = createAtom({ pageIndex: 0, pageSize: 50 });
+	const columnVisibilityAtom = createAtom<ColumnVisibilityState>({
+		google_sdk_app_count: false,
+		apple_sdk_app_count: false,
+		google_sdk_installs_d30: false,
+		apple_sdk_installs_d30: false,
+		google_sdk_percentage: false,
+		apple_sdk_percentage: false,
+		google_sdk_latest_pct_market_share_change: true,
+		apple_sdk_latest_pct_market_share_change: true,
+		google_sdk_latest_apps_lost: false,
+		apple_sdk_latest_apps_lost: false,
+		google_api_call_app_count: false,
+		google_app_ads_direct_app_count: false,
+		apple_app_ads_direct_app_count: false,
+		google_app_ads_direct_installs_d30: false,
+		apple_app_ads_direct_installs_d30: false,
+		google_app_ads_direct_percentage: false,
+		apple_app_ads_direct_percentage: false,
+		google_app_ads_direct_latest_pct_market_share_change: true,
+		apple_app_ads_direct_latest_pct_market_share_change: true,
+		google_app_ads_direct_latest_apps_lost: false,
+		apple_app_ads_direct_latest_apps_lost: false
+	});
 	const [sorting, onSortingChange] = createTableState<SortingState>([]);
 	const [columnFilters, onColumnFiltersChange] = createTableState<ColumnFiltersState>([]);
 	const [globalFilter, onGlobalFilterChange] = createTableState('');
@@ -57,20 +79,8 @@
 	});
 	let showsSdkColumns = $derived(resolvedViewMode !== 'api');
 	let showsApiColumns = $derived(resolvedViewMode === 'api');
-	let showsAdsColumns = $derived(resolvedViewMode === 'ads');
+	let showsAdsColumns = $derived(resolvedViewMode === 'ads' || resolvedViewMode === 'both');
 	let isAdsPage = $derived(resolvedViewMode === 'ads');
-
-	// Metric state — declared after view-mode derivations since dataMetric depends on showsApiColumns
-	let rawMetric = $state<MetricValue>('market_share');
-	let dataMetric = $derived(rawMetric);
-
-	$effect(() => {
-		// App-publishers view only supports app_count and installs metrics,
-		// so snap any unsupported selection (e.g. market_share) back to app_count.
-		if (showsApiColumns && rawMetric !== 'app_count' && rawMetric !== 'installs') {
-			rawMetric = 'app_count';
-		}
-	});
 
 	// ===== Dynamic column definitions =====
 	let columns = $derived.by<ReturnType<typeof genericColumns>>(() => {
@@ -91,27 +101,39 @@
 		}
 
 		const sdkMetricColDefs = [
-			{ title: 'SDK Android', accessorKey: 'google_sdk_app_count', isSortable: true },
-			{ title: 'SDK iOS', accessorKey: 'apple_sdk_app_count', isSortable: true },
-			{ title: 'SDK Android', accessorKey: 'google_sdk_installs_d30', isSortable: true },
-			{ title: 'SDK iOS', accessorKey: 'apple_sdk_installs_d30', isSortable: true },
-			{ title: 'SDK Android', accessorKey: 'google_sdk_percentage', isSortable: true },
-			{ title: 'SDK iOS', accessorKey: 'apple_sdk_percentage', isSortable: true },
+			{ title: 'SDK Android Apps', accessorKey: 'google_sdk_app_count', isSortable: true },
+			{ title: 'SDK iOS Apps', accessorKey: 'apple_sdk_app_count', isSortable: true },
 			{
-				title: 'SDK Android',
+				title: 'SDK Android Installs (30d)',
+				accessorKey: 'google_sdk_installs_d30',
+				isSortable: true
+			},
+			{ title: 'SDK iOS Installs (30d)', accessorKey: 'apple_sdk_installs_d30', isSortable: true },
+			{ title: 'SDK Android Market Share', accessorKey: 'google_sdk_percentage', isSortable: true },
+			{ title: 'SDK iOS Market Share', accessorKey: 'apple_sdk_percentage', isSortable: true },
+			{
+				title: 'SDK Android Q/Q Market Share Change',
 				accessorKey: 'google_sdk_latest_pct_market_share_change',
 				isSortable: true
 			},
 			{
-				title: 'SDK iOS',
+				title: 'SDK iOS Q/Q Market Share Change',
 				accessorKey: 'apple_sdk_latest_pct_market_share_change',
 				isSortable: true
 			},
-			{ title: 'SDK Android', accessorKey: 'google_sdk_latest_apps_lost', isSortable: true },
-			{ title: 'SDK iOS', accessorKey: 'apple_sdk_latest_apps_lost', isSortable: true }
+			{
+				title: 'SDK Android Q/Q Apps Lost',
+				accessorKey: 'google_sdk_latest_apps_lost',
+				isSortable: true
+			},
+			{
+				title: 'SDK iOS Q/Q Apps Lost',
+				accessorKey: 'apple_sdk_latest_apps_lost',
+				isSortable: true
+			}
 		];
 		const apiColDefs = [
-			{ title: 'API Android', accessorKey: 'google_api_call_app_count', isSortable: true }
+			{ title: 'API Android Apps', accessorKey: 'google_api_call_app_count', isSortable: true }
 		];
 
 		const rawCols = [
@@ -125,12 +147,12 @@
 			...apiColDefs,
 			// Ad counts
 			{
-				title: 'App-Ads.txt Direct Android',
+				title: 'App-Ads.txt Direct Android Apps',
 				accessorKey: 'google_app_ads_direct_app_count',
 				isSortable: true
 			},
 			{
-				title: 'App-Ads.txt Direct iOS',
+				title: 'App-Ads.txt Direct iOS Apps',
 				accessorKey: 'apple_app_ads_direct_app_count',
 				isSortable: true
 			},
@@ -140,22 +162,22 @@
 				(c) => c.accessorKey.includes('installs_d30') || c.accessorKey.includes('percentage')
 			),
 			{
-				title: 'App-Ads.txt Direct Android',
+				title: 'App-Ads.txt Direct Android Installs (30d)',
 				accessorKey: 'google_app_ads_direct_installs_d30',
 				isSortable: true
 			},
 			{
-				title: 'App-Ads.txt Direct iOS',
+				title: 'App-Ads.txt Direct iOS Installs (30d)',
 				accessorKey: 'apple_app_ads_direct_installs_d30',
 				isSortable: true
 			},
 			{
-				title: 'App-Ads.txt Direct Android',
+				title: 'App-Ads.txt Direct Android Market Share',
 				accessorKey: 'google_app_ads_direct_percentage',
 				isSortable: true
 			},
 			{
-				title: 'App-Ads.txt Direct iOS',
+				title: 'App-Ads.txt Direct iOS Market Share',
 				accessorKey: 'apple_app_ads_direct_percentage',
 				isSortable: true
 			},
@@ -166,22 +188,22 @@
 					c.accessorKey.includes('latest_apps_lost')
 			),
 			{
-				title: 'App-Ads.txt Direct Android',
+				title: 'App-Ads.txt Direct Android Q/Q Market Share Change',
 				accessorKey: 'google_app_ads_direct_latest_pct_market_share_change',
 				isSortable: true
 			},
 			{
-				title: 'App-Ads.txt Direct iOS',
+				title: 'App-Ads.txt Direct iOS Q/Q Market Share Change',
 				accessorKey: 'apple_app_ads_direct_latest_pct_market_share_change',
 				isSortable: true
 			},
 			{
-				title: 'App-Ads.txt Direct Android',
+				title: 'App-Ads.txt Direct Android Q/Q Apps Lost',
 				accessorKey: 'google_app_ads_direct_latest_apps_lost',
 				isSortable: true
 			},
 			{
-				title: 'App-Ads.txt Direct iOS',
+				title: 'App-Ads.txt Direct iOS Q/Q Apps Lost',
 				accessorKey: 'apple_app_ads_direct_latest_apps_lost',
 				isSortable: true
 			}
@@ -211,9 +233,6 @@
 			return columns;
 		},
 		state: {
-			get pagination() {
-				return pagination();
-			},
 			get sorting() {
 				return sorting();
 			},
@@ -227,8 +246,11 @@
 		globalFilterFn,
 		onSortingChange,
 		onColumnFiltersChange,
-		onPaginationChange,
-		onGlobalFilterChange
+		onGlobalFilterChange,
+		atoms: {
+			pagination: paginationAtom,
+			columnVisibility: columnVisibilityAtom
+		}
 	});
 
 	function formatPercentage(num: number) {
@@ -276,85 +298,17 @@
 		}
 		return formatNumber(num);
 	}
-	let hasCategorySelected = $derived(Boolean(page.params.category));
-	const QOQ_METRICS: MetricValue[] = ['qoq_share', 'apps_lost'];
-	const BASE_METRIC_OPTIONS: MetricOption[] = [
-		{ value: 'installs', label: 'Installs (Last 30 Days)' },
-		{ value: 'market_share', label: 'Market Share' },
-		{ value: 'app_count', label: 'App Counts' }
-	];
-	const QOQ_METRIC_OPTIONS: MetricOption[] = [
-		{ value: 'qoq_share', label: 'Q/Q Market Share Change %' },
-		{ value: 'apps_lost', label: 'Q/Q Apps Lost' }
-	];
-	let metricOptions = $derived(
-		hasCategorySelected
-			? BASE_METRIC_OPTIONS
-			: [
-					BASE_METRIC_OPTIONS[0],
-					BASE_METRIC_OPTIONS[1],
-					...QOQ_METRIC_OPTIONS,
-					BASE_METRIC_OPTIONS[2]
-				]
-	);
-
-	$effect(() => {
-		if (hasCategorySelected && QOQ_METRICS.includes(rawMetric)) {
-			rawMetric = 'installs';
-		}
-	});
-
 	function shouldShowHeader(header: any) {
-		if (header.column.id === 'percent_open_source') return true;
-		if (header.column.id === 'country') return true;
-		if (header.column.id === 'company_name') return true;
-		if (header.column.id === 'parent_company_name') return true;
-		if (header.column.id === 'total_app_count') return dataMetric === 'app_count';
-
-		let headerIsAds = header.column.id.includes('direct');
-		if (headerIsAds && !isAdsPage) return false;
-
-		// On the ads page, also show the API Android column (only in app_count mode)
-		if (isAdsPage && header.column.id === 'google_api_call_app_count')
-			return dataMetric === 'app_count';
-
-		let headerHasInstall = header.column.id.includes('install');
-		let headerHasAppCount =
-			header.column.id.endsWith('_app_count') && header.column.id !== 'total_app_count';
-		let headerHasPercent = header.column.id.includes('percentage');
-		let headerHasShareChange = header.column.id.includes('latest_pct_market_share_change');
-		let headerHasAppsLost = header.column.id.includes('latest_apps_lost');
+		if (!header.column.getIsVisible()) return false;
+		if (header.column.id.includes('direct')) return showsAdsColumns;
 		if (showsApiColumns) {
-			// Basic columns always visible
-			let alwaysCols = ['percent_open_source', 'country', 'company_name', 'parent_company_name'];
-			if (alwaysCols.includes(header.column.id)) return true;
-			// App count columns when metric is app_count
-			if (dataMetric === 'app_count') {
-				let appCountCols = ['total_app_count', 'google_app_count', 'apple_app_count'];
-				return appCountCols.includes(header.column.id);
-			}
-			// Install columns when metric is installs
-			if (dataMetric === 'installs') {
-				let installCols = ['installs_d30', 'google_installs_d30', 'apple_installs_d30'];
-				return installCols.includes(header.column.id);
-			}
-			return false;
+			return (
+				!header.column.id.startsWith('google_sdk_') &&
+				!header.column.id.startsWith('apple_sdk_') &&
+				!header.column.id.startsWith('google_api_')
+			);
 		}
-
-		if (dataMetric === 'app_count' && headerHasAppCount) {
-			return true;
-		}
-
-		if (dataMetric === 'installs' && headerHasInstall) {
-			return true;
-		} else if (dataMetric === 'market_share' && headerHasPercent) {
-			return true;
-		} else if (dataMetric === 'qoq_share' && headerHasShareChange) {
-			return true;
-		} else if (dataMetric === 'apps_lost' && headerHasAppsLost) {
-			return true;
-		}
-		return false;
+		return true;
 	}
 
 	function getCompanyNameColumnWidth(header: any) {
@@ -379,6 +333,59 @@
 			company.parent_company_domain && company.parent_company_domain !== company.company_domain
 		);
 	}
+
+	function columnLabel(columnId: string) {
+		return columnId
+			.replace(/^(google|apple)_/, '$1 ')
+			.replace(/_d30$/, ' (30d)')
+			.replace(/_app_count$/, ' apps')
+			.replace(/_percentage$/, ' market share')
+			.replace(/_latest_pct_market_share_change$/, ' Q/Q share change')
+			.replace(/_latest_apps_lost$/, ' Q/Q apps lost')
+			.replace(/_/g, ' ')
+			.replace(/\b\w/g, (letter) => letter.toUpperCase())
+			.replace(/\bSdk\b/g, 'SDK')
+			.replace(/\bApi\b/g, 'API')
+			.replace(/App Ads Txt/g, 'App-Ads.txt');
+	}
+
+	const CORE_COLUMN_IDS = new Set([
+		'percent_open_source',
+		'country',
+		'company_name',
+		'parent_company_name'
+	]);
+
+	const COLUMN_GROUPS = [
+		{ label: 'App Counts', matches: (id: string) => id.endsWith('_app_count') },
+		{ label: 'Installs (Last 30 Days)', matches: (id: string) => id.includes('installs_d30') },
+		{ label: 'Market Share', matches: (id: string) => id.includes('percentage') },
+		{
+			label: 'Q/Q Market Share Change',
+			matches: (id: string) => id.includes('latest_pct_market_share_change')
+		},
+		{ label: 'Q/Q Apps Lost', matches: (id: string) => id.includes('latest_apps_lost') }
+	];
+
+	function getColumnGroup(columnId: string) {
+		return COLUMN_GROUPS.find((group) => group.matches(columnId))?.label ?? 'Other';
+	}
+
+	function isColumnVisible(columnId: string) {
+		return table.getColumn(columnId)?.getIsVisible() ?? true;
+	}
+
+	function isColumnAvailable(columnId: string) {
+		if (columnId.includes('direct')) return showsAdsColumns;
+		if (showsApiColumns) {
+			return (
+				!columnId.startsWith('google_sdk_') &&
+				!columnId.startsWith('apple_sdk_') &&
+				!columnId.startsWith('google_api_')
+			);
+		}
+		return true;
+	}
 </script>
 
 {#if showLimitNote}
@@ -388,7 +395,7 @@
 	</p>
 {/if}
 <div class="table-container p-0 md:p-2">
-	<div class="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-8 m-2">
+	<div class="grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-8 m-2">
 		<div class="preset-outlined-surface-100-900 flex items-center flex-col p-0 md:p-2">
 			<input
 				placeholder="Filter top companies..."
@@ -400,22 +407,41 @@
 				class="bg-surface-50-950 max-w-sm p-1"
 			/>
 		</div>
-		<div class="flex flex-col justify-center gap-1 p-2 md:items-start">
-			<label for="metric-select" class="px-1 text-sm md:text-base">Metric</label>
-			<select
-				id="metric-select"
-				class="select select-sm preset-outlined-primary-100-900 w-full max-w-sm p-1"
-				bind:value={rawMetric}
-			>
-				{#if showsApiColumns}
-					<option value="app_count">App Count</option>
-					<option value="installs">Installs (Last 30 Days)</option>
-				{:else}
-					{#each metricOptions as option (option.value)}
-						<option value={option.value}>{option.label}</option>
-					{/each}
-				{/if}
-			</select>
+		<div class="flex items-center p-2">
+			<Popover>
+				<Popover.Trigger>
+					<span class="btn preset-outlined-primary-100-900" role="button" tabindex="0">
+						Show/Hide Columns
+					</span>
+				</Popover.Trigger>
+				<Portal>
+					<Popover.Positioner>
+						<Popover.Content>
+							<form class="space-y-3 bg-surface-100-900 p-4 max-w-[360px]">
+								{#each COLUMN_GROUPS as group (group.label)}
+									<div class="space-y-1">
+										<p class="text-xs font-semibold text-surface-500-400">{group.label}</p>
+										{#each table
+											.getAllLeafColumns()
+											.filter((column) => !CORE_COLUMN_IDS.has(column.id) && isColumnAvailable(column.id) && group.matches(column.id)) as column (column.id)}
+											<label class="label flex items-center space-x-2">
+												<input
+													type="checkbox"
+													checked={column.getIsVisible()}
+													disabled={!column.getCanHide()}
+													onchange={(event) => column.toggleVisibility(event.currentTarget.checked)}
+													class="checkbox"
+												/>
+												<span class="text-xs">{columnLabel(column.id)}</span>
+											</label>
+										{/each}
+									</div>
+								{/each}
+							</form>
+						</Popover.Content>
+					</Popover.Positioner>
+				</Portal>
+			</Popover>
 		</div>
 	</div>
 	<div class="overflow-x-auto pl-0">
@@ -438,7 +464,7 @@
 			<tbody>
 				{#each table.getRowModel().rows as row (row.id)}
 					<tr class="px-0">
-						<td class="text-center">
+						<td class="text-center" class:hidden={!isColumnVisible('percent_open_source')}>
 							{#if row.original.percent_open_source > 0.75}
 								<div
 									class="flex items-center justify-center gap-1 text-success-900-100"
@@ -472,7 +498,7 @@
 								</div>
 							{/if}
 						</td>
-						<td class="text-center">
+						<td class="text-center" class:hidden={!isColumnVisible('country')}>
 							{#if row.original.country}
 								<span
 									class="text-xs md:text-sm whitespace-nowrap inline-flex items-center gap-1.5"
@@ -482,7 +508,7 @@
 								</span>
 							{/if}
 						</td>
-						<td class="w-0">
+						<td class="w-0" class:hidden={!isColumnVisible('company_name')}>
 							<a
 								href="/companies/{row.original.company_domain}"
 								style="cursor: pointer;"
@@ -512,7 +538,7 @@
 								</div>
 							</a>
 						</td>
-						<td class="w-0">
+						<td class="w-0" class:hidden={!isColumnVisible('parent_company_name')}>
 							{#if hasDistinctParentCompany(row.original)}
 								<a
 									href="/companies/{row.original.parent_company_domain}"
@@ -546,71 +572,80 @@
 								<span class="text-xs text-surface-500-400">-</span>
 							{/if}
 						</td>
-						{#if showsApiColumns && dataMetric == 'app_count'}
-							<td class="table-cell-fit">
+						{#if showsApiColumns}
+							<td class="table-cell-fit" class:hidden={!isColumnVisible('total_app_count')}>
 								<p class="text-xs md:text-sm">
 									{formatOptionalNumber(row.original.total_app_count)}
 								</p>
 							</td>
-							<td class="table-cell-fit">
+							<td class="table-cell-fit" class:hidden={!isColumnVisible('google_app_count')}>
 								<p class="text-xs md:text-sm">
 									{formatOptionalNumber(row.original.google_app_count)}
 								</p>
 							</td>
-							<td class="table-cell-fit">
+							<td class="table-cell-fit" class:hidden={!isColumnVisible('apple_app_count')}>
 								<p class="text-xs md:text-sm">
 									{formatOptionalNumber(row.original.apple_app_count)}
 								</p>
 							</td>
 						{/if}
-						{#if showsApiColumns && dataMetric == 'installs'}
-							<td class="table-cell-fit">
+						{#if showsApiColumns}
+							<td class="table-cell-fit" class:hidden={!isColumnVisible('installs_d30')}>
 								<p class="text-xs md:text-sm">{formatNumber(row.original.installs_d30 ?? 0)}</p>
 							</td>
-							<td class="table-cell-fit">
+							<td class="table-cell-fit" class:hidden={!isColumnVisible('google_installs_d30')}>
 								<p class="text-xs md:text-sm">
 									{formatNumber(row.original.google_installs_d30 ?? 0)}
 								</p>
 							</td>
-							<td class="table-cell-fit">
+							<td class="table-cell-fit" class:hidden={!isColumnVisible('apple_installs_d30')}>
 								<p class="text-xs md:text-sm">
 									{formatNumber(row.original.apple_installs_d30 ?? 0)}
 								</p>
 							</td>
 						{/if}
 
-						{#if !showsApiColumns && dataMetric == 'app_count'}
-							<td class="table-cell-fit">
+						{#if !showsApiColumns}
+							<td class="table-cell-fit" class:hidden={!isColumnVisible('total_app_count')}>
 								<p class="text-xs md:text-sm">
 									{formatOptionalNumber(row.original.total_app_count)}
 								</p>
 							</td>
 							{#if showsSdkColumns}
-								<td class="table-cell-fit">
+								<td class="table-cell-fit" class:hidden={!isColumnVisible('google_sdk_app_count')}>
 									<p class="text-xs md:text-sm">
 										{formatOptionalNumber(row.original.google_sdk_app_count)}
 									</p>
 								</td>
-								<td class="table-cell-fit">
+								<td class="table-cell-fit" class:hidden={!isColumnVisible('apple_sdk_app_count')}>
 									<p class="text-xs md:text-sm">
 										{formatOptionalNumber(row.original.apple_sdk_app_count)}
 									</p>
 								</td>
 							{/if}
 							{#if showsSdkColumns || isAdsPage}
-								<td class="table-cell-fit">
+								<td
+									class="table-cell-fit"
+									class:hidden={!isColumnVisible('google_api_call_app_count')}
+								>
 									<p class="text-xs md:text-sm">
 										{formatOptionalNumber(row.original.google_api_call_app_count)}
 									</p>
 								</td>
 							{/if}
 							{#if showsAdsColumns}
-								<td class="table-cell-fit">
+								<td
+									class="table-cell-fit"
+									class:hidden={!isColumnVisible('google_app_ads_direct_app_count')}
+								>
 									<p class="text-xs md:text-sm">
 										{formatOptionalNumber(row.original.google_app_ads_direct_app_count)}
 									</p>
 								</td>
-								<td class="table-cell-fit">
+								<td
+									class="table-cell-fit"
+									class:hidden={!isColumnVisible('apple_app_ads_direct_app_count')}
+								>
 									<p class="text-xs md:text-sm">
 										{formatOptionalNumber(row.original.apple_app_ads_direct_app_count)}
 									</p>
@@ -618,27 +653,39 @@
 							{/if}
 						{/if}
 
-						{#if !showsApiColumns && dataMetric == 'installs'}
+						{#if !showsApiColumns}
 							{#if showsSdkColumns}
-								<td class="table-cell-fit">
+								<td
+									class="table-cell-fit"
+									class:hidden={!isColumnVisible('google_sdk_installs_d30')}
+								>
 									<p class="text-xs md:text-sm">
 										{formatNumber(row.original.google_sdk_installs_d30)}
 									</p>
 								</td>
-								<td class="table-cell-fit">
+								<td
+									class="table-cell-fit"
+									class:hidden={!isColumnVisible('apple_sdk_installs_d30')}
+								>
 									<p class="text-xs md:text-sm">
 										{formatNumber(row.original.apple_sdk_installs_d30)}
 									</p>
 								</td>
 							{/if}
 							{#if showsAdsColumns}
-								<td class="table-cell-fit">
+								<td
+									class="table-cell-fit"
+									class:hidden={!isColumnVisible('google_app_ads_direct_installs_d30')}
+								>
 									<p class="text-xs md:text-sm">
 										{formatNumber(row.original.google_app_ads_direct_installs_d30)}
 									</p>
 								</td>
 
-								<td class="table-cell-fit">
+								<td
+									class="table-cell-fit"
+									class:hidden={!isColumnVisible('apple_app_ads_direct_installs_d30')}
+								>
 									<p class="text-xs md:text-sm">
 										{formatNumber(row.original.apple_app_ads_direct_installs_d30)}
 									</p>
@@ -646,15 +693,15 @@
 							{/if}
 						{/if}
 
-						{#if !showsApiColumns && dataMetric == 'market_share'}
+						{#if !showsApiColumns}
 							{#if showsSdkColumns}
-								<td class="table-cell-fit">
+								<td class="table-cell-fit" class:hidden={!isColumnVisible('google_sdk_percentage')}>
 									<p class="text-xs md:text-sm">
 										{formatPercentage(row.original.google_sdk_percentage)}
 									</p>
 								</td>
 
-								<td class="table-cell-fit">
+								<td class="table-cell-fit" class:hidden={!isColumnVisible('apple_sdk_percentage')}>
 									<p class="text-xs md:text-sm">
 										{formatPercentage(row.original.apple_sdk_percentage)}
 									</p>
@@ -662,13 +709,19 @@
 							{/if}
 
 							{#if showsAdsColumns}
-								<td class="table-cell-fit">
+								<td
+									class="table-cell-fit"
+									class:hidden={!isColumnVisible('google_app_ads_direct_percentage')}
+								>
 									<p class="text-xs md:text-sm">
 										{formatPercentage(row.original.google_app_ads_direct_percentage)}
 									</p>
 								</td>
 
-								<td class="table-cell-fit">
+								<td
+									class="table-cell-fit"
+									class:hidden={!isColumnVisible('apple_app_ads_direct_percentage')}
+								>
 									<p class="text-xs md:text-sm">
 										{formatPercentage(row.original.apple_app_ads_direct_percentage)}
 									</p>
@@ -676,9 +729,12 @@
 							{/if}
 						{/if}
 
-						{#if !showsApiColumns && dataMetric == 'qoq_share'}
+						{#if !showsApiColumns}
 							{#if showsSdkColumns}
-								<td class="table-cell-fit">
+								<td
+									class="table-cell-fit"
+									class:hidden={!isColumnVisible('google_sdk_latest_pct_market_share_change')}
+								>
 									<p class="text-xs md:text-sm">
 										{formatQoqShareChangePct(
 											row.original.google_sdk_latest_pct_market_share_change
@@ -686,7 +742,10 @@
 									</p>
 								</td>
 
-								<td class="table-cell-fit">
+								<td
+									class="table-cell-fit"
+									class:hidden={!isColumnVisible('apple_sdk_latest_pct_market_share_change')}
+								>
 									<p class="text-xs md:text-sm">
 										{formatQoqShareChangePct(row.original.apple_sdk_latest_pct_market_share_change)}
 									</p>
@@ -694,7 +753,12 @@
 							{/if}
 
 							{#if showsAdsColumns}
-								<td class="table-cell-fit">
+								<td
+									class="table-cell-fit"
+									class:hidden={!isColumnVisible(
+										'google_app_ads_direct_latest_pct_market_share_change'
+									)}
+								>
 									<p class="text-xs md:text-sm">
 										{formatQoqShareChangePct(
 											row.original.google_app_ads_direct_latest_pct_market_share_change
@@ -702,7 +766,12 @@
 									</p>
 								</td>
 
-								<td class="table-cell-fit">
+								<td
+									class="table-cell-fit"
+									class:hidden={!isColumnVisible(
+										'apple_app_ads_direct_latest_pct_market_share_change'
+									)}
+								>
 									<p class="text-xs md:text-sm">
 										{formatQoqShareChangePct(
 											row.original.apple_app_ads_direct_latest_pct_market_share_change
@@ -712,15 +781,21 @@
 							{/if}
 						{/if}
 
-						{#if !showsApiColumns && dataMetric == 'apps_lost'}
+						{#if !showsApiColumns}
 							{#if showsSdkColumns}
-								<td class="table-cell-fit">
+								<td
+									class="table-cell-fit"
+									class:hidden={!isColumnVisible('google_sdk_latest_apps_lost')}
+								>
 									<p class="text-xs md:text-sm">
 										{formatOptionalNumber(row.original.google_sdk_latest_apps_lost)}
 									</p>
 								</td>
 
-								<td class="table-cell-fit">
+								<td
+									class="table-cell-fit"
+									class:hidden={!isColumnVisible('apple_sdk_latest_apps_lost')}
+								>
 									<p class="text-xs md:text-sm">
 										{formatOptionalNumber(row.original.apple_sdk_latest_apps_lost)}
 									</p>
@@ -728,13 +803,19 @@
 							{/if}
 
 							{#if showsAdsColumns}
-								<td class="table-cell-fit">
+								<td
+									class="table-cell-fit"
+									class:hidden={!isColumnVisible('google_app_ads_direct_latest_apps_lost')}
+								>
 									<p class="text-xs md:text-sm">
 										{formatOptionalNumber(row.original.google_app_ads_direct_latest_apps_lost)}
 									</p>
 								</td>
 
-								<td class="table-cell-fit">
+								<td
+									class="table-cell-fit"
+									class:hidden={!isColumnVisible('apple_app_ads_direct_latest_apps_lost')}
+								>
 									<p class="text-xs md:text-sm">
 										{formatOptionalNumber(row.original.apple_app_ads_direct_latest_apps_lost)}
 									</p>

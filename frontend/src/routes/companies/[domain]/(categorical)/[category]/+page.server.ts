@@ -21,12 +21,18 @@ export const load: PageServerLoad = async ({ fetch, parent, params, locals }) =>
 		'Company Top Apps'
 	);
 
+	const companyCountryApps = await api.get(
+		`/companies/${companyDomain}/countries?category=${category}`,
+		'Company Country Apps'
+	);
+
 	const { companyDetails, companyTree } = await parent();
 
 	return {
 		companyDetails,
 		companyTree,
 		companyCategoryApps,
+		companyCountryApps,
 		hasB2BSdkAccess
 	};
 };

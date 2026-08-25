@@ -3,6 +3,7 @@
 	import { page } from '$app/state';
 
 	import CompanyCategoryControls from '$lib/CompanyCategoryControls.svelte';
+	import CompanyCountryAppPie from '$lib/CompanyCountryAppPie.svelte';
 	import TotalsBox from '$lib/TotalsBox.svelte';
 	import CompaniesLayout from '$lib/CompaniesLayout.svelte';
 	import WhiteCard from '$lib/WhiteCard.svelte';
@@ -144,6 +145,47 @@
 		{/if}
 	{/snippet}
 </CompaniesLayout>
+
+{#if data.companyCountryApps?.android?.length || data.companyCountryApps?.ios?.length}
+	<section class="mb-6">
+		<h3 class="text-xl font-semibold mb-2">Apps by Country</h3>
+		<p class="text-sm text-gray-600 mb-3">
+			Where {companyName}'s apps in this category are distributed by country.
+		</p>
+		<div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+			<WhiteCard>
+				{#snippet title()}
+					<span>{companyName}'s Android Apps by Country</span>
+				{/snippet}
+				<div>
+					{#if data.companyCountryApps?.android?.length}
+						<CompanyCountryAppPie
+							plotData={data.companyCountryApps.android}
+							storeLabel="Google Play"
+						/>
+					{:else}
+						<p class="text-center text-sm text-gray-600">No Android data.</p>
+					{/if}
+				</div>
+			</WhiteCard>
+			<WhiteCard>
+				{#snippet title()}
+					<span>{companyName}'s iOS Apps by Country</span>
+				{/snippet}
+				<div>
+					{#if data.companyCountryApps?.ios?.length}
+						<CompanyCountryAppPie
+							plotData={data.companyCountryApps.ios}
+							storeLabel="Apple App Store"
+						/>
+					{:else}
+						<p class="text-center text-sm text-gray-600">No iOS data.</p>
+					{/if}
+				</div>
+			</WhiteCard>
+		</div>
+	</section>
+{/if}
 
 <CompanyTableGrid
 	tableData={data.companyCategoryApps}

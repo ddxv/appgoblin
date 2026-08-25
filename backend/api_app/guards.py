@@ -41,6 +41,41 @@ LEGACY_TIER_LIMITS: dict[str, TierLimits] = {
 
 TIER_LIMITS: dict[str, TierLimits] = {**PUBLIC_TIER_LIMITS, **LEGACY_TIER_LIMITS}
 
+# Stripe/provider price IDs are configured by the application at startup.
+# Direct tier labels are also accepted for normalized subscription rows.
+PRICE_ID_TO_TIER: dict[str, str] = {}
+
+
+def configure_tier_mapping(price_map: dict[str, str]) -> None:
+    """Register the mapping from provider price IDs to public tier labels."""
+    PRICE_ID_TO_TIER.update(price_map)
+
+
+def validate_tier_mapping_config(price_map: dict[str, str] | None) -> None:
+    """Validate the configured paid-tier price mapping."""
+    if price_map is None:
+        raise ValueError("Missing required [tier_prices] configuration")
+
+    required_tiers = {"b2b_sdk", "b2b_appads", "b2b_premium"}
+    configured_tiers = set(price_map.values())
+    missing = required_tiers - configured_tiers
+    if missing:
+        raise ValueError(f"Missing required tier mapping: {sorted(missing)}")
+
+    unknown = configured_tiers - set(TIER_LIMITS)
+    if unknown:
+        raise ValueError(f"Unknown tier label: {sorted(unknown)}")
+
+
+def _resolve_tier(price_or_tier: str | None) -> str:
+    """Resolve a normalized tier label or provider price ID to a tier."""
+    if not price_or_tier:
+        return "free"
+    if price_or_tier in TIER_LIMITS:
+        return price_or_tier
+    mapped_tier = PRICE_ID_TO_TIER.get(price_or_tier)
+    return mapped_tier if mapped_tier in TIER_LIMITS else "free"
+
 
 def get_tier_limits(tier: str) -> TierLimits:
     """Get limits for a tier, defaulting to free."""
@@ -195,7 +230,8 @@ def _query_key(engine: Engine, key_hash: str) -> _CachedKey | None:
     """
     query = text("""
         SELECT ak.user_id,
-               COALESCE(t.slug, 'free') AS tier
+               tp.provider_price_id AS price_id,
+               t.slug AS tier
         FROM public.api_keys ak
         JOIN public.users u ON u.id = ak.user_id
         LEFT JOIN LATERAL (
@@ -222,7 +258,12 @@ def _query_key(engine: Engine, key_hash: str) -> _CachedKey | None:
     if row is None:
         return None
 
-    tier = row.tier or "free"
+    # Prefer the normalized tier label. Fall back to the provider price ID for
+    # older rows or deployments whose tier join has no matching record.
+    tier_value = getattr(row, "tier", None)
+    if not isinstance(tier_value, str):
+        tier_value = getattr(row, "price_id", None)
+    tier = _resolve_tier(tier_value)
 
     return _CachedKey(
         user_id=row.user_id,

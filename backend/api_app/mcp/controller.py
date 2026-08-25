@@ -1,9 +1,10 @@
-"""ASGI middleware + lifecycle wiring for the FastMCP server inside Litestar.
+"""ASGI middleware + lifecycle wiring for the MCP server inside Litestar.
 
 Architecture
 ------------
-FastMCP generates a Starlette-compatible ASGI app (``mcp_server.http_app()``).
-Because Litestar uses its own ASGI lifecycle, we wrap the FastMCP app in a thin
+MCPServer generates a Starlette-compatible ASGI app
+(``mcp_server.streamable_http_app()``).
+Because Litestar uses its own ASGI lifecycle, we wrap the MCP app in a thin
 middleware that handles **authentication** and **rate limiting** at the ASGI
 layer *before* requests reach any tool handler.
 
@@ -171,7 +172,7 @@ class _RateLimitError(Exception):
 class AuthenticatedMCPMiddleware:
     """ASGI middleware that authenticates + rate-limits every MCP request.
 
-    Wraps the FastMCP HTTP app.  On success the authenticated user context
+    Wraps the MCP HTTP app.  On success the authenticated user context
     is injected into ``scope["user"]`` so that tool handlers can retrieve it
     via ``ctx.request_context.request.scope.get("user")``.
     """
@@ -234,7 +235,7 @@ class AuthenticatedMCPMiddleware:
         # --- Inject user into scope ---
         scope["user"] = user_ctx
 
-        # --- Hand off to FastMCP engine ---
+        # --- Hand off to MCP engine ---
         await self.app(scope, receive, send)
 
 
@@ -242,5 +243,5 @@ class AuthenticatedMCPMiddleware:
 # Pre-wired ASGI app (imported by app.py)
 # ---------------------------------------------------------------------------
 
-fastmcp_asgi_app = mcp_server.http_app(path="/")
-protected_mcp_app = AuthenticatedMCPMiddleware(fastmcp_asgi_app)
+mcp_asgi_app = mcp_server.streamable_http_app(streamable_http_path="/")
+protected_mcp_app = AuthenticatedMCPMiddleware(mcp_asgi_app)

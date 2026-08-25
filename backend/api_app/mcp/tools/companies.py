@@ -6,9 +6,9 @@ receive a descriptive access-denied message rather than data.
 
 from __future__ import annotations
 
-# `Context` must be importable at runtime in FastMCP 3.x — the framework
+# `Context` must be importable at runtime — the framework
 # uses it for dependency injection into tool functions, not just typing.
-from fastmcp import Context  # noqa: TC002
+from mcp.server.mcpserver import Context  # noqa: TC002
 
 from api_app.controllers.companies import get_overviews
 from api_app.controllers.public.v1.companies import (
@@ -46,9 +46,7 @@ async def list_companies(ctx: Context) -> str:
 
 
 @mcp_server.tool()
-async def get_company_overview(  # noqa: D417
-    company_domain: str, ctx: Context
-) -> str:
+async def get_company_overview(company_domain: str, ctx: Context) -> str:  # noqa: D417
     """Fetch comprehensive market metrics, trends, and data for a company domain.
 
     Parameters

@@ -5,7 +5,7 @@ import { error } from '@sveltejs/kit';
 import { STRIPE_SECRET_KEY, APPGOBLIN_ENDPOINT_URL } from '$env/static/private';
 
 export const stripe = new Stripe(STRIPE_SECRET_KEY, {
-	apiVersion: '2026-06-24.dahlia'
+	apiVersion: '2026-07-29.dahlia'
 });
 
 export type BillingCycle = 'monthly' | 'yearly';

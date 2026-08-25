@@ -362,10 +362,18 @@ class TopCompaniesShort:
 
     sdk_ios: PlatformCompanies
     sdk_android: PlatformCompanies
-    pub_ios: PlatformCompanies
-    pub_android: PlatformCompanies
-    adstxt_direct_ios: PlatformCompanies
-    adstxt_direct_android: PlatformCompanies
+    pub_ios: PlatformCompanies = field(
+        default_factory=lambda: PlatformCompanies(ios=[], android=[])
+    )
+    pub_android: PlatformCompanies = field(
+        default_factory=lambda: PlatformCompanies(ios=[], android=[])
+    )
+    adstxt_direct_ios: PlatformCompanies = field(
+        default_factory=lambda: PlatformCompanies(ios=[], android=[])
+    )
+    adstxt_direct_android: PlatformCompanies = field(
+        default_factory=lambda: PlatformCompanies(ios=[], android=[])
+    )
 
 
 @dataclass

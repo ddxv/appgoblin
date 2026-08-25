@@ -5,15 +5,15 @@
 	import ChevronsRight from '@lucide/svelte/icons/chevrons-right';
 
 	let { tableModel } = $props();
-	const buttonSize = 16;
-	const buttonPreset = 'btn btn-sm preset-outlined-primary-100-900 p-0';
+	const buttonSize = 18;
+	const buttonPreset = 'btn preset-outlined-primary-100-900 p-1';
 
 	let pageIndex = $derived(tableModel.atoms.pagination.get().pageIndex);
 	let pageSize = $derived(tableModel.atoms.pagination.get().pageSize);
 </script>
 
 <div class="flex items-center justify-between px-2">
-	<div class="flex items-center space-x-6 lg:space-x-8">
+	<div class="flex items-center space-x-2 md:space-x-6 lg:space-x-8">
 		<div class="flex items-center space-x-2">
 			<button
 				type="button"
@@ -57,11 +57,10 @@
 		</div>
 
 		<div class="flex items-center space-x-2">
-			<!-- <p class="text-sm font-medium">Rows</p> -->
 			<select
-				class="select select-sm preset-outlined-primary-100-900 p-1"
+				class="select preset-outlined-primary-100-900"
 				value={String(pageSize)}
-				onchange={(e) => tableModel.setPageSize(e.currentTarget.value)}
+				onchange={(e) => tableModel.setPageSize(Number(e.currentTarget.value))}
 			>
 				<option value="10">10 Rows</option>
 				<option value="25">25 Rows</option>

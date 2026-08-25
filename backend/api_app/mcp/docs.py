@@ -21,8 +21,8 @@ MCP_DOCS_SERVERS = [
 def _parameter_schema(tool: object) -> dict:
     """Extract a human-readable parameter listing from a tool's input schema."""
     params: dict[str, object] = {}
-    properties = tool.parameters.get("properties", {})
-    required = set(tool.parameters.get("required", []))
+    properties = tool.input_schema.get("properties", {})
+    required = set(tool.input_schema.get("required", []))
 
     for name, prop in properties.items():
         param_info: dict[str, object] = {
