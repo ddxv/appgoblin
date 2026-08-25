@@ -549,9 +549,9 @@ function buildSingleSurfacePanel(
 		.sort(
 			(a, b) =>
 				getShareWeightedImpact(b, surface, section.metricKey) -
-				getShareWeightedImpact(a, surface, section.metricKey) ||
+					getShareWeightedImpact(a, surface, section.metricKey) ||
 				(getSurfaceMetricValue(b, surface, section.metricKey) ?? Number.NEGATIVE_INFINITY) -
-				(getSurfaceMetricValue(a, surface, section.metricKey) ?? Number.NEGATIVE_INFINITY)
+					(getSurfaceMetricValue(a, surface, section.metricKey) ?? Number.NEGATIVE_INFINITY)
 		);
 
 	return {
@@ -601,7 +601,9 @@ function getRowsForSection(rows: EcosystemCompanyData[], section: MetricSectionC
 }
 
 function buildMetricSections(rows: EcosystemCompanyData[]): MetricSection[] {
-	return SECTION_CONFIGS.map((section) => buildMetricSection(getRowsForSection(rows, section), section));
+	return SECTION_CONFIGS.map((section) =>
+		buildMetricSection(getRowsForSection(rows, section), section)
+	);
 }
 
 function buildMetricSectionsByCompanyType(
@@ -611,7 +613,10 @@ function buildMetricSectionsByCompanyType(
 	const buildSectionsForCompanyType = (companyTypeRows: EcosystemCompanyData[]) =>
 		SECTION_CONFIGS.map((section) =>
 			buildMetricSection(
-				getRowsForSection(section.companyCategory || section.companyCategories ? rows : companyTypeRows, section),
+				getRowsForSection(
+					section.companyCategory || section.companyCategories ? rows : companyTypeRows,
+					section
+				),
 				section
 			)
 		);

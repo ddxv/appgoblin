@@ -17,7 +17,7 @@ export const GET: RequestHandler = async (event) => {
 		headers: {
 			'Content-Type': 'text/csv; charset=utf-8',
 			'Content-Disposition': 'attachment; filename="appgoblin-mobile-ecosystem-2026-q2.csv"',
-			'Link': '<https://creativecommons.org/licenses/by/4.0/>; rel="license", <https://appgoblin.info>; rel="canonical"',
+			Link: '<https://creativecommons.org/licenses/by/4.0/>; rel="license", <https://appgoblin.info>; rel="canonical"',
 			'X-Attribution': 'Data provided by AppGoblin (https://appgoblin.info).'
 		}
 	});
