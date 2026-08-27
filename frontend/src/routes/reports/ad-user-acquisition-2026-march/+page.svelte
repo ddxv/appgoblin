@@ -10,9 +10,9 @@
 
 	// Creative modal state
 	const creativeModal = createCreativeModal();
-	const reportUrl = 'https://appgoblin.info/reports/ad-user-acquisition-2026-february';
-	const reportPublishedDate = '2026-03-20';
-	const reportTemporalCoverage = '2026-02-01/2026-02-28';
+	const reportUrl = 'https://appgoblin.info/reports/ad-user-acquisition-2026-march';
+	const reportPublishedDate = '2026-04-20';
+	const reportTemporalCoverage = '2026-03-01/2026-03-31';
 
 	function formatPercent(num: number): string {
 		return num.toFixed(1) + '%';
@@ -195,7 +195,7 @@
 					{
 						'@type': 'Thing',
 						name: 'Creative Performance',
-						description: 'Most-distributed video creatives in February 2026'
+						description: 'Most-distributed video creatives in March 2026'
 					}
 				],
 				mentions: [
@@ -224,7 +224,7 @@
 			{
 				'@type': 'Dataset',
 				'@id': `${reportUrl}#dataset`,
-				name: 'February 2026 Mobile App Advertising Intelligence',
+				name: 'March 2026 Mobile App Advertising Intelligence',
 				description:
 					'Comprehensive dataset of app performance, ad networks, and creative strategies',
 				publisher: {
@@ -359,17 +359,17 @@
 		<p
 			class="text-base sm:text-lg md:text-xl max-w-3xl mx-auto text-surface-700 dark:text-surface-200"
 		>
-			The ad campaigns behind February's fastest growing mobile apps. AppGoblin breaks the best
+			The ad campaigns behind March's fastest growing mobile apps. AppGoblin breaks the best
 			creatives we tracked in app ad campaigns.
 		</p>
 	</div>
 
-	<!-- February Snapshot -->
+	<!-- March Snapshot -->
 	<div
 		class="mb-12 rounded-2xl border border-surface-200 dark:border-surface-700 bg-gradient-to-br from-surface-50 to-white dark:from-surface-900 dark:to-surface-800 p-5 md:p-7 shadow-md"
 	>
 		<div class="flex flex-col md:flex-row md:items-center md:justify-between gap-2 md:gap-3 mb-5">
-			<h2 class="text-2xl md:text-3xl font-bold">App advertising overview - Feb 2026</h2>
+			<h2 class="text-2xl md:text-3xl font-bold">App advertising overview - March 2026</h2>
 			<div class="text-sm md:text-base text-surface-600 dark:text-surface-300">
 				What stood out this month
 			</div>
@@ -379,7 +379,7 @@
 			<div class="space-y-4 xl:col-span-4">
 				<div class="rounded-xl bg-gradient-to-r from-pink-600 to-rose-500 text-white p-5">
 					<div class="text-xl md:text-2xl font-bold leading-tight">
-						Familiar advertisers from January and new apps with big growth spikes
+						Familiar advertisers and new apps with big growth spikes
 					</div>
 				</div>
 
@@ -443,7 +443,7 @@
 							<PopularCreativeCard
 								{creative}
 								{index}
-								titlePrefix="February Featured Creative"
+								titlePrefix="March Featured Creative"
 								badgeLabel="Popular Creative"
 								compact={true}
 								dense={true}
@@ -836,7 +836,7 @@
 		</div>
 		<div class={sectionDescriptionClass}>
 			<p>
-				February 2026 shows a mix of SDK inventory and programmatic distribution. In this sample,
+				March 2026 shows a mix of SDK inventory and programmatic distribution. In this sample,
 				<a href="/companies/{data.adNetworks[0].ad_network_domain}"
 					>{data.adNetworks[0].ad_network_name}</a
 				>
@@ -985,7 +985,7 @@
 			</p>
 			<p class={paragraphClass}>
 				This is a useful set of apps for understanding which advertisers were able to spread
-				creative across the widest publisher footprint in February 2026.
+				creative across the widest publisher footprint in March 2026.
 			</p>
 		</div>
 		<!-- Top Apps by Publisher Reach -->
@@ -1136,9 +1136,9 @@
 							High Growth Opportunities
 						</h3>
 						<p class="text-surface-700 dark:text-surface-300">
-							Apps that ran February 2026 campaigns averaged {data.summary.avgGrowth}%
-							week-over-week growth on this ranking, which reinforces how quickly paid acquisition
-							can change install trajectories when creative and distribution line up.
+							Apps that ran March 2026 campaigns averaged {data.summary.avgGrowth}% week-over-week
+							growth on this ranking, which reinforces how quickly paid acquisition can change
+							install trajectories when creative and distribution line up.
 						</p>
 					</div>
 				</div>
