@@ -294,12 +294,14 @@ export interface CompaniesOverviewEntries {
 }
 
 export interface CompaniesSearchEntries {
-	country_code: string;
+	company_domain: string;
 	company_name: string;
-	sdk_app_count: number;
-	api_call_app_count: number;
-	app_ads_direct_app_count: number;
-	app_ads_reseller_app_count: number;
+	logo_url: string | null;
+	has_api_signal: boolean;
+	has_sdk_signal: boolean;
+	has_publisher_signal: boolean;
+	has_app_ads_direct: boolean;
+	has_app_ads_reseller: boolean;
 }
 
 export interface CompaniesOverviewPlatforms {
@@ -621,15 +623,15 @@ export interface CompanyCategoryOverview {
 	domain_overview?: CompanyOverviewScope | null;
 	parent_overview?: CompanyOverviewScope | null;
 	mediation_adapters:
-	| {
-		adapter_string: string;
-		adapter_company_domain: string;
-		adapter_company_name: string;
-		adapter_logo_url: string;
-		app_category: string;
-		app_count: number;
-	}[]
-	| null;
+		| {
+				adapter_string: string;
+				adapter_company_domain: string;
+				adapter_company_name: string;
+				adapter_logo_url: string;
+				app_category: string;
+				app_count: number;
+		  }[]
+		| null;
 	categories: {
 		[key: string]: CategoryAppStats;
 	};

@@ -133,7 +133,9 @@
 				</Tabs.Content>
 
 				<Tabs.Content value="companies">
-					<CompaniesSearchTable data={data.companiesResults} />
+					<div class="md:px-32">
+						<CompaniesSearchTable data={data.companiesResults} />
+					</div>
 				</Tabs.Content>
 			</Tabs>
 		</div>
