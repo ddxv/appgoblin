@@ -101,7 +101,7 @@
 							<a
 								href="/companies/{row.original.company_domain}"
 								style="cursor: pointer;"
-								class=" text-xs md:text-sm"
+								class="text-sm md:text-base"
 							>
 								<div class="flex items-center gap-2">
 									{#if row.original.logo_url}

@@ -77,10 +77,10 @@
 				<Tabs.List>
 					{#if showGoogle}
 						<Tabs.Trigger value="google" class="p-0 md:p-8">
-							<p class="inline-flex items-center gap-2 text-xs md:text-xl">
+							<p class="inline-flex items-center gap-1 md:gap-2 text-xs md:text-xl">
 								<StoreIcon store={1} />
-								Android Google Play
-								<span class="ml-2 px-2 py-0.5 text-xs rounded-full bg-primary-100-900">
+								Google Play
+								<span class="md:ml-2 px-2 py-0.5 text-xs rounded-full bg-primary-100-900">
 									{googleAppCount}
 								</span>
 							</p>
@@ -88,20 +88,20 @@
 					{/if}
 					{#if showApple}
 						<Tabs.Trigger value="apple" class="p-0 md:p-8">
-							<p class="inline-flex items-center gap-2 text-xs md:text-xl">
+							<p class="inline-flex items-center gap-1 md:gap-2 text-xs md:text-xl">
 								<StoreIcon store={2} />
-								iOS App Store
-								<span class="ml-2 px-2 py-0.5 text-xs rounded-full bg-primary-100-900">
+								iOS
+								<span class="ml-0 md:ml-2 px-2 py-0.5 text-xs rounded-full bg-primary-100-900">
 									{appleAppCount}
 								</span>
 							</p>
 						</Tabs.Trigger>
 					{/if}
 					{#if showCompanies}
-						<Tabs.Trigger value="companies" class="p-0 md:p-8">
+						<Tabs.Trigger value="companies" class="p-0 md:gap-2 md:p-8">
 							<p class="text-xs md:text-xl">
 								Companies & Domains
-								<span class="ml-2 px-2 py-0.5 text-xs rounded-full bg-primary-100-900">
+								<span class="md:ml-2 px-2 py-0.5 text-xs rounded-full bg-primary-100-900">
 									{companiesCount}
 								</span>
 							</p>
