@@ -58,6 +58,7 @@ class SDKsDetails:
     leftovers: dict[str, list[str]]
     app_queries: list[str]
     skadnetwork: list[str]
+    company_details: dict = field(default_factory=dict)
 
 
 @dataclass

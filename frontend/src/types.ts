@@ -824,6 +824,9 @@ export interface AppSDKs {
 	myPackageInfo: {
 		permissions: string[];
 		company_categories: { [key: string]: CompanySDKParts };
+		company_details: {
+			[key: string]: { company_name: string | null; company_logo_url: string | null };
+		};
 		android: string[];
 		leftovers: UnknownSDKs;
 		skadnetwork: string[];
