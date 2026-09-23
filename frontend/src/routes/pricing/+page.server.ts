@@ -52,7 +52,7 @@ export async function load(event: PageServerLoadEvent) {
 		if (event.locals.session === null || event.locals.user === null) {
 			return redirect(
 				302,
-				`/auth/signup?redirectTo=${encodeURIComponent('/pricing?subscribe=' + encodeURIComponent(subscribe) + '&cycle=' + encodeURIComponent(billingCycle))}`
+				`/auth/pricing-signup?redirectTo=${encodeURIComponent('/pricing?subscribe=' + encodeURIComponent(subscribe) + '&cycle=' + encodeURIComponent(billingCycle))}`
 			);
 		}
 		if (!event.locals.user.emailVerified) {
@@ -127,10 +127,10 @@ export const actions: Actions = {
 			if (typeof priceKey === 'string' && allowedKeys.includes(priceKey as StripePriceKey)) {
 				return redirect(
 					302,
-					`/auth/signup?redirectTo=${encodeURIComponent('/pricing?subscribe=' + encodeURIComponent(priceKey) + '&cycle=' + encodeURIComponent(cycle))}`
+					`/auth/pricing-signup?redirectTo=${encodeURIComponent('/pricing?subscribe=' + encodeURIComponent(priceKey) + '&cycle=' + encodeURIComponent(cycle))}`
 				);
 			}
-			return redirect(302, '/auth/signup?redirectTo=' + encodeURIComponent('/pricing'));
+			return redirect(302, '/auth/pricing-signup?redirectTo=' + encodeURIComponent('/pricing'));
 		}
 		if (!event.locals.user.emailVerified) {
 			const formData = await event.request.formData();
