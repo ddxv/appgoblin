@@ -5,4 +5,4 @@
 	let { data, form }: { data: PageData; form: ActionData } = $props();
 </script>
 
-<SignupForm redirectTo={data.redirectTo} form={form} />
+<SignupForm redirectTo={data.redirectTo} {form} />

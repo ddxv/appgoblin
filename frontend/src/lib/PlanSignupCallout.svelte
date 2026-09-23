@@ -19,8 +19,8 @@
 			: 'Create an account to complete your purchase'}
 	</h3>
 	<p class="text-sm md:text-base leading-relaxed">
-		You've selected the <strong>{planName}</strong> plan. Sign in or create an account to continue to the
-		secure checkout page.
+		You've selected the <strong>{planName}</strong> plan. Sign in or create an account to continue to
+		the secure checkout page.
 	</p>
 	<div class="pt-4 mt-4 border-t border-surface-100-900 bg-primary-500/5 p-4 rounded-lg">
 		<p class="text-sm">

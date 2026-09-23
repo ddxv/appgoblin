@@ -7,15 +7,15 @@ export const ssr = true;
 export const csr = true;
 
 export function load(event: PageServerLoadEvent) {
-	redirectIfAuthenticated(event);
-	const requestedRedirect = event.url.searchParams.get('redirectTo') ?? '';
-	const redirectTo = isSafeRedirect(requestedRedirect) ? requestedRedirect : '';
-	return {
-		redirectTo,
-		planKey: parseSubscribeIntent(redirectTo)?.plan ?? null
-	};
+    redirectIfAuthenticated(event);
+    const requestedRedirect = event.url.searchParams.get('redirectTo') ?? '';
+    const redirectTo = isSafeRedirect(requestedRedirect) ? requestedRedirect : '';
+    return {
+        redirectTo,
+        planKey: parseSubscribeIntent(redirectTo)?.plan ?? null
+    };
 }
 
 export const actions: Actions = {
-	default: handleSignup
+    default: handleSignup
 };

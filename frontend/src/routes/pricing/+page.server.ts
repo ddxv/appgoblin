@@ -8,6 +8,7 @@ import {
 } from '$lib/server/stripe';
 import { requireFullAuth, isSafeRedirect } from '$lib/server/auth/auth';
 import { db } from '$lib/server/auth/db';
+import { sendPricingPlanSelectionEmail } from '$lib/server/contact';
 
 const allowedKeys: StripePriceKey[] = ['b2b_sdk', 'b2b_appads', 'b2b_premium'];
 const allowedCycles: BillingCycle[] = ['monthly', 'yearly'];
@@ -93,11 +94,11 @@ export async function load(event: PageServerLoadEvent) {
 	const currentPlan = event.locals.user ? await getCurrentPlan(event.locals.user.id) : null;
 	const currentSubscription = currentPlan
 		? {
-				status: currentPlan.status,
-				provider_name: 'stripe' as const,
-				current_period_end: currentPlan.current_period_end,
-				cancel_at: currentPlan.cancel_at
-			}
+			status: currentPlan.status,
+			provider_name: 'stripe' as const,
+			current_period_end: currentPlan.current_period_end,
+			cancel_at: currentPlan.cancel_at
+		}
 		: null;
 
 	const currentPlanLabel = currentPlan?.slug
@@ -125,6 +126,9 @@ export const actions: Actions = {
 			const priceKey = formData.get('priceKey');
 			const cycle = parseBillingCycle(formData.get('billingCycle'));
 			if (typeof priceKey === 'string' && allowedKeys.includes(priceKey as StripePriceKey)) {
+				void sendPricingPlanSelectionEmail(priceKey as StripePriceKey, cycle).catch((error) => {
+					console.error('Failed to send pricing plan selection notification:', error);
+				});
 				return redirect(
 					302,
 					`/auth/pricing-signup?redirectTo=${encodeURIComponent('/pricing?subscribe=' + encodeURIComponent(priceKey) + '&cycle=' + encodeURIComponent(cycle))}`
@@ -137,6 +141,9 @@ export const actions: Actions = {
 			const priceKey = formData.get('priceKey');
 			const cycle = parseBillingCycle(formData.get('billingCycle'));
 			if (typeof priceKey === 'string' && allowedKeys.includes(priceKey as StripePriceKey)) {
+				void sendPricingPlanSelectionEmail(priceKey as StripePriceKey, cycle).catch((error) => {
+					console.error('Failed to send pricing plan selection notification:', error);
+				});
 				return redirect(
 					302,
 					`/auth/verify-email?redirectTo=${encodeURIComponent('/pricing?subscribe=' + encodeURIComponent(priceKey) + '&cycle=' + encodeURIComponent(cycle))}`
@@ -164,6 +171,9 @@ export const actions: Actions = {
 		}
 
 		const normalizedKey = priceKey as StripePriceKey;
+		void sendPricingPlanSelectionEmail(normalizedKey, billingCycle).catch((error) => {
+			console.error('Failed to send pricing plan selection notification:', error);
+		});
 
 		// Check existing — short-circuit if already on this exact plan+cycle
 		const existingPlan = await getCurrentPlan(user.id);
