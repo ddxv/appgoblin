@@ -152,5 +152,8 @@ SELECT
     ma.status
 FROM all_versions AS av
 LEFT JOIN myall AS ma ON av.version_code_id = ma.version_code_id
-LEFT JOIN last_scan_success AS ls ON
-    av.version_code_id = ls.version_code_id;
+LEFT JOIN last_scan_success AS ls
+    ON
+        av.version_code_id = ls.version_code_id
+ORDER BY
+    av.version_code_created_at DESC;

@@ -14,7 +14,6 @@ Disallow: /apps/*/trends/
 Disallow: /apps/*/ranks/
 Disallow: /sdks/*/
 Disallow: /companies/*/app-adstxt/
-Disallow: /companies/*/data-exports/
 Allow: /
 Allow: /.well-known/
 Allow: /api-docs

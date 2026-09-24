@@ -1,25 +1,16 @@
 <script lang="ts">
 	import Crown from '@lucide/svelte/icons/crown';
 	import { enhance } from '$app/forms';
+	import PlanSignupCallout from '$lib/PlanSignupCallout.svelte';
+	import { parseSubscribeIntent } from '$lib/plans';
 
 	import type { ActionData, PageData } from './$types';
 
 	let { data, form }: { data: PageData; form: ActionData } = $props();
 
 	// Parse subscribe intent from redirectTo (e.g. /pricing?subscribe=b2b_premium)
-	let subscribePlan: string | null = $derived(
-		data.redirectTo?.startsWith('/pricing?subscribe=')
-			? (data.redirectTo.split('subscribe=')[1]?.split('&')[0] ?? null)
-			: null
-	);
-
-	const planNames: Record<string, string> = {
-		b2b_sdk: 'B2B SDK Intelligence',
-		b2b_appads: 'App-Ads.txt',
-		b2b_premium: 'Premium B2B'
-	};
-
-	const planName = $derived(subscribePlan ? (planNames[subscribePlan] ?? 'paid') : null);
+	let subscribeIntent = $derived(parseSubscribeIntent(data.redirectTo));
+	let subscribePlan = $derived(subscribeIntent?.plan ?? null);
 </script>
 
 <svelte:head>
@@ -33,20 +24,8 @@
 			class="card border border-surface-100-900 p-6 md:p-8 flex flex-col justify-center space-y-4"
 		>
 			{#if subscribePlan}
-				<h3 class="text-xl md:text-2xl font-bold">
-					<Crown class="inline w-5 h-5 mr-1 -mt-0.5 text-primary-900-100" aria-hidden="true" />Sign
-					in to complete your purchase
-				</h3>
-				<p class="text-sm md:text-base leading-relaxed">
-					You've selected the <strong>{planName}</strong> plan. Sign in or create an account to continue
-					to the secure checkout page.
-				</p>
-				<div class="pt-4 mt-4 border-t border-surface-100-900 bg-primary-500/5 p-4 rounded-lg">
-					<p class="text-sm">
-						<span class="font-semibold">What happens next?</span>
-						After signing in and verifying your email, you'll be taken directly to our secure payment
-						page to complete your <strong>{planName}</strong> subscription.
-					</p>
+				<div class="-m-6 md:-m-8">
+					<PlanSignupCallout planKey={subscribePlan} mode="signin" />
 				</div>
 			{:else if data.redirectTo?.includes('/sdks/')}
 				<h3 class="text-xl md:text-2xl font-bold">Unlock Mobile SDK Data for Free</h3>

@@ -1,10 +1,12 @@
 <script lang="ts">
+	import SdkVersionSummary from '$lib/SdkVersionSummary.svelte';
 	let { data }: { data: any } = $props();
 </script>
 
 <div class="p-2 md:p-16 mt-2 md:mt-4">
 	<section class="grid grid-cols-1">
 		<h2 class="h1 md:h3 p-2">App Queries</h2>
+		<SdkVersionSummary sdkVersionSummary={data.sdkVersionSummary} />
 		{#if data.myPackageInfo.app_queries && data.myPackageInfo.app_queries.length > 0}
 			<p class="px-2 md:px-4">
 				These are the other apps that {data.myapp.name} requests to know other apps are also installed:

@@ -593,6 +593,7 @@ class AppController(Controller):
                 app_queries=[],
                 skadnetwork=[],
                 leftovers={},
+                company_details={},
             )
 
         df.loc[df["value_name"].isna(), "value_name"] = ""
@@ -694,12 +695,37 @@ class AppController(Controller):
 
         skadnetwork_list = df[is_skadnetwork].value_name.unique().tolist()
 
+        # Company display info (name + logo) keyed by company domain,
+        # using the same cached logos as /sdksoverview
+        company_logos_df = get_company_logos_df(state).drop_duplicates(
+            subset=["company_domain"], keep="first"
+        )
+        company_info_df = (
+            df.loc[df["company_domain"].notna(), ["company_domain", "company_name"]]
+            .drop_duplicates(subset=["company_domain"], keep="first")
+            .merge(company_logos_df, on="company_domain", how="left", validate="m:1")
+        )
+        company_details = {
+            str(row["company_domain"]): {
+                "company_name": (
+                    str(row["company_name"]) if pd.notna(row["company_name"]) else None
+                ),
+                "company_logo_url": (
+                    str(row["company_logo_url"])
+                    if pd.notna(row["company_logo_url"])
+                    else None
+                ),
+            }
+            for row in company_info_df.to_dict(orient="records")
+        }
+
         trackers_dict = SDKsDetails(
             company_categories=company_sdk_dict,
             permissions=permissions_list,
             leftovers=leftovers_dict,
             app_queries=app_queries,
             skadnetwork=skadnetwork_list,
+            company_details=company_details,
         )
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(f"{self.path}/{store_id}/sdks took {duration}ms")

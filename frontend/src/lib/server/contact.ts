@@ -1,5 +1,6 @@
 import nodemailer from 'nodemailer';
 import { EMAIL_HOST, EMAIL_PORT, EMAIL_USER, EMAIL_PASSWORD } from '$env/static/private';
+import { STRIPE_PLAN_LABELS, type BillingCycle, type StripePriceKey } from '$lib/plans';
 
 let transporter: ReturnType<typeof nodemailer.createTransport> | null = null;
 
@@ -67,4 +68,36 @@ export async function sendContactEmail(
 	}
 
 	await t.sendMail(mailOptions);
+}
+
+export async function sendPricingPlanSelectionEmail(
+	planKey: StripePriceKey,
+	billingCycle: BillingCycle
+): Promise<void> {
+	const t = getTransporter();
+	const planName = STRIPE_PLAN_LABELS[planKey];
+	const selectedAt = new Date().toISOString();
+	const subject = `Pricing signup started: ${planName}`;
+	const text = `A visitor selected the ${planName} plan (${billingCycle} billing) and started the signup flow.\n\nSelected at: ${selectedAt}`;
+	const html = `
+		<div>
+			<h2>New pricing signup started</h2>
+			<p><strong>Plan:</strong> ${planName}</p>
+			<p><strong>Billing:</strong> ${billingCycle}</p>
+			<p><strong>Selected at:</strong> ${selectedAt}</p>
+		</div>
+	`;
+
+	if (!t) {
+		console.log(`[DEV] ${subject} (${billingCycle})`);
+		return;
+	}
+
+	await t.sendMail({
+		from: `"AppGoblin Contact" <${EMAIL_USER}>`,
+		to: EMAIL_USER,
+		subject,
+		text,
+		html
+	});
 }

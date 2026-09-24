@@ -4,21 +4,12 @@ import { error } from '@sveltejs/kit';
 
 import { STRIPE_SECRET_KEY, APPGOBLIN_ENDPOINT_URL } from '$env/static/private';
 
+import { STRIPE_PLAN_LABELS, type BillingCycle, type StripePriceKey } from '$lib/plans';
+export { STRIPE_PLAN_LABELS, type BillingCycle, type StripePriceKey } from '$lib/plans';
+
 export const stripe = new Stripe(STRIPE_SECRET_KEY, {
 	apiVersion: '2026-07-29.dahlia'
 });
-
-export type BillingCycle = 'monthly' | 'yearly';
-
-/** Known tier slugs that can be subscribed to. */
-export type StripePriceKey = 'b2b_sdk' | 'b2b_appads' | 'b2b_premium';
-
-/** Human-readable label for a plan, useful for account/receipt pages. */
-export const STRIPE_PLAN_LABELS: Record<StripePriceKey, string> = {
-	b2b_sdk: 'Business SDK',
-	b2b_appads: 'App-Ads.txt',
-	b2b_premium: 'Premium B2B'
-};
 
 export async function createCheckoutSession(
 	userId: number,

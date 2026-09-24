@@ -6,9 +6,13 @@
 
 	interface Props {
 		items: CompanySDKParts;
+		companyDetails?: Record<
+			string,
+			{ company_name?: string | null; company_logo_url?: string | null }
+		>;
 	}
 
-	let { items = {} }: Props = $props();
+	let { items = {}, companyDetails = {} }: Props = $props();
 
 	const androidNameFont = 'text-xs md:text-sm px-8 md:px-16';
 
@@ -28,7 +32,11 @@
 				<!-- For trackers and networks -->
 				<div>
 					<div class="text-lg text-bold p-2">
-						<CompanyButton companyName={companyDomain} {companyDomain} />
+						<CompanyButton
+							companyName={companyDetails[companyDomain]?.company_name ?? companyDomain}
+							{companyDomain}
+							companyLogoUrl={companyDetails[companyDomain]?.company_logo_url ?? undefined}
+						/>
 					</div>
 					{#each Object.entries(companyObj) as [sdkShort, sdkShortObj]}
 						<Accordion
