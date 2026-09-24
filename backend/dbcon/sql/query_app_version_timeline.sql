@@ -13,4 +13,4 @@ WHERE
     sa.store_id = :store_id
 GROUP BY 1, 2
 ORDER BY
-    sdks_last_scanned_at DESC;
+    downloaded_at DESC;

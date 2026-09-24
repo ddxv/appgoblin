@@ -6,6 +6,32 @@ export const load: LayoutServerLoad = async ({ fetch, params, parent, locals }) 
 	const api = createApiClient(fetch);
 
 	const id = params.id;
+	const versionTimeline = await api.get(`/apps/${id}/versions`, 'App Version Timeline');
+	const latestVersion = Array.isArray(versionTimeline) ? versionTimeline[0] : undefined;
+	const latestSdkDownloadedAt = Array.isArray(versionTimeline)
+		? versionTimeline.reduce(
+				(latest: string | null, entry: Record<string, any>) =>
+					!latest || new Date(entry.downloaded_at ?? 0) > new Date(latest)
+						? (entry.downloaded_at ?? latest)
+						: latest,
+				null
+			)
+		: null;
+	const latestSdkScannedAt = Array.isArray(versionTimeline)
+		? versionTimeline.reduce(
+				(latest: string | null, entry: Record<string, any>) =>
+					!latest || new Date(entry.sdks_last_scanned_at ?? 0) > new Date(latest)
+						? (entry.sdks_last_scanned_at ?? latest)
+						: latest,
+				null
+			)
+		: null;
+
+	const sdkVersionSummary = {
+		latest_sdk_downloaded_at: latestSdkDownloadedAt,
+		latest_sdk_scanned_at: latestSdkScannedAt,
+		latest_sdk_version_code: latestVersion?.app_version_code ?? null
+	};
 
 	let myPackageInfo: Record<string, any> = {};
 	// Only fetch SDK package info for logged-in users to avoid wasted backend queries
@@ -15,6 +41,8 @@ export const load: LayoutServerLoad = async ({ fetch, params, parent, locals }) 
 
 	return {
 		myPackageInfo,
+		sdkVersionSummary,
+		versionTimeline,
 		companyTypes,
 		myapp
 	};

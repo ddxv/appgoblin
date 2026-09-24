@@ -5,7 +5,7 @@ import { userHasTierAccess } from '$lib/server/subscription';
 export const load: PageServerLoad = async (event) => {
 	const { fetch, params, parent, locals } = event;
 	const parentData = await parent();
-	const { myapp } = parentData;
+	const { myapp, versionTimeline } = parentData;
 	const api = createApiClient(fetch);
 
 	let hasB2BSdkAccess = false;
@@ -13,11 +13,10 @@ export const load: PageServerLoad = async (event) => {
 		hasB2BSdkAccess = await userHasTierAccess(locals.user.id, 'b2b_sdk', 'b2b_premium');
 	}
 
-	const id = params.id;
-	const versionTimeline = await api.get(`/apps/${id}/versions`, 'App Version Timeline');
 	let sdkHistory: Record<string, any> = { history: [] };
 	// Only fetch SDK history data if user has B2B access — avoids unnecessary backend queries
 	if (hasB2BSdkAccess && myapp.sdk_successful_last_crawled) {
+		const id = params.id;
 		sdkHistory = await api.get(`/apps/${id}/sdks/history`, 'App SDK History');
 	}
 

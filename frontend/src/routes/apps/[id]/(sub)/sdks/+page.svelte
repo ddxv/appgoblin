@@ -1,6 +1,7 @@
 <script lang="ts">
 	import ManifestItemList from '$lib/ManifestItemList.svelte';
 	import WhiteCard from '$lib/WhiteCard.svelte';
+	import SdkVersionSummary from '$lib/SdkVersionSummary.svelte';
 
 	let { data }: { data: any } = $props();
 
@@ -33,6 +34,7 @@
 <div class="p-2 md:p-16 mt-2 md:mt-4">
 	<section class="space-y-6">
 		<h2 class="h1 md:h3 p-2">SDKs in {data.myapp.name || ''}</h2>
+		<SdkVersionSummary sdkVersionSummary={data.sdkVersionSummary} />
 
 		{#if typeof data.myPackageInfo == 'string' || !data.myPackageInfo.company_categories}
 			<p>Permissions, SDKs and trackers info not yet available for this app.</p>
