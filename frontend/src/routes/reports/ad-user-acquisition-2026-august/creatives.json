@@ -1,0 +1,112 @@
+[
+  {
+    "phash": "76e3ffe2f7fb",
+    "md5_hash": "7b07cce0eeaf3989f0da38e7552eb197",
+    "file_extension": "mp4",
+    "advertiser_count": 1,
+    "publisher_count": 9,
+    "first_seen": "2026-08-11T22:04:48.877",
+    "last_seen": "2026-08-12T11:36:14.835",
+    "advertiser_store_id": "com.boge.lgmahjong",
+    "advertiser_icon_128": "e02caf09d3aa6b9c_128.png"
+  },
+  {
+    "phash": "676767c7d773",
+    "md5_hash": "f87c196907e505e89fdc290ababb6c5a",
+    "file_extension": "webm",
+    "advertiser_count": 1,
+    "publisher_count": 9,
+    "first_seen": "2026-08-08T23:51:06.612",
+    "last_seen": "2026-08-10T14:51:10.113",
+    "advertiser_store_id": "com.playgendary.tom",
+    "advertiser_icon_128": "c9b83667cb9889c3_128.png"
+  },
+  {
+    "phash": "9f9e4f6696db",
+    "md5_hash": "598861b01dbe69e90bd45028ccdcef83",
+    "file_extension": "mp4",
+    "advertiser_count": 1,
+    "publisher_count": 9,
+    "first_seen": "2026-08-08T16:41:18.814",
+    "last_seen": "2026-08-09T08:29:10.031",
+    "advertiser_store_id": "com.easybrain.crossword.puzzles",
+    "advertiser_icon_128": "dcd2a983fc632358_128.png"
+  },
+  {
+    "phash": "6aefb5b926b6",
+    "md5_hash": "5a393b255dc17f19f98ebd7ac741319b",
+    "file_extension": "webm",
+    "advertiser_count": 1,
+    "publisher_count": 8,
+    "first_seen": "2026-08-08T16:41:18.814",
+    "last_seen": "2026-08-11T04:49:04.845",
+    "advertiser_store_id": "se.raketspel.digaround",
+    "advertiser_icon_128": "e16f159314c944fe_128.png"
+  },
+  {
+    "phash": "7ecb397c3f93",
+    "md5_hash": "600a0db136e4cb73610a9edf7f18f4eb",
+    "file_extension": "webm",
+    "advertiser_count": 1,
+    "publisher_count": 8,
+    "first_seen": "2026-08-09T02:31:47.550",
+    "last_seen": "2026-08-27T00:20:40.908",
+    "advertiser_store_id": "com.trace.art.draw.drawing.paint",
+    "advertiser_icon_128": "eaeca513d63c6944_128.png"
+  },
+  {
+    "phash": "7f1f3ffc7e67",
+    "md5_hash": "f24acdf7cc0e21fea00f59eb1b22de78",
+    "file_extension": "webm",
+    "advertiser_count": 1,
+    "publisher_count": 6,
+    "first_seen": "2026-08-09T02:16:14.189",
+    "last_seen": "2026-08-10T20:14:11.056",
+    "advertiser_store_id": "com.trace.art.draw.drawing.paint",
+    "advertiser_icon_128": "eaeca513d63c6944_128.png"
+  },
+  {
+    "phash": "c76c9ee33bcf",
+    "md5_hash": "b7034a06aa76a0bd960c6f597c4101e4",
+    "file_extension": "webm",
+    "advertiser_count": 1,
+    "publisher_count": 6,
+    "first_seen": "2026-08-09T05:12:16.681",
+    "last_seen": "2026-08-12T04:59:38.685",
+    "advertiser_store_id": "com.abi.perfect.tidy",
+    "advertiser_icon_128": "fa1d8562f0d90e72_128.png"
+  },
+  {
+    "phash": "1b28ffff1830",
+    "md5_hash": "98cf1c54102b65ca768968af76e90768",
+    "file_extension": "mp4",
+    "advertiser_count": 1,
+    "publisher_count": 6,
+    "first_seen": "2026-08-11T16:20:36.107",
+    "last_seen": "2026-08-12T06:16:19.271",
+    "advertiser_store_id": "com.boge.lgmahjong",
+    "advertiser_icon_128": "e02caf09d3aa6b9c_128.png"
+  },
+  {
+    "phash": "bafee1679b3d",
+    "md5_hash": "2ba1249ca94aeb084cebfc44779a7fb2",
+    "file_extension": "webm",
+    "advertiser_count": 1,
+    "publisher_count": 6,
+    "first_seen": "2026-08-09T05:25:10.670",
+    "last_seen": "2026-08-10T22:55:53.280",
+    "advertiser_store_id": "com.yumdom.cooking.asmr",
+    "advertiser_icon_128": "beb6c0686cd1398b_128.png"
+  },
+  {
+    "phash": "e1ebaaa1ce4a",
+    "md5_hash": "46ce6864ce532c06d74b18111a02c1d5",
+    "file_extension": "mp4",
+    "advertiser_count": 1,
+    "publisher_count": 6,
+    "first_seen": "2026-08-22T00:04:13.443",
+    "last_seen": "2026-08-30T08:01:55.793",
+    "advertiser_store_id": "wool.match.color.sort.jam.puzzle",
+    "advertiser_icon_128": "f9b80ec469ce7630_128.png"
+  }
+]

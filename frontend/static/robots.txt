@@ -7,8 +7,10 @@ Disallow: /apps/*.png
 Disallow: /auth/*
 Disallow: /account/
 Disallow: /apps/comparison/
+Disallow: /apps/*/keywords
 Disallow: /apps/*/keywords/
 Disallow: /apps/*/monetized-ads/
+Disallow: /apps/*/sdks
 Disallow: /apps/*/sdks/
 Disallow: /apps/*/trends/
 Disallow: /apps/*/ranks/
