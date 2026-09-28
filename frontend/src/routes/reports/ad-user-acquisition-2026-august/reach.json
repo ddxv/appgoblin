@@ -20,8 +20,8 @@
     "mmp_domains": null,
     "top_md5_hashes": [
       "70368f2c7d8cdfe891865a82588fe64f",
-      "e1486b16809b419a63b00d0f8414571a",
       "70368f2c7d8cdfe891865a82588fe64f",
+      "e1486b16809b419a63b00d0f8414571a",
       "e0c0f4cae3723be6eee7f5aa1b3ca560",
       "7b07cce0eeaf3989f0da38e7552eb197"
     ],
@@ -105,8 +105,8 @@
       "metrica.yandex.com"
     ],
     "top_md5_hashes": [
-      "aaf9940751b1a2309073d6a36f07ec1b",
       "59b2b21268c8ff59f3581f0820ecf841",
+      "aaf9940751b1a2309073d6a36f07ec1b",
       "770d1f66141467ef9e6e216b73125d2a",
       "0ed8b30a228cee967eef8c452e1bdf4e",
       "c1c53a90057fa30dfcb67ea86ac13554"
@@ -129,6 +129,7 @@
     ],
     "avg_publisher_installs": 78111209.17391305,
     "mmp_domains": [
+      "appmetrica.yandex.com",
       "appsflyer.com"
     ],
     "top_md5_hashes": [
@@ -200,7 +201,7 @@
       "6c59f25009c6209984005b295617d586",
       "9ef1df747b0dfde8581a2ba34220ea15",
       "f092c17d7ad8f274f18b91bbb922d55d",
-      "f092c17d7ad8f274f18b91bbb922d55d"
+      "9ef1df747b0dfde8581a2ba34220ea15"
     ],
     "estimated_buying_size_score": 68,
     "buying_size_tier": "Top"
@@ -225,9 +226,9 @@
     "top_md5_hashes": [
       "61787451baf975a52c1f63e9504e37f1",
       "969685814336cfe45de33ee2a44bf175",
-      "114a7dc4ba30a80c7bcb061aa32f1557",
+      "025a9afd22b73da01c3b88f73cfd68aa",
       "6e89c1ade8af911559c151b4c99b920c",
-      "025a9afd22b73da01c3b88f73cfd68aa"
+      "114a7dc4ba30a80c7bcb061aa32f1557"
     ],
     "estimated_buying_size_score": 48,
     "buying_size_tier": "Big"
@@ -254,8 +255,8 @@
       "2cb869f6c6f6a05c10f1b0565bf8c4d0",
       "5e824d0077485ab666ffd09fcd26815f",
       "5dfe59432371496a0e02e8457b750de5",
-      "9a71eb6c122f0118ad2599425883e3da",
-      "c1c10d3dde09e8b7d05c24b015dc2fae"
+      "c1c10d3dde09e8b7d05c24b015dc2fae",
+      "9a71eb6c122f0118ad2599425883e3da"
     ],
     "estimated_buying_size_score": 84,
     "buying_size_tier": "Top"
@@ -391,8 +392,8 @@
       "adjust.com"
     ],
     "top_md5_hashes": [
-      "a932ccf9cc3d33b6dd297ac6c8562b63",
       "bfeb31dccc306a96b0ef98f760ed0732",
+      "a932ccf9cc3d33b6dd297ac6c8562b63",
       "a932ccf9cc3d33b6dd297ac6c8562b63",
       "a932ccf9cc3d33b6dd297ac6c8562b63",
       "a932ccf9cc3d33b6dd297ac6c8562b63"
@@ -426,7 +427,7 @@
       "f87c196907e505e89fdc290ababb6c5a",
       "858036b30d38741ea6a474e54af57b55",
       "858036b30d38741ea6a474e54af57b55",
-      "f87c196907e505e89fdc290ababb6c5a"
+      "b88ad560019120be61fa63cfb8750f77"
     ],
     "estimated_buying_size_score": 30,
     "buying_size_tier": "Big"
@@ -481,8 +482,8 @@
     ],
     "top_md5_hashes": [
       "06041681dc9f5de87f47fecfa26c70bf",
-      "c09d59bd2bdb08105dd9819d4b6d0ee0",
       "5df14294cc76148519a58ec279336fb8",
+      "c09d59bd2bdb08105dd9819d4b6d0ee0",
       "577c59387b42f6bcc12478a1d086a24a",
       "5df14294cc76148519a58ec279336fb8"
     ],
@@ -704,7 +705,7 @@
       "cf9c60e3e7040e4bcf40c54636989df4",
       "b59c1d2003530178e0c78ae0a511fb7a",
       "181ee6fbde72b8945ba78f33f1d63a70",
-      "75bf44994a8687d08cbaf2b81ba32b6d"
+      "7390a14b96d23024056c11cd696f23c3"
     ],
     "estimated_buying_size_score": 21,
     "buying_size_tier": "Big"
@@ -782,8 +783,8 @@
     "mmp_domains": null,
     "top_md5_hashes": [
       "6a8f82070d398c04aeeed8e9a4fdcf08",
-      "4cb2678a57c04d0af3d95ff345de00df",
       "e3ed5b6e07aa5e2099819c796d8958e2",
+      "4cb2678a57c04d0af3d95ff345de00df",
       "da8deafa43b940b55ffbe9a982a7d46e",
       "da8deafa43b940b55ffbe9a982a7d46e"
     ],
@@ -859,8 +860,8 @@
     ],
     "top_md5_hashes": [
       "71f56fe94522a979ec9778c655e01522",
-      "518ef6124d7fc36c67daf8a0832ac53e",
       "ce82e10135d706622b2cc9258e8ebe33",
+      "518ef6124d7fc36c67daf8a0832ac53e",
       "71f56fe94522a979ec9778c655e01522",
       "71f56fe94522a979ec9778c655e01522"
     ],
@@ -888,8 +889,8 @@
     "top_md5_hashes": [
       "a2c66076278b65747c70914707101962",
       "9af24fa39de7d8338807a4983d7725ab",
-      "9af24fa39de7d8338807a4983d7725ab",
       "61ae6da83bfb7615cced06d925888bcb",
+      "9af24fa39de7d8338807a4983d7725ab",
       "e7415a26fdd7fd515d92e91cd91f0f6a"
     ],
     "estimated_buying_size_score": 34,
@@ -942,11 +943,11 @@
       "appsflyer.com"
     ],
     "top_md5_hashes": [
-      "cb83f23afcfdda0e358f2039e6409bf1",
+      "c40b9676848dd084f0a111c9d64eddb8",
       "f01a99d8adec1f717e97191ddb38f94d",
       "8e36cafe0c7467323ba1d83ab508fd19",
       "11fa912f5bbb3b809f11b88db76ca9fd",
-      "c40b9676848dd084f0a111c9d64eddb8"
+      "cb83f23afcfdda0e358f2039e6409bf1"
     ],
     "estimated_buying_size_score": 52,
     "buying_size_tier": "Top"
@@ -1079,9 +1080,9 @@
       "appsflyer.com"
     ],
     "top_md5_hashes": [
+      "c645a53eeaddb86e58c16eef407f5db3",
       "1718c22c427a2c03c418ba1436e8a73d",
       "57e1d5cb1f0e8690039985933e977ed9",
-      "c645a53eeaddb86e58c16eef407f5db3",
       "15902a67d5b192d8bb3a66af11332215",
       "d978a3352aa236653e922a1a4b209f28"
     ],
@@ -1156,6 +1157,7 @@
     ],
     "avg_publisher_installs": 6807284.0,
     "mmp_domains": [
+      "app.link",
       "appsflyer.com",
       "branch.io",
       "impression.link"
@@ -1247,7 +1249,7 @@
     "buying_size_tier": "Medium"
   },
   {
-    "advertiser_name": "Mini Games: Calm & Relax",
+    "advertiser_name": "Mini Games: Brainrot Challenge",
     "advertiser_store_id": "com.uc.minigame.relax",
     "advertiser_icon_128": "af1e9ac1ec70e1d0_128.png",
     "advertiser_category": "game_casual",

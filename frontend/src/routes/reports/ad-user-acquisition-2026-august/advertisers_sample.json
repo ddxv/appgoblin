@@ -139,7 +139,7 @@
     "unique_publishers_strong": 19,
     "unique_publishers_weak": 12,
     "avg_publisher_installs": 103577658.12903225,
-    "mmp_providers": "['appsflyer.com']",
+    "mmp_providers": "['appmetrica.yandex.com'; 'appsflyer.com']",
     "estimated_buying_size_score": 199,
     "report_period": "August 2026"
   },
@@ -211,7 +211,7 @@
     "unique_publishers_strong": 4,
     "unique_publishers_weak": 2,
     "avg_publisher_installs": 50924788.666666664,
-    "mmp_providers": "['adjust.com'; 'appsflyer.com']",
+    "mmp_providers": "['appsflyer.com']",
     "estimated_buying_size_score": 184,
     "report_period": "August 2026"
   },

@@ -338,13 +338,13 @@
     "store_id": "animal.hospital.escape",
     "store": 1,
     "category": "game_action",
-    "installs": 389324,
-    "rating": 4.54032,
-    "rating_count": 2082,
-    "installs_sum_1w": 48590,
-    "installs_sum_4w": 323147.0,
-    "installs_z_score_2w": 1.9144392442,
-    "installs_z_score_4w": 3.0414135918,
+    "installs": 394657,
+    "rating": 4.531353,
+    "rating_count": 2086,
+    "installs_sum_1w": 53923,
+    "installs_sum_4w": 328480.0,
+    "installs_z_score_2w": 2.0844649651,
+    "installs_z_score_4w": 3.1264264522,
     "release_date": "2026-07-31T00:00:00.000",
     "icon_128": "beb964626996662c_128.png",
     "developer_name": "Kids Games LLC",
@@ -497,6 +497,43 @@
     ]
   },
   {
+    "name": "ASMR Car Restore: Wash & Fix",
+    "store_id": "com.htk.carrestore.washfix.asmr",
+    "store": 1,
+    "category": "game_role_playing",
+    "installs": 28343,
+    "rating": null,
+    "rating_count": 0,
+    "installs_sum_1w": 21537,
+    "installs_sum_4w": 26938.0,
+    "installs_z_score_2w": 37.6680117665,
+    "installs_z_score_4w": 18.0349602711,
+    "release_date": "2026-08-08T00:00:00.000",
+    "icon_128": "9df863588ed65914_128.png",
+    "developer_name": "HAI TRUNG KIM BUSINESS TRADING COMPANY LIMITED",
+    "developer_id": "HAI+TRUNG+KIM+BUSINESS+TRADING+COMPANY+LIMITED",
+    "ad_supported": true,
+    "in_app_purchases": false,
+    "advertiser_country": "VN",
+    "ad_network_names": [
+      "Google"
+    ],
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": null,
+    "creative_count": 1,
+    "md5_hashes": [
+      "be757da6908020228627d0edc4313e9a"
+    ],
+    "md5_file_extensions": [
+      "webm"
+    ]
+  },
+  {
     "name": "ASMR Girl: Livestream Mukbang",
     "store_id": "com.asmrgirl.livestreammukbang",
     "store": 1,
@@ -576,43 +613,6 @@
     ],
     "md5_file_extensions": [
       "jpeg"
-    ]
-  },
-  {
-    "name": "ASMR Car Restore: Wash & Fix",
-    "store_id": "com.htk.carrestore.washfix.asmr",
-    "store": 1,
-    "category": "game_role_playing",
-    "installs": 6806,
-    "rating": null,
-    "rating_count": 0,
-    "installs_sum_1w": 5065,
-    "installs_sum_4w": 6340.0,
-    "installs_z_score_2w": 5.8646509569,
-    "installs_z_score_4w": 2.6385697015,
-    "release_date": "2026-08-08T00:00:00.000",
-    "icon_128": "9df863588ed65914_128.png",
-    "developer_name": "HAI TRUNG KIM BUSINESS TRADING COMPANY LIMITED",
-    "developer_id": "HAI+TRUNG+KIM+BUSINESS+TRADING+COMPANY+LIMITED",
-    "ad_supported": true,
-    "in_app_purchases": false,
-    "advertiser_country": "VN",
-    "ad_network_names": [
-      "Google"
-    ],
-    "ad_network_domains": [
-      "google.com"
-    ],
-    "ad_network_logo_urls": [
-      "company-logos/google.com/logo_200x200.jpeg"
-    ],
-    "mmp_domains": null,
-    "creative_count": 1,
-    "md5_hashes": [
-      "be757da6908020228627d0edc4313e9a"
-    ],
-    "md5_file_extensions": [
-      "webm"
     ]
   },
   {
