@@ -1,0 +1,655 @@
+[
+  {
+    "name": "Painty Hide n Seek",
+    "store_id": "com.cdt.mega.mechagame",
+    "store": 1,
+    "category": "game_casual",
+    "installs": 8888509,
+    "rating": 2.759201,
+    "rating_count": 8920,
+    "installs_sum_1w": 37741,
+    "installs_sum_4w": 595324.0,
+    "installs_z_score_2w": -1.1093072486,
+    "installs_z_score_4w": -1.0062596789,
+    "release_date": "2026-06-26T00:00:00.000",
+    "icon_128": "99c94666bd62d266_128.png",
+    "developer_name": "CDT Games Limited",
+    "developer_id": "CDT+Games+Limited",
+    "ad_supported": true,
+    "in_app_purchases": true,
+    "advertiser_country": "HK",
+    "ad_network_names": [
+      "Google"
+    ],
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": [
+      "adjust.com",
+      "appmetrica.yandex.com",
+      "metrica.yandex.com"
+    ],
+    "creative_count": 6,
+    "md5_hashes": [
+      "25bd094223e5f7d5634e842f123643e3",
+      "3fdf5037d07e92c3c822959eed18a992",
+      "4610f2c1c9275b858f98de54e846e9ce",
+      "619046a0d88a2f53ffe7c46b78b29613",
+      "bf371ad3987bd47f3394a01d48a464fb",
+      "f0f3fce5c198cb72ed47ede895528569",
+      "fcbe7cb9bca8b93535ba5934e7c72e2f"
+    ],
+    "md5_file_extensions": [
+      "webm"
+    ]
+  },
+  {
+    "name": "Traffic Car Pro - Driving Sim",
+    "store_id": "com.dt.trading.traffic.car.pro.driving.sim",
+    "store": 1,
+    "category": "game_racing",
+    "installs": 2543794,
+    "rating": 4.229261,
+    "rating_count": 2333,
+    "installs_sum_1w": 193871,
+    "installs_sum_4w": 807626.0,
+    "installs_z_score_2w": -0.8201257525,
+    "installs_z_score_4w": -0.6594431238,
+    "release_date": "2026-07-15T00:00:00.000",
+    "icon_128": "f98150f4e63c9c3a_128.png",
+    "developer_name": "DT Trading Lab",
+    "developer_id": "DT+Trading+Lab",
+    "ad_supported": true,
+    "in_app_purchases": false,
+    "advertiser_country": "PK",
+    "ad_network_names": [
+      "Google"
+    ],
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": [
+      "appsflyer.com"
+    ],
+    "creative_count": 5,
+    "md5_hashes": [
+      "45e5e219dfa12da7f867b78b385da912",
+      "776ee96ac603a668cf31bc295108be55",
+      "846a174f381f6fd5afeb05b04964c6d9",
+      "955e852d1e9c0767cfce53862cf62c90",
+      "966168529547cfff3371a9f47948c225"
+    ],
+    "md5_file_extensions": [
+      "webm"
+    ]
+  },
+  {
+    "name": "CookieRun: Crumble - Idle RPG",
+    "store_id": "com.devsisters.cc",
+    "store": 1,
+    "category": "game_role_playing",
+    "installs": 1833721,
+    "rating": 4.486011,
+    "rating_count": 55466,
+    "installs_sum_1w": 9883,
+    "installs_sum_4w": 102904.0,
+    "installs_z_score_2w": -0.7351412664,
+    "installs_z_score_4w": -0.7003292698,
+    "release_date": "2026-07-28T00:00:00.000",
+    "icon_128": "abd3e166c43db428_128.png",
+    "developer_name": "Devsisters Corporation",
+    "developer_id": "7767058403001139720",
+    "ad_supported": true,
+    "in_app_purchases": true,
+    "advertiser_country": "KR",
+    "ad_network_names": [
+      "Appier",
+      "Google",
+      "Unity"
+    ],
+    "ad_network_domains": [
+      "appier.com",
+      "google.com",
+      "unity.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/appier.com/logo_200x200.jpeg",
+      "company-logos/google.com/logo_200x200.jpeg",
+      "company-logos/unity.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": [
+      "appsflyer.com"
+    ],
+    "creative_count": 3,
+    "md5_hashes": [
+      "1aa69e0eba739de944ff8cd3c7eccf90",
+      "507c322b30597619720b95b80fd82e62",
+      "72d501c7157d6a73c9ffe3cc6e78038e"
+    ],
+    "md5_file_extensions": [
+      "jpeg",
+      "webm"
+    ]
+  },
+  {
+    "name": "Zoodoku: Brain Puzzle Games",
+    "store_id": "com.nebula.zoodoku",
+    "store": 1,
+    "category": "game_puzzle",
+    "installs": 1451453,
+    "rating": 4.4519873,
+    "rating_count": 17871,
+    "installs_sum_1w": 107699,
+    "installs_sum_4w": 984083.0,
+    "installs_z_score_2w": 0.9413129769,
+    "installs_z_score_4w": 1.7812273014,
+    "release_date": "2026-06-25T00:00:00.000",
+    "icon_128": "f2ed959b5c302706_128.png",
+    "developer_name": "Nebula  Studio",
+    "developer_id": "5287763931371703518",
+    "ad_supported": true,
+    "in_app_purchases": false,
+    "advertiser_country": "SG",
+    "ad_network_names": [
+      "Google"
+    ],
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": [
+      "appsflyer.com"
+    ],
+    "creative_count": 1,
+    "md5_hashes": [
+      "217f476e8ec91f0e10d3a16d8b0bf4d8"
+    ],
+    "md5_file_extensions": [
+      "webm"
+    ]
+  },
+  {
+    "name": "Runaway From Vlogger",
+    "store_id": "com.RC54.runaway.vlogger",
+    "store": 1,
+    "category": "game_simulation",
+    "installs": 921811,
+    "rating": 3.0391288,
+    "rating_count": 512,
+    "installs_sum_1w": 78607,
+    "installs_sum_4w": 474914.0,
+    "installs_z_score_2w": 0.6951541999,
+    "installs_z_score_4w": 1.632758006,
+    "release_date": "2026-06-30T00:00:00.000",
+    "icon_128": "b16426c7c699d936_128.png",
+    "developer_name": "Sprigame",
+    "developer_id": "Sprigame",
+    "ad_supported": true,
+    "in_app_purchases": false,
+    "advertiser_country": "VN",
+    "ad_network_names": [
+      "Google"
+    ],
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": [
+      "appsflyer.com"
+    ],
+    "creative_count": 2,
+    "md5_hashes": [
+      "25ca693746abf1df20cfb25e969886e8",
+      "721b266e0fa0e7e9b23631d183838b8e",
+      "abd673a18cc4194b3bcf3b4faef1a1c4"
+    ],
+    "md5_file_extensions": [
+      "webm"
+    ]
+  },
+  {
+    "name": "Car Driving Open World Game 3D",
+    "store_id": "com.car.driving.city.open.world",
+    "store": 1,
+    "category": "game_simulation",
+    "installs": 915881,
+    "rating": 4.6401176,
+    "rating_count": 997,
+    "installs_sum_1w": 70465,
+    "installs_sum_4w": 399606.0,
+    "installs_z_score_2w": 0.476802919,
+    "installs_z_score_4w": 0.8368114812,
+    "release_date": "2026-06-23T00:00:00.000",
+    "icon_128": "bb90802fc5a0c7f7_128.png",
+    "developer_name": "SpeedZone",
+    "developer_id": "SpeedZone",
+    "ad_supported": true,
+    "in_app_purchases": false,
+    "advertiser_country": "VN",
+    "ad_network_names": [
+      "Google"
+    ],
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": [
+      "appsflyer.com"
+    ],
+    "creative_count": 1,
+    "md5_hashes": [
+      "383c6e9277c9ae945a96d2699166a5d1"
+    ],
+    "md5_file_extensions": [
+      "webm"
+    ]
+  },
+  {
+    "name": "Charxy Talk: Character AI Chat",
+    "store_id": "com.charxy.aichat.character",
+    "store": 1,
+    "category": "entertainment",
+    "installs": 845301,
+    "rating": 4.3830814,
+    "rating_count": 6221,
+    "installs_sum_1w": 28487,
+    "installs_sum_4w": 376790.0,
+    "installs_z_score_2w": -0.3017119929,
+    "installs_z_score_4w": 0.3380126669,
+    "release_date": "2026-06-23T00:00:00.000",
+    "icon_128": "ea2d8c0c9193f35e_128.png",
+    "developer_name": "Language Alphabet Apps",
+    "developer_id": "Language+Alphabet+Apps",
+    "ad_supported": true,
+    "in_app_purchases": false,
+    "advertiser_country": "VN",
+    "ad_network_names": [
+      "Google"
+    ],
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": [
+      "adjust.com",
+      "appsflyer.com"
+    ],
+    "creative_count": 1,
+    "md5_hashes": [
+      "0d4a7cbf0db25e6e55641230e3021c83"
+    ],
+    "md5_file_extensions": [
+      "webm"
+    ]
+  },
+  {
+    "name": "Cake Maker Fun: Baking Games",
+    "store_id": "com.mspgs.cake.maker.fun.baking.games",
+    "store": 1,
+    "category": "game_role_playing",
+    "installs": 453990,
+    "rating": 4.2166667,
+    "rating_count": 89,
+    "installs_sum_1w": 84323,
+    "installs_sum_4w": 345015.0,
+    "installs_z_score_2w": 3.7538202731,
+    "installs_z_score_4w": 3.1778747657,
+    "release_date": "2026-08-19T00:00:00.000",
+    "icon_128": "97b5f68251575870_128.png",
+    "developer_name": "M/S Phone Games Studio",
+    "developer_id": "M/S+Phone+Games+Studio",
+    "ad_supported": true,
+    "in_app_purchases": false,
+    "advertiser_country": "PK",
+    "ad_network_names": [
+      "Google"
+    ],
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": null,
+    "creative_count": 1,
+    "md5_hashes": [
+      "d7fec4230121b2957469d915c4928daf"
+    ],
+    "md5_file_extensions": [
+      "webm"
+    ]
+  },
+  {
+    "name": "Horror Escape for Verity: Cats",
+    "store_id": "animal.hospital.escape",
+    "store": 1,
+    "category": "game_action",
+    "installs": 389324,
+    "rating": 4.54032,
+    "rating_count": 2082,
+    "installs_sum_1w": 48590,
+    "installs_sum_4w": 323147.0,
+    "installs_z_score_2w": 1.9144392442,
+    "installs_z_score_4w": 3.0414135918,
+    "release_date": "2026-07-31T00:00:00.000",
+    "icon_128": "beb964626996662c_128.png",
+    "developer_name": "Kids Games LLC",
+    "developer_id": "6566434917716295659",
+    "ad_supported": true,
+    "in_app_purchases": true,
+    "advertiser_country": "US",
+    "ad_network_names": [
+      "Google"
+    ],
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": [
+      "adjust.com",
+      "appmetrica.yandex.com",
+      "metrica.yandex.com"
+    ],
+    "creative_count": 1,
+    "md5_hashes": [
+      "15cf6bdf3fc7ff3504bf990e4979cb65"
+    ],
+    "md5_file_extensions": [
+      "webm"
+    ]
+  },
+  {
+    "name": "Fluvsies Care: Princess",
+    "store_id": "com.tutotoons.app.fluvsiescareprincess",
+    "store": 1,
+    "category": "game_educational",
+    "installs": 180964,
+    "rating": 4.0460215,
+    "rating_count": 329,
+    "installs_sum_1w": 8921,
+    "installs_sum_4w": 38029.0,
+    "installs_z_score_2w": -2.1902156992,
+    "installs_z_score_4w": -2.0458754041,
+    "release_date": "2026-07-06T00:00:00.000",
+    "icon_128": "b19b50dac55707a5_128.png",
+    "developer_name": "TutoTOONS",
+    "developer_id": "6493980387780624296",
+    "ad_supported": true,
+    "in_app_purchases": true,
+    "advertiser_country": "GB",
+    "ad_network_names": [
+      "TutoADS"
+    ],
+    "ad_network_domains": [
+      "tutoads.tv"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/tutoads.tv/logo_200x200.jpeg"
+    ],
+    "mmp_domains": [
+      "singular.net"
+    ],
+    "creative_count": 4,
+    "md5_hashes": [
+      "2703eeb736066dbcebf33608d328fd64",
+      "56c56de43e7b3ab6a681f549fd75b5cd",
+      "8ace8175331c7e970c281cb2d05e4bf5",
+      "d2335a6b6a7bcd2cdf62f7fd385c98a3"
+    ],
+    "md5_file_extensions": [
+      "jpeg",
+      "mp4"
+    ]
+  },
+  {
+    "name": "Memory Jigsaw: Vintage Games",
+    "store_id": "vintage.jigsaw.senior.solitaire.nostalgia.art",
+    "store": 1,
+    "category": "game_puzzle",
+    "installs": 57205,
+    "rating": 4.7695427,
+    "rating_count": 906,
+    "installs_sum_1w": 5404,
+    "installs_sum_4w": 20451.0,
+    "installs_z_score_2w": 0.9330142152,
+    "installs_z_score_4w": 0.9238516862,
+    "release_date": "2026-07-05T00:00:00.000",
+    "icon_128": "91b4b4633a4f6be0_128.png",
+    "developer_name": "StartNewGames",
+    "developer_id": "5009674197417155957",
+    "ad_supported": true,
+    "in_app_purchases": false,
+    "advertiser_country": "CN",
+    "ad_network_names": [
+      "Google"
+    ],
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": null,
+    "creative_count": 1,
+    "md5_hashes": [
+      "e4d4ebee6e6f04c4520a03380502c336"
+    ],
+    "md5_file_extensions": [
+      "webm"
+    ]
+  },
+  {
+    "name": "\u042f\u043d\u0434\u0435\u043a\u0441 \u0426\u0432\u0435\u0442\u044b",
+    "store_id": "ru.yandex.flowers",
+    "store": 1,
+    "category": "shopping",
+    "installs": 46046,
+    "rating": null,
+    "rating_count": 0,
+    "installs_sum_1w": 2850,
+    "installs_sum_4w": 24190.0,
+    "installs_z_score_2w": 0.2038183278,
+    "installs_z_score_4w": 0.7601175113,
+    "release_date": "2026-07-17T00:00:00.000",
+    "icon_128": "eb0e93e4194e6c1b_128.png",
+    "developer_name": "Mikromobilnost LLC Belgrade",
+    "developer_id": "Mikromobilnost+LLC+Belgrade",
+    "ad_supported": false,
+    "in_app_purchases": false,
+    "advertiser_country": "RS",
+    "ad_network_names": [
+      "Yandex"
+    ],
+    "ad_network_domains": [
+      "yandex.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/yandex.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": [
+      "adjust.com"
+    ],
+    "creative_count": 4,
+    "md5_hashes": [
+      "3309962d857bd9f1bd6e62d00bf273f9",
+      "49fb8b64fbcc9e7922b853adf17fc20e",
+      "d3ec9cc4a44b5180b6e65a12e7f8c716",
+      "df70df422389ff3afea969463a8f0c3e"
+    ],
+    "md5_file_extensions": [
+      "png"
+    ]
+  },
+  {
+    "name": "ASMR Girl: Livestream Mukbang",
+    "store_id": "com.asmrgirl.livestreammukbang",
+    "store": 1,
+    "category": "game_simulation",
+    "installs": 19749,
+    "rating": null,
+    "rating_count": 0,
+    "installs_sum_1w": 4291,
+    "installs_sum_4w": 19749.0,
+    "installs_z_score_2w": -0.0420894349,
+    "installs_z_score_4w": -0.0804742523,
+    "release_date": "2026-08-25T00:00:00.000",
+    "icon_128": "d259676b1d942a8d_128.png",
+    "developer_name": "ABW apps",
+    "developer_id": "ABW+apps",
+    "ad_supported": true,
+    "in_app_purchases": false,
+    "advertiser_country": "ID",
+    "ad_network_names": [
+      "Google"
+    ],
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": null,
+    "creative_count": 1,
+    "md5_hashes": [
+      "63028be12c273d8db7cee1b639fd94e5"
+    ],
+    "md5_file_extensions": [
+      "webm"
+    ]
+  },
+  {
+    "name": "Meloria: AI Song & Video Maker",
+    "store_id": "ai.meloria.app",
+    "store": 1,
+    "category": "music_and_audio",
+    "installs": 17501,
+    "rating": 4.1880155,
+    "rating_count": 0,
+    "installs_sum_1w": 899,
+    "installs_sum_4w": 5989.0,
+    "installs_z_score_2w": -0.5980922356,
+    "installs_z_score_4w": -0.3839483245,
+    "release_date": "2026-07-05T00:00:00.000",
+    "icon_128": "b9f9c686c21bc364_128.png",
+    "developer_name": "PND AI 360",
+    "developer_id": "8660146909386096489",
+    "ad_supported": true,
+    "in_app_purchases": true,
+    "advertiser_country": "VN",
+    "ad_network_names": null,
+    "ad_network_domains": null,
+    "ad_network_logo_urls": null,
+    "mmp_domains": null,
+    "creative_count": 15,
+    "md5_hashes": [
+      "2b88e9fd33e4e097ca7ebc10dde8e001",
+      "3c5fed019bd6924cae1d42c5ace2f90e",
+      "44f558480be1d282674d0d352de6488c",
+      "5ca4afbb8287b0c18a3e6a4f84025b06",
+      "5cfae7d7c604a9e108eea40e6268696b",
+      "82c84cecb031bbcf8babfc339aa551b0",
+      "8a6da4f76b1f87975908acad0953a019",
+      "9a8dd7cb50b49d965a5865b7cd3f1da3",
+      "9f3affa2fd741557777cf7620c7ce07e",
+      "aea4fa967a201355d7a3e92de5329428",
+      "b0b67c9ba0aa278f31f463695a40c64b",
+      "b5bf44ae3d2792a438849f6c9ddd1eb6",
+      "be2366f5a839c5a64a17a9cf7f9f866f",
+      "c0145298f12be4d497565526defd0098",
+      "c6545fe7359c526860bc7b296663cab9"
+    ],
+    "md5_file_extensions": [
+      "jpeg"
+    ]
+  },
+  {
+    "name": "ASMR Car Restore: Wash & Fix",
+    "store_id": "com.htk.carrestore.washfix.asmr",
+    "store": 1,
+    "category": "game_role_playing",
+    "installs": 6806,
+    "rating": null,
+    "rating_count": 0,
+    "installs_sum_1w": 5065,
+    "installs_sum_4w": 6340.0,
+    "installs_z_score_2w": 5.8646509569,
+    "installs_z_score_4w": 2.6385697015,
+    "release_date": "2026-08-08T00:00:00.000",
+    "icon_128": "9df863588ed65914_128.png",
+    "developer_name": "HAI TRUNG KIM BUSINESS TRADING COMPANY LIMITED",
+    "developer_id": "HAI+TRUNG+KIM+BUSINESS+TRADING+COMPANY+LIMITED",
+    "ad_supported": true,
+    "in_app_purchases": false,
+    "advertiser_country": "VN",
+    "ad_network_names": [
+      "Google"
+    ],
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": null,
+    "creative_count": 1,
+    "md5_hashes": [
+      "be757da6908020228627d0edc4313e9a"
+    ],
+    "md5_file_extensions": [
+      "webm"
+    ]
+  },
+  {
+    "name": "Snow Guy",
+    "store_id": "com.snow.ball.zd.guy",
+    "store": 1,
+    "category": "game_arcade",
+    "installs": 916,
+    "rating": null,
+    "rating_count": 0,
+    "installs_sum_1w": 5,
+    "installs_sum_4w": 64.0,
+    "installs_z_score_2w": -0.6131650965,
+    "installs_z_score_4w": -0.5618821976,
+    "release_date": "2026-07-09T00:00:00.000",
+    "icon_128": "b973435ec823c4e6_128.png",
+    "developer_name": "Zendius JSC",
+    "developer_id": "4720320392230494588",
+    "ad_supported": true,
+    "in_app_purchases": false,
+    "advertiser_country": "VN",
+    "ad_network_names": [
+      "Google"
+    ],
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": null,
+    "creative_count": 1,
+    "md5_hashes": [
+      "875650dcf724b129f4f5451e813b57ca"
+    ],
+    "md5_file_extensions": [
+      "webm"
+    ]
+  }
+]

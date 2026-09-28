@@ -1,0 +1,216 @@
+[
+  {
+    "ad_network_name": "Google",
+    "ad_network_domain": "google.com",
+    "company_logo_url": "company-logos/google.com/logo_200x200.jpeg",
+    "all_domains": [
+      "google.com",
+      "youtube.com"
+    ],
+    "publisher_count": 492,
+    "creatives_count": 629,
+    "advertiser_count": 270,
+    "advertiser_count_strong": 179,
+    "advertiser_count_weak": 166
+  },
+  {
+    "ad_network_name": "Affle",
+    "ad_network_domain": "affle.com",
+    "company_logo_url": "company-logos/affle.com/logo_200x200.jpeg",
+    "all_domains": [
+      "jampp.com",
+      "revx.io",
+      "youappi.com"
+    ],
+    "publisher_count": 162,
+    "creatives_count": 104,
+    "advertiser_count": 6,
+    "advertiser_count_strong": 6,
+    "advertiser_count_weak": 0
+  },
+  {
+    "ad_network_name": "BidEase",
+    "ad_network_domain": "bidease.com",
+    "company_logo_url": "company-logos/bidease.com/logo_200x200.jpeg",
+    "all_domains": [
+      "bidease.com"
+    ],
+    "publisher_count": 88,
+    "creatives_count": 62,
+    "advertiser_count": 11,
+    "advertiser_count_strong": 11,
+    "advertiser_count_weak": 0
+  },
+  {
+    "ad_network_name": "Moloco",
+    "ad_network_domain": "moloco.com",
+    "company_logo_url": "company-logos/moloco.com/logo_200x200.jpeg",
+    "all_domains": [
+      "moloco.com"
+    ],
+    "publisher_count": 81,
+    "creatives_count": 68,
+    "advertiser_count": 7,
+    "advertiser_count_strong": 7,
+    "advertiser_count_weak": 0
+  },
+  {
+    "ad_network_name": "Yandex",
+    "ad_network_domain": "yandex.com",
+    "company_logo_url": "company-logos/yandex.com/logo_200x200.jpeg",
+    "all_domains": [
+      "yandex.com"
+    ],
+    "publisher_count": 58,
+    "creatives_count": 291,
+    "advertiser_count": 37,
+    "advertiser_count_strong": 4,
+    "advertiser_count_weak": 36
+  },
+  {
+    "ad_network_name": "AppLovin",
+    "ad_network_domain": "applovin.com",
+    "company_logo_url": "company-logos/applovin.com/logo_200x200.jpeg",
+    "all_domains": [
+      "applovin.com"
+    ],
+    "publisher_count": 57,
+    "creatives_count": 167,
+    "advertiser_count": 0,
+    "advertiser_count_strong": 0,
+    "advertiser_count_weak": 0
+  },
+  {
+    "ad_network_name": "Unity",
+    "ad_network_domain": "unity.com",
+    "company_logo_url": "company-logos/unity.com/logo_200x200.jpeg",
+    "all_domains": [
+      "unity.com",
+      "unity3d.com"
+    ],
+    "publisher_count": 51,
+    "creatives_count": 72,
+    "advertiser_count": 32,
+    "advertiser_count_strong": 8,
+    "advertiser_count_weak": 24
+  },
+  {
+    "ad_network_name": "Remerge",
+    "ad_network_domain": "remerge.io",
+    "company_logo_url": "company-logos/remerge.io/logo_200x200.jpeg",
+    "all_domains": [
+      "remerge.io"
+    ],
+    "publisher_count": 41,
+    "creatives_count": 56,
+    "advertiser_count": 2,
+    "advertiser_count_strong": 2,
+    "advertiser_count_weak": 0
+  },
+  {
+    "ad_network_name": "Mobvista",
+    "ad_network_domain": "mobvista.com",
+    "company_logo_url": "company-logos/mobvista.com/logo_200x200.jpeg",
+    "all_domains": [
+      "mintegral.com"
+    ],
+    "publisher_count": 29,
+    "creatives_count": 28,
+    "advertiser_count": 4,
+    "advertiser_count_strong": 4,
+    "advertiser_count_weak": 0
+  },
+  {
+    "ad_network_name": "Criteo",
+    "ad_network_domain": "criteo.com",
+    "company_logo_url": "company-logos/criteo.com/logo_200x200.jpeg",
+    "all_domains": [
+      "criteo.com"
+    ],
+    "publisher_count": 19,
+    "creatives_count": 19,
+    "advertiser_count": 0,
+    "advertiser_count_strong": 0,
+    "advertiser_count_weak": 0
+  },
+  {
+    "ad_network_name": "Appier",
+    "ad_network_domain": "appier.com",
+    "company_logo_url": "company-logos/appier.com/logo_200x200.jpeg",
+    "all_domains": [
+      "appier.com"
+    ],
+    "publisher_count": 17,
+    "creatives_count": 13,
+    "advertiser_count": 3,
+    "advertiser_count_strong": 3,
+    "advertiser_count_weak": 0
+  },
+  {
+    "ad_network_name": "Digital Turbine",
+    "ad_network_domain": "digitalturbine.com",
+    "company_logo_url": "company-logos/digitalturbine.com/logo_200x200.jpeg",
+    "all_domains": [
+      "adcolony.com",
+      "appreciate.mobi",
+      "fyber.com"
+    ],
+    "publisher_count": 16,
+    "creatives_count": 37,
+    "advertiser_count": 4,
+    "advertiser_count_strong": 4,
+    "advertiser_count_weak": 0
+  },
+  {
+    "ad_network_name": "InMobi",
+    "ad_network_domain": "inmobi.com",
+    "company_logo_url": "company-logos/inmobi.com/logo_200x200.jpeg",
+    "all_domains": [
+      "inmobi.com"
+    ],
+    "publisher_count": 15,
+    "creatives_count": 15,
+    "advertiser_count": 1,
+    "advertiser_count_strong": 1,
+    "advertiser_count_weak": 0
+  },
+  {
+    "ad_network_name": "Appodeal",
+    "ad_network_domain": "appodeal.com",
+    "company_logo_url": "company-logos/appodeal.com/logo_200x200.jpeg",
+    "all_domains": [
+      "bidmachine.io"
+    ],
+    "publisher_count": 15,
+    "creatives_count": 18,
+    "advertiser_count": 3,
+    "advertiser_count_strong": 3,
+    "advertiser_count_weak": 0
+  },
+  {
+    "ad_network_name": "Celtra",
+    "ad_network_domain": "celtra.com",
+    "company_logo_url": "company-logos/celtra.com/logo_200x200.jpeg",
+    "all_domains": [
+      "celtra.com"
+    ],
+    "publisher_count": 14,
+    "creatives_count": 13,
+    "advertiser_count": 0,
+    "advertiser_count_strong": 0,
+    "advertiser_count_weak": 0
+  },
+  {
+    "ad_network_name": "LiftOff",
+    "ad_network_domain": "liftoff.io",
+    "company_logo_url": "company-logos/liftoff.io/logo_200x200.jpeg",
+    "all_domains": [
+      "vungle.com"
+    ],
+    "publisher_count": 13,
+    "creatives_count": 12,
+    "advertiser_count": 8,
+    "advertiser_count_strong": 8,
+    "advertiser_count_weak": 0
+  }
+]
