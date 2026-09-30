@@ -26,6 +26,7 @@ from dbcon.queries import (
     get_sdk_pattern_companies,
     get_user_requested_latest_sdks,
 )
+from dbcon.static import get_company_logos_df
 
 logger = get_logger(__name__)
 
@@ -116,16 +117,7 @@ class SdksController(Controller):
 
         overview = get_sdk_pattern(state, value_pattern)
 
-        is_google = overview["store"].str.startswith("Google")
-        android_overview = overview[is_google]
-        ios_overview = overview[~is_google]
-
-        ios_overview_dict = ios_overview.to_dict(orient="records")
-        android_overview_dict = android_overview.to_dict(orient="records")
-
-        overview_resp = SdkOverview(
-            ios_overview=ios_overview_dict, android_overview=android_overview_dict
-        )
+        overview_resp = SdkOverview(apps=overview.to_dict(orient="records"))
 
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(f"{self.path}/{value_pattern} took {duration}ms")
@@ -146,6 +138,17 @@ class SdksController(Controller):
         start = time.perf_counter() * 1000
 
         overview = get_sdk_pattern_companies(state, value_pattern)
+
+        if not overview.empty:
+            company_logos = get_company_logos_df(state).drop_duplicates(
+                subset=["company_domain"], keep="first"
+            )
+            overview = overview.merge(
+                company_logos[["company_domain", "company_logo_url"]],
+                on="company_domain",
+                how="left",
+                validate="m:1",
+            )
 
         overview_dict = overview.to_dict(orient="records")
 

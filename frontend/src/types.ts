@@ -408,8 +408,24 @@ export interface SdkOverview {
 	store: string;
 	store_id: string;
 	app_name: string;
+	app_icon_url: string;
+	category: string | null;
+	is_removed: boolean | null;
+	developer_name: string | null;
 	installs: number;
-	rating_count: number;
+	installs_sum_4w: number | null;
+}
+
+export interface SdkPatternCompany {
+	company_name: string;
+	company_domain: string;
+	company_logo_url: string | null;
+	parent_company_domain: string | null;
+	sdk_name: string;
+	pattern_type: string;
+	pattern_value: string;
+	app_count: number | null;
+	parent_company_name: string | null;
 }
 
 export interface CompanyOverviewPlatforms {

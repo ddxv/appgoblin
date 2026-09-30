@@ -755,8 +755,7 @@ class SdksUserRequested:
 class SdkOverview:
     """Contains a list of sdk overview objects."""
 
-    ios_overview: list[dict]
-    android_overview: list[dict]
+    apps: list[dict]
 
 
 @dataclass

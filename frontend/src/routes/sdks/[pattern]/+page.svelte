@@ -2,26 +2,29 @@
 	import { page } from '$app/state';
 	let pattern = page.params.pattern;
 	import SDKOverviewTable from '$lib/SDKOverviewTable.svelte';
+	import SDKPatternCompany from '$lib/SDKPatternCompany.svelte';
 	let { data } = $props();
 	import WhiteCard from '$lib/WhiteCard.svelte';
-	import CompanyButton from '$lib/CompanyButton.svelte';
 </script>
 
 <svelte:head>
 	<meta name="robots" content="noindex, nofollow" />
 </svelte:head>
 
-<h1 class="text-2xl font-bold break-all">{pattern}</h1>
+<div class="p-2 md:p-4 space-y-4 md:space-y-6">
+	<header class="px-2 md:px-4">
+		<p class="text-sm uppercase tracking-wider text-surface-600-400">SDK pattern</p>
+		<h1 class="text-3xl md:text-4xl font-bold break-all">{pattern}</h1>
+	</header>
 
-<div class="p-2 md:p-4">
-	<div class="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-6 p-2 md:p-4">
+	<div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 px-2 md:px-4">
 		<WhiteCard>
 			{#snippet title()}
 				Info
 			{/snippet}
 			<p class="p-2 md:p-4 text-sm md:text-base">
 				These are apps and companies that had some part of an Android Manifest, Info.plist,
-				directories or files that matched this string. Matching apps:
+				directories or files that matched this string.
 			</p>
 		</WhiteCard>
 
@@ -29,22 +32,7 @@
 			loading
 		{:then myMatchedCompanies}
 			{#if myMatchedCompanies.companies.length > 0}
-				<WhiteCard>
-					{#snippet title()}
-						Companies
-					{/snippet}
-					<p class="p-2 md:p-4 text-sm md:text-base">
-						These are the companies that have apps that matched this string.
-					</p>
-					<div class="flex flex-wrap gap-2 justify-center p-2 md:p-4">
-						{#each myMatchedCompanies.companies as company}
-							<CompanyButton
-								companyName={company.company_name}
-								companyDomain={company.company_domain}
-							/>
-						{/each}
-					</div>
-				</WhiteCard>
+				<SDKPatternCompany matches={myMatchedCompanies.companies} />
 			{:else}
 				<p class="p-2 md:p-4 text-sm md:text-base">
 					No companies matched this string, if you know how to match this string, please contact us
@@ -52,34 +40,24 @@
 				</p>
 			{/if}
 		{/await}
-
-		{#await data.matchedApps}
-			loading
-		{:then myMatchedApps}
-			<div>
-				<WhiteCard>
-					{#snippet title()}
-						Android Apps
-					{/snippet}
-					{#if myMatchedApps.android_overview.length > 0}
-						<SDKOverviewTable entries_table={myMatchedApps.android_overview} is_ios={false} />
-					{:else}
-						<p class="p-2 md:p-4 text-sm md:text-base">No matching Android apps found.</p>
-					{/if}
-				</WhiteCard>
-			</div>
-			<div>
-				<WhiteCard>
-					{#snippet title()}
-						iOS Apps
-					{/snippet}
-					{#if myMatchedApps.ios_overview.length > 0}
-						<SDKOverviewTable entries_table={myMatchedApps.ios_overview} is_ios={true} />
-					{:else}
-						<p class="p-2 md:p-4 text-sm md:text-base">No matching iOS apps found.</p>
-					{/if}
-				</WhiteCard>
-			</div>
-		{/await}
 	</div>
+
+	{#await data.matchedApps}
+		loading
+	{:then myMatchedApps}
+		<section class="px-2 md:px-4">
+			<WhiteCard>
+				{#snippet title()}
+					Matching Apps <span class="text-sm font-normal text-surface-600-400"
+						>({myMatchedApps.apps.length})</span
+					>
+				{/snippet}
+				{#if myMatchedApps.apps.length > 0}
+					<SDKOverviewTable entries_table={myMatchedApps.apps} />
+				{:else}
+					<p class="p-4 text-sm md:text-base">No matching apps found.</p>
+				{/if}
+			</WhiteCard>
+		</section>
+	{/await}
 </div>
