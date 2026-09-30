@@ -6,7 +6,7 @@ SELECT
     cso.parent_company_name,
     cso.app_count
 FROM
-    frontend.test_companies_sdks_overview AS cso
+    frontend.companies_sdks_overview AS cso
 WHERE
     cso.company_domain = :company_domain
     OR cso.parent_company_domain = :company_domain;
