@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { CompanySDKsDict } from '../types';
 	import WhiteCard from './WhiteCard.svelte';
+	import { formatNumber } from './utils/formatNumber';
 
 	interface Props {
 		mySdks: CompanySDKsDict;
@@ -12,12 +13,13 @@
 		...new Set(
 			Object.values(mySdks.companies || {})
 				.flatMap((c) => c.sdks || [])
-				.flatMap((c) => c.package_patterns || [])
+				.flatMap((c) => c.paths || [])
+				.map((pattern) => pattern.pattern)
 				.filter((path) => path != null)
 		)
 	]);
 
-	function truncateList(list: string[], maxItems = 3) {
+	function truncateList<T>(list: T[], maxItems = 8) {
 		return list.slice(0, maxItems);
 	}
 </script>
@@ -31,16 +33,47 @@
 						<span class="text-sm font-semibold">{companyName} - {sdkName}</span>
 					{/snippet}
 					<div class="p-4 text-xs">
-						<h4 class="font-medium uppercase tracking-wider mb-1">Package Patterns</h4>
-						<ul class="list-disc list-inside space-y-0.5">
-							{#if patterns && patterns.package_patterns.length > 0}
+						{#if patterns && patterns.package_patterns.length > 0}
+							<h4 class="font-medium uppercase tracking-wider mb-1">Package Patterns</h4>
+							<ul class="list-disc list-inside space-y-0.5">
 								{#each truncateList(patterns.package_patterns) as pattern}
-									<li class=""><a href={`/sdks/${pattern}`} rel="nofollow">{pattern}</a></li>
+									<li class="">
+										<a href={`/sdks/${pattern.pattern}`} rel="nofollow">{pattern.pattern}</a>
+										{#if pattern.app_count !== null}
+											<span class="text-gray-500">({formatNumber(pattern.app_count)} apps)</span>
+										{/if}
+									</li>
 								{/each}
-							{:else}
-								<li class="">No package patterns found</li>
-							{/if}
-						</ul>
+							</ul>
+						{/if}
+
+						{#if patterns && patterns.paths.length > 0}
+							<h4 class="font-medium uppercase tracking-wider mt-3 mb-1">Path Patterns</h4>
+							<ul class="list-disc list-inside space-y-0.5">
+								{#each truncateList(patterns.paths) as path}
+									<li>
+										{path.pattern}
+										{#if path.app_count !== null}
+											<span class="text-gray-500">({formatNumber(path.app_count)} apps)</span>
+										{/if}
+									</li>
+								{/each}
+							</ul>
+						{/if}
+
+						{#if patterns && patterns.mediation_patterns.length > 0}
+							<h4 class="font-medium uppercase tracking-wider mt-3 mb-1">Mediation Patterns</h4>
+							<ul class="list-disc list-inside space-y-0.5">
+								{#each truncateList(patterns.mediation_patterns) as mediation}
+									<li>
+										{mediation.pattern}
+										{#if mediation.app_count !== null}
+											<span class="text-gray-500">({formatNumber(mediation.app_count)} apps)</span>
+										{/if}
+									</li>
+								{/each}
+							</ul>
+						{/if}
 					</div>
 				</WhiteCard>
 			</div>

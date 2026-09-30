@@ -145,12 +145,21 @@ class CompanyTypes:
 
 
 @dataclass
+class SDKPattern:
+    """A detected SDK pattern and the number of apps using it, if known."""
+
+    pattern: str
+    app_count: int | None
+
+
+@dataclass
 class SDKPatterns:
-    """Holds a list of package patterns and paths for a company."""
+    """Holds package, path, and mediation patterns for a company SDK."""
 
     sdk_name: str
-    package_patterns: list[str]
-    paths: list[str]
+    package_patterns: list[SDKPattern]
+    paths: list[SDKPattern]
+    mediation_patterns: list[SDKPattern]
 
 
 @dataclass

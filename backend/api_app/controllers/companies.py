@@ -2528,7 +2528,22 @@ class CompaniesController(Controller):
 
         company_sdks: dict = {}
 
-        # Group by company_name and sdk_name
+        def _pattern_rows(group: pd.DataFrame, pattern_type: str) -> list[dict]:
+            """Shape query pattern rows while preserving nullable app counts."""
+            rows = group[group["pattern_type"].astype(str).str.lower() == pattern_type]
+            return [
+                {
+                    "pattern": str(row.pattern_value),
+                    "app_count": (
+                        None if pd.isna(row.app_count) else int(row.app_count)
+                    ),
+                }
+                for row in rows.itertuples(index=False)
+                if pd.notna(row.pattern_value)
+            ]
+
+        # Group by company name and SDK name. The query now returns one row per
+        # pattern, with pattern_type replacing the old package/path columns.
         for (company, sdk), group in df.groupby(["company_name", "sdk_name"]):
             # Create entry for company if it doesn't exist
             if company not in company_sdks:
@@ -2536,12 +2551,9 @@ class CompaniesController(Controller):
 
             # Add sdk data
             company_sdks[company][sdk] = {
-                "package_patterns": group["package_pattern"].unique().tolist(),
-                "paths": [
-                    path
-                    for path in group["path_pattern"].unique().tolist()
-                    if pd.notna(path)
-                ],
+                "package_patterns": _pattern_rows(group, "package"),
+                "paths": _pattern_rows(group, "path"),
+                "mediation_patterns": _pattern_rows(group, "mediation"),
             }
         mydict = CompanyPatternsDict(
             companies=company_sdks,
