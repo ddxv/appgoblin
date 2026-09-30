@@ -4,8 +4,11 @@ SELECT
     sa.store,
     sa.store_id,
     sa.name AS app_name,
+    sa.category,
+    sa.is_removed,
+    sa.developer_name,
     sa.installs,
-    sa.rating_count,
+    sa.installs_sum_4w,
     CONCAT(
         'https://media.appgoblin.info/app-icons/',
         sa.store_id,

@@ -408,8 +408,24 @@ export interface SdkOverview {
 	store: string;
 	store_id: string;
 	app_name: string;
+	app_icon_url: string;
+	category: string | null;
+	is_removed: boolean | null;
+	developer_name: string | null;
 	installs: number;
-	rating_count: number;
+	installs_sum_4w: number | null;
+}
+
+export interface SdkPatternCompany {
+	company_name: string;
+	company_domain: string;
+	company_logo_url: string | null;
+	parent_company_domain: string | null;
+	sdk_name: string;
+	pattern_type: string;
+	pattern_value: string;
+	app_count: number | null;
+	parent_company_name: string | null;
 }
 
 export interface CompanyOverviewPlatforms {
@@ -559,13 +575,14 @@ export interface CompanyLayoutDetails {
 }
 
 export interface CompanyPatterns {
-	package_patterns: string[];
-	paths: string[];
+	pattern: string;
+	app_count: number | null;
 }
 
 export interface SDKPatterns {
-	package_patterns: string[];
-	paths: string[];
+	package_patterns: CompanyPatterns[];
+	paths: CompanyPatterns[];
+	mediation_patterns: CompanyPatterns[];
 }
 
 export interface CompanySDKs {
@@ -623,15 +640,15 @@ export interface CompanyCategoryOverview {
 	domain_overview?: CompanyOverviewScope | null;
 	parent_overview?: CompanyOverviewScope | null;
 	mediation_adapters:
-		| {
-				adapter_string: string;
-				adapter_company_domain: string;
-				adapter_company_name: string;
-				adapter_logo_url: string;
-				app_category: string;
-				app_count: number;
-		  }[]
-		| null;
+	| {
+		adapter_string: string;
+		adapter_company_domain: string;
+		adapter_company_name: string;
+		adapter_logo_url: string;
+		app_category: string;
+		app_count: number;
+	}[]
+	| null;
 	categories: {
 		[key: string]: CategoryAppStats;
 	};

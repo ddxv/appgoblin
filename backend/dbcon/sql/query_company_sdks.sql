@@ -1,9 +1,10 @@
 SELECT
     cso.company_name,
     cso.sdk_name,
-    cso.package_pattern,
-    cso.path_pattern,
-    cso.parent_company_name
+    cso.pattern_type,
+    cso.pattern_value,
+    cso.parent_company_name,
+    cso.app_count
 FROM
     frontend.companies_sdks_overview AS cso
 WHERE
