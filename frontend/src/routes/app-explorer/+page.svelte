@@ -246,8 +246,10 @@
 				const payload = (await response.json()) as unknown;
 				const entries = Array.isArray(payload)
 					? payload
-						.map((entry) => normalizeCompanyDirectoryEntry(entry as Record<string, unknown>))
-						.filter((entry): entry is CompanyDirectoryEntry => entry != null && entry.company_id > 0)
+							.map((entry) => normalizeCompanyDirectoryEntry(entry as Record<string, unknown>))
+							.filter(
+								(entry): entry is CompanyDirectoryEntry => entry != null && entry.company_id > 0
+							)
 					: [];
 
 				companyDirectory = entries;
