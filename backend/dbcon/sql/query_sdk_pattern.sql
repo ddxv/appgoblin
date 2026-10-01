@@ -1,3 +1,8 @@
+WITH matching_strings AS MATERIALIZED (
+    SELECT id, xml_path, value_name
+    FROM version_strings
+    WHERE LOWER(value_name) LIKE LOWER(:value_pattern) || '%'
+)
 SELECT
     vs.xml_path,
     vs.value_name,
@@ -15,14 +20,9 @@ SELECT
         '/',
         sa.icon_64
     ) AS app_icon_url
-FROM
-    adtech.app_sdk_strings AS sass
-INNER JOIN version_strings AS vs
-    ON
-        sass.string_id = vs.id
+FROM matching_strings AS vs
+INNER JOIN adtech.app_sdk_strings AS sass
+    ON vs.id = sass.string_id
 LEFT JOIN frontend.store_apps_overview AS sa
-    ON
-        sass.store_app = sa.id
-WHERE
-    LOWER(vs.value_name) LIKE LOWER(:value_pattern) || '%'
+    ON sass.store_app = sa.id
 LIMIT 100;
