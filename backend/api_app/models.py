@@ -258,7 +258,9 @@ class CompanyDirectoryEntry:
     """Slim company directory row for frontend selectors and lookups."""
 
     name: str
-    company_domain: str
+    company_domain: str | None = None
+    company_id: int | None = None
+    parent_company_id: int | None = None
     parent_company_domain: str | None = None
     parent_company_name: str | None = None
     company_logo_url: str | None = None

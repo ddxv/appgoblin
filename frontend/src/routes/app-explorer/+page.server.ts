@@ -7,8 +7,8 @@ import { userHasTierAccess } from '$lib/server/subscription';
 import { getCachedData } from '../../hooks.server';
 
 interface CrossfilterPayload {
-	include_domains: string[];
-	exclude_domains: string[];
+	include_company_ids: number[];
+	exclude_company_ids: number[];
 	require_sdk_api: boolean;
 	require_iap: boolean;
 	require_ads: boolean;
@@ -24,13 +24,13 @@ interface CrossfilterPayload {
 	max_installs_d30: number | null;
 }
 
-function parseJsonArrayField(value: FormDataEntryValue | null): string[] {
+function parseJsonArrayField(value: FormDataEntryValue | null): number[] {
 	if (value == null) return [];
 
 	try {
 		const parsed = JSON.parse(value.toString());
 		return Array.isArray(parsed)
-			? parsed.filter((entry): entry is string => typeof entry === 'string')
+			? parsed.filter((entry): entry is number => typeof entry === 'number' && Number.isInteger(entry))
 			: [];
 	} catch {
 		return [];
@@ -47,12 +47,12 @@ function parseOptionalNumberField(value: FormDataEntryValue | null): number | nu
 }
 
 function buildCrossfilterPayload(data: FormData, hasB2BSdkAccess: boolean): CrossfilterPayload {
-	const parsedIncludeDomains = parseJsonArrayField(data.get('include_domains'));
-	const parsedExcludeDomains = parseJsonArrayField(data.get('exclude_domains'));
+	const parsedIncludeCompanyIds = parseJsonArrayField(data.get('include_company_ids'));
+	const parsedExcludeCompanyIds = parseJsonArrayField(data.get('exclude_company_ids'));
 
 	return {
-		include_domains: hasB2BSdkAccess ? parsedIncludeDomains : [],
-		exclude_domains: hasB2BSdkAccess ? parsedExcludeDomains : [],
+		include_company_ids: hasB2BSdkAccess ? parsedIncludeCompanyIds : [],
+		exclude_company_ids: hasB2BSdkAccess ? parsedExcludeCompanyIds : [],
 		require_sdk_api: data.get('require_sdk_api') === 'true',
 		require_iap: data.get('require_iap') === 'true',
 		require_ads: data.get('require_ads') === 'true',
@@ -71,8 +71,8 @@ function buildCrossfilterPayload(data: FormData, hasB2BSdkAccess: boolean): Cros
 
 function hasExportFilters(payload: CrossfilterPayload): boolean {
 	return (
-		payload.include_domains.length > 0 ||
-		payload.exclude_domains.length > 0 ||
+		payload.include_company_ids.length > 0 ||
+		payload.exclude_company_ids.length > 0 ||
 		payload.require_sdk_api ||
 		payload.require_iap ||
 		payload.require_ads ||

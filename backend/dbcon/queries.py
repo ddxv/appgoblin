@@ -368,6 +368,11 @@ def get_companies_stats(
     return df
 
 
+def get_company_directory(state: State) -> pd.DataFrame:
+    """Get the mapped company IDs and names used by App Explorer selectors."""
+    return pd.read_sql(sql.company_directory, state.dbcon.engine)
+
+
 def get_companies_top(
     state: State,
     type_slug: str | None = None,
@@ -430,6 +435,7 @@ def get_company_stats(
         df = (
             df.groupby(
                 [
+                    "company_id",
                     "company_domain",
                     "company_name",
                     "store",
@@ -1167,8 +1173,8 @@ def get_keyword_apps(state: State, keyword: str, rank: int = 20) -> pd.DataFrame
 
 def query_apps_crossfilter(
     state: State,
-    include_domains: list[str] | None,
-    exclude_domains: list[str] | None,
+    include_company_ids: list[int] | None,
+    exclude_company_ids: list[int] | None,
     require_sdk_api: bool = False,
     require_iap: bool = False,
     require_ads: bool = False,
@@ -1185,9 +1191,8 @@ def query_apps_crossfilter(
     limit: int = 100,
 ) -> pd.DataFrame:
     """Query apps for analytics dashboard."""
-    # Ensure domains are lists, not None
-    include_domains = include_domains or []
-    exclude_domains = exclude_domains or []
+    include_company_ids = include_company_ids or []
+    exclude_company_ids = exclude_company_ids or []
 
     if category == "games":
         category = "game%"
@@ -1202,8 +1207,8 @@ def query_apps_crossfilter(
         sql.apps_crossfilter,
         state.dbcon.engine,
         params={
-            "include_domains": include_domains,
-            "exclude_domains": exclude_domains,
+            "include_company_ids": include_company_ids,
+            "exclude_company_ids": exclude_company_ids,
             "require_sdk_api": bool(require_sdk_api),
             "require_iap": bool(require_iap),
             "require_ads": bool(require_ads),

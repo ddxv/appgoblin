@@ -163,8 +163,8 @@ def create_crossfilter_export_csv(state: State, payload: dict) -> tuple[bytes, i
     """Run the export query and serialize the result to CSV bytes."""
     apps_df = query_apps_crossfilter(
         state,
-        include_domains=payload.get("include_domains"),
-        exclude_domains=payload.get("exclude_domains"),
+        include_company_ids=payload.get("include_company_ids"),
+        exclude_company_ids=payload.get("exclude_company_ids"),
         require_sdk_api=bool(payload.get("require_sdk_api", False)),
         require_iap=bool(payload.get("require_iap", False)),
         require_ads=bool(payload.get("require_ads", False)),
