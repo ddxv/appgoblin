@@ -1,11 +1,11 @@
 import { db } from '$lib/server/auth/db';
-import { buildAppAdsTxtUrl, buildCompanyVerifiedAppsUrl } from '$lib/server/downloads';
-
 import type { PageServerLoad } from './$types';
 
 type CompanyTotals = {
 	sdk_android_total_apps?: number | null;
 	sdk_ios_total_apps?: number | null;
+	api_android_total_apps?: number | null;
+	api_ios_total_apps?: number | null;
 };
 
 type CompanyDetailsForExports = {
@@ -41,17 +41,34 @@ export const load: PageServerLoad = async ({ locals, params, parent }) => {
 	const domain = params.domain ?? '';
 	const totals = companyDetails?.categories?.all;
 	const hasAdstxtData = Boolean(companyDetails?.adstxt_ad_domain_overview);
-	const hasAndroidData = Number(totals?.sdk_android_total_apps ?? 0) > 0;
-	const hasIosData = Number(totals?.sdk_ios_total_apps ?? 0) > 0;
+	const hasAndroidData =
+		Number(totals?.sdk_android_total_apps ?? 0) > 0 ||
+		Number(totals?.api_android_total_apps ?? 0) > 0;
+	const hasIosData =
+		Number(totals?.sdk_ios_total_apps ?? 0) > 0 ||
+		Number(totals?.api_ios_total_apps ?? 0) > 0;
+
+	const getSignedDownloadUrl = async (dataset: string, platform?: 'ios' | 'android') => {
+		const query = new URLSearchParams({ dataset, domain });
+		if (platform) query.set('platform', platform);
+		const response = await fetch(
+			`http://localhost:8000/api/public/exports/signed-url?${query.toString()}`
+		);
+		if (!response.ok) throw new Error(`Unable to sign ${dataset} download`);
+		const body = (await response.json()) as { url: string };
+		return body.url;
+	};
 
 	const downloadUrls = canDownload
 		? {
-				appAdsTxt: hasAdstxtData ? buildAppAdsTxtUrl(domain) : null,
-				companyVerifiedAndroid: hasAndroidData
-					? buildCompanyVerifiedAppsUrl(domain, 'android')
-					: null,
-				companyVerifiedIos: hasIosData ? buildCompanyVerifiedAppsUrl(domain, 'ios') : null
-			}
+			appAdsTxt: hasAdstxtData ? await getSignedDownloadUrl('app-ads-txt') : null,
+			companyVerifiedAndroid: hasAndroidData
+				? await getSignedDownloadUrl('company-verified-apps', 'android')
+				: null,
+			companyVerifiedIos: hasIosData
+				? await getSignedDownloadUrl('company-verified-apps', 'ios')
+				: null
+		}
 		: null;
 
 	return {

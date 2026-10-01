@@ -57,7 +57,7 @@
 		name="description"
 		content="Download the complete {data.companyName} market footprint — SDK adoption, API signals, and app-ads.txt records. Analysis-ready data for B2B prospecting, compliance, and competitive intelligence."
 	/>
-	<meta name="robots" content="noindex, nofollow" />
+	<meta name="robots" content="index, nofollow" />
 </svelte:head>
 
 <section class="mx-2 md:mx-auto md:max-w-4xl space-y-8">
