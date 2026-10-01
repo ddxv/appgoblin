@@ -1,5 +1,6 @@
 import { db } from './db';
 import { encodeHexLowerCase, generateRandomOTP, sha256 } from '$lib/server/auth/utils';
+export { sendPasswordResetEmail } from './email-verification';
 
 import type { RequestEvent } from '@sveltejs/kit';
 import type { User } from './user';
@@ -73,7 +74,7 @@ WHERE prs.id = $1`,
 		email: row.user_table_email,
 		code: row.code,
 		expiresAt: new Date(row.expires_at),
-		emailVerified: row.user_email_verified,
+		emailVerified: row.email_verified,
 		twoFactorVerified: row.two_factor_verified
 	};
 	const user: User = {
@@ -142,10 +143,6 @@ export function deletePasswordResetSessionTokenCookie(event: RequestEvent): void
 		path: '/',
 		secure: !import.meta.env.DEV
 	});
-}
-
-export function sendPasswordResetEmail(email: string, code: string): void {
-	console.log(`To ${email}: Your reset code is ${code}`);
 }
 
 export interface PasswordResetSession {
