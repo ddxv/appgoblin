@@ -112,6 +112,8 @@
 				);
 			case 'data-exports':
 				return (
+					Boolean(tabIndicators.has_api_signal) ||
+					Boolean(tabIndicators.adstxt_direct_app_count) ||
 					Boolean(tabIndicators.adstxt_direct_app_count) ||
 					Boolean(tabIndicators.adstxt_parent_app_count) ||
 					Boolean(tabIndicators.sdk_count)

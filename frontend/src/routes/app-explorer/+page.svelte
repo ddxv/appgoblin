@@ -27,8 +27,9 @@
 	}
 
 	interface CompanyDirectoryEntry {
+		company_id: number;
 		name: string;
-		company_domain: string;
+		company_domain?: string;
 		parent_company_domain: string | null;
 		parent_company_name: string | null;
 		company_logo_url: string | null;
@@ -65,8 +66,9 @@
 	);
 
 	// Filter state
-	let includeDomains = $state<string[]>([]);
-	let excludeDomains = $state<string[]>([]);
+	let includeCompanyIds = $state<number[]>([]);
+	let excludeCompanyIds = $state<number[]>([]);
+	let companyLabelsById = $state<Record<number, string>>({});
 	let requireSdkApi = $state(false);
 	let requireIap = $state(false);
 	let requireAds = $state(false);
@@ -112,8 +114,8 @@
 	const hasSearched = $derived(() => !!form?.success || !!form?.error);
 
 	function appendFilterFields(formData: FormData) {
-		formData.set('include_domains', JSON.stringify(hasB2BSdkAccess ? includeDomains : []));
-		formData.set('exclude_domains', JSON.stringify(hasB2BSdkAccess ? excludeDomains : []));
+		formData.set('include_company_ids', JSON.stringify(hasB2BSdkAccess ? includeCompanyIds : []));
+		formData.set('exclude_company_ids', JSON.stringify(hasB2BSdkAccess ? excludeCompanyIds : []));
 		formData.set('require_sdk_api', requireSdkApi.toString());
 		formData.set('require_iap', requireIap.toString());
 		formData.set('require_ads', requireAds.toString());
@@ -193,26 +195,21 @@
 
 	function setCompanyItems(target: 'include' | 'exclude', options: CompanyOption[]) {
 		updateCompanyLabels(options);
-
 		if (target === 'include') {
 			includeItems = options;
 			return;
 		}
-
 		excludeItems = options;
 	}
 
 	function normalizeCompanyDirectoryEntry(
 		entry: Record<string, unknown> | null | undefined
 	): CompanyDirectoryEntry | null {
-		const companyDomain =
-			typeof entry?.company_domain === 'string' ? entry.company_domain.trim() : '';
-		if (companyDomain === '') return null;
-
-		const name = typeof entry?.name === 'string' ? entry.name.trim() : companyDomain;
+		const name = typeof entry?.name === 'string' ? entry.name.trim() : '';
+		if (name === '') return null;
 		return {
-			name: name || companyDomain,
-			company_domain: companyDomain,
+			company_id: typeof entry?.company_id === 'number' ? entry.company_id : 0,
+			name,
 			parent_company_domain:
 				typeof entry?.parent_company_domain === 'string' &&
 				entry.parent_company_domain.trim() !== ''
@@ -250,12 +247,17 @@
 				const entries = Array.isArray(payload)
 					? payload
 							.map((entry) => normalizeCompanyDirectoryEntry(entry as Record<string, unknown>))
-							.filter((entry): entry is CompanyDirectoryEntry => entry != null)
+							.filter(
+								(entry): entry is CompanyDirectoryEntry => entry != null && entry.company_id > 0
+							)
 					: [];
 
 				companyDirectory = entries;
+				companyLabelsById = Object.fromEntries(
+					entries.map((entry) => [entry.company_id, entry.name])
+				);
 				updateCompanyLabels(
-					entries.map((entry) => ({ label: entry.name, value: entry.company_domain }))
+					entries.map((entry) => ({ label: entry.name, value: String(entry.company_id) }))
 				);
 				return entries;
 			})();
@@ -271,12 +273,12 @@
 	function filterCompanyOptions(
 		entries: CompanyDirectoryEntry[],
 		searchValue: string,
-		selectedDomains: string[]
+		selectedIds: number[]
 	): CompanyOption[] {
 		const trimmedSearchValue = searchValue.trim().toLowerCase();
 
 		return entries
-			.filter((entry) => !selectedDomains.includes(entry.company_domain))
+			.filter((entry) => !selectedIds.includes(entry.company_id))
 			.filter((entry) => {
 				if (trimmedSearchValue === '') {
 					return true;
@@ -284,20 +286,20 @@
 
 				return (
 					entry.name.toLowerCase().includes(trimmedSearchValue) ||
-					entry.company_domain.toLowerCase().includes(trimmedSearchValue)
+					(entry.company_domain?.toLowerCase().includes(trimmedSearchValue) ?? false)
 				);
 			})
 			.slice(0, 50)
 			.map((entry) => ({
 				label: entry.name,
-				value: entry.company_domain
+				value: String(entry.company_id)
 			}));
 	}
 
 	async function loadCompanyOptions(
 		target: 'include' | 'exclude',
 		searchValue: string,
-		selectedDomains: string[]
+		selectedIds: number[]
 	) {
 		const requestId = target === 'include' ? ++includeRequestId : ++excludeRequestId;
 		if (target === 'include') {
@@ -308,7 +310,7 @@
 
 		try {
 			const entries = await ensureCompanyDirectoryLoaded();
-			const options = filterCompanyOptions(entries, searchValue, selectedDomains);
+			const options = filterCompanyOptions(entries, searchValue, selectedIds);
 
 			if (target === 'include') {
 				if (requestId !== includeRequestId) return;
@@ -352,44 +354,44 @@
 	);
 
 	const onIncludeOpenChange = () => {
-		void loadCompanyOptions('include', '', includeDomains);
+		void loadCompanyOptions('include', '', includeCompanyIds);
 	};
 
 	const onExcludeOpenChange = () => {
-		void loadCompanyOptions('exclude', '', excludeDomains);
+		void loadCompanyOptions('exclude', '', excludeCompanyIds);
 	};
 
 	const onIncludeInputValueChange: ComboboxRootProps['onInputValueChange'] = (event) => {
-		void loadCompanyOptions('include', event.inputValue ?? '', includeDomains);
+		void loadCompanyOptions('include', event.inputValue ?? '', includeCompanyIds);
 	};
 
 	const onExcludeInputValueChange: ComboboxRootProps['onInputValueChange'] = (event) => {
-		void loadCompanyOptions('exclude', event.inputValue ?? '', excludeDomains);
+		void loadCompanyOptions('exclude', event.inputValue ?? '', excludeCompanyIds);
 	};
 
 	const onIncludeValueChange: ComboboxRootProps['onValueChange'] = (event) => {
-		includeDomains = event.value as string[];
-		void loadCompanyOptions('include', '', includeDomains);
+		includeCompanyIds = (event.value as string[]).map(Number);
+		void loadCompanyOptions('include', '', includeCompanyIds);
 	};
 
 	const onExcludeValueChange: ComboboxRootProps['onValueChange'] = (event) => {
-		excludeDomains = event.value as string[];
-		void loadCompanyOptions('exclude', '', excludeDomains);
+		excludeCompanyIds = (event.value as string[]).map(Number);
+		void loadCompanyOptions('exclude', '', excludeCompanyIds);
 	};
 
-	function removeIncludeDomain(domain: string) {
-		includeDomains = includeDomains.filter((d) => d !== domain);
-		void loadCompanyOptions('include', '', includeDomains);
+	function removeIncludeCompany(companyId: number) {
+		includeCompanyIds = includeCompanyIds.filter((id) => id !== companyId);
+		void loadCompanyOptions('include', '', includeCompanyIds);
 	}
 
-	function removeExcludeDomain(domain: string) {
-		excludeDomains = excludeDomains.filter((d) => d !== domain);
-		void loadCompanyOptions('exclude', '', excludeDomains);
+	function removeExcludeCompany(companyId: number) {
+		excludeCompanyIds = excludeCompanyIds.filter((id) => id !== companyId);
+		void loadCompanyOptions('exclude', '', excludeCompanyIds);
 	}
 
 	function resetFilters() {
-		includeDomains = [];
-		excludeDomains = [];
+		includeCompanyIds = [];
+		excludeCompanyIds = [];
 		requireSdkApi = false;
 		requireIap = false;
 		requireAds = false;
@@ -417,9 +419,8 @@
 		excludeItems = [];
 	}
 
-	function getCompanyName(domain: string): string {
-		if (!domain) return 'Unknown';
-		return companyLabelsByDomain[domain] || domain;
+	function getCompanyName(companyId: number): string {
+		return companyLabelsById[companyId] || 'Unknown';
 	}
 </script>
 
@@ -692,7 +693,7 @@
 							collection={includeCollection}
 							onOpenChange={onIncludeOpenChange}
 							onInputValueChange={onIncludeInputValueChange}
-							value={includeDomains}
+							value={includeCompanyIds.map(String)}
 							onValueChange={onIncludeValueChange}
 							class="w-full"
 							multiple
@@ -728,14 +729,18 @@
 							</Portal>
 						</Combobox>
 
-						{#if includeDomains.length > 0}
+						{#if includeCompanyIds.length > 0}
 							<div class="flex flex-wrap gap-1 mt-2">
-								{#each includeDomains as domain}
+								{#each includeCompanyIds as companyId}
 									<span
 										class="badge preset-filled-primary-500 text-xs flex items-center gap-1 px-2 py-1"
 									>
-										{getCompanyName(domain)}
-										<button type="button" onclick={() => removeIncludeDomain(domain)} class="ml-1">
+										{getCompanyName(companyId)}
+										<button
+											type="button"
+											onclick={() => removeIncludeCompany(companyId)}
+											class="ml-1"
+										>
 											<X size={12} />
 										</button>
 									</span>
@@ -753,7 +758,7 @@
 							collection={excludeCollection}
 							onOpenChange={onExcludeOpenChange}
 							onInputValueChange={onExcludeInputValueChange}
-							value={excludeDomains}
+							value={excludeCompanyIds.map(String)}
 							onValueChange={onExcludeValueChange}
 							class="w-full"
 							multiple
@@ -788,14 +793,18 @@
 								</Combobox.Positioner>
 							</Portal>
 						</Combobox>
-						{#if excludeDomains.length > 0}
+						{#if excludeCompanyIds.length > 0}
 							<div class="flex flex-wrap gap-1 mt-2">
-								{#each excludeDomains as domain}
+								{#each excludeCompanyIds as companyId}
 									<span
 										class="badge preset-filled-error-900-100 text-xs flex items-center gap-1 px-2 py-1"
 									>
-										{getCompanyName(domain)}
-										<button type="button" onclick={() => removeExcludeDomain(domain)} class="ml-1">
+										{getCompanyName(companyId)}
+										<button
+											type="button"
+											onclick={() => removeExcludeCompany(companyId)}
+											class="ml-1"
+										>
 											<X size={12} />
 										</button>
 									</span>
@@ -887,14 +896,14 @@
 			{/if}
 
 			<!-- Filter Summary -->
-			{#if includeDomains.length > 0}
+			{#if includeCompanyIds.length > 0}
 				<div class="text-xs pt-2 border-t border-surface-300-700">
 					<p>
-						<strong>Query:</strong> Apps using {includeDomains.length} selected SDK{includeDomains.length >
+						<strong>Query:</strong> Apps using {includeCompanyIds.length} selected SDK{includeCompanyIds.length >
 						1
 							? 's'
 							: ''}
-						{excludeDomains.length > 0 ? `, excluding ${excludeDomains.length}` : ''}
+						{excludeCompanyIds.length > 0 ? `, excluding ${excludeCompanyIds.length}` : ''}
 					</p>
 				</div>
 			{/if}

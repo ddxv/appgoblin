@@ -61,6 +61,7 @@ from dbcon.queries import (
     get_category_type_stats,
     get_combined_companies_history,
     get_companies_stats,
+    get_company_directory as get_company_directory_df,
     get_companies_top,
     get_companies_type_stats,
     get_company_adstxt_ad_domain_overview,
@@ -833,82 +834,16 @@ def get_overviews(
 
 def get_company_directory(state: State) -> list[CompanyDirectoryEntry]:
     """Build a slim company directory payload for selectors and cached lookups."""
-    companies_df = get_companies_stats(state)
+    companies_df = get_company_directory_df(state)
     if companies_df.empty:
         return []
 
-    directory_df = (
-        companies_df.groupby(
-            [
-                "company_domain",
-                "company_name",
-                "parent_company_domain",
-                "parent_company_name",
-            ],
-            dropna=False,
-        )[["app_count"]]
-        .sum()
-        .reset_index()
-        .rename(columns={"app_count": "total_apps"})
-    )
-
-    directory_df = directory_df[directory_df["company_domain"].notna()].copy()
-    directory_df["company_domain"] = (
-        directory_df["company_domain"].astype(str).str.strip()
-    )
-    directory_df = directory_df[directory_df["company_domain"] != ""]
-    directory_df["company_name"] = directory_df["company_name"].where(
-        directory_df["company_name"].notna(), directory_df["company_domain"]
-    )
-    directory_df["company_name"] = directory_df["company_name"].astype(str).str.strip()
-    directory_df.loc[directory_df["company_name"] == "", "company_name"] = directory_df[
-        "company_domain"
-    ]
-
-    company_logos_df = get_company_logos_df(state).drop_duplicates(
-        subset=["company_domain"], keep="first"
-    )
-    directory_df = directory_df.merge(
-        company_logos_df,
-        on="company_domain",
-        how="left",
-        validate="m:1",
-    )
-    parent_company_logos_df = company_logos_df.rename(
-        columns={
-            "company_domain": "parent_company_domain",
-            "company_logo_url": "parent_company_logo_url",
-        }
-    )
-    directory_df = directory_df.merge(
-        parent_company_logos_df,
-        on="parent_company_domain",
-        how="left",
-        validate="m:1",
-    )
-
-    directory_df = directory_df.sort_values(
-        by=["total_apps", "company_name", "company_domain"],
-        ascending=[False, True, True],
-        na_position="last",
-    )
-
-    def _optional_string(value: object) -> str | None:
-        if pd.isna(value):
-            return None
-        normalized = str(value).strip()
-        return normalized or None
-
     return [
         CompanyDirectoryEntry(
-            name=str(row.company_name),
-            company_domain=str(row.company_domain),
-            parent_company_domain=_optional_string(row.parent_company_domain),
-            parent_company_name=_optional_string(row.parent_company_name),
-            company_logo_url=_optional_string(row.company_logo_url),
-            parent_company_logo_url=_optional_string(row.parent_company_logo_url),
+            name=str(row.name),
+            company_id=int(row.company_id),
         )
-        for row in directory_df.itertuples(index=False)
+        for row in companies_df.itertuples(index=False)
     ]
 
 

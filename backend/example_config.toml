@@ -53,6 +53,13 @@ access_key_id = "myaccesskey"
 secret_key = "mysecretkey"
 bucket = "my-public-bucket"
 
+[s3-signed-downloads]
+region_name = "nyc3"
+host = "nyc3.digitaloceanspaces.com"
+access_key_id = "myaccesskey"
+secret_key = "mysecretkey"
+bucket = "my-downloads-bucket"
+
 [smtp]
 host = "smtp.zoho.com"
 port = 465

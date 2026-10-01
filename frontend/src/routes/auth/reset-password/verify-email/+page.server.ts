@@ -14,12 +14,12 @@ export const csr = true;
 const bucket = new ExpiringTokenBucket<number>(5, 60 * 30);
 
 export async function load(event: RequestEvent) {
-	const { session } = await validatePasswordResetSessionRequest(event);
+	const { session, user } = await validatePasswordResetSessionRequest(event);
 	if (session === null) {
 		return redirect(302, '/auth/forgot-password');
 	}
 	if (session.emailVerified) {
-		if (!session.twoFactorVerified) {
+		if (user.registered2FA && !session.twoFactorVerified) {
 			return redirect(302, '/auth/reset-password/2fa');
 		}
 		return redirect(302, '/auth/reset-password');
@@ -72,12 +72,13 @@ async function action(event: RequestEvent) {
 		});
 	}
 	bucket.reset(session.userId);
-	setPasswordResetSessionAsEmailVerified(session.id);
-	const emailMatches = setUserAsEmailVerifiedIfEmailMatches(session.userId, session.email);
+	await setPasswordResetSessionAsEmailVerified(session.id);
+	const emailMatches = await setUserAsEmailVerifiedIfEmailMatches(session.userId, session.email);
 	if (!emailMatches) {
 		return fail(400, {
 			message: 'Please restart the process'
 		});
 	}
-	return redirect(302, '/auth/reset-password/2fa');
+	const { user } = await validatePasswordResetSessionRequest(event);
+	return redirect(302, user?.registered2FA ? '/auth/reset-password/2fa' : '/auth/reset-password');
 }

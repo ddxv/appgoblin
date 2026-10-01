@@ -68,7 +68,7 @@ TRUNCATED_LENGTH = 41
 
 def has_crossfilter_export_filters(payload: dict) -> bool:
     """Return True when at least one meaningful export filter is set."""
-    array_fields = ("include_domains", "exclude_domains")
+    array_fields = ("include_company_ids", "exclude_company_ids")
     boolean_fields = ("require_sdk_api", "require_iap", "require_ads")
     value_fields = (
         "ranking_country",
@@ -1021,8 +1021,8 @@ class AppController(Controller):
         start = time.perf_counter() * 1000
 
         # Extract and validate parameters
-        include_domains = data.get("include_domains") or []
-        exclude_domains = data.get("exclude_domains") or []
+        include_company_ids = data.get("include_company_ids") or []
+        exclude_company_ids = data.get("exclude_company_ids") or []
         require_sdk_api = bool(data.get("require_sdk_api", False))
         require_iap = bool(data.get("require_iap", False))
         require_ads = bool(data.get("require_ads", False))
@@ -1037,21 +1037,21 @@ class AppController(Controller):
         min_installs_d30 = data.get("min_installs_d30")
         max_installs_d30 = data.get("max_installs_d30")
 
-        # Ensure domains are lists of strings
-        if isinstance(include_domains, str):
-            include_domains = [include_domains]
-        if isinstance(exclude_domains, str):
-            exclude_domains = [exclude_domains]
+        # Ensure company IDs are lists of integers.
+        if isinstance(include_company_ids, (int, str)):
+            include_company_ids = [include_company_ids]
+        if isinstance(exclude_company_ids, (int, str)):
+            exclude_company_ids = [exclude_company_ids]
 
         # Filter out empty strings
-        include_domains = [d for d in include_domains if d and isinstance(d, str)]
-        exclude_domains = [d for d in exclude_domains if d and isinstance(d, str)]
+        include_company_ids = [int(value) for value in include_company_ids if value]
+        exclude_company_ids = [int(value) for value in exclude_company_ids if value]
         if ranking_country is not None:
             ranking_country = str(ranking_country).strip() or None
 
         logger.info(
-            f"Crossfilter query: include={len(include_domains)} domains, "
-            f"exclude={len(exclude_domains)} domains, sdk_api={require_sdk_api}, "
+            f"Crossfilter query: include={len(include_company_ids)} companies, "
+            f"exclude={len(exclude_company_ids)} companies, sdk_api={require_sdk_api}, "
             f"iap={require_iap}, ads={require_ads}, "
             f"ranking_country={ranking_country}, date={mydate}, "
             f"category={category}, store={store}"
@@ -1060,8 +1060,8 @@ class AppController(Controller):
         try:
             apps_df = query_apps_crossfilter(
                 state,
-                include_domains=include_domains,
-                exclude_domains=exclude_domains,
+                include_company_ids=include_company_ids,
+                exclude_company_ids=exclude_company_ids,
                 require_sdk_api=require_sdk_api,
                 require_iap=require_iap,
                 require_ads=require_ads,
