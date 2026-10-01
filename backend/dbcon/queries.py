@@ -4,7 +4,8 @@ import datetime
 
 import pandas as pd
 from litestar.datastructures import State
-from sqlalchemy import bindparam
+from sqlalchemy import bindparam, text
+from sqlalchemy.sql.elements import TextClause
 
 from config import get_logger
 from dbcon.connections import PostgresCon
@@ -1189,6 +1190,7 @@ def query_apps_crossfilter(
     min_installs_d30: int | None = None,
     max_installs_d30: int | None = None,
     limit: int = 100,
+    log_query: bool = False,
 ) -> pd.DataFrame:
     """Query apps for analytics dashboard."""
     include_company_ids = include_company_ids or []
@@ -1203,29 +1205,81 @@ def query_apps_crossfilter(
     except (ValueError, TypeError):
         parsed_date = datetime.date(2024, 1, 1)
 
+    params = {
+        "require_iap": bool(require_iap),
+        "require_ads": bool(require_ads),
+        "ranking_country": ranking_country,
+        "mydate": parsed_date,
+        "category": category,
+        "store": store,
+        "min_installs": min_installs,
+        "max_installs": max_installs,
+        "min_rating_count": min_rating_count,
+        "max_rating_count": max_rating_count,
+        "min_installs_d30": min_installs_d30,
+        "max_installs_d30": max_installs_d30,
+        "limit": limit,
+    }
+    if include_company_ids:
+        params.update(
+            {
+                "include_company_ids": include_company_ids,
+                "require_sdk_api": bool(require_sdk_api),
+            }
+        )
+    if exclude_company_ids:
+        params["exclude_company_ids"] = exclude_company_ids
+
+    query = _build_apps_crossfilter_query(
+        include_companies=bool(include_company_ids),
+        exclude_companies=bool(exclude_company_ids),
+    )
+    if log_query:
+        logger.debug("Apps crossfilter query:\n%s", query.text)
+
     df = pd.read_sql(
-        sql.apps_crossfilter,
+        query,
         state.dbcon.engine,
-        params={
-            "include_company_ids": include_company_ids,
-            "exclude_company_ids": exclude_company_ids,
-            "require_sdk_api": bool(require_sdk_api),
-            "require_iap": bool(require_iap),
-            "require_ads": bool(require_ads),
-            "ranking_country": ranking_country,
-            "mydate": parsed_date,
-            "category": category,
-            "store": store,
-            "min_installs": min_installs,
-            "max_installs": max_installs,
-            "min_rating_count": min_rating_count,
-            "max_rating_count": max_rating_count,
-            "min_installs_d30": min_installs_d30,
-            "max_installs_d30": max_installs_d30,
-            "limit": limit,
-        },
+        params=params,
     )
     return df
+
+
+def _build_apps_crossfilter_query(
+    *, include_companies: bool, exclude_companies: bool
+) -> TextClause:
+    """Compose the cross-filter query from SQL fragments.
+
+    Company filters change both the CTE list and the driving table. Keeping
+    those branches here avoids making PostgreSQL plan around no-op predicates.
+    The individual SQL fragments remain in ``dbcon/sql`` and are loaded by the
+    existing ``SQLLoader``.
+    """
+    ctes: list[str] = []
+    if include_companies:
+        ctes.append(str(sql.apps_crossfilter_include_cte))
+    if exclude_companies:
+        ctes.append(str(sql.apps_crossfilter_exclude_cte))
+
+    parts: list[str] = []
+    if ctes:
+        parts.append("WITH\n" + ",\n".join(ctes))
+
+    parts.extend(
+        [
+            str(sql.apps_crossfilter_select),
+            str(
+                sql.apps_crossfilter_from_include
+                if include_companies
+                else sql.apps_crossfilter_from
+            ),
+            str(sql.apps_crossfilter_where),
+        ]
+    )
+    if exclude_companies:
+        parts.append(str(sql.apps_crossfilter_exclusion))
+    parts.append(str(sql.apps_crossfilter_order_limit))
+    return text("\n".join(parts))
 
 
 def get_single_app_keywords(

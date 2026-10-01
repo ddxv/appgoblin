@@ -11,7 +11,6 @@ from email.message import EmailMessage
 import boto3
 from litestar.datastructures import State
 
-from api_app.utils import extend_app_icon_url
 from config import (
     CONFIG,
     SMTP_HOST,
@@ -24,7 +23,7 @@ from dbcon.queries import query_apps_crossfilter
 
 logger = get_logger(__name__)
 
-EXPORT_S3_CONFIG_KEY = "public-s3"
+EXPORT_S3_CONFIG_KEY = "s3-signed-downloads"
 SMTP_CONFIG_KEY = "smtp"
 APP_EXPLORER_EXPORT_PREFIX = "user-reports/app-explorer"
 APP_EXPLORER_EXPORT_ROW_LIMIT = 2147483647
@@ -180,11 +179,15 @@ def create_crossfilter_export_csv(state: State, payload: dict) -> tuple[bytes, i
         max_installs_d30=payload.get("max_installs_d30"),
         limit=APP_EXPLORER_EXPORT_ROW_LIMIT,
     )
-    apps_df = extend_app_icon_url(apps_df)
     _normalize_export_frame_columns(apps_df)
 
-    if "icon_64" in apps_df.columns:
-        apps_df = apps_df.drop(columns=["icon_64"])
+    internal_columns = [
+        column
+        for column in ("id", "app_icon_url", "icon_64")
+        if column in apps_df.columns
+    ]
+    if internal_columns:
+        apps_df = apps_df.drop(columns=internal_columns)
 
     buffer = io.StringIO()
     apps_df.to_csv(buffer, index=False)
