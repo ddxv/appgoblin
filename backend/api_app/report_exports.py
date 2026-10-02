@@ -22,6 +22,7 @@ from config import (
     get_logger,
 )
 from dbcon.queries import query_apps_crossfilter
+from dbcon.queries import get_sdk_pattern_export
 
 logger = get_logger(__name__)
 
@@ -111,13 +112,20 @@ def upload_report_csv(csv_bytes: bytes, report_id: str) -> tuple[str, str]:
 
 
 def store_generated_report(
-    *, state: State, user_id: int, s3_key: str, payload: dict
+    *,
+    state: State,
+    user_id: int,
+    s3_key: str,
+    payload: dict,
+    report_name: str | None = None,
 ) -> None:
     """Store metadata for a completed user-generated report."""
     if state.dbconwrite is None:
         raise RuntimeError("Write database connection is not available")
 
-    report_name = f"App Explorer CSV export {datetime.now(UTC).strftime('%Y-%m-%d')}"
+    report_name = report_name or (
+        f"App Explorer CSV export {datetime.now(UTC).strftime('%Y-%m-%d')}"
+    )
     filters = {
         key: value
         for key, value in payload.items()
@@ -228,6 +236,17 @@ def create_crossfilter_export_csv(state: State, payload: dict) -> tuple[bytes, i
     return buffer.getvalue().encode("utf-8"), len(apps_df.index)
 
 
+def create_sdk_pattern_export_csv(state: State, pattern: str) -> tuple[bytes, int]:
+    """Run an unrestricted SDK pattern query and serialize it to CSV."""
+    apps_df = get_sdk_pattern_export(state, pattern)
+    if "id" in apps_df.columns:
+        apps_df = apps_df.drop(columns=["id"])
+
+    buffer = io.StringIO()
+    apps_df.to_csv(buffer, index=False)
+    return buffer.getvalue().encode("utf-8"), len(apps_df.index)
+
+
 def run_app_explorer_export_job(
     *, state: State, payload: dict, recipient_email: str, report_id: str, user_id: int
 ) -> None:
@@ -258,4 +277,36 @@ def run_app_explorer_export_job(
             "Failed app explorer export %s for %s",
             report_id,
             recipient_email,
+        )
+
+
+def run_sdk_pattern_export_job(
+    *, state: State, pattern: str, recipient_email: str, report_id: str, user_id: int
+) -> None:
+    """Generate, upload, and email an unrestricted SDK pattern report."""
+    try:
+        csv_bytes, row_count = create_sdk_pattern_export_csv(state, pattern)
+        download_url, s3_key = upload_report_csv(csv_bytes, report_id)
+        store_generated_report(
+            state=state,
+            user_id=user_id,
+            s3_key=s3_key,
+            payload={"pattern": pattern},
+            report_name=f"SDK pattern export {pattern}",
+        )
+        send_report_ready_email(
+            recipient_email=recipient_email,
+            download_url=download_url,
+            report_id=report_id,
+            row_count=row_count,
+        )
+        logger.info(
+            "Completed SDK pattern export %s for %s with %s rows",
+            report_id,
+            recipient_email,
+            row_count,
+        )
+    except Exception:
+        logger.exception(
+            "Failed SDK pattern export %s for %s", report_id, recipient_email
         )

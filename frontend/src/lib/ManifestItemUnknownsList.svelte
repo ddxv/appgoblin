@@ -1,11 +1,13 @@
 <script lang="ts">
 	import type { UnknownSDKs } from '../types';
+	import RequestMappingButton from '$lib/RequestMappingButton.svelte';
 
 	interface Props {
 		items: UnknownSDKs;
+		appStoreId: string;
 	}
 
-	let { items = {} }: Props = $props();
+	let { items = {}, appStoreId }: Props = $props();
 
 	let sortedEntries = $derived(
 		Object.entries(items)
@@ -50,7 +52,15 @@
 										{#if xmlPath.includes('res.raw')}
 											{value.slice(0, 100)}
 										{:else}
-											<a href="/sdks/{value}" rel="nofollow">{value.slice(0, 100)}</a>
+											<div class="space-y-1">
+												<a href="/sdks/{value}" rel="nofollow">{value.slice(0, 100)}</a>
+												<RequestMappingButton
+													mapType="app_sdk"
+													valueToBeMapped={value}
+													additionalInfo={{ store_id: appStoreId }}
+													label="Request SDK mapping"
+												/>
+											</div>
 										{/if}
 									</div>
 								{/each}

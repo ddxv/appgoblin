@@ -10,7 +10,8 @@ import time
 from typing import Self
 
 import pandas as pd
-from litestar import Controller, get
+from litestar import Controller, Response, get, post
+from litestar.background_tasks import BackgroundTask
 from litestar.datastructures import State
 
 from api_app.models import (
@@ -20,6 +21,11 @@ from api_app.models import (
     SdksUserRequested,
 )
 from config import get_logger
+from api_app.report_exports import (
+    create_report_id,
+    run_sdk_pattern_export_job,
+    validate_export_dependencies,
+)
 from dbcon.queries import (
     get_latest_sdks,
     get_sdk_pattern,
@@ -157,3 +163,34 @@ class SdksController(Controller):
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(f"{self.path}/{value_pattern}/companies took {duration}ms")
         return overview_resp
+
+    @post(path="/{value_pattern:str}/export")
+    async def export_sdk_pattern(
+        self: Self, state: State, value_pattern: str, data: dict
+    ) -> Response:
+        """Queue an unrestricted SDK pattern CSV export."""
+        validate_export_dependencies()
+        recipient_email = str(data.get("recipient_email", "")).strip()
+        user_id = data.get("user_id")
+        if not recipient_email or not isinstance(user_id, int) or user_id <= 0:
+            return Response(
+                {"success": False, "error": "recipient_email and user_id are required"},
+                status_code=400,
+            )
+
+        report_id = create_report_id()
+        return Response(
+            {
+                "success": True,
+                "report_id": report_id,
+                "message": "Export queued. A download link will be sent by email.",
+            },
+            background=BackgroundTask(
+                run_sdk_pattern_export_job,
+                state=state,
+                pattern=value_pattern,
+                recipient_email=recipient_email,
+                report_id=report_id,
+                user_id=user_id,
+            ),
+        )

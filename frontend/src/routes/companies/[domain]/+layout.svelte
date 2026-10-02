@@ -9,6 +9,7 @@
 	import MainContent from '$lib/MainContent.svelte';
 	import CompanyTypesTabs from '$lib/utils/CompanyTypesTabs.svelte';
 	import CompanyNavTabs from '$lib/utils/CompanyNavTabs.svelte';
+	import RequestMappingButton from '$lib/RequestMappingButton.svelte';
 
 	let { children, data }: { children: any; data: CompanyLayoutDetails } = $props();
 	const domain = page.params.domain ?? '';
@@ -504,9 +505,11 @@
 											This domain is not yet linked to an organization/sdks in the AppGoblin
 											database.
 										</p>
-										<a href="/contact" class="btn preset-tonal-secondary btn-sm">
-											Identify Parent or Request Mapping
-										</a>
+										<RequestMappingButton
+											mapType="company_domain_name"
+											valueToBeMapped={domain}
+											label="Request Mapping"
+										/>
 									</div>
 								{/if}
 							</div>

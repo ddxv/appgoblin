@@ -21,7 +21,10 @@
 				</p>
 			</div>
 
-			<ManifestItemUnknownsList items={data.myPackageInfo.leftovers} />
+			<ManifestItemUnknownsList
+				items={data.myPackageInfo.leftovers}
+				appStoreId={data.myapp.store_id}
+			/>
 		{:else}
 			<p>No unknown SDKs found.</p>
 		{/if}

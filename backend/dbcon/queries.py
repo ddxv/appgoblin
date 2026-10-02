@@ -1152,6 +1152,17 @@ def get_sdk_pattern(state: State, value_pattern: str) -> pd.DataFrame:
     return df
 
 
+def get_sdk_pattern_export(state: State, value_pattern: str) -> pd.DataFrame:
+    """Get every app matching an SDK pattern for a B2B export."""
+    df = pd.read_sql(
+        sql.sdk_pattern_export,
+        state.dbcon.engine,
+        params={"value_pattern": value_pattern},
+    )
+    df["store"] = df["store"].replace({1: "Google Play", 2: "Apple App Store"})
+    return df
+
+
 def get_keyword_details(state: State, keyword: str) -> pd.DataFrame:
     """Get keyword details."""
     df = pd.read_sql(

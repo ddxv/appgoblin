@@ -101,3 +101,50 @@ export async function sendPricingPlanSelectionEmail(
 		html
 	});
 }
+
+export async function sendMappingRequestEmail(
+	userId: number,
+	userEmail: string,
+	username: string,
+	mapType: string,
+	valueToBeMapped: string,
+	additionalInfo: Record<string, unknown> | null
+): Promise<void> {
+	const t = getTransporter();
+	const additionalInfoText = additionalInfo ? JSON.stringify(additionalInfo) : 'None';
+	const subject = `Mapping request: ${valueToBeMapped}`;
+	const text = [
+		'A new mapping request was submitted.',
+		'',
+		`User ID: ${userId}`,
+		`Username: ${username}`,
+		`User email: ${userEmail}`,
+		`Mapping type: ${mapType}`,
+		`Value: ${valueToBeMapped}`,
+		`Additional info: ${additionalInfoText}`
+	].join('\n');
+	const html = `
+		<div>
+			<h2>New mapping request</h2>
+			<p><strong>User ID:</strong> ${userId}</p>
+			<p><strong>Username:</strong> ${username}</p>
+			<p><strong>User email:</strong> ${userEmail}</p>
+			<p><strong>Mapping type:</strong> ${mapType}</p>
+			<p><strong>Value:</strong> ${valueToBeMapped}</p>
+			<p><strong>Additional info:</strong> ${additionalInfoText}</p>
+		</div>
+	`;
+
+	if (!t) {
+		console.log(`[DEV] ${subject}\n${text}`);
+		return;
+	}
+
+	await t.sendMail({
+		from: `"AppGoblin Contact" <${EMAIL_USER}>`,
+		to: EMAIL_USER,
+		subject,
+		text,
+		html
+	});
+}
