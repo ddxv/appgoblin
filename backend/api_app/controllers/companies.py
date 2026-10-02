@@ -61,7 +61,6 @@ from dbcon.queries import (
     get_category_type_stats,
     get_combined_companies_history,
     get_companies_stats,
-    get_company_directory as get_company_directory_df,
     get_companies_top,
     get_companies_type_stats,
     get_company_adstxt_ad_domain_overview,
@@ -85,6 +84,9 @@ from dbcon.queries import (
     get_topapps_for_company_parent,
     get_topapps_for_company_secondary,
     search_companies,
+)
+from dbcon.queries import (
+    get_company_directory as get_company_directory_df,
 )
 from dbcon.static import (
     get_adtech_categories,

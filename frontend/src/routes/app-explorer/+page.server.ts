@@ -30,7 +30,9 @@ function parseJsonArrayField(value: FormDataEntryValue | null): number[] {
 	try {
 		const parsed = JSON.parse(value.toString());
 		return Array.isArray(parsed)
-			? parsed.filter((entry): entry is number => typeof entry === 'number' && Number.isInteger(entry))
+			? parsed.filter(
+					(entry): entry is number => typeof entry === 'number' && Number.isInteger(entry)
+				)
 			: [];
 	} catch {
 		return [];
@@ -175,14 +177,14 @@ export const actions = {
 		try {
 			const exportResponse = await api.post(
 				'/apps/crossfilter/export',
-				{ ...payload, recipient_email: user.email },
+				{ ...payload, recipient_email: user.email, user_id: user.id },
 				'Crossfilter Export'
 			);
 
 			return {
 				success: true,
 				exportQueued: true,
-				exportMessage: `CSV export queued. A download link will be sent to ${user.email} within the next 15 minutes.`,
+				exportMessage: `Report generation queued. You can see all your reports in "Reports" section of your account. A download link will be sent to ${user.email} within the next few minutes.`,
 				reportId: exportResponse.report_id
 			};
 		} catch (error) {

@@ -1095,9 +1095,16 @@ class AppController(Controller):
         validate_export_dependencies()
 
         recipient_email = str(data.get("recipient_email", "")).strip()
+        user_id = data.get("user_id")
         if not recipient_email:
             return Response(
                 {"success": False, "error": "recipient_email is required"},
+                status_code=400,
+            )
+
+        if not isinstance(user_id, int) or user_id <= 0:
+            return Response(
+                {"success": False, "error": "user_id is required"},
                 status_code=400,
             )
 
@@ -1130,6 +1137,7 @@ class AppController(Controller):
                 payload=data,
                 recipient_email=recipient_email,
                 report_id=report_id,
+                user_id=user_id,
             ),
         )
 

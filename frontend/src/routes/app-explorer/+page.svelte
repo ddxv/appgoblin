@@ -512,12 +512,14 @@
 									} else if (result.type === 'success') {
 										const actionData = result.data as Record<string, unknown>;
 										exportFeedback =
-											getActionStringField(actionData, 'exportMessage') || 'CSV export queued.';
+											getActionStringField(actionData, 'exportMessage') ||
+											'Generate & Email Report queued.';
 										exportError = getActionStringField(actionData, 'error');
 									} else if (result.type === 'failure') {
 										const actionData = result.data as Record<string, unknown>;
 										exportError =
-											getActionStringField(actionData, 'error') || 'Failed to queue CSV export';
+											getActionStringField(actionData, 'error') ||
+											'Failed to queue report generation';
 									}
 								} else {
 									await update({ reset: false }); // Don't reset form fields
@@ -867,7 +869,7 @@
 							Queueing CSV Email...
 						{:else}
 							<Mail size={16} />
-							Email CSV Link
+							Generate & Email Report
 						{/if}
 					</button>
 

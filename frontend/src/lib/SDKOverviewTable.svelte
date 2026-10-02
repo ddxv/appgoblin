@@ -5,7 +5,12 @@
 	import { createAppTable } from '$lib/components/data-table/index.js';
 	import { genericColumns } from '$lib/components/data-table/generic-column';
 
-	let { entries_table }: { entries_table: SdkOverview[] } = $props();
+	interface Props {
+		entries_table: SdkOverview[];
+		previewMode?: boolean;
+	}
+
+	let { entries_table, previewMode = false }: Props = $props();
 
 	function tableHasRemoved(table: SdkOverview[]) {
 		return table.some((row) => row.is_removed != null);
@@ -24,7 +29,7 @@
 
 	const table = createAppTable({
 		get data() {
-			return entries_table;
+			return previewMode ? entries_table.slice(0, 3) : entries_table;
 		},
 		get columns() {
 			return genericColumns(
@@ -84,6 +89,42 @@
 							>{/if}
 					</tr>
 				{/each}
+				{#if previewMode && entries_table.length > 3}
+					{#each { length: Math.min(2, entries_table.length - 3) } as _, index}
+						<tr class="px-0 opacity-30">
+							<td class="table-cell-fit text-gray-500">{index + 4}</td>
+							<td class="table-cell-fit"><div class="h-3 w-32 rounded bg-surface-200-800"></div></td
+							>
+							<td class="table-cell-fit"><div class="h-3 w-40 rounded bg-surface-200-800"></div></td
+							>
+							<td class="table-cell-fit"><div class="h-3 w-20 rounded bg-surface-200-800"></div></td
+							>
+							<td class="table-cell-fit"><div class="h-3 w-20 rounded bg-surface-200-800"></div></td
+							>
+							<td class="table-cell-fit"><div class="h-3 w-24 rounded bg-surface-200-800"></div></td
+							>
+							<td class="table-cell-fit"><div class="h-3 w-16 rounded bg-surface-200-800"></div></td
+							>
+							<td class="table-cell-fit"><div class="h-3 w-20 rounded bg-surface-200-800"></div></td
+							>
+							{#if tableHasRemoved(entries_table)}
+								<td class="table-cell-fit"
+									><div class="h-3 w-10 rounded bg-surface-200-800"></div></td
+								>
+							{/if}
+						</tr>
+					{/each}
+					<tr class="px-0">
+						<td colspan="99" class="text-center py-4">
+							<p class="text-sm opacity-70">
+								<a href="/pricing" class="font-semibold underline hover:text-primary-600-400"
+									>Upgrade to B2B</a
+								>
+								to see all apps
+							</p>
+						</td>
+					</tr>
+				{/if}
 			</tbody>
 		</table>
 	</div>

@@ -1,0 +1,1 @@
+FROM frontend.store_apps_overview AS sao

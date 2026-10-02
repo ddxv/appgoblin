@@ -94,11 +94,11 @@ export async function load(event: PageServerLoadEvent) {
 	const currentPlan = event.locals.user ? await getCurrentPlan(event.locals.user.id) : null;
 	const currentSubscription = currentPlan
 		? {
-			status: currentPlan.status,
-			provider_name: 'stripe' as const,
-			current_period_end: currentPlan.current_period_end,
-			cancel_at: currentPlan.cancel_at
-		}
+				status: currentPlan.status,
+				provider_name: 'stripe' as const,
+				current_period_end: currentPlan.current_period_end,
+				cancel_at: currentPlan.cancel_at
+			}
 		: null;
 
 	const currentPlanLabel = currentPlan?.slug

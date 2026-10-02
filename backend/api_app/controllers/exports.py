@@ -17,6 +17,7 @@ logger = get_logger(__name__)
 
 SIGNED_DOWNLOADS_CONFIG_KEY = "s3-signed-downloads"
 SIGNED_DOWNLOAD_URL_TTL_SECONDS = 60 * 60
+USER_REPORT_S3_PREFIX = "user-reports/"
 
 
 def _get_signed_download_client():
@@ -71,6 +72,22 @@ class ExportsController(Controller):
             from litestar.exceptions import ClientException
 
             raise ClientException(detail=str(exc), status_code=400) from exc
+
+        s3_config = CONFIG[SIGNED_DOWNLOADS_CONFIG_KEY]
+        url = _get_signed_download_client().generate_presigned_url(
+            "get_object",
+            Params={"Bucket": s3_config["bucket"], "Key": s3_key},
+            ExpiresIn=SIGNED_DOWNLOAD_URL_TTL_SECONDS,
+        )
+        return {"url": url}
+
+    @get(path="exports/user-report-signed-url")
+    async def get_user_report_signed_url(self: Self, s3_key: str) -> dict[str, str]:
+        """Return a short-lived signed URL for a generated user report."""
+        if not s3_key.startswith(USER_REPORT_S3_PREFIX):
+            from litestar.exceptions import ClientException
+
+            raise ClientException(detail="Unsupported report key", status_code=400)
 
         s3_config = CONFIG[SIGNED_DOWNLOADS_CONFIG_KEY]
         url = _get_signed_download_client().generate_presigned_url(

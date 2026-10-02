@@ -8,6 +8,7 @@
 	import LayoutDashboard from '@lucide/svelte/icons/layout-dashboard';
 	import ListTodo from '@lucide/svelte/icons/list-todo';
 	import Code from '@lucide/svelte/icons/code';
+	import FileText from '@lucide/svelte/icons/file-text';
 	import MainContent from '$lib/MainContent.svelte';
 
 	let { data, children }: { data: LayoutData; children: any } = $props();
@@ -18,6 +19,7 @@
 		{ href: '/account', label: 'Overview', icon: LayoutDashboard },
 		{ href: '/account/watchlist', label: 'Watchlists', icon: ListTodo },
 		{ href: '/account/api-keys', label: 'API Keys', icon: Code },
+		{ href: '/account/reports', label: 'Generated Reports', icon: FileText },
 		{ href: '/account/settings', label: 'Settings', icon: Settings },
 		{ href: '/account/security', label: 'Security', icon: ShieldCheck },
 		{ href: '/account/subscription', label: 'Subscription', icon: CreditCard }

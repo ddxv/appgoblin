@@ -1,4 +1,4 @@
-WITH matching_strings AS MATERIALIZED (
+WITH matching_strings AS (
     SELECT
         id,
         xml_path,
@@ -17,16 +17,9 @@ SELECT
     sa.is_removed,
     sa.developer_name,
     sa.installs,
-    sa.installs_sum_4w,
-    CONCAT(
-        'https://media.appgoblin.info/app-icons/',
-        sa.store_id,
-        '/',
-        sa.icon_64
-    ) AS app_icon_url
+    sa.installs_sum_4w
 FROM matching_strings AS vs
 INNER JOIN adtech.app_sdk_strings AS sass
     ON vs.id = sass.string_id
 LEFT JOIN frontend.store_apps_overview AS sa
-    ON sass.store_app = sa.id
-LIMIT 100;
+    ON sass.store_app = sa.id;

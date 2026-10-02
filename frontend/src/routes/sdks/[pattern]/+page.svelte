@@ -1,10 +1,17 @@
 <script lang="ts">
 	import { page } from '$app/state';
+	import { enhance } from '$app/forms';
+	import Crown from '@lucide/svelte/icons/crown';
+	import Mail from '@lucide/svelte/icons/mail';
+	import Loader2 from '@lucide/svelte/icons/loader-2';
 	let pattern = page.params.pattern;
 	import SDKOverviewTable from '$lib/SDKOverviewTable.svelte';
 	import SDKPatternCompany from '$lib/SDKPatternCompany.svelte';
-	let { data } = $props();
+	let { data, form } = $props();
 	import WhiteCard from '$lib/WhiteCard.svelte';
+	let isExporting = $state(false);
+	let exportMessage = $derived(typeof form?.exportMessage === 'string' ? form.exportMessage : '');
+	let exportError = $derived(typeof form?.error === 'string' ? form.error : '');
 </script>
 
 <svelte:head>
@@ -52,8 +59,52 @@
 						>({myMatchedApps.apps.length})</span
 					>
 				{/snippet}
+				{#if !data.hasB2BSdkAccess}
+					<div
+						class="mx-2 md:mx-4 mt-2 p-3 bg-warning-50-950/20 rounded-lg border border-warning-800-200"
+					>
+						<p class="text-sm text-warning-950-50 flex items-center gap-2">
+							<Crown class="w-4 h-4 text-primary-900-100" aria-hidden="true" />
+							B2B SDK Intelligence tier.
+							<a href="/pricing" class="underline hover:text-primary-600-400">Upgrade</a> to unlock full
+							reports.
+						</p>
+					</div>
+				{/if}
+				<form
+					method="POST"
+					action="?/emailExport"
+					use:enhance={() => {
+						isExporting = true;
+						return async ({ update }) => {
+							await update({ reset: false });
+							isExporting = false;
+						};
+					}}
+					class="mt-2 px-2 md:px-4"
+				>
+					<button
+						type="submit"
+						disabled={!data.hasB2BSdkAccess || isExporting}
+						class="btn preset-tonal-primary flex items-center gap-2 text-sm"
+					>
+						{#if isExporting}<Loader2 size={16} class="animate-spin" />{:else}<Mail
+								size={16}
+							/>{/if}
+						{isExporting ? 'Queueing CSV Email...' : 'Generate & Email Full Report'}
+					</button>
+				</form>
+				{#if exportMessage}<p class="px-2 md:px-4 pt-2 text-success-900-100 text-sm">
+						{exportMessage}
+					</p>{/if}
+				{#if exportError}<p class="px-2 md:px-4 pt-2 text-error-900-100 text-sm">
+						{exportError}
+					</p>{/if}
 				{#if myMatchedApps.apps.length > 0}
-					<SDKOverviewTable entries_table={myMatchedApps.apps} />
+					<SDKOverviewTable
+						entries_table={myMatchedApps.apps}
+						previewMode={!data.hasB2BSdkAccess}
+					/>
 				{:else}
 					<p class="p-4 text-sm md:text-base">No matching apps found.</p>
 				{/if}
