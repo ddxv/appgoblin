@@ -1,16 +1,15 @@
 SELECT
-	company_name,
-	company_domain,
-	sp.parent_company_domain,
-	sdk_name,
-	pattern_type,
-	pattern_value,
-	app_count,
-	parent_company_name
+    sp.company_name,
+    sp.company_domain,
+    sp.parent_company_domain,
+    sp.sdk_name,
+    sp.pattern_type,
+    sp.pattern_value,
+    sp.app_count,
+    sp.parent_company_name
 FROM
-	frontend.companies_sdks_overview sp
+    frontend.companies_sdks_overview AS sp
 WHERE
-	sp.pattern_value ILIKE :value_pattern || '%'
-	OR 
-	:value_pattern ILIKE sp.pattern_value || '%'
-;
+    sp.pattern_value ILIKE :value_pattern || '%'
+    OR
+    :value_pattern ILIKE sp.pattern_value || '%';

@@ -43,7 +43,12 @@
 </script>
 
 <div class="space-y-1">
-	<button type="button" class="btn preset-tonal-secondary btn-sm" onclick={requestMapping} disabled={isLoading || requested}>
+	<button
+		type="button"
+		class="btn preset-tonal-secondary btn-sm"
+		onclick={requestMapping}
+		disabled={isLoading || requested}
+	>
 		{#if isLoading}
 			Submitting...
 		{:else if requested}

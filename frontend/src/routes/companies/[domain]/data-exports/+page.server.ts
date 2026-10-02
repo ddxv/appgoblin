@@ -45,8 +45,7 @@ export const load: PageServerLoad = async ({ locals, params, parent }) => {
 		Number(totals?.sdk_android_total_apps ?? 0) > 0 ||
 		Number(totals?.api_android_total_apps ?? 0) > 0;
 	const hasIosData =
-		Number(totals?.sdk_ios_total_apps ?? 0) > 0 ||
-		Number(totals?.api_ios_total_apps ?? 0) > 0;
+		Number(totals?.sdk_ios_total_apps ?? 0) > 0 || Number(totals?.api_ios_total_apps ?? 0) > 0;
 
 	const getSignedDownloadUrl = async (dataset: string, platform?: 'ios' | 'android') => {
 		const query = new URLSearchParams({ dataset, domain });
@@ -61,14 +60,14 @@ export const load: PageServerLoad = async ({ locals, params, parent }) => {
 
 	const downloadUrls = canDownload
 		? {
-			appAdsTxt: hasAdstxtData ? await getSignedDownloadUrl('app-ads-txt') : null,
-			companyVerifiedAndroid: hasAndroidData
-				? await getSignedDownloadUrl('company-verified-apps', 'android')
-				: null,
-			companyVerifiedIos: hasIosData
-				? await getSignedDownloadUrl('company-verified-apps', 'ios')
-				: null
-		}
+				appAdsTxt: hasAdstxtData ? await getSignedDownloadUrl('app-ads-txt') : null,
+				companyVerifiedAndroid: hasAndroidData
+					? await getSignedDownloadUrl('company-verified-apps', 'android')
+					: null,
+				companyVerifiedIos: hasIosData
+					? await getSignedDownloadUrl('company-verified-apps', 'ios')
+					: null
+			}
 		: null;
 
 	return {

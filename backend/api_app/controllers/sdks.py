@@ -20,12 +20,12 @@ from api_app.models import (
     SdksLatestResults,
     SdksUserRequested,
 )
-from config import get_logger
 from api_app.report_exports import (
     create_report_id,
     run_sdk_pattern_export_job,
     validate_export_dependencies,
 )
+from config import get_logger
 from dbcon.queries import (
     get_latest_sdks,
     get_sdk_pattern,

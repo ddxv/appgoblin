@@ -1,8 +1,12 @@
 WITH matching_strings AS MATERIALIZED (
-    SELECT id, xml_path, value_name
+    SELECT
+        id,
+        xml_path,
+        value_name
     FROM version_strings
     WHERE LOWER(value_name) LIKE LOWER(:value_pattern) || '%'
 )
+
 SELECT
     vs.xml_path,
     vs.value_name,

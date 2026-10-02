@@ -21,8 +21,7 @@ from config import (
     SMTP_USER,
     get_logger,
 )
-from dbcon.queries import query_apps_crossfilter
-from dbcon.queries import get_sdk_pattern_export
+from dbcon.queries import get_sdk_pattern_export, query_apps_crossfilter
 
 logger = get_logger(__name__)
 

@@ -21,4 +21,3 @@ CREATE TABLE user_requested_mapping (
 
 CREATE INDEX idx_user_requested_mapping_created
 ON user_requested_mapping (user_id, created_at DESC);
-
