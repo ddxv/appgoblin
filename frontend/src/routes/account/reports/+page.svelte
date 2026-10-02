@@ -25,14 +25,14 @@
 	<div class="flex items-start justify-between gap-3">
 		<div>
 			<h1 class="text-2xl font-bold">Generated Reports</h1>
-			<p class="mt-2 text-sm">Download your recent App Explorer reports.</p>
+			<p class="mt-2 text-sm">Download your recent reports.</p>
 		</div>
 		<FileText size={28} class="text-primary-500" />
 	</div>
 
 	{#if data.generatedReports.length === 0}
 		<div class="rounded-lg border border-surface-300-700 p-6 text-sm text-surface-500">
-			No generated reports yet. Reports created from App Explorer will appear here.
+			No reports generated yet. Reports can be created from the App Explorer and SDK detail pages.
 		</div>
 	{:else}
 		<div class="divide-y divide-surface-300-700 rounded-lg border border-surface-300-700">

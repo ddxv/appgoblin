@@ -1,4 +1,4 @@
-WITH matching_strings AS MATERIALIZED (
+WITH matching_strings AS (
     SELECT
         id,
         xml_path,
