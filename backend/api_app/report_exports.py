@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import io
+import json
 import smtplib
 import uuid
 from datetime import UTC, datetime
@@ -10,6 +11,7 @@ from email.message import EmailMessage
 
 import boto3
 from litestar.datastructures import State
+from sqlalchemy import text
 
 from config import (
     CONFIG,
@@ -83,8 +85,8 @@ def _get_public_s3_client():
     )
 
 
-def upload_report_csv(csv_bytes: bytes, report_id: str) -> str:
-    """Upload a CSV export to S3 and return its presigned download URL."""
+def upload_report_csv(csv_bytes: bytes, report_id: str) -> tuple[str, str]:
+    """Upload a CSV export to S3 and return its URL and object key."""
     s3_config = CONFIG[EXPORT_S3_CONFIG_KEY]
     s3_key = build_export_s3_key(report_id)
     s3_client = _get_public_s3_client()
@@ -94,7 +96,7 @@ def upload_report_csv(csv_bytes: bytes, report_id: str) -> str:
         Body=csv_bytes,
         ContentType="text/csv; charset=utf-8",
     )
-    return s3_client.generate_presigned_url(
+    download_url = s3_client.generate_presigned_url(
         "get_object",
         Params={
             "Bucket": s3_config["bucket"],
@@ -105,6 +107,36 @@ def upload_report_csv(csv_bytes: bytes, report_id: str) -> str:
         },
         ExpiresIn=APP_EXPLORER_EXPORT_URL_TTL_SECONDS,
     )
+    return download_url, s3_key
+
+
+def store_generated_report(
+    *, state: State, user_id: int, s3_key: str, payload: dict
+) -> None:
+    """Store metadata for a completed user-generated report."""
+    if state.dbconwrite is None:
+        raise RuntimeError("Write database connection is not available")
+
+    report_name = f"App Explorer CSV export {datetime.now(UTC).strftime('%Y-%m-%d')}"
+    filters = {
+        key: value
+        for key, value in payload.items()
+        if key not in {"user_id", "recipient_email"}
+    }
+    with state.dbconwrite.engine.begin() as connection:
+        connection.execute(
+            text("""
+                INSERT INTO user_generated_reports
+                    (user_id, report_name, s3_key, filters)
+                VALUES (:user_id, :report_name, :s3_key, CAST(:filters AS jsonb))
+                """),
+            {
+                "user_id": user_id,
+                "report_name": report_name,
+                "s3_key": s3_key,
+                "filters": json.dumps(filters),
+            },
+        )
 
 
 def send_report_ready_email(
@@ -138,6 +170,8 @@ def send_report_ready_email(
         f"<p><strong>Rows exported:</strong> {row_count}</p>"
         f"<p>This download link expires in {expires_in_days} days.</p>"
         f'<p><a href="{download_url}">Download your CSV report</a></p>'
+        "<h2>View all your reports:</h2>"
+        f'<p><a href="https://appgoblin.info/account/reports">https://appgoblin.info/account/reports</a></p>'
         "</div>"
     )
     message.set_content(text_body)
@@ -195,12 +229,18 @@ def create_crossfilter_export_csv(state: State, payload: dict) -> tuple[bytes, i
 
 
 def run_app_explorer_export_job(
-    *, state: State, payload: dict, recipient_email: str, report_id: str
+    *, state: State, payload: dict, recipient_email: str, report_id: str, user_id: int
 ) -> None:
     """Generate, upload, and email a crossfilter report."""
     try:
         csv_bytes, row_count = create_crossfilter_export_csv(state, payload)
-        download_url = upload_report_csv(csv_bytes, report_id)
+        download_url, s3_key = upload_report_csv(csv_bytes, report_id)
+        store_generated_report(
+            state=state,
+            user_id=user_id,
+            s3_key=s3_key,
+            payload=payload,
+        )
         send_report_ready_email(
             recipient_email=recipient_email,
             download_url=download_url,
