@@ -1,5 +1,4 @@
 import { requireAuthOr401 } from '$lib/server/auth/auth';
-import { createApiClient } from '$lib/server/api';
 import { db } from '$lib/server/auth/db';
 import type { PageServerLoad } from './$types';
 
@@ -21,22 +20,14 @@ export const load: PageServerLoad = async (event) => {
 		 LIMIT 25`,
 		[user.id]
 	);
-	const api = createApiClient(event.fetch);
-	const generatedReports = await Promise.all(
-		reports.map(async (report) => {
-			const signed = await api.get(
-				`/internal/exports/user-report-signed-url?s3_key=${encodeURIComponent(report.s3_key)}`,
-				'User Report Download'
-			);
-			return {
-				id: report.id,
-				reportName: report.report_name,
-				rowCount: report.row_count,
-				createdAt: report.created_at.toISOString(),
-				url: signed.url as string
-			};
-		})
-	);
+	const generatedReports = reports.map((report) => {
+		return {
+			id: report.id,
+			reportName: report.report_name,
+			rowCount: report.row_count,
+			createdAt: report.created_at.toISOString()
+		};
+	});
 
 	return { generatedReports };
 };
