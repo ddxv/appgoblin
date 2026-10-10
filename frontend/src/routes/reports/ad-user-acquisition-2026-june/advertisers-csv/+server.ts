@@ -1,12 +1,7 @@
-import { APPGOBLIN_DOWNLOADS_BASE } from '$env/static/private';
 import type { RequestEvent } from '@sveltejs/kit';
-import { error } from '@sveltejs/kit';
+import { error, redirect } from '@sveltejs/kit';
 import { requireFullAuth } from '$lib/server/auth/auth';
 import { userHasTierAccess } from '$lib/server/subscription';
-
-function buildCsvUrl(slug: string): string {
-	return `${APPGOBLIN_DOWNLOADS_BASE}downloads/reports/${slug}/advertisers.csv`;
-}
 
 export async function GET(event: RequestEvent) {
 	const { user } = requireFullAuth(event);
@@ -23,30 +18,25 @@ export async function GET(event: RequestEvent) {
 	}
 	const slug = pathParts[reportsIdx + 1];
 
-	const csvUrl = buildCsvUrl(slug);
-
-	let s3Response: Response;
+	let signingResponse: Response;
 	try {
-		s3Response = await fetch(csvUrl);
+		signingResponse = await fetch(
+			`http://localhost:8000/api/internal/exports/advertiser-report-signed-url?slug=${encodeURIComponent(slug)}`
+		);
 	} catch (err) {
-		console.error('S3 fetch failed for advertiser CSV:', err);
-		error(502, 'Unable to reach the CSV storage. Please try again later.');
+		console.error('Signing request failed for advertiser CSV:', err);
+		error(502, 'Unable to prepare the CSV download. Please try again later.');
 	}
 
-	if (!s3Response.ok) {
-		if (s3Response.status === 404) {
+	if (!signingResponse.ok) {
+		if (signingResponse.status === 404) {
 			error(404, 'The advertiser CSV for this report has not been published yet.');
 		}
-		console.error(`S3 returned ${s3Response.status} for advertiser CSV: ${csvUrl}`);
-		error(502, 'Failed to retrieve the CSV from storage.');
+		console.error(`Signing service returned ${signingResponse.status} for advertiser CSV`);
+		error(502, 'Failed to prepare the CSV download.');
 	}
 
-	// Stream the CSV back to the client
-	return new Response(s3Response.body, {
-		status: 200,
-		headers: {
-			'Content-Type': 'text/csv; charset=utf-8',
-			'Content-Disposition': `attachment; filename="appgoblin-${slug}-advertisers.csv"`
-		}
-	});
+	const { url } = (await signingResponse.json()) as { url?: string };
+	if (!url) error(502, 'Signing service returned an invalid download URL.');
+	redirect(303, url);
 }

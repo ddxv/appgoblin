@@ -1131,6 +1131,54 @@ class TestV1Apps:
             },
         }
 
+    def test_company_detail_builds_signed_dataset_urls(self):
+        app = _make_test_app()
+        overview = FakeCompanyCategoryOverview(
+            categories={
+                "all": CategoryCompanyStats(
+                    sdk_android_total_apps=123,
+                    sdk_ios_total_apps=45,
+                )
+            },
+            company_types=["ad-network"],
+        )
+
+        with (
+            _patch_key_found("b2b_sdk"),
+            _patch_raw_company_detail(overview),
+            patch(
+                "api_app.controllers.public.v1.companies.get_signed_download_url",
+                side_effect=lambda key: f"signed://{key}",
+            ),
+            TestClient(app=app, raise_server_exceptions=False) as client,
+        ):
+            resp = client.get(
+                "/api/v1/companies/google.com",
+                headers={"X-API-Key": "ag_companydetail"},
+            )
+
+        assert resp.status_code == 200
+        assert resp.json()["datasets"] == {
+            "sdk_api_android": {
+                "available": True,
+                "estimated_rows": 123,
+                "url": (
+                    "signed://downloads/company-verified-apps/domains/"
+                    "domain=google.com/source=all/"
+                    "appgoblin_google.com_android_verified_apps.csv"
+                ),
+            },
+            "sdk_api_ios": {
+                "available": True,
+                "estimated_rows": 45,
+                "url": (
+                    "signed://downloads/company-verified-apps/domains/"
+                    "domain=google.com/source=all/"
+                    "appgoblin_google.com_ios_verified_apps.csv"
+                ),
+            },
+        }
+
     def test_app_sdks_returns_empty_shape_when_missing(self):
         app = _make_test_app()
         with (

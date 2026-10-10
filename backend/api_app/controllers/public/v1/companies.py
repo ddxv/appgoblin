@@ -1,6 +1,5 @@
 """Versioned public API endpoints — requires API key authentication."""
 
-import os
 import time
 from collections.abc import Mapping
 from typing import Self, SupportsFloat, SupportsIndex, SupportsInt, cast
@@ -35,11 +34,11 @@ from api_app.models import (
 from api_app.models import (
     CompanyCategoryOverview as PrivateCompanyCategoryOverview,
 )
+from api_app.s3_downloads import get_signed_download_url
 from config import get_logger
 
 logger = get_logger(__name__)
 
-DEFAULT_DOWNLOADS_BASE = "https://media.appgoblin.info/"
 UNMAPPED_COMPANY_NOTICE = (
     "This domain has not yet been manually mapped to a company in the AppGoblin "
     "database. Current results may include incidental matches from ads.txt or "
@@ -115,26 +114,18 @@ def _api_key_guard(request: ASGIConnection, route_handler: BaseRouteHandler) -> 
         )
 
 
-def _get_downloads_base_url() -> str:
-    """Return the configured public downloads base URL."""
-    base = os.getenv("APPGOBLIN_DOWNLOADS_BASE", "").strip()
-    if not base:
-        return DEFAULT_DOWNLOADS_BASE
-    return base if base.endswith("/") else f"{base}/"
-
-
 def _build_company_verified_apps_url(company_domain: str, platform: str) -> str | None:
-    """Build the public S3 URL for a company verified apps export."""
+    """Build a signed URL for a company verified apps export."""
     if not company_domain:
         return None
 
     encoded_domain = quote(company_domain, safe="")
-    base = _get_downloads_base_url()
-    return (
-        f"{base}downloads/company-verified-apps/"
+    key = (
+        "downloads/company-verified-apps/"
         f"domains/domain={encoded_domain}/source=all/"
         f"appgoblin_{encoded_domain}_{platform}_verified_apps.csv"
     )
+    return get_signed_download_url(key)
 
 
 def _build_company_datasets(

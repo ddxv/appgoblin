@@ -25,7 +25,7 @@ export const load: PageServerLoad = async (event) => {
 	const generatedReports = await Promise.all(
 		reports.map(async (report) => {
 			const signed = await api.get(
-				`/public/exports/user-report-signed-url?s3_key=${encodeURIComponent(report.s3_key)}`,
+				`/internal/exports/user-report-signed-url?s3_key=${encodeURIComponent(report.s3_key)}`,
 				'User Report Download'
 			);
 			return {

@@ -1,7 +1,4 @@
-"""Public API for data exports.
-
-/api/public/exports/datasets - list of available export files
-"""
+"""Public dataset discovery and internal S3 download signing endpoints."""
 
 from typing import Self
 
@@ -11,6 +8,7 @@ from litestar.config.response_cache import CACHE_FOREVER
 from litestar.datastructures import State
 from litestar.exceptions import ClientException, NotFoundException
 
+from api_app.s3_downloads import get_signed_download_url
 from config import CONFIG, get_logger
 from dbcon.queries import get_company_s3_reports
 from dbcon.static import get_s3_datasets
@@ -20,6 +18,11 @@ logger = get_logger(__name__)
 SIGNED_DOWNLOADS_CONFIG_KEY = "s3-signed-downloads"
 SIGNED_DOWNLOAD_URL_TTL_SECONDS = 60 * 60
 USER_REPORT_S3_PREFIX = "user-reports/"
+ADVERTISER_REPORT_SLUGS = {
+    "ad-user-acquisition-2026-june",
+    "ad-user-acquisition-2026-july",
+    "ad-user-acquisition-2026-august",
+}
 
 
 def _get_signed_download_client():
@@ -48,7 +51,7 @@ def _build_signed_download_key(dataset: str, domain: str, platform: str | None) 
     raise ValueError("Unsupported download dataset or platform")
 
 
-class ExportsController(Controller):
+class PublicExportsController(Controller):
     """Public endpoint for free data export listings."""
 
     path = "/api/public/"
@@ -57,6 +60,21 @@ class ExportsController(Controller):
     async def get_datasets(self: Self, state: State) -> list[dict]:
         """Return list of available public export datasets from S3."""
         return get_s3_datasets(state)
+
+
+class InternalExportsController(Controller):
+    """Local-only endpoints for signing frontend downloads."""
+
+    path = "/api/internal/"
+
+    @get(path="exports/advertiser-report-signed-url")
+    async def get_advertiser_report_signed_url(self: Self, slug: str) -> dict[str, str]:
+        """Return a signed URL for an advertiser report CSV."""
+        if slug not in ADVERTISER_REPORT_SLUGS:
+            raise NotFoundException("Advertiser report not found", status_code=404)
+
+        key = f"downloads/reports/{slug}/advertisers.csv"
+        return {"url": get_signed_download_url(key)}
 
     @get(path="exports/signed-url")
     async def get_signed_url(
