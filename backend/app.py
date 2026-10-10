@@ -17,7 +17,10 @@ from api_app.controllers.categories import CategoryController
 from api_app.controllers.companies import CompaniesController
 from api_app.controllers.creatives import CreativesController
 from api_app.controllers.developers import DeveloperController
-from api_app.controllers.exports import ExportsController
+from api_app.controllers.exports import (
+    InternalExportsController,
+    PublicExportsController,
+)
 from api_app.controllers.health import HealthController
 from api_app.controllers.keywords import KeywordsController
 from api_app.controllers.public.v1.advertisers import V1AdvertisersController
@@ -287,7 +290,8 @@ app = Litestar(
         KeywordsController,
         ScryController,
         CreativesController,
-        ExportsController,
+        PublicExportsController,
+        InternalExportsController,
         HealthController,
         V1AppsController,
         V1AdvertisersController,

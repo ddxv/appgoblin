@@ -104,6 +104,8 @@ class CompanyDatasets:
 
     sdk_api_android: CompanyDatasetTarget
     sdk_api_ios: CompanyDatasetTarget
+    parent_company_android: CompanyDatasetTarget | None = None
+    parent_company_ios: CompanyDatasetTarget | None = None
 
 
 @dataclass

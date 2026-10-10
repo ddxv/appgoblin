@@ -50,7 +50,7 @@
 						</p>
 					</div>
 					<a
-						href={report.url}
+						href={`/account/reports/${report.id}/download`}
 						class="btn btn-sm preset-tonal flex items-center justify-center gap-2 sm:shrink-0"
 						download
 					>

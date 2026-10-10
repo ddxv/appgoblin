@@ -35,7 +35,7 @@ export const load: PageServerLoad = async ({ fetch, params, parent, locals }) =>
 					s3_key: report.file_key
 				});
 				const response = await fetch(
-					`http://localhost:8000/api/public/exports/signed-url?${query.toString()}`
+					`http://localhost:8000/api/internal/exports/signed-url?${query.toString()}`
 				);
 				if (response.ok) report.url = ((await response.json()) as { url: string }).url;
 			})
