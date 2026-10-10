@@ -17,6 +17,7 @@ from api_app.controllers.companies import (
     get_company_app_change_store_ids_by_platform,
     get_overviews,
 )
+from dbcon.queries import get_company_s3_reports
 from api_app.controllers.public.v1.public_models import (
     CompanyDatasets,
     CompanyDatasetTarget,
@@ -129,13 +130,49 @@ def _build_company_verified_apps_url(company_domain: str, platform: str) -> str 
 
 
 def _build_company_datasets(
-    company_domain: str, categories: Mapping[str, CategoryCompanyStats]
+    state: State,
+    company_domain: str,
+    categories: Mapping[str, CategoryCompanyStats],
 ) -> CompanyDatasets:
     """Build public SDK/API dataset metadata for a company domain."""
     totals = categories.get("all")
 
     android_rows = int(getattr(totals, "sdk_android_total_apps", 0)) if totals else 0
     ios_rows = int(getattr(totals, "sdk_ios_total_apps", 0)) if totals else 0
+
+    # Some lightweight callers (including API contract tests) provide the
+    # overview without a database connection. In that case there cannot be a
+    # registered parent-company export, so expose it as unavailable.
+    reports = (
+        get_company_s3_reports(state=state, company_domain=company_domain)
+        if getattr(state, "dbcon", None) is not None
+        else None
+    )
+
+    def parent_company_report(platform: str) -> CompanyDatasetTarget:
+        """Build a parent-company export target only when its file is registered."""
+        if reports is None:
+            return CompanyDatasetTarget(available=False, estimated_rows=0, url=None)
+
+        matching = reports[
+            reports["file_key"]
+            .astype(str)
+            .str.contains(f"downloads/parent-company-verified-apps/", regex=False)
+            & reports["file_key"]
+            .astype(str)
+            .str.contains(f"_{platform}_verified_apps.csv", regex=False)
+        ]
+        if matching.empty:
+            return CompanyDatasetTarget(available=False, estimated_rows=0, url=None)
+
+        file_key = str(matching.iloc[0]["file_key"])
+        row_count = matching.iloc[0].get("row_count")
+        estimated_rows = int(row_count) if row_count is not None else 0
+        return CompanyDatasetTarget(
+            available=True,
+            estimated_rows=estimated_rows,
+            url=get_signed_download_url(file_key),
+        )
 
     return CompanyDatasets(
         sdk_api_android=CompanyDatasetTarget(
@@ -156,6 +193,8 @@ def _build_company_datasets(
                 else None
             ),
         ),
+        parent_company_android=parent_company_report("android"),
+        parent_company_ios=parent_company_report("ios"),
     )
 
 
@@ -338,7 +377,7 @@ def _build_public_company_overview_payload(
         company_types=overview.company_types,
         domain_is_mapped=domain_is_mapped,
         mapping_notice=mapping_notice,
-        datasets=_build_company_datasets(company_domain, overview.categories),
+        datasets=_build_company_datasets(state, company_domain, overview.categories),
     )
 
 
@@ -407,7 +446,7 @@ class V1CompaniesController(Controller):
             ),
         )
 
-    @get(path="/companies/{company_domain:str}", cache=86400)
+    @get(path="/companies/{company_domain:str}")
     async def company_overview(
         self: Self,
         state: State,

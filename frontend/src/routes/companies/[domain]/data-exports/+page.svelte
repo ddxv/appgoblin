@@ -23,22 +23,30 @@
 		data.reports.some((report) => report.report_name.toLowerCase().includes('app-ads'))
 	);
 	let hasVerifiedAppsExport = $derived(
-		data.reports.some((report) => !report.report_name.toLowerCase().includes('app-ads'))
+		data.reports.some((report) => {
+			const name = `${report.report_name} ${report.file_key}`.toLowerCase();
+			return !name.includes('app-ads') && !name.includes('parent-company-verified-apps');
+		})
 	);
 
 	const getDatasetMetadata = (report: Props['data']['reports'][number]) => {
 		const name = `${report.report_name} ${report.file_key}`.toLowerCase();
 		const isAppAdsTxt = name.includes('app-ads') || name.includes('ads_txt');
+		const isParentCompany = name.includes('parent-company-verified-apps');
 		const isIos = name.includes('ios') || name.includes('apple');
 
 		return {
 			label: isAppAdsTxt
 				? 'App-Ads.txt Data'
-				: `SDK & API Verified Apps (${isIos ? 'iOS' : 'Android'})`,
+				: isParentCompany
+					? `Parent Company Verified Apps (${isIos ? 'iOS' : 'Android'})`
+					: `SDK & API Verified Apps (${isIos ? 'iOS' : 'Android'})`,
 			platform: isAppAdsTxt ? 'Cross-Platform' : isIos ? 'iOS' : 'Android',
 			signalDepth: isAppAdsTxt
 				? 'Apps with app-ads.txt records for the company domain.'
-				: 'Apps verified by matched SDKs or API HTTP requests.'
+				: isParentCompany
+					? 'Apps verified through the company’s parent-company SDK or API footprint.'
+					: 'Apps verified by matched SDKs or API HTTP requests.'
 		};
 	};
 </script>
@@ -161,7 +169,7 @@
 											rel="noopener noreferrer"
 											class="btn preset-filled-primary-500 p-3 text-sm"
 										>
-											Signed Download
+											Download
 										</a>
 									{:else}
 										<a href="/pricing" class="btn preset-filled-primary-500 p-3 text-sm"

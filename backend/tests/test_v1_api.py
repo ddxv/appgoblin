@@ -553,6 +553,12 @@ class TestV1CompanyDetail:
                         "source=all/appgoblin_google.com_ios_verified_apps.csv"
                     ),
                 ),
+                parent_company_android=CompanyDatasetTarget(
+                    available=False, estimated_rows=0, url=None
+                ),
+                parent_company_ios=CompanyDatasetTarget(
+                    available=False, estimated_rows=0, url=None
+                ),
             ),
             mapping_notice=None,
         )
@@ -615,6 +621,16 @@ class TestV1CompanyDetail:
                         "downloads/company-verified-apps/domains/domain=google.com/"
                         "source=all/appgoblin_google.com_ios_verified_apps.csv"
                     ),
+                },
+                "parent_company_android": {
+                    "available": False,
+                    "estimated_rows": 0,
+                    "url": None,
+                },
+                "parent_company_ios": {
+                    "available": False,
+                    "estimated_rows": 0,
+                    "url": None,
                 },
             },
             "mapping_notice": None,
@@ -1176,6 +1192,16 @@ class TestV1Apps:
                     "domain=google.com/source=all/"
                     "appgoblin_google.com_ios_verified_apps.csv"
                 ),
+            },
+            "parent_company_android": {
+                "available": False,
+                "estimated_rows": 0,
+                "url": None,
+            },
+            "parent_company_ios": {
+                "available": False,
+                "estimated_rows": 0,
+                "url": None,
             },
         }
 
