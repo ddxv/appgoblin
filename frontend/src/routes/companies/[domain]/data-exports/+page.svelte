@@ -45,7 +45,7 @@
 			signalDepth: isAppAdsTxt
 				? 'Apps with app-ads.txt records for the company domain.'
 				: isParentCompany
-					? 'Apps verified through the company’s parent-company SDK or API footprint.'
+					? 'Apps verified by all company and child company SDKs or APIs.'
 					: 'Apps verified by matched SDKs or API HTTP requests.'
 		};
 	};
