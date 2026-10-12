@@ -13,8 +13,8 @@ from api_app.analytics import PUBLIC_API_HOSTNAME, build_request_page_view_task
 from api_app.controllers.public.v1.public_models import (
     PublicAppBasics,
     PublicAppBestRank,
-    PublicAppSdkHistory,
     PublicAppSdkDetails,
+    PublicAppSdkHistory,
 )
 from api_app.guards import validate_api_key
 from config import get_logger

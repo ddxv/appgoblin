@@ -65,8 +65,8 @@
 		<p class="text-sm md:text-base">
 			The public API also exposes app version timelines and SDK change history through
 			<code class="px-1">/api/v1/apps/{'{store_id}'}/versions</code> and
-			<code class="px-1">/api/v1/apps/{'{store_id}'}/sdks/history</code>. These endpoints
-			require a B2B SDK or B2B Premium API token.
+			<code class="px-1">/api/v1/apps/{'{store_id}'}/sdks/history</code>. These endpoints require a
+			B2B SDK or B2B Premium API token.
 		</p>
 	</div>
 

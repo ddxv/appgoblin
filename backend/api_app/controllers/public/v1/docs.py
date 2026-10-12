@@ -492,9 +492,7 @@ def _set_app_basics_example(schema: dict[str, Any]) -> None:
 def _set_app_sdk_history_examples(schema: dict[str, Any]) -> None:
     """Attach examples to the B2B SDK timeline and history endpoints."""
     timeline_path = schema.get("paths", {}).get("/api/v1/apps/{store_id}/versions")
-    history_path = schema.get("paths", {}).get(
-        "/api/v1/apps/{store_id}/sdks/history"
-    )
+    history_path = schema.get("paths", {}).get("/api/v1/apps/{store_id}/sdks/history")
 
     if isinstance(timeline_path, dict):
         operation = timeline_path.get("get")
