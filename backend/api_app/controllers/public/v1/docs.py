@@ -186,6 +186,39 @@ KEYWORD_RANKS_EXAMPLE_RESPONSE = {
         }
     ],
 }
+APP_VERSION_TIMELINE_EXAMPLE_STORE_ID = "dev.thirdgate.appgoblin"
+APP_VERSION_TIMELINE_EXAMPLE_RESPONSE = [
+    {
+        "app_version_code": "42",
+        "sdk_scan_result": 1,
+        "sdks_last_scanned_at": "2026-07-22T10:15:00Z",
+        "downloaded_at": "2026-07-21T14:32:08Z",
+    }
+]
+APP_SDK_HISTORY_EXAMPLE_RESPONSE = {
+    "history": [
+        {
+            "company_name": "Adjust",
+            "company_domain": "adjust.com",
+            "sdk_name": "Adjust SDK",
+            "version_code": "42",
+            "version_code_created_at": "2026-07-21T14:32:08Z",
+            "sdk_scan_result": 1,
+            "status": "added",
+            "company_logo_url": "company-logos/adjust.png",
+        },
+        {
+            "company_name": None,
+            "company_domain": None,
+            "sdk_name": None,
+            "version_code": "41",
+            "version_code_created_at": "2026-07-14T09:00:00Z",
+            "sdk_scan_result": 1,
+            "status": None,
+            "company_logo_url": None,
+        },
+    ]
+}
 ADVERTISER_CREATIVES_EXAMPLE_HOST_DOMAIN = "applovin.com"
 ADVERTISER_CREATIVES_EXAMPLE_RESPONSE = {
     "host_domain": ADVERTISER_CREATIVES_EXAMPLE_HOST_DOMAIN,
@@ -279,6 +312,30 @@ V1_OPERATION_DOCS = {
                 "Endpoint: `GET /api/v1/apps/{store_id}/sdks`\n\n"
                 "Returns public SDK findings, permissions, package queries, SKAdNetwork "
                 "entries, and unmapped evidence for a single app."
+            ),
+        }
+    },
+    "/api/v1/apps/{store_id}/versions": {
+        "get": {
+            "summary": "[B2B SDK] /apps/{store_id}/versions",
+            "description": (
+                "Endpoint: `GET /api/v1/apps/{store_id}/versions`\n\n"
+                "Access: B2B SDK and B2B Premium tiers only.\n\n"
+                "Returns the crawled version timeline for an app, including the "
+                "version code, download timestamp, SDK scan result, and latest "
+                "SDK scan timestamp."
+            ),
+        }
+    },
+    "/api/v1/apps/{store_id}/sdks/history": {
+        "get": {
+            "summary": "[B2B SDK] /apps/{store_id}/sdks/history",
+            "description": (
+                "Endpoint: `GET /api/v1/apps/{store_id}/sdks/history`\n\n"
+                "Access: B2B SDK and B2B Premium tiers only.\n\n"
+                "Returns SDK additions and removals across app versions, along "
+                "with scan-status rows when a version had no detected SDK change. "
+                "Change rows include SDK and company metadata when available."
             ),
         }
     },
@@ -430,6 +487,54 @@ def _set_app_basics_example(schema: dict[str, Any]) -> None:
             "value": APP_BASICS_EXAMPLE_RESPONSE,
         }
     }
+
+
+def _set_app_sdk_history_examples(schema: dict[str, Any]) -> None:
+    """Attach examples to the B2B SDK timeline and history endpoints."""
+    timeline_path = schema.get("paths", {}).get("/api/v1/apps/{store_id}/versions")
+    history_path = schema.get("paths", {}).get(
+        "/api/v1/apps/{store_id}/sdks/history"
+    )
+
+    if isinstance(timeline_path, dict):
+        operation = timeline_path.get("get")
+        if isinstance(operation, dict):
+            for parameter in operation.get("parameters", []):
+                if parameter.get("name") == "store_id":
+                    parameter["example"] = APP_VERSION_TIMELINE_EXAMPLE_STORE_ID
+            content = (
+                operation.get("responses", {})
+                .get("200", {})
+                .get("content", {})
+                .get("application/json")
+            )
+            if isinstance(content, dict):
+                content["examples"] = {
+                    "app_version_timeline": {
+                        "summary": "Crawled versions and SDK scan status",
+                        "value": APP_VERSION_TIMELINE_EXAMPLE_RESPONSE,
+                    }
+                }
+
+    if isinstance(history_path, dict):
+        operation = history_path.get("get")
+        if isinstance(operation, dict):
+            for parameter in operation.get("parameters", []):
+                if parameter.get("name") == "store_id":
+                    parameter["example"] = APP_VERSION_TIMELINE_EXAMPLE_STORE_ID
+            content = (
+                operation.get("responses", {})
+                .get("200", {})
+                .get("content", {})
+                .get("application/json")
+            )
+            if isinstance(content, dict):
+                content["examples"] = {
+                    "app_sdk_history": {
+                        "summary": "SDK additions, removals, and scan-status rows",
+                        "value": APP_SDK_HISTORY_EXAMPLE_RESPONSE,
+                    }
+                }
 
 
 def _set_company_overview_example(schema: dict[str, Any]) -> None:
@@ -696,6 +801,7 @@ def build_v1_openapi_schema(request: Request) -> dict[str, Any]:
     _set_operation_docs(schema)
     _set_companies_index_example(schema)
     _set_app_basics_example(schema)
+    _set_app_sdk_history_examples(schema)
     _set_company_overview_example(schema)
     _set_company_app_changes_examples(schema)
     _set_keyword_metrics_example(schema)
