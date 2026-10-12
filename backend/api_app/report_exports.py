@@ -21,7 +21,7 @@ from config import (
     SMTP_USER,
     get_logger,
 )
-from dbcon.queries import get_sdk_pattern_export, query_apps_crossfilter
+from dbcon.queries import get_sdk_export, get_sdk_pattern_export, query_apps_crossfilter
 
 logger = get_logger(__name__)
 
@@ -266,6 +266,14 @@ def create_sdk_pattern_export_csv(state: State, pattern: str) -> tuple[bytes, in
     return buffer.getvalue().encode("utf-8"), len(apps_df.index)
 
 
+def create_sdk_export_csv(state: State, sdk_id: int) -> tuple[bytes, int]:
+    """Run an unrestricted export for one exact SDK."""
+    apps_df = get_sdk_export(state, sdk_id)
+    buffer = io.StringIO()
+    apps_df.to_csv(buffer, index=False)
+    return buffer.getvalue().encode("utf-8"), len(apps_df.index)
+
+
 def run_app_explorer_export_job(
     *, state: State, payload: dict, recipient_email: str, report_id: str, user_id: int
 ) -> None:
@@ -334,3 +342,31 @@ def run_sdk_pattern_export_job(
         logger.exception(
             "Failed SDK pattern export %s for %s", report_id, recipient_email
         )
+
+
+def run_sdk_export_job(
+    *, state: State, sdk_id: int, recipient_email: str, report_id: str, user_id: int
+) -> None:
+    """Generate, upload, and email an exact SDK report."""
+    try:
+        csv_bytes, row_count = create_sdk_export_csv(state, sdk_id)
+        download_url, s3_key = upload_report_csv(
+            csv_bytes, report_id, report_type="sdks"
+        )
+        store_generated_report(
+            state=state,
+            user_id=user_id,
+            s3_key=s3_key,
+            payload={"sdk_id": sdk_id},
+            row_count=row_count,
+            report_name=f"SDK export {sdk_id}",
+        )
+        send_report_ready_email(
+            recipient_email=recipient_email,
+            download_url=download_url,
+            report_id=report_id,
+            row_count=row_count,
+            report_type="sdks",
+        )
+    except Exception:
+        logger.exception("Failed SDK export %s for %s", report_id, recipient_email)

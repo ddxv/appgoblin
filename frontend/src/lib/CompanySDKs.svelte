@@ -2,13 +2,15 @@
 	import type { CompanySDKsDict } from '../types';
 	import WhiteCard from './WhiteCard.svelte';
 	import { formatNumber } from './utils/formatNumber';
+	import Crown from '@lucide/svelte/icons/crown';
+	import Mail from '@lucide/svelte/icons/mail';
 
 	interface Props {
 		mySdks: CompanySDKsDict;
+		hasB2BSdkAccess: boolean;
 	}
 
-	let { mySdks }: Props = $props();
-
+	let { mySdks, hasB2BSdkAccess }: Props = $props();
 	const uniquePaths = $derived([
 		...new Set(
 			Object.values(mySdks.companies || {})
@@ -24,15 +26,43 @@
 	}
 </script>
 
+{#if !hasB2BSdkAccess}
+	<div class="mx-2 md:mx-4 mt-2 p-3 bg-warning-50-950/20 rounded-lg border border-warning-800-200">
+		<p class="text-sm text-warning-950-50 flex items-center gap-2">
+			<Crown class="w-4 h-4 text-primary-900-100" aria-hidden="true" />
+			B2B SDK Intelligence tier.
+			<a href="/pricing" class="underline hover:text-primary-600-400">Upgrade</a>
+			to unlock full reports.
+		</p>
+	</div>
+{/if}
+
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-2 md:p-4">
 	{#each Object.entries(mySdks.companies) as [companyName, sdks]}
 		{#each Object.entries(sdks) as [sdkName, patterns]}
 			<div class="col-span-1">
 				<WhiteCard>
 					{#snippet title()}
-						<span class="text-sm font-semibold">{companyName} - {sdkName}</span>
+						<a class="text-sm font-semibold underline" href={`/sdks/appgoblin/${patterns.sdk_slug}`}
+							>{companyName} - {sdkName}</a
+						>
 					{/snippet}
 					<div class="p-4 text-xs">
+						<form method="POST" action="?/emailExport" class="mb-3">
+							<input type="hidden" name="sdk_id" value={patterns.sdk_id} />
+							<button
+								type="submit"
+								disabled={!hasB2BSdkAccess}
+								class="btn preset-tonal-primary flex items-center gap-2 text-sm"
+							>
+								<Mail size={14} /> Generate & Email Report
+							</button>
+						</form>
+						{#if !hasB2BSdkAccess}
+							<a href="/pricing" class="underline text-primary-600-400"
+								>Upgrade to generate reports</a
+							>
+						{/if}
 						{#if patterns && patterns.package_patterns.length > 0}
 							<h4 class="font-medium uppercase tracking-wider mb-1">Package Patterns</h4>
 							<ul class="list-disc list-inside space-y-0.5">

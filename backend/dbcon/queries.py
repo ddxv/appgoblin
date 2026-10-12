@@ -659,6 +659,31 @@ def get_company_sdks(state: State, company_domain: str) -> pd.DataFrame:
     return df
 
 
+def get_sdk(state: State, sdk_id: int, limit: int = 10) -> pd.DataFrame:
+    """Get the top apps for one exact SDK."""
+    df = pd.read_sql(
+        sql.sdk,
+        state.dbcon.engine,
+        params={"sdk_id": sdk_id, "mylimit": limit},
+    )
+    df["store"] = df["store"].replace({1: "Google Play", 2: "Apple App Store"})
+    return df
+
+
+def get_sdk_companies(state: State, sdk_slug: str) -> pd.DataFrame:
+    """Get companies associated with one exact SDK."""
+    return pd.read_sql(
+        sql.sdk_companies, state.dbcon.engine, params={"sdk_slug": sdk_slug}
+    )
+
+
+def get_sdk_export(state: State, sdk_id: int) -> pd.DataFrame:
+    """Get every app and matched string for one exact SDK."""
+    df = pd.read_sql(sql.sdk_export, state.dbcon.engine, params={"sdk_id": sdk_id})
+    df["store"] = df["store"].replace({1: "Google Play", 2: "Apple App Store"})
+    return df
+
+
 def _format_category_name(category: str) -> str:
     """Format a raw app_category into a human-readable display name."""
     if category in ("games", "apps", "others", "None"):
