@@ -1,5 +1,11 @@
 import nodemailer from 'nodemailer';
-import { APPGOBLIN_ENDPOINT_URL, EMAIL_HOST, EMAIL_PORT, EMAIL_USER, EMAIL_PASSWORD } from '$env/static/private';
+import {
+	APPGOBLIN_ENDPOINT_URL,
+	EMAIL_HOST,
+	EMAIL_PORT,
+	EMAIL_USER,
+	EMAIL_PASSWORD
+} from '$env/static/private';
 import { STRIPE_PLAN_LABELS, type BillingCycle, type StripePriceKey } from '$lib/plans';
 
 let transporter: ReturnType<typeof nodemailer.createTransport> | null = null;

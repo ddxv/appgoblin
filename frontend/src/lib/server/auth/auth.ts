@@ -96,14 +96,16 @@ export async function requirePaidSubscription(event: RequestEvent) {
 		redirect(302, '/pricing');
 	}
 	const organizationSubscription = await getOrganizationSubscriptionAccess(event.locals.user.id);
-	const row = organizationSubscription ?? await db.queryOne<{ status: string }>(
-		`SELECT status FROM subscriptions
+	const row =
+		organizationSubscription ??
+		(await db.queryOne<{ status: string }>(
+			`SELECT status FROM subscriptions
 		 WHERE user_id = $1
 		 AND status IN ('active', 'trialing')
 		 AND (cancel_at IS NULL OR cancel_at > NOW())
 		 ORDER BY created_at DESC LIMIT 1`,
-		[event.locals.user.id]
-	);
+			[event.locals.user.id]
+		));
 	if (!row) {
 		redirect(302, '/pricing');
 	}

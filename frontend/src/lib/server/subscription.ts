@@ -32,7 +32,10 @@ export async function getUserTierSlugs(userId: number): Promise<string[]> {
 export async function userHasTierAccess(userId: number, ...slugs: string[]): Promise<boolean> {
 	if (!userId || slugs.length === 0) return false;
 	const organizationSubscription = await getOrganizationSubscriptionAccess(userId);
-	if (organizationSubscription) return !!organizationSubscription.tier_slug && slugs.includes(organizationSubscription.tier_slug);
+	if (organizationSubscription)
+		return (
+			!!organizationSubscription.tier_slug && slugs.includes(organizationSubscription.tier_slug)
+		);
 
 	const row = await db.queryOne<{ slug: string }>(
 		`SELECT t.slug

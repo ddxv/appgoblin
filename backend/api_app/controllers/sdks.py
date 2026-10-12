@@ -28,9 +28,9 @@ from api_app.report_exports import (
 )
 from config import get_logger
 from dbcon.queries import (
+    get_latest_sdks,
     get_sdk,
     get_sdk_companies,
-    get_latest_sdks,
     get_sdk_pattern,
     get_sdk_pattern_companies,
     get_user_requested_latest_sdks,

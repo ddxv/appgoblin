@@ -32,8 +32,15 @@ export const actions = {
 		if (!(await userHasTierAccess(user.id, 'b2b_sdk', 'b2b_premium')))
 			return fail(403, { error: 'B2B SDK Intelligence access is required.' });
 		try {
-			await createApiClient(event.fetch).post(`/sdks/id/${sdkId}/export`, { recipient_email: user.email, user_id: user.id }, 'SDK Export');
-			return { success: true, exportMessage: `Report generation queued. A download link will be sent to ${user.email}.` };
+			await createApiClient(event.fetch).post(
+				`/sdks/id/${sdkId}/export`,
+				{ recipient_email: user.email, user_id: user.id },
+				'SDK Export'
+			);
+			return {
+				success: true,
+				exportMessage: `Report generation queued. A download link will be sent to ${user.email}.`
+			};
 		} catch {
 			return fail(500, { error: 'Failed to queue CSV export.' });
 		}
