@@ -1,6 +1,7 @@
 import { error, redirect } from '@sveltejs/kit';
 import type { RequestEvent } from '@sveltejs/kit';
 import { db } from './db';
+import { getOrganizationSubscriptionAccess } from '$lib/server/organization';
 
 /**
  * Build login URL with optional redirectTo (current path by default).
@@ -94,7 +95,8 @@ export async function requirePaidSubscription(event: RequestEvent) {
 	if (!event.locals.user) {
 		redirect(302, '/pricing');
 	}
-	const row = await db.queryOne<{ status: string }>(
+	const organizationSubscription = await getOrganizationSubscriptionAccess(event.locals.user.id);
+	const row = organizationSubscription ?? await db.queryOne<{ status: string }>(
 		`SELECT status FROM subscriptions
 		 WHERE user_id = $1
 		 AND status IN ('active', 'trialing')

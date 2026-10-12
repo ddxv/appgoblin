@@ -1,10 +1,14 @@
 import { db } from '$lib/server/auth/db';
+import { getOrganizationSubscriptionAccess } from '$lib/server/organization';
 
 /**
  * Get all tier slugs the user currently has access to.
  * Returns an empty array for free/no-subscription users.
  */
 export async function getUserTierSlugs(userId: number): Promise<string[]> {
+	const organizationSubscription = await getOrganizationSubscriptionAccess(userId);
+	if (organizationSubscription?.tier_slug) return [organizationSubscription.tier_slug];
+
 	const rows = await db.query<{ slug: string }>(
 		`SELECT DISTINCT t.slug
 		 FROM public.subscriptions s
@@ -27,6 +31,9 @@ export async function getUserTierSlugs(userId: number): Promise<string[]> {
  */
 export async function userHasTierAccess(userId: number, ...slugs: string[]): Promise<boolean> {
 	if (!userId || slugs.length === 0) return false;
+	const organizationSubscription = await getOrganizationSubscriptionAccess(userId);
+	if (organizationSubscription) return !!organizationSubscription.tier_slug && slugs.includes(organizationSubscription.tier_slug);
+
 	const row = await db.queryOne<{ slug: string }>(
 		`SELECT t.slug
 		 FROM public.subscriptions s
@@ -47,6 +54,23 @@ export async function userHasTierAccess(userId: number, ...slugs: string[]): Pro
  * Returns null if no active subscription found.
  */
 export async function getActiveSubscription(userId: number) {
+	const organizationSubscription = await getOrganizationSubscriptionAccess(userId);
+	if (organizationSubscription) {
+		return db.queryOne(
+			`SELECT s.id, s.status, tp.provider_name,
+			        s.current_period_start, s.current_period_end,
+			        s.cancel_at, s.cancel_requested_at,
+			        s.tier_price_id, t.slug AS tier_slug,
+			        tp.billing_cycle
+			 FROM subscriptions s
+			 LEFT JOIN tier_prices tp ON tp.id = s.tier_price_id
+			 LEFT JOIN tiers t ON t.id = tp.tier_id
+			 JOIN organization_members om ON om.organization_id = s.organization_id
+			 WHERE om.user_id = $1 AND s.id = $2`,
+			[userId, organizationSubscription.id]
+		);
+	}
+
 	const row = await db.queryOne<{
 		id: number;
 		status: string;

@@ -19,6 +19,7 @@ import {
 import { isSafeRedirect } from '$lib/server/auth/auth';
 import { getClientIP } from '$lib/server/request';
 import { altcha } from '$lib/server/altcha';
+import { createPersonalOrganization } from '$lib/server/organization';
 import type { SessionFlags } from '$lib/server/auth/session';
 import type { RequestEvent } from '@sveltejs/kit';
 
@@ -78,6 +79,7 @@ export async function handleSignup(event: RequestEvent) {
 	let user;
 	try {
 		user = await createUser(email, username, password);
+		await createPersonalOrganization(user.id, `${username}'s account`);
 	} catch (error: unknown) {
 		// The availability check above is not enough on its own because two
 		// signup requests can race. The database constraint is authoritative.
