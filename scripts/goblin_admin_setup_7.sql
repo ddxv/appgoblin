@@ -3,7 +3,9 @@
 
 CREATE TABLE IF NOT EXISTS public.organization_invitations (
     id BIGSERIAL PRIMARY KEY,
-    organization_id INT NOT NULL REFERENCES public.organizations (id) ON DELETE CASCADE,
+    organization_id INT NOT NULL REFERENCES public.organizations (
+        id
+    ) ON DELETE CASCADE,
     email TEXT NOT NULL,
     token_hash TEXT NOT NULL UNIQUE,
     invited_by_user_id INT NOT NULL REFERENCES public.users (id),
@@ -15,9 +17,9 @@ CREATE TABLE IF NOT EXISTS public.organization_invitations (
 );
 
 CREATE INDEX IF NOT EXISTS organization_invitations_organization_idx
-    ON public.organization_invitations (organization_id, created_at DESC);
+ON public.organization_invitations (organization_id, created_at DESC);
 CREATE INDEX IF NOT EXISTS organization_invitations_email_idx
-    ON public.organization_invitations (lower(email), expires_at);
+ON public.organization_invitations (LOWER(email), expires_at);
 
 -- Make all existing users owners of a personal organization. The block is safe to
 -- re-run and preserves existing organization memberships.
@@ -61,4 +63,4 @@ END $$;
 
 -- New paid accounts start with three seats. Existing rows retain larger values.
 ALTER TABLE public.subscriptions
-    ALTER COLUMN seats_total SET DEFAULT 3;
+ALTER COLUMN seats_total SET DEFAULT 3;
