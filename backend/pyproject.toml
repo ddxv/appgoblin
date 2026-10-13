@@ -62,7 +62,7 @@ templater = 'placeholder'
 verbose = 0
 dialect = 'postgres'
 large_file_skip_byte_limit = 0
-excluce_fules = ['AM04']
+exclude_rules = ["AM04", "PG01"]
 
 
 [tool.sqlfluff.templater.placeholder]

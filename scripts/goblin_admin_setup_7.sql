@@ -1,6 +1,3 @@
--- Organization accounts: personal organizations, invitations, and three-seat defaults.
--- Run after goblin_admin_setup_6.sql. This migration is intentionally idempotent.
-
 CREATE TABLE IF NOT EXISTS public.organization_invitations (
     id BIGSERIAL PRIMARY KEY,
     organization_id INT NOT NULL REFERENCES public.organizations (
@@ -21,8 +18,6 @@ ON public.organization_invitations (organization_id, created_at DESC);
 CREATE INDEX IF NOT EXISTS organization_invitations_email_idx
 ON public.organization_invitations (LOWER(email), expires_at);
 
--- Make all existing users owners of a personal organization. The block is safe to
--- re-run and preserves existing organization memberships.
 DO $$
 DECLARE
     user_row RECORD;
@@ -61,6 +56,5 @@ BEGIN
     END LOOP;
 END $$;
 
--- New paid accounts start with three seats. Existing rows retain larger values.
 ALTER TABLE public.subscriptions
 ALTER COLUMN seats_total SET DEFAULT 3;
