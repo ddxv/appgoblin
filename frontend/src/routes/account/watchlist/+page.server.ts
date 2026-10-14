@@ -108,8 +108,14 @@ export async function load(event: PageServerLoadEvent) {
 		]);
 
 	const followedApps: FollowedApp[] = followedAppRows.map((app) => ({ ...app, app_name: null }));
-	const trackedKeywords: TrackedKeyword[] = trackedKeywordRows.map((keyword) => ({ ...keyword, app_name: null }));
-	const requestedSdkScans: RequestedSdkScan[] = requestedSdkScanRows.map((scan) => ({ ...scan, app_name: null }));
+	const trackedKeywords: TrackedKeyword[] = trackedKeywordRows.map((keyword) => ({
+		...keyword,
+		app_name: null
+	}));
+	const requestedSdkScans: RequestedSdkScan[] = requestedSdkScanRows.map((scan) => ({
+		...scan,
+		app_name: null
+	}));
 
 	return {
 		followedApps,

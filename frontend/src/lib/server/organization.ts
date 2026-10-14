@@ -56,7 +56,10 @@ export async function getOrganizationInvitation(
 	);
 }
 
-export async function acceptOrganizationInvitation(invitationId: number, userId: number): Promise<void> {
+export async function acceptOrganizationInvitation(
+	invitationId: number,
+	userId: number
+): Promise<void> {
 	await db.transaction(async (client) => {
 		const invitation = await client.query<{ organization_id: number }>(
 			`SELECT organization_id

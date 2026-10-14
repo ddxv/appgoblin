@@ -31,9 +31,9 @@ from dbcon.queries import (
     get_latest_sdks,
     get_sdk,
     get_sdk_companies,
-    get_sdk_patterns,
     get_sdk_pattern,
     get_sdk_pattern_companies,
+    get_sdk_patterns,
     get_user_requested_latest_sdks,
 )
 from dbcon.static import get_company_logos_df

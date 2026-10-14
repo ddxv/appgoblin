@@ -31,8 +31,8 @@ function parseJsonArrayField(value: FormDataEntryValue | null): number[] {
 		const parsed = JSON.parse(value.toString());
 		return Array.isArray(parsed)
 			? parsed.filter(
-				(entry): entry is number => typeof entry === 'number' && Number.isInteger(entry)
-			)
+					(entry): entry is number => typeof entry === 'number' && Number.isInteger(entry)
+				)
 			: [];
 	} catch {
 		return [];

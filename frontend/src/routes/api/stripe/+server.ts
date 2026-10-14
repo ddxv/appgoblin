@@ -61,14 +61,11 @@ async function handleCheckoutSessionCompleted(session: any) {
 		const subscriptionDetails = await handleSubscriptionUpdated(subscription);
 		if (subscriptionDetails) {
 			const { planKey, billingCycle, userEmail } = subscriptionDetails;
-			void sendPricingPlanCompletionEmail(
-				planKey,
-				billingCycle,
-				userEmail,
-				session.id
-			).catch((error) => {
-				console.error('Failed to send pricing plan completion notification:', error);
-			});
+			void sendPricingPlanCompletionEmail(planKey, billingCycle, userEmail, session.id).catch(
+				(error) => {
+					console.error('Failed to send pricing plan completion notification:', error);
+				}
+			);
 		}
 	} else {
 		console.log(
