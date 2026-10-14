@@ -580,6 +580,8 @@ export interface CompanyPatterns {
 }
 
 export interface SDKPatterns {
+	sdk_id: number;
+	sdk_slug: string;
 	package_patterns: CompanyPatterns[];
 	paths: CompanyPatterns[];
 	mediation_patterns: CompanyPatterns[];

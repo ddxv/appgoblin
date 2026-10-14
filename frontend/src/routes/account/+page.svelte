@@ -33,7 +33,7 @@
 	<div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
 		<div>
 			<h1 class="text-2xl font-bold">Hello, {data.user.username}!</h1>
-			<p class="text-sm">Review your plan, security status, and account access in one place.</p>
+			<p class="text-sm">Review your plan and account access in one place.</p>
 		</div>
 
 		<form method="post" action="?/logout" use:enhance>

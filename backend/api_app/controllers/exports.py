@@ -18,11 +18,6 @@ logger = get_logger(__name__)
 SIGNED_DOWNLOADS_CONFIG_KEY = "s3-signed-downloads"
 SIGNED_DOWNLOAD_URL_TTL_SECONDS = 60 * 60
 USER_REPORT_S3_PREFIX = "user-reports/"
-ADVERTISER_REPORT_SLUGS = {
-    "ad-user-acquisition-2026-june",
-    "ad-user-acquisition-2026-july",
-    "ad-user-acquisition-2026-august",
-}
 
 
 def _get_signed_download_client():
@@ -70,9 +65,6 @@ class InternalExportsController(Controller):
     @get(path="exports/advertiser-report-signed-url")
     async def get_advertiser_report_signed_url(self: Self, slug: str) -> dict[str, str]:
         """Return a signed URL for an advertiser report CSV."""
-        if slug not in ADVERTISER_REPORT_SLUGS:
-            raise NotFoundException("Advertiser report not found", status_code=404)
-
         key = f"downloads/reports/{slug}/advertisers.csv"
         return {"url": get_signed_download_url(key)}
 

@@ -1,5 +1,7 @@
 SELECT
     cso.company_name,
+    cso.sdk_id,
+    cso.sdk_slug,
     cso.sdk_name,
     cso.pattern_type,
     cso.pattern_value,

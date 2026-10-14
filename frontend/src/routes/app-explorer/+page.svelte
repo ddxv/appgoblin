@@ -108,7 +108,7 @@
 	let exportError = $state('');
 	let sorting = $state<SortingState>([{ id: 'installs', desc: true }]);
 
-	const exportFilename = `appgoblin-crossfilter-${new Date().toISOString().split('T')[0]}`;
+	const exportFilename = `app-explorer-${new Date().toISOString().split('T')[0]}`;
 	const formApps = $derived(() => (form?.apps ?? []) as CrossfilterApp[]);
 	const formError = $derived(() => form?.error ?? '');
 	const hasSearched = $derived(() => !!form?.success || !!form?.error);

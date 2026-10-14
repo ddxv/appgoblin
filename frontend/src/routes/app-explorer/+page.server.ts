@@ -92,8 +92,9 @@ function hasExportFilters(payload: CrossfilterPayload): boolean {
 
 async function getSubscriptionAccess(userId: number) {
 	const row = await db.queryOne<{ id: number }>(
-		`SELECT id FROM subscriptions
-		 WHERE user_id = $1
+		`SELECT s.id FROM subscriptions s
+		 JOIN organization_members om ON om.organization_id = s.organization_id
+		 WHERE om.user_id = $1
 		 AND status IN ('active', 'trialing')
 		 AND (cancel_at IS NULL OR cancel_at > NOW())
 		 LIMIT 1`,
@@ -184,7 +185,8 @@ export const actions = {
 			return {
 				success: true,
 				exportQueued: true,
-				exportMessage: `Report generation queued. You can see all your reports in "Reports" section of your account. A download link will be sent to ${user.email} within the next few minutes.`,
+				exportMessage:
+					'Report queued, when finished a download link will be emailed and available in your Account Reports tab.',
 				reportId: exportResponse.report_id
 			};
 		} catch (error) {

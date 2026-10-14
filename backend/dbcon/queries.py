@@ -255,6 +255,16 @@ def get_single_app(state: State, store_id: str) -> pd.DataFrame:
     return df
 
 
+def get_single_app_summary(state: State, store_id: str) -> pd.DataFrame:
+    """Get the small set of app fields used by account watchlists."""
+    logger.info(f"Query summary for single app_id={store_id}")
+    return pd.read_sql(
+        sql.app_summary,
+        state.dbcon.engine,
+        params={"store_id": store_id},
+    )
+
+
 def get_app_rating_histogram(state: State, store_id: str) -> pd.DataFrame:
     """Get app rating histogram for a single store_id."""
     df = pd.read_sql(
@@ -656,6 +666,41 @@ def get_company_sdks(state: State, company_domain: str) -> pd.DataFrame:
         state.dbcon.engine,
         params={"company_domain": company_domain},
     )
+    return df
+
+
+def get_sdk(state: State, sdk_id: int, limit: int = 10) -> pd.DataFrame:
+    """Get the latest-version apps for one exact SDK."""
+    df = pd.read_sql(
+        sql.sdk_latest,
+        state.dbcon.engine,
+        params={"sdk_id": sdk_id, "mylimit": limit},
+    )
+    df["store"] = df["store"].replace({1: "Google Play", 2: "Apple App Store"})
+    return df
+
+
+def get_sdk_companies(state: State, sdk_slug: str) -> pd.DataFrame:
+    """Get companies associated with one exact SDK."""
+    return pd.read_sql(
+        sql.sdk_companies, state.dbcon.engine, params={"sdk_slug": sdk_slug}
+    )
+
+
+def get_sdk_patterns(state: State, sdk_slug: str) -> pd.DataFrame:
+    """Get the mapped package, path, and mediation patterns for one SDK."""
+    return pd.read_sql(
+        sql.sdk_patterns, state.dbcon.engine, params={"sdk_slug": sdk_slug}
+    )
+
+
+def get_sdk_export(
+    state: State, sdk_id: int, latest_only: bool = False
+) -> pd.DataFrame:
+    """Get all or latest app versions for one exact SDK."""
+    query = sql.sdk_export_latest if latest_only else sql.sdk_export
+    df = pd.read_sql(query, state.dbcon.engine, params={"sdk_id": sdk_id})
+    df["store"] = df["store"].replace({1: "Google Play", 2: "Apple App Store"})
     return df
 
 

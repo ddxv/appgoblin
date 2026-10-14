@@ -31,7 +31,8 @@ async function getCurrentPlan(userId: number) {
 		 FROM subscriptions s
 		 LEFT JOIN tier_prices tp ON tp.id = s.tier_price_id
 		 LEFT JOIN tiers t ON t.id = tp.tier_id
-		 WHERE s.user_id = $1
+		 JOIN organization_members om ON om.organization_id = s.organization_id
+		 WHERE om.user_id = $1
 		   AND (
 		     (s.cancel_at IS NOT NULL AND s.cancel_at > NOW())
 		     OR (s.cancel_at IS NULL AND s.status IN ('active', 'trialing'))

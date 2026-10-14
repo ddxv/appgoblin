@@ -1,5 +1,11 @@
 import nodemailer from 'nodemailer';
-import { EMAIL_HOST, EMAIL_PORT, EMAIL_USER, EMAIL_PASSWORD } from '$env/static/private';
+import {
+	APPGOBLIN_ENDPOINT_URL,
+	EMAIL_HOST,
+	EMAIL_PORT,
+	EMAIL_USER,
+	EMAIL_PASSWORD
+} from '$env/static/private';
 import { STRIPE_PLAN_LABELS, type BillingCycle, type StripePriceKey } from '$lib/plans';
 
 let transporter: ReturnType<typeof nodemailer.createTransport> | null = null;
@@ -96,6 +102,87 @@ export async function sendPricingPlanSelectionEmail(
 	await t.sendMail({
 		from: `"AppGoblin Contact" <${EMAIL_USER}>`,
 		to: EMAIL_USER,
+		subject,
+		text,
+		html
+	});
+}
+
+export async function sendPricingPlanCompletionEmail(
+	planKey: StripePriceKey,
+	billingCycle: BillingCycle,
+	userEmail: string,
+	checkoutSessionId: string
+): Promise<void> {
+	const t = getTransporter();
+	const planName = STRIPE_PLAN_LABELS[planKey];
+	const completedAt = new Date().toISOString();
+	const subject = `Pricing signup completed: ${planName}`;
+	const text = [
+		`A customer completed signup for the ${planName} plan (${billingCycle} billing).`,
+		'',
+		`Customer email: ${userEmail}`,
+		`Checkout session: ${checkoutSessionId}`,
+		`Completed at: ${completedAt}`
+	].join('\n');
+	const html = `
+		<div>
+			<h2>Pricing signup completed</h2>
+			<p><strong>Plan:</strong> ${planName}</p>
+			<p><strong>Billing:</strong> ${billingCycle}</p>
+			<p><strong>Customer email:</strong> ${userEmail}</p>
+			<p><strong>Checkout session:</strong> ${checkoutSessionId}</p>
+			<p><strong>Completed at:</strong> ${completedAt}</p>
+		</div>
+	`;
+
+	if (!t) {
+		console.log(`[DEV] ${subject} (${billingCycle}) for ${userEmail}`);
+		return;
+	}
+
+	await t.sendMail({
+		from: `"AppGoblin Contact" <${EMAIL_USER}>`,
+		to: EMAIL_USER,
+		subject,
+		text,
+		html
+	});
+}
+
+export async function sendOrganizationInvitationEmail(
+	email: string,
+	organizationName: string,
+	invitationToken: string
+): Promise<void> {
+	const t = getTransporter();
+	const signupUrl = `${APPGOBLIN_ENDPOINT_URL}/auth/invitation-signup?token=${encodeURIComponent(invitationToken)}`;
+	const subject = `You’re invited to join ${organizationName} on AppGoblin`;
+	const text = [
+		`You’ve been invited to join ${organizationName} on AppGoblin.`,
+		'',
+		'Create your AppGoblin account here:',
+		signupUrl,
+		'',
+		'If you do not see this email, please check your Spam or Junk folder.'
+	].join('\n');
+	const html = `
+		<div>
+			<h2>You’re invited to AppGoblin</h2>
+			<p>You’ve been invited to join <strong>${organizationName}</strong> on AppGoblin.</p>
+			<p><a href="${signupUrl}">Create your AppGoblin account</a></p>
+			<p>If you do not see this email, please check your Spam or Junk folder.</p>
+		</div>
+	`;
+
+	if (!t) {
+		console.log(`[DEV] Organization invitation to ${email}: ${signupUrl}`);
+		return;
+	}
+
+	await t.sendMail({
+		from: `"AppGoblin" <${EMAIL_USER}>`,
+		to: email,
 		subject,
 		text,
 		html

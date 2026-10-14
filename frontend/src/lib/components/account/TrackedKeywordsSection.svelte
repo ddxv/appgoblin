@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import type { AccountFormResult, TrackedKeyword } from './types';
+	import AppSummary from './AppSummary.svelte';
 
 	let {
 		keywords,
@@ -39,22 +40,7 @@
 					<div class="flex items-center justify-between gap-3">
 						<div>
 							<p class="font-medium">{keyword.keyword_text}</p>
-							<p class="text-xs text-surface-500">
-								{#if keyword.app_name}
-									<a href={`/apps/${keyword.store_id}/keywords`} class="hover:underline">
-										{keyword.app_name}
-									</a>
-									(
-									<a href={`/apps/${keyword.store_id}/keywords`} class="hover:underline">
-										{keyword.store_id}
-									</a>
-									)
-								{:else}
-									<a href={`/apps/${keyword.store_id}/keywords`} class="hover:underline">
-										{keyword.store_id}
-									</a>
-								{/if}
-							</p>
+							<AppSummary storeId={keyword.store_id} href={`/apps/${keyword.store_id}/keywords`} />
 						</div>
 
 						<form method="POST" action="?/deleteTrackedKeyword" use:enhance>

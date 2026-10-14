@@ -2503,6 +2503,16 @@ class CompaniesController(Controller):
 
             # Add sdk data
             company_sdks[company][sdk] = {
+                "sdk_id": (
+                    int(group["sdk_id"].dropna().iloc[0])
+                    if group["sdk_id"].notna().any()
+                    else 0
+                ),
+                "sdk_slug": (
+                    str(group["sdk_slug"].dropna().iloc[0])
+                    if group["sdk_slug"].notna().any()
+                    else ""
+                ),
                 "package_patterns": _pattern_rows(group, "package"),
                 "paths": _pattern_rows(group, "path"),
                 "mediation_patterns": _pattern_rows(group, "mediation"),

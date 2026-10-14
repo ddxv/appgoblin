@@ -237,8 +237,10 @@ def _query_key(engine: Engine, key_hash: str) -> _CachedKey | None:
         LEFT JOIN LATERAL (
             SELECT sub.tier_price_id
             FROM public.subscriptions sub
-            WHERE sub.user_id = ak.user_id
-              AND (
+                        JOIN public.organization_members om
+                            ON om.organization_id = sub.organization_id
+                         AND om.user_id = ak.user_id
+                        WHERE (
                     (sub.cancel_at IS NOT NULL AND sub.cancel_at > now())
                     OR (sub.cancel_at IS NULL AND sub.status IN ('active', 'trialing'))
               )

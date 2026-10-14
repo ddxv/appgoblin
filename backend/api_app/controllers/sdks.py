@@ -22,14 +22,18 @@ from api_app.models import (
 )
 from api_app.report_exports import (
     create_report_id,
+    run_sdk_export_job,
     run_sdk_pattern_export_job,
     validate_export_dependencies,
 )
 from config import get_logger
 from dbcon.queries import (
     get_latest_sdks,
+    get_sdk,
+    get_sdk_companies,
     get_sdk_pattern,
     get_sdk_pattern_companies,
+    get_sdk_patterns,
     get_user_requested_latest_sdks,
 )
 from dbcon.static import get_company_logos_df
@@ -129,6 +133,55 @@ class SdksController(Controller):
         logger.info(f"{self.path}/{value_pattern} took {duration}ms")
         return overview_resp
 
+    @get(path="/appgoblin/{sdk_slug:str}", cache=3600)
+    async def sdk_detail(self: Self, state: State, sdk_slug: str) -> dict:
+        """Return metadata, mapped patterns, the owner, and top apps for one SDK."""
+        companies = get_sdk_companies(state, sdk_slug)
+        sdk_id = (
+            int(companies.iloc[0]["sdk_id"])
+            if not companies.empty and pd.notna(companies.iloc[0]["sdk_id"])
+            else None
+        )
+        apps = (
+            get_sdk(state, sdk_id, limit=10) if sdk_id is not None else pd.DataFrame()
+        )
+        patterns = get_sdk_patterns(state, sdk_slug)
+        owner = companies.iloc[0].to_dict() if not companies.empty else {}
+        if owner.get("company_domain"):
+            company_logos = get_company_logos_df(state).drop_duplicates(
+                subset=["company_domain"], keep="first"
+            )
+            logo = company_logos[
+                company_logos["company_domain"] == owner["company_domain"]
+            ]
+            if not logo.empty:
+                owner["company_logo_url"] = logo.iloc[0].get("company_logo_url")
+
+        def pattern_rows(pattern_type: str) -> list[dict]:
+            rows = patterns[
+                patterns["pattern_type"].astype(str).str.lower() == pattern_type
+            ]
+            return [
+                {
+                    "pattern": str(row.pattern_value),
+                    "app_count": None if pd.isna(row.app_count) else int(row.app_count),
+                }
+                for row in rows.itertuples(index=False)
+                if pd.notna(row.pattern_value)
+            ]
+
+        return {
+            "sdk_id": sdk_id,
+            "sdk_name": apps.iloc[0]["sdk_name"] if not apps.empty else sdk_slug,
+            "apps": apps.to_dict(orient="records"),
+            "owner": owner,
+            "patterns": {
+                "package_patterns": pattern_rows("package"),
+                "paths": pattern_rows("path"),
+                "mediation_patterns": pattern_rows("mediation"),
+            },
+        }
+
     @get(path="/{value_pattern:str}/companies", cache=3600)
     async def sdks_companies(
         self: Self, state: State, value_pattern: str
@@ -192,5 +245,40 @@ class SdksController(Controller):
                 recipient_email=recipient_email,
                 report_id=report_id,
                 user_id=user_id,
+            ),
+        )
+
+    @post(path="/id/{sdk_id:int}/export")
+    async def export_sdk(self: Self, state: State, sdk_id: int, data: dict) -> Response:
+        """Queue an unrestricted exact SDK CSV export."""
+        validate_export_dependencies()
+        recipient_email = str(data.get("recipient_email", "")).strip()
+        user_id = data.get("user_id")
+        if not recipient_email or not isinstance(user_id, int) or user_id <= 0:
+            return Response(
+                {"success": False, "error": "recipient_email and user_id are required"},
+                status_code=400,
+            )
+
+        report_id = create_report_id()
+        sdk_label = (
+            str(data.get("sdk_slug") or data.get("sdk_name") or "").strip() or None
+        )
+        latest_only = data.get("latest_only", False) is True
+        return Response(
+            {
+                "success": True,
+                "report_id": report_id,
+                "message": "Export queued. A download link will be sent by email.",
+            },
+            background=BackgroundTask(
+                run_sdk_export_job,
+                state=state,
+                sdk_id=sdk_id,
+                sdk_label=sdk_label,
+                recipient_email=recipient_email,
+                report_id=report_id,
+                user_id=user_id,
+                latest_only=latest_only,
             ),
         )

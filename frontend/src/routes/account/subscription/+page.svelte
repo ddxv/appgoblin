@@ -113,7 +113,7 @@
 					</div>
 				{/if}
 
-				{#if data.showStripePortal}
+				{#if data.showStripePortal && data.user.organizationRole === 'owner'}
 					<form method="POST" action="?/portal" use:enhance>
 						<button type="submit" class="btn preset-tonal w-full sm:w-auto"
 							>Manage Subscription at Stripe</button

@@ -11,10 +11,11 @@
 
 	interface Props {
 		redirectTo: string;
+		invitationToken?: string;
 		form: SignupFormState | null | undefined;
 	}
 
-	let { redirectTo, form }: Props = $props();
+	let { redirectTo, invitationToken = '', form }: Props = $props();
 </script>
 
 <h2 class="text-2xl font-bold">Create an account</h2>
@@ -22,6 +23,9 @@
 <form class="space-y-1" method="post" use:enhance>
 	{#if redirectTo}
 		<input type="hidden" name="redirectTo" value={redirectTo} />
+	{/if}
+	{#if invitationToken}
+		<input type="hidden" name="invitationToken" value={invitationToken} />
 	{/if}
 	<label class="label" for="form-signup.username">Name</label>
 	<input

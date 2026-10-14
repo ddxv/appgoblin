@@ -191,6 +191,13 @@ class PublicAppSdkDetails:
 
 
 @dataclass
+class PublicAppSdkHistory:
+    """SDK change-history rows returned for a B2B app."""
+
+    history: list[dict] = field(default_factory=list)
+
+
+@dataclass
 class PublicKeywordPlatformMetrics:
     """Public keyword metrics for a single mobile platform."""
 

@@ -2,6 +2,7 @@
 	import { enhance } from '$app/forms';
 	import type { SubmitFunction } from '@sveltejs/kit';
 	import type { AccountFormResult, FollowedApp } from './types';
+	import AppSummary from './AppSummary.svelte';
 
 	let {
 		apps,
@@ -77,16 +78,7 @@
 						</form>
 					{:else}
 						<div class="flex items-center justify-between gap-3">
-							<div>
-								<p class="font-medium">
-									{#if app.app_name}
-										<a class="hover:underline" href={`/apps/${app.store_id}`}>{app.app_name}</a>
-									{:else}
-										<a class="hover:underline" href={`/apps/${app.store_id}`}>{app.store_id}</a>
-									{/if}
-								</p>
-								<p class="text-xs text-surface-500">{app.store_id}</p>
-							</div>
+							<AppSummary storeId={app.store_id} />
 
 							<div class="flex gap-2">
 								<button

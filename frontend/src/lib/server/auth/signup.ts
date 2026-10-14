@@ -19,6 +19,11 @@ import {
 import { isSafeRedirect } from '$lib/server/auth/auth';
 import { getClientIP } from '$lib/server/request';
 import { altcha } from '$lib/server/altcha';
+import {
+	acceptOrganizationInvitation,
+	createPersonalOrganization,
+	getOrganizationInvitation
+} from '$lib/server/organization';
 import type { SessionFlags } from '$lib/server/auth/session';
 import type { RequestEvent } from '@sveltejs/kit';
 
@@ -46,6 +51,7 @@ export async function handleSignup(event: RequestEvent) {
 	const password = formData.get('password');
 	const redirectToParam = formData.get('redirectTo');
 	const referralSource = formData.get('referral_source');
+	const invitationToken = formData.get('invitationToken');
 
 	if (typeof email !== 'string' || typeof username !== 'string' || typeof password !== 'string') {
 		return fail(400, {
@@ -54,6 +60,9 @@ export async function handleSignup(event: RequestEvent) {
 			username: '',
 			referral_source: ''
 		});
+	}
+	if (invitationToken !== null && typeof invitationToken !== 'string') {
+		return fail(400, { message: 'Invalid invitation', email, username, referral_source: '' });
 	}
 	if (email === '' || password === '' || username === '') {
 		return fail(400, {
@@ -71,6 +80,18 @@ export async function handleSignup(event: RequestEvent) {
 		return fail(400, { message: 'Invalid username', email, username, referral_source: '' });
 	if (!(await verifyPasswordStrength(password)))
 		return fail(400, { message: 'Weak password', email, username, referral_source: '' });
+	const invitation =
+		invitationToken && invitationToken.length > 0
+			? await getOrganizationInvitation(invitationToken, email)
+			: null;
+	if (invitationToken && !invitation) {
+		return fail(400, {
+			message: 'This invitation is invalid, expired, or for a different email address.',
+			email,
+			username,
+			referral_source: ''
+		});
+	}
 	if (clientIP !== null && !ipBucket.consume(clientIP, 1)) {
 		return fail(429, { message: 'Too many requests', email, username, referral_source: '' });
 	}
@@ -78,6 +99,11 @@ export async function handleSignup(event: RequestEvent) {
 	let user;
 	try {
 		user = await createUser(email, username, password);
+		if (invitation) {
+			await acceptOrganizationInvitation(invitation.id, user.id);
+		} else {
+			await createPersonalOrganization(user.id, `${username}'s account`);
+		}
 	} catch (error: unknown) {
 		// The availability check above is not enough on its own because two
 		// signup requests can race. The database constraint is authoritative.

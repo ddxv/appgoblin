@@ -17,7 +17,6 @@ from api_app.controllers.companies import (
     get_company_app_change_store_ids_by_platform,
     get_overviews,
 )
-from dbcon.queries import get_company_s3_reports
 from api_app.controllers.public.v1.public_models import (
     CompanyDatasets,
     CompanyDatasetTarget,
@@ -37,6 +36,7 @@ from api_app.models import (
 )
 from api_app.s3_downloads import get_signed_download_url
 from config import get_logger
+from dbcon.queries import get_company_s3_reports
 
 logger = get_logger(__name__)
 
@@ -157,7 +157,7 @@ def _build_company_datasets(
         matching = reports[
             reports["file_key"]
             .astype(str)
-            .str.contains(f"downloads/parent-company-verified-apps/", regex=False)
+            .str.contains("downloads/parent-company-verified-apps/", regex=False)
             & reports["file_key"]
             .astype(str)
             .str.contains(f"_{platform}_verified_apps.csv", regex=False)

@@ -51,6 +51,7 @@ from dbcon.queries import (
     get_recent_apps,
     get_single_app,
     get_single_app_keywords,
+    get_single_app_summary,
     get_single_apps_adstxt,
     insert_sdk_scan_request,
     insert_search_query,
@@ -432,6 +433,21 @@ class AppController(Controller):
         duration = round((time.perf_counter() * 1000 - start), 2)
         logger.info(f"{self.path}/{store_id} took {duration}ms")
         return app_dict
+
+    @get(path="/{store_id:str}/summary", cache=3600)
+    async def get_app_summary(self: Self, state: State, store_id: str) -> dict:
+        """Return the lightweight app payload used by account watchlists."""
+        start = time.perf_counter() * 1000
+        app_df = get_single_app_summary(state, store_id)
+        if app_df.empty:
+            raise NotFoundException(
+                f"Store ID not found: {store_id!r}",
+                status_code=404,
+            )
+
+        duration = round((time.perf_counter() * 1000 - start), 2)
+        logger.info(f"{self.path}/{store_id}/summary took {duration}ms")
+        return app_df.to_dict(orient="records")[0]
 
     @get(path="/{store_id:str}/ratingHistogram", cache=3600)
     async def get_app_histogram(

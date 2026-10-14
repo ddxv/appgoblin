@@ -30,7 +30,7 @@
 		{#if typeof data.companySdks == 'string'}
 			<p class="text-red-500 text-center">Failed to load company SDKs.</p>
 		{:else if data.companySdks}
-			<CompanySDKs mySdks={data.companySdks} />
+			<CompanySDKs mySdks={data.companySdks} hasB2BSdkAccess={data.hasB2BSdkAccess ?? false} />
 		{:else}
 			<p class="text-center p-4">No SDKs found for this company.</p>
 		{/if}

@@ -1,21 +1,17 @@
 import { fail } from '@sveltejs/kit';
 import { requireAuthOr401 } from '$lib/server/auth/auth';
 import { db } from '$lib/server/auth/db';
-import { createApiClient } from '$lib/server/api';
 
 import type { Actions, PageServerLoadEvent, RequestEvent } from './$types';
 
 export async function load(event: PageServerLoadEvent) {
 	// user is provided by +layout.server.ts
 	const { user } = await event.parent();
-	const api = createApiClient(event.fetch);
-
 	interface FollowedApp {
 		id: number;
 		store_id: string;
 		created_at: Date;
-		app_name: string | null;
-		store: number | null;
+		app_name: null;
 	}
 
 	interface FollowedAppRow {
@@ -37,7 +33,7 @@ export async function load(event: PageServerLoadEvent) {
 		store_id: string;
 		keyword_text: string;
 		created_at: Date;
-		app_name: string | null;
+		app_name: null;
 	}
 
 	interface TrackedKeywordRow {
@@ -51,40 +47,13 @@ export async function load(event: PageServerLoadEvent) {
 		id: number;
 		store_id: string;
 		created_at: Date;
-		app_name: string | null;
+		app_name: null;
 	}
 
 	interface RequestedSdkScanRow {
 		id: number;
 		store_id: string;
 		created_at: Date;
-	}
-
-	interface BackendAppSummary {
-		name?: string | null;
-		store?: number | null;
-	}
-
-	const appSummaryByStoreId = new Map<string, BackendAppSummary | null>();
-
-	async function getAppSummary(storeId: string): Promise<BackendAppSummary | null> {
-		if (appSummaryByStoreId.has(storeId)) {
-			return appSummaryByStoreId.get(storeId) ?? null;
-		}
-
-		try {
-			const app = await api.get(`/apps/${encodeURIComponent(storeId)}`, 'App Details');
-			const summary = {
-				name: typeof app?.name === 'string' ? app.name : null,
-				store: typeof app?.store === 'number' ? app.store : null
-			};
-			appSummaryByStoreId.set(storeId, summary);
-			return summary;
-		} catch (error) {
-			console.warn('Failed to load app summary for account item', { storeId, error });
-			appSummaryByStoreId.set(storeId, null);
-			return null;
-		}
 	}
 
 	const [followedAppRows, followedCompanies, trackedKeywordRows, requestedSdkScanRows] =
@@ -138,40 +107,15 @@ export async function load(event: PageServerLoadEvent) {
 			)
 		]);
 
-	const appStoreIds = Array.from(
-		new Set([
-			...followedAppRows.map((app) => app.store_id),
-			...trackedKeywordRows.map((keyword) => keyword.store_id),
-			...requestedSdkScanRows.map((scan) => scan.store_id)
-		])
-	);
-
-	await Promise.all(appStoreIds.map((storeId) => getAppSummary(storeId)));
-
-	const followedApps: FollowedApp[] = followedAppRows.map((app) => {
-		const summary = appSummaryByStoreId.get(app.store_id) ?? null;
-		return {
-			...app,
-			app_name: summary?.name ?? null,
-			store: summary?.store ?? null
-		};
-	});
-
-	const trackedKeywords: TrackedKeyword[] = trackedKeywordRows.map((keyword) => {
-		const summary = appSummaryByStoreId.get(keyword.store_id) ?? null;
-		return {
-			...keyword,
-			app_name: summary?.name ?? null
-		};
-	});
-
-	const requestedSdkScans: RequestedSdkScan[] = requestedSdkScanRows.map((scan) => {
-		const summary = appSummaryByStoreId.get(scan.store_id) ?? null;
-		return {
-			...scan,
-			app_name: summary?.name ?? null
-		};
-	});
+	const followedApps: FollowedApp[] = followedAppRows.map((app) => ({ ...app, app_name: null }));
+	const trackedKeywords: TrackedKeyword[] = trackedKeywordRows.map((keyword) => ({
+		...keyword,
+		app_name: null
+	}));
+	const requestedSdkScans: RequestedSdkScan[] = requestedSdkScanRows.map((scan) => ({
+		...scan,
+		app_name: null
+	}));
 
 	return {
 		followedApps,

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import type { AccountFormResult, RequestedSdkScan } from './types';
+	import AppSummary from './AppSummary.svelte';
 
 	let {
 		scans,
@@ -38,13 +39,7 @@
 		{:else}
 			{#each scans as scan (scan.id)}
 				<div class="rounded-lg border border-surface-100-900 p-3">
-					<p class="font-medium">
-						{#if scan.app_name}
-							<a class="hover:underline" href={`/apps/${scan.store_id}`}>{scan.app_name}</a>
-						{:else}
-							<a class="hover:underline" href={`/apps/${scan.store_id}`}>{scan.store_id}</a>
-						{/if}
-					</p>
+					<AppSummary storeId={scan.store_id} />
 					<p class="text-xs text-surface-500">
 						Requested {new Date(scan.created_at).toLocaleString()}
 					</p>

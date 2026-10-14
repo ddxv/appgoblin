@@ -4,23 +4,28 @@ import time
 from dataclasses import fields as dataclass_fields
 from typing import Self
 
+import pandas as pd
 from litestar import Controller, Request, Response, get
 from litestar.datastructures import State
-from litestar.exceptions import NotFoundException
+from litestar.exceptions import NotFoundException, PermissionDeniedException
 
 from api_app.analytics import PUBLIC_API_HOSTNAME, build_request_page_view_task
 from api_app.controllers.public.v1.public_models import (
     PublicAppBasics,
     PublicAppBestRank,
     PublicAppSdkDetails,
+    PublicAppSdkHistory,
 )
 from api_app.guards import validate_api_key
 from config import get_logger
 from dbcon.queries import (
     get_app_sdk_details,
+    get_app_sdk_history,
+    get_app_version_timeline,
     get_ranks_for_app_overview,
     get_single_app,
 )
+from dbcon.static import get_company_logos_df
 
 logger = get_logger(__name__)
 
@@ -34,7 +39,18 @@ APP_BASICS_FIELD_SOURCES = {
 def _api_key_guard(request, route_handler) -> None:
     """Guard that validates the Authorization: Bearer header (X-API-Key also accepted)."""
     state = request.app.state
-    validate_api_key(request, state)
+    request.scope["_api_key_context"] = validate_api_key(request, state)
+
+
+def _b2b_sdk_guard(request: Request, route_handler) -> None:
+    """Require the B2B SDK or B2B Premium subscription tier."""
+    context = request.scope.get("_api_key_context")
+    if context is None:
+        context = validate_api_key(request, request.app.state)
+    if context.tier not in {"b2b_sdk", "b2b_premium"}:
+        raise PermissionDeniedException(
+            detail="SDK history requires a B2B SDK or B2B Premium subscription tier"
+        )
 
 
 def _build_app_basics_payload(state: State, store_id: str) -> PublicAppBasics:
@@ -163,6 +179,33 @@ def _build_app_sdk_details_payload(state: State, store_id: str) -> PublicAppSdkD
     )
 
 
+def _build_app_version_timeline_payload(state: State, store_id: str) -> list[dict]:
+    """Return the crawled version timeline used by the SDK history UI."""
+    timeline_df = get_app_version_timeline(state, store_id)
+    timeline_df = timeline_df[timeline_df["app_version_code"].astype("string") != "-1"]
+    return timeline_df.to_dict(orient="records")
+
+
+def _build_app_sdk_history_payload(state: State, store_id: str) -> PublicAppSdkHistory:
+    """Return SDK additions, removals, and scan-status rows for an app."""
+    history_df = get_app_sdk_history(state, store_id)
+
+    if not history_df.empty:
+        company_logos_df = get_company_logos_df(state).drop_duplicates(
+            subset=["company_domain"], keep="first"
+        )
+        history_df = history_df.merge(
+            company_logos_df,
+            on="company_domain",
+            how="left",
+            validate="m:1",
+        )
+        history_df = history_df.replace({pd.NaT: None})
+        history_df = history_df.where(pd.notna(history_df), None)
+
+    return PublicAppSdkHistory(history=history_df.to_dict(orient="records"))
+
+
 class V1AppsController(Controller):
     """Public API v1 — app endpoints (API key required)."""
 
@@ -219,6 +262,50 @@ class V1AppsController(Controller):
             background=build_request_page_view_task(
                 request,
                 url=f"/api/v1/apps/{store_id}/sdks",
+                hostname=PUBLIC_API_HOSTNAME,
+            ),
+        )
+
+    @get(
+        path="/apps/{store_id:str}/versions",
+        cache=7200,
+        guards=[_b2b_sdk_guard],
+    )
+    async def app_version_timeline(
+        self: Self, state: State, request: Request, store_id: str
+    ) -> list[dict]:
+        """Return crawled app versions and their SDK scan status."""
+        start = time.perf_counter() * 1000
+        payload = _build_app_version_timeline_payload(state=state, store_id=store_id)
+        duration = round((time.perf_counter() * 1000 - start), 2)
+        logger.info(f"GET /api/v1/apps/{store_id}/versions took {duration}ms")
+        return Response(
+            payload,
+            background=build_request_page_view_task(
+                request,
+                url=f"/api/v1/apps/{store_id}/versions",
+                hostname=PUBLIC_API_HOSTNAME,
+            ),
+        )
+
+    @get(
+        path="/apps/{store_id:str}/sdks/history",
+        cache=3600,
+        guards=[_b2b_sdk_guard],
+    )
+    async def app_sdk_history(
+        self: Self, state: State, request: Request, store_id: str
+    ) -> PublicAppSdkHistory:
+        """Return SDK additions, removals, and scan-status rows for an app."""
+        start = time.perf_counter() * 1000
+        payload = _build_app_sdk_history_payload(state=state, store_id=store_id)
+        duration = round((time.perf_counter() * 1000 - start), 2)
+        logger.info(f"GET /api/v1/apps/{store_id}/sdks/history took {duration}ms")
+        return Response(
+            payload,
+            background=build_request_page_view_task(
+                request,
+                url=f"/api/v1/apps/{store_id}/sdks/history",
                 hostname=PUBLIC_API_HOSTNAME,
             ),
         )

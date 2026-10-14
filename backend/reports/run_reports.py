@@ -565,7 +565,7 @@ def upload_advertiser_csv(csv_bytes: bytes, slug: str) -> str:
             sys.path.insert(0, backend_dir_text)
         CONFIG = importlib.import_module("config").CONFIG  # noqa: N806
 
-    s3_config = CONFIG.get("digi-cloud")
+    s3_config = CONFIG.get("s3-signed-downloads")
     if not s3_config:
         message = (
             "S3 upload requested but [public-s3] section is missing from config.toml"

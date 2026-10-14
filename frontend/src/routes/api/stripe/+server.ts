@@ -3,6 +3,8 @@ import { db } from '$lib/server/auth/db';
 import type { RequestHandler } from './$types';
 
 import { STRIPE_WEBHOOK_SECRET } from '$env/static/private';
+import { sendPricingPlanCompletionEmail } from '$lib/server/contact';
+import type { BillingCycle, StripePriceKey } from '$lib/plans';
 
 export const POST: RequestHandler = async ({ request }) => {
 	console.log('Stripe webhook request received');
@@ -56,7 +58,15 @@ async function handleCheckoutSessionCompleted(session: any) {
 	if (session.mode === 'subscription' && typeof subscriptionId === 'string') {
 		console.log('Retrieving subscription', subscriptionId);
 		const subscription = await stripe.subscriptions.retrieve(subscriptionId);
-		await handleSubscriptionUpdated(subscription);
+		const subscriptionDetails = await handleSubscriptionUpdated(subscription);
+		if (subscriptionDetails) {
+			const { planKey, billingCycle, userEmail } = subscriptionDetails;
+			void sendPricingPlanCompletionEmail(planKey, billingCycle, userEmail, session.id).catch(
+				(error) => {
+					console.error('Failed to send pricing plan completion notification:', error);
+				}
+			);
+		}
 	} else {
 		console.log(
 			'Session mode is not subscription or subscriptionId missing',
@@ -154,8 +164,15 @@ async function handleSubscriptionUpdated(subscription: any, eventCreatedAt?: num
 	}
 
 	// Resolve the tier_price_id from the Stripe price ID
-	const tierPriceRow = await db.queryOne<{ id: number }>(
-		`SELECT id FROM public.tier_prices WHERE provider_price_id = $1`,
+	const tierPriceRow = await db.queryOne<{
+		id: number;
+		slug: string;
+		billing_cycle: string;
+	}>(
+		`SELECT tp.id, t.slug, tp.billing_cycle
+		 FROM public.tier_prices tp
+		 JOIN public.tiers t ON t.id = tp.tier_id
+		 WHERE tp.provider_price_id = $1`,
 		[priceId]
 	);
 	if (!tierPriceRow) {
@@ -163,15 +180,28 @@ async function handleSubscriptionUpdated(subscription: any, eventCreatedAt?: num
 	}
 	const tierPriceId = tierPriceRow?.id ?? null;
 
-	console.log('Upserting subscription for user', user.id);
+	const organization = await db.queryOne<{ id: number }>(
+		`SELECT organization_id AS id
+		 FROM organization_members
+		 WHERE user_id = $1
+		 ORDER BY created_at ASC, id ASC
+		 LIMIT 1`,
+		[user.id]
+	);
+	if (!organization) {
+		console.error('Organization not found for Stripe customer user:', user.id);
+		return;
+	}
+
+	console.log('Upserting subscription for organization', organization.id);
 	// Upsert subscription (provider_price_id/product_id live on tier_prices now)
 	await db.execute(
 		`
         INSERT INTO subscriptions (
-            user_id, provider_subscription_id, provider_customer_id,
+			organization_id, user_id, provider_subscription_id, provider_customer_id,
             status, current_period_start, current_period_end, cancel_at, cancel_requested_at,
             seats_total, updated_at, tier_price_id
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, 1, NOW(), $9)
+		) VALUES ($1, NULL, $2, $3, $4, $5, $6, $7, $8, 1, NOW(), $9)
         ON CONFLICT (provider_subscription_id) DO UPDATE SET
             status = EXCLUDED.status,
             current_period_start = EXCLUDED.current_period_start,
@@ -182,7 +212,7 @@ async function handleSubscriptionUpdated(subscription: any, eventCreatedAt?: num
             updated_at = NOW();
     `,
 		[
-			user.id,
+			organization.id,
 			subscription.id,
 			customerId,
 			status,
@@ -194,4 +224,22 @@ async function handleSubscriptionUpdated(subscription: any, eventCreatedAt?: num
 		]
 	);
 	console.log('Subscription upserted');
+
+	if (
+		tierPriceRow &&
+		(tierPriceRow.slug === 'b2b_sdk' ||
+			tierPriceRow.slug === 'b2b_appads' ||
+			tierPriceRow.slug === 'b2b_premium') &&
+		(tierPriceRow.billing_cycle === 'monthly' || tierPriceRow.billing_cycle === 'yearly')
+	) {
+		const userDetails = await db.queryOne<{ email: string }>(
+			'SELECT email FROM users WHERE id = $1',
+			[user.id]
+		);
+		return {
+			planKey: tierPriceRow.slug as StripePriceKey,
+			billingCycle: tierPriceRow.billing_cycle as BillingCycle,
+			userEmail: userDetails?.email ?? 'unknown'
+		};
+	}
 }

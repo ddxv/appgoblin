@@ -213,6 +213,22 @@ def _patch_sdk_details(rows: list[dict]):
     )
 
 
+def _patch_version_timeline(rows: list[dict]):
+    timeline_df = pd.DataFrame(rows)
+    return patch(
+        "api_app.controllers.public.v1.apps.get_app_version_timeline",
+        return_value=timeline_df,
+    )
+
+
+def _patch_sdk_history(rows: list[dict]):
+    history_df = pd.DataFrame(rows)
+    return patch(
+        "api_app.controllers.public.v1.apps.get_app_sdk_history",
+        return_value=history_df,
+    )
+
+
 def _patch_keyword_details(rows: list[dict]):
     keyword_df = pd.DataFrame(rows)
     return patch(
@@ -870,6 +886,83 @@ class TestV1CompanyAppChanges:
 
 
 class TestV1Apps:
+    def test_app_version_timeline_requires_b2b_sdk_tier(self):
+        app = _make_test_app()
+        with (
+            _patch_key_found("free"),
+            TestClient(app=app, raise_server_exceptions=False) as client,
+        ):
+            resp = client.get(
+                "/api/v1/apps/com.example.app/versions",
+                headers={"X-API-Key": "ag_versions_free"},
+            )
+
+        assert resp.status_code == 403
+        assert "B2B SDK" in resp.json()["detail"]
+
+    def test_app_version_timeline_returns_expected_rows(self):
+        app = _make_test_app()
+        timeline_rows = [
+            {
+                "app_version_code": "-1",
+                "sdk_scan_result": 0,
+                "sdks_last_scanned_at": None,
+                "downloaded_at": "2026-04-01T12:00:00",
+            },
+            {
+                "app_version_code": "42",
+                "sdk_scan_result": 1,
+                "sdks_last_scanned_at": "2026-05-02T12:00:00",
+                "downloaded_at": "2026-05-01T12:00:00",
+            },
+        ]
+        with (
+            _patch_key_found("b2b_sdk"),
+            _patch_version_timeline(timeline_rows),
+            TestClient(app=app, raise_server_exceptions=False) as client,
+        ):
+            resp = client.get(
+                "/api/v1/apps/com.example.app/versions",
+                headers={"X-API-Key": "ag_versions"},
+            )
+
+        assert resp.status_code == 200
+        assert resp.json() == timeline_rows[1:]
+
+    def test_app_sdk_history_returns_expected_shape(self):
+        app = _make_test_app()
+        history_rows = [
+            {
+                "company_name": "Adjust",
+                "company_domain": "adjust.com",
+                "sdk_name": "Adjust SDK",
+                "version_code": "42",
+                "version_code_created_at": "2026-05-01T12:00:00",
+                "sdk_scan_result": 1,
+                "status": "added",
+            }
+        ]
+        with (
+            _patch_key_found("b2b_premium"),
+            _patch_sdk_history(history_rows),
+            patch(
+                "api_app.controllers.public.v1.apps.get_company_logos_df",
+                return_value=pd.DataFrame(
+                    [{"company_domain": "adjust.com", "company_logo_url": "adjust.png"}]
+                ),
+            ),
+            TestClient(app=app, raise_server_exceptions=False) as client,
+        ):
+            resp = client.get(
+                "/api/v1/apps/com.example.app/sdks/history",
+                headers={"X-API-Key": "ag_sdk_history"},
+            )
+
+        assert resp.status_code == 200
+        assert resp.json() == {
+            "history": [{**history_rows[0], "company_logo_url": "adjust.png"}]
+        }
+
     def test_app_basics_logs_umami_page_view_with_user_id(self):
         app = _make_test_app()
         app_row = {
@@ -1530,6 +1623,9 @@ class TestV1Docs:
             "/api/v1/apps/{store_id}",
             "/api/v1/apps/{store_id}/ranks",
             "/api/v1/apps/{store_id}/sdks",
+            "/api/v1/apps/{store_id}/versions",
+            "/api/v1/apps/{store_id}/sdks/history",
+            "/api/v1/apps/{store_id}/sdks/history",
             "/api/v1/companies",
             "/api/v1/companies/{company_domain}",
             "/api/v1/companies/{company_domain}/app-changes",
@@ -1545,6 +1641,7 @@ class TestV1Docs:
                 v1_public_models.PublicAppBasics,
                 v1_public_models.PublicAppBestRank,
                 v1_public_models.PublicAppSdkDetails,
+                v1_public_models.PublicAppSdkHistory,
                 v1_public_models.PublicCategoryCompanyStats,
                 v1_public_models.PublicCompanyAppChangeStoreIds,
                 v1_public_models.PublicCompanyListItem,
@@ -1592,6 +1689,15 @@ class TestV1Docs:
         assert data["paths"]
         assert all(path.startswith("/api/v1/") for path in data["paths"])
         assert "PublicAppSdkOverview" not in data["components"]["schemas"]
+        versions_operation = data["paths"]["/api/v1/apps/{store_id}/versions"]["get"]
+        assert versions_operation["summary"] == "[B2B SDK] /apps/{store_id}/versions"
+        assert "B2B SDK and B2B Premium tiers only" in versions_operation["description"]
+        assert versions_operation["responses"]["200"]["content"]["application/json"][
+            "examples"
+        ]
+        history_operation = data["paths"]["/api/v1/apps/{store_id}/sdks/history"]["get"]
+        assert history_operation["summary"] == "[B2B SDK] /apps/{store_id}/sdks/history"
+        assert "B2B SDK and B2B Premium tiers only" in history_operation["description"]
         app_basics_operation = data["paths"]["/api/v1/apps/{store_id}"]["get"]
         store_id_parameter = next(
             parameter

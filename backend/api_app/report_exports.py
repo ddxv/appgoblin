@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import io
 import json
+import re
 import smtplib
 import uuid
 from datetime import UTC, datetime
@@ -21,7 +22,12 @@ from config import (
     SMTP_USER,
     get_logger,
 )
-from dbcon.queries import get_sdk_pattern_export, query_apps_crossfilter
+from dbcon.queries import (
+    get_sdk,
+    get_sdk_export,
+    get_sdk_pattern_export,
+    query_apps_crossfilter,
+)
 
 logger = get_logger(__name__)
 
@@ -61,23 +67,38 @@ def create_report_id() -> str:
     return uuid.uuid4().hex
 
 
-def build_export_filename(report_id: str, report_type: str = "app-explorer") -> str:
+def _safe_filename_label(label: str) -> str:
+    """Convert a user-facing label into a short, filesystem-safe filename part."""
+    safe_label = re.sub(r"[^A-Za-z0-9]+", "-", label).strip("-").lower()
+    return safe_label[:80] or "sdk"
+
+
+def build_export_filename(
+    report_id: str, report_type: str = "app-explorer", report_label: str | None = None
+) -> str:
     """Build a stable CSV filename for a generated report."""
     date_part = datetime.now(UTC).strftime("%Y-%m-%d")
     short_id = report_id[:8]
     if report_type == "sdk-patterns":
-        return f"appgoblin-sdk-pattern-{date_part}-{short_id}.csv"
-    return f"appgoblin-crossfilter-{date_part}-{short_id}.csv"
+        return f"sdk-pattern-{date_part}-{short_id}.csv"
+    if report_type == "sdks":
+        sdk_part = (
+            f"{_safe_filename_label(report_label)}-sdk" if report_label else "sdk"
+        )
+        return f"{sdk_part}_{date_part}_{short_id}.csv"
+    return f"app-explorer-{date_part}-{short_id}.csv"
 
 
-def build_export_s3_key(report_id: str, report_type: str = "app-explorer") -> str:
+def build_export_s3_key(
+    report_id: str, report_type: str = "app-explorer", report_label: str | None = None
+) -> str:
     """Build the object key for a generated report."""
     prefix = (
         SDK_PATTERN_EXPORT_PREFIX
         if report_type == "sdk-patterns"
         else APP_EXPLORER_EXPORT_PREFIX
     )
-    filename = build_export_filename(report_id, report_type)
+    filename = build_export_filename(report_id, report_type, report_label)
     return f"{prefix}/{report_id}/{filename}"
 
 
@@ -94,11 +115,14 @@ def _get_public_s3_client():
 
 
 def upload_report_csv(
-    csv_bytes: bytes, report_id: str, report_type: str = "app-explorer"
+    csv_bytes: bytes,
+    report_id: str,
+    report_type: str = "app-explorer",
+    report_label: str | None = None,
 ) -> tuple[str, str]:
     """Upload a CSV report to S3 and return its URL and object key."""
     s3_config = CONFIG[EXPORT_S3_CONFIG_KEY]
-    s3_key = build_export_s3_key(report_id, report_type)
+    s3_key = build_export_s3_key(report_id, report_type, report_label)
     s3_client = _get_public_s3_client()
     s3_client.put_object(
         Bucket=s3_config["bucket"],
@@ -112,7 +136,7 @@ def upload_report_csv(
             "Bucket": s3_config["bucket"],
             "Key": s3_key,
             "ResponseContentDisposition": (
-                f'attachment; filename="{build_export_filename(report_id, report_type)}"'
+                f'attachment; filename="{build_export_filename(report_id, report_type, report_label)}"'
             ),
         },
         ExpiresIn=APP_EXPLORER_EXPORT_URL_TTL_SECONDS,
@@ -266,6 +290,16 @@ def create_sdk_pattern_export_csv(state: State, pattern: str) -> tuple[bytes, in
     return buffer.getvalue().encode("utf-8"), len(apps_df.index)
 
 
+def create_sdk_export_csv(
+    state: State, sdk_id: int, latest_only: bool = False
+) -> tuple[bytes, int]:
+    """Run an unrestricted all-time or latest-version SDK export."""
+    apps_df = get_sdk_export(state, sdk_id, latest_only=latest_only)
+    buffer = io.StringIO()
+    apps_df.to_csv(buffer, index=False)
+    return buffer.getvalue().encode("utf-8"), len(apps_df.index)
+
+
 def run_app_explorer_export_job(
     *, state: State, payload: dict, recipient_email: str, report_id: str, user_id: int
 ) -> None:
@@ -334,3 +368,50 @@ def run_sdk_pattern_export_job(
         logger.exception(
             "Failed SDK pattern export %s for %s", report_id, recipient_email
         )
+
+
+def run_sdk_export_job(
+    *,
+    state: State,
+    sdk_id: int,
+    sdk_label: str | None,
+    recipient_email: str,
+    report_id: str,
+    user_id: int,
+    latest_only: bool = False,
+) -> None:
+    """Generate, upload, and email an exact SDK report."""
+    try:
+        sdk_metadata = get_sdk(state, sdk_id, limit=1)
+        sdk_name = (
+            str(sdk_metadata.iloc[0]["sdk_name"])
+            if not sdk_metadata.empty and sdk_metadata.iloc[0]["sdk_name"]
+            else f"SDK {sdk_id}"
+        )
+        sdk_label = sdk_label or sdk_name
+        csv_bytes, row_count = create_sdk_export_csv(
+            state, sdk_id, latest_only=latest_only
+        )
+        download_url, s3_key = upload_report_csv(
+            csv_bytes,
+            report_id,
+            report_type="sdks",
+            report_label=sdk_label,
+        )
+        store_generated_report(
+            state=state,
+            user_id=user_id,
+            s3_key=s3_key,
+            payload={"sdk_id": sdk_id, "latest_only": latest_only},
+            row_count=row_count,
+            report_name=f"SDK export - {sdk_name} ({'latest' if latest_only else 'all versions'})",
+        )
+        send_report_ready_email(
+            recipient_email=recipient_email,
+            download_url=download_url,
+            report_id=report_id,
+            row_count=row_count,
+            report_type="sdks",
+        )
+    except Exception:
+        logger.exception("Failed SDK export %s for %s", report_id, recipient_email)
