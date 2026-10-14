@@ -48,17 +48,37 @@
 						>
 					{/snippet}
 					<div class="p-4 text-xs">
-						<form method="POST" action="?/emailExport" class="mb-3">
-							<input type="hidden" name="sdk_id" value={patterns.sdk_id} />
-							<input type="hidden" name="sdk_slug" value={patterns.sdk_slug} />
-							<button
-								type="submit"
-								disabled={!hasB2BSdkAccess}
-								class="btn preset-tonal-primary flex items-center gap-2 text-sm"
-							>
-								<Mail size={14} /> Generate & Email Report
-							</button>
-						</form>
+						<div class="mb-3 space-y-2">
+							<p class="text-xs font-medium uppercase tracking-wider text-surface-600-400">
+								Generate &amp; Email Report
+							</p>
+							<div class="flex flex-wrap gap-2">
+								<form method="POST" action="?/emailExport">
+									<input type="hidden" name="sdk_id" value={patterns.sdk_id} />
+									<input type="hidden" name="sdk_slug" value={patterns.sdk_slug} />
+									<input type="hidden" name="latest_only" value="false" />
+									<button
+										type="submit"
+										disabled={!hasB2BSdkAccess}
+										class="btn preset-tonal-primary flex items-center gap-2 text-sm"
+									>
+										<Mail size={14} /> All App Versions
+									</button>
+								</form>
+								<form method="POST" action="?/emailExport">
+									<input type="hidden" name="sdk_id" value={patterns.sdk_id} />
+									<input type="hidden" name="sdk_slug" value={patterns.sdk_slug} />
+									<input type="hidden" name="latest_only" value="true" />
+									<button
+										type="submit"
+										disabled={!hasB2BSdkAccess}
+										class="btn preset-tonal-primary flex items-center gap-2 text-sm"
+									>
+										<Mail size={14} /> Latest App Versions Only
+									</button>
+								</form>
+							</div>
+						</div>
 						{#if !hasB2BSdkAccess}
 							<a href="/pricing" class="underline text-primary-600-400"
 								>Upgrade to generate reports</a

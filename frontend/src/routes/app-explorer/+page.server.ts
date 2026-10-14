@@ -185,7 +185,8 @@ export const actions = {
 			return {
 				success: true,
 				exportQueued: true,
-				exportMessage: `Report generation queued. You can see all your reports in "Reports" section of your account. A download link will be sent to ${user.email} within the next few minutes.`,
+				exportMessage:
+					'Report queued, when finished a download link will be emailed and available in your Account Reports tab.',
 				reportId: exportResponse.report_id
 			};
 		} catch (error) {

@@ -290,9 +290,11 @@ def create_sdk_pattern_export_csv(state: State, pattern: str) -> tuple[bytes, in
     return buffer.getvalue().encode("utf-8"), len(apps_df.index)
 
 
-def create_sdk_export_csv(state: State, sdk_id: int) -> tuple[bytes, int]:
-    """Run an unrestricted export for one exact SDK."""
-    apps_df = get_sdk_export(state, sdk_id)
+def create_sdk_export_csv(
+    state: State, sdk_id: int, latest_only: bool = False
+) -> tuple[bytes, int]:
+    """Run an unrestricted all-time or latest-version SDK export."""
+    apps_df = get_sdk_export(state, sdk_id, latest_only=latest_only)
     buffer = io.StringIO()
     apps_df.to_csv(buffer, index=False)
     return buffer.getvalue().encode("utf-8"), len(apps_df.index)
@@ -376,6 +378,7 @@ def run_sdk_export_job(
     recipient_email: str,
     report_id: str,
     user_id: int,
+    latest_only: bool = False,
 ) -> None:
     """Generate, upload, and email an exact SDK report."""
     try:
@@ -386,7 +389,9 @@ def run_sdk_export_job(
             else f"SDK {sdk_id}"
         )
         sdk_label = sdk_label or sdk_name
-        csv_bytes, row_count = create_sdk_export_csv(state, sdk_id)
+        csv_bytes, row_count = create_sdk_export_csv(
+            state, sdk_id, latest_only=latest_only
+        )
         download_url, s3_key = upload_report_csv(
             csv_bytes,
             report_id,
@@ -397,9 +402,9 @@ def run_sdk_export_job(
             state=state,
             user_id=user_id,
             s3_key=s3_key,
-            payload={"sdk_id": sdk_id},
+            payload={"sdk_id": sdk_id, "latest_only": latest_only},
             row_count=row_count,
-            report_name=f"SDK export - {sdk_name}",
+            report_name=f"SDK export - {sdk_name} ({'latest' if latest_only else 'all versions'})",
         )
         send_report_ready_email(
             recipient_email=recipient_email,

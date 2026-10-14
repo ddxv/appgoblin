@@ -670,9 +670,9 @@ def get_company_sdks(state: State, company_domain: str) -> pd.DataFrame:
 
 
 def get_sdk(state: State, sdk_id: int, limit: int = 10) -> pd.DataFrame:
-    """Get the top apps for one exact SDK."""
+    """Get the latest-version apps for one exact SDK."""
     df = pd.read_sql(
-        sql.sdk,
+        sql.sdk_latest,
         state.dbcon.engine,
         params={"sdk_id": sdk_id, "mylimit": limit},
     )
@@ -694,9 +694,12 @@ def get_sdk_patterns(state: State, sdk_slug: str) -> pd.DataFrame:
     )
 
 
-def get_sdk_export(state: State, sdk_id: int) -> pd.DataFrame:
-    """Get every app and matched string for one exact SDK."""
-    df = pd.read_sql(sql.sdk_export, state.dbcon.engine, params={"sdk_id": sdk_id})
+def get_sdk_export(
+    state: State, sdk_id: int, latest_only: bool = False
+) -> pd.DataFrame:
+    """Get all or latest app versions for one exact SDK."""
+    query = sql.sdk_export_latest if latest_only else sql.sdk_export
+    df = pd.read_sql(query, state.dbcon.engine, params={"sdk_id": sdk_id})
     df["store"] = df["store"].replace({1: "Google Play", 2: "Apple App Store"})
     return df
 

@@ -20,18 +20,22 @@ export const actions = {
 		const { user } = requireAuthOr401(event);
 		const hasAccess = await userHasTierAccess(user.id, 'b2b_sdk', 'b2b_premium');
 		if (!hasAccess) return { success: false, error: 'B2B SDK Intelligence access is required.' };
+		const formData = await event.request.formData();
+		const latestOnly = formData.get('latest_only') === 'true';
 		const response = await createApiClient(event.fetch).post(
-			`/sdks/id/${Number((await event.request.formData()).get('sdk_id'))}/export`,
+			`/sdks/id/${Number(formData.get('sdk_id'))}/export`,
 			{
 				recipient_email: user.email,
 				user_id: user.id,
-				sdk_slug: event.params.sdkSlug
+				sdk_slug: event.params.sdkSlug,
+				latest_only: latestOnly
 			},
 			'SDK Export'
 		);
 		return {
 			success: true,
-			exportMessage: `Report generation queued. A download link will be sent to ${user.email}.`,
+			exportMessage:
+				'Report queued, when finished a download link will be emailed and available in your Account Reports tab.',
 			reportId: response.report_id
 		};
 	}

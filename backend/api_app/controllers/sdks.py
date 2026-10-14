@@ -264,6 +264,7 @@ class SdksController(Controller):
         sdk_label = (
             str(data.get("sdk_slug") or data.get("sdk_name") or "").strip() or None
         )
+        latest_only = data.get("latest_only", False) is True
         return Response(
             {
                 "success": True,
@@ -278,5 +279,6 @@ class SdksController(Controller):
                 recipient_email=recipient_email,
                 report_id=report_id,
                 user_id=user_id,
+                latest_only=latest_only,
             ),
         )

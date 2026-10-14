@@ -68,30 +68,63 @@
 			{#snippet title()}
 				<div class="flex items-center justify-between gap-3">
 					<span>Top apps</span>
-					<form
-						method="POST"
-						action="?/emailExport"
-						use:enhance={() => {
-							isExporting = true;
-							return async ({ update }) => {
-								await update({ reset: false });
-								isExporting = false;
-							};
-						}}
-					>
-						<input type="hidden" name="sdk_id" value={data.sdk_id} />
-						<input type="hidden" name="sdk_slug" value={data.sdk_slug ?? ''} />
-						<button
-							type="submit"
-							disabled={!data.hasB2BSdkAccess || isExporting}
-							class="btn preset-tonal-primary flex items-center gap-2 text-sm"
+					<div class="flex flex-col items-end gap-1">
+						<span class="text-xs font-medium uppercase tracking-wider text-surface-600-400"
+							>Generate &amp; Email Report</span
 						>
-							{#if isExporting}<Loader2 size={16} class="animate-spin" />{:else}<Mail
-									size={16}
-								/>{/if}
-							{isExporting ? 'Queueing CSV Email...' : 'Generate & Email Full Report'}
-						</button>
-					</form>
+						<div class="flex flex-wrap items-center justify-end gap-2">
+							<form
+								method="POST"
+								action="?/emailExport"
+								use:enhance={() => {
+									isExporting = true;
+									return async ({ update }) => {
+										await update({ reset: false });
+										isExporting = false;
+									};
+								}}
+							>
+								<input type="hidden" name="sdk_id" value={data.sdk_id} />
+								<input type="hidden" name="sdk_slug" value={data.sdk_slug ?? ''} />
+								<input type="hidden" name="latest_only" value="false" />
+								<button
+									type="submit"
+									disabled={!data.hasB2BSdkAccess || isExporting}
+									class="btn preset-tonal-primary flex items-center gap-2 text-sm"
+								>
+									{#if isExporting}<Loader2 size={16} class="animate-spin" />{:else}<Mail
+											size={16}
+										/>{/if}
+									{isExporting ? 'Queueing CSV Email...' : 'All App Versions'}
+								</button>
+							</form>
+							<form
+								method="POST"
+								action="?/emailExport"
+								use:enhance={() => {
+									isExporting = true;
+									return async ({ update }) => {
+										await update({ reset: false });
+										isExporting = false;
+									};
+								}}
+							>
+								<input type="hidden" name="sdk_id" value={data.sdk_id} />
+								<input type="hidden" name="sdk_slug" value={data.sdk_slug ?? ''} />
+								<input type="hidden" name="latest_only" value="true" />
+								<button
+									type="submit"
+									disabled={!data.hasB2BSdkAccess || isExporting}
+									class="btn preset-tonal-primary text-sm"
+								>
+									{#if isExporting}<Loader2 size={16} class="animate-spin" />{:else}<Mail
+											size={16}
+										/>{/if}
+									{isExporting ? 'Queueing CSV Email...' : 'Latest App Versions Only'}
+								</button>
+							</form>
+						</div>
+					</div>
 				</div>
 			{/snippet}
 			{#if exportMessage}<p class="px-4 text-success-900-100 text-sm">{exportMessage}</p>{/if}

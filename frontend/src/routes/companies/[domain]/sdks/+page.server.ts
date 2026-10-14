@@ -30,18 +30,25 @@ export const actions = {
 		const formData = await event.request.formData();
 		const sdkId = Number(formData.get('sdk_id'));
 		const sdkSlug = formData.get('sdk_slug')?.toString().trim();
+		const latestOnly = formData.get('latest_only') === 'true';
 		if (!Number.isInteger(sdkId) || sdkId <= 0) return fail(400, { error: 'Invalid SDK.' });
 		if (!(await userHasTierAccess(user.id, 'b2b_sdk', 'b2b_premium')))
 			return fail(403, { error: 'B2B SDK Intelligence access is required.' });
 		try {
 			await createApiClient(event.fetch).post(
 				`/sdks/id/${sdkId}/export`,
-				{ recipient_email: user.email, user_id: user.id, sdk_slug: sdkSlug },
+				{
+					recipient_email: user.email,
+					user_id: user.id,
+					sdk_slug: sdkSlug,
+					latest_only: latestOnly
+				},
 				'SDK Export'
 			);
 			return {
 				success: true,
-				exportMessage: `Report generation queued. A download link will be sent to ${user.email}.`
+				exportMessage:
+					'Report queued, when finished a download link will be emailed and available in your Account Reports tab.'
 			};
 		} catch {
 			return fail(500, { error: 'Failed to queue CSV export.' });

@@ -42,7 +42,8 @@ export const actions = {
 			);
 			return {
 				success: true,
-				exportMessage: `Report generation queued. A download link will be sent to ${user.email}.`,
+				exportMessage:
+					'Report queued, when finished a download link will be emailed and available in your Account Reports tab.',
 				reportId: response.report_id
 			};
 		} catch (error) {
