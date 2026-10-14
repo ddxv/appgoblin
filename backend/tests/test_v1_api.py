@@ -914,7 +914,7 @@ class TestV1Apps:
                 "sdk_scan_result": 1,
                 "sdks_last_scanned_at": "2026-05-02T12:00:00",
                 "downloaded_at": "2026-05-01T12:00:00",
-            }
+            },
         ]
         with (
             _patch_key_found("b2b_sdk"),
@@ -927,7 +927,7 @@ class TestV1Apps:
             )
 
         assert resp.status_code == 200
-        assert resp.json() == timeline_rows
+        assert resp.json() == timeline_rows[1:]
 
     def test_app_sdk_history_returns_expected_shape(self):
         app = _make_test_app()

@@ -317,7 +317,7 @@ V1_OPERATION_DOCS = {
     },
     "/api/v1/apps/{store_id}/versions": {
         "get": {
-            "summary": "[B2B SDK] /apps/{store_id}/versions",
+            "summary": "[Paid] /apps/{store_id}/versions",
             "description": (
                 "Endpoint: `GET /api/v1/apps/{store_id}/versions`\n\n"
                 "Access: B2B SDK and B2B Premium tiers only.\n\n"
@@ -329,7 +329,7 @@ V1_OPERATION_DOCS = {
     },
     "/api/v1/apps/{store_id}/sdks/history": {
         "get": {
-            "summary": "[B2B SDK] /apps/{store_id}/sdks/history",
+            "summary": "[Paid] /apps/{store_id}/sdks/history",
             "description": (
                 "Endpoint: `GET /api/v1/apps/{store_id}/sdks/history`\n\n"
                 "Access: B2B SDK and B2B Premium tiers only.\n\n"
