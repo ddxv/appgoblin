@@ -7,20 +7,7 @@ import { getOrganizationSubscriptionAccess } from '$lib/server/organization';
  */
 export async function getUserTierSlugs(userId: number): Promise<string[]> {
 	const organizationSubscription = await getOrganizationSubscriptionAccess(userId);
-	if (organizationSubscription?.tier_slug) return [organizationSubscription.tier_slug];
-
-	const rows = await db.query<{ slug: string }>(
-		`SELECT DISTINCT t.slug
-		 FROM public.subscriptions s
-		 JOIN public.tier_prices tp ON tp.id = s.tier_price_id
-		 JOIN public.tiers t ON t.id = tp.tier_id
-		 WHERE s.user_id = $1
-		   AND s.status IN ('active', 'trialing')
-		   AND (s.cancel_at IS NULL OR s.cancel_at > NOW())
-		 LIMIT 10`,
-		[userId]
-	);
-	return rows.map((r) => r.slug);
+	return organizationSubscription?.tier_slug ? [organizationSubscription.tier_slug] : [];
 }
 
 /**
@@ -32,24 +19,7 @@ export async function getUserTierSlugs(userId: number): Promise<string[]> {
 export async function userHasTierAccess(userId: number, ...slugs: string[]): Promise<boolean> {
 	if (!userId || slugs.length === 0) return false;
 	const organizationSubscription = await getOrganizationSubscriptionAccess(userId);
-	if (organizationSubscription)
-		return (
-			!!organizationSubscription.tier_slug && slugs.includes(organizationSubscription.tier_slug)
-		);
-
-	const row = await db.queryOne<{ slug: string }>(
-		`SELECT t.slug
-		 FROM public.subscriptions s
-		 JOIN public.tier_prices tp ON tp.id = s.tier_price_id
-		 JOIN public.tiers t ON t.id = tp.tier_id
-		 WHERE s.user_id = $1
-		   AND s.status IN ('active', 'trialing')
-		   AND (s.cancel_at IS NULL OR s.cancel_at > NOW())
-		   AND t.slug = ANY($2)
-		 LIMIT 1`,
-		[userId, slugs]
-	);
-	return !!row;
+	return !!organizationSubscription?.tier_slug && slugs.includes(organizationSubscription.tier_slug);
 }
 
 /**
@@ -94,7 +64,8 @@ export async function getActiveSubscription(userId: number) {
 		 FROM public.subscriptions s
 		 LEFT JOIN public.tier_prices tp ON tp.id = s.tier_price_id
 		 LEFT JOIN public.tiers t ON t.id = tp.tier_id
-		 WHERE s.user_id = $1
+		 JOIN organization_members om ON om.organization_id = s.organization_id
+		 WHERE om.user_id = $1
 		   AND (
 		     (s.cancel_at IS NOT NULL AND s.cancel_at > NOW())
 		     OR (s.cancel_at IS NULL AND s.status IN ('active', 'trialing'))

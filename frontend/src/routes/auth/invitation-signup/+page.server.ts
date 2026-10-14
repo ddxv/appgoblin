@@ -7,9 +7,11 @@ export const csr = true;
 
 export function load(event: PageServerLoadEvent) {
 	redirectIfAuthenticated(event);
+	const invitationToken = event.url.searchParams.get('token') ?? '';
 	const requestedRedirect = event.url.searchParams.get('redirectTo') ?? '/account';
 	return {
-		redirectTo: isSafeRedirect(requestedRedirect) ? requestedRedirect : '/account'
+		redirectTo: isSafeRedirect(requestedRedirect) ? requestedRedirect : '/account',
+		invitationToken
 	};
 }
 

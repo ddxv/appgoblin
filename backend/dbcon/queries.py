@@ -255,6 +255,16 @@ def get_single_app(state: State, store_id: str) -> pd.DataFrame:
     return df
 
 
+def get_single_app_summary(state: State, store_id: str) -> pd.DataFrame:
+    """Get the small set of app fields used by account watchlists."""
+    logger.info(f"Query summary for single app_id={store_id}")
+    return pd.read_sql(
+        sql.app_summary,
+        state.dbcon.engine,
+        params={"store_id": store_id},
+    )
+
+
 def get_app_rating_histogram(state: State, store_id: str) -> pd.DataFrame:
     """Get app rating histogram for a single store_id."""
     df = pd.read_sql(
@@ -674,6 +684,13 @@ def get_sdk_companies(state: State, sdk_slug: str) -> pd.DataFrame:
     """Get companies associated with one exact SDK."""
     return pd.read_sql(
         sql.sdk_companies, state.dbcon.engine, params={"sdk_slug": sdk_slug}
+    )
+
+
+def get_sdk_patterns(state: State, sdk_slug: str) -> pd.DataFrame:
+    """Get the mapped package, path, and mediation patterns for one SDK."""
+    return pd.read_sql(
+        sql.sdk_patterns, state.dbcon.engine, params={"sdk_slug": sdk_slug}
     )
 
 

@@ -10,11 +10,16 @@ SELECT DISTINCT
     sa.installs,
     sa.installs_sum_4w,
     CONCAT(
-        'https://media.appgoblin.info/app-icons/', sa.store_id, '/', sa.icon_64
+        'https://media.appgoblin.info/app-icons/',
+        sa.store_id,
+        '/',
+        sa.icon_64
     ) AS app_icon_url
-FROM adtech.sdks AS sd
-INNER JOIN adtech.app_sdk_strings AS sass ON sd.id = sass.sdk_id
-LEFT JOIN frontend.store_apps_overview AS sa ON sass.store_app = sa.id
-WHERE sd.id = :sdk_id
+FROM adtech.app_sdks AS asd
+LEFT JOIN adtech.sdks AS sd
+    ON asd.sdk_id = sd.id
+LEFT JOIN frontend.store_apps_overview AS sa
+    ON asd.store_app = sa.id
+WHERE asd.sdk_id = :sdk_id
 ORDER BY sa.installs DESC NULLS LAST
 LIMIT :mylimit;

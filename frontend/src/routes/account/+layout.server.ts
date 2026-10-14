@@ -1,10 +1,12 @@
 import { requireAuthOr401 } from '$lib/server/auth/auth';
 import { db } from '$lib/server/auth/db';
 import { STRIPE_PLAN_LABELS, type StripePriceKey } from '$lib/server/stripe';
+import { getUserOrganization } from '$lib/server/organization';
 import type { LayoutServerLoadEvent } from './$types';
 
 export async function load(event: LayoutServerLoadEvent) {
 	const { user } = requireAuthOr401(event);
+	const organization = await getUserOrganization(user.id);
 
 	interface Subscription {
 		status: string;
@@ -33,7 +35,8 @@ export async function load(event: LayoutServerLoadEvent) {
          FROM subscriptions s
          LEFT JOIN tier_prices tp ON tp.id = s.tier_price_id
          LEFT JOIN tiers t ON t.id = tp.tier_id
-	         WHERE s.user_id = $1
+			 JOIN organization_members om ON om.organization_id = s.organization_id
+		 WHERE om.user_id = $1
 	         AND (
 	         	(s.cancel_at IS NOT NULL AND s.cancel_at > NOW())
 	         	OR (s.cancel_at IS NULL AND s.status IN ('active', 'trialing'))
@@ -49,7 +52,8 @@ export async function load(event: LayoutServerLoadEvent) {
 		 FROM subscriptions s
 		 LEFT JOIN tier_prices tp ON tp.id = s.tier_price_id
 		 LEFT JOIN tiers t ON t.id = tp.tier_id
-		 WHERE s.user_id = $1
+		 JOIN organization_members om ON om.organization_id = s.organization_id
+		 WHERE om.user_id = $1
 		 AND NOT (
 		 	(s.cancel_at IS NOT NULL AND s.cancel_at > NOW())
 		 	OR (s.cancel_at IS NULL AND s.status IN ('active', 'trialing'))
@@ -63,7 +67,7 @@ export async function load(event: LayoutServerLoadEvent) {
 		slug && slug in STRIPE_PLAN_LABELS ? STRIPE_PLAN_LABELS[slug as StripePriceKey] : slug; // fallback to raw slug if unknown
 
 	return {
-		user,
+		user: { ...user, organizationRole: organization?.role ?? null },
 		subscription,
 		showStripePortal: subscription?.provider_name === 'stripe',
 		subscriptionHistory: subscriptionHistory.map((entry) => ({

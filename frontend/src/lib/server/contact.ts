@@ -108,12 +108,55 @@ export async function sendPricingPlanSelectionEmail(
 	});
 }
 
-export async function sendOrganizationInvitationEmail(
-	email: string,
-	organizationName: string
+export async function sendPricingPlanCompletionEmail(
+	planKey: StripePriceKey,
+	billingCycle: BillingCycle,
+	userEmail: string,
+	checkoutSessionId: string
 ): Promise<void> {
 	const t = getTransporter();
-	const signupUrl = `${APPGOBLIN_ENDPOINT_URL}/auth/invitation-signup`;
+	const planName = STRIPE_PLAN_LABELS[planKey];
+	const completedAt = new Date().toISOString();
+	const subject = `Pricing signup completed: ${planName}`;
+	const text = [
+		`A customer completed signup for the ${planName} plan (${billingCycle} billing).`,
+		'',
+		`Customer email: ${userEmail}`,
+		`Checkout session: ${checkoutSessionId}`,
+		`Completed at: ${completedAt}`
+	].join('\n');
+	const html = `
+		<div>
+			<h2>Pricing signup completed</h2>
+			<p><strong>Plan:</strong> ${planName}</p>
+			<p><strong>Billing:</strong> ${billingCycle}</p>
+			<p><strong>Customer email:</strong> ${userEmail}</p>
+			<p><strong>Checkout session:</strong> ${checkoutSessionId}</p>
+			<p><strong>Completed at:</strong> ${completedAt}</p>
+		</div>
+	`;
+
+	if (!t) {
+		console.log(`[DEV] ${subject} (${billingCycle}) for ${userEmail}`);
+		return;
+	}
+
+	await t.sendMail({
+		from: `"AppGoblin Contact" <${EMAIL_USER}>`,
+		to: EMAIL_USER,
+		subject,
+		text,
+		html
+	});
+}
+
+export async function sendOrganizationInvitationEmail(
+	email: string,
+	organizationName: string,
+	invitationToken: string
+): Promise<void> {
+	const t = getTransporter();
+	const signupUrl = `${APPGOBLIN_ENDPOINT_URL}/auth/invitation-signup?token=${encodeURIComponent(invitationToken)}`;
 	const subject = `You’re invited to join ${organizationName} on AppGoblin`;
 	const text = [
 		`You’ve been invited to join ${organizationName} on AppGoblin.`,

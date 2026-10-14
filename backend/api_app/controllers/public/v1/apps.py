@@ -181,7 +181,11 @@ def _build_app_sdk_details_payload(state: State, store_id: str) -> PublicAppSdkD
 
 def _build_app_version_timeline_payload(state: State, store_id: str) -> list[dict]:
     """Return the crawled version timeline used by the SDK history UI."""
-    return get_app_version_timeline(state, store_id).to_dict(orient="records")
+    timeline_df = get_app_version_timeline(state, store_id)
+    timeline_df = timeline_df[
+        timeline_df["app_version_code"].astype("string") != "-1"
+    ]
+    return timeline_df.to_dict(orient="records")
 
 
 def _build_app_sdk_history_payload(state: State, store_id: str) -> PublicAppSdkHistory:

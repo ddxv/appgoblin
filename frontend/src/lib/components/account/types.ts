@@ -9,7 +9,12 @@ export interface FollowedApp {
 	store_id: string;
 	created_at: string | Date;
 	app_name: string | null;
-	store: number | null;
+}
+
+export interface AppSummary {
+	name: string | null;
+	icon: string | null;
+	installs: number | null;
 }
 
 export interface FollowedCompany {

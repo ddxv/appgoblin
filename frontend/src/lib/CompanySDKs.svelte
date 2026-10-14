@@ -43,13 +43,14 @@
 			<div class="col-span-1">
 				<WhiteCard>
 					{#snippet title()}
-						<a class="text-sm font-semibold underline" href={`/sdks/appgoblin/${patterns.sdk_slug}`}
+						<a class="text-sm font-semibold underline" href={`/sdks/mapped/${patterns.sdk_slug}`}
 							>{companyName} - {sdkName}</a
 						>
 					{/snippet}
 					<div class="p-4 text-xs">
 						<form method="POST" action="?/emailExport" class="mb-3">
 							<input type="hidden" name="sdk_id" value={patterns.sdk_id} />
+							<input type="hidden" name="sdk_slug" value={patterns.sdk_slug} />
 							<button
 								type="submit"
 								disabled={!hasB2BSdkAccess}

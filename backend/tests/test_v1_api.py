@@ -904,6 +904,12 @@ class TestV1Apps:
         app = _make_test_app()
         timeline_rows = [
             {
+                "app_version_code": "-1",
+                "sdk_scan_result": 0,
+                "sdks_last_scanned_at": None,
+                "downloaded_at": "2026-04-01T12:00:00",
+            },
+            {
                 "app_version_code": "42",
                 "sdk_scan_result": 1,
                 "sdks_last_scanned_at": "2026-05-02T12:00:00",

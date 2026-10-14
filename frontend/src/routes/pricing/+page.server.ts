@@ -31,7 +31,8 @@ async function getCurrentPlan(userId: number) {
 		 FROM subscriptions s
 		 LEFT JOIN tier_prices tp ON tp.id = s.tier_price_id
 		 LEFT JOIN tiers t ON t.id = tp.tier_id
-		 WHERE s.user_id = $1
+		 JOIN organization_members om ON om.organization_id = s.organization_id
+		 WHERE om.user_id = $1
 		   AND (
 		     (s.cancel_at IS NOT NULL AND s.cancel_at > NOW())
 		     OR (s.cancel_at IS NULL AND s.status IN ('active', 'trialing'))
@@ -94,11 +95,11 @@ export async function load(event: PageServerLoadEvent) {
 	const currentPlan = event.locals.user ? await getCurrentPlan(event.locals.user.id) : null;
 	const currentSubscription = currentPlan
 		? {
-				status: currentPlan.status,
-				provider_name: 'stripe' as const,
-				current_period_end: currentPlan.current_period_end,
-				cancel_at: currentPlan.cancel_at
-			}
+			status: currentPlan.status,
+			provider_name: 'stripe' as const,
+			current_period_end: currentPlan.current_period_end,
+			cancel_at: currentPlan.cancel_at
+		}
 		: null;
 
 	const currentPlanLabel = currentPlan?.slug

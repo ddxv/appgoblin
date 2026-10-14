@@ -27,14 +27,16 @@ export const load: PageServerLoad = async ({ fetch, params, parent, locals }) =>
 export const actions = {
 	emailExport: async (event) => {
 		const { user } = requireAuthOr401(event);
-		const sdkId = Number((await event.request.formData()).get('sdk_id'));
+		const formData = await event.request.formData();
+		const sdkId = Number(formData.get('sdk_id'));
+		const sdkSlug = formData.get('sdk_slug')?.toString().trim();
 		if (!Number.isInteger(sdkId) || sdkId <= 0) return fail(400, { error: 'Invalid SDK.' });
 		if (!(await userHasTierAccess(user.id, 'b2b_sdk', 'b2b_premium')))
 			return fail(403, { error: 'B2B SDK Intelligence access is required.' });
 		try {
 			await createApiClient(event.fetch).post(
 				`/sdks/id/${sdkId}/export`,
-				{ recipient_email: user.email, user_id: user.id },
+				{ recipient_email: user.email, user_id: user.id, sdk_slug: sdkSlug },
 				'SDK Export'
 			);
 			return {

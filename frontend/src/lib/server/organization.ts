@@ -20,6 +20,13 @@ export interface OrganizationMember {
 	createdAt: Date;
 }
 
+export interface OrganizationInvitation {
+	id: number;
+	email: string;
+	expiresAt: Date;
+	createdAt: Date;
+}
+
 export function normalizeInvitationEmail(email: string): string {
 	return email.trim().toLowerCase();
 }
@@ -31,6 +38,51 @@ export function createInvitationToken(): { token: string; tokenHash: string } {
 
 export function hashInvitationToken(token: string): string {
 	return createHash('sha256').update(token).digest('hex');
+}
+
+export async function getOrganizationInvitation(
+	token: string,
+	email: string
+): Promise<{ id: number } | null> {
+	return db.queryOne<{ id: number }>(
+		`SELECT id
+		 FROM organization_invitations
+		 WHERE token_hash = $1
+		   AND lower(email) = $2
+		   AND accepted_at IS NULL
+		   AND revoked_at IS NULL
+		   AND expires_at > NOW()`,
+		[hashInvitationToken(token), normalizeInvitationEmail(email)]
+	);
+}
+
+export async function acceptOrganizationInvitation(invitationId: number, userId: number): Promise<void> {
+	await db.transaction(async (client) => {
+		const invitation = await client.query<{ organization_id: number }>(
+			`SELECT organization_id
+			 FROM organization_invitations
+			 WHERE id = $1
+			   AND accepted_at IS NULL
+			   AND revoked_at IS NULL
+			   AND expires_at > NOW()
+			 FOR UPDATE`,
+			[invitationId]
+		);
+		const row = invitation.rows[0];
+		if (!row) throw new Error('Invitation is no longer active.');
+
+		await client.query(
+			`INSERT INTO organization_members (organization_id, user_id, role)
+			 VALUES ($1, $2, 'member')`,
+			[row.organization_id, userId]
+		);
+		await client.query(
+			`UPDATE organization_invitations
+			 SET accepted_at = NOW(), accepted_by_user_id = $1
+			 WHERE id = $2`,
+			[userId, invitationId]
+		);
+	});
 }
 
 export async function createPersonalOrganization(
@@ -103,6 +155,22 @@ export async function getOrganizationSeatSummary(organizationId: number) {
 		 LEFT JOIN organization_members om ON om.organization_id = o.id
 		 WHERE o.id = $1
 		 GROUP BY o.id`,
+		[organizationId]
+	);
+}
+
+export async function getActiveOrganizationInvitations(
+	organizationId: number
+): Promise<OrganizationInvitation[]> {
+	return db.query<OrganizationInvitation>(
+		`SELECT id, email,
+		        expires_at AS "expiresAt", created_at AS "createdAt"
+		 FROM organization_invitations
+		 WHERE organization_id = $1
+		   AND accepted_at IS NULL
+		   AND revoked_at IS NULL
+		   AND expires_at > NOW()
+		 ORDER BY created_at DESC`,
 		[organizationId]
 	);
 }
@@ -185,6 +253,29 @@ export async function createOrganizationInvitation(
 		[organizationId, normalizedEmail, tokenHash, invitedByUserId, expiresAt]
 	);
 	return { token, expiresAt };
+}
+
+export async function revokeOrganizationInvitation(
+	organizationId: number,
+	ownerUserId: number,
+	invitationId: number
+): Promise<void> {
+	const result = await db.execute(
+		`UPDATE organization_invitations oi
+		 SET revoked_at = NOW()
+		 WHERE oi.id = $1
+		   AND oi.organization_id = $2
+		   AND oi.accepted_at IS NULL
+		   AND oi.revoked_at IS NULL
+		   AND EXISTS (
+		       SELECT 1 FROM organization_members om
+		       WHERE om.organization_id = oi.organization_id
+		         AND om.user_id = $3
+		         AND om.role = 'owner'
+		   )`,
+		[invitationId, organizationId, ownerUserId]
+	);
+	if (result.changes === 0) throw new Error('Invitation is no longer active.');
 }
 
 export async function getOrganizationSubscriptionAccess(userId: number) {

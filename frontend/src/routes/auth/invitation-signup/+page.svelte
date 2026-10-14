@@ -17,4 +17,4 @@
 	</p>
 </div>
 
-<SignupForm redirectTo={data.redirectTo} {form} />
+<SignupForm redirectTo={data.redirectTo} invitationToken={data.invitationToken} {form} />

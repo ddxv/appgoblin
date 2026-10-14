@@ -31,6 +31,7 @@ from dbcon.queries import (
     get_latest_sdks,
     get_sdk,
     get_sdk_companies,
+    get_sdk_patterns,
     get_sdk_pattern,
     get_sdk_pattern_companies,
     get_user_requested_latest_sdks,
@@ -134,7 +135,7 @@ class SdksController(Controller):
 
     @get(path="/appgoblin/{sdk_slug:str}", cache=3600)
     async def sdk_detail(self: Self, state: State, sdk_slug: str) -> dict:
-        """Return a top-app preview and companies for one exact SDK."""
+        """Return metadata, mapped patterns, the owner, and top apps for one SDK."""
         companies = get_sdk_companies(state, sdk_slug)
         sdk_id = (
             int(companies.iloc[0]["sdk_id"])
@@ -144,11 +145,41 @@ class SdksController(Controller):
         apps = (
             get_sdk(state, sdk_id, limit=10) if sdk_id is not None else pd.DataFrame()
         )
+        patterns = get_sdk_patterns(state, sdk_slug)
+        owner = companies.iloc[0].to_dict() if not companies.empty else {}
+        if owner.get("company_domain"):
+            company_logos = get_company_logos_df(state).drop_duplicates(
+                subset=["company_domain"], keep="first"
+            )
+            logo = company_logos[
+                company_logos["company_domain"] == owner["company_domain"]
+            ]
+            if not logo.empty:
+                owner["company_logo_url"] = logo.iloc[0].get("company_logo_url")
+
+        def pattern_rows(pattern_type: str) -> list[dict]:
+            rows = patterns[
+                patterns["pattern_type"].astype(str).str.lower() == pattern_type
+            ]
+            return [
+                {
+                    "pattern": str(row.pattern_value),
+                    "app_count": None if pd.isna(row.app_count) else int(row.app_count),
+                }
+                for row in rows.itertuples(index=False)
+                if pd.notna(row.pattern_value)
+            ]
+
         return {
             "sdk_id": sdk_id,
             "sdk_name": apps.iloc[0]["sdk_name"] if not apps.empty else sdk_slug,
             "apps": apps.to_dict(orient="records"),
-            "companies": companies.to_dict(orient="records"),
+            "owner": owner,
+            "patterns": {
+                "package_patterns": pattern_rows("package"),
+                "paths": pattern_rows("path"),
+                "mediation_patterns": pattern_rows("mediation"),
+            },
         }
 
     @get(path="/{value_pattern:str}/companies", cache=3600)
@@ -230,6 +261,9 @@ class SdksController(Controller):
             )
 
         report_id = create_report_id()
+        sdk_label = (
+            str(data.get("sdk_slug") or data.get("sdk_name") or "").strip() or None
+        )
         return Response(
             {
                 "success": True,
@@ -240,6 +274,7 @@ class SdksController(Controller):
                 run_sdk_export_job,
                 state=state,
                 sdk_id=sdk_id,
+                sdk_label=sdk_label,
                 recipient_email=recipient_email,
                 report_id=report_id,
                 user_id=user_id,

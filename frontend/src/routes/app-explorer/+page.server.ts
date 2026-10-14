@@ -31,8 +31,8 @@ function parseJsonArrayField(value: FormDataEntryValue | null): number[] {
 		const parsed = JSON.parse(value.toString());
 		return Array.isArray(parsed)
 			? parsed.filter(
-					(entry): entry is number => typeof entry === 'number' && Number.isInteger(entry)
-				)
+				(entry): entry is number => typeof entry === 'number' && Number.isInteger(entry)
+			)
 			: [];
 	} catch {
 		return [];
@@ -92,8 +92,9 @@ function hasExportFilters(payload: CrossfilterPayload): boolean {
 
 async function getSubscriptionAccess(userId: number) {
 	const row = await db.queryOne<{ id: number }>(
-		`SELECT id FROM subscriptions
-		 WHERE user_id = $1
+		`SELECT s.id FROM subscriptions s
+		 JOIN organization_members om ON om.organization_id = s.organization_id
+		 WHERE om.user_id = $1
 		 AND status IN ('active', 'trialing')
 		 AND (cancel_at IS NULL OR cancel_at > NOW())
 		 LIMIT 1`,
