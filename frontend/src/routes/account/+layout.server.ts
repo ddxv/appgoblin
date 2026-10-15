@@ -16,19 +16,14 @@ export async function load(event: LayoutServerLoadEvent) {
 		cancel_at: Date | null;
 		cancel_requested_at: Date | null;
 		tier_slug: string | null;
+		planName?: string | null;
 	}
 
-	interface SubscriptionHistoryRow {
-		status: string;
-		current_period_start: Date | null;
-		current_period_end: Date;
-		cancel_at: Date | null;
-		cancel_requested_at: Date | null;
+	interface SubscriptionHistoryRow extends Subscription {
 		updated_at: Date;
-		tier_slug: string | null;
 	}
 
-	const subscription = await db.queryOne<Subscription>(
+	const subscriptions = await db.query<Subscription>(
 		`SELECT s.status, tp.provider_name, s.current_period_start, s.current_period_end,
 		        s.cancel_at, s.cancel_requested_at,
 		        t.slug AS tier_slug
@@ -41,9 +36,11 @@ export async function load(event: LayoutServerLoadEvent) {
 	         	(s.cancel_at IS NOT NULL AND s.cancel_at > NOW())
 	         	OR (s.cancel_at IS NULL AND s.status IN ('active', 'trialing'))
 	         )
-	         ORDER BY s.updated_at DESC LIMIT 1`,
+	         ORDER BY s.updated_at DESC`,
 		[user.id]
 	);
+
+	const subscription = subscriptions[0] ?? null;
 
 	const subscriptionHistory = await db.query<SubscriptionHistoryRow>(
 		`SELECT s.status, s.current_period_start, s.current_period_end, s.cancel_at,
@@ -58,8 +55,7 @@ export async function load(event: LayoutServerLoadEvent) {
 		 	(s.cancel_at IS NOT NULL AND s.cancel_at > NOW())
 		 	OR (s.cancel_at IS NULL AND s.status IN ('active', 'trialing'))
 		 )
-		 ORDER BY COALESCE(s.cancel_at, s.current_period_end, s.updated_at) DESC
-		 LIMIT 5`,
+		 ORDER BY COALESCE(s.cancel_at, s.current_period_end, s.updated_at) DESC`,
 		[user.id]
 	);
 
@@ -69,6 +65,10 @@ export async function load(event: LayoutServerLoadEvent) {
 	return {
 		user: { ...user, organizationRole: organization?.role ?? null },
 		subscription,
+		subscriptions: subscriptions.map((entry) => ({
+			...entry,
+			planName: resolvePlanName(entry.tier_slug)
+		})),
 		showStripePortal: subscription?.provider_name === 'stripe',
 		subscriptionHistory: subscriptionHistory.map((entry) => ({
 			...entry,

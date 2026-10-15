@@ -144,6 +144,36 @@
 		</div>
 	</section>
 
+	{#if data.subscriptions?.length}
+		<section class="space-y-4">
+			<div class="p-6 md:p-8 space-y-4 border-t border-surface-300-700">
+				<div>
+					<h2 class="text-lg font-bold">All Active Subscriptions</h2>
+					<p class="text-sm">Subscriptions available to your organization.</p>
+				</div>
+				<div class="grid gap-3 md:grid-cols-2">
+					{#each data.subscriptions as entry}
+						<div class="rounded-lg border border-surface-300-700 p-4">
+							<div class="flex items-start justify-between gap-3">
+								<div>
+									<p class="font-semibold">{entry.planName ?? 'Subscription'}</p>
+									<p class="mt-1 text-sm">{formatStatus(entry.status)} · {entry.provider_name}</p>
+								</div>
+								<span class="badge px-3 py-1 font-medium preset-filled-surface-500">
+									{formatStatus(entry.status)}
+								</span>
+							</div>
+							<p class="mt-3 text-sm">
+								{entry.cancel_at ? 'Access ends' : 'Renews on'}
+								{formatDate(entry.cancel_at ?? entry.current_period_end)}
+							</p>
+						</div>
+					{/each}
+				</div>
+			</div>
+		</section>
+	{/if}
+
 	{#if data.subscriptionHistory?.length}
 		<section class="space-y-4">
 			<div class="p-6 md:p-8 space-y-4 border-t border-surface-300-700">
