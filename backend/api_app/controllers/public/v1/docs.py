@@ -190,7 +190,7 @@ APP_VERSION_TIMELINE_EXAMPLE_STORE_ID = "dev.thirdgate.appgoblin"
 APP_VERSION_TIMELINE_EXAMPLE_RESPONSE = [
     {
         "app_version_code": "42",
-        "sdk_scan_result": 1,
+        "sdk_scan_result": "success",
         "sdks_last_scanned_at": "2026-07-22T10:15:00Z",
         "downloaded_at": "2026-07-21T14:32:08Z",
     }
@@ -203,7 +203,7 @@ APP_SDK_HISTORY_EXAMPLE_RESPONSE = {
             "sdk_name": "Adjust SDK",
             "version_code": "42",
             "version_code_created_at": "2026-07-21T14:32:08Z",
-            "sdk_scan_result": 1,
+            "sdk_scan_result": "success",
             "status": "added",
             "company_logo_url": "company-logos/adjust.png",
         },
@@ -213,8 +213,8 @@ APP_SDK_HISTORY_EXAMPLE_RESPONSE = {
             "sdk_name": None,
             "version_code": "41",
             "version_code_created_at": "2026-07-14T09:00:00Z",
-            "sdk_scan_result": 1,
-            "status": None,
+            "sdk_scan_result": "success",
+            "status": "no_change",
             "company_logo_url": None,
         },
     ]

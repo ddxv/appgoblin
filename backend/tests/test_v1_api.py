@@ -915,9 +915,16 @@ class TestV1Apps:
                 "sdks_last_scanned_at": "2026-05-02T12:00:00",
                 "downloaded_at": "2026-05-01T12:00:00",
             },
+            {
+                "app_version_code": "41",
+                "sdk_scan_result": 0,
+                "sdks_last_scanned_at": None,
+                "downloaded_at": "2026-04-01T12:00:00",
+            },
         ]
         with (
             _patch_key_found("b2b_sdk"),
+            _patch_single_app({"store_id": "com.example.app"}),
             _patch_version_timeline(timeline_rows),
             TestClient(app=app, raise_server_exceptions=False) as client,
         ):
@@ -927,7 +934,37 @@ class TestV1Apps:
             )
 
         assert resp.status_code == 200
-        assert resp.json() == timeline_rows[1:]
+        assert resp.json() == [
+            {
+                **timeline_rows[1],
+                "sdk_scan_result": "success",
+            },
+            {
+                **timeline_rows[2],
+                "sdk_scan_result": "failure",
+            },
+        ]
+
+    @pytest.mark.parametrize(
+        "path",
+        [
+            "/api/v1/apps/com.unknown.app/versions",
+            "/api/v1/apps/com.unknown.app/sdks/history",
+        ],
+    )
+    def test_app_version_endpoints_return_404_for_unknown_apps(self, path):
+        app = _make_test_app()
+        with (
+            _patch_key_found("b2b_sdk"),
+            _patch_single_app(None),
+            TestClient(app=app, raise_server_exceptions=False) as client,
+        ):
+            resp = client.get(
+                path,
+                headers={"X-API-Key": "ag_versions"},
+            )
+
+        assert resp.status_code == 404
 
     def test_app_sdk_history_returns_expected_shape(self):
         app = _make_test_app()
@@ -940,10 +977,20 @@ class TestV1Apps:
                 "version_code_created_at": "2026-05-01T12:00:00",
                 "sdk_scan_result": 1,
                 "status": "added",
-            }
+            },
+            {
+                "company_name": None,
+                "company_domain": None,
+                "sdk_name": None,
+                "version_code": "41",
+                "version_code_created_at": "2026-04-01T12:00:00",
+                "sdk_scan_result": 0,
+                "status": None,
+            },
         ]
         with (
             _patch_key_found("b2b_premium"),
+            _patch_single_app({"store_id": "com.example.app"}),
             _patch_sdk_history(history_rows),
             patch(
                 "api_app.controllers.public.v1.apps.get_company_logos_df",
@@ -960,7 +1007,19 @@ class TestV1Apps:
 
         assert resp.status_code == 200
         assert resp.json() == {
-            "history": [{**history_rows[0], "company_logo_url": "adjust.png"}]
+            "history": [
+                {
+                    **history_rows[0],
+                    "sdk_scan_result": "success",
+                    "company_logo_url": "adjust.png",
+                },
+                {
+                    **history_rows[1],
+                    "sdk_scan_result": "failure",
+                    "status": "no_change",
+                    "company_logo_url": None,
+                },
+            ]
         }
 
     def test_app_basics_logs_umami_page_view_with_user_id(self):

@@ -181,16 +181,42 @@ def _build_app_sdk_details_payload(state: State, store_id: str) -> PublicAppSdkD
 
 def _build_app_version_timeline_payload(state: State, store_id: str) -> list[dict]:
     """Return the crawled version timeline used by the SDK history UI."""
+    app_df = get_single_app(state, store_id)
+    if app_df.empty:
+        msg = f"Store ID not found: {store_id!r}"
+        raise NotFoundException(msg, status_code=404)
+
     timeline_df = get_app_version_timeline(state, store_id)
     timeline_df = timeline_df[timeline_df["app_version_code"].astype("string") != "-1"]
+    timeline_df["sdk_scan_result"] = timeline_df["sdk_scan_result"].map(
+        lambda result: (
+            None if pd.isna(result) else "success" if result == 1 else "failure"
+        )
+    )
     return timeline_df.to_dict(orient="records")
 
 
 def _build_app_sdk_history_payload(state: State, store_id: str) -> PublicAppSdkHistory:
     """Return SDK additions, removals, and scan-status rows for an app."""
+    app_df = get_single_app(state, store_id)
+    if app_df.empty:
+        msg = f"Store ID not found: {store_id!r}"
+        raise NotFoundException(msg, status_code=404)
+
     history_df = get_app_sdk_history(state, store_id)
 
     if not history_df.empty:
+        no_change_rows = (
+            history_df["company_name"].isna()
+            & history_df["sdk_name"].isna()
+            & history_df["status"].isna()
+        )
+        history_df.loc[no_change_rows, "status"] = "no_change"
+        history_df["sdk_scan_result"] = history_df["sdk_scan_result"].map(
+            lambda result: (
+                None if pd.isna(result) else "success" if result == 1 else "failure"
+            )
+        )
         company_logos_df = get_company_logos_df(state).drop_duplicates(
             subset=["company_domain"], keep="first"
         )
