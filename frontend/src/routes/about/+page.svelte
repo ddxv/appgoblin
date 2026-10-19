@@ -216,7 +216,7 @@
 			<br />
 			<p>You can download it from the Google Play Store.</p>
 			<a
-				href="https://app.thirdgate.dev/appgoblin-android-site"
+				href="https://play.google.com/store/apps/details?id=dev.thirdgate.appgoblin"
 				target="_blank"
 				class="anchor inline-flex items-baseline"
 			>
