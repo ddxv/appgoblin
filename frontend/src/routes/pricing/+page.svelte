@@ -67,20 +67,6 @@
 			]
 		},
 		{
-			key: 'b2b_appads',
-			name: 'App-Ads.txt',
-			monthlyPrice: '$99',
-			yearlyPrice: '$950',
-			period: '/mo',
-			description: 'Ad networks, DSPs, SSPs',
-			b2b: true,
-			highlights: [
-				'Everything in Free, plus...',
-				'Download bulk app-ads.txt datasets',
-				'App-ads.txt data updated daily'
-			]
-		},
-		{
 			key: 'b2b_sdk',
 			name: 'B2B SDK Intelligence',
 			monthlyPrice: '$399',
@@ -134,7 +120,6 @@
 		name: string;
 		free: boolean;
 		sdk: boolean;
-		appads: boolean;
 		b2b: boolean;
 		link?: string;
 	}
@@ -146,7 +131,6 @@
 			name: 'API /companies + apps added/lost endpoints',
 			free: false,
 			sdk: true,
-			appads: true,
 			b2b: true
 		},
 		{
@@ -154,7 +138,6 @@
 			name: 'API higher rate limits',
 			free: false,
 			sdk: true,
-			appads: true,
 			b2b: true
 		},
 		{
@@ -162,7 +145,6 @@
 			name: 'App Explorer dash + SDK filters',
 			free: false,
 			sdk: true,
-			appads: true,
 			b2b: true
 		},
 		{
@@ -170,7 +152,6 @@
 			name: 'Export Company / SDK apps',
 			free: false,
 			sdk: true,
-			appads: false,
 			b2b: true,
 			link: '/docs/data-exports'
 		},
@@ -179,7 +160,6 @@
 			name: 'Bulk app-ads.txt datasets',
 			free: false,
 			sdk: false,
-			appads: true,
 			b2b: true
 		},
 		{
@@ -187,7 +167,6 @@
 			name: 'Compliance & security requests',
 			free: false,
 			sdk: false,
-			appads: false,
 			b2b: true
 		},
 		{
@@ -195,7 +174,6 @@
 			name: 'Custom reports & integration',
 			free: false,
 			sdk: false,
-			appads: false,
 			b2b: true
 		}
 	];
@@ -228,7 +206,6 @@
 	const getFeatureValue = (feature: (typeof comparisonFeatures)[0], planKey: string): boolean => {
 		if (planKey === 'free') return feature.free;
 		if (planKey === 'b2b_sdk') return feature.sdk;
-		if (planKey === 'b2b_appads') return feature.appads;
 		if (planKey === 'b2b_premium') return feature.b2b;
 		return false;
 	};
