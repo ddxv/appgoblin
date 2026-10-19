@@ -1749,13 +1749,13 @@ class TestV1Docs:
         assert all(path.startswith("/api/v1/") for path in data["paths"])
         assert "PublicAppSdkOverview" not in data["components"]["schemas"]
         versions_operation = data["paths"]["/api/v1/apps/{store_id}/versions"]["get"]
-        assert versions_operation["summary"] == "[B2B SDK] /apps/{store_id}/versions"
+        assert versions_operation["summary"] == "[Paid] /apps/{store_id}/versions"
         assert "B2B SDK and B2B Premium tiers only" in versions_operation["description"]
         assert versions_operation["responses"]["200"]["content"]["application/json"][
             "examples"
         ]
         history_operation = data["paths"]["/api/v1/apps/{store_id}/sdks/history"]["get"]
-        assert history_operation["summary"] == "[B2B SDK] /apps/{store_id}/sdks/history"
+        assert history_operation["summary"] == "[Paid] /apps/{store_id}/sdks/history"
         assert "B2B SDK and B2B Premium tiers only" in history_operation["description"]
         app_basics_operation = data["paths"]["/api/v1/apps/{store_id}"]["get"]
         store_id_parameter = next(
