@@ -48,6 +48,8 @@
 		freeTier?: boolean;
 		b2b?: boolean;
 		featured?: boolean;
+		includedSeats?: number;
+		additionalSeatPrice?: string;
 		highlights: string[];
 	}
 
@@ -75,6 +77,8 @@
 			description: 'Sales teams, ad networks, agencies',
 			b2b: true,
 			featured: true,
+			includedSeats: 3,
+			additionalSeatPrice: '$99/seat/mo',
 			highlights: [
 				'Everything in Free, plus...',
 				'Download verified client apps for all companies',
@@ -95,6 +99,8 @@
 			description: 'Larger companies, security teams, ad networks, hedge funds',
 			b2b: true,
 			featured: false,
+			includedSeats: 10,
+			additionalSeatPrice: '$49/seat/mo',
 			highlights: [
 				'Everything in paid plans, plus...',
 				'Compliance & security requests',
@@ -395,6 +401,14 @@
 								>
 							</p>
 							<p class="text-sm opacity-90 mt-1">{plan.description}</p>
+							{#if plan.includedSeats}
+								<p class="text-sm font-semibold mt-2">
+									{plan.includedSeats} included seats
+									<span class="font-normal opacity-75"
+										>· Additional seats {plan.additionalSeatPrice}</span
+									>
+								</p>
+							{/if}
 						</div>
 
 						<!-- Highlights -->
@@ -482,6 +496,11 @@
 							<p class="text-base font-semibold leading-tight mt-1">
 								{getPrice(plan)}<span class="text-xs opacity-60 ml-1">{getPeriod(plan)}</span>
 							</p>
+							{#if plan.includedSeats}
+								<p class="text-xs font-semibold mt-1">
+									{plan.includedSeats} included seats · Additional seats {plan.additionalSeatPrice}
+								</p>
+							{/if}
 						</div>
 					{/each}
 

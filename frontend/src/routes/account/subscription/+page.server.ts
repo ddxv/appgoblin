@@ -2,7 +2,7 @@ import { fail, redirect } from '@sveltejs/kit';
 import { requireFullAuth } from '$lib/server/auth/auth';
 import { db } from '$lib/server/auth/db';
 import { getUserOrganization, isOrganizationOwner } from '$lib/server/organization';
-import { createPortalSession } from '$lib/server/stripe';
+import { createPortalSession, updateSubscriptionSeats } from '$lib/server/stripe';
 import type { Actions, RequestEvent } from './$types';
 
 async function requireSubscriptionUser(event: RequestEvent) {
@@ -16,6 +16,21 @@ export async function load(event: RequestEvent) {
 }
 
 export const actions: Actions = {
+	seats: async (event: RequestEvent) => {
+		const { user, organization } = await requireSubscriptionUser(event);
+		if (!organization || !(await isOrganizationOwner(user.id, organization.organizationId))) {
+			return fail(403, { message: 'Only the organization owner can manage seats.' });
+		}
+		const formData = await event.request.formData();
+		const totalSeats = Number(formData.get('totalSeats'));
+		try {
+			await updateSubscriptionSeats(user.id, totalSeats);
+			return { seatsUpdated: true };
+		} catch (error) {
+			console.error(error);
+			return fail(400, { message: 'Unable to update seats.' });
+		}
+	},
 	portal: async (event: RequestEvent) => {
 		const { user, organization } = await requireSubscriptionUser(event);
 		if (!organization || !(await isOrganizationOwner(user.id, organization.organizationId))) {

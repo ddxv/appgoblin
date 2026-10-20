@@ -6,6 +6,22 @@
 
 	let { data }: { data: PageData } = $props();
 	let planSummary = $derived(getPlanSummary(data.subscriptionTier));
+	let includedSeats = $derived(data.subscriptionTier === 'Premium B2B' ? 10 : 3);
+	let currentSeats = $derived(data.subscription?.seats_total ?? includedSeats);
+	let additionalSeats = $derived(Math.max(0, currentSeats - includedSeats));
+	let seatPrice = $derived(data.subscriptionTier === 'Premium B2B' ? 49 : 99);
+	let basePrice = $derived(
+		data.subscriptionTier === 'Premium B2B'
+			? 599
+			: data.subscriptionTier === 'Business SDK'
+				? 399
+				: 0
+	);
+	let periodLabel = $derived(data.subscription?.billing_cycle === 'yearly' ? 'year' : 'month');
+	let pendingSeats = $state(0);
+	$effect(() => {
+		pendingSeats = additionalSeats;
+	});
 
 	function formatDate(date: string | Date | null | undefined): string {
 		if (!date) return 'Not available';
@@ -72,6 +88,61 @@
 					</span>
 				</div>
 
+				{#if data.showStripePortal && data.user.organizationRole === 'owner'}
+					<div class="mb-4">
+						<form method="POST" action="?/portal" use:enhance>
+							<button type="submit" class="btn preset-tonal">Manage Subscription at Stripe</button>
+						</form>
+					</div>
+				{/if}
+
+				<div class="rounded-lg border border-surface-300-700 p-5 space-y-4">
+					<h2 class="text-lg font-semibold">Manage Additional Seats</h2>
+					<p class="font-semibold">{data.subscriptionTier}</p>
+					<div class="space-y-1 text-sm">
+						<p>Base subscription: ${basePrice}/{periodLabel}</p>
+						<p>Included seats: {includedSeats}</p>
+					</div>
+					<div class="space-y-2">
+						<p class="text-sm font-semibold">Additional seats: {additionalSeats}</p>
+						<div class="flex items-center gap-3">
+							<button
+								type="button"
+								class="btn preset-tonal"
+								aria-label="Remove one seat"
+								onclick={() => (pendingSeats = Math.max(0, pendingSeats - 1))}>−</button
+							>
+							<span class="min-w-8 text-center font-semibold">{pendingSeats}</span>
+							<button
+								type="button"
+								class="btn preset-tonal"
+								aria-label="Add one seat"
+								onclick={() => (pendingSeats = Math.min(100, pendingSeats + 1))}>+</button
+							>
+						</div>
+					</div>
+					<p class="text-sm">Additional seat cost: ${pendingSeats * seatPrice}/{periodLabel}</p>
+					<p class="text-sm font-semibold">Total seats: {includedSeats + pendingSeats}</p>
+					<p class="text-lg font-bold">
+						Total {periodLabel}ly subscription: ${basePrice + pendingSeats * seatPrice}
+					</p>
+					{#if data.user.organizationRole === 'owner'}
+						<form
+							method="POST"
+							action="?/seats"
+							use:enhance
+							onsubmit={(event) => !confirm('Confirm this seat change?') && event.preventDefault()}
+						>
+							<input type="hidden" name="totalSeats" value={includedSeats + pendingSeats} />
+							<button
+								type="submit"
+								class="btn preset-filled-primary-500"
+								disabled={pendingSeats === additionalSeats}>Update seats</button
+							>
+						</form>
+					{/if}
+				</div>
+
 				<div class="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
 					<div class="rounded-lg border border-surface-300-700 p-4">
 						<p class="text-xs font-semibold uppercase tracking-wide">Plan tier</p>
@@ -87,16 +158,8 @@
 						<p class="mt-1 font-semibold">{planSummary.limits}</p>
 					</div>
 					<div class="rounded-lg border border-surface-300-700 p-4">
-						<p class="text-xs font-semibold uppercase tracking-wide">Current period started</p>
-						<p class="mt-1 font-semibold">{formatDate(data.subscription.current_period_start)}</p>
-					</div>
-					<div class="rounded-lg border border-surface-300-700 p-4">
-						<p class="text-xs font-semibold uppercase tracking-wide">
-							{data.subscription.cancel_at ? 'Access ends' : 'Next renewal'}
-						</p>
-						<p class="mt-1 font-semibold">
-							{formatDate(data.subscription.cancel_at ?? data.subscription.current_period_end)}
-						</p>
+						<p class="text-xs font-semibold uppercase tracking-wide">Created</p>
+						<p class="mt-1 font-semibold">{formatDate(data.subscription.created_at)}</p>
 					</div>
 				</div>
 
@@ -113,13 +176,7 @@
 					</div>
 				{/if}
 
-				{#if data.showStripePortal && data.user.organizationRole === 'owner'}
-					<form method="POST" action="?/portal" use:enhance>
-						<button type="submit" class="btn preset-tonal w-full sm:w-auto"
-							>Manage Subscription at Stripe</button
-						>
-					</form>
-				{:else if data.subscription.status === 'trialing'}
+				{#if data.user.organizationRole !== 'owner' && data.subscription.status === 'trialing'}
 					<a href="/pricing" class="btn preset-filled-primary-500 w-full sm:w-auto">Upgrade Plan</a>
 				{/if}
 			{:else}

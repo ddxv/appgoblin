@@ -147,14 +147,17 @@ export async function getOrganizationMembers(
 }
 
 export async function getOrganizationSeatSummary(organizationId: number) {
-	return db.queryOne<{ seatsTotal: number; seatsUsed: number }>(
+	return db.queryOne<{ seatsTotal: number; seatsUsed: number; includedSeats: number }>(
 		`SELECT COALESCE(MAX(s.seats_total), ${DEFAULT_ORGANIZATION_SEATS})::int AS "seatsTotal",
+		        CASE WHEN BOOL_OR(t.slug = 'b2b_premium') THEN 10 ELSE 3 END::int AS "includedSeats",
 		        COUNT(om.id)::int AS "seatsUsed"
 		 FROM organizations o
 		 LEFT JOIN subscriptions s
 		   ON s.organization_id = o.id
 		  AND s.status IN ('active', 'trialing')
 		  AND (s.cancel_at IS NULL OR s.cancel_at > NOW())
+		 LEFT JOIN tier_prices tp ON tp.id = s.tier_price_id
+		 LEFT JOIN tiers t ON t.id = tp.tier_id
 		 LEFT JOIN organization_members om ON om.organization_id = o.id
 		 WHERE o.id = $1
 		 GROUP BY o.id`,

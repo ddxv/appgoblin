@@ -15,7 +15,10 @@ export async function load(event: LayoutServerLoadEvent) {
 		current_period_end: Date;
 		cancel_at: Date | null;
 		cancel_requested_at: Date | null;
+		seats_total: number;
+		created_at: Date;
 		tier_slug: string | null;
+		billing_cycle: 'monthly' | 'yearly';
 		planName?: string | null;
 	}
 
@@ -25,8 +28,8 @@ export async function load(event: LayoutServerLoadEvent) {
 
 	const subscriptions = await db.query<Subscription>(
 		`SELECT s.status, tp.provider_name, s.current_period_start, s.current_period_end,
-		        s.cancel_at, s.cancel_requested_at,
-		        t.slug AS tier_slug
+		        s.cancel_at, s.cancel_requested_at, s.seats_total, s.created_at,
+		        t.slug AS tier_slug, tp.billing_cycle
          FROM subscriptions s
          LEFT JOIN tier_prices tp ON tp.id = s.tier_price_id
          LEFT JOIN tiers t ON t.id = tp.tier_id

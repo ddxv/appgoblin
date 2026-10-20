@@ -2,7 +2,13 @@ import { stripe } from '$lib/server/stripe';
 import { db } from '$lib/server/auth/db';
 import type { RequestHandler } from './$types';
 
-import { STRIPE_WEBHOOK_SECRET } from '$env/static/private';
+import {
+	STRIPE_WEBHOOK_SECRET,
+	STRIPE_PRICE_B2B_SDK_SEAT_MO,
+	STRIPE_PRICE_B2B_SDK_SEAT_YR,
+	STRIPE_PRICE_B2B_PREMIUM_SEAT_MO,
+	STRIPE_PRICE_B2B_PREMIUM_SEAT_YR
+} from '$env/static/private';
 import { sendPricingPlanCompletionEmail } from '$lib/server/contact';
 import type { BillingCycle, StripePriceKey } from '$lib/plans';
 
@@ -82,7 +88,17 @@ async function handleSubscriptionUpdated(subscription: any, eventCreatedAt?: num
 	const customerId = subscription.customer as string;
 	const status = subscription.status;
 	const cancelAtPeriodEnd = Boolean(subscription.cancel_at_period_end);
-	const lineItem = subscription.items?.data?.[0];
+	const lineItems = subscription.items?.data ?? [];
+	const lineItem = lineItems.find(
+		(item: any) =>
+			item.price?.id &&
+			![
+				STRIPE_PRICE_B2B_SDK_SEAT_MO,
+				STRIPE_PRICE_B2B_SDK_SEAT_YR,
+				STRIPE_PRICE_B2B_PREMIUM_SEAT_MO,
+				STRIPE_PRICE_B2B_PREMIUM_SEAT_YR
+			].includes(item.price.id)
+	);
 	const priceId = lineItem?.price?.id;
 	if (!priceId) {
 		console.error('Subscription missing price ID');
@@ -179,6 +195,17 @@ async function handleSubscriptionUpdated(subscription: any, eventCreatedAt?: num
 		console.error('Unknown Stripe price ID — add to tier_prices table:', priceId);
 	}
 	const tierPriceId = tierPriceRow?.id ?? null;
+	const seatLineItem = lineItems.find((item: any) =>
+		[
+			STRIPE_PRICE_B2B_SDK_SEAT_MO,
+			STRIPE_PRICE_B2B_SDK_SEAT_YR,
+			STRIPE_PRICE_B2B_PREMIUM_SEAT_MO,
+			STRIPE_PRICE_B2B_PREMIUM_SEAT_YR
+		].includes(item.price?.id)
+	);
+	const includedSeats = tierPriceRow?.slug === 'b2b_premium' ? 10 : 3;
+	const additionalSeats = Number(seatLineItem?.quantity ?? 0);
+	const seatsTotal = includedSeats + additionalSeats;
 
 	const organization = await db.queryOne<{ id: number }>(
 		`SELECT organization_id AS id
@@ -201,13 +228,14 @@ async function handleSubscriptionUpdated(subscription: any, eventCreatedAt?: num
 			organization_id, user_id, provider_subscription_id, provider_customer_id,
             status, current_period_start, current_period_end, cancel_at, cancel_requested_at,
             seats_total, updated_at, tier_price_id
-		) VALUES ($1, NULL, $2, $3, $4, $5, $6, $7, $8, 1, NOW(), $9)
+		) VALUES ($1, NULL, $2, $3, $4, $5, $6, $7, $8, $9, NOW(), $10)
         ON CONFLICT (provider_subscription_id) DO UPDATE SET
             status = EXCLUDED.status,
             current_period_start = EXCLUDED.current_period_start,
             current_period_end = EXCLUDED.current_period_end,
             cancel_at = EXCLUDED.cancel_at,
             cancel_requested_at = EXCLUDED.cancel_requested_at,
+            seats_total = EXCLUDED.seats_total,
             tier_price_id = COALESCE(EXCLUDED.tier_price_id, subscriptions.tier_price_id),
             updated_at = NOW();
     `,
@@ -220,6 +248,7 @@ async function handleSubscriptionUpdated(subscription: any, eventCreatedAt?: num
 			currentPeriodEnd,
 			cancelAt,
 			cancelRequestedAt,
+			seatsTotal,
 			tierPriceId
 		]
 	);

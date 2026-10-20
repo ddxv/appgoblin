@@ -1,5 +1,6 @@
-import { fail } from '@sveltejs/kit';
+import { fail, redirect } from '@sveltejs/kit';
 import { requireFullAuth } from '$lib/server/auth/auth';
+import { db } from '$lib/server/auth/db';
 import {
 	createOrganizationInvitation,
 	getActiveOrganizationInvitations,
@@ -11,6 +12,7 @@ import {
 	updateOrganizationName
 } from '$lib/server/organization';
 import { sendOrganizationInvitationEmail } from '$lib/server/contact';
+import { createPortalSession } from '$lib/server/stripe';
 import type { Actions, PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async (event) => {
@@ -18,15 +20,46 @@ export const load: PageServerLoad = async (event) => {
 	const organization = await getUserOrganization(user.id);
 	if (!organization) return { organization: null, members: [], seats: null, invitations: [] };
 
+	const paidSubscription = await db.queryOne<{ id: number }>(
+		`SELECT s.id
+		 FROM subscriptions s
+		 JOIN tier_prices tp ON tp.id = s.tier_price_id
+		 WHERE s.organization_id = $1
+		   AND tp.provider_name = 'stripe'
+		   AND s.status IN ('active', 'trialing')
+		   AND (s.cancel_at IS NULL OR s.cancel_at > NOW())
+		 LIMIT 1`,
+		[organization.organizationId]
+	);
+	if (!paidSubscription) {
+		return { organization, members: [], seats: null, invitations: [], paid: false };
+	}
+
 	const [members, seats, invitations] = await Promise.all([
 		getOrganizationMembers(organization.organizationId),
 		getOrganizationSeatSummary(organization.organizationId),
 		getActiveOrganizationInvitations(organization.organizationId)
 	]);
-	return { organization, members, seats, invitations };
+	return { organization, members, seats, invitations, paid: true };
 };
 
 export const actions: Actions = {
+	portal: async (event) => {
+		const { user } = requireFullAuth(event);
+		const organization = await getUserOrganization(user.id);
+		if (!organization || !(await isOrganizationOwner(user.id, organization.organizationId))) {
+			return fail(403, { message: 'Only the organization owner can manage the subscription.' });
+		}
+
+		try {
+			const url = await createPortalSession(user.id);
+			if (!url) return fail(500, { message: 'Failed to create portal session' });
+			return redirect(303, url);
+		} catch (error) {
+			console.error('Failed to create Stripe portal session', error);
+			return fail(500, { message: 'Unable to open Stripe billing.' });
+		}
+	},
 	rename: async (event) => {
 		const { user } = requireFullAuth(event);
 		const organization = await getUserOrganization(user.id);

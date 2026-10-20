@@ -18,7 +18,15 @@
 		<p class="text-sm">Manage the people who share your organization’s paid access.</p>
 	</div>
 
-	{#if data.organization}
+	{#if data.organization && !data.paid}
+		<section class="p-6 md:p-8">
+			<div class="rounded-lg border border-warning-500/30 bg-warning-500/10 p-5 space-y-3">
+				<h2 class="text-lg font-semibold">Team features require a paid plan</h2>
+				<p class="text-sm">Upgrade your plan to invite teammates and manage shared seats.</p>
+				<a href="/pricing" class="btn preset-filled-primary-500">View pricing</a>
+			</div>
+		</section>
+	{:else if data.organization}
 		<section class="p-6 md:p-8 space-y-4">
 			<div class="flex items-center gap-3">
 				<Users size={22} class="text-primary-500" />
@@ -26,6 +34,10 @@
 					<h2 class="text-lg font-semibold">{data.organization.organizationName}</h2>
 					<p class="text-sm">
 						{data.seats?.seatsUsed ?? 0} of {data.seats?.seatsTotal ?? 3} seats used
+					</p>
+					<p class="text-xs opacity-75">
+						{Math.max(0, (data.seats?.seatsTotal ?? 3) - (data.seats?.includedSeats ?? 3))} additional
+						seats
 					</p>
 				</div>
 			</div>

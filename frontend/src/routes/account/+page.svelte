@@ -4,7 +4,6 @@
 	import CreditCard from '@lucide/svelte/icons/credit-card';
 	import Crown from '@lucide/svelte/icons/crown';
 	import LogOut from '@lucide/svelte/icons/log-out';
-	import ShieldCheck from '@lucide/svelte/icons/shield-check';
 	import { getPlanSummary } from '$lib/account/subscription';
 
 	let { data }: { data: PageData } = $props();
@@ -45,7 +44,7 @@
 	</div>
 
 	<section class="space-y-4">
-		<div class="grid gap-4 lg:grid-cols-2">
+		<div class="grid gap-4">
 			<!-- Subscription Status -->
 			<div class="space-y-4 rounded-lg border border-surface-300-700 p-6">
 				<div class="flex items-start justify-between gap-3">
@@ -64,7 +63,12 @@
 							</p>
 						</div>
 					</div>
-					<a href="/account/subscription" class="btn btn-sm preset-tonal shrink-0">Manage</a>
+					<a
+						href={data.subscription ? '/account/subscription' : '/pricing'}
+						class="btn btn-sm preset-tonal shrink-0"
+					>
+						{data.subscription ? 'Manage' : 'Upgrade'}
+					</a>
 				</div>
 
 				<div class="flex flex-wrap items-center gap-2">
@@ -90,53 +94,13 @@
 						<p class="mt-1 font-semibold">{planSummary.limits}</p>
 					</div>
 					<div class="rounded-lg border border-surface-300-700 p-4">
-						<p class="text-xs font-semibold uppercase tracking-wide">
-							{data.subscription
-								? data.subscription.cancel_at
-									? 'Access through'
-									: 'Renews on'
-								: 'Upgrade path'}
-						</p>
+						<p class="text-xs font-semibold uppercase tracking-wide">Team Seats</p>
 						<p class="mt-1 font-semibold">
 							{data.subscription
-								? formatDate(data.subscription.cancel_at ?? data.subscription.current_period_end)
-								: 'See pricing for paid plans'}
+								? `${data.subscription.seats_total ?? 3} seats`
+								: 'Not available on free plans'}
 						</p>
 					</div>
-				</div>
-			</div>
-
-			<!-- Quick Security Status -->
-			<div class="space-y-4 rounded-lg border border-surface-300-700 p-6">
-				<div class="flex items-start justify-between gap-3">
-					<div>
-						<h2 class="text-sm font-semibold uppercase tracking-wide">Security Status</h2>
-						<p class="mt-2 text-xl font-bold">
-							{data.user.registered2FA ? 'Protected' : 'Needs setup'}
-						</p>
-					</div>
-					<a href="/account/security" class="btn btn-sm preset-tonal shrink-0">Manage</a>
-				</div>
-
-				<div class="flex items-center gap-3 rounded-lg border border-surface-300-700 p-4">
-					<ShieldCheck
-						size={24}
-						class={data.user.registered2FA ? 'text-success-500' : 'text-surface-400'}
-					/>
-					<div>
-						<p class="font-bold">{data.user.registered2FA ? '2FA Enabled' : 'Add 2FA'}</p>
-						<p class="text-sm">
-							{data.user.registered2FA ? 'Your account is secure.' : 'Not set up yet.'}
-						</p>
-					</div>
-				</div>
-
-				<div class="rounded-lg border border-surface-300-700 p-4">
-					<p class="text-xs font-semibold uppercase tracking-wide">Email</p>
-					<p class="mt-1 font-semibold">{data.user.email}</p>
-					<p class="mt-1 text-sm">
-						{data.user.emailVerified ? 'Email verified.' : 'Email verification still pending.'}
-					</p>
 				</div>
 			</div>
 		</div>
