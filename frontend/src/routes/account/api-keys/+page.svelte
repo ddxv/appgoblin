@@ -8,7 +8,7 @@
 	import Check from '@lucide/svelte/icons/check';
 	import ExternalLink from '@lucide/svelte/icons/external-link';
 	import Crown from '@lucide/svelte/icons/crown';
-	import { getPlanSummary } from '$lib/account/subscription';
+	import { getPlanSummary } from '#lib/account/subscription.js';
 
 	let { data, form }: { data: PageData; form?: ActionData | null } = $props();
 

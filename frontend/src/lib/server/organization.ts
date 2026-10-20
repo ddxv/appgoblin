@@ -1,5 +1,5 @@
 import { createHash, randomBytes } from 'node:crypto';
-import { db } from '$lib/server/auth/db';
+import { db } from '#lib/server/auth/db.js';
 
 export const DEFAULT_ORGANIZATION_SEATS = 3;
 export type OrganizationRole = 'owner' | 'member';

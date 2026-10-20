@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Crown from '@lucide/svelte/icons/crown';
-	import { STRIPE_PLAN_LABELS, type StripePriceKey } from '$lib/plans';
+	import { STRIPE_PLAN_LABELS, type StripePriceKey } from '#lib/plans.js';
 
 	interface Props {
 		planKey: StripePriceKey | null;

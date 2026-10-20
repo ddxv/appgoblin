@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { UnknownSDKs } from '../types';
-	import RequestMappingButton from '$lib/RequestMappingButton.svelte';
+	import RequestMappingButton from '#lib/RequestMappingButton.svelte';
 
 	interface Props {
 		items: UnknownSDKs;

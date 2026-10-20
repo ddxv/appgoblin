@@ -1,11 +1,11 @@
 <script lang="ts">
 	import type { DeveloperResponse } from '../../../types';
-	import AppsCard from '$lib/AppGroupCard.svelte';
-	import ExternalLink from '$lib/ExternalLink.svelte';
-	import DeveloperAppsTable from '$lib/DeveloperAppsTable.svelte';
+	import AppsCard from '#lib/AppGroupCard.svelte';
+	import ExternalLink from '#lib/ExternalLink.svelte';
+	import DeveloperAppsTable from '#lib/DeveloperAppsTable.svelte';
 	import { Tabs } from '@skeletonlabs/skeleton-svelte';
-	import IconGoogle from '$lib/svg/IconGoogle.svelte';
-	import IconiOS from '$lib/svg/IconiOS.svelte';
+	import IconGoogle from '#lib/svg/IconGoogle.svelte';
+	import IconiOS from '#lib/svg/IconiOS.svelte';
 
 	interface Props {
 		data: DeveloperResponse;

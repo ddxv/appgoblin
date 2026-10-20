@@ -1,7 +1,7 @@
 import { fail, redirect } from '@sveltejs/kit';
 import type { RequestEvent } from '@sveltejs/kit';
-import { loginUrl, requireAuthOr401 } from '$lib/server/auth/auth';
-import { deleteSessionTokenCookie, invalidateSession } from '$lib/server/auth/session';
+import { loginUrl, requireAuthOr401 } from '#lib/server/auth/auth.js';
+import { deleteSessionTokenCookie, invalidateSession } from '#lib/server/auth/session.js';
 import type { PageServerLoadEvent } from './$types';
 
 export async function load(event: PageServerLoadEvent) {

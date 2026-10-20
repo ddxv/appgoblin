@@ -1,5 +1,5 @@
 import Stripe from 'stripe';
-import { db } from '$lib/server/auth/db';
+import { db } from '#lib/server/auth/db.js';
 import { error } from '@sveltejs/kit';
 
 import {
@@ -9,10 +9,10 @@ import {
 	STRIPE_PRICE_B2B_SDK_SEAT_YR,
 	STRIPE_PRICE_B2B_PREMIUM_SEAT_MO,
 	STRIPE_PRICE_B2B_PREMIUM_SEAT_YR
-} from '$env/static/private';
+} from '$app/env/private';
 
-import { STRIPE_PLAN_LABELS, type BillingCycle, type StripePriceKey } from '$lib/plans';
-export { STRIPE_PLAN_LABELS, type BillingCycle, type StripePriceKey } from '$lib/plans';
+import { STRIPE_PLAN_LABELS, type BillingCycle, type StripePriceKey } from '#lib/plans.js';
+export { STRIPE_PLAN_LABELS, type BillingCycle, type StripePriceKey } from '#lib/plans.js';
 
 export const stripe = new Stripe(STRIPE_SECRET_KEY, {
 	apiVersion: '2026-07-29.dahlia'
@@ -37,11 +37,10 @@ export async function createCheckoutSession(
 			stripeCustomerId = user.provider_customer_id;
 		} else {
 			const customer = await stripe.customers.create({
-				email: email,
-				metadata: {
-					userId: userId.toString()
-				}
+				email,
+				metadata: { userId: userId.toString() }
 			});
+
 			stripeCustomerId = customer.id;
 			await db.execute('UPDATE users SET provider_customer_id = $1 WHERE id = $2', [
 				stripeCustomerId,
@@ -79,12 +78,7 @@ export async function createCheckoutSession(
 		const session = await stripe.checkout.sessions.create({
 			customer: stripeCustomerId,
 			billing_address_collection: 'auto',
-			line_items: [
-				{
-					price: priceId,
-					quantity: 1
-				}
-			],
+			line_items: [{ price: priceId, quantity: 1 }],
 			...(seatPriceId
 				? {
 						optional_items: [

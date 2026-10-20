@@ -1,7 +1,7 @@
 <script lang="ts">
-	import WhiteCard from '$lib/WhiteCard.svelte';
-	import SDKOverview from '$lib/utils/SDKOverview.svelte';
-	import { formatNumberLocale } from '$lib/utils/formatNumber';
+	import WhiteCard from '#lib/WhiteCard.svelte';
+	import SDKOverview from '#lib/utils/SDKOverview.svelte';
+	import { formatNumberLocale } from '#lib/utils/formatNumber.js';
 	let { data } = $props();
 </script>
 

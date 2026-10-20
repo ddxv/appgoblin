@@ -1,11 +1,11 @@
 [
-  {
-    "apps_analyzed": 9933,
-    "https_tracked": 466694,
-    "api_domains": 3590,
-    "adtech_companies": 322,
-    "advertisers": 343,
-    "advertisers_all": 690,
-    "creative_count": 9212
-  }
+	{
+		"apps_analyzed": 9933,
+		"https_tracked": 466694,
+		"api_domains": 3590,
+		"adtech_companies": 322,
+		"advertisers": 343,
+		"advertisers_all": 690,
+		"creative_count": 9212
+	}
 ]

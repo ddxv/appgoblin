@@ -1,6 +1,6 @@
 <script>
-	import AdvertiserCreativeRankingsTable from '$lib/AdvertiserCreativeRankingsTable.svelte';
-	import WhiteCard from '$lib/WhiteCard.svelte';
+	import AdvertiserCreativeRankingsTable from '#lib/AdvertiserCreativeRankingsTable.svelte';
+	import WhiteCard from '#lib/WhiteCard.svelte';
 	let { data } = $props();
 
 	let pageTitle = 'Top Mobile Advertisers and Creatives';

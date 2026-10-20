@@ -1,15 +1,15 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import RatingInstallsLarge from '$lib/RatingInstallsLarge.svelte';
-	import StarsRating from '$lib/StarsRating.svelte';
-	import FollowToggleButton from '$lib/components/follows/FollowToggleButton.svelte';
-	import RequestSDKScanButton from '$lib/RequestSDKScanButton.svelte';
+	import RatingInstallsLarge from '#lib/RatingInstallsLarge.svelte';
+	import StarsRating from '#lib/StarsRating.svelte';
+	import FollowToggleButton from '#lib/components/follows/FollowToggleButton.svelte';
+	import RequestSDKScanButton from '#lib/RequestSDKScanButton.svelte';
 	import LogIn from '@lucide/svelte/icons/log-in';
 	import type { CompanyTypes, AppFullDetail, CatData } from '../../../types';
-	import AvailableOniOs from '$lib/svg/AvailableOniOS.svelte';
-	import AppNavTabs from '$lib/utils/AppNavTabs.svelte';
-	import MainContent from '$lib/MainContent.svelte';
-	import { countryCodeToEmoji } from '$lib/utils/countryCodeToEmoji';
+	import AvailableOniOs from '#lib/svg/AvailableOniOS.svelte';
+	import AppNavTabs from '#lib/utils/AppNavTabs.svelte';
+	import MainContent from '#lib/MainContent.svelte';
+	import { countryCodeToEmoji } from '#lib/utils/countryCodeToEmoji.js';
 
 	let {
 		data,

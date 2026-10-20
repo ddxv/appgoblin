@@ -3,7 +3,7 @@
      while users still see a clear call to action. -->
 <script lang="ts">
 	import { page } from '$app/state';
-	import LoginPrompt from '$lib/LoginPrompt.svelte';
+	import LoginPrompt from '#lib/LoginPrompt.svelte';
 </script>
 
 <svelte:head>

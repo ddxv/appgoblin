@@ -1,5 +1,5 @@
 import type { PageServerLoad } from './$types';
-import { requireAuthOr401 } from '$lib/server/auth/auth';
+import { requireAuthOr401 } from '#lib/server/auth/auth.js';
 
 export const load: PageServerLoad = async (event) => {
 	requireAuthOr401(event);

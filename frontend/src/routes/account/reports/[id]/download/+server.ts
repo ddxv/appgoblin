@@ -1,7 +1,7 @@
 import { error, redirect } from '@sveltejs/kit';
-import { requireAuthOr401 } from '$lib/server/auth/auth';
-import { createApiClient } from '$lib/server/api';
-import { db } from '$lib/server/auth/db';
+import { requireAuthOr401 } from '#lib/server/auth/auth.js';
+import { createApiClient } from '#lib/server/api.js';
+import { db } from '#lib/server/auth/db.js';
 import type { RequestHandler } from './$types';
 
 interface GeneratedReportRow {

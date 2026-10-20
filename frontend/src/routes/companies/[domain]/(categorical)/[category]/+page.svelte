@@ -2,13 +2,13 @@
 	import type { CompanyCategoryDetails, CompanyOverviewScope } from '../../../../../types';
 	import { page } from '$app/state';
 
-	import CompanyCategoryControls from '$lib/CompanyCategoryControls.svelte';
-	import CompanyCountryAppPie from '$lib/CompanyCountryAppPie.svelte';
-	import TotalsBox from '$lib/TotalsBox.svelte';
-	import CompaniesLayout from '$lib/CompaniesLayout.svelte';
-	import WhiteCard from '$lib/WhiteCard.svelte';
-	import CompanyTableGrid from '$lib/CompanyTableGrid.svelte';
-	import HierarchyTree from '$lib/HierarchyTree.svelte';
+	import CompanyCategoryControls from '#lib/CompanyCategoryControls.svelte';
+	import CompanyCountryAppPie from '#lib/CompanyCountryAppPie.svelte';
+	import TotalsBox from '#lib/TotalsBox.svelte';
+	import CompaniesLayout from '#lib/CompaniesLayout.svelte';
+	import WhiteCard from '#lib/WhiteCard.svelte';
+	import CompanyTableGrid from '#lib/CompanyTableGrid.svelte';
+	import HierarchyTree from '#lib/HierarchyTree.svelte';
 	interface Props {
 		data: CompanyCategoryDetails;
 	}

@@ -1,10 +1,10 @@
 <script lang="ts">
-	import CompanyButton from '$lib/CompanyButton.svelte';
-	import CreativeModal from '$lib/CreativeModal.svelte';
-	import PopularCreativeCard from '$lib/PopularCreativeCard.svelte';
-	import { createCreativeModal } from '$lib/stores/creativeModal.svelte';
+	import CompanyButton from '#lib/CompanyButton.svelte';
+	import CreativeModal from '#lib/CreativeModal.svelte';
+	import PopularCreativeCard from '#lib/PopularCreativeCard.svelte';
+	import { createCreativeModal } from '#lib/stores/creativeModal.svelte.js';
 
-	import { formatNumber } from '$lib/utils/formatNumber.js';
+	import { formatNumber } from '#lib/utils/formatNumber.js';
 
 	let { data } = $props();
 

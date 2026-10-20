@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { formatNumberLocale } from '$lib/utils/formatNumber';
+	import { formatNumberLocale } from '#lib/utils/formatNumber.js';
 	import type { CompanyTrendSummary, CompanyTrendsSummary } from '../types';
 
 	const titleFont = 'text-xl  tracking-wide';

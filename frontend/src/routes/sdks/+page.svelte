@@ -1,8 +1,8 @@
 <script lang="ts">
-	import SDKsLatestAppsTable from '$lib/SDKsLatestAppsTable.svelte';
-	import SDKsUserRequestAppsTable from '$lib/SDKsUserRequestAppsTable.svelte';
-	import WhiteCard from '$lib/WhiteCard.svelte';
-	import SDKOverview from '$lib/utils/SDKOverview.svelte';
+	import SDKsLatestAppsTable from '#lib/SDKsLatestAppsTable.svelte';
+	import SDKsUserRequestAppsTable from '#lib/SDKsUserRequestAppsTable.svelte';
+	import WhiteCard from '#lib/WhiteCard.svelte';
+	import SDKOverview from '#lib/utils/SDKOverview.svelte';
 	import { Tabs } from '@skeletonlabs/skeleton-svelte';
 
 	let { data } = $props();

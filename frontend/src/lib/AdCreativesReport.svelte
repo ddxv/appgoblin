@@ -3,13 +3,13 @@
 	import LayoutGrid from '@lucide/svelte/icons/layout-grid';
 	import RectangleHorizontal from '@lucide/svelte/icons/rectangle-horizontal';
 	import RectangleVertical from '@lucide/svelte/icons/rectangle-vertical';
-	import AdCreativeCard from '$lib/AdCreativeCard.svelte';
+	import AdCreativeCard from '#lib/AdCreativeCard.svelte';
 	import {
 		type AdCreativeCategoryOption,
 		adCreativeFormats,
 		buildAdCreativesUrl,
 		getAdCreativeNetworkLabel
-	} from '$lib/ad-creatives';
+	} from '#lib/ad-creatives.js';
 
 	interface CreativeCluster {
 		vhash: string;

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Dialog, Portal } from '@skeletonlabs/skeleton-svelte';
-	import MainContent from '$lib/MainContent.svelte';
-	import SideBar from '$lib/SideBar.svelte';
+	import MainContent from '#lib/MainContent.svelte';
+	import SideBar from '#lib/SideBar.svelte';
 	let { data, children } = $props();
 </script>
 

@@ -2,8 +2,8 @@
 	import Check from '@lucide/svelte/icons/check';
 	import X from '@lucide/svelte/icons/x';
 	import type { CompanyOverviewApps } from '../types';
-	import { formatNumber } from '$lib/utils/formatNumber';
-	import { countryCodeToEmoji } from '$lib/utils/countryCodeToEmoji';
+	import { formatNumber } from '#lib/utils/formatNumber.js';
+	import { countryCodeToEmoji } from '#lib/utils/countryCodeToEmoji.js';
 
 	type Props = {
 		android: CompanyOverviewApps[];

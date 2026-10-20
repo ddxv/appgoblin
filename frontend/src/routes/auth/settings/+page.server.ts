@@ -3,23 +3,27 @@ import {
 	sendVerificationEmail,
 	sendVerificationEmailBucket,
 	setEmailVerificationRequestCookie
-} from '$lib/server/auth/email-verification';
+} from '#lib/server/auth/email-verification.js';
 import { fail, redirect } from '@sveltejs/kit';
-import { checkEmailAvailability, verifyEmailInput } from '$lib/server/auth/email';
-import { verifyPasswordHash, verifyPasswordStrength } from '$lib/server/auth/password';
-import { getUserPasswordHash, getUserRecoverCode, updateUserPassword } from '$lib/server/auth/user';
+import { checkEmailAvailability, verifyEmailInput } from '#lib/server/auth/email.js';
+import { verifyPasswordHash, verifyPasswordStrength } from '#lib/server/auth/password.js';
+import {
+	getUserPasswordHash,
+	getUserRecoverCode,
+	updateUserPassword
+} from '#lib/server/auth/user.js';
 import {
 	createSession,
 	DEFAULT_SESSION_DURATION_HOURS,
 	generateSessionToken,
 	invalidateUserSessions,
 	setSessionTokenCookie
-} from '$lib/server/auth/session';
-import { requireAuth } from '$lib/server/auth/auth';
-import { ExpiringTokenBucket } from '$lib/server/auth/rate-limit';
+} from '#lib/server/auth/session.js';
+import { requireAuth } from '#lib/server/auth/auth.js';
+import { ExpiringTokenBucket } from '#lib/server/auth/rate-limit.js';
 
 import type { Actions, RequestEvent } from './$types';
-import type { SessionFlags } from '$lib/server/auth/session';
+import type { SessionFlags } from '#lib/server/auth/session.js';
 
 export const ssr = true;
 export const csr = true;

@@ -7,23 +7,23 @@
 	import { createAtom } from '@tanstack/svelte-store';
 	import { Popover, Portal } from '@skeletonlabs/skeleton-svelte';
 
-	import Pagination from '$lib/components/data-table/Pagination.svelte';
-	import ExportAsCSV from '$lib/components/data-table/ExportAsCSV.svelte';
+	import Pagination from '#lib/components/data-table/Pagination.svelte';
+	import ExportAsCSV from '#lib/components/data-table/ExportAsCSV.svelte';
 	import type { CompaniesOverviewEntries } from '../types';
 
 	import {
 		createAppTable,
 		createTableState,
 		FlexRender
-	} from '$lib/components/data-table/index.js';
+	} from '#lib/components/data-table/index.js';
 
-	import { genericColumns } from '$lib/components/data-table/generic-column';
+	import { genericColumns } from '#lib/components/data-table/generic-column.js';
 	import Shield from '@lucide/svelte/icons/shield';
 	import CircleHalf from '@lucide/svelte/icons/shield-half';
 	import Eye from '@lucide/svelte/icons/eye';
 
-	import { formatNumber } from '$lib/utils/formatNumber';
-	import { countryCodeToEmoji } from '$lib/utils/countryCodeToEmoji';
+	import { formatNumber } from '#lib/utils/formatNumber.js';
+	import { countryCodeToEmoji } from '#lib/utils/countryCodeToEmoji.js';
 
 	type ViewMode = 'auto' | 'sdk' | 'ads' | 'both' | 'api';
 

@@ -5,10 +5,10 @@ import {
 	STRIPE_PLAN_LABELS,
 	type StripePriceKey,
 	type BillingCycle
-} from '$lib/server/stripe';
-import { requireFullAuth, isSafeRedirect } from '$lib/server/auth/auth';
-import { db } from '$lib/server/auth/db';
-import { sendPricingPlanSelectionEmail } from '$lib/server/contact';
+} from '#lib/server/stripe.js';
+import { requireFullAuth, isSafeRedirect } from '#lib/server/auth/auth.js';
+import { db } from '#lib/server/auth/db.js';
+import { sendPricingPlanSelectionEmail } from '#lib/server/contact.js';
 
 const allowedKeys: StripePriceKey[] = ['b2b_sdk', 'b2b_appads', 'b2b_premium'];
 const allowedCycles: BillingCycle[] = ['monthly', 'yearly'];

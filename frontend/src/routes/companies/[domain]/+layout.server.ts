@@ -1,8 +1,8 @@
 import type { LayoutServerLoad } from './$types';
 import { error } from '@sveltejs/kit';
-import { createApiClient } from '$lib/server/api';
-import { getAppCategories } from '$lib/server/appCategories';
-import { db } from '$lib/server/auth/db';
+import { createApiClient } from '#lib/server/api.js';
+import { getAppCategories } from '#lib/server/appCategories.js';
+import { db } from '#lib/server/auth/db.js';
 
 const PROTECTED_PREFIXES = ['/app-adstxt/publisher/', '/app-adstxt/download'];
 
