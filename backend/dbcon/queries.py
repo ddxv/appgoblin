@@ -275,6 +275,15 @@ def get_app_rating_histogram(state: State, store_id: str) -> pd.DataFrame:
     return df
 
 
+def get_app_mapped_sdks(state: State, store_id: str) -> pd.DataFrame:
+    """Get mapped SDK slugs grouped by company domain for an app."""
+    return pd.read_sql(
+        sql.app_mapped_sdks,
+        state.dbcon.engine,
+        params={"store_id": store_id},
+    )
+
+
 def get_app_sdk_details(state: State, store_id: str) -> pd.DataFrame:
     """Get basic app details for a single store_id."""
     df = pd.read_sql(

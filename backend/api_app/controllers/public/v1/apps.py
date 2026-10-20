@@ -13,12 +13,14 @@ from api_app.analytics import PUBLIC_API_HOSTNAME, build_request_page_view_task
 from api_app.controllers.public.v1.public_models import (
     PublicAppBasics,
     PublicAppBestRank,
+    PublicAppMappedSdks,
     PublicAppSdkDetails,
     PublicAppSdkHistory,
 )
 from api_app.guards import validate_api_key
 from config import get_logger
 from dbcon.queries import (
+    get_app_mapped_sdks,
     get_app_sdk_details,
     get_app_sdk_history,
     get_app_version_timeline,
@@ -86,6 +88,22 @@ def _build_app_ranks_payload(state: State, store_id: str) -> list[PublicAppBestR
         )
         for row in overview_df.to_dict(orient="records")
     ]
+
+
+def _build_app_mapped_sdks_payload(
+    state: State, store_id: str
+) -> PublicAppMappedSdks:
+    """Return mapped SDK slugs grouped by company domain for an app."""
+    mapped_sdks_df = get_app_mapped_sdks(state, store_id)
+    mapped_sdks: dict[str, list[str]] = {}
+    for row in mapped_sdks_df.to_dict(orient="records"):
+        company_domain = row.get("company_domain")
+        sdk_slug = row.get("sdk_slug")
+        if pd.isna(company_domain) or pd.isna(sdk_slug):
+            continue
+        mapped_sdks.setdefault(str(company_domain), []).append(str(sdk_slug))
+
+    return PublicAppMappedSdks(store_id=store_id, mapped_sdks=mapped_sdks)
 
 
 def _build_app_sdk_details_payload(state: State, store_id: str) -> PublicAppSdkDetails:
@@ -270,6 +288,28 @@ class V1AppsController(Controller):
             background=build_request_page_view_task(
                 request,
                 url=f"/api/v1/apps/{store_id}/ranks",
+                hostname=PUBLIC_API_HOSTNAME,
+            ),
+        )
+
+    @get(
+        path="/apps/{store_id:str}/mapped-sdks",
+        cache=3600,
+        guards=[_b2b_sdk_guard],
+    )
+    async def app_mapped_sdks(
+        self: Self, state: State, request: Request, store_id: str
+    ) -> PublicAppMappedSdks:
+        """Return mapped SDK slugs grouped by company domain for an app."""
+        start = time.perf_counter() * 1000
+        payload = _build_app_mapped_sdks_payload(state=state, store_id=store_id)
+        duration = round((time.perf_counter() * 1000 - start), 2)
+        logger.info(f"GET /api/v1/apps/{store_id}/mapped-sdks took {duration}ms")
+        return Response(
+            payload,
+            background=build_request_page_view_task(
+                request,
+                url=f"/api/v1/apps/{store_id}/mapped-sdks",
                 hostname=PUBLIC_API_HOSTNAME,
             ),
         )

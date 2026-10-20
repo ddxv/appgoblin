@@ -255,6 +255,28 @@ V1_OPERATION_DOCS = {
             ),
         }
     },
+    "/api/v1/companies/{company_domain}/sdks": {
+        "get": {
+            "summary": "[Paid] /companies/{company_domain}/sdks",
+            "description": (
+                "Endpoint: `GET /api/v1/companies/{company_domain}/sdks`\n\n"
+                "Access: Paid tiers only.\n\n"
+                "Returns mapped SDK slugs, names, and basic app counts for a company domain."
+            ),
+        }
+    },
+    "/api/v1/sdks/{sdk_slug}": {
+        "get": {
+            "summary": "[Paid] /sdks/{sdk_slug}",
+            "description": (
+                "Endpoint: `GET /api/v1/sdks/{sdk_slug}`\n\n"
+                "Access: Paid tiers only.\n\n"
+                "Returns the SDK slug, its related company domain and name, and "
+                "the public company overview. Private SDK and company database IDs "
+                "and company logos are omitted."
+            ),
+        }
+    },
     "/api/v1/companies/{company_domain}": {
         "get": {
             "summary": "[Paid] /companies/{company_domain}",
@@ -302,6 +324,16 @@ V1_OPERATION_DOCS = {
                 "Endpoint: `GET /api/v1/apps/{store_id}/ranks`\n\n"
                 "Returns flat best-rank records by country, collection, and category "
                 "for the last 90 days."
+            ),
+        }
+    },
+    "/api/v1/apps/{store_id}/mapped-sdks": {
+        "get": {
+            "summary": "[Paid] /apps/{store_id}/mapped-sdks",
+            "description": (
+                "Endpoint: `GET /api/v1/apps/{store_id}/mapped-sdks`\n\n"
+                "Access: B2B SDK and B2B Premium tiers only.\n\n"
+                "Returns mapped SDK slugs grouped by company domain for a single app."
             ),
         }
     },

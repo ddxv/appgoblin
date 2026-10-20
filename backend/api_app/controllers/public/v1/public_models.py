@@ -123,6 +123,33 @@ class PublicCompanyOverview:
 
 
 @dataclass
+class PublicCompanySdk:
+    """Basic public SDK mapping information for a company."""
+
+    sdk_slug: str
+    sdk_name: str | None = None
+    app_count: int | None = None
+
+
+@dataclass
+class PublicCompanySdks:
+    """Public SDK mappings for a company domain."""
+
+    company_domain: str
+    sdks: list[PublicCompanySdk] = field(default_factory=list)
+
+
+@dataclass
+class PublicSdkCompanyOverview:
+    """Public SDK metadata and its related company overview."""
+
+    sdk_slug: str
+    company_domain: str | None = None
+    company_name: str | None = None
+    company: PublicCompanyOverview | None = None
+
+
+@dataclass
 class PublicCompanyAppChangeStoreIds:
     """Public paid response for a company app-change slice."""
 
@@ -171,6 +198,14 @@ class PublicAppBestRank:
     collection: str
     category: str
     best_rank: int
+
+
+@dataclass
+class PublicAppMappedSdks:
+    """Mapped SDK slugs grouped by their company domain."""
+
+    store_id: str
+    mapped_sdks: dict[str, list[str]] = field(default_factory=dict)
 
 
 @dataclass

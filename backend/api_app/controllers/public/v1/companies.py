@@ -2,6 +2,8 @@
 
 import time
 from collections.abc import Mapping
+
+import pandas as pd
 from typing import Self, SupportsFloat, SupportsIndex, SupportsInt, cast
 from urllib.parse import quote
 
@@ -24,6 +26,9 @@ from api_app.controllers.public.v1.public_models import (
     PublicCompanyAppChangeStoreIds,
     PublicCompanyListItem,
     PublicCompanyOverview,
+    PublicCompanySdk,
+    PublicCompanySdks,
+    PublicSdkCompanyOverview,
     PublicCompanyTrends,
 )
 from api_app.guards import validate_api_key
@@ -36,7 +41,7 @@ from api_app.models import (
 )
 from api_app.s3_downloads import get_signed_download_url
 from config import get_logger
-from dbcon.queries import get_company_s3_reports
+from dbcon.queries import get_company_s3_reports, get_company_sdks, get_sdk_companies
 
 logger = get_logger(__name__)
 
@@ -381,6 +386,58 @@ def _build_public_company_overview_payload(
     )
 
 
+def _build_public_company_sdks_payload(
+    state: State, company_domain: str
+) -> PublicCompanySdks:
+    """Return basic SDK mappings for an exact company domain."""
+    sdk_rows = get_company_sdks(state, company_domain)
+    if sdk_rows.empty:
+        msg = f"Company domain not found: {company_domain!r}"
+        raise NotFoundException(msg, status_code=404)
+
+    sdk_records = (
+        sdk_rows.drop_duplicates(subset=["sdk_slug"])
+        .sort_values("app_count", ascending=False, na_position="last")
+    )
+    return PublicCompanySdks(
+        company_domain=company_domain,
+        sdks=[
+            PublicCompanySdk(
+                sdk_slug=str(row.sdk_slug),
+                sdk_name=_optional_string(row.sdk_name),
+                app_count=_optional_int(row.app_count),
+            )
+            for row in sdk_records.itertuples(index=False)
+            if pd.notna(row.sdk_slug)
+        ],
+    )
+
+
+def _build_public_sdk_company_overview_payload(
+    state: State, sdk_slug: str
+) -> PublicSdkCompanyOverview:
+    """Return public company overview data for an exact SDK slug."""
+    sdk_rows = get_sdk_companies(state, sdk_slug)
+    if sdk_rows.empty:
+        msg = f"SDK slug not found: {sdk_slug!r}"
+        raise NotFoundException(msg, status_code=404)
+
+    sdk_row = sdk_rows.iloc[0]
+    company_domain = _optional_string(sdk_row.get("company_domain"))
+    company_name = _optional_string(sdk_row.get("company_name"))
+    company = (
+        _build_public_company_overview_payload(state, company_domain)
+        if company_domain
+        else None
+    )
+    return PublicSdkCompanyOverview(
+        sdk_slug=sdk_slug,
+        company_domain=company_domain,
+        company_name=company_name,
+        company=company,
+    )
+
+
 def _build_public_company_app_change_payload(
     state: State,
     *,
@@ -466,6 +523,42 @@ class V1CompaniesController(Controller):
             background=build_request_page_view_task(
                 request,
                 url=f"/api/v1/companies/{company_domain}",
+                hostname=PUBLIC_API_HOSTNAME,
+            ),
+        )
+
+    @get(path="/companies/{company_domain:str}/sdks", cache=86400)
+    async def company_sdks(
+        self: Self, state: State, request: Request, company_domain: str
+    ) -> PublicCompanySdks:
+        """Return basic SDK mappings for an exact company domain."""
+        start = time.perf_counter() * 1000
+        payload = _build_public_company_sdks_payload(state, company_domain)
+        duration = round((time.perf_counter() * 1000 - start), 2)
+        logger.info(f"GET /api/v1/companies/{company_domain}/sdks took {duration}ms")
+        return Response(
+            payload,
+            background=build_request_page_view_task(
+                request,
+                url=f"/api/v1/companies/{quote(company_domain)}/sdks",
+                hostname=PUBLIC_API_HOSTNAME,
+            ),
+        )
+
+    @get(path="/sdks/{sdk_slug:str}", cache=86400)
+    async def sdk_company_overview(
+        self: Self, state: State, request: Request, sdk_slug: str
+    ) -> PublicSdkCompanyOverview:
+        """Return public company overview data for an exact SDK slug."""
+        start = time.perf_counter() * 1000
+        payload = _build_public_sdk_company_overview_payload(state, sdk_slug)
+        duration = round((time.perf_counter() * 1000 - start), 2)
+        logger.info(f"GET /api/v1/sdks/{sdk_slug} took {duration}ms")
+        return Response(
+            payload,
+            background=build_request_page_view_task(
+                request,
+                url=f"/api/v1/sdks/{quote(sdk_slug)}",
                 hostname=PUBLIC_API_HOSTNAME,
             ),
         )
