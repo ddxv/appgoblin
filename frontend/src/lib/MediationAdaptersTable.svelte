@@ -1,9 +1,9 @@
 <script lang="ts">
-	import ExportAsCSV from '#lib/components/data-table/ExportAsCSV.svelte';
-	import Pagination from '#lib/components/data-table/Pagination.svelte';
-	import { formatNumberLocale } from '#lib/utils/formatNumber.js';
-	import { createAppTable, createTableState } from '#lib/components/data-table/index.js';
-	import { genericColumns } from '#lib/components/data-table/generic-column.js';
+	import ExportAsCSV from '$lib/components/data-table/ExportAsCSV.svelte';
+	import Pagination from '$lib/components/data-table/Pagination.svelte';
+	import { formatNumberLocale } from '$lib/utils/formatNumber';
+	import { createAppTable, createTableState } from '$lib/components/data-table/index.js';
+	import { genericColumns } from '$lib/components/data-table/generic-column';
 
 	import CompanyButton from './CompanyButton.svelte';
 

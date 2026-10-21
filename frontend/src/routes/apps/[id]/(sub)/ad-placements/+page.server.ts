@@ -1,5 +1,5 @@
 import type { PageServerLoad } from './$types.js';
-import { createApiClient } from '#lib/server/api.js';
+import { createApiClient } from '$lib/server/api';
 
 export const load: PageServerLoad = async ({ fetch, parent, params }) => {
 	let creatives = null;

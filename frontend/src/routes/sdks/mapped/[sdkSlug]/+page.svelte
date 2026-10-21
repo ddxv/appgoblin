@@ -2,10 +2,10 @@
 	import { enhance } from '$app/forms';
 	import Mail from '@lucide/svelte/icons/mail';
 	import Loader2 from '@lucide/svelte/icons/loader-2';
-	import SDKOverviewTable from '#lib/SDKOverviewTable.svelte';
-	import CompanyButton from '#lib/CompanyButton.svelte';
-	import { formatNumber } from '#lib/utils/formatNumber.js';
-	import WhiteCard from '#lib/WhiteCard.svelte';
+	import SDKOverviewTable from '$lib/SDKOverviewTable.svelte';
+	import CompanyButton from '$lib/CompanyButton.svelte';
+	import { formatNumber } from '$lib/utils/formatNumber';
+	import WhiteCard from '$lib/WhiteCard.svelte';
 
 	let { data, form } = $props();
 	let isExporting = $state(false);

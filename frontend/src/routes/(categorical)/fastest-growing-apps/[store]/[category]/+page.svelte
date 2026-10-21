@@ -1,6 +1,6 @@
 <script lang="ts">
 	let { data } = $props();
-	import FastestGrowingAppsTable from '#lib/FastestGrowingAppsTable.svelte';
+	import FastestGrowingAppsTable from '$lib/FastestGrowingAppsTable.svelte';
 	import { page } from '$app/state';
 
 	let category_title = $derived(getCategoryTitle(page.params.category || ''));

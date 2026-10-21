@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
 	import * as echarts from 'echarts';
-	import { plotColors } from '#lib/constants.js';
-	import { resolvedThemeMode } from '#lib/stores/theme.svelte.js';
+	import { plotColors } from '$lib/constants';
+	import { resolvedThemeMode } from '$lib/stores/theme.svelte';
 
 	interface Props {
 		plotData: any[];

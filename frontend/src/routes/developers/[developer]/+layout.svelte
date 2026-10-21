@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Tabs } from '@skeletonlabs/skeleton-svelte';
-	import MainContent from '#lib/MainContent.svelte';
+	import MainContent from '$lib/MainContent.svelte';
 
 	import { page } from '$app/state';
 

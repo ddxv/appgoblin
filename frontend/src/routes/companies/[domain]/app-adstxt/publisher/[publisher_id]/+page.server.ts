@@ -1,6 +1,6 @@
 import type { PageServerLoad } from './$types';
 import { error } from '@sveltejs/kit';
-import { createApiClient } from '#lib/server/api.js';
+import { createApiClient } from '$lib/server/api';
 
 export const ssr: boolean = true;
 export const csr: boolean = true;

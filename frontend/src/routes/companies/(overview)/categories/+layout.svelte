@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import MainContent from '#lib/MainContent.svelte';
+	import MainContent from '$lib/MainContent.svelte';
 
 	let { data, children } = $props();
 

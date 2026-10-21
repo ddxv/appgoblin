@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { enhance, type SubmitFunction } from '$app/forms';
+	import { enhance } from '$app/forms';
+	import type { SubmitFunction } from '@sveltejs/kit';
 	import type { AccountFormResult, FollowedApp } from './types';
 	import AppSummary from './AppSummary.svelte';
 
@@ -66,9 +67,13 @@
 							/>
 							<div class="flex gap-2">
 								<button type="submit" class="btn preset-tonal">Save</button>
-								<button type="button" class="btn preset-outlined" onclick={() => (editingId = null)}
-									>Cancel</button
+								<button
+									type="button"
+									class="btn preset-outlined"
+									onclick={() => (editingId = null)}
 								>
+									Cancel
+								</button>
 							</div>
 						</form>
 					{:else}
@@ -79,9 +84,10 @@
 								<button
 									type="button"
 									class="btn preset-outlined"
-									onclick={() => (editingId = app.id)}>Edit</button
+									onclick={() => (editingId = app.id)}
 								>
-
+									Edit
+								</button>
 								<form
 									method="POST"
 									action="?/deleteFollowedApp"

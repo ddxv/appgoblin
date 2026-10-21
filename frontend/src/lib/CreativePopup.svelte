@@ -1,6 +1,6 @@
 <script lang="ts" generics="TData, TValue">
-	import CreativeModal from '#lib/CreativeModal.svelte';
-	import { createCreativeModal } from '#lib/stores/creativeModal.svelte.js';
+	import CreativeModal from '$lib/CreativeModal.svelte';
+	import { createCreativeModal } from '$lib/stores/creativeModal.svelte';
 
 	let { md5_hash, file_extension }: { md5_hash: string; file_extension: string } = $props();
 

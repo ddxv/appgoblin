@@ -32,7 +32,7 @@
 		creative_thumb_url: string;
 	}
 
-	import CompanyButton from '#lib/CompanyButton.svelte';
+	import CompanyButton from '$lib/CompanyButton.svelte';
 
 	let { data }: { data: CreativeCluster[] } = $props();
 

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { CompanyFullDetails } from '../../../../types';
-	import AdsTxtPubIDsTable from '#lib/AdsTxtPubIDsTable.svelte';
+	import AdsTxtPubIDsTable from '$lib/AdsTxtPubIDsTable.svelte';
 
 	interface Props {
 		data: CompanyFullDetails;

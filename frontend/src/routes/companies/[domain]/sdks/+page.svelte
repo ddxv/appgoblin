@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { CompanyFullDetails } from '../../../../types';
-	import CompanySDKs from '#lib/CompanySDKs.svelte';
-	import WhiteCard from '#lib/WhiteCard.svelte';
+	import CompanySDKs from '$lib/CompanySDKs.svelte';
+	import WhiteCard from '$lib/WhiteCard.svelte';
 
 	interface Props {
 		data: CompanyFullDetails;

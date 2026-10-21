@@ -2,20 +2,20 @@ import {
 	deletePasswordResetSessionTokenCookie,
 	invalidateUserPasswordResetSessions,
 	validatePasswordResetSessionRequest
-} from '#lib/server/auth/password-reset.js';
+} from '$lib/server/auth/password-reset';
 import { fail, redirect } from '@sveltejs/kit';
-import { verifyPasswordStrength } from '#lib/server/auth/password.js';
+import { verifyPasswordStrength } from '$lib/server/auth/password';
 import {
 	createSession,
 	DEFAULT_SESSION_DURATION_HOURS,
 	generateSessionToken,
 	invalidateUserSessions,
 	setSessionTokenCookie
-} from '#lib/server/auth/session.js';
-import { updateUserPassword } from '#lib/server/auth/user.js';
+} from '$lib/server/auth/session';
+import { updateUserPassword } from '$lib/server/auth/user';
 
 import type { Actions, RequestEvent } from './$types';
-import type { SessionFlags } from '#lib/server/auth/session.js';
+import type { SessionFlags } from '$lib/server/auth/session';
 
 export const ssr = true;
 export const csr = true;

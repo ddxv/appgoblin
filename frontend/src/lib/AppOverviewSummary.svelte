@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { AppFullDetail, AppSDKsOverview, CompanyTypes } from '../types';
-	import { formatNumber, getRevenueBucket } from '#lib/utils/formatNumber.js';
+	import { formatNumber, getRevenueBucket } from '$lib/utils/formatNumber';
 
 	interface Props {
 		app: AppFullDetail;

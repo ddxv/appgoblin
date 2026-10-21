@@ -1,4 +1,4 @@
-import { browser } from '$app/env';
+import { browser } from '$app/environment';
 import { get, writable } from 'svelte/store';
 
 export type ThemeMode = 'system' | 'light' | 'dark';
@@ -62,8 +62,13 @@ themeModeStore.subscribe((themeMode) => {
 	applyThemeMode(themeMode);
 });
 
-export const themeMode = { subscribe: themeModeStore.subscribe };
-export const resolvedThemeMode = { subscribe: resolvedThemeModeStore.subscribe };
+export const themeMode = {
+	subscribe: themeModeStore.subscribe
+};
+
+export const resolvedThemeMode = {
+	subscribe: resolvedThemeModeStore.subscribe
+};
 
 export function initializeTheme() {
 	if (!browser || initialized) {

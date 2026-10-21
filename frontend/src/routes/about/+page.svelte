@@ -1,5 +1,5 @@
 <script>
-	import discordIcon from '#lib/svg/discord-mark-black.svg?raw';
+	import discordIcon from '$lib/svg/discord-mark-black.svg?raw';
 	let contentPadding = 'p-2 md:p-4';
 	let cardPadding = 'p-2 mx:p-4';
 </script>

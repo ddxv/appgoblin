@@ -1,6 +1,6 @@
-import { redirectIfAuthenticated, isSafeRedirect } from '#lib/server/auth/auth.js';
-import { handleSignup } from '#lib/server/auth/signup.js';
-import { parseSubscribeIntent } from '#lib/plans.js';
+import { redirectIfAuthenticated, isSafeRedirect } from '$lib/server/auth/auth';
+import { handleSignup } from '$lib/server/auth/signup';
+import { parseSubscribeIntent } from '$lib/plans';
 import type { Actions, PageServerLoadEvent } from './$types';
 
 export const ssr = true;

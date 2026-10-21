@@ -1,4 +1,4 @@
-import { recoveryCodeBucket, resetUser2FAWithRecoveryCode } from '#lib/server/auth/2fa.js';
+import { recoveryCodeBucket, resetUser2FAWithRecoveryCode } from '$lib/server/auth/2fa';
 import { fail, redirect } from '@sveltejs/kit';
 
 import type { Actions, RequestEvent } from './$types';

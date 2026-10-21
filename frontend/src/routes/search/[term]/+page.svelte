@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import type { SearchResponse } from '../../../types';
-	import AppGroupCard from '#lib/AppGroupCard.svelte';
-	import CompaniesSearchTable from '#lib/CompaniesSearchTable.svelte';
-	import StoreIcon from '#lib/StoreIcon.svelte';
+	import AppGroupCard from '$lib/AppGroupCard.svelte';
+	import CompaniesSearchTable from '$lib/CompaniesSearchTable.svelte';
+	import StoreIcon from '$lib/StoreIcon.svelte';
 	import { Tabs } from '@skeletonlabs/skeleton-svelte';
 
 	interface Props {

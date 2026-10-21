@@ -1,6 +1,6 @@
 import type { PageServerLoad } from '../../$types';
-import { db } from '#lib/server/auth/db.js';
-import { userHasTierAccess } from '#lib/server/subscription.js';
+import { db } from '$lib/server/auth/db';
+import { userHasTierAccess } from '$lib/server/subscription';
 
 const reportJsonModules = import.meta.glob('./*.json', {
 	eager: true,

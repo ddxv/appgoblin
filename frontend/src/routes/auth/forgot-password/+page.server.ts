@@ -1,14 +1,14 @@
-import { verifyEmailInput } from '#lib/server/auth/email.js';
-import { getUserFromEmail } from '#lib/server/auth/user.js';
+import { verifyEmailInput } from '$lib/server/auth/email';
+import { getUserFromEmail } from '$lib/server/auth/user';
 import {
 	createPasswordResetSession,
 	invalidateUserPasswordResetSessions,
 	sendPasswordResetEmail,
 	setPasswordResetSessionTokenCookie
-} from '#lib/server/auth/password-reset.js';
-import { RefillingTokenBucket } from '#lib/server/auth/rate-limit.js';
-import { generateSessionToken } from '#lib/server/auth/session.js';
-import { getClientIP } from '#lib/server/request.js';
+} from '$lib/server/auth/password-reset';
+import { RefillingTokenBucket } from '$lib/server/auth/rate-limit';
+import { generateSessionToken } from '$lib/server/auth/session';
+import { getClientIP } from '$lib/server/request';
 import { fail, redirect } from '@sveltejs/kit';
 
 import type { Actions, RequestEvent } from './$types';

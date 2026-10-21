@@ -1,11 +1,11 @@
 [
-	{
-		"apps_analyzed": 22328,
-		"https_tracked": 2363528,
-		"api_domains": 6611,
-		"adtech_companies": 354,
-		"advertisers": 1476,
-		"advertisers_all": 2595,
-		"creative_count": 31797
-	}
+  {
+    "apps_analyzed": 22328,
+    "https_tracked": 2363528,
+    "api_domains": 6611,
+    "adtech_companies": 354,
+    "advertisers": 1476,
+    "advertisers_all": 2595,
+    "creative_count": 31797
+  }
 ]

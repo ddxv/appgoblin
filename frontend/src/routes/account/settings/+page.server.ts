@@ -1,6 +1,6 @@
 import { fail, redirect } from '@sveltejs/kit';
-import { deleteSessionTokenCookie, invalidateSession } from '#lib/server/auth/session.js';
-import { loginUrl } from '#lib/server/auth/auth.js';
+import { deleteSessionTokenCookie, invalidateSession } from '$lib/server/auth/session';
+import { loginUrl } from '$lib/server/auth/auth';
 import type { Actions, RequestEvent } from './$types';
 
 export const actions: Actions = {

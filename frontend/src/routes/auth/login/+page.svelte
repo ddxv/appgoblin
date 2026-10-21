@@ -1,8 +1,8 @@
 <script lang="ts">
 	import Crown from '@lucide/svelte/icons/crown';
 	import { enhance } from '$app/forms';
-	import PlanSignupCallout from '#lib/PlanSignupCallout.svelte';
-	import { parseSubscribeIntent } from '#lib/plans.js';
+	import PlanSignupCallout from '$lib/PlanSignupCallout.svelte';
+	import { parseSubscribeIntent } from '$lib/plans';
 
 	import type { ActionData, PageData } from './$types';
 

@@ -1,5 +1,5 @@
 import { fail, redirect } from '@sveltejs/kit';
-import { loginUrl, isSafeRedirect } from '#lib/server/auth/auth.js';
+import { loginUrl, isSafeRedirect } from '$lib/server/auth/auth';
 import {
 	EMAIL_VERIFICATION_LIMIT_MESSAGE,
 	createEmailVerificationRequest,
@@ -11,11 +11,11 @@ import {
 	sendVerificationEmail,
 	sendVerificationEmailBucket,
 	setEmailVerificationRequestCookie
-} from '#lib/server/auth/email-verification.js';
-import { deleteSessionTokenCookie, invalidateSession } from '#lib/server/auth/session.js';
-import { invalidateUserPasswordResetSessions } from '#lib/server/auth/password-reset.js';
-import { updateUserEmailAndSetEmailAsVerified } from '#lib/server/auth/user.js';
-import { ExpiringTokenBucket } from '#lib/server/auth/rate-limit.js';
+} from '$lib/server/auth/email-verification';
+import { deleteSessionTokenCookie, invalidateSession } from '$lib/server/auth/session';
+import { invalidateUserPasswordResetSessions } from '$lib/server/auth/password-reset';
+import { updateUserEmailAndSetEmailAsVerified } from '$lib/server/auth/user';
+import { ExpiringTokenBucket } from '$lib/server/auth/rate-limit';
 
 import type { Actions, RequestEvent } from './$types';
 

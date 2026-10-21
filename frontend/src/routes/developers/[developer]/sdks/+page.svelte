@@ -1,5 +1,5 @@
 <script lang="ts">
-	import DeveloperSDKOverview from '#lib/DeveloperSDKOverview.svelte';
+	import DeveloperSDKOverview from '$lib/DeveloperSDKOverview.svelte';
 	import type { DeveloperSDKResponse } from '../../../../types';
 
 	interface Props {

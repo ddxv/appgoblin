@@ -1,5 +1,5 @@
 <script lang="ts">
-	import AdsTxtTable from '#lib/AdsTxtTable.svelte';
+	import AdsTxtTable from '$lib/AdsTxtTable.svelte';
 	import type { AdsTxtEntriesResult } from '../../../../../types';
 	let { data }: { data: AdsTxtEntriesResult } = $props();
 </script>

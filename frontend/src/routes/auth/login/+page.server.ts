@@ -1,18 +1,18 @@
 import { fail, redirect } from '@sveltejs/kit';
-import { verifyEmailInput } from '#lib/server/auth/email.js';
-import { getUserFromEmail, getUserPasswordHash } from '#lib/server/auth/user.js';
-import { RefillingTokenBucket, Throttler } from '#lib/server/auth/rate-limit.js';
-import { verifyPasswordHash } from '#lib/server/auth/password.js';
+import { verifyEmailInput } from '$lib/server/auth/email';
+import { getUserFromEmail, getUserPasswordHash } from '$lib/server/auth/user';
+import { RefillingTokenBucket, Throttler } from '$lib/server/auth/rate-limit';
+import { verifyPasswordHash } from '$lib/server/auth/password';
 import {
 	createSession,
 	DEFAULT_SESSION_DURATION_HOURS,
 	generateSessionToken,
 	setSessionTokenCookie
-} from '#lib/server/auth/session.js';
-import { redirectIfAuthenticated, isSafeRedirect } from '#lib/server/auth/auth.js';
-import { getClientIP } from '#lib/server/request.js';
+} from '$lib/server/auth/session';
+import { redirectIfAuthenticated, isSafeRedirect } from '$lib/server/auth/auth';
+import { getClientIP } from '$lib/server/request';
 
-import type { SessionFlags } from '#lib/server/auth/session.js';
+import type { SessionFlags } from '$lib/server/auth/session';
 import type { Actions, PageServerLoadEvent, RequestEvent } from './$types';
 
 export const ssr = true;

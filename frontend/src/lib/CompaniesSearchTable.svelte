@@ -10,9 +10,9 @@
 		createAppTable,
 		createTableState,
 		FlexRender
-	} from '#lib/components/data-table/index.js';
+	} from '$lib/components/data-table/index.js';
 
-	import { genericColumns } from '#lib/components/data-table/generic-column.js';
+	import { genericColumns } from '$lib/components/data-table/generic-column';
 
 	type DataTableProps = {
 		data: CompaniesSearchEntries[];

@@ -1,9 +1,9 @@
 import type { PageServerLoad } from './$types';
-import { createApiClient } from '#lib/server/api.js';
-import { getAppCategories } from '#lib/server/appCategories.js';
-import { requireAuthOr401 } from '#lib/server/auth/auth.js';
-import { db } from '#lib/server/auth/db.js';
-import { userHasTierAccess } from '#lib/server/subscription.js';
+import { createApiClient } from '$lib/server/api';
+import { getAppCategories } from '$lib/server/appCategories';
+import { requireAuthOr401 } from '$lib/server/auth/auth';
+import { db } from '$lib/server/auth/db';
+import { userHasTierAccess } from '$lib/server/subscription';
 import { getCachedData } from '../../hooks.server';
 
 interface CrossfilterPayload {

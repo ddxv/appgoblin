@@ -1,6 +1,6 @@
 <script lang="ts">
-	import WhiteCard from '#lib/WhiteCard.svelte';
-	import CompanyButton from '#lib/CompanyButton.svelte';
+	import WhiteCard from '$lib/WhiteCard.svelte';
+	import CompanyButton from '$lib/CompanyButton.svelte';
 
 	import { page } from '$app/state';
 

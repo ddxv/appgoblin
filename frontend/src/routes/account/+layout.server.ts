@@ -1,7 +1,7 @@
-import { requireAuthOr401 } from '#lib/server/auth/auth.js';
-import { db } from '#lib/server/auth/db.js';
-import { STRIPE_PLAN_LABELS, type StripePriceKey } from '#lib/server/stripe.js';
-import { getUserOrganization } from '#lib/server/organization.js';
+import { requireAuthOr401 } from '$lib/server/auth/auth';
+import { db } from '$lib/server/auth/db';
+import { STRIPE_PLAN_LABELS, type StripePriceKey } from '$lib/server/stripe';
+import { getUserOrganization } from '$lib/server/organization';
 import type { LayoutServerLoadEvent } from './$types';
 
 export async function load(event: LayoutServerLoadEvent) {

@@ -1,6 +1,6 @@
 import { fail, redirect } from '@sveltejs/kit';
-import { requireFullAuth } from '#lib/server/auth/auth.js';
-import { db } from '#lib/server/auth/db.js';
+import { requireFullAuth } from '$lib/server/auth/auth';
+import { db } from '$lib/server/auth/db';
 import {
 	createOrganizationInvitation,
 	getActiveOrganizationInvitations,
@@ -10,9 +10,9 @@ import {
 	isOrganizationOwner,
 	revokeOrganizationInvitation,
 	updateOrganizationName
-} from '#lib/server/organization.js';
-import { sendOrganizationInvitationEmail } from '#lib/server/contact.js';
-import { createPortalSession } from '#lib/server/stripe.js';
+} from '$lib/server/organization';
+import { sendOrganizationInvitationEmail } from '$lib/server/contact';
+import { createPortalSession } from '$lib/server/stripe';
 import type { Actions, PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async (event) => {

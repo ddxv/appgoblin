@@ -1,7 +1,7 @@
 <script lang="ts">
 	import CompaniesOverviewTable from './ReportCompaniesOverviewTable.svelte';
 	import ReportSectionEditorial from './ReportSectionEditorial.svelte';
-	import StoreIcon from '#lib/StoreIcon.svelte';
+	import StoreIcon from '$lib/StoreIcon.svelte';
 	import Download from '@lucide/svelte/icons/download';
 	import Lock from '@lucide/svelte/icons/lock';
 

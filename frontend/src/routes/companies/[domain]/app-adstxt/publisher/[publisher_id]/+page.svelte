@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import CompanyPubAppsTable from '#lib/CompanyPubAppsTable.svelte';
-	import WhiteCard from '#lib/WhiteCard.svelte';
+	import CompanyPubAppsTable from '$lib/CompanyPubAppsTable.svelte';
+	import WhiteCard from '$lib/WhiteCard.svelte';
 	let { data } = $props();
 	const tree = $derived(
 		(

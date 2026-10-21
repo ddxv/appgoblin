@@ -1,5 +1,5 @@
 <script lang="ts">
-	import generateId from '#lib/utils/generateIds.js';
+	import generateId from '$lib/utils/generateIds';
 
 	let {
 		fillPercent = 100,

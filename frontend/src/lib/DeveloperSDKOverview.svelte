@@ -1,7 +1,7 @@
 <script lang="ts">
-	import WhiteCard from '#lib/WhiteCard.svelte';
-	import RequestSDKScanButton from '#lib/RequestSDKScanButton.svelte';
-	import CompanyButton from '#lib/CompanyButton.svelte';
+	import WhiteCard from '$lib/WhiteCard.svelte';
+	import RequestSDKScanButton from '$lib/RequestSDKScanButton.svelte';
+	import CompanyButton from '$lib/CompanyButton.svelte';
 
 	import { Accordion } from '@skeletonlabs/skeleton-svelte';
 

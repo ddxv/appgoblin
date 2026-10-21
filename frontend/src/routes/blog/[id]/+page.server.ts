@@ -11,7 +11,7 @@ export const prerender = true;
 export const ssr = true;
 export const csr = false;
 
-import { blogPosts, getMetadataFromMatter } from '#lib/content.js';
+import { blogPosts, getMetadataFromMatter } from '$lib/content';
 
 export const load: PageServerLoad = async ({ params }) => {
 	const matchPath = `/src/content/blog/${params.id}.mdx`;

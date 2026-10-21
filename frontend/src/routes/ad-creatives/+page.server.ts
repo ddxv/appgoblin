@@ -11,10 +11,10 @@ import {
 	normalizeAdCreativeCategory,
 	normalizeAdCreativeFormat,
 	normalizeAdCreativeNetwork
-} from '#lib/ad-creatives.js';
-import { loginUrl } from '#lib/server/auth/auth.js';
-import { createApiClient } from '#lib/server/api.js';
-import { getAppCategories } from '#lib/server/appCategories.js';
+} from '$lib/ad-creatives';
+import { loginUrl } from '$lib/server/auth/auth';
+import { createApiClient } from '$lib/server/api';
+import { getAppCategories } from '$lib/server/appCategories';
 
 type PrimaryFilter = 'base' | 'network' | 'app-category';
 

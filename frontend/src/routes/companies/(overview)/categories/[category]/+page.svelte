@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import CompaniesOverviewTable from '#lib/CompaniesOverviewTable.svelte';
-	import CompaniesTableGrid from '#lib/CompaniesTableGrid.svelte';
+	import CompaniesOverviewTable from '$lib/CompaniesOverviewTable.svelte';
+	import CompaniesTableGrid from '$lib/CompaniesTableGrid.svelte';
 
 	let { data } = $props();
 

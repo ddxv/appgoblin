@@ -1,5 +1,5 @@
 <script lang="ts">
-	import SdkVersionSummary from '#lib/SdkVersionSummary.svelte';
+	import SdkVersionSummary from '$lib/SdkVersionSummary.svelte';
 	let { data }: { data: any } = $props();
 </script>
 

@@ -1,13 +1,8 @@
-import {
-	createTOTPKeyURI,
-	verifyTOTP,
-	decodeBase64,
-	encodeBase64
-} from '#lib/server/auth/utils.js';
+import { createTOTPKeyURI, verifyTOTP, decodeBase64, encodeBase64 } from '$lib/server/auth/utils';
 import { fail, redirect } from '@sveltejs/kit';
-import { updateUserTOTPKey } from '#lib/server/auth/user.js';
-import { setSessionAs2FAVerified } from '#lib/server/auth/session.js';
-import { RefillingTokenBucket } from '#lib/server/auth/rate-limit.js';
+import { updateUserTOTPKey } from '$lib/server/auth/user';
+import { setSessionAs2FAVerified } from '$lib/server/auth/session';
+import { RefillingTokenBucket } from '$lib/server/auth/rate-limit';
 import { encodeQR } from 'qr';
 
 import type { Actions, RequestEvent } from './$types';

@@ -1,6 +1,6 @@
 import { decodeBase64 } from './utils';
 import { createCipheriv, createDecipheriv, randomBytes } from 'crypto';
-import { ENCRYPTION_KEY } from '$app/env/private';
+import { ENCRYPTION_KEY } from '$env/static/private';
 
 const key = decodeBase64(ENCRYPTION_KEY);
 

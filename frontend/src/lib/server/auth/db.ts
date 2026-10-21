@@ -1,5 +1,5 @@
 import { Pool, type PoolConfig } from 'pg';
-import { PGHOST, PGPORT, PGDATABASE, PGUSER, PGPASSWORD } from '$app/env/private';
+import { PGHOST, PGPORT, PGDATABASE, PGUSER, PGPASSWORD } from '$env/static/private';
 
 class Database {
 	private pool: Pool;

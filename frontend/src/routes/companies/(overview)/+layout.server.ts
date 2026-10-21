@@ -1,6 +1,6 @@
 import type { LayoutServerLoad } from '../../$types';
 
-import { getAppCategories } from '#lib/server/appCategories.js';
+import { getAppCategories } from '$lib/server/appCategories';
 import { getCachedData } from '../../../hooks.server';
 
 export const load: LayoutServerLoad = async () => {

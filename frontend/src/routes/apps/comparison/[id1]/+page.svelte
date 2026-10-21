@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import AppComparisonSlot from '#lib/AppComparisonSlot.svelte';
+	import AppComparisonSlot from '$lib/AppComparisonSlot.svelte';
 	import { goto } from '$app/navigation';
 	import type { PageData } from './$types';
 

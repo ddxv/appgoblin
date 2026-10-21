@@ -1,14 +1,13 @@
-import { sequence, type Handle, type ServerInit } from '@sveltejs/kit/hooks';
-
+import type { Handle, ServerInit } from '@sveltejs/kit';
+import { sequence } from '@sveltejs/kit/hooks';
 import type { CompanyTypes, AppStore, CollectionRanks, CategoryRanks, Countries } from './types';
-
-import { RefillingTokenBucket } from '#lib/server/auth/rate-limit.js';
+import { RefillingTokenBucket } from '$lib/server/auth/rate-limit';
 import {
 	validateSessionToken,
 	setSessionTokenCookie,
 	deleteSessionTokenCookie
-} from '#lib/server/auth/session.js';
-import { getClientIP } from '#lib/server/request.js';
+} from '$lib/server/auth/session';
+import { getClientIP } from '$lib/server/request';
 
 const bucket = new RefillingTokenBucket<string>(100, 1);
 

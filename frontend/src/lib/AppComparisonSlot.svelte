@@ -1,6 +1,6 @@
 <script lang="ts">
-	import AppComparisonColumn from '#lib/AppComparisonColumn.svelte';
-	import ComparisonSearch from '#lib/ComparisonSearch.svelte';
+	import AppComparisonColumn from '$lib/AppComparisonColumn.svelte';
+	import ComparisonSearch from '$lib/ComparisonSearch.svelte';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
 

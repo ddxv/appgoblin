@@ -1,5 +1,5 @@
 <script lang="ts">
-	import DataExportColumnDocs from '#lib/components/docs/DataExportColumnDocs.svelte';
+	import DataExportColumnDocs from '$lib/components/docs/DataExportColumnDocs.svelte';
 
 	interface Props {
 		data: {

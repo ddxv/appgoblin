@@ -1,6 +1,6 @@
 import type { PageServerLoad } from './$types';
-import { createApiClient } from '#lib/server/api.js';
-import { userHasTierAccess } from '#lib/server/subscription.js';
+import { createApiClient } from '$lib/server/api';
+import { userHasTierAccess } from '$lib/server/subscription';
 import type { CompanyAppChangesOverview, CompanyOverviewApps } from '../../../../types';
 
 type MergedAppChanges = {

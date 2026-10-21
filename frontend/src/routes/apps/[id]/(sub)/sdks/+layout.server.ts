@@ -1,5 +1,5 @@
 import type { LayoutServerLoad } from './$types';
-import { createApiClient } from '#lib/server/api.js';
+import { createApiClient } from '$lib/server/api';
 
 export const load: LayoutServerLoad = async ({ fetch, params, parent, locals }) => {
 	const { myapp, companyTypes } = await parent();

@@ -1,10 +1,10 @@
 <script lang="ts">
 	import type { PageData } from './$types';
-	import type { AccountFormResult } from '#lib/components/account/types.js';
-	import TrackedAppsSection from '#lib/components/account/TrackedAppsSection.svelte';
-	import TrackedCompaniesSection from '#lib/components/account/TrackedCompaniesSection.svelte';
-	import TrackedKeywordsSection from '#lib/components/account/TrackedKeywordsSection.svelte';
-	import RequestedSdkScansSection from '#lib/components/account/RequestedSdkScansSection.svelte';
+	import type { AccountFormResult } from '$lib/components/account/types';
+	import TrackedAppsSection from '$lib/components/account/TrackedAppsSection.svelte';
+	import TrackedCompaniesSection from '$lib/components/account/TrackedCompaniesSection.svelte';
+	import TrackedKeywordsSection from '$lib/components/account/TrackedKeywordsSection.svelte';
+	import RequestedSdkScansSection from '$lib/components/account/RequestedSdkScansSection.svelte';
 
 	let { data, form }: { data: PageData; form?: AccountFormResult | null } = $props();
 	let accountData = $derived(data);

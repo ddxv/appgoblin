@@ -3,7 +3,7 @@ import type { PageServerLoad } from './$types';
 import type { Actions } from './$types';
 import { getCachedData } from '../../../../hooks.server';
 
-import { createApiClient } from '#lib/server/api.js';
+import { createApiClient } from '$lib/server/api';
 
 export const actions = {
 	updateRanks: async ({ request, fetch, params }) => {

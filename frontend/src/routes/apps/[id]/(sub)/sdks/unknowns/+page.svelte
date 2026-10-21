@@ -1,6 +1,6 @@
 <script lang="ts">
-	import ManifestItemUnknownsList from '#lib/ManifestItemUnknownsList.svelte';
-	import SdkVersionSummary from '#lib/SdkVersionSummary.svelte';
+	import ManifestItemUnknownsList from '$lib/ManifestItemUnknownsList.svelte';
+	import SdkVersionSummary from '$lib/SdkVersionSummary.svelte';
 	let { data }: { data: any } = $props();
 </script>
 

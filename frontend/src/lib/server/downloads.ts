@@ -1,4 +1,4 @@
-import { APPGOBLIN_DOWNLOADS_BASE } from '$app/env/private';
+import { APPGOBLIN_DOWNLOADS_BASE } from '$env/static/private';
 
 function getDownloadsBaseUrl(): string {
 	const base = APPGOBLIN_DOWNLOADS_BASE?.trim();

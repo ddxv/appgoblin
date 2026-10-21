@@ -1,9 +1,9 @@
 <script lang="ts">
-	import CompanyButton from '#lib/CompanyButton.svelte';
-	import CreativeModal from '#lib/CreativeModal.svelte';
-	import { createCreativeModal } from '#lib/stores/creativeModal.svelte.js';
+	import CompanyButton from '$lib/CompanyButton.svelte';
+	import CreativeModal from '$lib/CreativeModal.svelte';
+	import { createCreativeModal } from '$lib/stores/creativeModal.svelte';
 
-	import { formatNumber } from '#lib/utils/formatNumber.js';
+	import { formatNumber } from '$lib/utils/formatNumber.js';
 
 	let { data } = $props();
 

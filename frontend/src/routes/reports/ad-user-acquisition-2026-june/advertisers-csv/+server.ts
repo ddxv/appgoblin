@@ -1,7 +1,7 @@
 import type { RequestEvent } from '@sveltejs/kit';
 import { error, redirect } from '@sveltejs/kit';
-import { requireFullAuth } from '#lib/server/auth/auth.js';
-import { userHasTierAccess } from '#lib/server/subscription.js';
+import { requireFullAuth } from '$lib/server/auth/auth';
+import { userHasTierAccess } from '$lib/server/subscription';
 
 export async function GET(event: RequestEvent) {
 	const { user } = requireFullAuth(event);

@@ -34,9 +34,9 @@
 
 	type CreativeOrientation = 'portrait' | 'landscape';
 
-	import { createCreativeModal } from '#lib/stores/creativeModal.svelte.js';
-	import CreativeModal from '#lib/CreativeModal.svelte';
-	import CompanyButton from '#lib/CompanyButton.svelte';
+	import { createCreativeModal } from '$lib/stores/creativeModal.svelte';
+	import CreativeModal from '$lib/CreativeModal.svelte';
+	import CompanyButton from '$lib/CompanyButton.svelte';
 
 	let {
 		data,

@@ -1,8 +1,8 @@
 <script lang="ts">
 	import Crown from '@lucide/svelte/icons/crown';
-	import CompanyAppChangesTable from '#lib/CompanyAppChangesTable.svelte';
+	import CompanyAppChangesTable from '$lib/CompanyAppChangesTable.svelte';
 	import type { CompanyOverviewApps, CompanyTabIndicators } from '../../../../types';
-	import { formatNumber } from '#lib/utils/formatNumber.js';
+	import { formatNumber } from '$lib/utils/formatNumber';
 
 	type MergedAppChanges = {
 		android: CompanyOverviewApps[];

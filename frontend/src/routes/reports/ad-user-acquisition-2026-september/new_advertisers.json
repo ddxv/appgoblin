@@ -1,249 +1,354 @@
 [
-	{
-		"name": "Aniimo",
-		"store_id": "com.x.aniimos",
-		"store": 1,
-		"category": "game_role_playing",
-		"installs": 1946745,
-		"rating": 3.358492,
-		"rating_count": 23478,
-		"installs_sum_1w": 1670590,
-		"installs_sum_4w": 1946745.0,
-		"installs_z_score_2w": null,
-		"installs_z_score_4w": null,
-		"release_date": "2026-09-21T00:00:00.000",
-		"icon_128": "9ec01e6aa52df2b4_128.png",
-		"developer_name": "Pawprint Studio",
-		"developer_id": "Pawprint+Studio",
-		"ad_supported": false,
-		"in_app_purchases": true,
-		"advertiser_country": "SG",
-		"ad_network_names": ["Google"],
-		"ad_network_domains": ["google.com"],
-		"ad_network_logo_urls": ["company-logos/google.com/logo_200x200.jpeg"],
-		"mmp_domains": ["appsflyer.com"],
-		"creative_count": 2,
-		"md5_hashes": ["3474338d743859531eafd4ede7c17d99", "efeb00acd8f1373a1febfba24f9fa3cb"],
-		"md5_file_extensions": ["webm"]
-	},
-	{
-		"name": "Hair Salon Makeover Studio",
-		"store_id": "com.mrxvip.hair.salon",
-		"store": 1,
-		"category": "game_casual",
-		"installs": 1617690,
-		"rating": 3.78187,
-		"rating_count": 1644,
-		"installs_sum_1w": 493446,
-		"installs_sum_4w": 1386841.0,
-		"installs_z_score_2w": 31.5522754945,
-		"installs_z_score_4w": 21.8690793667,
-		"release_date": "2026-08-10T00:00:00.000",
-		"icon_128": "d864c7331ef0399a_128.png",
-		"developer_name": "MR. PROXY CORE",
-		"developer_id": "MR.+PROXY+CORE",
-		"ad_supported": true,
-		"in_app_purchases": false,
-		"advertiser_country": "GB",
-		"ad_network_names": ["Google"],
-		"ad_network_domains": ["google.com"],
-		"ad_network_logo_urls": ["company-logos/google.com/logo_200x200.jpeg"],
-		"mmp_domains": ["appsflyer.com"],
-		"creative_count": 3,
-		"md5_hashes": [
-			"3c7c57eba59b1dc16ce5ce8d07b30112",
-			"615913e2326f346452711f46096ed72a",
-			"65720e1f02221be57d2217f6e57810bb"
-		],
-		"md5_file_extensions": ["webm"]
-	},
-	{
-		"name": "GPS Location Sharing on Phone",
-		"store_id": "com.pocket.gpstracker",
-		"store": 1,
-		"category": "tools",
-		"installs": 327656,
-		"rating": null,
-		"rating_count": 0,
-		"installs_sum_1w": 38197,
-		"installs_sum_4w": 161479.0,
-		"installs_z_score_2w": -0.1980663141,
-		"installs_z_score_4w": -0.0384621809,
-		"release_date": "2026-07-27T00:00:00.000",
-		"icon_128": "f09d9763c88d8f60_128.png",
-		"developer_name": "PocketUtilities",
-		"developer_id": "PocketUtilities",
-		"ad_supported": true,
-		"in_app_purchases": true,
-		"advertiser_country": "VN",
-		"ad_network_names": ["Google"],
-		"ad_network_domains": ["google.com"],
-		"ad_network_logo_urls": ["company-logos/google.com/logo_200x200.jpeg"],
-		"mmp_domains": ["adjust.com", "appsflyer.com"],
-		"creative_count": 1,
-		"md5_hashes": ["5b606eeeb7fa5468f6a52784ea329719"],
-		"md5_file_extensions": ["webm"]
-	},
-	{
-		"name": "Go Browser - Fast & Safe",
-		"store_id": "com.dbk.pri.go.browser",
-		"store": 1,
-		"category": "tools",
-		"installs": 306306,
-		"rating": 4.871652,
-		"rating_count": 7313,
-		"installs_sum_1w": 101057,
-		"installs_sum_4w": 281621.0,
-		"installs_z_score_2w": 12.8380162299,
-		"installs_z_score_4w": 10.0272473463,
-		"release_date": "2026-08-12T00:00:00.000",
-		"icon_128": "bc99c16acf949866_128.png",
-		"developer_name": "DBK Entertainment",
-		"developer_id": "DBK+Entertainment",
-		"ad_supported": true,
-		"in_app_purchases": false,
-		"advertiser_country": "US",
-		"ad_network_names": ["Google"],
-		"ad_network_domains": ["google.com"],
-		"ad_network_logo_urls": ["company-logos/google.com/logo_200x200.jpeg"],
-		"mmp_domains": ["appsflyer.com"],
-		"creative_count": 1,
-		"md5_hashes": ["62039a467a69342500bf8e820117f1a0"],
-		"md5_file_extensions": ["webm"]
-	},
-	{
-		"name": "Cube Realm: Voxel Adventure",
-		"store_id": "com.mrxvip.cube.adventure",
-		"store": 1,
-		"category": "game_adventure",
-		"installs": 96722,
-		"rating": null,
-		"rating_count": 99,
-		"installs_sum_1w": 61496,
-		"installs_sum_4w": 96722.0,
-		"installs_z_score_2w": null,
-		"installs_z_score_4w": null,
-		"release_date": "2026-09-14T00:00:00.000",
-		"icon_128": "f6d2c289081dbfa5_128.png",
-		"developer_name": "MR. PROXY CORE",
-		"developer_id": "MR.+PROXY+CORE",
-		"ad_supported": true,
-		"in_app_purchases": false,
-		"advertiser_country": "GB",
-		"ad_network_names": ["Google"],
-		"ad_network_domains": ["google.com"],
-		"ad_network_logo_urls": ["company-logos/google.com/logo_200x200.jpeg"],
-		"mmp_domains": ["appsflyer.com"],
-		"creative_count": 1,
-		"md5_hashes": ["55d198e21726bc55b9cf9427144d2727"],
-		"md5_file_extensions": ["webm"]
-	},
-	{
-		"name": "Smart TV Cast For Chromecast",
-		"store_id": "com.tvchromecast.screenmirroringplus",
-		"store": 1,
-		"category": "tools",
-		"installs": 21704,
-		"rating": null,
-		"rating_count": 0,
-		"installs_sum_1w": 11674,
-		"installs_sum_4w": 21704.0,
-		"installs_z_score_2w": null,
-		"installs_z_score_4w": null,
-		"release_date": "2026-07-27T00:00:00.000",
-		"icon_128": "91cc4e8b6b36646d_128.png",
-		"developer_name": "Crest Digital Lab LLC",
-		"developer_id": "Crest+Digital+Lab+LLC",
-		"ad_supported": false,
-		"in_app_purchases": true,
-		"advertiser_country": "US",
-		"ad_network_names": ["Google"],
-		"ad_network_domains": ["google.com"],
-		"ad_network_logo_urls": ["company-logos/google.com/logo_200x200.jpeg"],
-		"mmp_domains": null,
-		"creative_count": 1,
-		"md5_hashes": ["650363054b493d1f4548539095bdcc3f"],
-		"md5_file_extensions": ["webm"]
-	},
-	{
-		"name": "Merry Christmas Color",
-		"store_id": "com.merry.christmas.happy.paint.by.number.coloring.game",
-		"store": 1,
-		"category": "game_board",
-		"installs": 15137,
-		"rating": 4.943504,
-		"rating_count": 450,
-		"installs_sum_1w": 11367,
-		"installs_sum_4w": 15137.0,
-		"installs_z_score_2w": null,
-		"installs_z_score_4w": null,
-		"release_date": "2026-09-22T00:00:00.000",
-		"icon_128": "afa392b392c3a14d_128.png",
-		"developer_name": "LoveColoring Game",
-		"developer_id": "LoveColoring+Game",
-		"ad_supported": true,
-		"in_app_purchases": true,
-		"advertiser_country": "CN",
-		"ad_network_names": ["Google"],
-		"ad_network_domains": ["google.com"],
-		"ad_network_logo_urls": ["company-logos/google.com/logo_200x200.jpeg"],
-		"mmp_domains": ["appmetrica.yandex.com", "appsflyer.com"],
-		"creative_count": 1,
-		"md5_hashes": ["628356c3d93b8dcea093a1e264f3b4bf"],
-		"md5_file_extensions": ["webm"]
-	},
-	{
-		"name": "BrightSteps - Count Steps",
-		"store_id": "com.ollo.brightsteps.countsteps",
-		"store": 1,
-		"category": "health_and_fitness",
-		"installs": 1636,
-		"rating": null,
-		"rating_count": 0,
-		"installs_sum_1w": 240,
-		"installs_sum_4w": 1636.0,
-		"installs_z_score_2w": null,
-		"installs_z_score_4w": null,
-		"release_date": "2026-09-04T00:00:00.000",
-		"icon_128": "d9fc66116dcc306c_128.png",
-		"developer_name": "pr-ollo",
-		"developer_id": "pr-ollo",
-		"ad_supported": true,
-		"in_app_purchases": false,
-		"advertiser_country": "BD",
-		"ad_network_names": ["Mobvista"],
-		"ad_network_domains": ["mobvista.com"],
-		"ad_network_logo_urls": ["company-logos/mobvista.com/logo_200x200.jpeg"],
-		"mmp_domains": null,
-		"creative_count": 1,
-		"md5_hashes": ["cf678547cc2b6afdfc6e06046397111f"],
-		"md5_file_extensions": ["jpeg"]
-	},
-	{
-		"name": "Zoe AI",
-		"store_id": "com.bapps.dategramai",
-		"store": 1,
-		"category": "dating",
-		"installs": 75,
-		"rating": null,
-		"rating_count": 0,
-		"installs_sum_1w": 44,
-		"installs_sum_4w": 63.0,
-		"installs_z_score_2w": 5.4834461626,
-		"installs_z_score_4w": 3.3292351702,
-		"release_date": "2026-07-31T00:00:00.000",
-		"icon_128": "ce9b316421339ece_128.png",
-		"developer_name": "B-Apps",
-		"developer_id": "B-Apps",
-		"ad_supported": false,
-		"in_app_purchases": true,
-		"advertiser_country": "CY",
-		"ad_network_names": ["Yandex"],
-		"ad_network_domains": ["yandex.com"],
-		"ad_network_logo_urls": ["company-logos/yandex.com/logo_200x200.jpeg"],
-		"mmp_domains": ["appsflyer.com"],
-		"creative_count": 1,
-		"md5_hashes": ["aa2560a3baef87cbf9cab79fb7065e61"],
-		"md5_file_extensions": ["jpeg"]
-	}
+  {
+    "name": "Aniimo",
+    "store_id": "com.x.aniimos",
+    "store": 1,
+    "category": "game_role_playing",
+    "installs": 1946745,
+    "rating": 3.358492,
+    "rating_count": 23478,
+    "installs_sum_1w": 1670590,
+    "installs_sum_4w": 1946745.0,
+    "installs_z_score_2w": null,
+    "installs_z_score_4w": null,
+    "release_date": "2026-09-21T00:00:00.000",
+    "icon_128": "9ec01e6aa52df2b4_128.png",
+    "developer_name": "Pawprint Studio",
+    "developer_id": "Pawprint+Studio",
+    "ad_supported": false,
+    "in_app_purchases": true,
+    "advertiser_country": "SG",
+    "ad_network_names": [
+      "Google"
+    ],
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": [
+      "appsflyer.com"
+    ],
+    "creative_count": 2,
+    "md5_hashes": [
+      "3474338d743859531eafd4ede7c17d99",
+      "efeb00acd8f1373a1febfba24f9fa3cb"
+    ],
+    "md5_file_extensions": [
+      "webm"
+    ]
+  },
+  {
+    "name": "Hair Salon Makeover Studio",
+    "store_id": "com.mrxvip.hair.salon",
+    "store": 1,
+    "category": "game_casual",
+    "installs": 1617690,
+    "rating": 3.78187,
+    "rating_count": 1644,
+    "installs_sum_1w": 493446,
+    "installs_sum_4w": 1386841.0,
+    "installs_z_score_2w": 31.5522754945,
+    "installs_z_score_4w": 21.8690793667,
+    "release_date": "2026-08-10T00:00:00.000",
+    "icon_128": "d864c7331ef0399a_128.png",
+    "developer_name": "MR. PROXY CORE",
+    "developer_id": "MR.+PROXY+CORE",
+    "ad_supported": true,
+    "in_app_purchases": false,
+    "advertiser_country": "GB",
+    "ad_network_names": [
+      "Google"
+    ],
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": [
+      "appsflyer.com"
+    ],
+    "creative_count": 3,
+    "md5_hashes": [
+      "3c7c57eba59b1dc16ce5ce8d07b30112",
+      "615913e2326f346452711f46096ed72a",
+      "65720e1f02221be57d2217f6e57810bb"
+    ],
+    "md5_file_extensions": [
+      "webm"
+    ]
+  },
+  {
+    "name": "GPS Location Sharing on Phone",
+    "store_id": "com.pocket.gpstracker",
+    "store": 1,
+    "category": "tools",
+    "installs": 327656,
+    "rating": null,
+    "rating_count": 0,
+    "installs_sum_1w": 38197,
+    "installs_sum_4w": 161479.0,
+    "installs_z_score_2w": -0.1980663141,
+    "installs_z_score_4w": -0.0384621809,
+    "release_date": "2026-07-27T00:00:00.000",
+    "icon_128": "f09d9763c88d8f60_128.png",
+    "developer_name": "PocketUtilities",
+    "developer_id": "PocketUtilities",
+    "ad_supported": true,
+    "in_app_purchases": true,
+    "advertiser_country": "VN",
+    "ad_network_names": [
+      "Google"
+    ],
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": [
+      "adjust.com",
+      "appsflyer.com"
+    ],
+    "creative_count": 1,
+    "md5_hashes": [
+      "5b606eeeb7fa5468f6a52784ea329719"
+    ],
+    "md5_file_extensions": [
+      "webm"
+    ]
+  },
+  {
+    "name": "Go Browser - Fast & Safe",
+    "store_id": "com.dbk.pri.go.browser",
+    "store": 1,
+    "category": "tools",
+    "installs": 306306,
+    "rating": 4.871652,
+    "rating_count": 7313,
+    "installs_sum_1w": 101057,
+    "installs_sum_4w": 281621.0,
+    "installs_z_score_2w": 12.8380162299,
+    "installs_z_score_4w": 10.0272473463,
+    "release_date": "2026-08-12T00:00:00.000",
+    "icon_128": "bc99c16acf949866_128.png",
+    "developer_name": "DBK Entertainment",
+    "developer_id": "DBK+Entertainment",
+    "ad_supported": true,
+    "in_app_purchases": false,
+    "advertiser_country": "US",
+    "ad_network_names": [
+      "Google"
+    ],
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": [
+      "appsflyer.com"
+    ],
+    "creative_count": 1,
+    "md5_hashes": [
+      "62039a467a69342500bf8e820117f1a0"
+    ],
+    "md5_file_extensions": [
+      "webm"
+    ]
+  },
+  {
+    "name": "Cube Realm: Voxel Adventure",
+    "store_id": "com.mrxvip.cube.adventure",
+    "store": 1,
+    "category": "game_adventure",
+    "installs": 96722,
+    "rating": null,
+    "rating_count": 99,
+    "installs_sum_1w": 61496,
+    "installs_sum_4w": 96722.0,
+    "installs_z_score_2w": null,
+    "installs_z_score_4w": null,
+    "release_date": "2026-09-14T00:00:00.000",
+    "icon_128": "f6d2c289081dbfa5_128.png",
+    "developer_name": "MR. PROXY CORE",
+    "developer_id": "MR.+PROXY+CORE",
+    "ad_supported": true,
+    "in_app_purchases": false,
+    "advertiser_country": "GB",
+    "ad_network_names": [
+      "Google"
+    ],
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": [
+      "appsflyer.com"
+    ],
+    "creative_count": 1,
+    "md5_hashes": [
+      "55d198e21726bc55b9cf9427144d2727"
+    ],
+    "md5_file_extensions": [
+      "webm"
+    ]
+  },
+  {
+    "name": "Smart TV Cast For Chromecast",
+    "store_id": "com.tvchromecast.screenmirroringplus",
+    "store": 1,
+    "category": "tools",
+    "installs": 21704,
+    "rating": null,
+    "rating_count": 0,
+    "installs_sum_1w": 11674,
+    "installs_sum_4w": 21704.0,
+    "installs_z_score_2w": null,
+    "installs_z_score_4w": null,
+    "release_date": "2026-07-27T00:00:00.000",
+    "icon_128": "91cc4e8b6b36646d_128.png",
+    "developer_name": "Crest Digital Lab LLC",
+    "developer_id": "Crest+Digital+Lab+LLC",
+    "ad_supported": false,
+    "in_app_purchases": true,
+    "advertiser_country": "US",
+    "ad_network_names": [
+      "Google"
+    ],
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": null,
+    "creative_count": 1,
+    "md5_hashes": [
+      "650363054b493d1f4548539095bdcc3f"
+    ],
+    "md5_file_extensions": [
+      "webm"
+    ]
+  },
+  {
+    "name": "Merry Christmas Color",
+    "store_id": "com.merry.christmas.happy.paint.by.number.coloring.game",
+    "store": 1,
+    "category": "game_board",
+    "installs": 15137,
+    "rating": 4.943504,
+    "rating_count": 450,
+    "installs_sum_1w": 11367,
+    "installs_sum_4w": 15137.0,
+    "installs_z_score_2w": null,
+    "installs_z_score_4w": null,
+    "release_date": "2026-09-22T00:00:00.000",
+    "icon_128": "afa392b392c3a14d_128.png",
+    "developer_name": "LoveColoring Game",
+    "developer_id": "LoveColoring+Game",
+    "ad_supported": true,
+    "in_app_purchases": true,
+    "advertiser_country": "CN",
+    "ad_network_names": [
+      "Google"
+    ],
+    "ad_network_domains": [
+      "google.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/google.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": [
+      "appmetrica.yandex.com",
+      "appsflyer.com"
+    ],
+    "creative_count": 1,
+    "md5_hashes": [
+      "628356c3d93b8dcea093a1e264f3b4bf"
+    ],
+    "md5_file_extensions": [
+      "webm"
+    ]
+  },
+  {
+    "name": "BrightSteps - Count Steps",
+    "store_id": "com.ollo.brightsteps.countsteps",
+    "store": 1,
+    "category": "health_and_fitness",
+    "installs": 1636,
+    "rating": null,
+    "rating_count": 0,
+    "installs_sum_1w": 240,
+    "installs_sum_4w": 1636.0,
+    "installs_z_score_2w": null,
+    "installs_z_score_4w": null,
+    "release_date": "2026-09-04T00:00:00.000",
+    "icon_128": "d9fc66116dcc306c_128.png",
+    "developer_name": "pr-ollo",
+    "developer_id": "pr-ollo",
+    "ad_supported": true,
+    "in_app_purchases": false,
+    "advertiser_country": "BD",
+    "ad_network_names": [
+      "Mobvista"
+    ],
+    "ad_network_domains": [
+      "mobvista.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/mobvista.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": null,
+    "creative_count": 1,
+    "md5_hashes": [
+      "cf678547cc2b6afdfc6e06046397111f"
+    ],
+    "md5_file_extensions": [
+      "jpeg"
+    ]
+  },
+  {
+    "name": "Zoe AI",
+    "store_id": "com.bapps.dategramai",
+    "store": 1,
+    "category": "dating",
+    "installs": 75,
+    "rating": null,
+    "rating_count": 0,
+    "installs_sum_1w": 44,
+    "installs_sum_4w": 63.0,
+    "installs_z_score_2w": 5.4834461626,
+    "installs_z_score_4w": 3.3292351702,
+    "release_date": "2026-07-31T00:00:00.000",
+    "icon_128": "ce9b316421339ece_128.png",
+    "developer_name": "B-Apps",
+    "developer_id": "B-Apps",
+    "ad_supported": false,
+    "in_app_purchases": true,
+    "advertiser_country": "CY",
+    "ad_network_names": [
+      "Yandex"
+    ],
+    "ad_network_domains": [
+      "yandex.com"
+    ],
+    "ad_network_logo_urls": [
+      "company-logos/yandex.com/logo_200x200.jpeg"
+    ],
+    "mmp_domains": [
+      "appsflyer.com"
+    ],
+    "creative_count": 1,
+    "md5_hashes": [
+      "aa2560a3baef87cbf9cab79fb7065e61"
+    ],
+    "md5_file_extensions": [
+      "jpeg"
+    ]
+  }
 ]

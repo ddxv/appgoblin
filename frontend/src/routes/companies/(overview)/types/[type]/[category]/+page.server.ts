@@ -1,5 +1,5 @@
-import { createApiClient } from '#lib/server/api.js';
-import { getAppCategories } from '#lib/server/appCategories.js';
+import { createApiClient } from '$lib/server/api.js';
+import { getAppCategories } from '$lib/server/appCategories';
 import type { PageServerLoad } from './$types.js';
 
 export const ssr: boolean = true;

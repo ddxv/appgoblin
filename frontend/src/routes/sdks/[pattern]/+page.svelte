@@ -5,10 +5,10 @@
 	import Mail from '@lucide/svelte/icons/mail';
 	import Loader2 from '@lucide/svelte/icons/loader-2';
 	let pattern = page.params.pattern;
-	import SDKOverviewTable from '#lib/SDKOverviewTable.svelte';
-	import SDKPatternCompany from '#lib/SDKPatternCompany.svelte';
+	import SDKOverviewTable from '$lib/SDKOverviewTable.svelte';
+	import SDKPatternCompany from '$lib/SDKPatternCompany.svelte';
 	let { data, form } = $props();
-	import WhiteCard from '#lib/WhiteCard.svelte';
+	import WhiteCard from '$lib/WhiteCard.svelte';
 	let isExporting = $state(false);
 	let exportMessage = $derived(typeof form?.exportMessage === 'string' ? form.exportMessage : '');
 	let exportError = $derived(typeof form?.error === 'string' ? form.error : '');

@@ -1,5 +1,5 @@
 import { db } from './db';
-import { encodeHexLowerCase, generateRandomOTP, sha256 } from '#lib/server/auth/utils.js';
+import { encodeHexLowerCase, generateRandomOTP, sha256 } from '$lib/server/auth/utils';
 export { sendPasswordResetEmail } from './email-verification';
 
 import type { RequestEvent } from '@sveltejs/kit';

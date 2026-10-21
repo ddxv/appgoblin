@@ -1,15 +1,15 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import AppRankTableShort from '#lib/AppRankTableShort.svelte';
-	import LazyCompaniesBarChart from '#lib/LazyCompaniesBarChart.svelte';
-	import AdvertiserCreativeRankingsTableTop from '#lib/AdvertiserCreativeRankingsTableTop.svelte';
-	import { formatNumber } from '#lib/utils/formatNumber.js';
-	import appPageLight from '#lib/assets/frontpage/app_page_light.png?enhanced';
-	import appPageDark from '#lib/assets/frontpage/app_page_dark.png?enhanced';
-	import creativeExplorerLight from '#lib/assets/frontpage/creative_explorer_light.png?enhanced';
-	import creativeExplorerDark from '#lib/assets/frontpage/creative_explorer_dark.png?enhanced';
-	import companyOverviewLight from '#lib/assets/frontpage/app_intelligence_company_overview_light.png?enhanced';
-	import companyOverviewDark from '#lib/assets/frontpage/app_intelligence_company_overview_dark.png?enhanced';
+	import AppRankTableShort from '$lib/AppRankTableShort.svelte';
+	import LazyCompaniesBarChart from '$lib/LazyCompaniesBarChart.svelte';
+	import AdvertiserCreativeRankingsTableTop from '$lib/AdvertiserCreativeRankingsTableTop.svelte';
+	import { formatNumber } from '$lib/utils/formatNumber.js';
+	import appPageLight from '$lib/assets/frontpage/app_page_light.png?enhanced';
+	import appPageDark from '$lib/assets/frontpage/app_page_dark.png?enhanced';
+	import creativeExplorerLight from '$lib/assets/frontpage/creative_explorer_light.png?enhanced';
+	import creativeExplorerDark from '$lib/assets/frontpage/creative_explorer_dark.png?enhanced';
+	import companyOverviewLight from '$lib/assets/frontpage/app_intelligence_company_overview_light.png?enhanced';
+	import companyOverviewDark from '$lib/assets/frontpage/app_intelligence_company_overview_dark.png?enhanced';
 	import ClipboardList from '@lucide/svelte/icons/clipboard-list';
 	import TrendingUp from '@lucide/svelte/icons/trending-up';
 	import Layers from '@lucide/svelte/icons/layers';

@@ -2,13 +2,13 @@
 	import Check from '@lucide/svelte/icons/check';
 	import X from '@lucide/svelte/icons/x';
 
-	import ExportAsCSV from '#lib/components/data-table/ExportAsCSV.svelte';
+	import ExportAsCSV from '$lib/components/data-table/ExportAsCSV.svelte';
 	import type { CompanyOverviewApps } from '../types';
-	import { formatNumber } from '#lib/utils/formatNumber.js';
-	import { createAppTable } from '#lib/components/data-table/index.js';
+	import { formatNumber } from '$lib/utils/formatNumber';
+	import { createAppTable } from '$lib/components/data-table/index.js';
 
-	import { genericColumns } from '#lib/components/data-table/generic-column.js';
-	import { countryCodeToEmoji } from '#lib/utils/countryCodeToEmoji.js';
+	import { genericColumns } from '$lib/components/data-table/generic-column';
+	import { countryCodeToEmoji } from '$lib/utils/countryCodeToEmoji';
 
 	type DataTableProps = {
 		data: CompanyOverviewApps[];

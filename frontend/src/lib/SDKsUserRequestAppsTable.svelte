@@ -2,7 +2,7 @@
 	import IconGoogle from './svg/IconGoogle.svelte';
 	import IconiOs from './svg/IconiOS.svelte';
 	import type { SDKAppsOverview } from '../types';
-	import { formatNumber } from '#lib/utils/formatNumber.js';
+	import { formatNumber } from '$lib/utils/formatNumber';
 
 	let { entries_table }: { entries_table: SDKAppsOverview[] } = $props();
 </script>

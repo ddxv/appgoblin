@@ -1,8 +1,8 @@
 import type { RequestEvent } from '@sveltejs/kit';
 import { error } from '@sveltejs/kit';
-import { requireFullAuth } from '#lib/server/auth/auth.js';
-import { db } from '#lib/server/auth/db.js';
-import { userHasTierAccess } from '#lib/server/subscription.js';
+import { requireFullAuth } from '$lib/server/auth/auth';
+import { db } from '$lib/server/auth/db';
+import { userHasTierAccess } from '$lib/server/subscription';
 
 const reportJsonModules = import.meta.glob('../*.json', {
 	eager: true,

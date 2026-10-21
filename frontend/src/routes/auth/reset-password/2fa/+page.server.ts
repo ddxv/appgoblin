@@ -1,13 +1,13 @@
-import { verifyTOTP } from '#lib/server/auth/utils.js';
-import { getUserTOTPKey } from '#lib/server/auth/user.js';
+import { verifyTOTP } from '$lib/server/auth/utils';
+import { getUserTOTPKey } from '$lib/server/auth/user';
 import {
 	validatePasswordResetSessionRequest,
 	setPasswordResetSessionAs2FAVerified
-} from '#lib/server/auth/password-reset.js';
-import { totpBucket } from '#lib/server/auth/2fa.js';
+} from '$lib/server/auth/password-reset';
+import { totpBucket } from '$lib/server/auth/2fa';
 import { fail, redirect } from '@sveltejs/kit';
-import { resetUser2FAWithRecoveryCode } from '#lib/server/auth/2fa.js';
-import { recoveryCodeBucket } from '#lib/server/auth/2fa.js';
+import { resetUser2FAWithRecoveryCode } from '$lib/server/auth/2fa';
+import { recoveryCodeBucket } from '$lib/server/auth/2fa';
 
 import type { Actions, RequestEvent } from './$types';
 

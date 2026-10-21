@@ -1,9 +1,9 @@
 import { type Column, type ColumnDef } from '@tanstack/table-core';
 
-import { renderComponent } from '#lib/components/data-table/index.js';
-import type { FullFeatures } from '#lib/components/data-table/features.js';
+import { renderComponent } from '$lib/components/data-table/index.js';
+import type { FullFeatures } from '$lib/components/data-table/features.js';
 
-import ColumnSortButton from '#lib/components/data-table/ColumnSortButton.svelte';
+import ColumnSortButton from '$lib/components/data-table/ColumnSortButton.svelte';
 
 type GenericColumnProps = {
 	title: string;

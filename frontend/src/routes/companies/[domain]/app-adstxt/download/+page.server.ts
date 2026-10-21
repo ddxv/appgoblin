@@ -1,5 +1,5 @@
 import { error, redirect } from '@sveltejs/kit';
-import { buildAppAdsTxtUrl } from '#lib/server/downloads.js';
+import { buildAppAdsTxtUrl } from '$lib/server/downloads';
 
 import type { PageServerLoad } from './$types';
 

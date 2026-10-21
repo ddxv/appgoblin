@@ -1,112 +1,112 @@
 [
-	{
-		"phash": "69cb6965c7c9",
-		"md5_hash": "c4733643d7d02217d851f3314799f265",
-		"file_extension": "mp4",
-		"advertiser_count": 1,
-		"publisher_count": 29,
-		"first_seen": "2026-09-29T02:41:37.307",
-		"last_seen": "2026-09-30T17:38:38.673",
-		"advertiser_store_id": "org.sabgames.domino",
-		"advertiser_icon_128": "95943e0e196f51d9_128.png"
-	},
-	{
-		"phash": "3c49c1cececc",
-		"md5_hash": "eabcecd789dbe2b166ffcb45bb3ac3ba",
-		"file_extension": "mp4",
-		"advertiser_count": 1,
-		"publisher_count": 23,
-		"first_seen": "2026-09-24T21:46:08.393",
-		"last_seen": "2026-09-30T15:01:23.452",
-		"advertiser_store_id": "org.sabgames.domino",
-		"advertiser_icon_128": "95943e0e196f51d9_128.png"
-	},
-	{
-		"phash": "67feeffd7a77",
-		"md5_hash": "7885dc1bea698ad884673af2a9f28928",
-		"file_extension": "mp4",
-		"advertiser_count": 1,
-		"publisher_count": 20,
-		"first_seen": "2026-09-02T00:07:05.852",
-		"last_seen": "2026-09-26T18:15:00.255",
-		"advertiser_store_id": "tv.fubo.mobile",
-		"advertiser_icon_128": "d0e12f8e94717a8e_128.png"
-	},
-	{
-		"phash": "edcfd352cabc",
-		"md5_hash": "e55e8c86aef255cba063fb7abd85978d",
-		"file_extension": "mp4",
-		"advertiser_count": 1,
-		"publisher_count": 14,
-		"first_seen": "2026-09-25T04:33:23.273",
-		"last_seen": "2026-09-30T14:13:29.424",
-		"advertiser_store_id": "com.snowprintstudios.tacticus",
-		"advertiser_icon_128": "b485ed7a1790caa5_128.png"
-	},
-	{
-		"phash": "e7ebb7bf0d71",
-		"md5_hash": "e93e33ca45c32134e1f1106be45ddb35",
-		"file_extension": "webm",
-		"advertiser_count": 1,
-		"publisher_count": 14,
-		"first_seen": "2026-09-17T12:19:04.464",
-		"last_seen": "2026-09-30T22:34:02.611",
-		"advertiser_store_id": "com.finger.hsgame",
-		"advertiser_icon_128": "d05b6363f4a664e2_128.png"
-	},
-	{
-		"phash": "f88efddcfbf1",
-		"md5_hash": "a6c803c6d5eaf72264eab2f7e348270f",
-		"file_extension": "mp4",
-		"advertiser_count": 1,
-		"publisher_count": 11,
-		"first_seen": "2026-09-02T00:13:02.890",
-		"last_seen": "2026-09-26T19:58:00.332",
-		"advertiser_store_id": "tv.fubo.mobile",
-		"advertiser_icon_128": "d0e12f8e94717a8e_128.png"
-	},
-	{
-		"phash": "755ea993fdc9",
-		"md5_hash": "bd615b12369db15925a079b45709662e",
-		"file_extension": "webm",
-		"advertiser_count": 1,
-		"publisher_count": 11,
-		"first_seen": "2026-09-01T08:09:40.432",
-		"last_seen": "2026-09-27T14:27:24.971",
-		"advertiser_store_id": "com.bagelcode.slots1",
-		"advertiser_icon_128": "90b117137e7e71c4_128.png"
-	},
-	{
-		"phash": "1de7b7fdfc61",
-		"md5_hash": "ada352989761bc7f5e3dd557b70f0a86",
-		"file_extension": "webm",
-		"advertiser_count": 1,
-		"publisher_count": 11,
-		"first_seen": "2026-09-25T03:22:45.802",
-		"last_seen": "2026-09-30T00:15:37.908",
-		"advertiser_store_id": "com.diamondlife.slots.vegas.free",
-		"advertiser_icon_128": "d1f8684b23c10f7e_128.png"
-	},
-	{
-		"phash": "1e04ebfa5a4a",
-		"md5_hash": "aee4fea6282f8fefa075750e14db2b0c",
-		"file_extension": "webm",
-		"advertiser_count": 1,
-		"publisher_count": 11,
-		"first_seen": "2026-09-13T04:01:05.235",
-		"last_seen": "2026-09-30T23:22:41.256",
-		"advertiser_store_id": "com.boge.lgmahjong",
-		"advertiser_icon_128": "e02caf09d3aa6b9c_128.png"
-	},
-	{
-		"phash": "fbad355b7c6e",
-		"md5_hash": "889d0d4ac27df6afd1d774ccdd8828f4",
-		"file_extension": "webm",
-		"advertiser_count": 1,
-		"publisher_count": 11,
-		"first_seen": "2026-09-25T05:53:19.375",
-		"last_seen": "2026-09-30T03:43:40.867",
-		"advertiser_store_id": "com.zoo.doctor.dentist.game",
-		"advertiser_icon_128": "a7fa1c256894dae1_128.png"
-	}
+  {
+    "phash": "69cb6965c7c9",
+    "md5_hash": "c4733643d7d02217d851f3314799f265",
+    "file_extension": "mp4",
+    "advertiser_count": 1,
+    "publisher_count": 29,
+    "first_seen": "2026-09-29T02:41:37.307",
+    "last_seen": "2026-09-30T17:38:38.673",
+    "advertiser_store_id": "org.sabgames.domino",
+    "advertiser_icon_128": "95943e0e196f51d9_128.png"
+  },
+  {
+    "phash": "3c49c1cececc",
+    "md5_hash": "eabcecd789dbe2b166ffcb45bb3ac3ba",
+    "file_extension": "mp4",
+    "advertiser_count": 1,
+    "publisher_count": 23,
+    "first_seen": "2026-09-24T21:46:08.393",
+    "last_seen": "2026-09-30T15:01:23.452",
+    "advertiser_store_id": "org.sabgames.domino",
+    "advertiser_icon_128": "95943e0e196f51d9_128.png"
+  },
+  {
+    "phash": "67feeffd7a77",
+    "md5_hash": "7885dc1bea698ad884673af2a9f28928",
+    "file_extension": "mp4",
+    "advertiser_count": 1,
+    "publisher_count": 20,
+    "first_seen": "2026-09-02T00:07:05.852",
+    "last_seen": "2026-09-26T18:15:00.255",
+    "advertiser_store_id": "tv.fubo.mobile",
+    "advertiser_icon_128": "d0e12f8e94717a8e_128.png"
+  },
+  {
+    "phash": "edcfd352cabc",
+    "md5_hash": "e55e8c86aef255cba063fb7abd85978d",
+    "file_extension": "mp4",
+    "advertiser_count": 1,
+    "publisher_count": 14,
+    "first_seen": "2026-09-25T04:33:23.273",
+    "last_seen": "2026-09-30T14:13:29.424",
+    "advertiser_store_id": "com.snowprintstudios.tacticus",
+    "advertiser_icon_128": "b485ed7a1790caa5_128.png"
+  },
+  {
+    "phash": "e7ebb7bf0d71",
+    "md5_hash": "e93e33ca45c32134e1f1106be45ddb35",
+    "file_extension": "webm",
+    "advertiser_count": 1,
+    "publisher_count": 14,
+    "first_seen": "2026-09-17T12:19:04.464",
+    "last_seen": "2026-09-30T22:34:02.611",
+    "advertiser_store_id": "com.finger.hsgame",
+    "advertiser_icon_128": "d05b6363f4a664e2_128.png"
+  },
+  {
+    "phash": "f88efddcfbf1",
+    "md5_hash": "a6c803c6d5eaf72264eab2f7e348270f",
+    "file_extension": "mp4",
+    "advertiser_count": 1,
+    "publisher_count": 11,
+    "first_seen": "2026-09-02T00:13:02.890",
+    "last_seen": "2026-09-26T19:58:00.332",
+    "advertiser_store_id": "tv.fubo.mobile",
+    "advertiser_icon_128": "d0e12f8e94717a8e_128.png"
+  },
+  {
+    "phash": "755ea993fdc9",
+    "md5_hash": "bd615b12369db15925a079b45709662e",
+    "file_extension": "webm",
+    "advertiser_count": 1,
+    "publisher_count": 11,
+    "first_seen": "2026-09-01T08:09:40.432",
+    "last_seen": "2026-09-27T14:27:24.971",
+    "advertiser_store_id": "com.bagelcode.slots1",
+    "advertiser_icon_128": "90b117137e7e71c4_128.png"
+  },
+  {
+    "phash": "1de7b7fdfc61",
+    "md5_hash": "ada352989761bc7f5e3dd557b70f0a86",
+    "file_extension": "webm",
+    "advertiser_count": 1,
+    "publisher_count": 11,
+    "first_seen": "2026-09-25T03:22:45.802",
+    "last_seen": "2026-09-30T00:15:37.908",
+    "advertiser_store_id": "com.diamondlife.slots.vegas.free",
+    "advertiser_icon_128": "d1f8684b23c10f7e_128.png"
+  },
+  {
+    "phash": "1e04ebfa5a4a",
+    "md5_hash": "aee4fea6282f8fefa075750e14db2b0c",
+    "file_extension": "webm",
+    "advertiser_count": 1,
+    "publisher_count": 11,
+    "first_seen": "2026-09-13T04:01:05.235",
+    "last_seen": "2026-09-30T23:22:41.256",
+    "advertiser_store_id": "com.boge.lgmahjong",
+    "advertiser_icon_128": "e02caf09d3aa6b9c_128.png"
+  },
+  {
+    "phash": "fbad355b7c6e",
+    "md5_hash": "889d0d4ac27df6afd1d774ccdd8828f4",
+    "file_extension": "webm",
+    "advertiser_count": 1,
+    "publisher_count": 11,
+    "first_seen": "2026-09-25T05:53:19.375",
+    "last_seen": "2026-09-30T03:43:40.867",
+    "advertiser_store_id": "com.zoo.doctor.dentist.game",
+    "advertiser_icon_128": "a7fa1c256894dae1_128.png"
+  }
 ]

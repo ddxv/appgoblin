@@ -1,11 +1,11 @@
 <script lang="ts">
-	import CompaniesLayout from '#lib/CompaniesLayout.svelte';
-	import WhiteCard from '#lib/WhiteCard.svelte';
-	import CompaniesBarChart from '#lib/CompaniesBarChart.svelte';
-	import TotalsBox from '#lib/TotalsBox.svelte';
+	import CompaniesLayout from '$lib/CompaniesLayout.svelte';
+	import WhiteCard from '$lib/WhiteCard.svelte';
+	import CompaniesBarChart from '$lib/CompaniesBarChart.svelte';
+	import TotalsBox from '$lib/TotalsBox.svelte';
 	import { page } from '$app/state';
-	import MainContent from '#lib/MainContent.svelte';
-	import SideBarCompanies from '#lib/SideBarCompanies.svelte';
+	import MainContent from '$lib/MainContent.svelte';
+	import SideBarCompanies from '$lib/SideBarCompanies.svelte';
 	import { Dialog, Portal } from '@skeletonlabs/skeleton-svelte';
 
 	let { data, children } = $props();

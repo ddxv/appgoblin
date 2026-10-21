@@ -1,5 +1,5 @@
 <script lang="ts">
-	import AdCreativesReport from '#lib/AdCreativesReport.svelte';
+	import AdCreativesReport from '$lib/AdCreativesReport.svelte';
 	import type { PageData } from './$types';
 
 	let { data = {} as PageData }: { data?: PageData } = $props();

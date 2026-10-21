@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import type { AppFullDetails } from '../../../../types';
-	import RankChart from '#lib/RankChart.svelte';
-	import { countryCodeToEmoji } from '#lib/utils/countryCodeToEmoji.js';
+	import RankChart from '$lib/RankChart.svelte';
+	import { countryCodeToEmoji } from '$lib/utils/countryCodeToEmoji';
 
 	interface Props {
 		data: AppFullDetails;

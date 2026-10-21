@@ -1,4 +1,4 @@
-import { getBlogPostsMetadata } from '#lib/content.js';
+import { getBlogPostsMetadata } from '$lib/content';
 
 import type { PageServerLoad } from './$types';
 

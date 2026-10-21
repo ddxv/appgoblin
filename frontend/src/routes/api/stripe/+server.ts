@@ -1,5 +1,5 @@
-import { stripe } from '#lib/server/stripe.js';
-import { db } from '#lib/server/auth/db.js';
+import { stripe } from '$lib/server/stripe';
+import { db } from '$lib/server/auth/db';
 import type { RequestHandler } from './$types';
 
 import {
@@ -8,9 +8,9 @@ import {
 	STRIPE_PRICE_B2B_SDK_SEAT_YR,
 	STRIPE_PRICE_B2B_PREMIUM_SEAT_MO,
 	STRIPE_PRICE_B2B_PREMIUM_SEAT_YR
-} from '$app/env/private';
-import { sendPricingPlanCompletionEmail } from '#lib/server/contact.js';
-import type { BillingCycle, StripePriceKey } from '#lib/plans.js';
+} from '$env/static/private';
+import { sendPricingPlanCompletionEmail } from '$lib/server/contact';
+import type { BillingCycle, StripePriceKey } from '$lib/plans';
 
 export const POST: RequestHandler = async ({ request }) => {
 	console.log('Stripe webhook request received');
@@ -128,7 +128,6 @@ async function handleSubscriptionUpdated(subscription: any, eventCreatedAt?: num
 			subscription.ended_at ??
 			subscription.canceled_at ??
 			(status === 'canceled' ? currentPeriodEndVal : null));
-
 	const cancelRequestedAtUnix = cancelAtPeriodEnd
 		? (subscription.canceled_at ?? eventCreatedAt ?? null)
 		: status === 'canceled'

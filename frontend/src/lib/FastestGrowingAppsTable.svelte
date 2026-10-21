@@ -2,23 +2,23 @@
 	import type { ColumnFiltersState, SortingState } from '@tanstack/svelte-table';
 
 	import { Popover, Portal } from '@skeletonlabs/skeleton-svelte';
-	import Pagination from '#lib/components/data-table/Pagination.svelte';
-	import ExportAsCSV from '#lib/components/data-table/ExportAsCSV.svelte';
+	import Pagination from '$lib/components/data-table/Pagination.svelte';
+	import ExportAsCSV from '$lib/components/data-table/ExportAsCSV.svelte';
 	import type { CompaniesOverviewEntries } from '../types';
 
 	import {
 		createAppTable,
 		createTableState,
 		FlexRender
-	} from '#lib/components/data-table/index.js';
+	} from '$lib/components/data-table/index.js';
 
-	import { genericColumns } from '#lib/components/data-table/generic-column.js';
+	import { genericColumns } from '$lib/components/data-table/generic-column';
 
 	import Check from '@lucide/svelte/icons/check';
 	import X from '@lucide/svelte/icons/x';
 
-	import { formatNumber, getRevenueBucket } from '#lib/utils/formatNumber.js';
-	import ZScoreMeter from '#lib/components/ZScoreMeter.svelte';
+	import { formatNumber, getRevenueBucket } from '$lib/utils/formatNumber';
+	import ZScoreMeter from '$lib/components/ZScoreMeter.svelte';
 
 	type DataTableProps = {
 		data: CompaniesOverviewEntries[];

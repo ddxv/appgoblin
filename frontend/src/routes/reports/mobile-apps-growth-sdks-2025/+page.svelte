@@ -1,5 +1,5 @@
 <script lang="ts">
-	import CompanyButton from '#lib/CompanyButton.svelte';
+	import CompanyButton from '$lib/CompanyButton.svelte';
 
 	let { data } = $props();
 

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { formatNumber } from '#lib/utils/formatNumber.js';
+	import { formatNumber } from '$lib/utils/formatNumber';
 
 	type ZScoreMeterProps = {
 		value: number;

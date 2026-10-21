@@ -1,5 +1,5 @@
 import type { LayoutServerLoad } from './$types';
-import { requireAuthOr401 } from '#lib/server/auth/auth.js';
+import { requireAuthOr401 } from '$lib/server/auth/auth';
 
 export const ssr: boolean = true;
 export const csr: boolean = true;

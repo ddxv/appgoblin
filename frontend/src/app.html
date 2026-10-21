@@ -1,31 +1,29 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en" data-theme="appgoblin-theme">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" href="%sveltekit.assets%/favicon.ico" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<script>
-			const storedThemeMode = window.localStorage.getItem('appgoblin-theme-mode');
-			const preferredThemeMode =
-				storedThemeMode === 'light' || storedThemeMode === 'dark'
-					? storedThemeMode
-					: window.matchMedia('(prefers-color-scheme: dark)').matches
-						? 'dark'
-						: 'light';
 
-			document.documentElement.dataset.mode = preferredThemeMode;
-			document.documentElement.style.colorScheme = preferredThemeMode;
-		</script>
-		<script
-			defer
-			src="https://caz.appgoblin.info/script.js"
-			data-website-id="3a063390-a9d5-4743-af11-e7ef3fc10cb3"
-			data-domains="appgoblin.info"
-		></script>
-		%sveltekit.head%
-	</head>
+<head>
+	<meta charset="utf-8" />
+	<link rel="icon" href="%sveltekit.assets%/favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<script>
+		const storedThemeMode = window.localStorage.getItem('appgoblin-theme-mode');
+		const preferredThemeMode =
+			storedThemeMode === 'light' || storedThemeMode === 'dark'
+				? storedThemeMode
+				: window.matchMedia('(prefers-color-scheme: dark)').matches
+					? 'dark'
+					: 'light';
 
-	<body>
-		<div style="display: contents">%sveltekit.body%</div>
-	</body>
+		document.documentElement.dataset.mode = preferredThemeMode;
+		document.documentElement.style.colorScheme = preferredThemeMode;
+	</script>
+	<script defer src="https://caz.appgoblin.info/script.js" data-website-id="3a063390-a9d5-4743-af11-e7ef3fc10cb3"
+		data-domains="appgoblin.info"></script>
+	%sveltekit.head%
+</head>
+
+<body>
+	<div style="display: contents">%sveltekit.body%</div>
+</body>
+
 </html>

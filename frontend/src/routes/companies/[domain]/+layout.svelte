@@ -1,15 +1,15 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import Breadcrumbs from '#lib/Breadcrumbs.svelte';
+	import Breadcrumbs from '$lib/Breadcrumbs.svelte';
 	import type { CompanyLayoutDetails, CompanyTypes, Crumb, MyCrumbMetadata } from '../../../types';
 
-	import ExternalLink from '#lib/ExternalLink.svelte';
-	import CompanyButton from '#lib/CompanyButton.svelte';
-	import { countryCodeToEmoji } from '#lib/utils/countryCodeToEmoji.js';
-	import MainContent from '#lib/MainContent.svelte';
-	import CompanyTypesTabs from '#lib/utils/CompanyTypesTabs.svelte';
-	import CompanyNavTabs from '#lib/utils/CompanyNavTabs.svelte';
-	import RequestMappingButton from '#lib/RequestMappingButton.svelte';
+	import ExternalLink from '$lib/ExternalLink.svelte';
+	import CompanyButton from '$lib/CompanyButton.svelte';
+	import { countryCodeToEmoji } from '$lib/utils/countryCodeToEmoji';
+	import MainContent from '$lib/MainContent.svelte';
+	import CompanyTypesTabs from '$lib/utils/CompanyTypesTabs.svelte';
+	import CompanyNavTabs from '$lib/utils/CompanyNavTabs.svelte';
+	import RequestMappingButton from '$lib/RequestMappingButton.svelte';
 
 	let { children, data }: { children: any; data: CompanyLayoutDetails } = $props();
 	const domain = page.params.domain ?? '';

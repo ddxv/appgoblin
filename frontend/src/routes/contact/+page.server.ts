@@ -1,6 +1,6 @@
 import { redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
-import { sendContactEmail } from '#lib/server/contact.js';
+import { sendContactEmail } from '$lib/server/contact';
 
 export const load: PageServerLoad = ({ url }) => {
 	return { sent: url.searchParams.get('sent') === '1' ? 1 : 0 };

@@ -1,7 +1,7 @@
 import type { PageServerLoad } from './$types';
-import { createApiClient } from '#lib/server/api.js';
-import { db } from '#lib/server/auth/db.js';
-import { userHasTierAccess } from '#lib/server/subscription.js';
+import { createApiClient } from '$lib/server/api';
+import { db } from '$lib/server/auth/db';
+import { userHasTierAccess } from '$lib/server/subscription';
 
 async function isPremiumB2B(userId: number | null): Promise<boolean> {
 	if (!userId) return false;

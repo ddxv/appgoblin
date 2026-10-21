@@ -1,5 +1,5 @@
 <script lang="ts">
-	import MainContent from '#lib/MainContent.svelte';
+	import MainContent from '$lib/MainContent.svelte';
 
 	interface Props {
 		children?: import('svelte').Snippet;

@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import type { Crumb } from '../../types';
-	import Breadcrumbs from '#lib/Breadcrumbs.svelte';
-	import CompanyTypesTabs from '#lib/utils/CompanyTypesTabs.svelte';
-	import MainContent from '#lib/MainContent.svelte';
+	import Breadcrumbs from '$lib/Breadcrumbs.svelte';
+	import CompanyTypesTabs from '$lib/utils/CompanyTypesTabs.svelte';
+	import MainContent from '$lib/MainContent.svelte';
 	import type { MyCrumbMetadata } from '../../types';
 
 	let { data, children } = $props();

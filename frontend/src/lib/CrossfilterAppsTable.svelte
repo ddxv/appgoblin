@@ -6,12 +6,12 @@
 		createAppTable,
 		createTableState,
 		FlexRender
-	} from '#lib/components/data-table/index.js';
-	import { genericColumns } from '#lib/components/data-table/generic-column.js';
-	import Pagination from '#lib/components/data-table/Pagination.svelte';
-	import ExportAsCSV from '#lib/components/data-table/ExportAsCSV.svelte';
-	import StoreIcon from '#lib/StoreIcon.svelte';
-	import { formatNumber, getRevenueBucket } from '#lib/utils/formatNumber.js';
+	} from '$lib/components/data-table/index.js';
+	import { genericColumns } from '$lib/components/data-table/generic-column';
+	import Pagination from '$lib/components/data-table/Pagination.svelte';
+	import ExportAsCSV from '$lib/components/data-table/ExportAsCSV.svelte';
+	import StoreIcon from '$lib/StoreIcon.svelte';
+	import { formatNumber, getRevenueBucket } from '$lib/utils/formatNumber';
 
 	import type { CrossfilterApp } from '../types.js';
 

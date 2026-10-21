@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { CompaniesOverview } from '../../../types';
-	import CompaniesOverviewTable from '#lib/CompaniesOverviewTable.svelte';
-	import CompaniesTableGrid from '#lib/CompaniesTableGrid.svelte';
+	import CompaniesOverviewTable from '$lib/CompaniesOverviewTable.svelte';
+	import CompaniesTableGrid from '$lib/CompaniesTableGrid.svelte';
 	interface Props {
 		data: CompaniesOverview;
 	}

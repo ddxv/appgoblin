@@ -1,5 +1,5 @@
-import { requireAuthOr401 } from '#lib/server/auth/auth.js';
-import { db } from '#lib/server/auth/db.js';
+import { requireAuthOr401 } from '$lib/server/auth/auth';
+import { db } from '$lib/server/auth/db';
 import type { PageServerLoad } from './$types';
 
 interface GeneratedReportRow {
