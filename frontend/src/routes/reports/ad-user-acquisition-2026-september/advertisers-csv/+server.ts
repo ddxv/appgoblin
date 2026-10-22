@@ -38,5 +38,5 @@ export async function GET(event: RequestEvent) {
 
 	const { url } = (await signingResponse.json()) as { url?: string };
 	if (!url) error(502, 'Signing service returned an invalid download URL.');
-	redirect(303, url);
+	redirect(303, url, { external: true });
 }
