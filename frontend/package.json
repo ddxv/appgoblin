@@ -58,5 +58,9 @@
 		"pg": "^8.23.0",
 		"qr": "^0.6.0",
 		"stripe": "^22.4.0"
+	},
+	"allowScripts": {
+		"argon2@0.45.1": true,
+		"sharp@0.34.5": true
 	}
 }
