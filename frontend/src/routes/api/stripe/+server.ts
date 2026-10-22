@@ -8,7 +8,7 @@ import {
 	STRIPE_PRICE_B2B_SDK_SEAT_YR,
 	STRIPE_PRICE_B2B_PREMIUM_SEAT_MO,
 	STRIPE_PRICE_B2B_PREMIUM_SEAT_YR
-} from '$env/static/private';
+} from '$app/env/private';
 import { sendPricingPlanCompletionEmail } from '$lib/server/contact';
 import type { BillingCycle, StripePriceKey } from '$lib/plans';
 
@@ -128,6 +128,7 @@ async function handleSubscriptionUpdated(subscription: any, eventCreatedAt?: num
 			subscription.ended_at ??
 			subscription.canceled_at ??
 			(status === 'canceled' ? currentPeriodEndVal : null));
+
 	const cancelRequestedAtUnix = cancelAtPeriodEnd
 		? (subscription.canceled_at ?? eventCreatedAt ?? null)
 		: status === 'canceled'

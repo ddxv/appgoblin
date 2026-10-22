@@ -1,6 +1,6 @@
 import { create, randomInt, CappedMap } from 'altcha-lib/frameworks/sveltekit';
 import { deriveKey } from 'altcha-lib/algorithms/pbkdf2';
-import { ALTCHA_HMAC_SECRET } from '$env/static/private';
+import { ALTCHA_HMAC_SECRET } from '$app/env/private';
 
 export const altcha = create({
 	hmacSignatureSecret: ALTCHA_HMAC_SECRET,
