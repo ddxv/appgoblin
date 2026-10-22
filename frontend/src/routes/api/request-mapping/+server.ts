@@ -1,4 +1,3 @@
-import { json } from '@sveltejs/kit';
 import { db } from '#lib/server/auth/db.js';
 import { sendMappingRequestEmail } from '#lib/server/contact.js';
 import type { RequestHandler } from './$types';
@@ -12,12 +11,12 @@ type MappingRequest = {
 };
 
 function badRequest(error: string) {
-	return json({ success: false, error }, { status: 400 });
+	return Response.json({ success: false, error }, { status: 400 });
 }
 
 export const POST: RequestHandler = async ({ request, locals }) => {
 	if (!locals.user) {
-		return json({ success: false, error: 'Authentication required' }, { status: 401 });
+		return Response.json({ success: false, error: 'Authentication required' }, { status: 401 });
 	}
 
 	const body = (await request.json()) as MappingRequest;
@@ -58,5 +57,5 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 		console.error('Failed to send mapping request notification:', error);
 	});
 
-	return json({ success: true });
+	return Response.json({ success: true });
 };

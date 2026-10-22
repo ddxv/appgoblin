@@ -7,7 +7,7 @@
 	interface Props {
 		relPathToRoutes?: string;
 		routeId: string | null;
-		url: URL;
+		url: URL | Readonly<URL>;
 		crumbs?: Crumb<any>[] | undefined;
 		routeModules?: Record<string, ModuleData> | undefined;
 		pageData: any;

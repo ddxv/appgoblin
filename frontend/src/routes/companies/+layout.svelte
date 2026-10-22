@@ -39,7 +39,7 @@
 {#if !page.params.domain}
 	<div class="px-1 md:px-4 mb-4">
 		<Breadcrumbs
-			url={page.url}
+			url={new URL(page.url.href)}
 			routeId={page.route.id}
 			pageData={page.data}
 			crumbs={pageDataCrumbs ?? customCrumbs}

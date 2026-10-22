@@ -62,9 +62,9 @@
 
 		// When opening search, clear the search param to start fresh
 		if (isSearching) {
-			const url = new URL(page.url);
+			const url = new URL(page.url.href);
 			url.searchParams.delete(`search${slotId}`);
-			goto(url.pathname + url.search, { noScroll: true, keepFocus: true, invalidateAll: false });
+			goto(url.pathname + url.search, { reset: false, refreshAll: false });
 		}
 	}
 </script>

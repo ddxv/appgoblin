@@ -1,4 +1,3 @@
-import { json } from '@sveltejs/kit';
 import { db } from '#lib/server/auth/db.js';
 import type { RequestHandler } from './$types';
 
@@ -13,12 +12,12 @@ type FollowRequest = {
 };
 
 function badRequest(error: string) {
-	return json({ success: false, error }, { status: 400 });
+	return Response.json({ success: false, error }, { status: 400 });
 }
 
 export const POST: RequestHandler = async ({ request, locals }) => {
 	if (!locals.user) {
-		return json({ success: false, error: 'Authentication required' }, { status: 401 });
+		return Response.json({ success: false, error: 'Authentication required' }, { status: 401 });
 	}
 
 	const body = (await request.json()) as FollowRequest;
@@ -48,7 +47,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 			);
 		}
 
-		return json({ success: true, following: follow });
+		return Response.json({ success: true, following: follow });
 	}
 
 	if (entity === 'keyword') {
@@ -75,7 +74,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 			);
 		}
 
-		return json({ success: true, following: follow });
+		return Response.json({ success: true, following: follow });
 	}
 
 	if (entity === 'company') {
@@ -98,7 +97,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 			);
 		}
 
-		return json({ success: true, following: follow });
+		return Response.json({ success: true, following: follow });
 	}
 
 	return badRequest('Unsupported follow entity');

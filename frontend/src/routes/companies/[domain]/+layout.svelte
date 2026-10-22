@@ -280,7 +280,7 @@
 	<MainContent class="min-w-0 pl-1 md:pl-4">
 		<div class="mb-4">
 			<Breadcrumbs
-				url={page.url}
+				url={new URL(page.url.href)}
 				routeId={page.route.id}
 				pageData={page.data}
 				crumbs={pageDataCrumbs ?? customCrumbs}

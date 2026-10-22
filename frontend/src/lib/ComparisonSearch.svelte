@@ -64,16 +64,16 @@
 	function handleSearch() {
 		if (!searchQuery || searchQuery.length < 3) {
 			// Clear search param if query is too short
-			const url = new URL(page.url);
+			const url = new URL(page.url.href);
 			url.searchParams.delete(`search${slotId}`);
-			goto(url.pathname + url.search, { noScroll: true, keepFocus: true });
+			goto(url.pathname + url.search, { reset: false });
 			return;
 		}
 
 		// Update URL with search param to trigger server-side search
-		const url = new URL(page.url);
+		const url = new URL(page.url.href);
 		url.searchParams.set(`search${slotId}`, searchQuery);
-		goto(url.pathname + url.search, { noScroll: true, keepFocus: true });
+		goto(url.pathname + url.search, { reset: false });
 	}
 
 	function selectApp(app: any) {
