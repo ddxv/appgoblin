@@ -9,14 +9,8 @@
 	let includedSeats = $derived(data.subscriptionTier === 'Premium B2B' ? 10 : 3);
 	let currentSeats = $derived(data.subscription?.seats_total ?? includedSeats);
 	let additionalSeats = $derived(Math.max(0, currentSeats - includedSeats));
-	let seatPrice = $derived(data.subscriptionTier === 'Premium B2B' ? 49 : 99);
-	let basePrice = $derived(
-		data.subscriptionTier === 'Premium B2B'
-			? 599
-			: data.subscriptionTier === 'Business SDK'
-				? 399
-				: 0
-	);
+	let seatPrice = $derived(data.subscription?.seat_price_amount ?? 0);
+	let basePrice = $derived(data.subscription?.base_price_amount ?? 0);
 	let periodLabel = $derived(data.subscription?.billing_cycle === 'yearly' ? 'year' : 'month');
 	let pendingSeats = $state(0);
 	$effect(() => {

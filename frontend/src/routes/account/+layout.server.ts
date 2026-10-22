@@ -1,6 +1,6 @@
 import { requireAuthOr401 } from '#lib/server/auth/auth.js';
 import { db } from '#lib/server/auth/db.js';
-import { STRIPE_PLAN_LABELS, type StripePriceKey } from '#lib/server/stripe.js';
+import { STRIPE_PLAN_LABELS, stripe, type StripePriceKey } from '#lib/server/stripe.js';
 import { getUserOrganization } from '#lib/server/organization.js';
 import type { LayoutServerLoadEvent } from './$types';
 
@@ -11,6 +11,7 @@ export async function load(event: LayoutServerLoadEvent) {
 	interface Subscription {
 		status: string;
 		provider_name: string;
+		provider_subscription_id: string | null;
 		current_period_start: Date | null;
 		current_period_end: Date;
 		cancel_at: Date | null;
@@ -19,6 +20,9 @@ export async function load(event: LayoutServerLoadEvent) {
 		created_at: Date;
 		tier_slug: string | null;
 		billing_cycle: 'monthly' | 'yearly';
+		provider_price_id: string | null;
+		base_price_amount: number | null;
+		seat_price_amount: number | null;
 		planName?: string | null;
 	}
 
@@ -27,9 +31,12 @@ export async function load(event: LayoutServerLoadEvent) {
 	}
 
 	const subscriptions = await db.query<Subscription>(
-		`SELECT s.status, tp.provider_name, s.current_period_start, s.current_period_end,
+		`		SELECT s.status, tp.provider_name, s.provider_subscription_id, s.current_period_start, s.current_period_end,
 		        s.cancel_at, s.cancel_requested_at, s.seats_total, s.created_at,
-		        t.slug AS tier_slug, tp.billing_cycle
+		        t.slug AS tier_slug, tp.billing_cycle,
+		        tp.provider_price_id,
+		        NULL::numeric AS base_price_amount,
+		        NULL::numeric AS seat_price_amount
          FROM subscriptions s
          LEFT JOIN tier_prices tp ON tp.id = s.tier_price_id
          LEFT JOIN tiers t ON t.id = tp.tier_id
@@ -44,6 +51,27 @@ export async function load(event: LayoutServerLoadEvent) {
 	);
 
 	const subscription = subscriptions[0] ?? null;
+	if (subscription?.provider_name === 'stripe' && subscription.provider_subscription_id) {
+		try {
+			const stripeSubscription = await stripe.subscriptions.retrieve(
+				subscription.provider_subscription_id,
+				{
+					expand: ['items.data.price']
+				}
+			);
+			const items = stripeSubscription.items.data;
+			const baseItem = items.find((item) => item.price.id === subscription.provider_price_id);
+			const seatItem = items.find((item) => item.price.id !== subscription.provider_price_id);
+			subscription.base_price_amount = baseItem?.price.unit_amount
+				? baseItem.price.unit_amount / 100
+				: null;
+			subscription.seat_price_amount = seatItem?.price.unit_amount
+				? seatItem.price.unit_amount / 100
+				: null;
+		} catch (error) {
+			console.error('Unable to load Stripe subscription pricing:', error);
+		}
+	}
 
 	const subscriptionHistory = await db.query<SubscriptionHistoryRow>(
 		`SELECT s.status, s.current_period_start, s.current_period_end, s.cancel_at,
