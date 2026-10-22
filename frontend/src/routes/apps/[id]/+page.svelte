@@ -1,10 +1,10 @@
 <script lang="ts">
-	import ExternalLinkSvg from '$lib/svg/ExternalLinkSVG.svelte';
+	import ExternalLinkSvg from '#lib/svg/ExternalLinkSVG.svelte';
 	import type { AppFullDetails } from '../../../types';
-	import WhiteCard from '$lib/WhiteCard.svelte';
-	import AppSDKOverview from '$lib/AppSDKOverview.svelte';
-	import AppOverviewSummary from '$lib/AppOverviewSummary.svelte';
-	import { formatNumber } from '$lib/utils/formatNumber';
+	import WhiteCard from '#lib/WhiteCard.svelte';
+	import AppSDKOverview from '#lib/AppSDKOverview.svelte';
+	import AppOverviewSummary from '#lib/AppOverviewSummary.svelte';
+	import { formatNumber } from '#lib/utils/formatNumber.js';
 
 	interface Props {
 		data: AppFullDetails;

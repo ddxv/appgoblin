@@ -1,5 +1,5 @@
 import { json } from '@sveltejs/kit';
-import { db } from '$lib/server/auth/db';
+import { db } from '#lib/server/auth/db.js';
 import type { RequestHandler } from './$types';
 
 type FollowEntity = 'app' | 'keyword' | 'company';

@@ -6,7 +6,7 @@ import {
 	EMAIL_USER,
 	EMAIL_PASSWORD
 } from '$app/env/private';
-import { STRIPE_PLAN_LABELS, type BillingCycle, type StripePriceKey } from '$lib/plans';
+import { STRIPE_PLAN_LABELS, type BillingCycle, type StripePriceKey } from '#lib/plans.js';
 
 let transporter: ReturnType<typeof nodemailer.createTransport> | null = null;
 

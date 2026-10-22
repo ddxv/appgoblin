@@ -1,5 +1,5 @@
 import Stripe from 'stripe';
-import { db } from '$lib/server/auth/db';
+import { db } from '#lib/server/auth/db.js';
 import { error } from '@sveltejs/kit';
 
 import {
@@ -11,8 +11,8 @@ import {
 	STRIPE_PRICE_B2B_PREMIUM_SEAT_YR
 } from '$app/env/private';
 
-import { STRIPE_PLAN_LABELS, type BillingCycle, type StripePriceKey } from '$lib/plans';
-export { STRIPE_PLAN_LABELS, type BillingCycle, type StripePriceKey } from '$lib/plans';
+import { STRIPE_PLAN_LABELS, type BillingCycle, type StripePriceKey } from '#lib/plans.js';
+export { STRIPE_PLAN_LABELS, type BillingCycle, type StripePriceKey } from '#lib/plans.js';
 
 export const stripe = new Stripe(STRIPE_SECRET_KEY, {
 	apiVersion: '2026-07-29.dahlia'

@@ -1,5 +1,5 @@
 import type { PageServerLoad } from './$types.js';
-import { createApiClient } from '$lib/server/api';
+import { createApiClient } from '#lib/server/api.js';
 
 export const load: PageServerLoad = async ({ fetch, depends }) => {
 	// Depend on user context so this load function runs again when auth state changes

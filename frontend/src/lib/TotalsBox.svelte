@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { formatNumberLocale, getCountBucket } from '$lib/utils/formatNumber';
+	import { formatNumberLocale, getCountBucket } from '#lib/utils/formatNumber.js';
 	import type { CompanyTrendSummary, CompanyTrendsSummary } from '../types';
 
 	import { page } from '$app/state';

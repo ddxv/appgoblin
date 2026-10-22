@@ -1,7 +1,7 @@
 import type { LayoutServerLoad } from './$types';
-import { createApiClient } from '$lib/server/api';
-import { getAppCategories } from '$lib/server/appCategories';
-import { db } from '$lib/server/auth/db';
+import { createApiClient } from '#lib/server/api.js';
+import { getAppCategories } from '#lib/server/appCategories.js';
+import { db } from '#lib/server/auth/db.js';
 
 import { getCachedData } from '../../../hooks.server';
 

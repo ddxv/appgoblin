@@ -3,8 +3,8 @@
 	import { page } from '$app/state';
 	import { LineChart } from 'layerchart';
 	import { format, PeriodType } from '@layerstack/utils';
-	import { plotColors } from '$lib/constants';
-	import AppKeywordsNav from '$lib/AppKeywordsNav.svelte';
+	import { plotColors } from '#lib/constants.js';
+	import AppKeywordsNav from '#lib/AppKeywordsNav.svelte';
 	import type { AppFullDetail } from '../../../../../../types';
 
 	type ComparePageData = {

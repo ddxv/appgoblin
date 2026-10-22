@@ -4,7 +4,7 @@
 	import CreditCard from '@lucide/svelte/icons/credit-card';
 	import Crown from '@lucide/svelte/icons/crown';
 	import LogOut from '@lucide/svelte/icons/log-out';
-	import { getPlanSummary } from '$lib/account/subscription';
+	import { getPlanSummary } from '#lib/account/subscription.js';
 
 	let { data }: { data: PageData } = $props();
 	let planSummary = $derived(getPlanSummary(data.subscriptionTier));

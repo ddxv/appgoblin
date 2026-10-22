@@ -1,5 +1,5 @@
 <script lang="ts">
-	import IconSearch from '$lib/svg/IconSearch.svelte';
+	import IconSearch from '#lib/svg/IconSearch.svelte';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
 

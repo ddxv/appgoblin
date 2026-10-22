@@ -6,7 +6,7 @@
 	import Mail from '@lucide/svelte/icons/mail';
 	import Loader2 from '@lucide/svelte/icons/loader-2';
 	import RotateCcw from '@lucide/svelte/icons/rotate-ccw';
-	import { countryCodeToEmoji } from '$lib/utils/countryCodeToEmoji';
+	import { countryCodeToEmoji } from '#lib/utils/countryCodeToEmoji.js';
 	import { applyAction, enhance } from '$app/forms';
 	import {
 		Combobox,
@@ -14,7 +14,7 @@
 		type ComboboxRootProps,
 		useListCollection
 	} from '@skeletonlabs/skeleton-svelte';
-	import CrossfilterAppsTable from '$lib/CrossfilterAppsTable.svelte';
+	import CrossfilterAppsTable from '#lib/CrossfilterAppsTable.svelte';
 
 	import type { CatData, CrossfilterApp, Countries } from '../.././types';
 

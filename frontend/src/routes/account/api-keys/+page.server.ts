@@ -1,7 +1,7 @@
 import { fail } from '@sveltejs/kit';
-import { requireAuthOr401 } from '$lib/server/auth/auth';
-import { db } from '$lib/server/auth/db';
-import { encodeBase32, encodeHexLowerCase, sha256 } from '$lib/server/auth/utils';
+import { requireAuthOr401 } from '#lib/server/auth/auth.js';
+import { db } from '#lib/server/auth/db.js';
+import { encodeBase32, encodeHexLowerCase, sha256 } from '#lib/server/auth/utils.js';
 
 import type { Actions, PageServerLoadEvent, RequestEvent } from './$types';
 

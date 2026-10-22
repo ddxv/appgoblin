@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import type { PageData } from './$types';
-	import { getPlanSummary } from '$lib/account/subscription';
+	import { getPlanSummary } from '#lib/account/subscription.js';
 	import Crown from '@lucide/svelte/icons/crown';
 
 	let { data }: { data: PageData } = $props();

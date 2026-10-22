@@ -1,5 +1,5 @@
-import { stripe } from '$lib/server/stripe';
-import { db } from '$lib/server/auth/db';
+import { stripe } from '#lib/server/stripe.js';
+import { db } from '#lib/server/auth/db.js';
 import type { RequestHandler } from './$types';
 
 import {
@@ -9,8 +9,8 @@ import {
 	STRIPE_PRICE_B2B_PREMIUM_SEAT_MO,
 	STRIPE_PRICE_B2B_PREMIUM_SEAT_YR
 } from '$app/env/private';
-import { sendPricingPlanCompletionEmail } from '$lib/server/contact';
-import type { BillingCycle, StripePriceKey } from '$lib/plans';
+import { sendPricingPlanCompletionEmail } from '#lib/server/contact.js';
+import type { BillingCycle, StripePriceKey } from '#lib/plans.js';
 
 export const POST: RequestHandler = async ({ request }) => {
 	console.log('Stripe webhook request received');

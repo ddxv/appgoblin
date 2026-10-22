@@ -1,4 +1,4 @@
-import { getBlogPostsMetadata, getReportsMetadata } from '$lib/content';
+import { getBlogPostsMetadata, getReportsMetadata } from '#lib/content.js';
 
 import type { RequestHandler } from './$types';
 

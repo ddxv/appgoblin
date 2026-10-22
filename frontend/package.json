@@ -62,5 +62,9 @@
 	"allowScripts": {
 		"argon2@0.45.1": true,
 		"sharp@0.34.5": true
+	},
+	"imports": {
+		"#lib": "./src/lib/index.js",
+		"#lib/*": "./src/lib/*"
 	}
 }

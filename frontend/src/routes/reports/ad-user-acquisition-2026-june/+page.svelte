@@ -1,13 +1,13 @@
 <script lang="ts">
-	import CompanyButton from '$lib/CompanyButton.svelte';
-	import CreativeModal from '$lib/CreativeModal.svelte';
-	import PopularCreativeCard from '$lib/PopularCreativeCard.svelte';
+	import CompanyButton from '#lib/CompanyButton.svelte';
+	import CreativeModal from '#lib/CreativeModal.svelte';
+	import PopularCreativeCard from '#lib/PopularCreativeCard.svelte';
 	import Crown from '@lucide/svelte/icons/crown';
 	import Lock from '@lucide/svelte/icons/lock';
-	import RankBadge from '$lib/RankBadge.svelte';
-	import { createCreativeModal } from '$lib/stores/creativeModal.svelte';
+	import RankBadge from '#lib/RankBadge.svelte';
+	import { createCreativeModal } from '#lib/stores/creativeModal.svelte.js';
 
-	import { formatNumber } from '$lib/utils/formatNumber.js';
+	import { formatNumber } from '#lib/utils/formatNumber.js';
 
 	let { data } = $props();
 

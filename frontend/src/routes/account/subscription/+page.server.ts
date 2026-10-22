@@ -1,8 +1,8 @@
 import { fail, redirect } from '@sveltejs/kit';
-import { requireFullAuth } from '$lib/server/auth/auth';
-import { db } from '$lib/server/auth/db';
-import { getUserOrganization, isOrganizationOwner } from '$lib/server/organization';
-import { createPortalSession, updateSubscriptionSeats } from '$lib/server/stripe';
+import { requireFullAuth } from '#lib/server/auth/auth.js';
+import { db } from '#lib/server/auth/db.js';
+import { getUserOrganization, isOrganizationOwner } from '#lib/server/organization.js';
+import { createPortalSession, updateSubscriptionSeats } from '#lib/server/stripe.js';
 import type { Actions, RequestEvent } from './$types';
 
 async function requireSubscriptionUser(event: RequestEvent) {

@@ -1,7 +1,7 @@
 <script lang="ts">
-	import ManifestItemList from '$lib/ManifestItemList.svelte';
-	import WhiteCard from '$lib/WhiteCard.svelte';
-	import SdkVersionSummary from '$lib/SdkVersionSummary.svelte';
+	import ManifestItemList from '#lib/ManifestItemList.svelte';
+	import WhiteCard from '#lib/WhiteCard.svelte';
+	import SdkVersionSummary from '#lib/SdkVersionSummary.svelte';
 
 	let { data }: { data: any } = $props();
 

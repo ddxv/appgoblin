@@ -1,5 +1,5 @@
 import type { PageServerLoad } from './$types';
-import { requireAuthOr401 } from '$lib/server/auth/auth';
+import { requireAuthOr401 } from '#lib/server/auth/auth.js';
 import { getCachedData } from '../../../../hooks.server';
 
 export const ssr: boolean = true;

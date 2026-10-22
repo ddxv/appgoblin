@@ -1,6 +1,6 @@
 <script>
-	import CreativesMonetizedTable from '$lib/CreativesMonetizedTable.svelte';
-	import WhiteCard from '$lib/WhiteCard.svelte';
+	import CreativesMonetizedTable from '#lib/CreativesMonetizedTable.svelte';
+	import WhiteCard from '#lib/WhiteCard.svelte';
 	let { data } = $props();
 </script>
 

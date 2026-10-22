@@ -1,9 +1,9 @@
 <script lang="ts">
-	import WhiteCard from '$lib/WhiteCard.svelte';
-	import AppAPICallsTable from '$lib/AppAPICallsTable.svelte';
-	import CompanyButton from '$lib/CompanyButton.svelte';
+	import WhiteCard from '#lib/WhiteCard.svelte';
+	import AppAPICallsTable from '#lib/AppAPICallsTable.svelte';
+	import CompanyButton from '#lib/CompanyButton.svelte';
 
-	import { countryCodeToEmoji } from '$lib/utils/countryCodeToEmoji';
+	import { countryCodeToEmoji } from '#lib/utils/countryCodeToEmoji.js';
 
 	let { data }: { data: any } = $props();
 

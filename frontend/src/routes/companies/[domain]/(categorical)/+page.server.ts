@@ -1,6 +1,6 @@
-import { userHasTierAccess } from '$lib/server/subscription';
+import { userHasTierAccess } from '#lib/server/subscription.js';
 import type { PageServerLoad } from './$types';
-import { createApiClient } from '$lib/server/api';
+import { createApiClient } from '#lib/server/api.js';
 
 export const ssr: boolean = true;
 export const csr: boolean = true;

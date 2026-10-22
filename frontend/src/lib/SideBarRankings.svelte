@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import CardFirst from './CardFirst.svelte';
-	import { prettyName } from '$lib/utils/prettyNames';
+	import { prettyName } from '#lib/utils/prettyNames.js';
 	import type { StoreIDLookup, CollectionRanks, CategoryRanks } from '../types';
 
 	const buttonSelectedClass = 'btn preset-filled-secondary-100-900 relative ';

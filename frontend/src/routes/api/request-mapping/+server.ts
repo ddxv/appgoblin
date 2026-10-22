@@ -1,6 +1,6 @@
 import { json } from '@sveltejs/kit';
-import { db } from '$lib/server/auth/db';
-import { sendMappingRequestEmail } from '$lib/server/contact';
+import { db } from '#lib/server/auth/db.js';
+import { sendMappingRequestEmail } from '#lib/server/contact.js';
 import type { RequestHandler } from './$types';
 
 type MappingType = 'company_domain_name' | 'app_sdk';

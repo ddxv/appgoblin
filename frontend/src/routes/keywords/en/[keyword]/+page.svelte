@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import AppRankTable from '$lib/AppRankTable.svelte';
+	import AppRankTable from '#lib/AppRankTable.svelte';
 	import type { KeywordScore } from '../../../../types';
 
 	type KeywordApps = {

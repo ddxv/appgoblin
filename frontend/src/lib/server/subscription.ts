@@ -1,5 +1,5 @@
-import { db } from '$lib/server/auth/db';
-import { getOrganizationSubscriptionAccess } from '$lib/server/organization';
+import { db } from '#lib/server/auth/db.js';
+import { getOrganizationSubscriptionAccess } from '#lib/server/organization.js';
 
 /**
  * Get all tier slugs the user currently has access to.
