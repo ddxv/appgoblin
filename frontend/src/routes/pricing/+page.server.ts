@@ -6,7 +6,7 @@ import {
 	type StripePriceKey,
 	type BillingCycle
 } from '#lib/server/stripe.js';
-import { requireFullAuth, isSafeRedirect } from '#lib/server/auth/auth.js';
+import { requireFullAuth } from '#lib/server/auth/auth.js';
 import { db } from '#lib/server/auth/db.js';
 import { sendPricingPlanSelectionEmail } from '#lib/server/contact.js';
 
