@@ -39,5 +39,5 @@ export const GET: RequestHandler = async (event) => {
 		error(502, 'The report download URL could not be created.');
 	}
 
-	redirect(303, signed.url);
+	redirect(303, signed.url, { external: true });
 };

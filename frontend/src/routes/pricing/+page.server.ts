@@ -88,7 +88,7 @@ export async function load(event: PageServerLoadEvent) {
 			console.error(e);
 		}
 		if (url) {
-			return redirect(303, url);
+			return redirect(303, url, { external: true });
 		}
 	}
 
@@ -199,6 +199,6 @@ export const actions: Actions = {
 			return fail(500, { message: 'Failed to create checkout session' });
 		}
 
-		redirect(303, url);
+		redirect(303, url, { external: true });
 	}
 };

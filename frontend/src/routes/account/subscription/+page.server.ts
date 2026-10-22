@@ -67,6 +67,6 @@ export const actions: Actions = {
 			return fail(500, { message: 'Failed to create portal session' });
 		}
 
-		redirect(303, url);
+		redirect(303, url, { external: true });
 	}
 };

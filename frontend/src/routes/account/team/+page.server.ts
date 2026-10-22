@@ -54,7 +54,7 @@ export const actions: Actions = {
 		try {
 			const url = await createPortalSession(user.id);
 			if (!url) return fail(500, { message: 'Failed to create portal session' });
-			return redirect(303, url);
+			return redirect(303, url, { external: true });
 		} catch (error) {
 			console.error('Failed to create Stripe portal session', error);
 			return fail(500, { message: 'Unable to open Stripe billing.' });
