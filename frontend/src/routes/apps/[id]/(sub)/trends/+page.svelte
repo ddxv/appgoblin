@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { AppGlobalMetrics, AppCountryMetrics } from '../../../../../types';
-	import AppTrendsDashboard from '$lib/AppTrendsDash.svelte';
+	import AppTrendsDashboard from '#lib/AppTrendsDash.svelte';
 
 	interface Props {
 		data: {

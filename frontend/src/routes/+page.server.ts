@@ -1,7 +1,7 @@
 import type { PageServerLoad } from './$types.js';
-import { createApiClient } from '$lib/server/api';
+import { createApiClient } from '#lib/server/api.js';
 import { getCachedData } from '../hooks.server.js';
-import { getMixedContentFeed } from '$lib/content.js';
+import { getMixedContentFeed } from '#lib/content.js';
 
 export const ssr = true;
 export const csr = true;

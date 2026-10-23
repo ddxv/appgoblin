@@ -10,7 +10,7 @@
 	import Code from '@lucide/svelte/icons/code';
 	import FileText from '@lucide/svelte/icons/file-text';
 	import Users from '@lucide/svelte/icons/users';
-	import MainContent from '$lib/MainContent.svelte';
+	import MainContent from '#lib/MainContent.svelte';
 
 	let { data, children }: { data: LayoutData; children: any } = $props();
 

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import MainContent from '$lib/MainContent.svelte';
+	import MainContent from '#lib/MainContent.svelte';
 
 	let { data, children } = $props();
 </script>

@@ -1,6 +1,6 @@
 import type { PageServerLoad } from './$types';
 
-import { createApiClient } from '$lib/server/api';
+import { createApiClient } from '#lib/server/api.js';
 
 export const load: PageServerLoad = async ({ fetch, params, parent }) => {
 	const api = createApiClient(fetch);

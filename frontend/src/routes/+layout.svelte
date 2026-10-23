@@ -5,19 +5,19 @@
 	import { goto } from '$app/navigation';
 	import { Menu, Portal } from '@skeletonlabs/skeleton-svelte';
 
-	import IconSearch from '$lib/svg/IconSearch.svelte';
+	import IconSearch from '#lib/svg/IconSearch.svelte';
 	import MenuIcon from '@lucide/svelte/icons/menu';
 	import MoonIcon from '@lucide/svelte/icons/moon';
 	import SunIcon from '@lucide/svelte/icons/sun';
 
 	import { AppBar } from '@skeletonlabs/skeleton-svelte';
 
-	import discordIconSvg from '$lib/svg/discord-mark-black.svg?raw';
-	import githubIconSvg from '$lib/svg/github-mark.svg?raw';
-	import LoginAccountButton from '$lib/LoginAccountButton.svelte';
-	import MainContent from '$lib/MainContent.svelte';
-	import NavTabs from '$lib/NavTabs.svelte';
-	import { initializeTheme, resolvedThemeMode, toggleTheme } from '$lib/stores/theme.svelte';
+	import discordIconSvg from '#lib/svg/discord-mark-black.svg?raw';
+	import githubIconSvg from '#lib/svg/github-mark.svg?raw';
+	import LoginAccountButton from '#lib/LoginAccountButton.svelte';
+	import MainContent from '#lib/MainContent.svelte';
+	import NavTabs from '#lib/NavTabs.svelte';
+	import { initializeTheme, resolvedThemeMode, toggleTheme } from '#lib/stores/theme.svelte.js';
 
 	let { children } = $props();
 	let isSearchStarting = $state(false);

@@ -1,11 +1,10 @@
-import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 
 export const POST: RequestHandler = async ({ request, locals }) => {
 	const { appId } = await request.json();
 
 	if (!appId) {
-		return json({ success: false, error: 'appId is required' }, { status: 400 });
+		return Response.json({ success: false, error: 'appId is required' }, { status: 400 });
 	}
 
 	const userId = locals.user?.id ?? null;
@@ -21,8 +20,8 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 	});
 
 	if (response.status === 200) {
-		return json({ success: true });
+		return Response.json({ success: true });
 	} else {
-		return json({ success: false }, { status: response.status });
+		return Response.json({ success: false }, { status: response.status });
 	}
 };

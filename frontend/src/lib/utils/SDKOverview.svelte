@@ -1,6 +1,6 @@
 <script lang="ts">
-	import WhiteCard from '$lib/WhiteCard.svelte';
-	import { formatNumber } from '$lib/utils/formatNumber';
+	import WhiteCard from '#lib/WhiteCard.svelte';
+	import { formatNumber } from '#lib/utils/formatNumber.js';
 
 	let { data } = $props();
 </script>

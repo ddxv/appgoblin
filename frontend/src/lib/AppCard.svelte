@@ -1,10 +1,10 @@
 <script lang="ts">
 	import type { AppFullDetail, RankedApps } from '../types';
 
-	import Rating from '$lib/StarsRating.svelte';
-	import IconDownload from '$lib/svg/IconDownload.svelte';
+	import Rating from '#lib/StarsRating.svelte';
+	import IconDownload from '#lib/svg/IconDownload.svelte';
 	import StoreIcon from './StoreIcon.svelte';
-	import { formatNumber } from '$lib/utils/formatNumber';
+	import { formatNumber } from '#lib/utils/formatNumber.js';
 
 	interface Props {
 		app: AppFullDetail | RankedApps;

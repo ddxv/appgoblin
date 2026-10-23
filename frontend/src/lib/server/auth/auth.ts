@@ -1,7 +1,7 @@
 import { error, redirect } from '@sveltejs/kit';
 import type { RequestEvent } from '@sveltejs/kit';
 import { db } from './db';
-import { getOrganizationSubscriptionAccess } from '$lib/server/organization';
+import { getOrganizationSubscriptionAccess } from '#lib/server/organization.js';
 
 /**
  * Build login URL with optional redirectTo (current path by default).

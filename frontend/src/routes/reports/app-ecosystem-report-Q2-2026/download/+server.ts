@@ -1,5 +1,5 @@
 import type { RequestHandler } from './$types';
-import { requireAuth } from '$lib/server/auth/auth';
+import { requireAuth } from '#lib/server/auth/auth.js';
 
 export const GET: RequestHandler = async (event) => {
 	requireAuth(event);

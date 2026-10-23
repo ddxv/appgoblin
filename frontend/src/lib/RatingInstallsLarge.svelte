@@ -4,9 +4,9 @@
 	import UsersIcon from '@lucide/svelte/icons/users';
 	import DollarSignIcon from '@lucide/svelte/icons/dollar-sign';
 
-	import IconDownload from '$lib/svg/IconDownload.svelte';
+	import IconDownload from '#lib/svg/IconDownload.svelte';
 	import Star from './Star.svelte';
-	import { formatNumber, getRevenueBucket } from '$lib/utils/formatNumber';
+	import { formatNumber, getRevenueBucket } from '#lib/utils/formatNumber.js';
 
 	import type { AppFullDetail } from '../types';
 	interface Props {

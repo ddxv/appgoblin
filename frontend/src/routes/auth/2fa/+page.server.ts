@@ -1,8 +1,8 @@
-import { totpBucket } from '$lib/server/auth/2fa';
+import { totpBucket } from '#lib/server/auth/2fa.js';
 import { fail, redirect } from '@sveltejs/kit';
-import { getUserTOTPKey } from '$lib/server/auth/user';
-import { verifyTOTP } from '$lib/server/auth/utils';
-import { setSessionAs2FAVerified } from '$lib/server/auth/session';
+import { getUserTOTPKey } from '#lib/server/auth/user.js';
+import { verifyTOTP } from '#lib/server/auth/utils.js';
+import { setSessionAs2FAVerified } from '#lib/server/auth/session.js';
 
 import type { Actions, RequestEvent } from './$types';
 

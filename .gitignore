@@ -191,3 +191,6 @@ frontend/yarn-debug.log*
 frontend/yarn-error.log*
 
 scratchpad.py
+
+*.pem
+.mcp-server-config

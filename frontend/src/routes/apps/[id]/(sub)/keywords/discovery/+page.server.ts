@@ -1,6 +1,6 @@
 import type { PageServerLoad } from './$types';
-import { createApiClient } from '$lib/server/api';
-import { requireAuthOr401 } from '$lib/server/auth/auth';
+import { createApiClient } from '#lib/server/api.js';
+import { requireAuthOr401 } from '#lib/server/auth/auth.js';
 
 export const load: PageServerLoad = async (event) => {
 	const { fetch, params, parent } = event;

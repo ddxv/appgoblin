@@ -1,6 +1,6 @@
 <script>
-	import CreativesTable from '$lib/CreativesTable.svelte';
-	import WhiteCard from '$lib/WhiteCard.svelte';
+	import CreativesTable from '#lib/CreativesTable.svelte';
+	import WhiteCard from '#lib/WhiteCard.svelte';
 	let { data } = $props();
 </script>
 

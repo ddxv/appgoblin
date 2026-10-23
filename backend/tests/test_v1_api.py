@@ -205,11 +205,35 @@ def _patch_ranks(rows: list[dict]):
     )
 
 
+def _patch_mapped_sdks(rows: list[dict]):
+    mapped_sdks_df = pd.DataFrame(rows)
+    return patch(
+        "api_app.controllers.public.v1.apps.get_app_mapped_sdks",
+        return_value=mapped_sdks_df,
+    )
+
+
 def _patch_sdk_details(rows: list[dict]):
     details_df = pd.DataFrame(rows)
     return patch(
         "api_app.controllers.public.v1.apps.get_app_sdk_details",
         return_value=details_df,
+    )
+
+
+def _patch_sdk_companies(rows: list[dict]):
+    companies_df = pd.DataFrame(rows)
+    return patch(
+        "api_app.controllers.public.v1.companies.get_sdk_companies",
+        return_value=companies_df,
+    )
+
+
+def _patch_company_sdks(rows: list[dict]):
+    sdks_df = pd.DataFrame(rows)
+    return patch(
+        "api_app.controllers.public.v1.companies.get_company_sdks",
+        return_value=sdks_df,
     )
 
 
@@ -334,6 +358,97 @@ class TestV1CompaniesAuth:
 
         assert resp.status_code == 403
         assert "paid subscription tier" in resp.json()["detail"]
+
+    def test_company_sdks_returns_public_mapping(self):
+        app = _make_test_app()
+        with (
+            _patch_key_found("premium_access"),
+            _patch_company_sdks(
+                [
+                    {"sdk_slug": "unity-ads", "sdk_name": "Unity Ads", "app_count": 30},
+                    {"sdk_slug": "unity-ads", "sdk_name": "Unity Ads", "app_count": 30},
+                    {"sdk_slug": "unity-mediation", "sdk_name": "Unity Mediation", "app_count": 12},
+                ]
+            ),
+            TestClient(app=app, raise_server_exceptions=False) as client,
+        ):
+            resp = client.get(
+                "/api/v1/companies/unity.com/sdks",
+                headers={"X-API-Key": "ag_company_sdks"},
+            )
+
+        assert resp.status_code == 200
+        assert resp.json() == {
+            "company_domain": "unity.com",
+            "sdks": [
+                {"sdk_slug": "unity-ads", "sdk_name": "Unity Ads", "app_count": 30},
+                {
+                    "sdk_slug": "unity-mediation",
+                    "sdk_name": "Unity Mediation",
+                    "app_count": 12,
+                },
+            ],
+        }
+
+    def test_sdk_company_overview_returns_public_shape(self):
+        app = _make_test_app()
+        company_payload = PublicCompanyOverview(
+            domain_is_mapped=True,
+            company_types=["ad-networks"],
+        )
+        with (
+            _patch_key_found("premium_access"),
+            _patch_sdk_companies(
+                [
+                    {
+                        "sdk_id": 42,
+                        "sdk_slug": "example-sdk",
+                        "company_name": "Example Co",
+                        "company_domain": "example.com",
+                    }
+                ]
+            ),
+            patch(
+                "api_app.controllers.public.v1.companies._build_public_company_overview_payload",
+                return_value=company_payload,
+            ),
+            TestClient(app=app, raise_server_exceptions=False) as client,
+        ):
+            resp = client.get(
+                "/api/v1/sdks/example-sdk",
+                headers={"X-API-Key": "ag_goodkey"},
+            )
+
+        assert resp.status_code == 200
+        assert resp.json() == {
+            "sdk_slug": "example-sdk",
+            "company_domain": "example.com",
+            "company_name": "Example Co",
+            "company": {
+                "domain_is_mapped": True,
+                "company_types": ["ad-networks"],
+                "metrics": {
+                    "total_apps": 0,
+                    "adstxt_direct_android_total_apps": 0,
+                    "adstxt_direct_ios_total_apps": 0,
+                    "adstxt_reseller_android_total_apps": 0,
+                    "adstxt_reseller_ios_total_apps": 0,
+                    "sdk_android_total_apps": 0,
+                    "sdk_ios_total_apps": 0,
+                    "sdk_total_apps": 0,
+                    "api_android_total_apps": 0,
+                    "api_total_apps": 0,
+                    "sdk_android_installs_d30": 0,
+                    "sdk_ios_installs_d30": 0,
+                    "adstxt_direct_android_installs_d30": 0,
+                    "adstxt_reseller_android_installs_d30": 0,
+                },
+                "trends": None,
+                "mapping_notice": None,
+                "datasets": None,
+            },
+        }
+        assert "sdk_id" not in resp.json()
 
     def test_paid_key_returns_200(self):
         app = _make_test_app()
@@ -886,6 +1001,47 @@ class TestV1CompanyAppChanges:
 
 
 class TestV1Apps:
+    def test_mapped_sdks_requires_b2b_sdk_tier(self):
+        app = _make_test_app()
+        with (
+            _patch_key_found("free"),
+            TestClient(app=app, raise_server_exceptions=False) as client,
+        ):
+            resp = client.get(
+                "/api/v1/apps/com.example.app/mapped-sdks",
+                headers={"X-API-Key": "ag_mapped_sdks_free"},
+            )
+
+        assert resp.status_code == 403
+        assert "B2B SDK" in resp.json()["detail"]
+
+    def test_mapped_sdks_returns_company_grouped_slugs(self):
+        app = _make_test_app()
+        with (
+            _patch_key_found("b2b_sdk"),
+            _patch_mapped_sdks(
+                [
+                    {"company_domain": "adjust.com", "sdk_slug": "adjust"},
+                    {"company_domain": "unity.com", "sdk_slug": "unity-ads"},
+                    {"company_domain": "adjust.com", "sdk_slug": "adjust-signals"},
+                ]
+            ),
+            TestClient(app=app, raise_server_exceptions=False) as client,
+        ):
+            resp = client.get(
+                "/api/v1/apps/com.example.app/mapped-sdks",
+                headers={"X-API-Key": "ag_mapped_sdks"},
+            )
+
+        assert resp.status_code == 200
+        assert resp.json() == {
+            "store_id": "com.example.app",
+            "mapped_sdks": {
+                "adjust.com": ["adjust", "adjust-signals"],
+                "unity.com": ["unity-ads"],
+            },
+        }
+
     def test_app_version_timeline_requires_b2b_sdk_tier(self):
         app = _make_test_app()
         with (
@@ -915,9 +1071,16 @@ class TestV1Apps:
                 "sdks_last_scanned_at": "2026-05-02T12:00:00",
                 "downloaded_at": "2026-05-01T12:00:00",
             },
+            {
+                "app_version_code": "41",
+                "sdk_scan_result": 0,
+                "sdks_last_scanned_at": None,
+                "downloaded_at": "2026-04-01T12:00:00",
+            },
         ]
         with (
             _patch_key_found("b2b_sdk"),
+            _patch_single_app({"store_id": "com.example.app"}),
             _patch_version_timeline(timeline_rows),
             TestClient(app=app, raise_server_exceptions=False) as client,
         ):
@@ -927,7 +1090,37 @@ class TestV1Apps:
             )
 
         assert resp.status_code == 200
-        assert resp.json() == timeline_rows[1:]
+        assert resp.json() == [
+            {
+                **timeline_rows[1],
+                "sdk_scan_result": "success",
+            },
+            {
+                **timeline_rows[2],
+                "sdk_scan_result": "failure",
+            },
+        ]
+
+    @pytest.mark.parametrize(
+        "path",
+        [
+            "/api/v1/apps/com.unknown.app/versions",
+            "/api/v1/apps/com.unknown.app/sdks/history",
+        ],
+    )
+    def test_app_version_endpoints_return_404_for_unknown_apps(self, path):
+        app = _make_test_app()
+        with (
+            _patch_key_found("b2b_sdk"),
+            _patch_single_app(None),
+            TestClient(app=app, raise_server_exceptions=False) as client,
+        ):
+            resp = client.get(
+                path,
+                headers={"X-API-Key": "ag_versions"},
+            )
+
+        assert resp.status_code == 404
 
     def test_app_sdk_history_returns_expected_shape(self):
         app = _make_test_app()
@@ -940,10 +1133,20 @@ class TestV1Apps:
                 "version_code_created_at": "2026-05-01T12:00:00",
                 "sdk_scan_result": 1,
                 "status": "added",
-            }
+            },
+            {
+                "company_name": None,
+                "company_domain": None,
+                "sdk_name": None,
+                "version_code": "41",
+                "version_code_created_at": "2026-04-01T12:00:00",
+                "sdk_scan_result": 0,
+                "status": None,
+            },
         ]
         with (
             _patch_key_found("b2b_premium"),
+            _patch_single_app({"store_id": "com.example.app"}),
             _patch_sdk_history(history_rows),
             patch(
                 "api_app.controllers.public.v1.apps.get_company_logos_df",
@@ -960,7 +1163,19 @@ class TestV1Apps:
 
         assert resp.status_code == 200
         assert resp.json() == {
-            "history": [{**history_rows[0], "company_logo_url": "adjust.png"}]
+            "history": [
+                {
+                    **history_rows[0],
+                    "sdk_scan_result": "success",
+                    "company_logo_url": "adjust.png",
+                },
+                {
+                    **history_rows[1],
+                    "sdk_scan_result": "failure",
+                    "status": "no_change",
+                    "company_logo_url": None,
+                },
+            ]
         }
 
     def test_app_basics_logs_umami_page_view_with_user_id(self):
@@ -1622,11 +1837,14 @@ class TestV1Docs:
         assert set(data["paths"]) == {
             "/api/v1/apps/{store_id}",
             "/api/v1/apps/{store_id}/ranks",
+            "/api/v1/apps/{store_id}/mapped-sdks",
             "/api/v1/apps/{store_id}/sdks",
             "/api/v1/apps/{store_id}/versions",
             "/api/v1/apps/{store_id}/sdks/history",
             "/api/v1/apps/{store_id}/sdks/history",
             "/api/v1/companies",
+            "/api/v1/companies/{company_domain}/sdks",
+            "/api/v1/sdks/{sdk_slug}",
             "/api/v1/companies/{company_domain}",
             "/api/v1/companies/{company_domain}/app-changes",
             "/api/v1/keywords/{keyword}",
@@ -1690,13 +1908,13 @@ class TestV1Docs:
         assert all(path.startswith("/api/v1/") for path in data["paths"])
         assert "PublicAppSdkOverview" not in data["components"]["schemas"]
         versions_operation = data["paths"]["/api/v1/apps/{store_id}/versions"]["get"]
-        assert versions_operation["summary"] == "[B2B SDK] /apps/{store_id}/versions"
+        assert versions_operation["summary"] == "[Paid] /apps/{store_id}/versions"
         assert "B2B SDK and B2B Premium tiers only" in versions_operation["description"]
         assert versions_operation["responses"]["200"]["content"]["application/json"][
             "examples"
         ]
         history_operation = data["paths"]["/api/v1/apps/{store_id}/sdks/history"]["get"]
-        assert history_operation["summary"] == "[B2B SDK] /apps/{store_id}/sdks/history"
+        assert history_operation["summary"] == "[Paid] /apps/{store_id}/sdks/history"
         assert "B2B SDK and B2B Premium tiers only" in history_operation["description"]
         app_basics_operation = data["paths"]["/api/v1/apps/{store_id}"]["get"]
         store_id_parameter = next(

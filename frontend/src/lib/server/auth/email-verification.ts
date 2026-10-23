@@ -3,7 +3,7 @@ import { generateRandomOTP, encodeBase32 } from './utils';
 import { db } from './db';
 import { ExpiringTokenBucket } from './rate-limit';
 import nodemailer from 'nodemailer';
-import { EMAIL_PASSWORD, EMAIL_HOST, EMAIL_PORT, EMAIL_USER } from '$env/static/private';
+import { EMAIL_PASSWORD, EMAIL_HOST, EMAIL_PORT, EMAIL_USER } from '$app/env/private';
 
 export async function getUserEmailVerificationRequest(
 	userId: number,
@@ -112,18 +112,14 @@ export async function createEmailVerificationRequest(
 
 	const code = generateRandomOTP();
 	const expiresAt = new Date(Date.now() + 1000 * 60 * 10);
+
 	await db.queryOne<{ id: string }>(
 		'INSERT INTO email_verification_requests (id, user_id, code, email, expires_at) VALUES ($1, $2, $3, $4, $5) RETURNING id',
 		[id, userId, code, email, expiresAt]
 	);
 
-	const request: EmailVerificationRequest = {
-		id,
-		userId,
-		code,
-		email,
-		expiresAt
-	};
+	const request: EmailVerificationRequest = { id, userId, code, email, expiresAt };
+
 	return request;
 }
 
@@ -281,7 +277,6 @@ const EMAIL_VERIFICATION_SEND_WINDOW_SECONDS = 60 * 60;
 
 export const EMAIL_VERIFICATION_LIMIT_MESSAGE =
 	'You can request up to 3 verification emails for now. Check spam or junk folder.';
-
 export const sendVerificationEmailBucket = new ExpiringTokenBucket<number>(
 	EMAIL_VERIFICATION_SEND_LIMIT,
 	EMAIL_VERIFICATION_SEND_WINDOW_SECONDS

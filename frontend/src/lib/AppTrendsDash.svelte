@@ -75,11 +75,11 @@
 		const region = (event.currentTarget as HTMLSelectElement).value;
 
 		if (region === 'global') {
-			await goto('?', { keepFocus: true, noScroll: true });
+			await goto('?', { reset: false });
 			return;
 		}
 
-		await goto(`?country=${encodeURIComponent(region)}`, { keepFocus: true, noScroll: true });
+		await goto(`?country=${encodeURIComponent(region)}`, { reset: false });
 	}
 
 	// Filter data by selected scope

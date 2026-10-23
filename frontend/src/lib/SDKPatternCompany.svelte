@@ -1,7 +1,7 @@
 <script lang="ts">
 	import WhiteCard from './WhiteCard.svelte';
 	import CompanyButton from './CompanyButton.svelte';
-	import { formatNumber } from '$lib/utils/formatNumber';
+	import { formatNumber } from '#lib/utils/formatNumber.js';
 	import type { SdkPatternCompany } from '../types';
 
 	let { matches }: { matches: SdkPatternCompany[] } = $props();

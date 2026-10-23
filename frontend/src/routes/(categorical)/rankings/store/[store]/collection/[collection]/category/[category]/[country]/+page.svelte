@@ -1,10 +1,10 @@
 <script lang="ts">
 	import type { StoreCategoryRanks } from '../../../../../../../../../../types.js';
 	import { page } from '$app/state';
-	import RankChart from '$lib/RankChart.svelte';
-	import AppRankTable from '$lib/AppRankTable.svelte';
-	import { countryCodeToEmoji } from '$lib/utils/countryCodeToEmoji';
-	import { prettyName } from '$lib/utils/prettyNames';
+	import RankChart from '#lib/RankChart.svelte';
+	import AppRankTable from '#lib/AppRankTable.svelte';
+	import { countryCodeToEmoji } from '#lib/utils/countryCodeToEmoji.js';
+	import { prettyName } from '#lib/utils/prettyNames.js';
 
 	interface Props {
 		data: StoreCategoryRanks;

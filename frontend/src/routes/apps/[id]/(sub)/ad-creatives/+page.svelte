@@ -1,5 +1,5 @@
 <script>
-	import WhiteCard from '$lib/WhiteCard.svelte';
+	import WhiteCard from '#lib/WhiteCard.svelte';
 	let { data } = $props();
 </script>
 

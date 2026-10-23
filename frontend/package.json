@@ -16,9 +16,9 @@
 		"@lucide/svelte": "^1.0.1",
 		"@skeletonlabs/skeleton": "^5.0.0",
 		"@skeletonlabs/skeleton-svelte": "^5.0.0",
-		"@sveltejs/adapter-node": "^5.5.7",
-		"@sveltejs/enhanced-img": "^0.11.0",
-		"@sveltejs/kit": "^2.70.2",
+		"@sveltejs/adapter-node": "^6.0.0",
+		"@sveltejs/enhanced-img": "^1.0.0",
+		"@sveltejs/kit": "^3.0.0",
 		"@sveltejs/vite-plugin-svelte": "^7.3.0",
 		"@tailwindcss/forms": "^0.5.9",
 		"@tailwindcss/vite": "^4.3.3",
@@ -35,7 +35,7 @@
 		"rehype-stringify": "^10.0.1",
 		"remark-parse": "^11.0.0",
 		"remark-rehype": "^11.1.2",
-		"svelte": "^5.56.8",
+		"svelte": "^5.57.1",
 		"svelte-check": "^4.7.5",
 		"tailwindcss": "^4.3.3",
 		"typescript": "^6.0.2",
@@ -54,9 +54,17 @@
 		"echarts": "^6.0.0",
 		"export-to-csv": "^1.4.0",
 		"layerchart": "^2.1.0",
-		"nodemailer": "^9.0.5",
+		"nodemailer": "^10.0.1",
 		"pg": "^8.23.0",
 		"qr": "^0.6.0",
 		"stripe": "^22.4.0"
+	},
+	"allowScripts": {
+		"argon2@0.45.1": true,
+		"sharp@0.34.5": true
+	},
+	"imports": {
+		"#lib": "./src/lib/index.js",
+		"#lib/*": "./src/lib/*"
 	}
 }

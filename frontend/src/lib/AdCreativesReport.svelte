@@ -3,13 +3,13 @@
 	import LayoutGrid from '@lucide/svelte/icons/layout-grid';
 	import RectangleHorizontal from '@lucide/svelte/icons/rectangle-horizontal';
 	import RectangleVertical from '@lucide/svelte/icons/rectangle-vertical';
-	import AdCreativeCard from '$lib/AdCreativeCard.svelte';
+	import AdCreativeCard from '#lib/AdCreativeCard.svelte';
 	import {
 		type AdCreativeCategoryOption,
 		adCreativeFormats,
 		buildAdCreativesUrl,
 		getAdCreativeNetworkLabel
-	} from '$lib/ad-creatives';
+	} from '#lib/ad-creatives.js';
 
 	interface CreativeCluster {
 		vhash: string;
@@ -122,10 +122,7 @@
 		const format = fmtSelect ? fmtSelect.value : selectedFormat;
 		const network = selectedSearchCompany;
 
-		goto(buildAdCreativesUrl({ category, format, network }), {
-			keepFocus: true,
-			noScroll: true
-		});
+		goto(buildAdCreativesUrl({ category, format, network }), { reset: false });
 	}
 
 	function handleNetworkFilter(network: string) {
@@ -135,19 +132,13 @@
 				format: selectedFormat,
 				network
 			}),
-			{
-				keepFocus: true,
-				noScroll: true
-			}
+			{ reset: false }
 		);
 	}
 
 	function clearAllFilters() {
 		selectedOrientationFilter = 'all';
-		goto(buildAdCreativesUrl({ category: 'overall', format: 'all', network: '' }), {
-			keepFocus: true,
-			noScroll: true
-		});
+		goto(buildAdCreativesUrl({ category: 'overall', format: 'all', network: '' }), { reset: false });
 	}
 
 	function setOrientationFilter(value: 'all' | 'portrait' | 'landscape') {

@@ -1,7 +1,7 @@
 import type { RequestEvent } from '@sveltejs/kit';
 import { error, redirect } from '@sveltejs/kit';
-import { requireFullAuth } from '$lib/server/auth/auth';
-import { userHasTierAccess } from '$lib/server/subscription';
+import { requireFullAuth } from '#lib/server/auth/auth.js';
+import { userHasTierAccess } from '#lib/server/subscription.js';
 
 export async function GET(event: RequestEvent) {
 	const { user } = requireFullAuth(event);
@@ -38,5 +38,5 @@ export async function GET(event: RequestEvent) {
 
 	const { url } = (await signingResponse.json()) as { url?: string };
 	if (!url) error(502, 'Signing service returned an invalid download URL.');
-	redirect(303, url);
+	redirect(303, url, { external: true });
 }

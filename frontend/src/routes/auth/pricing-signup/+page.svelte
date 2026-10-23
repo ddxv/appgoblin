@@ -1,6 +1,6 @@
 <script lang="ts">
-	import PlanSignupCallout from '$lib/PlanSignupCallout.svelte';
-	import SignupForm from '$lib/SignupForm.svelte';
+	import PlanSignupCallout from '#lib/PlanSignupCallout.svelte';
+	import SignupForm from '#lib/SignupForm.svelte';
 	import type { ActionData, PageData } from './$types';
 
 	let { data, form }: { data: PageData; form: ActionData } = $props();

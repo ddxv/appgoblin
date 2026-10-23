@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import type { PageData } from './$types';
-	import AppComparisonSlot from '$lib/AppComparisonSlot.svelte';
+	import AppComparisonSlot from '#lib/AppComparisonSlot.svelte';
 	import { goto } from '$app/navigation';
 
 	let { data }: { data: PageData } = $props();

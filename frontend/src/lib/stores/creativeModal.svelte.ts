@@ -4,7 +4,7 @@
  * @example
  * ```svelte
  * <script>
- *   import { createCreativeModal } from '$lib/stores/creativeModal.svelte';
+ *   import { createCreativeModal } from '#lib/stores/creativeModal.svelte.js';
  *   const creativeModal = createCreativeModal();
  * </script>
  *

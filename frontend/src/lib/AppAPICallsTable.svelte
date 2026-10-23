@@ -5,17 +5,17 @@
 
 	import { countryCodeToEmoji } from './utils/countryCodeToEmoji';
 
-	import Pagination from '$lib/components/data-table/Pagination.svelte';
-	import ExportAsCSV from '$lib/components/data-table/ExportAsCSV.svelte';
+	import Pagination from '#lib/components/data-table/Pagination.svelte';
+	import ExportAsCSV from '#lib/components/data-table/ExportAsCSV.svelte';
 	import type { AppAPIs } from '../types';
 
 	import {
 		createAppTable,
 		createTableState,
 		FlexRender
-	} from '$lib/components/data-table/index.js';
+	} from '#lib/components/data-table/index.js';
 
-	import { genericColumns } from '$lib/components/data-table/generic-column';
+	import { genericColumns } from '#lib/components/data-table/generic-column.js';
 
 	type DataTableProps = {
 		data: AppAPIs;

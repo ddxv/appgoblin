@@ -1,5 +1,5 @@
 import { error, redirect } from '@sveltejs/kit';
-import { buildAppAdsTxtUrl } from '$lib/server/downloads';
+import { buildAppAdsTxtUrl } from '#lib/server/downloads.js';
 
 import type { PageServerLoad } from './$types';
 
@@ -9,6 +9,6 @@ export const load: PageServerLoad = async (event) => {
 	}
 	const domain = event.params.domain || '';
 	const downloadUrl = buildAppAdsTxtUrl(domain);
-	if (downloadUrl) redirect(302, downloadUrl);
+	if (downloadUrl) redirect(302, downloadUrl, { external: true });
 	return { downloadUrl: null };
 };

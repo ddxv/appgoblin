@@ -1,5 +1,5 @@
 <script lang="ts">
-	import CompanyTrendsDash from '$lib/CompanyTrendsDash.svelte';
+	import CompanyTrendsDash from '#lib/CompanyTrendsDash.svelte';
 	import type { CompanyTrendsDetails } from '../../../../types';
 
 	interface Props {

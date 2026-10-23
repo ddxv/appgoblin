@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { format, PeriodType } from '@layerstack/utils';
 	import { AreaChart, LineChart, BarChart } from 'layerchart';
-	import AppSdkOverview from '$lib/AppSDKOverview.svelte';
+	import AppSdkOverview from '#lib/AppSDKOverview.svelte';
 
 	interface Props {
 		app: any;

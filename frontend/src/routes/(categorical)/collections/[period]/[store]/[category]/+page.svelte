@@ -1,5 +1,5 @@
 <script lang="ts">
-	import AppsCard from '$lib/AppGroupCard.svelte';
+	import AppsCard from '#lib/AppGroupCard.svelte';
 	import { page } from '$app/state';
 
 	let { data } = $props();

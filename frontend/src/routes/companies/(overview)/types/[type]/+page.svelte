@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import CompaniesOverviewTable from '$lib/CompaniesOverviewTable.svelte';
-	import CompaniesTableGrid from '$lib/CompaniesTableGrid.svelte';
-	import WhiteCard from '$lib/WhiteCard.svelte';
-	import CompanyCountryPie from '$lib/CompanyCountryPie.svelte';
+	import CompaniesOverviewTable from '#lib/CompaniesOverviewTable.svelte';
+	import CompaniesTableGrid from '#lib/CompaniesTableGrid.svelte';
+	import WhiteCard from '#lib/WhiteCard.svelte';
+	import CompanyCountryPie from '#lib/CompanyCountryPie.svelte';
 
 	import type { PageData } from './$types';
 

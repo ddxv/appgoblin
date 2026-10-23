@@ -1,5 +1,5 @@
 <script>
-	import discordIcon from '$lib/svg/discord-mark-black.svg?raw';
+	import discordIcon from '#lib/svg/discord-mark-black.svg?raw';
 	let contentPadding = 'p-2 md:p-4';
 	let cardPadding = 'p-2 mx:p-4';
 </script>
@@ -216,7 +216,7 @@
 			<br />
 			<p>You can download it from the Google Play Store.</p>
 			<a
-				href="https://app.thirdgate.dev/appgoblin-android-site"
+				href="https://play.google.com/store/apps/details?id=dev.thirdgate.appgoblin"
 				target="_blank"
 				class="anchor inline-flex items-baseline"
 			>

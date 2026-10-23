@@ -1,10 +1,10 @@
 <script lang="ts">
 	import type { AppFullDetail } from '../types';
-	import { formatNumber } from '$lib/utils/formatNumber';
-	import { createAppTable, createTableState } from '$lib/components/data-table/index.js';
-	import { genericColumns } from '$lib/components/data-table/generic-column';
-	import Pagination from '$lib/components/data-table/Pagination.svelte';
-	import ExportAsCSV from '$lib/components/data-table/ExportAsCSV.svelte';
+	import { formatNumber } from '#lib/utils/formatNumber.js';
+	import { createAppTable, createTableState } from '#lib/components/data-table/index.js';
+	import { genericColumns } from '#lib/components/data-table/generic-column.js';
+	import Pagination from '#lib/components/data-table/Pagination.svelte';
+	import ExportAsCSV from '#lib/components/data-table/ExportAsCSV.svelte';
 
 	type DataTableProps = {
 		data: AppFullDetail[];

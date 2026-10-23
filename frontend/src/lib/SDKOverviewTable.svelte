@@ -1,9 +1,9 @@
 <script lang="ts">
 	import StoreIcon from './StoreIcon.svelte';
-	import { formatNumber } from '$lib/utils/formatNumber';
+	import { formatNumber } from '#lib/utils/formatNumber.js';
 	import type { SdkOverview } from '../types';
-	import { createAppTable } from '$lib/components/data-table/index.js';
-	import { genericColumns } from '$lib/components/data-table/generic-column';
+	import { createAppTable } from '#lib/components/data-table/index.js';
+	import { genericColumns } from '#lib/components/data-table/generic-column.js';
 
 	interface Props {
 		entries_table: SdkOverview[];

@@ -1,4 +1,3 @@
-import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 
 export const GET: RequestHandler = async ({ params, fetch }) => {
@@ -7,7 +6,7 @@ export const GET: RequestHandler = async ({ params, fetch }) => {
 	);
 
 	if (!response.ok) {
-		return json(
+		return Response.json(
 			{ error: response.status === 404 ? 'App not found' : 'Unable to load app' },
 			{
 				status: response.status
@@ -15,5 +14,5 @@ export const GET: RequestHandler = async ({ params, fetch }) => {
 		);
 	}
 
-	return json(await response.json());
+	return Response.json(await response.json());
 };

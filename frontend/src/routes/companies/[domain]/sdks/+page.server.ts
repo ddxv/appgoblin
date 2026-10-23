@@ -1,7 +1,7 @@
 import type { PageServerLoad } from './$types';
-import { createApiClient } from '$lib/server/api';
-import { userHasTierAccess } from '$lib/server/subscription';
-import { requireAuthOr401 } from '$lib/server/auth/auth';
+import { createApiClient } from '#lib/server/api.js';
+import { userHasTierAccess } from '#lib/server/subscription.js';
+import { requireAuthOr401 } from '#lib/server/auth/auth.js';
 import { fail } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async ({ fetch, params, parent, locals }) => {

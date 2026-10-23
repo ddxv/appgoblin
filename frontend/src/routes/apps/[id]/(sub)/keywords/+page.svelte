@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { AppFullDetail, KeywordScore } from '../../../../../types';
-	import AppKeywordsNav from '$lib/AppKeywordsNav.svelte';
+	import AppKeywordsNav from '#lib/AppKeywordsNav.svelte';
 
 	type KeywordData = {
 		keywords: string[];

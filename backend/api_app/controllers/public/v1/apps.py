@@ -13,12 +13,14 @@ from api_app.analytics import PUBLIC_API_HOSTNAME, build_request_page_view_task
 from api_app.controllers.public.v1.public_models import (
     PublicAppBasics,
     PublicAppBestRank,
+    PublicAppMappedSdks,
     PublicAppSdkDetails,
     PublicAppSdkHistory,
 )
 from api_app.guards import validate_api_key
 from config import get_logger
 from dbcon.queries import (
+    get_app_mapped_sdks,
     get_app_sdk_details,
     get_app_sdk_history,
     get_app_version_timeline,
@@ -86,6 +88,22 @@ def _build_app_ranks_payload(state: State, store_id: str) -> list[PublicAppBestR
         )
         for row in overview_df.to_dict(orient="records")
     ]
+
+
+def _build_app_mapped_sdks_payload(
+    state: State, store_id: str
+) -> PublicAppMappedSdks:
+    """Return mapped SDK slugs grouped by company domain for an app."""
+    mapped_sdks_df = get_app_mapped_sdks(state, store_id)
+    mapped_sdks: dict[str, list[str]] = {}
+    for row in mapped_sdks_df.to_dict(orient="records"):
+        company_domain = row.get("company_domain")
+        sdk_slug = row.get("sdk_slug")
+        if pd.isna(company_domain) or pd.isna(sdk_slug):
+            continue
+        mapped_sdks.setdefault(str(company_domain), []).append(str(sdk_slug))
+
+    return PublicAppMappedSdks(store_id=store_id, mapped_sdks=mapped_sdks)
 
 
 def _build_app_sdk_details_payload(state: State, store_id: str) -> PublicAppSdkDetails:
@@ -181,16 +199,42 @@ def _build_app_sdk_details_payload(state: State, store_id: str) -> PublicAppSdkD
 
 def _build_app_version_timeline_payload(state: State, store_id: str) -> list[dict]:
     """Return the crawled version timeline used by the SDK history UI."""
+    app_df = get_single_app(state, store_id)
+    if app_df.empty:
+        msg = f"Store ID not found: {store_id!r}"
+        raise NotFoundException(msg, status_code=404)
+
     timeline_df = get_app_version_timeline(state, store_id)
     timeline_df = timeline_df[timeline_df["app_version_code"].astype("string") != "-1"]
+    timeline_df["sdk_scan_result"] = timeline_df["sdk_scan_result"].map(
+        lambda result: (
+            None if pd.isna(result) else "success" if result == 1 else "failure"
+        )
+    )
     return timeline_df.to_dict(orient="records")
 
 
 def _build_app_sdk_history_payload(state: State, store_id: str) -> PublicAppSdkHistory:
     """Return SDK additions, removals, and scan-status rows for an app."""
+    app_df = get_single_app(state, store_id)
+    if app_df.empty:
+        msg = f"Store ID not found: {store_id!r}"
+        raise NotFoundException(msg, status_code=404)
+
     history_df = get_app_sdk_history(state, store_id)
 
     if not history_df.empty:
+        no_change_rows = (
+            history_df["company_name"].isna()
+            & history_df["sdk_name"].isna()
+            & history_df["status"].isna()
+        )
+        history_df.loc[no_change_rows, "status"] = "no_change"
+        history_df["sdk_scan_result"] = history_df["sdk_scan_result"].map(
+            lambda result: (
+                None if pd.isna(result) else "success" if result == 1 else "failure"
+            )
+        )
         company_logos_df = get_company_logos_df(state).drop_duplicates(
             subset=["company_domain"], keep="first"
         )
@@ -244,6 +288,28 @@ class V1AppsController(Controller):
             background=build_request_page_view_task(
                 request,
                 url=f"/api/v1/apps/{store_id}/ranks",
+                hostname=PUBLIC_API_HOSTNAME,
+            ),
+        )
+
+    @get(
+        path="/apps/{store_id:str}/mapped-sdks",
+        cache=3600,
+        guards=[_b2b_sdk_guard],
+    )
+    async def app_mapped_sdks(
+        self: Self, state: State, request: Request, store_id: str
+    ) -> PublicAppMappedSdks:
+        """Return mapped SDK slugs grouped by company domain for an app."""
+        start = time.perf_counter() * 1000
+        payload = _build_app_mapped_sdks_payload(state=state, store_id=store_id)
+        duration = round((time.perf_counter() * 1000 - start), 2)
+        logger.info(f"GET /api/v1/apps/{store_id}/mapped-sdks took {duration}ms")
+        return Response(
+            payload,
+            background=build_request_page_view_task(
+                request,
+                url=f"/api/v1/apps/{store_id}/mapped-sdks",
                 hostname=PUBLIC_API_HOSTNAME,
             ),
         )

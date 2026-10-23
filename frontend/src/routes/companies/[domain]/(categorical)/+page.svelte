@@ -7,15 +7,15 @@
 		value: number;
 	};
 
-	import CompanyCategoryControls from '$lib/CompanyCategoryControls.svelte';
-	import CompanyCountryAppPie from '$lib/CompanyCountryAppPie.svelte';
-	import TotalsBox from '$lib/TotalsBox.svelte';
-	import ApiTotalsBox from '$lib/ApiTotalsBox.svelte';
-	import CompanyCategoryPie from '$lib/CompanyCategoryPie.svelte';
-	import AdsTxtTotalsBox from '$lib/AdsTxtTotalsBox.svelte';
-	import CompanyTableGrid from '$lib/CompanyTableGrid.svelte';
-	import HierarchyTree from '$lib/HierarchyTree.svelte';
-	import WhiteCard from '$lib/WhiteCard.svelte';
+	import CompanyCategoryControls from '#lib/CompanyCategoryControls.svelte';
+	import CompanyCountryAppPie from '#lib/CompanyCountryAppPie.svelte';
+	import TotalsBox from '#lib/TotalsBox.svelte';
+	import ApiTotalsBox from '#lib/ApiTotalsBox.svelte';
+	import CompanyCategoryPie from '#lib/CompanyCategoryPie.svelte';
+	import AdsTxtTotalsBox from '#lib/AdsTxtTotalsBox.svelte';
+	import CompanyTableGrid from '#lib/CompanyTableGrid.svelte';
+	import HierarchyTree from '#lib/HierarchyTree.svelte';
+	import WhiteCard from '#lib/WhiteCard.svelte';
 	interface Props {
 		data: CompanyFullDetails;
 	}

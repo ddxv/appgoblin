@@ -1,6 +1,6 @@
 import type { PageServerLoad } from './$types';
-import { createApiClient } from '$lib/server/api';
-import { userHasTierAccess } from '$lib/server/subscription';
+import { createApiClient } from '#lib/server/api.js';
+import { userHasTierAccess } from '#lib/server/subscription.js';
 
 export const load: PageServerLoad = async (event) => {
 	const { fetch, params, parent, locals } = event;

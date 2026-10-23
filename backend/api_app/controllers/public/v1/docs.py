@@ -190,7 +190,7 @@ APP_VERSION_TIMELINE_EXAMPLE_STORE_ID = "dev.thirdgate.appgoblin"
 APP_VERSION_TIMELINE_EXAMPLE_RESPONSE = [
     {
         "app_version_code": "42",
-        "sdk_scan_result": 1,
+        "sdk_scan_result": "success",
         "sdks_last_scanned_at": "2026-07-22T10:15:00Z",
         "downloaded_at": "2026-07-21T14:32:08Z",
     }
@@ -203,7 +203,7 @@ APP_SDK_HISTORY_EXAMPLE_RESPONSE = {
             "sdk_name": "Adjust SDK",
             "version_code": "42",
             "version_code_created_at": "2026-07-21T14:32:08Z",
-            "sdk_scan_result": 1,
+            "sdk_scan_result": "success",
             "status": "added",
             "company_logo_url": "company-logos/adjust.png",
         },
@@ -213,8 +213,8 @@ APP_SDK_HISTORY_EXAMPLE_RESPONSE = {
             "sdk_name": None,
             "version_code": "41",
             "version_code_created_at": "2026-07-14T09:00:00Z",
-            "sdk_scan_result": 1,
-            "status": None,
+            "sdk_scan_result": "success",
+            "status": "no_change",
             "company_logo_url": None,
         },
     ]
@@ -252,6 +252,28 @@ V1_OPERATION_DOCS = {
                 "display names, parent mappings, installs, and the latest trend "
                 "snapshot fields for market share, market-share change, total "
                 "apps, apps added, and apps lost."
+            ),
+        }
+    },
+    "/api/v1/companies/{company_domain}/sdks": {
+        "get": {
+            "summary": "[Paid] /companies/{company_domain}/sdks",
+            "description": (
+                "Endpoint: `GET /api/v1/companies/{company_domain}/sdks`\n\n"
+                "Access: Paid tiers only.\n\n"
+                "Returns mapped SDK slugs, names, and basic app counts for a company domain."
+            ),
+        }
+    },
+    "/api/v1/sdks/{sdk_slug}": {
+        "get": {
+            "summary": "[Paid] /sdks/{sdk_slug}",
+            "description": (
+                "Endpoint: `GET /api/v1/sdks/{sdk_slug}`\n\n"
+                "Access: Paid tiers only.\n\n"
+                "Returns the SDK slug, its related company domain and name, and "
+                "the public company overview. Private SDK and company database IDs "
+                "and company logos are omitted."
             ),
         }
     },
@@ -302,6 +324,16 @@ V1_OPERATION_DOCS = {
                 "Endpoint: `GET /api/v1/apps/{store_id}/ranks`\n\n"
                 "Returns flat best-rank records by country, collection, and category "
                 "for the last 90 days."
+            ),
+        }
+    },
+    "/api/v1/apps/{store_id}/mapped-sdks": {
+        "get": {
+            "summary": "[Paid] /apps/{store_id}/mapped-sdks",
+            "description": (
+                "Endpoint: `GET /api/v1/apps/{store_id}/mapped-sdks`\n\n"
+                "Access: B2B SDK and B2B Premium tiers only.\n\n"
+                "Returns mapped SDK slugs grouped by company domain for a single app."
             ),
         }
     },

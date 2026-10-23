@@ -1,14 +1,13 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
+	import { enhance, type ActionResult } from '$app/forms';
 	import Check from '@lucide/svelte/icons/check';
 	import Crown from '@lucide/svelte/icons/crown';
 	import X from '@lucide/svelte/icons/x';
 	import ChevronDown from '@lucide/svelte/icons/chevron-down';
 	import ChevronUp from '@lucide/svelte/icons/chevron-up';
 	import Sparkles from '@lucide/svelte/icons/sparkles';
-	import type { BillingCycle } from '$lib/server/stripe';
+	import type { BillingCycle } from '#lib/server/stripe.js';
 	import type { PageData } from './$types';
-	import type { ActionResult } from '@sveltejs/kit';
 
 	let { data }: { data: PageData } = $props();
 
@@ -48,6 +47,8 @@
 		freeTier?: boolean;
 		b2b?: boolean;
 		featured?: boolean;
+		includedSeats?: number;
+		additionalSeatPrice?: string;
 		highlights: string[];
 	}
 
@@ -67,20 +68,6 @@
 			]
 		},
 		{
-			key: 'b2b_appads',
-			name: 'App-Ads.txt',
-			monthlyPrice: '$99',
-			yearlyPrice: '$950',
-			period: '/mo',
-			description: 'Ad networks, DSPs, SSPs',
-			b2b: true,
-			highlights: [
-				'Everything in Free, plus...',
-				'Download bulk app-ads.txt datasets',
-				'App-ads.txt data updated daily'
-			]
-		},
-		{
 			key: 'b2b_sdk',
 			name: 'B2B SDK Intelligence',
 			monthlyPrice: '$399',
@@ -89,30 +76,32 @@
 			description: 'Sales teams, ad networks, agencies',
 			b2b: true,
 			featured: true,
+			includedSeats: 3,
+			additionalSeatPrice: '$99/mo',
 			highlights: [
 				'Everything in Free, plus...',
-				'Download verified client apps for all companies',
-				'Bulk CSV reports updated daily',
-				'Company apps added & lost reports',
-				'All B2B company API endpoints',
-				'Higher API rate limits',
-				'App Explorer & B2B filters'
+				'CSV exports of SDK & API app lists',
+				'Latest apps added & lost reports',
+				'100,000 daily API requests',
+				'Full access to App Explorer',
+				'Full Monthly Advertiser reports'
 			]
 		},
-
 		{
 			key: 'b2b_premium',
 			name: 'Premium B2B',
-			monthlyPrice: '$599',
-			yearlyPrice: '$5,750',
+			monthlyPrice: '$899',
+			yearlyPrice: '$8,650',
 			period: '/mo',
 			description: 'Larger companies, security teams, ad networks, hedge funds',
 			b2b: true,
 			featured: false,
+			includedSeats: 10,
+			additionalSeatPrice: '$49/mo',
 			highlights: [
 				'Everything in paid plans, plus...',
-				'Compliance & security requests',
 				'Custom reports & features',
+				'Compliance & security requests',
 				'Deeper integration options'
 			]
 		}
@@ -134,7 +123,6 @@
 		name: string;
 		free: boolean;
 		sdk: boolean;
-		appads: boolean;
 		b2b: boolean;
 		link?: string;
 	}
@@ -146,7 +134,6 @@
 			name: 'API /companies + apps added/lost endpoints',
 			free: false,
 			sdk: true,
-			appads: true,
 			b2b: true
 		},
 		{
@@ -154,7 +141,6 @@
 			name: 'API higher rate limits',
 			free: false,
 			sdk: true,
-			appads: true,
 			b2b: true
 		},
 		{
@@ -162,7 +148,6 @@
 			name: 'App Explorer dash + SDK filters',
 			free: false,
 			sdk: true,
-			appads: true,
 			b2b: true
 		},
 		{
@@ -170,7 +155,6 @@
 			name: 'Export Company / SDK apps',
 			free: false,
 			sdk: true,
-			appads: false,
 			b2b: true,
 			link: '/docs/data-exports'
 		},
@@ -179,7 +163,6 @@
 			name: 'Bulk app-ads.txt datasets',
 			free: false,
 			sdk: false,
-			appads: true,
 			b2b: true
 		},
 		{
@@ -187,7 +170,6 @@
 			name: 'Compliance & security requests',
 			free: false,
 			sdk: false,
-			appads: false,
 			b2b: true
 		},
 		{
@@ -195,7 +177,6 @@
 			name: 'Custom reports & integration',
 			free: false,
 			sdk: false,
-			appads: false,
 			b2b: true
 		}
 	];
@@ -228,7 +209,6 @@
 	const getFeatureValue = (feature: (typeof comparisonFeatures)[0], planKey: string): boolean => {
 		if (planKey === 'free') return feature.free;
 		if (planKey === 'b2b_sdk') return feature.sdk;
-		if (planKey === 'b2b_appads') return feature.appads;
 		if (planKey === 'b2b_premium') return feature.b2b;
 		return false;
 	};
@@ -418,6 +398,14 @@
 								>
 							</p>
 							<p class="text-sm opacity-90 mt-1">{plan.description}</p>
+							{#if plan.includedSeats}
+								<p class="text-sm font-semibold mt-2">
+									{plan.includedSeats} included seats
+									<span class="font-normal opacity-75"
+										>· Additional seats {plan.additionalSeatPrice}</span
+									>
+								</p>
+							{/if}
 						</div>
 
 						<!-- Highlights -->
@@ -505,6 +493,11 @@
 							<p class="text-base font-semibold leading-tight mt-1">
 								{getPrice(plan)}<span class="text-xs opacity-60 ml-1">{getPeriod(plan)}</span>
 							</p>
+							{#if plan.includedSeats}
+								<p class="text-xs font-semibold mt-1">
+									{plan.includedSeats} included seats · Additional seats {plan.additionalSeatPrice}
+								</p>
+							{/if}
 						</div>
 					{/each}
 

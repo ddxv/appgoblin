@@ -1,7 +1,7 @@
 import { error, redirect } from '@sveltejs/kit';
-import { requireAuthOr401 } from '$lib/server/auth/auth';
-import { createApiClient } from '$lib/server/api';
-import { db } from '$lib/server/auth/db';
+import { requireAuthOr401 } from '#lib/server/auth/auth.js';
+import { createApiClient } from '#lib/server/api.js';
+import { db } from '#lib/server/auth/db.js';
 import type { RequestHandler } from './$types';
 
 interface GeneratedReportRow {
@@ -39,5 +39,5 @@ export const GET: RequestHandler = async (event) => {
 		error(502, 'The report download URL could not be created.');
 	}
 
-	redirect(303, signed.url);
+	redirect(303, signed.url, { external: true });
 };

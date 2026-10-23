@@ -1,30 +1,30 @@
 import { fail, redirect } from '@sveltejs/kit';
-import { checkEmailAvailability, verifyEmailInput } from '$lib/server/auth/email';
-import { createUser, verifyUsernameInput } from '$lib/server/auth/user';
-import { db } from '$lib/server/auth/db';
-import { RefillingTokenBucket } from '$lib/server/auth/rate-limit';
-import { verifyPasswordStrength } from '$lib/server/auth/password';
+import { checkEmailAvailability, verifyEmailInput } from '#lib/server/auth/email.js';
+import { createUser, verifyUsernameInput } from '#lib/server/auth/user.js';
+import { db } from '#lib/server/auth/db.js';
+import { RefillingTokenBucket } from '#lib/server/auth/rate-limit.js';
+import { verifyPasswordStrength } from '#lib/server/auth/password.js';
 import {
 	createSession,
 	DEFAULT_SESSION_DURATION_HOURS,
 	generateSessionToken,
 	setSessionTokenCookie
-} from '$lib/server/auth/session';
+} from '#lib/server/auth/session.js';
 import {
 	createEmailVerificationRequest,
 	sendVerificationEmail,
 	sendVerificationEmailBucket,
 	setEmailVerificationRequestCookie
-} from '$lib/server/auth/email-verification';
-import { isSafeRedirect } from '$lib/server/auth/auth';
-import { getClientIP } from '$lib/server/request';
-import { altcha } from '$lib/server/altcha';
+} from '#lib/server/auth/email-verification.js';
+import { isSafeRedirect } from '#lib/server/auth/auth.js';
+import { getClientIP } from '#lib/server/request.js';
+import { altcha } from '#lib/server/altcha.js';
 import {
 	acceptOrganizationInvitation,
 	createPersonalOrganization,
 	getOrganizationInvitation
-} from '$lib/server/organization';
-import type { SessionFlags } from '$lib/server/auth/session';
+} from '#lib/server/organization.js';
+import type { SessionFlags } from '#lib/server/auth/session.js';
 import type { RequestEvent } from '@sveltejs/kit';
 
 const ipBucket = new RefillingTokenBucket<string>(3, 10);

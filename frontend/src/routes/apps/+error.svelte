@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import LoginPrompt from '$lib/LoginPrompt.svelte';
+	import LoginPrompt from '#lib/LoginPrompt.svelte';
 </script>
 
 <div class="p-6 text-center">

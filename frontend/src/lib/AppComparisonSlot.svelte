@@ -1,6 +1,6 @@
 <script lang="ts">
-	import AppComparisonColumn from '$lib/AppComparisonColumn.svelte';
-	import ComparisonSearch from '$lib/ComparisonSearch.svelte';
+	import AppComparisonColumn from '#lib/AppComparisonColumn.svelte';
+	import ComparisonSearch from '#lib/ComparisonSearch.svelte';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
 
@@ -62,9 +62,9 @@
 
 		// When opening search, clear the search param to start fresh
 		if (isSearching) {
-			const url = new URL(page.url);
+			const url = new URL(page.url.href);
 			url.searchParams.delete(`search${slotId}`);
-			goto(url.pathname + url.search, { noScroll: true, keepFocus: true, invalidateAll: false });
+			goto(url.pathname + url.search, { reset: false, refreshAll: false });
 		}
 	}
 </script>

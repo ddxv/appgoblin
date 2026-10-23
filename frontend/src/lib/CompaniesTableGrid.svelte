@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import type { Snippet } from 'svelte';
-	import { formatNumber } from '$lib/utils/formatNumber';
+	import { formatNumber } from '#lib/utils/formatNumber.js';
 	import WhiteCard from './WhiteCard.svelte';
 
 	let {
