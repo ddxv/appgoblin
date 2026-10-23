@@ -77,33 +77,31 @@
 			b2b: true,
 			featured: true,
 			includedSeats: 3,
-			additionalSeatPrice: '$99/seat/mo',
+			additionalSeatPrice: '$99/mo',
 			highlights: [
 				'Everything in Free, plus...',
-				'Download verified client apps for all companies',
-				'Bulk CSV reports updated daily',
-				'Company apps added & lost reports',
-				'All B2B company API endpoints',
-				'Higher API rate limits',
-				'App Explorer & B2B filters'
+				'CSV exports of SDK & API app lists',
+				'Latest apps added & lost reports',
+				'100,000 daily API requests',
+				'Full access to App Explorer',
+				'Full Monthly Advertiser reports'
 			]
 		},
-
 		{
 			key: 'b2b_premium',
 			name: 'Premium B2B',
-			monthlyPrice: '$599',
-			yearlyPrice: '$5,750',
+			monthlyPrice: '$899',
+			yearlyPrice: '$8,650',
 			period: '/mo',
 			description: 'Larger companies, security teams, ad networks, hedge funds',
 			b2b: true,
 			featured: false,
 			includedSeats: 10,
-			additionalSeatPrice: '$49/seat/mo',
+			additionalSeatPrice: '$49/mo',
 			highlights: [
 				'Everything in paid plans, plus...',
-				'Compliance & security requests',
 				'Custom reports & features',
+				'Compliance & security requests',
 				'Deeper integration options'
 			]
 		}
