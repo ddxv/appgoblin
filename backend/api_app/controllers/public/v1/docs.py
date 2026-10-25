@@ -38,6 +38,7 @@ APP_BASICS_EXAMPLE_RESPONSE = {
     "release_date": "2025-03-16",
     "ad_supported": False,
     "in_app_purchases": False,
+    "tv_supported": False,
     "store_link": (
         "https://play.google.com/store/apps/details?id=dev.thirdgate.appgoblin"
     ),

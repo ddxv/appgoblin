@@ -96,6 +96,12 @@
 								<span class="font-medium">Ads:</span>
 								<span class="">{data.myapp.ad_supported ? 'Yes' : 'No'}</span>
 							</div>
+							{#if data.myapp.tv_supported}
+								<div class="flex items-center gap-2">
+									<span class="font-medium">TV Support:</span>
+									<span class="">Yes</span>
+								</div>
+							{/if}
 							<div class="flex items-center gap-2">
 								<span class="font-medium">Price:</span>
 								<span class="">{data.myapp.free === 'true' ? 'Free' : 'Paid'}</span>

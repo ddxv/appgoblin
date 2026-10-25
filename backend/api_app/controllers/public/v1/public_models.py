@@ -187,6 +187,7 @@ class PublicAppBasics:
     release_date: str | None = None
     ad_supported: bool | None = None
     in_app_purchases: bool | None = None
+    tv_supported: bool = False
     store_link: str | None = None
 
 
