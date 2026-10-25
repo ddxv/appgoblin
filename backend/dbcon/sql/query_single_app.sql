@@ -46,6 +46,7 @@ SELECT
     run_result AS api_crawl_result,
     api_successful_last_crawled,
     c.alpha2 AS country_code,
+    COALESCE(tv_supported, FALSE) AS tv_supported,
     CASE
         WHEN icon_128 IS NOT NULL
             THEN

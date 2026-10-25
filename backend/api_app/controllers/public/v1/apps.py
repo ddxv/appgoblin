@@ -55,6 +55,11 @@ def _b2b_sdk_guard(request: Request, route_handler) -> None:
         )
 
 
+def _coerce_tv_supported(value: object) -> bool:
+    """Only an explicit TRUE means TV support; NULL and FALSE both resolve to False."""
+    return bool(value) if pd.notna(value) else False
+
+
 def _build_app_basics_payload(state: State, store_id: str) -> PublicAppBasics:
     """Return public app metadata plus estimated growth, usage, and revenue signals."""
     app_df = get_single_app(state, store_id)
@@ -63,14 +68,12 @@ def _build_app_basics_payload(state: State, store_id: str) -> PublicAppBasics:
         raise NotFoundException(msg, status_code=404)
 
     app_dict = app_df.to_dict(orient="records")[0]
-    return PublicAppBasics(
-        **{
-            field.name: app_dict.get(
-                APP_BASICS_FIELD_SOURCES.get(field.name, field.name)
-            )
-            for field in dataclass_fields(PublicAppBasics)
-        }
-    )
+    payload_fields = {
+        field.name: app_dict.get(APP_BASICS_FIELD_SOURCES.get(field.name, field.name))
+        for field in dataclass_fields(PublicAppBasics)
+    }
+    payload_fields["tv_supported"] = _coerce_tv_supported(app_dict.get("tv_supported"))
+    return PublicAppBasics(**payload_fields)
 
 
 def _build_app_ranks_payload(state: State, store_id: str) -> list[PublicAppBestRank]:
@@ -90,9 +93,7 @@ def _build_app_ranks_payload(state: State, store_id: str) -> list[PublicAppBestR
     ]
 
 
-def _build_app_mapped_sdks_payload(
-    state: State, store_id: str
-) -> PublicAppMappedSdks:
+def _build_app_mapped_sdks_payload(state: State, store_id: str) -> PublicAppMappedSdks:
     """Return mapped SDK slugs grouped by company domain for an app."""
     mapped_sdks_df = get_app_mapped_sdks(state, store_id)
     mapped_sdks: dict[str, list[str]] = {}

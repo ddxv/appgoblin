@@ -1026,6 +1026,7 @@ export interface AppFullDetail {
 	content_rating?: string;
 	ad_supported?: string;
 	in_app_purchases?: string;
+	tv_supported?: boolean;
 	editors_choice?: string;
 	crawl_result: number;
 	release_date: string;

@@ -1254,6 +1254,7 @@ class TestV1Apps:
             "release_date": "2024-01-01",
             "ad_supported": True,
             "in_app_purchases": False,
+            "tv_supported": True,
             "app_icon_url": "https://media.appgoblin.info/icon.png",
             "store_link": "https://play.google.com/store/apps/details?id=com.example.app",
             "ad_creative_count": 12,
@@ -1293,6 +1294,7 @@ class TestV1Apps:
             "release_date": "2024-01-01",
             "ad_supported": True,
             "in_app_purchases": False,
+            "tv_supported": True,
             "store_link": "https://play.google.com/store/apps/details?id=com.example.app",
         }
         assert "id" not in resp.json()
@@ -1314,6 +1316,35 @@ class TestV1Apps:
 
         assert resp.status_code == 404
         assert "Store ID not found" in resp.json()["detail"]
+
+    @pytest.mark.parametrize(
+        ("tv_supported", "expected"),
+        [
+            (True, True),
+            (False, False),
+            (None, False),
+            (float("nan"), False),
+        ],
+    )
+    def test_app_basics_tv_supported_only_true_is_true(self, tv_supported, expected):
+        app = _make_test_app()
+        app_row = {
+            "store_id": "com.example.app",
+            "name": "Example App",
+            "tv_supported": tv_supported,
+        }
+        with (
+            _patch_key_found("free"),
+            _patch_single_app(app_row),
+            TestClient(app=app, raise_server_exceptions=False) as client,
+        ):
+            resp = client.get(
+                "/api/v1/apps/com.example.app",
+                headers={"X-API-Key": "ag_appkey"},
+            )
+
+        assert resp.status_code == 200
+        assert resp.json()["tv_supported"] is expected
 
     def test_app_ranks_returns_expected_shape(self):
         app = _make_test_app()
