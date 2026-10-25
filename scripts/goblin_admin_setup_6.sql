@@ -53,3 +53,25 @@ SET canonical_email = CANONICALIZE_EMAIL(email);
 
 CREATE UNIQUE INDEX users_canonical_email_unique
 ON users (canonical_email);
+
+
+
+CREATE OR REPLACE FUNCTION users_set_canonical_email()
+RETURNS trigger
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    IF TG_OP = 'INSERT' THEN
+        -- Explicit values win, so manual overrides still work on insert.
+        NEW.canonical_email := COALESCE(NEW.canonical_email, canonicalize_email(NEW.email));
+    ELSIF NEW.email IS DISTINCT FROM OLD.email THEN
+        -- Changing the address re-derives it; a manual value is not carried over.
+        NEW.canonical_email := canonicalize_email(NEW.email);
+    END IF;
+    RETURN NEW;
+END;
+$$;
+
+CREATE TRIGGER users_set_canonical_email
+BEFORE INSERT OR UPDATE OF email ON users
+FOR EACH ROW EXECUTE FUNCTION users_set_canonical_email();
