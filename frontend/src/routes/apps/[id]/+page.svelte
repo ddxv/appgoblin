@@ -104,7 +104,13 @@
 							{/if}
 							<div class="flex items-center gap-2">
 								<span class="font-medium">Price:</span>
-								<span class="">{data.myapp.free === 'true' ? 'Free' : 'Paid'}</span>
+								<span class=""
+									>{data.myapp.free === true
+										? 'Free'
+										: data.myapp.free === false
+											? 'Paid'
+											: 'Unknown'}</span
+								>
 							</div>
 
 							{#if data.myapp.developer_url}

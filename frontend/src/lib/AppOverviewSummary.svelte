@@ -58,10 +58,10 @@
 	// Monetization model
 	const monetization = $derived.by(() => {
 		const parts: string[] = [];
-		if (String(app.free) === 'true') parts.push('free');
-		else if (app.price) parts.push(`paid (${app.price})`);
-		if (String(app.ad_supported) === 'true') parts.push('ad-supported');
-		if (String(app.in_app_purchases) === 'true') parts.push('with in-app purchases');
+		if (app.free === true) parts.push('free');
+		else if (app.free === false) parts.push('paid');
+		if (app.ad_supported) parts.push('ad-supported');
+		if (app.in_app_purchases) parts.push('with in-app purchases');
 		return parts.length > 0 ? parts.join(', ') : null;
 	});
 
