@@ -1,44 +1,67 @@
 import { sequence, type Handle, type ServerInit } from '@sveltejs/kit/hooks';
+import type { RequestEvent } from '@sveltejs/kit';
 
 import type { CompanyTypes, AppStore, CollectionRanks, CategoryRanks, Countries } from './types';
 
-import { RefillingTokenBucket } from '#lib/server/auth/rate-limit.js';
 import {
 	validateSessionToken,
 	setSessionTokenCookie,
 	deleteSessionTokenCookie
 } from '#lib/server/auth/session.js';
-import { getClientIP } from '#lib/server/request.js';
+import {
+	checkPreAuthRateLimit,
+	checkRateLimit,
+	isBlockedDataRequest,
+	isNoindexPath,
+	isStaticAssetPath,
+	rateLimitResponse
+} from '#lib/server/request-rate-limit.js';
 
-const bucket = new RefillingTokenBucket<string>(100, 1);
-
-// Rate limiting handle
-const rateLimitHandle: Handle = async ({ event, resolve }) => {
+// Static assets, the live-session probe (the header calls /auth/me on every SPA
+// navigation, so a 429 would blank it) and the health check.
+function isRateLimitExempt(event: RequestEvent): boolean {
 	const route = event.url.pathname;
+	return isStaticAssetPath(route) || route === '/auth/me' || route === '/check';
+}
 
-	// Skip rate limiting for static assets and the live-session probe
-	// (the LoginAccountButton in the header calls /auth/me on every SPA
-	// navigation, so a 429 there would blank the header for the user).
-	if (route.startsWith('/_app') || route.startsWith('/favicon') || route === '/auth/me') {
+// Runs before session validation, which costs a database lookup per request.
+const preAuthRateLimitHandle: Handle = async ({ event, resolve }) => {
+	if (isRateLimitExempt(event)) {
 		return resolve(event);
 	}
 
-	const clientIP = getClientIP(event.request);
-	if (clientIP === null) {
+	const result = checkPreAuthRateLimit(event);
+	if (!result.allowed) {
+		return rateLimitResponse(event, result);
+	}
+
+	return resolve(event);
+};
+
+// Runs after authHandle so signed-in users are keyed by user id, and so clients
+// that call `__data.json` directly are charged to the scraper bucket.
+const rateLimitHandle: Handle = async ({ event, resolve }) => {
+	if (isRateLimitExempt(event)) {
 		return resolve(event);
 	}
 
-	let cost: number;
-	if (event.request.method === 'GET' || event.request.method === 'OPTIONS') {
-		cost = 1;
-	} else {
-		cost = 3;
-	}
-
-	if (!bucket.consume(clientIP, cost)) {
-		return new Response('Too many requests', {
-			status: 429
+	// A direct `__data.json` call skips the page's `noindex` meta tag and the
+	// analytics script. Real navigations still get the data, with an
+	// `X-Robots-Tag` set below.
+	if (isBlockedDataRequest(event)) {
+		return new Response(JSON.stringify({ message: 'Not found' }), {
+			status: 404,
+			headers: {
+				'Content-Type': 'application/json',
+				'X-Robots-Tag': 'noindex, nofollow',
+				'Cache-Control': 'no-store'
+			}
 		});
+	}
+
+	const result = checkRateLimit(event);
+	if (!result.allowed) {
+		return rateLimitResponse(event, result);
 	}
 
 	return resolve(event);
@@ -163,6 +186,12 @@ const cacheAndRoutingHandle: Handle = async ({ event, resolve }) => {
 		appendVaryHeader(response, 'Cookie');
 	}
 
+	// The `__data.json` twin of a noindex page has none of the HTML page's
+	// `<meta name="robots">` markup, so send the header form too.
+	if (event.isDataRequest && isNoindexPath(route)) {
+		response.headers.set('X-Robots-Tag', 'noindex, nofollow');
+	}
+
 	if (pathIsCacheable && !isAuthenticated) {
 		response.headers.set('cache-control', 'public, max-age=86400, stale-while-revalidate=3600');
 	}
@@ -181,7 +210,12 @@ const cacheAndRoutingHandle: Handle = async ({ event, resolve }) => {
 };
 
 // Combine all handles in sequence
-export const handle = sequence(rateLimitHandle, authHandle, cacheAndRoutingHandle);
+export const handle = sequence(
+	preAuthRateLimitHandle,
+	authHandle,
+	rateLimitHandle,
+	cacheAndRoutingHandle
+);
 
 interface CachedData {
 	appsOverview: any;

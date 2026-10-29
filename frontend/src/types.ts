@@ -1018,14 +1018,14 @@ export interface AppFullDetail {
 	monthly_ad_revenue: number;
 	monthly_iap_revenue: number;
 	category: string;
-	free: string;
-	price: string;
+	free: boolean | null;
+	price?: number | null;
 	size?: string;
 	minimum_android?: string;
 	developer_email?: string;
 	content_rating?: string;
-	ad_supported?: string;
-	in_app_purchases?: string;
+	ad_supported?: boolean | null;
+	in_app_purchases?: boolean | null;
 	tv_supported?: boolean;
 	editors_choice?: string;
 	crawl_result: number;
@@ -1053,7 +1053,7 @@ export interface AppFullDetail {
 	run_result?: number;
 	ad_creative_count?: number;
 	ad_monetized_creative_count?: number;
-	is_removed?: string;
+	is_removed?: boolean | null;
 	country_code?: string;
 }
 

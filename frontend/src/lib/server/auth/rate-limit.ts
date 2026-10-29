@@ -33,15 +33,47 @@ export class RefillingTokenBucket<_Key> {
 			this.storage.set(key, bucket);
 			return true;
 		}
-		const refill = Math.floor((now - bucket.refilledAt) / (this.refillIntervalSeconds * 1000));
-		bucket.count = Math.min(bucket.count + refill, this.max);
-		bucket.refilledAt = now;
+		const intervalMs = this.refillIntervalSeconds * 1000;
+		const refill = Math.floor((now - bucket.refilledAt) / intervalMs);
+		if (refill > 0) {
+			bucket.count = Math.min(bucket.count + refill, this.max);
+			// Advance by whole intervals only; setting this to `now` would discard
+			// the partial interval on every request, so a client polling faster
+			// than the refill interval would never refill.
+			bucket.refilledAt += refill * intervalMs;
+		}
 		if (bucket.count < cost) {
 			return false;
 		}
 		bucket.count -= cost;
 		this.storage.set(key, bucket);
 		return true;
+	}
+
+	public getRemaining(key: _Key): number {
+		const bucket = this.storage.get(key) ?? null;
+		if (bucket === null) {
+			return this.max;
+		}
+		const intervalMs = this.refillIntervalSeconds * 1000;
+		const refill = Math.floor((Date.now() - bucket.refilledAt) / intervalMs);
+		return Math.min(bucket.count + refill, this.max);
+	}
+
+	/**
+	 * Drop buckets that have fully refilled. A full bucket behaves exactly like a
+	 * missing one, so this is safe, and it keeps the map from growing without
+	 * bound.
+	 */
+	public sweep(): void {
+		const intervalMs = this.refillIntervalSeconds * 1000;
+		const now = Date.now();
+		for (const [key, bucket] of this.storage) {
+			const refill = Math.floor((now - bucket.refilledAt) / intervalMs);
+			if (bucket.count + refill >= this.max) {
+				this.storage.delete(key);
+			}
+		}
 	}
 }
 

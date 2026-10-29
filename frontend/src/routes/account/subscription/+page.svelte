@@ -275,4 +275,12 @@
 			</div>
 		</section>
 	{/if}
+
+	<section class="p-6 md:p-8 border-t border-surface-300-700">
+		<p class="text-sm">
+			If you have questions about subscriptions please feel free to request a demo or support:
+			<a class="anchor" href="mailto:contact@appgoblin.info">contact@appgoblin.info</a>.
+			{#if !data.subscription}Paypal, Bank transfers &amp; BTC welcome.{/if}
+		</p>
+	</section>
 </div>

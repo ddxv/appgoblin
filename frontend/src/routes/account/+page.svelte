@@ -105,4 +105,12 @@
 			</div>
 		</div>
 	</section>
+
+	<section class="rounded-lg border border-surface-300-700 p-6">
+		<p class="text-sm">
+			If you have questions about subscriptions please feel free to request a demo or support:
+			<a class="anchor" href="mailto:contact@appgoblin.info">contact@appgoblin.info</a>.
+			{#if !data.subscription}Paypal, Bank transfers &amp; BTC welcome.{/if}
+		</p>
+	</section>
 </div>
